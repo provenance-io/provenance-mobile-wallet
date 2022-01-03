@@ -1,0 +1,56 @@
+// @dart=2.12
+
+// import 'package:figure_pay/util/logs/logging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Wrapper around [SharedPreferences] to consolidate keys and consistency.
+class SharedPrefsService {
+  static SharedPrefsService? _instance;
+  SharedPrefsService._();
+  factory SharedPrefsService() => _instance ??= SharedPrefsService._();
+
+  Future<SharedPreferences> get _pref async =>
+      await SharedPreferences.getInstance();
+
+  Future<bool> containsKey(PrefKey key) async {
+    return (await _pref).containsKey(key.name);
+  }
+
+  Future<bool> setBool(PrefKey key, bool value) async {
+    return (await _pref).setBool(key.name, value);
+  }
+
+  Future<bool?> getBool(PrefKey key) async {
+    try {
+      return (await _pref).getBool(key.name);
+    } catch (e) {
+      // logError(e);
+      return false;
+    }
+  }
+
+  Future<bool> setString(PrefKey key, String value) async {
+    return (await _pref).setString(key.name, value);
+  }
+}
+
+enum PrefKey {
+  releaseMode,
+  declinedSecureAuth,
+  privateKey,
+  publicKey,
+  uuid,
+  referralInviteFinished,
+  firstBankAccountComplete,
+  showSaleDialog,
+  showReturnDialog,
+
+  /// TODO: remove these
+  hasShownReturnsDialog,
+  hasShownStartTransactionDialog
+}
+
+extension on PrefKey {
+  String get name => describeEnum(this);
+}

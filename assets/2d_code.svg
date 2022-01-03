@@ -1,0 +1,22 @@
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="28" height="28" />
+<path d="M2.5 18L2.5 25.5H10" stroke="white"/>
+<path d="M25.5 10L25.5 2.5L18 2.5" stroke="white"/>
+<path d="M25.5 19V25.5H19" stroke="white"/>
+<path d="M2.5 10L2.5 2.5L10 2.5" stroke="white"/>
+<rect x="5.5" y="17.5" width="5" height="5" stroke="white"/>
+<rect x="5.5" y="5.5" width="5" height="5" stroke="white"/>
+<rect x="17.5" y="5.5" width="5" height="5" stroke="white"/>
+<path d="M5 12.5H6" stroke="white"/>
+<path d="M8 12.5H11" stroke="white"/>
+<path d="M13 20.5H14M14 21.5H15" stroke="white"/>
+<path d="M22 15.5H23" stroke="white"/>
+<path d="M18 14.5H19" stroke="white"/>
+<path d="M5 15.5H6" stroke="white"/>
+<path d="M6 13.5H9M6 14.5H8M12 22.5H18M16 21.5H18M19 12.5L23 12.5M21 13.5H23M18 15.5H21M19 16.5H20M21.5 16V18M19.5 16.5V20" stroke="white"/>
+<path d="M12 13.5H13M11 14.5H15M22 22.5H20M22.5 20V23M7 15.5H13" stroke="white"/>
+<path d="M12.5 7V11M12 5.5H13M15.5 5V8M13.5 7V9M17 12.5H18M14.5 20V19M15 17.5H18M20 19.5H22M14.5 10V13M15.5 12V14M13.5 19V16M16 18.5H17M16.5 16V14M17 16.5H18M18 21.5H20M17.5 21V19M15 9.5H16" stroke="white"/>
+<rect x="7" y="7" width="2" height="2" fill="white"/>
+<rect x="7" y="19" width="2" height="2" fill="white"/>
+<rect x="19" y="7" width="2" height="2" fill="white"/>
+</svg>
