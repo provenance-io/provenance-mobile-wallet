@@ -46,7 +46,7 @@ dependencies:
   shared_preferences: ^2.0.6
   uuid: ^3.0.4
   prov_wallet_flutter:
-    path: /Users/mattjaffa/dev/mobile-tech-wallet-flutter-plugin
+    path: ../mobile-tech-wallet-flutter-plugin
 
 dev_dependencies:
   flutter_test:
