@@ -28,7 +28,7 @@ class _LandingState extends State<Landing> {
 
   @override
   void initState() {
-    _pageController.addListener((){
+    _pageController.addListener(() {
       setState(() {
         currentPage = _pageController.page ?? 0;
       });
@@ -67,8 +67,8 @@ class _LandingState extends State<Landing> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-
-                    Expanded(child: PageView(
+                    Expanded(
+                        child: PageView(
                       controller: _pageController,
                       children: [
                         Column(
@@ -179,8 +179,8 @@ class _LandingState extends State<Landing> {
                                   width: 158,
                                   decoration: BoxDecoration(
                                       color: Color(0xFF9196AA),
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(79))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(79))),
                                 )
                               ],
                             ),
@@ -222,8 +222,8 @@ class _LandingState extends State<Landing> {
                                   width: 158,
                                   decoration: BoxDecoration(
                                       color: Color(0xFF9196AA),
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(79))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(79))),
                                 )
                               ],
                             ),
@@ -271,8 +271,11 @@ class _LandingState extends State<Landing> {
                               color: FwColor.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(AccountName(WalletAddImportType.onBoardingAdd, currentStep: 1, numberOfSteps: 4).route());
+                              Navigator.of(context).push(AccountName(
+                                      WalletAddImportType.onBoardingAdd,
+                                      currentStep: 1,
+                                      numberOfSteps: 4)
+                                  .route());
                             })),
                     SizedBox(
                       height: 8,
@@ -286,8 +289,11 @@ class _LandingState extends State<Landing> {
                               color: FwColor.globalNeutral450,
                             ),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(AccountName(WalletAddImportType.onBoardingRecover, currentStep: 1, numberOfSteps: 4).route());
+                              Navigator.of(context).push(AccountName(
+                                      WalletAddImportType.onBoardingRecover,
+                                      currentStep: 1,
+                                      numberOfSteps: 4)
+                                  .route());
                             })),
                     SizedBox(
                       height: 40,
@@ -341,10 +347,8 @@ class _LandingState extends State<Landing> {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 0),
         margin: EdgeInsets.symmetric(horizontal: 4.0),
-        height: isActive
-            ? 10:8.0,
-        width: isActive
-            ? 12:8.0,
+        height: isActive ? 10 : 8.0,
+        width: isActive ? 12 : 8.0,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -352,7 +356,9 @@ class _LandingState extends State<Landing> {
             )
           ],
           shape: BoxShape.circle,
-          color: isActive ? Theme.of(context).colorScheme.globalNeutral600Black : Color(0XFFC4C4C4),
+          color: isActive
+              ? Theme.of(context).colorScheme.globalNeutral600Black
+              : Color(0XFFC4C4C4),
         ),
       ),
     );
