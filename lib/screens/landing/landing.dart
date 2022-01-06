@@ -6,6 +6,7 @@ import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/account_name.dart';
 import 'package:flutter_tech_wallet/screens/backup_account_intro.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
+import 'package:flutter_tech_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:flutter_tech_wallet/screens/restore_account_intro.dart';
 import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
 import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
@@ -71,102 +72,7 @@ class _LandingState extends State<Landing> {
                         child: PageView(
                       controller: _pageController,
                       children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: FwText(
-                                'Figure Tech Wallet is Lorem ipsum dolor sit amet, consectetur ',
-                                style: FwTextStyle.h3,
-                                textAlign: TextAlign.center,
-                                color: FwColor.globalNeutral550,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 48,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: GridView.count(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                crossAxisSpacing: 0.0,
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 0.0,
-                                childAspectRatio: 1.89,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FwText(
-                                        '\$12.5B',
-                                        style: FwTextStyle.h4,
-                                        color: FwColor.globalNeutral450,
-                                      ),
-                                      FwText(
-                                        'Market Cap',
-                                        style: FwTextStyle.m,
-                                        color: FwColor.globalNeutral450,
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FwText(
-                                        '10',
-                                        style: FwTextStyle.h4,
-                                        color: FwColor.globalNeutral450,
-                                      ),
-                                      FwText(
-                                        'Validators',
-                                        style: FwTextStyle.m,
-                                        color: FwColor.globalNeutral450,
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FwText(
-                                        '395.8K',
-                                        style: FwTextStyle.h4,
-                                        color: FwColor.globalNeutral450,
-                                      ),
-                                      FwText(
-                                        'Transactions',
-                                        style: FwTextStyle.m,
-                                        color: FwColor.globalNeutral450,
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FwText(
-                                        '6.36 sec.',
-                                        style: FwTextStyle.h4,
-                                        color: FwColor.globalNeutral450,
-                                      ),
-                                      FwText(
-                                        'Avg Block Time',
-                                        style: FwTextStyle.m,
-                                        color: FwColor.globalNeutral450,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                        OnboardingLandingSlide(),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,

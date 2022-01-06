@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/theme.dart';
-import 'package:flutter_tech_wallet/screens/landing.dart';
+import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_tech_wallet/util/router_observer.dart';
 
