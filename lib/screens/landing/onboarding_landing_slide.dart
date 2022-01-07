@@ -25,7 +25,6 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
       _isLoading = true;
     });
     // TODO: Put the service call here.
-    // TODO: There's something weird here with the refresh - sometimes it doesn't.
     await Future.delayed(Duration(milliseconds: 500));
 
     setState(() {
