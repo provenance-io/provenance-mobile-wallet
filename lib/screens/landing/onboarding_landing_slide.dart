@@ -1,6 +1,4 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
-import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
 
 class OnboardingLandingSlide extends StatefulWidget {
   @override
