@@ -1,13 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/account_name.dart';
-import 'package:flutter_tech_wallet/screens/backup_account_intro.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
 import 'package:flutter_tech_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:flutter_tech_wallet/screens/restore_account_intro.dart';
 import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
 import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
 import 'package:flutter_tech_wallet/util/local_authentication_service.dart';
