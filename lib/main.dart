@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: FigurePayThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
-        navigatorObservers: [RouterObserver.instance.routeObserver],
+      navigatorObservers: [RouterObserver.instance.routeObserver],
       home: Landing(),
     );
   }
