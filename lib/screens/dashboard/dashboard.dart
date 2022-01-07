@@ -256,7 +256,7 @@ class DashboardState extends State<Dashboard>
                                                             color:
                                                                 FwColor.white,
                                                             style:
-                                                                FwTextStyle.s)
+                                                                FwTextStyle.s),
                                                       ],
                                                     ),
                                                   )),
