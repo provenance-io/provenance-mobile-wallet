@@ -25,13 +25,13 @@ class _LandingState extends State<Landing> {
   LocalAuthenticationService _localAuth = LocalAuthenticationService();
   LocalAuthHelper _helper = LocalAuthHelper.instance;
   PageController _pageController = PageController();
-  double currentPage = 0;
+  double _currentPage = 0;
 
   @override
   void initState() {
     _pageController.addListener(() {
       setState(() {
-        currentPage = _pageController.page ?? 0;
+        _currentPage = _pageController.page ?? 0;
       });
     });
     _localAuth.initialize();
@@ -242,7 +242,7 @@ class _LandingState extends State<Landing> {
   List<Widget> _buildPageIndicator() {
     List<Widget> list = [];
     for (int i = 0; i < 3; i++) {
-      list.add(i == currentPage ? _indicator(true) : _indicator(false));
+      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
     }
     return list;
   }
