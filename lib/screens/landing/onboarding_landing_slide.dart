@@ -15,9 +15,9 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
   bool _isLoading = false;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     getStats();
-    super.initState();
+    super.didChangeDependencies();
   }
 
   Future<void> getStats() async {
