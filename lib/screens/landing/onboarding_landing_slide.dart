@@ -10,10 +10,10 @@ class OnboardingLandingSlide extends StatefulWidget {
 }
 
 class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
-  double marketCap = 0;
-  int numValidators = 0;
-  double numTransactions = 0;
-  String blockTime = "";
+  String _marketCap = "";
+  int _numValidators = 0;
+  String _transactions = "";
+  String _blockTime = "";
   bool _isLoading = false;
 
   @override
@@ -22,9 +22,16 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
     super.initState();
   }
 
-  void getStats() {
+  Future<void> getStats() async {
     _isLoading = true;
     // TODO: Put the service call here.
+    // TODO: There's something weird here with the refresh - sometimes it doesn't.r
+    await Future.delayed(Duration(milliseconds: 500));
+    _marketCap = '\$12.5B';
+    _transactions = '395.8K';
+    _numValidators = 10;
+    _blockTime = '6.36 sec.';
+    _isLoading = false;
   }
 
   @override
@@ -69,7 +76,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FwText(
-                          '\$12.5B',
+                          _marketCap,
                           style: FwTextStyle.h4,
                           color: FwColor.globalNeutral450,
                         ),
@@ -85,7 +92,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FwText(
-                          '10',
+                          '$_numValidators',
                           style: FwTextStyle.h4,
                           color: FwColor.globalNeutral450,
                         ),
@@ -101,7 +108,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FwText(
-                          '395.8K',
+                          _transactions,
                           style: FwTextStyle.h4,
                           color: FwColor.globalNeutral450,
                         ),
@@ -117,7 +124,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FwText(
-                          '6.36 sec.',
+                          _blockTime,
                           style: FwTextStyle.h4,
                           color: FwColor.globalNeutral450,
                         ),
