@@ -1,4 +1,5 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class OnboardingTradeSlide extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _OnboardingTradeSlideState extends State<OnboardingTradeSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            'Trade ',
+            LandingStrings.trade,
             style: FwTextStyle.extraLarge,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -44,7 +45,7 @@ class _OnboardingTradeSlideState extends State<OnboardingTradeSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            'Trade Hash, etc lorem ipsum with confidence blah blah blah',
+            LandingStrings.tradeHashText,
             style: FwTextStyle.m,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
