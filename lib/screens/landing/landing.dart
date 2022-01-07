@@ -39,6 +39,12 @@ class _LandingState extends State<Landing> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _pageController.removeListener(() {});
+    super.dispose();
+  }
+
   void checkAccount() async {
     final storage = await SecureStorageService().read(StorageKey.privateKey);
     if (storage != null && storage.isNotEmpty) {
