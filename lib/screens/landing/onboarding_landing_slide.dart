@@ -23,7 +23,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
   Future<void> getStats() async {
     _isLoading = true;
     // TODO: Put the service call here.
-    // TODO: There's something weird here with the refresh - sometimes it doesn't.r
+    // TODO: There's something weird here with the refresh - sometimes it doesn't.
     await Future.delayed(Duration(milliseconds: 500));
     _marketCap = '\$12.5B';
     _transactions = '395.8K';

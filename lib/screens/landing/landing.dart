@@ -8,6 +8,8 @@ import 'package:flutter_tech_wallet/screens/backup_account_intro.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
 import 'package:flutter_tech_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:flutter_tech_wallet/screens/restore_account_intro.dart';
+import 'package:flutter_tech_wallet/screens/landing/onboarding_manage_slide.dart';
+import 'package:flutter_tech_wallet/screens/landing/onboarding_trade_slide.dart';
 import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
 import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
 import 'package:flutter_tech_wallet/util/local_authentication_service.dart';
@@ -73,92 +75,8 @@ class _LandingState extends State<Landing> {
                       controller: _pageController,
                       children: [
                         OnboardingLandingSlide(),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 158,
-                                  width: 158,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFF9196AA),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(79))),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 48,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: FwText(
-                                'Trade ',
-                                style: FwTextStyle.extraLarge,
-                                textAlign: TextAlign.center,
-                                color: FwColor.globalNeutral550,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: FwText(
-                                'Trade Hash, etc lorem ipsum with confidence blah blah blah',
-                                style: FwTextStyle.m,
-                                textAlign: TextAlign.center,
-                                color: FwColor.globalNeutral550,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 158,
-                                  width: 158,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFF9196AA),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(79))),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 48,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: FwText(
-                                'Manage your own wallet',
-                                style: FwTextStyle.extraLarge,
-                                textAlign: TextAlign.center,
-                                color: FwColor.globalNeutral550,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: FwText(
-                                'Fully control your wallet and crypto, and manage it independently.',
-                                style: FwTextStyle.m,
-                                textAlign: TextAlign.center,
-                                color: FwColor.globalNeutral550,
-                              ),
-                            ),
-                          ],
-                        ),
+                        OnboardingTradeSlide(),
+                        OnboardingManageSlide()
                       ],
                     )),
                     VerticalSpacer.medium(),
