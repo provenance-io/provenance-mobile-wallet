@@ -1,4 +1,5 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class OnboardingManageSlide extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _OnboardingManageSlideState extends State<OnboardingManageSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            'Manage your own wallet',
+            LandingStrings.manageYourOwnWallet,
             style: FwTextStyle.extraLarge,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -44,7 +45,7 @@ class _OnboardingManageSlideState extends State<OnboardingManageSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            'Fully control your wallet and crypto, and manage it independently.',
+            LandingStrings.fullyControlYourWallet,
             style: FwTextStyle.m,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
