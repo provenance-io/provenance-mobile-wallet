@@ -12,7 +12,8 @@ class RecoveryWords extends StatefulWidget {
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoveryWords(this.flowType, this.accountName, {this.currentStep, this.numberOfSteps});
+  RecoveryWords(this.flowType, this.accountName,
+      {this.currentStep, this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -91,36 +92,43 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         ),
                         Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Container(
-                                  color: Color(0xFFE9EEF9),
-                                  child: Padding(
-                                      padding: EdgeInsets.all(24),
-                                      child: Row(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Container(
+                              color: Color(0xFFE9EEF9),
+                              child: Padding(
+                                  padding: EdgeInsets.all(24),
+                                  child: Row(
+                                    children: [
+                                      Wrap(
+                                        direction: Axis.vertical,
+                                        runSpacing: 24.0,
+                                        spacing: 2.0,
                                         children: [
-                                          Wrap(
-                                            direction: Axis.vertical,
-                                            runSpacing: 24.0,
-                                            spacing: 2.0,
-                                            children: [...words
-                                                .mapIndexed((index, e) =>
-                                                FwText('${index + 1}. $e'))
-                                                .toList(), GestureDetector(
-                                              onTap: () async {
-                                                await Clipboard.setData(ClipboardData(text: words.join(' ')));
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Passphrase Copied')),
-                                                );
-                                              },
-                                              child: FwIcon(
-                                                FwIcons.copy,
-                                              ),
-                                            )
-                                            ],
+                                          ...words
+                                              .mapIndexed((index, e) =>
+                                                  FwText('${index + 1}. $e'))
+                                              .toList(),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              await Clipboard.setData(
+                                                  ClipboardData(
+                                                      text: words.join(' ')));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        'Passphrase Copied')),
+                                              );
+                                            },
+                                            child: FwIcon(
+                                              FwIcons.copy,
+                                            ),
                                           )
                                         ],
-                                      ))),
-                            )),
+                                      )
+                                    ],
+                                  ))),
+                        )),
                         SizedBox(
                           height: 100,
                         ),
@@ -133,23 +141,25 @@ class RecoveryWordsState extends State<RecoveryWords> {
                                   color: FwColor.white,
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .push(RecoveryWordsConfirm(
-                                      widget.flowType,
-                                      accountName: widget.accountName,
-                                      words: words,
-                                      currentStep: widget.currentStep ?? 0,
-                                      numberOfSteps: widget.numberOfSteps ?? 0
-                                  ).route());
+                                  Navigator.of(context).push(
+                                      RecoveryWordsConfirm(widget.flowType,
+                                              accountName: widget.accountName,
+                                              words: words,
+                                              currentStep:
+                                                  widget.currentStep ?? 0,
+                                              numberOfSteps:
+                                                  widget.numberOfSteps ?? 0)
+                                          .route());
                                 })),
                         SizedBox(
                           height: 40,
                         ),
-                        if (widget.numberOfSteps != null) ProgressStepper(
-                            widget.currentStep ?? 0, widget.numberOfSteps ?? 1,
-                            padding: EdgeInsets.only(left: 20, right: 20)),
-                        if (widget.numberOfSteps != null) VerticalSpacer
-                            .xxLarge()
+                        if (widget.numberOfSteps != null)
+                          ProgressStepper(widget.currentStep ?? 0,
+                              widget.numberOfSteps ?? 1,
+                              padding: EdgeInsets.only(left: 20, right: 20)),
+                        if (widget.numberOfSteps != null)
+                          VerticalSpacer.xxLarge()
                       ],
                     )))));
   }

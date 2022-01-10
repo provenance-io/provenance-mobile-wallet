@@ -16,7 +16,12 @@ class ConfirmPin extends StatefulHookWidget {
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
-  ConfirmPin(this.flowType, {this.words, this.accountName, this.code, this.currentStep, this.numberOfSteps});
+  ConfirmPin(this.flowType,
+      {this.words,
+      this.accountName,
+      this.code,
+      this.currentStep,
+      this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -143,7 +148,10 @@ class ConfirmPinState extends State<ConfirmPin> {
                     SizedBox(
                       height: 40,
                     ),
-                    if (widget.numberOfSteps != null) ProgressStepper(widget.currentStep ?? 0, widget.numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (widget.numberOfSteps != null)
+                      ProgressStepper(
+                          widget.currentStep ?? 0, widget.numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (widget.numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));

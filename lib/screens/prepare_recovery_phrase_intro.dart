@@ -10,7 +10,8 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
 
   final String accountName;
 
-  PrepareRecoveryPhraseIntro(this.flowType, this.accountName, {this.currentStep, this.numberOfSteps});
+  PrepareRecoveryPhraseIntro(this.flowType, this.accountName,
+      {this.currentStep, this.numberOfSteps});
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +94,18 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
                               color: FwColor.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(RecoveryWords(flowType, accountName, currentStep: currentStep, numberOfSteps: numberOfSteps).route());
+                              Navigator.of(context).push(RecoveryWords(
+                                      flowType, accountName,
+                                      currentStep: currentStep,
+                                      numberOfSteps: numberOfSteps)
+                                  .route());
                             })),
                     SizedBox(
                       height: 40,
                     ),
-                    if (numberOfSteps != null) ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (numberOfSteps != null)
+                      ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));

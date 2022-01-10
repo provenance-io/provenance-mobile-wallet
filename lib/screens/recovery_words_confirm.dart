@@ -16,7 +16,11 @@ class RecoveryWordsConfirm extends StatefulWidget {
   final String? accountName;
   final WalletAddImportType flowType;
 
-  RecoveryWordsConfirm(this.flowType, {@required this.words, this.accountName, this.currentStep, this.numberOfSteps});
+  RecoveryWordsConfirm(this.flowType,
+      {@required this.words,
+      this.accountName,
+      this.currentStep,
+      this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -192,8 +196,12 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                         SizedBox(
                           height: 40,
                         ),
-                        if (widget.numberOfSteps != null) ProgressStepper((widget.currentStep ?? 0), widget.numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
-                        if (widget.numberOfSteps != null) VerticalSpacer.xxLarge()
+                        if (widget.numberOfSteps != null)
+                          ProgressStepper((widget.currentStep ?? 0),
+                              widget.numberOfSteps ?? 1,
+                              padding: EdgeInsets.only(left: 20, right: 20)),
+                        if (widget.numberOfSteps != null)
+                          VerticalSpacer.xxLarge()
                       ],
                     )))));
   }
@@ -228,10 +236,10 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         ).route());
       } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
         ModalLoadingRoute.showLoading("Please Wait", context);
-        String privateKey =
-        await ProvWalletFlutter.getPrivateKey(
+        String privateKey = await ProvWalletFlutter.getPrivateKey(
             widget.words?.join(' ') ?? '');
-        await ProvWalletFlutter.saveToWalletService(widget.words?.join(' ') ?? '', widget.accountName ?? '');
+        await ProvWalletFlutter.saveToWalletService(
+            widget.words?.join(' ') ?? '', widget.accountName ?? '');
         ModalLoadingRoute.dismiss(context);
         Navigator.pop(context);
         Navigator.pop(context);

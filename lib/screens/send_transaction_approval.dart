@@ -10,7 +10,12 @@ class SendTransactionInfo {
   final String toAddress;
   final String fee;
 
-  SendTransactionInfo({this.requestId = '', this.amount = '', this.fromAddress = '', this.toAddress = '', this.fee = ''});
+  SendTransactionInfo(
+      {this.requestId = '',
+      this.amount = '',
+      this.fromAddress = '',
+      this.toAddress = '',
+      this.fee = ''});
 }
 
 class SendTransactionApproval extends StatelessWidget {
@@ -25,21 +30,19 @@ class SendTransactionApproval extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0.0,
           centerTitle: true,
-          title: FwText(
-            'Send Transaction',
-            color: FwColor.globalNeutral600Black
-          ),
+          title:
+              FwText('Send Transaction', color: FwColor.globalNeutral600Black),
           leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
-              size: 24,
-              color: Color(0xFF3D4151),
-            ),
-            onPressed: () async {
-              await ProvWalletFlutter.sendMessageFinish(details.requestId, false);
-              Navigator.of(context).pop();
-            }
-          ),
+              icon: FwIcon(
+                FwIcons.back,
+                size: 24,
+                color: Color(0xFF3D4151),
+              ),
+              onPressed: () async {
+                await ProvWalletFlutter.sendMessageFinish(
+                    details.requestId, false);
+                Navigator.of(context).pop();
+              }),
         ),
         body: Container(
             color: Colors.white,
@@ -56,17 +59,18 @@ class SendTransactionApproval extends StatelessWidget {
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
-                        FwText(
-                          details.amount,
-                          style: FwTextStyle.m,
-                          color: FwColor.globalNeutral500
-                        )
+                        FwText(details.amount,
+                            style: FwTextStyle.m,
+                            color: FwColor.globalNeutral500)
                       ],
                     ),
                     SizedBox(
                       height: 24,
                     ),
-                    Divider(height: 1, color: Colors.black12,),
+                    Divider(
+                      height: 1,
+                      color: Colors.black12,
+                    ),
                     SizedBox(
                       height: 24,
                     ),
@@ -78,17 +82,18 @@ class SendTransactionApproval extends StatelessWidget {
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
-                        FwText(
-                            details.fee,
+                        FwText(details.fee,
                             style: FwTextStyle.m,
-                            color: FwColor.globalNeutral500
-                        )
+                            color: FwColor.globalNeutral500)
                       ],
                     ),
                     SizedBox(
                       height: 24,
                     ),
-                    Divider(height: 1, color: Colors.black12,),
+                    Divider(
+                      height: 1,
+                      color: Colors.black12,
+                    ),
                     SizedBox(
                       height: 24,
                     ),
@@ -100,20 +105,22 @@ class SendTransactionApproval extends StatelessWidget {
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
-                        SizedBox(width: 40,),
+                        SizedBox(
+                          width: 40,
+                        ),
                         Flexible(
-                          child: FwText(
-                            details.fromAddress,
-                            style: FwTextStyle.m,
-                            color: FwColor.globalNeutral500
-                        )
-                        )
+                            child: FwText(details.fromAddress,
+                                style: FwTextStyle.m,
+                                color: FwColor.globalNeutral500))
                       ],
                     ),
                     SizedBox(
                       height: 24,
                     ),
-                    Divider(height: 1, color: Colors.black12,),
+                    Divider(
+                      height: 1,
+                      color: Colors.black12,
+                    ),
                     SizedBox(
                       height: 24,
                     ),
@@ -125,15 +132,13 @@ class SendTransactionApproval extends StatelessWidget {
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
-                        SizedBox(width: 40,),
+                        SizedBox(
+                          width: 40,
+                        ),
                         Flexible(
-                          child:
-                            FwText(
-                                details.toAddress,
+                            child: FwText(details.toAddress,
                                 style: FwTextStyle.m,
-                                color: FwColor.globalNeutral500
-                            )
-                        )
+                                color: FwColor.globalNeutral500))
                       ],
                     ),
                     Expanded(child: Container()),
@@ -147,7 +152,8 @@ class SendTransactionApproval extends StatelessWidget {
                             ),
                             onPressed: () async {
                               ModalLoadingRoute.showLoading("", context);
-                              await ProvWalletFlutter.sendMessageFinish(details.requestId, true);
+                              await ProvWalletFlutter.sendMessageFinish(
+                                  details.requestId, true);
                               ModalLoadingRoute.dismiss(context);
                               Navigator.of(context).pop();
                             })),
@@ -164,7 +170,8 @@ class SendTransactionApproval extends StatelessWidget {
                             ),
                             onPressed: () async {
                               ModalLoadingRoute.showLoading("", context);
-                              await ProvWalletFlutter.sendMessageFinish(details.requestId, false);
+                              await ProvWalletFlutter.sendMessageFinish(
+                                  details.requestId, false);
                               ModalLoadingRoute.dismiss(context);
                               Navigator.of(context).pop();
                             })),

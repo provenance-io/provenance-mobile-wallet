@@ -11,7 +11,8 @@ class AccountName extends HookWidget {
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
-  AccountName(this.flowType, {this.words, this.currentStep, this.numberOfSteps});
+  AccountName(this.flowType,
+      {this.words, this.currentStep, this.numberOfSteps});
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -96,24 +97,38 @@ class AccountName extends HookWidget {
                                 onPressed: () {
                                   if (_formKey.currentState?.validate() ==
                                       true) {
-                                    if (flowType == WalletAddImportType.onBoardingRecover || flowType == WalletAddImportType.dashboardRecover) {
-                                      Navigator.of(context).push(RestoreAccountIntro(flowType, accountNameProvider.text, currentStep: (currentStep ?? 0) + 1, numberOfSteps: numberOfSteps).route());
-                                    } else if (flowType == WalletAddImportType.onBoardingAdd || flowType == WalletAddImportType.dashboardAdd) {
+                                    if (flowType ==
+                                            WalletAddImportType
+                                                .onBoardingRecover ||
+                                        flowType ==
+                                            WalletAddImportType
+                                                .dashboardRecover) {
                                       Navigator.of(context).push(
-                                          PrepareRecoveryPhraseIntro(
-                                            flowType,
-                                            accountNameProvider.text,
-                                            currentStep: (currentStep ?? 0) + 1,
-                                            numberOfSteps: numberOfSteps,)
+                                          RestoreAccountIntro(
+                                                  flowType,
+                                                  accountNameProvider.text,
+                                                  currentStep:
+                                                      (currentStep ?? 0) + 1,
+                                                  numberOfSteps: numberOfSteps)
                                               .route());
+                                    } else if (flowType ==
+                                            WalletAddImportType.onBoardingAdd ||
+                                        flowType ==
+                                            WalletAddImportType.dashboardAdd) {
+                                      Navigator.of(context)
+                                          .push(PrepareRecoveryPhraseIntro(
+                                        flowType,
+                                        accountNameProvider.text,
+                                        currentStep: (currentStep ?? 0) + 1,
+                                        numberOfSteps: numberOfSteps,
+                                      ).route());
                                     }
-
                                   }
                                 })),
                         VerticalSpacer.xxLarge(),
-                        if (numberOfSteps != null) ProgressStepper(
-                            currentStep ?? 0, numberOfSteps ?? 1,
-                            padding: EdgeInsets.only(left: 20, right: 20)),
+                        if (numberOfSteps != null)
+                          ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1,
+                              padding: EdgeInsets.only(left: 20, right: 20)),
                         if (numberOfSteps != null) VerticalSpacer.xxLarge()
                       ],
                     )))));

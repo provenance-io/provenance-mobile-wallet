@@ -15,7 +15,13 @@ class EnableFaceId extends StatelessWidget {
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
-  EnableFaceId({this.words, this.accountName, this.code, this.currentStep, this.numberOfSteps, this.flowType = WalletAddImportType.onBoardingAdd});
+  EnableFaceId(
+      {this.words,
+      this.accountName,
+      this.code,
+      this.currentStep,
+      this.numberOfSteps,
+      this.flowType = WalletAddImportType.onBoardingAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +95,13 @@ class EnableFaceId extends StatelessWidget {
                               color: FwColor.white,
                             ),
                             onPressed: () async {
-                              ModalLoadingRoute.showLoading("Please Wait", context);
+                              ModalLoadingRoute.showLoading(
+                                  "Please Wait", context);
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(words?.join(' ') ?? '', accountName ?? '');
+                              await ProvWalletFlutter.saveToWalletService(
+                                  words?.join(' ') ?? '', accountName ?? '');
                               ModalLoadingRoute.dismiss(context);
                               LocalAuthHelper.instance.enroll(
                                   privateKey,
@@ -117,11 +125,13 @@ class EnableFaceId extends StatelessWidget {
                               color: FwColor.globalNeutral450,
                             ),
                             onPressed: () async {
-                              ModalLoadingRoute.showLoading("Please Wait", context);
+                              ModalLoadingRoute.showLoading(
+                                  "Please Wait", context);
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(words?.join(' ') ?? '', accountName ?? '');
+                              await ProvWalletFlutter.saveToWalletService(
+                                  words?.join(' ') ?? '', accountName ?? '');
                               ModalLoadingRoute.dismiss(context);
                               LocalAuthHelper.instance.enroll(
                                   privateKey,
@@ -136,7 +146,9 @@ class EnableFaceId extends StatelessWidget {
                     SizedBox(
                       height: 40,
                     ),
-                    if (numberOfSteps != null) ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (numberOfSteps != null)
+                      ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));

@@ -9,7 +9,8 @@ class RestoreAccountIntro extends StatelessWidget {
   final int? numberOfSteps;
   final String accountName;
 
-  RestoreAccountIntro(this.flowType, this.accountName, {this.currentStep, this.numberOfSteps});
+  RestoreAccountIntro(this.flowType, this.accountName,
+      {this.currentStep, this.numberOfSteps});
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +81,19 @@ class RestoreAccountIntro extends StatelessWidget {
                               color: FwColor.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(RecoverPassphraseEntry(flowType, accountName, currentStep: currentStep, numberOfSteps: numberOfSteps,).route());
+                              Navigator.of(context).push(RecoverPassphraseEntry(
+                                flowType,
+                                accountName,
+                                currentStep: currentStep,
+                                numberOfSteps: numberOfSteps,
+                              ).route());
                             })),
                     SizedBox(
                       height: 40,
                     ),
-                    if (numberOfSteps != null) ProgressStepper((currentStep ?? 0), numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (numberOfSteps != null)
+                      ProgressStepper((currentStep ?? 0), numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));
