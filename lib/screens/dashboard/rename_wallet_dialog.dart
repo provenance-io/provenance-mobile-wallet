@@ -72,12 +72,13 @@ class RenameWalletDialog extends StatelessWidget {
 }
 
 class _TextFormField extends StatelessWidget {
-  const _TextFormField({Key? key,
-    required this.label,
-    this.keyboardType,
-    this.onChanged,
-    this.validator,
-    this.controller})
+  const _TextFormField(
+      {Key? key,
+      required this.label,
+      this.keyboardType,
+      this.onChanged,
+      this.validator,
+      this.controller})
       : super(key: key);
 
   final String label;
