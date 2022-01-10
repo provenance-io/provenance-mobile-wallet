@@ -44,7 +44,7 @@ class Strings {
   static String signInWithBiometric(String authType) =>
       'Sign in using $authType';
   static String setupWithBiometric(String authType) =>
-      'Setup your account to use ${authType}';
+      'Setup your account to use $authType';
   static String authenticateTransactionWithBiometric(String authType) =>
       'Authenticate the transaction using $authType.';
   static String authenticateCreditAppWithBiometric(String authType) =>
