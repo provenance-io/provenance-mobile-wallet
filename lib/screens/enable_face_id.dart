@@ -102,18 +102,25 @@ class EnableFaceId extends StatelessWidget {
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(
-                                  words?.join(' ') ?? '', accountName ?? '');
+                              final success =
+                                  await ProvWalletFlutter.saveToWalletService(
+                                words?.join(' ') ?? '',
+                                accountName ?? '',
+                                useBiometry: true,
+                              );
                               ModalLoadingRoute.dismiss(context);
-                              LocalAuthHelper.instance.enroll(
-                                  privateKey,
-                                  code?.join() ?? '',
-                                  accountName ?? '',
-                                  true,
-                                  context, () async {
-                                navigatorKey.currentState
-                                    ?.pushReplacement(Dashboard().route());
-                              });
+
+                              if (success) {
+                                LocalAuthHelper.instance.enroll(
+                                    privateKey,
+                                    code?.join() ?? '',
+                                    accountName ?? '',
+                                    true,
+                                    context, () async {
+                                  navigatorKey.currentState
+                                      ?.pushReplacement(Dashboard().route());
+                                });
+                              }
                             })),
                     SizedBox(
                       height: 8,
@@ -132,18 +139,24 @@ class EnableFaceId extends StatelessWidget {
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(
-                                  words?.join(' ') ?? '', accountName ?? '');
+                              final success =
+                                  await ProvWalletFlutter.saveToWalletService(
+                                words?.join(' ') ?? '',
+                                accountName ?? '',
+                                useBiometry: false,
+                              );
                               ModalLoadingRoute.dismiss(context);
-                              LocalAuthHelper.instance.enroll(
-                                  privateKey,
-                                  code?.join() ?? '',
-                                  accountName ?? '',
-                                  false,
-                                  context, () {
-                                navigatorKey.currentState
-                                    ?.pushReplacement(Dashboard().route());
-                              });
+                              if (success) {
+                                LocalAuthHelper.instance.enroll(
+                                    privateKey,
+                                    code?.join() ?? '',
+                                    accountName ?? '',
+                                    false,
+                                    context, () {
+                                  navigatorKey.currentState
+                                      ?.pushReplacement(Dashboard().route());
+                                });
+                              }
                             })),
                     SizedBox(
                       height: 40,

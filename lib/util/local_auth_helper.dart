@@ -57,55 +57,23 @@ class LocalAuthHelper {
     }
   }
 
-  Future<bool> enroll(
-      String privateKey,
-      String code,
-      String accountName,
-      bool biometricEnabled,
-      BuildContext context,
-      VoidCallback callback) async {
+  Future<bool> enroll(String privateKey, String code, String accountName,
+      bool useBiometry, BuildContext context, VoidCallback callback) async {
     bool success = true;
-    if (biometricEnabled) {
-      if (hasBiometrics) {
-        await storage.write(StorageKey.biometricEnabled, 'true');
-        await storage.write(StorageKey.privateKey, privateKey);
-        await storage.write(StorageKey.code, code);
-        await storage.write(StorageKey.accountName, accountName);
-        callback();
-      } else {
-        success = false;
-        await showDialog(
-            context: context,
-            builder: (context) =>
-                ErrorDialog(error: 'Failed to enroll, try again in settings'));
-      }
-      // var result = await localAuth.authenticate(
-      //   biometricOnly: true,
-      //     localizedReason: 'Authenticate',
-      //     iOSAuthStrings: IOSAuthMessages(
-      //         cancelButton: 'Cancel',
-      //         goToSettingsButton: 'Setting',
-      //         goToSettingsDescription: 'Setting Description',
-      //         lockOut: 'Try again later, your are locked out'));
-      // success = result;
-      // if (result) {
-      //   await storage.write(StorageKey.biometricEnabled, 'true');
-      //   await storage.write(StorageKey.privateKey, privateKey);
-      //   await storage.write(StorageKey.code, code);
-      //   await storage.write(StorageKey.accountName, accountName);
-      //   callback();
-      // } else {
-      //   success = false;
-      //   await showDialog(
-      //       context: context,
-      //       builder: (context) =>
-      //           ErrorDialog(error: 'Failed to enroll, try again in settings'));
-      // }
+    if (useBiometry && !hasBiometrics) {
+      success = false;
+      await showDialog(
+          context: context,
+          builder: (context) =>
+              ErrorDialog(error: 'Failed to enroll, try again in settings'));
     } else {
-      await storage.write(StorageKey.biometricEnabled, 'false');
+      await storage.write(StorageKey.biometricEnabled, useBiometry.toString());
       await storage.write(StorageKey.privateKey, privateKey);
       await storage.write(StorageKey.code, code);
+      await storage.write(StorageKey.accountName, accountName);
+      callback();
     }
+
     return success;
   }
 
