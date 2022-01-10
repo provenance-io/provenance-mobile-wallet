@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_spacer.dart';
-import 'package:flutter_tech_wallet/screens/create_pin.dart';
 import 'package:flutter_tech_wallet/screens/prepare_recovery_phrase_intro.dart';
 import 'package:flutter_tech_wallet/screens/restore_account_intro.dart';
 

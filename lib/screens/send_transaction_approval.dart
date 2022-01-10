@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/screens/prepare_recovery_phrase_intro.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class SendTransactionInfo {
