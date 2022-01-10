@@ -77,6 +77,11 @@ class LandingStrings {
 class DashboardStrings {
   // Dashboard Page
 
+  static const loadingAssets = 'Loading Assets';
+  static const sign = 'Sign';
+  static const decline = 'Decline';
+  static const dashboard = 'Dashboard';
+  static const transactions = 'Transactions';
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
   static const basicWallet = 'Basic Wallet';

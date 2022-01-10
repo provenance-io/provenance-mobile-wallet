@@ -14,6 +14,7 @@ import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
 import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,8 +65,8 @@ class DashboardState extends State<Dashboard>
       final result = await FwDialog.showConfirmation(context,
           title: description,
           message: message,
-          confirmText: 'Sign',
-          cancelText: 'Decline');
+          confirmText: DashboardStrings.sign,
+          cancelText: DashboardStrings.decline);
       ModalLoadingRoute.showLoading("", context);
       await ProvWalletFlutter.signTransactionFinish(requestId, result == true);
       ModalLoadingRoute.dismiss(context);
@@ -97,7 +98,7 @@ class DashboardState extends State<Dashboard>
       walletName = details.accountName;
     });
 
-    ModalLoadingRoute.showLoading("Loading Assets", context);
+    ModalLoadingRoute.showLoading(DashboardStrings.loadingAssets, context);
 
     final result = await AssetService.getAssets(walletAddress);
 
@@ -164,11 +165,11 @@ class DashboardState extends State<Dashboard>
                   tabs: [
                     _buildTabItem(
                       _tabController?.index == 0,
-                      'Dashboard',
+                      DashboardStrings.dashboard,
                       FwIcons.wallet,
                     ),
-                    _buildTabItem(_tabController?.index == 1, 'Transactions',
-                        FwIcons.staking),
+                    _buildTabItem(_tabController?.index == 1,
+                        DashboardStrings.transactions, FwIcons.staking),
                   ],
                 ))
           ],
