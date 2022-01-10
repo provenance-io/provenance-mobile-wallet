@@ -26,9 +26,7 @@ class _LandingState extends State<Landing> {
   @override
   void initState() {
     _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page ?? 0;
-      });
+      _setCurrentPage();
     });
     _localAuth.initialize();
     checkAccount();
@@ -58,6 +56,12 @@ class _LandingState extends State<Landing> {
       if (result == true) {
         Navigator.of(context).push(Dashboard().route());
       }
+    });
+  }
+
+  void _setCurrentPage() {
+    setState(() {
+      _currentPage = _pageController.page ?? 0;
     });
   }
 
