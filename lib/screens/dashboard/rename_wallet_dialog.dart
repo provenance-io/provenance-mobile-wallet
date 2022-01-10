@@ -1,6 +1,4 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 

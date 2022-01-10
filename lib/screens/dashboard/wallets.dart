@@ -1,8 +1,6 @@
-
 import 'package:flutter/services.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_spacer.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/add_wallet.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/rename_wallet_dialog.dart';

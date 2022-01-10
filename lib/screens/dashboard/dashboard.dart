@@ -1,8 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
@@ -16,11 +12,6 @@ import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tech_wallet/util/router_observer.dart';
 
 class Dashboard extends StatefulWidget {
