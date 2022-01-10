@@ -28,7 +28,10 @@ extension StringExtension on String {
   }
 }
 
-class BiometricStrings {
+// TODO: Localization
+
+class Strings {
+  // Biometric Strings
   static const String biometric = 'Biometric';
   static const String faceId = 'Face ID';
   static const String touchId = 'Touch ID';
@@ -46,10 +49,7 @@ class BiometricStrings {
       'Authenticate the transaction using $authType.';
   static String authenticateCreditAppWithBiometric(String authType) =>
       'Authenticate the credit application using $authType.';
-}
 
-// TODO: Localization
-class LandingStrings {
   // Landing Page
   static const createWallet = 'Create Wallet';
   static const restoreWallet = 'Restore Wallet';
@@ -71,17 +71,13 @@ class LandingStrings {
   static const manageYourOwnWallet = 'Manage your own wallet';
   static const fullyControlYourWallet =
       'Fully control your wallet and crypto, and manage it independently.';
-}
 
-// TODO: Localization
-class DashboardStrings {
   // Dashboard Page
-
   static const loadingAssets = 'Loading Assets';
   static const sign = 'Sign';
   static const decline = 'Decline';
   static const dashboard = 'Dashboard';
-  static const transactions = 'Transactions';
+
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
   static const basicWallet = 'Basic Wallet';

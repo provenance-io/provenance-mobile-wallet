@@ -11,7 +11,7 @@ class AddWallet extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.otherBackground,
           elevation: 0.0,
           centerTitle: true,
-          title: FwText(DashboardStrings.chooseWalletType,
+          title: FwText(Strings.chooseWalletType,
               color: FwColor.globalNeutral550, style: FwTextStyle.h6),
           leading: IconButton(
             icon: FwIcon(
@@ -51,12 +51,11 @@ class AddWallet extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 VerticalSpacer.xxLarge(),
-                                FwText(DashboardStrings.basicWallet,
+                                FwText(Strings.basicWallet,
                                     color: FwColor.globalNeutral550,
                                     style: FwTextStyle.m),
                                 VerticalSpacer.medium(),
-                                FwText(
-                                    DashboardStrings.standardSingleUserWallet,
+                                FwText(Strings.standardSingleUserWallet,
                                     color: FwColor.globalNeutral450,
                                     style: FwTextStyle.s),
                                 VerticalSpacer.xxLarge()
@@ -86,11 +85,11 @@ class AddWallet extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 VerticalSpacer.xxLarge(),
-                                FwText(DashboardStrings.importRecoverWallet,
+                                FwText(Strings.importRecoverWallet,
                                     color: FwColor.globalNeutral550,
                                     style: FwTextStyle.m),
                                 VerticalSpacer.medium(),
-                                FwText(DashboardStrings.importExistingWallet,
+                                FwText(Strings.importExistingWallet,
                                     color: FwColor.globalNeutral450,
                                     style: FwTextStyle.s),
                                 VerticalSpacer.xxLarge()

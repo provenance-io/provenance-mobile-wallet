@@ -65,8 +65,8 @@ class DashboardState extends State<Dashboard>
       final result = await FwDialog.showConfirmation(context,
           title: description,
           message: message,
-          confirmText: DashboardStrings.sign,
-          cancelText: DashboardStrings.decline);
+          confirmText: Strings.sign,
+          cancelText: Strings.decline);
       ModalLoadingRoute.showLoading("", context);
       await ProvWalletFlutter.signTransactionFinish(requestId, result == true);
       ModalLoadingRoute.dismiss(context);
@@ -98,7 +98,7 @@ class DashboardState extends State<Dashboard>
       walletName = details.accountName;
     });
 
-    ModalLoadingRoute.showLoading(DashboardStrings.loadingAssets, context);
+    ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
 
     final result = await AssetService.getAssets(walletAddress);
 
@@ -165,11 +165,11 @@ class DashboardState extends State<Dashboard>
                   tabs: [
                     _buildTabItem(
                       _tabController?.index == 0,
-                      DashboardStrings.dashboard,
+                      Strings.dashboard,
                       FwIcons.wallet,
                     ),
                     _buildTabItem(_tabController?.index == 1,
-                        DashboardStrings.transactions, FwIcons.staking),
+                        Strings.transactions, FwIcons.staking),
                   ],
                 ))
           ],
