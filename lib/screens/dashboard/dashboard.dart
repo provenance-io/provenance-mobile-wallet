@@ -437,6 +437,7 @@ class DashboardState extends State<Dashboard>
                                                         width: 32,
                                                         height: 32,
                                                         child: FwIcon(
+                                                          // TODO: Consolidate code?
                                                           item.display?.toUpperCase() ==
                                                                       'USD' ||
                                                                   item.display
