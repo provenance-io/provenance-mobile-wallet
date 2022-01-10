@@ -2,6 +2,7 @@ import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class RenameWalletDialog extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -24,30 +25,30 @@ class RenameWalletDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const VerticalSpacer.xxLarge(),
-                Text('Wallet Rename',
+                Text(Strings.walletRename,
                     textAlign: TextAlign.center,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .headline4!
-                        .copyWith(color: Theme
-                        .of(context)
-                        .colorScheme
-                        .black)),
+                        .copyWith(color: Theme.of(context).colorScheme.black)),
                 const VerticalSpacer.medium(),
                 Padding(
                     padding: const EdgeInsets.only(
                         top: Spacing.medium,
                         left: Spacing.medium,
                         right: Spacing.medium),
-                    child: _TextFormField(label: 'Wallet Name',
+                    child: _TextFormField(
+                      label: Strings.walletName,
                       controller: _nameController,
                       validator: (value) {
-                        return ((value?.isEmpty ?? true) ? '*required' : null);
-                      },)),
+                        return ((value?.isEmpty ?? true)
+                            ? Strings.required
+                            : null);
+                      },
+                    )),
                 const VerticalSpacer.xxLarge(),
                 FwPrimaryButton(
-                  child: FwText('Confirm'),
+                  child: FwText(Strings.confirm),
                   onPressed: () async {
                     if (_formKey.currentState?.validate() == true) {
                       if (_nameController.text.trim() == currentName) {
@@ -60,7 +61,7 @@ class RenameWalletDialog extends StatelessWidget {
                 ),
                 const VerticalSpacer.small(),
                 FwTextButton(
-                  child: FwText('Cancel'),
+                  child: FwText(Strings.cancel),
                   onPressed: () => Navigator.of(context).pop(null),
                 )
               ],

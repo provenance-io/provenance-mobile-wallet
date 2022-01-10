@@ -92,4 +92,10 @@ class Strings {
   static const standardSingleUserWallet = 'Standard, single-user wallet.';
   static const importRecoverWallet = 'Import/recover Wallet';
   static const importExistingWallet = 'Import existing wallet';
+
+  // Rename Wallet Dialog
+  static const walletRename = 'Wallet Rename';
+  static const walletName = 'Wallet Name';
+  static const required = '*required';
+  static const confirm = 'Confirm';
 }
