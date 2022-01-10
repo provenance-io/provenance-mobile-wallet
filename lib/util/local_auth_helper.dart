@@ -75,9 +75,9 @@ class LocalAuthHelper {
       } else {
         success = false;
         await showDialog(
-                  context: context,
-                  builder: (context) =>
-                      ErrorDialog(error: 'Failed to enroll, try again in settings'));
+            context: context,
+            builder: (context) =>
+                ErrorDialog(error: 'Failed to enroll, try again in settings'));
       }
       // var result = await localAuth.authenticate(
       //   biometricOnly: true,
