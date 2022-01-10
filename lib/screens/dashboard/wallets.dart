@@ -5,6 +5,7 @@ import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/add_wallet.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/rename_wallet_dialog.dart';
 import 'package:flutter_tech_wallet/util/router_observer.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class Wallets extends StatefulWidget {
@@ -48,7 +49,7 @@ class WalletsState extends State<Wallets>
 
   void loadWallets() async {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      ModalLoadingRoute.showLoading("Loading Wallets", context);
+      ModalLoadingRoute.showLoading(Strings.loadingWallets, context);
       final walletList = await ProvWalletFlutter.getWallets();
       ModalLoadingRoute.dismiss(context);
       setState(() {
@@ -78,7 +79,7 @@ class WalletsState extends State<Wallets>
                 )),
             HorizontalSpacer.medium(),
           ],
-          title: FwText('Wallets',
+          title: FwText(Strings.wallets,
               color: FwColor.globalNeutral550, style: FwTextStyle.h6),
           leading: IconButton(
             icon: FwIcon(
@@ -107,7 +108,7 @@ class WalletsState extends State<Wallets>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         FwText(
-                          'Selected Wallet',
+                          Strings.selectedWallet,
                           color: FwColor.globalNeutral550,
                           style: FwTextStyle.sBold,
                         ),
@@ -147,7 +148,7 @@ class WalletsState extends State<Wallets>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 FwText(
-                  'All Wallets',
+                  Strings.allWallets,
                   color: FwColor.globalNeutral550,
                   style: FwTextStyle.sBold,
                 ),
@@ -209,7 +210,7 @@ class WalletItem extends StatelessWidget {
                       color: Color(0xFFEDEDED),
                       borderRadius: BorderRadius.circular(13.0)),
                   child: Center(
-                      child: FwText('Basic',
+                      child: FwText(Strings.basic,
                           color: FwColor.globalNeutral550,
                           style: FwTextStyle.xs)),
                 ),
@@ -233,16 +234,16 @@ class WalletItem extends StatelessWidget {
                           if (!item.isSelected)
                             PopupMenuItem<MenuOperation>(
                               value: MenuOperation.select,
-                              child: FwText('Select'),
+                              child: FwText(Strings.select),
                             ),
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.rename,
-                            child: FwText('Rename'),
+                            child: FwText(Strings.rename),
                           ),
                           if (!item.isSelected)
                             PopupMenuItem<MenuOperation>(
                               value: MenuOperation.delete,
-                              child: FwText('Remove'),
+                              child: FwText(Strings.remove),
                             ),
                         ],
                       );
@@ -261,10 +262,9 @@ class WalletItem extends StatelessWidget {
                       } else if (result == MenuOperation.delete) {
                         final dialogResult = await FwDialog.showConfirmation(
                             context,
-                            message:
-                                'Are you sure you want to remove this wallet?',
-                            confirmText: 'Yes',
-                            cancelText: 'Cancel');
+                            message: Strings.removeThisWallet,
+                            confirmText: Strings.yes,
+                            cancelText: Strings.cancel);
                         if (dialogResult == true) {
                           await ProvWalletFlutter.removeWallet(item.id);
                           reload.call();
@@ -303,7 +303,7 @@ class WalletItem extends StatelessWidget {
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: item.address));
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: FwText('Address copied')));
+                          SnackBar(content: FwText(Strings.addressCopied)));
                     },
                     child: Container(
                       width: 24,

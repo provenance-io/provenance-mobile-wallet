@@ -98,4 +98,20 @@ class Strings {
   static const walletName = 'Wallet Name';
   static const required = '*required';
   static const confirm = 'Confirm';
+
+  // Wallets Page
+  static const loadingWallets = 'Loading Wallets';
+  static const wallets = 'Wallets';
+  static const selectedWallet = 'Selected Wallet';
+  static const allWallets = 'All Wallets';
+
+  // Wallet Item
+  static const basic = 'Basic';
+  static const select = 'Select';
+  static const rename = 'Rename';
+  static const remove = 'Remove';
+  static const removeThisWallet =
+      'Are you sure you want to remove this wallet?';
+  static const yes = 'Yes';
+  static const addressCopied = 'Address copied';
 }
