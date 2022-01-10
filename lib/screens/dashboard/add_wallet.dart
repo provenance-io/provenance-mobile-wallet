@@ -1,12 +1,6 @@
-
-import 'package:flutter/services.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_spacer.dart';
-import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/screens/account_name.dart';
-import 'package:flutter_tech_wallet/util/router_observer.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 
 class AddWallet extends StatelessWidget {
