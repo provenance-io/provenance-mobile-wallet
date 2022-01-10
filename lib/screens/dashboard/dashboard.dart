@@ -33,6 +33,7 @@ class DashboardState extends State<Dashboard>
   TabController? _tabController;
   String walletAddress = '';
   String walletName = '';
+  String _walletValue = '';
   List<AssetResponse> assets = [];
   bool _assetsLoading = true;
 
@@ -96,6 +97,7 @@ class DashboardState extends State<Dashboard>
     setState(() {
       walletAddress = details.address;
       walletName = details.accountName;
+      _walletValue = '\$0';
     });
 
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
@@ -213,7 +215,7 @@ class DashboardState extends State<Dashboard>
                                               FwText(Strings.portfolioValue,
                                                   color: FwColor.white,
                                                   style: FwTextStyle.sBold),
-                                              FwText('\$0',
+                                              FwText(_walletValue,
                                                   color: FwColor.white,
                                                   style: FwTextStyle.h6)
                                             ],
