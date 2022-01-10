@@ -31,8 +31,8 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   TabController? _tabController;
-  String walletAddress = '';
-  String walletName = '';
+  String _walletAddress = '';
+  String _walletName = '';
   String _walletValue = '';
   List<AssetResponse> assets = [];
   bool _assetsLoading = true;
@@ -95,14 +95,14 @@ class DashboardState extends State<Dashboard>
   void loadAddress() async {
     final details = await ProvWalletFlutter.getWalletDetails();
     setState(() {
-      walletAddress = details.address;
-      walletName = details.accountName;
+      _walletAddress = details.address;
+      _walletName = details.accountName;
       _walletValue = '\$0';
     });
 
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
 
-    final result = await AssetService.getAssets(walletAddress);
+    final result = await AssetService.getAssets(_walletAddress);
 
     ModalLoadingRoute.dismiss(context);
     if (result.isSuccessful) {
@@ -136,7 +136,7 @@ class DashboardState extends State<Dashboard>
             HorizontalSpacer.medium(),
           ],
           title: FwText(
-            walletName,
+            _walletName,
             style: FwTextStyle.h6,
             color: FwColor.globalNeutral550,
           ),
