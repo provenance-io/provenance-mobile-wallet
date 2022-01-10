@@ -488,12 +488,6 @@ class DashboardState extends State<Dashboard>
                                                   ),
                                                 ),
                                               ));
-                                          return Container(
-                                            height: 2,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .globalNeutral450,
-                                          );
                                         },
                                         separatorBuilder: (context, index) {
                                           return VerticalSpacer.small();
