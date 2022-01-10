@@ -1,13 +1,6 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 
-class OnboardingManageSlide extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _OnboardingManageSlideState();
-  }
-}
-
-class _OnboardingManageSlideState extends State<OnboardingManageSlide> {
+class OnboardingManageSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
