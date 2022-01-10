@@ -72,3 +72,15 @@ class LandingStrings {
   static const fullyControlYourWallet =
       'Fully control your wallet and crypto, and manage it independently.';
 }
+
+// TODO: Localization
+class DashboardStrings {
+  // Dashboard Page
+
+  // AddWallet Page
+  static const chooseWalletType = 'Choose Wallet Type';
+  static const basicWallet = 'Basic Wallet';
+  static const standardSingleUserWallet = 'Standard, single-user wallet.';
+  static const importRecoverWallet = 'Import/recover Wallet';
+  static const importExistingWallet = 'Import existing wallet';
+}
