@@ -175,6 +175,7 @@ class WalletsState extends State<Wallets>
   }
 }
 
+// TODO: Should be StatefulWidget since it's not immutable?
 class WalletItem extends StatelessWidget {
   final WalletDetails item;
   Offset? _tapPosition;
