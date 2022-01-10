@@ -210,7 +210,7 @@ class DashboardState extends State<Dashboard>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              FwText('Portfolio Value',
+                                              FwText(Strings.portfolioValue,
                                                   color: FwColor.white,
                                                   style: FwTextStyle.sBold),
                                               FwText('\$0',
@@ -253,7 +253,7 @@ class DashboardState extends State<Dashboard>
                                                           ),
                                                         ),
                                                         VerticalSpacer.xSmall(),
-                                                        FwText('Send',
+                                                        FwText(Strings.send,
                                                             color:
                                                                 FwColor.white,
                                                             style:
@@ -289,7 +289,7 @@ class DashboardState extends State<Dashboard>
                                                           ),
                                                         ),
                                                         VerticalSpacer.xSmall(),
-                                                        FwText('Receive',
+                                                        FwText(Strings.receive,
                                                             color:
                                                                 FwColor.white,
                                                             style:
@@ -357,7 +357,8 @@ class DashboardState extends State<Dashboard>
                                                               VerticalSpacer
                                                                   .xSmall(),
                                                               FwText(
-                                                                  'WalletConnect',
+                                                                  Strings
+                                                                      .walletConnect,
                                                                   color: FwColor
                                                                       .white,
                                                                   style:
@@ -393,7 +394,7 @@ class DashboardState extends State<Dashboard>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          FwText('My Assets',
+                                          FwText(Strings.myAssets,
                                               color: FwColor.globalNeutral550,
                                               style: FwTextStyle.h6)
                                         ],
@@ -517,14 +518,14 @@ class DashboardState extends State<Dashboard>
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            FwText(
-                                                'Wallet connected: ${data.data!}'),
+                                            FwText(Strings.walletConnected(
+                                                data.data)),
                                             SizedBox(
                                               height: 16.0,
                                             ),
                                             FwButton(
                                                 child: FwText(
-                                                  'Disconnect',
+                                                  Strings.disconnect,
                                                   color: FwColor.white,
                                                 ),
                                                 onPressed: () {
@@ -544,7 +545,7 @@ class DashboardState extends State<Dashboard>
                                   padding: EdgeInsets.only(left: 20, right: 20),
                                   child: FwButton(
                                       child: FwText(
-                                        'Reset Wallet',
+                                        Strings.resetWallet,
                                       ),
                                       onPressed: () async {
                                         await ProvWalletFlutter

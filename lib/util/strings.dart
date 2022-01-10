@@ -77,6 +77,14 @@ class Strings {
   static const sign = 'Sign';
   static const decline = 'Decline';
   static const dashboard = 'Dashboard';
+  static const portfolioValue = 'Portfolio Value';
+  static const send = 'Send';
+  static const receive = 'Receive';
+  static const walletConnect = 'WalletConnect';
+  static const myAssets = 'My Assets';
+  static String walletConnected(String? data) => 'Wallet connected: $data';
+  static const disconnect = 'Disconnect';
+  static const resetWallet = 'Reset Wallet';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
