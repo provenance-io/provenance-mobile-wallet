@@ -32,12 +32,12 @@ extension StringExtension on String {
 
 class Strings {
   // Biometric Strings
-  static const String biometric = 'Biometric';
-  static const String faceId = 'Face ID';
-  static const String touchId = 'Touch ID';
-  static const String face = 'Face';
-  static const String fingerPrint = 'Finger Print';
-  static const String cancel = 'Cancel';
+  static const biometric = 'Biometric';
+  static const faceId = 'Face ID';
+  static const touchId = 'Touch ID';
+  static const face = 'Face';
+  static const fingerPrint = 'Finger Print';
+  static const cancel = 'Cancel';
   static const settings = 'Settings';
   static const setupBiometric = 'Please set up biometrics.';
   static const reEnableBiometric = 'Please re-enable biometrics';
