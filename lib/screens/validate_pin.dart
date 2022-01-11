@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class ValidatePin extends StatefulHookWidget {
   final List<int>? code;
@@ -72,7 +73,7 @@ class ValidatePinState extends State<ValidatePin> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FwText(
-                            'Enter your pin code',
+                            Strings.enterYourPinCode,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.left,
                             color: FwColor.globalNeutral550,
@@ -218,7 +219,7 @@ class ValidatePinState extends State<ValidatePin> {
           await showDialog(
               context: context,
               builder: (context) => ErrorDialog(
-                    error: "Your pin doesn't match.",
+                    error: Strings.yourPinDoesNotMatch,
                   ));
         } else {
           Navigator.of(context).pop(true);

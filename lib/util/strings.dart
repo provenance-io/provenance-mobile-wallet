@@ -124,7 +124,7 @@ class Strings {
 
   // Confirm Pin
   static const confirmYourPinCode = 'Confirm your pin code';
-  static const yourPinDoesNotMatch =
+  static const yourPinDoesNotMatchPleaseTryAgain =
       'Your pin doesn\'t match. Please try again or go back and re-enter your pin.';
 
   // CreatePin
@@ -177,4 +177,8 @@ class Strings {
   static const to = 'To';
   static const approve = 'Approve';
   static const reject = 'Reject';
+
+  // ValidatePin
+  static const enterYourPinCode = 'Enter your pin code';
+  static const yourPinDoesNotMatch = 'Your pin doesn\'t match.';
 }

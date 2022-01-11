@@ -236,7 +236,7 @@ class ConfirmPinState extends State<ConfirmPin> {
           await showDialog(
               context: context,
               builder: (context) => ErrorDialog(
-                    error: Strings.yourPinDoesNotMatch,
+                    error: Strings.yourPinDoesNotMatchPleaseTryAgain,
                   ));
         } else {
           Navigator.of(context).push(EnableFaceId(
