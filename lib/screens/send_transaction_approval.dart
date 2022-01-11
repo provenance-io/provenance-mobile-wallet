@@ -1,6 +1,7 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class SendTransactionInfo {
@@ -30,8 +31,8 @@ class SendTransactionApproval extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0.0,
           centerTitle: true,
-          title:
-              FwText('Send Transaction', color: FwColor.globalNeutral600Black),
+          title: FwText(Strings.sendTransaction,
+              color: FwColor.globalNeutral600Black),
           leading: IconButton(
               icon: FwIcon(
                 FwIcons.back,
@@ -55,7 +56,7 @@ class SendTransactionApproval extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         FwText(
-                          'Amount',
+                          Strings.amount,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
@@ -78,7 +79,7 @@ class SendTransactionApproval extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         FwText(
-                          'Fee',
+                          Strings.fee,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
@@ -101,7 +102,7 @@ class SendTransactionApproval extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         FwText(
-                          'From',
+                          Strings.from,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
@@ -128,7 +129,7 @@ class SendTransactionApproval extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         FwText(
-                          'To',
+                          Strings.to,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral350,
                         ),
@@ -146,7 +147,7 @@ class SendTransactionApproval extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              'Approve',
+                              Strings.approve,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
@@ -164,7 +165,7 @@ class SendTransactionApproval extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwTextButton(
                             child: FwText(
-                              'Reject',
+                              Strings.reject,
                               style: FwTextStyle.mBold,
                               color: FwColor.globalNeutral450,
                             ),
