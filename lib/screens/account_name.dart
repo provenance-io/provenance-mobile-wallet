@@ -91,7 +91,7 @@ class AccountName extends HookWidget {
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: FwButton(
                                 child: FwText(
-                                  'Continue',
+                                  Strings.continueName,
                                   style: FwTextStyle.mBold,
                                   color: FwColor.white,
                                 ),
