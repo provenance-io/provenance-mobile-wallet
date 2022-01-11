@@ -147,7 +147,20 @@ class Strings {
       'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
   static const iAmReady = 'I\'m ready to begin';
 
-  //RecoverPassphraseEntry
+  // RecoverPassphraseEntry
   static const enterYourRecoveryPassphrase = 'Enter your recovery passphrase';
   static const recover = 'Recover';
+
+  // RecoveryWordsConfirm
+  static const verifyRecoveryPassphrase = 'Verify recovery passphrase';
+  static const next = 'Next';
+  static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
+  static const yourSelectionsDoNotMatch =
+      'Your selections don\'t match. Please try again.';
+
+  // RecoveryWords
+  static const recoveryPassphrase = 'Recovery passphrase';
+  static const recordTheseWordsInTheCorrectOrder =
+      'Make sure to record these words in the correct order, using the corresponding numbers.';
+  static const passphraseCopied = 'Passphrase Copied';
 }

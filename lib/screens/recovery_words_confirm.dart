@@ -7,6 +7,7 @@ import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/common/widgets/word_selector.dart';
 import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
 import 'package:flutter_tech_wallet/screens/create_pin.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWordsConfirm extends StatefulWidget {
@@ -129,7 +130,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: FwText(
-                            'Verify recovery passphrase',
+                            Strings.verifyRecoveryPassphrase,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.center,
                             color: FwColor.globalNeutral550,
@@ -186,7 +187,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: FwButton(
                                 child: FwText(
-                                  'Next',
+                                  Strings.next,
                                   style: FwTextStyle.mBold,
                                   color: FwColor.white,
                                 ),
@@ -214,7 +215,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       await showDialog(
           context: context,
           builder: (context) => ErrorDialog(
-                error: "Please make a selection for the 4 rows.",
+                error: Strings.pleaseMakeASelection,
               ));
     } else if (_selectedWord1 != widget.words?[word1] ||
         _selectedWord2 != widget.words?[word2] ||
@@ -223,7 +224,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       await showDialog(
           context: context,
           builder: (context) => ErrorDialog(
-                error: "Your selections don't match. Please try again.",
+                error: Strings.yourSelectionsDoNotMatch,
               ));
     } else {
       if (widget.flowType == WalletAddImportType.onBoardingAdd) {
@@ -235,7 +236,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           numberOfSteps: widget.numberOfSteps,
         ).route());
       } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
-        ModalLoadingRoute.showLoading("Please Wait", context);
+        ModalLoadingRoute.showLoading(Strings.pleaseWait, context);
         String privateKey = await ProvWalletFlutter.getPrivateKey(
             widget.words?.join(' ') ?? '');
         await ProvWalletFlutter.saveToWalletService(

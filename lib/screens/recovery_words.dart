@@ -4,6 +4,7 @@ import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/recovery_words_confirm.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWords extends StatefulWidget {
@@ -69,7 +70,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: FwText(
-                            'Recovery passphrase',
+                            Strings.recoveryPassphrase,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.center,
                             color: FwColor.globalNeutral550,
@@ -81,7 +82,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: FwText(
-                            'Make sure to record these words in the correct order, using the corresponding numbers.',
+                            Strings.recordTheseWordsInTheCorrectOrder,
                             style: FwTextStyle.m,
                             textAlign: TextAlign.center,
                             color: FwColor.globalNeutral550,
@@ -116,8 +117,8 @@ class RecoveryWordsState extends State<RecoveryWords> {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
-                                                    content: Text(
-                                                        'Passphrase Copied')),
+                                                    content: Text(Strings
+                                                        .passphraseCopied)),
                                               );
                                             },
                                             child: FwIcon(
@@ -136,7 +137,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: FwButton(
                                 child: FwText(
-                                  'Next',
+                                  Strings.next,
                                   style: FwTextStyle.mBold,
                                   color: FwColor.white,
                                 ),
