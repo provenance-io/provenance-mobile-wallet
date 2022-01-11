@@ -121,4 +121,9 @@ class Strings {
   static const nameYourAccountText =
       'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.';
   static const continueName = 'Continue';
+
+  // Confirm Pin
+  static const confirmYourPinCode = 'Confirm your pin code';
+  static const yourPinDoesNotMatch =
+      'Your pin doesn\'t match. Please try again or go back and re-enter your pin.';
 }

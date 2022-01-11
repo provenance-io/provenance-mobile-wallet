@@ -7,6 +7,7 @@ import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
 import 'package:flutter_tech_wallet/screens/enable_face_id.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
   final List<String>? words;
@@ -84,7 +85,7 @@ class ConfirmPinState extends State<ConfirmPin> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FwText(
-                            'Confirm your pin code',
+                            Strings.confirmYourPinCode,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.left,
                             color: FwColor.globalNeutral550,
@@ -235,8 +236,7 @@ class ConfirmPinState extends State<ConfirmPin> {
           await showDialog(
               context: context,
               builder: (context) => ErrorDialog(
-                    error:
-                        "Your pin doesn't match. Please try again or go back and re-enter your pin.",
+                    error: Strings.yourPinDoesNotMatch,
                   ));
         } else {
           Navigator.of(context).push(EnableFaceId(
