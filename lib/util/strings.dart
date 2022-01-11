@@ -114,4 +114,10 @@ class Strings {
       'Are you sure you want to remove this wallet?';
   static const yes = 'Yes';
   static const addressCopied = 'Address copied';
+
+  // Account Name
+  static const nameYourAccount = 'Name your account';
+  static const accountName = 'Account Name';
+  static const nameYourAccountText =
+      'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.';
 }

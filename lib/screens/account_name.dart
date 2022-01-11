@@ -4,6 +4,7 @@ import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/prepare_recovery_phrase_intro.dart';
 import 'package:flutter_tech_wallet/screens/restore_account_intro.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class AccountName extends HookWidget {
   final List<String>? words;
@@ -48,7 +49,7 @@ class AccountName extends HookWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               FwText(
-                                'Name your account',
+                                Strings.nameYourAccount,
                                 style: FwTextStyle.extraLarge,
                                 textAlign: TextAlign.left,
                                 color: FwColor.globalNeutral550,
@@ -62,10 +63,10 @@ class AccountName extends HookWidget {
                         Padding(
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: _TextFormField(
-                              label: 'Account Name',
+                              label: Strings.accountName,
                               validator: (value) {
                                 return value == null || value.isEmpty
-                                    ? "*required"
+                                    ? Strings.required
                                     : null;
                               },
                               controller: accountNameProvider,
@@ -76,7 +77,7 @@ class AccountName extends HookWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: FwText(
-                            'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.',
+                            Strings.nameYourAccountText,
                             style: FwTextStyle.sBold,
                             textAlign: TextAlign.left,
                             color: FwColor.globalNeutral450,
