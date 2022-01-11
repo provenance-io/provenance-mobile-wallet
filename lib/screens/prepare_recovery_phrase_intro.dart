@@ -2,6 +2,7 @@ import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/recovery_words.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class PrepareRecoveryPhraseIntro extends StatelessWidget {
   final int? currentStep;
@@ -54,7 +55,7 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'Prepare to write down your recovery passphrase',
+                        Strings.prepareToWriteDownYourRecoveryPassphrase,
                         style: FwTextStyle.extraLarge,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -66,7 +67,7 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'The only way to recover your account is with this recovery passphrase.',
+                        Strings.theOnlyWayToRecoverYourAccount,
                         style: FwTextStyle.m,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -76,7 +77,7 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'Warning: Do not share this passphrase with anyone, as it grants full access to your account.',
+                        Strings.warningDoNotShare,
                         style: FwTextStyle.sBold,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral450,
@@ -89,7 +90,7 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              'I’m ready to begin',
+                              Strings.iAmReady,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
