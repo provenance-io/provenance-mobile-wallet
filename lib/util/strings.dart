@@ -163,4 +163,9 @@ class Strings {
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order, using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
+
+  // RestoreAccountIntro
+  static const recoverAccount = 'Recover Account';
+  static const inTheFollowingStepsText =
+      'In the following steps, you\'ll enter your 25-word recovery passphrase to recover your account.';
 }

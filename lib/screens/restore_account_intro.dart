@@ -2,6 +2,7 @@ import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/screens/recover_passphrase_entry.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class RestoreAccountIntro extends StatelessWidget {
   final WalletAddImportType flowType;
@@ -53,7 +54,7 @@ class RestoreAccountIntro extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'Recover Account',
+                        Strings.recoverAccount,
                         style: FwTextStyle.extraLarge,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -65,7 +66,7 @@ class RestoreAccountIntro extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'In the following steps, you’ll enter your 25-word recovery passphrase to recover your account.',
+                        Strings.inTheFollowingStepsText,
                         style: FwTextStyle.m,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -76,7 +77,7 @@ class RestoreAccountIntro extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              'Next',
+                              Strings.next,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
