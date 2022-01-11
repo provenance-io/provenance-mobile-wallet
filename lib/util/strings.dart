@@ -129,4 +129,12 @@ class Strings {
 
   // CreatePin
   static const setYourPinCode = 'Set your pin code';
+
+  // EnableFaceId
+  static const useFaceId = 'Use Face ID';
+  static const useYourFaceId =
+      'Use your Face ID for faster, easier access to your account.';
+  static const enableFaceId = 'Enable Face ID';
+  static const pleaseWait = 'Please Wait';
+  static const later = 'Later';
 }
