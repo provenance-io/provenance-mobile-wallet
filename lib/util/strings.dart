@@ -126,4 +126,7 @@ class Strings {
   static const confirmYourPinCode = 'Confirm your pin code';
   static const yourPinDoesNotMatch =
       'Your pin doesn\'t match. Please try again or go back and re-enter your pin.';
+
+  // CreatePin
+  static const setYourPinCode = 'Set your pin code';
 }
