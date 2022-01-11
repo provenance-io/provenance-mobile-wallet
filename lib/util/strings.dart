@@ -146,4 +146,8 @@ class Strings {
   static const warningDoNotShare =
       'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
   static const iAmReady = 'I\'m ready to begin';
+
+  //RecoverPassphraseEntry
+  static const enterYourRecoveryPassphrase = 'Enter your recovery passphrase';
+  static const recover = 'Recover';
 }

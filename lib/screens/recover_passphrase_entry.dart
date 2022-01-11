@@ -4,6 +4,7 @@ import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/screens/create_pin.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoverPassphraseEntry extends StatefulWidget {
@@ -179,7 +180,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                 children: [
                                   Flexible(
                                       child: FwText(
-                                    'Enter your recovery passphrase',
+                                    Strings.enterYourRecoveryPassphrase,
                                     style: FwTextStyle.extraLarge,
                                     textAlign: TextAlign.left,
                                     color: FwColor.globalNeutral550,
@@ -389,7 +390,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                 padding: EdgeInsets.only(left: 20, right: 20),
                                 child: FwButton(
                                     child: FwText(
-                                      'Recover',
+                                      Strings.recover,
                                       style: FwTextStyle.mBold,
                                       color: FwColor.white,
                                     ),
@@ -434,7 +435,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                           ).route());
                                         } else {
                                           ModalLoadingRoute.showLoading(
-                                              "Please Wait", context);
+                                              Strings.pleaseWait, context);
                                           String privateKey =
                                               await ProvWalletFlutter
                                                   .getPrivateKey(
@@ -585,7 +586,7 @@ class _TextFormField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (word) {
             if (word == null || word.isEmpty) {
-              return "*required";
+              return Strings.required;
             }
 
             return null;
