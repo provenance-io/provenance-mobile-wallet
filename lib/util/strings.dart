@@ -125,7 +125,7 @@ class Strings {
   // Confirm Pin
   static const confirmYourPinCode = 'Confirm your pin code';
   static const yourPinDoesNotMatchPleaseTryAgain =
-      'Your pin doesn\'t match. Please try again or go back and re-enter your pin.';
+      "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
   // CreatePin
   static const setYourPinCode = 'Set your pin code';
@@ -145,7 +145,7 @@ class Strings {
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
       'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
-  static const iAmReady = 'I\'m ready to begin';
+  static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
   static const enterYourRecoveryPassphrase = 'Enter your recovery passphrase';
@@ -156,7 +156,7 @@ class Strings {
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
-      'Your selections don\'t match. Please try again.';
+      "Your selections don't match. Please try again.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery passphrase';
@@ -167,7 +167,7 @@ class Strings {
   // RestoreAccountIntro
   static const recoverAccount = 'Recover Account';
   static const inTheFollowingStepsText =
-      'In the following steps, you\'ll enter your 25-word recovery passphrase to recover your account.';
+      "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
 
   // SendTransactionApproval
   static const sendTransaction = 'Send Transaction';
@@ -180,5 +180,5 @@ class Strings {
 
   // ValidatePin
   static const enterYourPinCode = 'Enter your pin code';
-  static const yourPinDoesNotMatch = 'Your pin doesn\'t match.';
+  static const yourPinDoesNotMatch = "Your pin doesn't match.";
 }
