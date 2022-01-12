@@ -167,32 +167,11 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                     onPressed: () async {
                                       if (_formKey.currentState?.validate() ==
                                           true) {
-                                        final words = [
-                                          word1.text.trim(),
-                                          word2.text.trim(),
-                                          word3.text.trim(),
-                                          word4.text.trim(),
-                                          word5.text.trim(),
-                                          word6.text.trim(),
-                                          word7.text.trim(),
-                                          word8.text.trim(),
-                                          word9.text.trim(),
-                                          word10.text.trim(),
-                                          word11.text.trim(),
-                                          word12.text.trim(),
-                                          word13.text.trim(),
-                                          word14.text.trim(),
-                                          word15.text.trim(),
-                                          word16.text.trim(),
-                                          word17.text.trim(),
-                                          word18.text.trim(),
-                                          word19.text.trim(),
-                                          word20.text.trim(),
-                                          word21.text.trim(),
-                                          word22.text.trim(),
-                                          word23.text.trim(),
-                                          word24.text.trim()
-                                        ];
+                                        final words = this
+                                            .textControllers
+                                            .map((e) => e.text.trim())
+                                            .toList();
+
                                         if (flowType ==
                                             WalletAddImportType
                                                 .onBoardingRecover) {
