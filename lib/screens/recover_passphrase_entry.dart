@@ -28,6 +28,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
+  List<TextEditingController> textControllers = <TextEditingController>[];
+  List<FocusNode> focusNodes = <FocusNode>[];
 
   RecoverPassphraseEntryState(this.flowType, this.accountName,
       {this.currentStep, this.numberOfSteps});
@@ -139,12 +141,58 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
     addListener(word22);
     addListener(word23);
     addListener(word24);
+    for (var i = 0; i < 24; i++) {
+      var word = TextEditingController();
+      addListener(word);
+      this.textControllers.add(word);
+      this.focusNodes.add(FocusNode());
+    }
   }
 
   void addListener(TextEditingController controller) {
     controller.addListener(() {
       _handleTextControllerTextChange(controller);
     });
+  }
+
+  List<Widget> buildTextNodes(double width) {
+    var first = List<Widget>.empty(growable: true);
+    var second = List<Widget>.empty(growable: true);
+    for (var i = 0; i <= 11; i++) {
+      var text1 = _TextFormField(
+        controller: textControllers.elementAt(i),
+        number: '${i + 1}',
+        focusNode: focusNodes.elementAt(i),
+        handlePaste: handlePaste,
+      );
+      var text2 = _TextFormField(
+        controller: textControllers.elementAt(i + 12),
+        number: '${i + 13}',
+        focusNode: focusNodes.elementAt(i + 12),
+        handlePaste: handlePaste,
+      );
+      first.add(text1);
+      second.add(text2);
+      if (i != 12) {
+        first.add(VerticalSpacer.small());
+        second.add(VerticalSpacer.small());
+      }
+    }
+
+    return [
+      Container(
+          width: width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: first,
+          )),
+      Container(
+          width: width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: second,
+          )),
+    ];
   }
 
   @override
