@@ -25,9 +25,7 @@ class _LandingState extends State<Landing> {
 
   @override
   void initState() {
-    _pageController.addListener(() {
-      _setCurrentPage();
-    });
+    _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
     checkAccount();
     super.initState();
@@ -35,10 +33,7 @@ class _LandingState extends State<Landing> {
 
   @override
   void dispose() {
-    _pageController.removeListener(() {
-      _setCurrentPage();
-    });
-    _pageController.dispose();
+    _pageController.removeListener(_setCurrentPage);
     super.dispose();
   }
 
