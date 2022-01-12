@@ -18,9 +18,10 @@ A mobile wallet.
 4. *Recommended:* Install the [latest Visual Studio Code](https://code.visualstudio.com/download)
 
 ### Zsh Configuration
-Add Flutter to `PATH`
 1. Open or create `~/.zshrc`
-2. Add `export PATH="$PATH:<Flutter SDK path>/bin"`
+1. Add `export PATH="$PATH:<Flutter SDK path>/bin"` (enables `flutter` commands)
+1. Add `export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/Contents/Home"` (enables `./gradlew` commands)
+2. Run `source ~/.zshrc` or restart Terminal
 
 ### Xcode Configuration
 Create a development certificate
