@@ -39,14 +39,14 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
     this.numberOfSteps,
   });
 
+  final _formKey = GlobalKey<FormState>();
+
   final int? currentStep;
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
-
-  final _formKey = GlobalKey<FormState>();
 
   handlePaste(TextEditingController controller) {
     _pasteWords(controller);
