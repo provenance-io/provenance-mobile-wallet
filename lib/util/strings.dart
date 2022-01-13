@@ -47,3 +47,28 @@ class BiometricStrings {
   static String authenticateCreditAppWithBiometric(String authType) =>
       'Authenticate the credit application using $authType.';
 }
+
+// TODO: Localization
+class LandingStrings {
+  // Landing Page
+  static const createWallet = 'Create Wallet';
+  static const restoreWallet = 'Restore Wallet';
+
+  // Landing Slide
+  static const figureTechWallet =
+      'Figure Tech Wallet is Lorem ipsum dolor sit amet, consectetur ';
+  static const marketCap = 'Market Cap';
+  static const validators = 'Validators';
+  static const transactions = 'Transactions';
+  static const avgBlockTime = 'Avg Block Time';
+
+  // Trade Slide
+  static const trade = 'Trade ';
+  static const tradeHashText =
+      'Trade Hash, etc lorem ipsum with confidence blah blah blah';
+
+  // Manage Slide
+  static const manageYourOwnWallet = 'Manage your own wallet';
+  static const fullyControlYourWallet =
+      'Fully control your wallet and crypto, and manage it independently.';
+}

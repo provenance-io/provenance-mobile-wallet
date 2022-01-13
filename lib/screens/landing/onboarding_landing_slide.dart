@@ -1,4 +1,5 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            'Figure Tech Wallet is Lorem ipsum dolor sit amet, consectetur ',
+            LandingStrings.figureTechWallet,
             style: FwTextStyle.h3,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -83,7 +84,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          'Market Cap',
+                          LandingStrings.marketCap,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -99,7 +100,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          'Validators',
+                          LandingStrings.validators,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -115,7 +116,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          'Transactions',
+                          LandingStrings.transactions,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -131,7 +132,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          'Avg Block Time',
+                          LandingStrings.avgBlockTime,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )

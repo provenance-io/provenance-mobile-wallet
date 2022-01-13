@@ -95,7 +95,7 @@ class _LandingState extends State<Landing> {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              'Create Wallet',
+                              LandingStrings.createWallet,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
@@ -113,7 +113,7 @@ class _LandingState extends State<Landing> {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwTextButton(
                             child: FwText(
-                              'Restore Wallet',
+                              LandingStrings.restoreWallet,
                               style: FwTextStyle.mBold,
                               color: FwColor.globalNeutral450,
                             ),
