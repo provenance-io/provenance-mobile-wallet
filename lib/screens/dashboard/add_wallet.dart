@@ -31,82 +31,81 @@ class AddWallet extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     return Container(
-        color: Theme.of(context).colorScheme.otherBackground,
-        child: Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(AccountName(
-                          WalletAddImportType.dashboardAdd,
-                          currentStep: 1,
-                          numberOfSteps: 2,
-                        ).route());
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                VerticalSpacer.xxLarge(),
-                                FwText(Strings.basicWallet,
-                                    color: FwColor.globalNeutral550,
-                                    style: FwTextStyle.m),
-                                VerticalSpacer.medium(),
-                                FwText(Strings.standardSingleUserWallet,
-                                    color: FwColor.globalNeutral450,
-                                    style: FwTextStyle.s),
-                                VerticalSpacer.xxLarge()
-                              ],
-                            ),
-                          )),
-                        ],
-                      ))),
-              VerticalSpacer.medium(),
-              Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(AccountName(
-                          WalletAddImportType.dashboardRecover,
-                          currentStep: 1,
-                          numberOfSteps: 2,
-                        ).route());
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                VerticalSpacer.xxLarge(),
-                                FwText(Strings.importRecoverWallet,
-                                    color: FwColor.globalNeutral550,
-                                    style: FwTextStyle.m),
-                                VerticalSpacer.medium(),
-                                FwText(Strings.importExistingWallet,
-                                    color: FwColor.globalNeutral450,
-                                    style: FwTextStyle.s),
-                                VerticalSpacer.xxLarge()
-                              ],
-                            ),
-                          )),
-                        ],
-                      ))),
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.otherBackground,
+      color: Theme.of(context).colorScheme.otherBackground,
+      child: Padding(
+        padding: EdgeInsets.only(top: 40),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(AccountName(
+                  WalletAddImportType.dashboardAdd,
+                  currentStep: 1,
+                  numberOfSteps: 2,
+                ).route());
+              },
+              child: _buildRow(
+                Strings.basicWallet,
+                Strings.standardSingleUserWallet,
+              ),
+            ),
+          ),
+          VerticalSpacer.medium(),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(AccountName(
+                  WalletAddImportType.dashboardRecover,
+                  currentStep: 1,
+                  numberOfSteps: 2,
+                ).route());
+              },
+              child: _buildRow(
+                Strings.importRecoverWallet,
+                Strings.importExistingWallet,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.otherBackground,
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildRow(String title, String subtitle) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                VerticalSpacer.xxLarge(),
+                FwText(
+                  title,
+                  color: FwColor.globalNeutral550,
+                  style: FwTextStyle.m,
                 ),
-              )
-            ])));
+                VerticalSpacer.medium(),
+                FwText(
+                  subtitle,
+                  color: FwColor.globalNeutral450,
+                  style: FwTextStyle.s,
+                ),
+                VerticalSpacer.xxLarge(),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
