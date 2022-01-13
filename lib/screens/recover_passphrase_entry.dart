@@ -222,30 +222,9 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
       }
       if (parts.length == 24) {
-        word1.text = parts[0];
-        word2.text = parts[1];
-        word3.text = parts[2];
-        word4.text = parts[3];
-        word5.text = parts[4];
-        word6.text = parts[5];
-        word7.text = parts[6];
-        word8.text = parts[7];
-        word9.text = parts[8];
-        word10.text = parts[9];
-        word11.text = parts[10];
-        word12.text = parts[11];
-        word13.text = parts[12];
-        word14.text = parts[13];
-        word15.text = parts[14];
-        word16.text = parts[15];
-        word17.text = parts[16];
-        word18.text = parts[17];
-        word19.text = parts[18];
-        word20.text = parts[19];
-        word21.text = parts[20];
-        word22.text = parts[21];
-        word23.text = parts[22];
-        word24.text = parts[23];
+        for (var i = 0; i < parts.length; i++) {
+          textControllers[i].text = parts[i];
+        }
       }
     }
   }
@@ -259,30 +238,9 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
       }
       if (parts.length == 24) {
-        word1.text = parts[0];
-        word2.text = parts[1];
-        word3.text = parts[2];
-        word4.text = parts[3];
-        word5.text = parts[4];
-        word6.text = parts[5];
-        word7.text = parts[6];
-        word8.text = parts[7];
-        word9.text = parts[8];
-        word10.text = parts[9];
-        word11.text = parts[10];
-        word12.text = parts[11];
-        word13.text = parts[12];
-        word14.text = parts[13];
-        word15.text = parts[14];
-        word16.text = parts[15];
-        word17.text = parts[16];
-        word18.text = parts[17];
-        word19.text = parts[18];
-        word20.text = parts[19];
-        word21.text = parts[20];
-        word22.text = parts[21];
-        word23.text = parts[22];
-        word24.text = parts[23];
+        for (var i = 0; i < parts.length; i++) {
+          textControllers[i].text = parts[i];
+        }
       }
     }
   }
