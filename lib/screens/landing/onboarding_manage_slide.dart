@@ -15,9 +15,10 @@ class OnboardingManageSlide extends StatelessWidget {
               height: 158,
               width: 158,
               decoration: BoxDecoration(
-                  color: Color(0xFF9196AA),
-                  borderRadius: BorderRadius.all(Radius.circular(79))),
-            )
+                color: Color(0xFF9196AA),
+                borderRadius: BorderRadius.all(Radius.circular(79)),
+              ),
+            ),
           ],
         ),
         SizedBox(

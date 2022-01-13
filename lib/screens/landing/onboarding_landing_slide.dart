@@ -75,7 +75,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [CircularProgressIndicator()],
-                    )
+                    ),
                   ]
                 : [
                     Column(
@@ -91,7 +91,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           Strings.marketCap,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -107,7 +107,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           Strings.validators,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -123,7 +123,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           Strings.transactions,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -139,7 +139,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           Strings.avgBlockTime,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
-                        )
+                        ),
                       ],
                     ),
                   ],
