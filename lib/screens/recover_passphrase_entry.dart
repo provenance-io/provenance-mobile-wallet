@@ -13,13 +13,21 @@ class RecoverPassphraseEntry extends StatefulWidget {
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoverPassphraseEntry(this.flowType, this.accountName,
-      {this.currentStep, this.numberOfSteps});
+  RecoverPassphraseEntry(
+    this.flowType,
+    this.accountName, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
 
   @override
   State<StatefulWidget> createState() {
-    return RecoverPassphraseEntryState(flowType, accountName,
-        currentStep: currentStep, numberOfSteps: numberOfSteps);
+    return RecoverPassphraseEntryState(
+      flowType,
+      accountName,
+      currentStep: currentStep,
+      numberOfSteps: numberOfSteps,
+    );
   }
 }
 
@@ -31,8 +39,12 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
 
-  RecoverPassphraseEntryState(this.flowType, this.accountName,
-      {this.currentStep, this.numberOfSteps});
+  RecoverPassphraseEntryState(
+    this.flowType,
+    this.accountName, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
 
   final _formKey = GlobalKey<FormState>();
 
@@ -84,134 +96,145 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 
     return [
       Container(
-          width: width,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: first,
-          )),
+        width: width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: first,
+        ),
+      ),
       Container(
-          width: width,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: second,
-          )),
+        width: width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: second,
+        ),
+      ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
-              size: 24,
-              color: Color(0xFF3D4151),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: FwIcon(
+            FwIcons.back,
+            size: 24,
+            color: Color(0xFF3D4151),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: FwText(
+                            Strings.enterYourRecoveryPassphrase,
+                            style: FwTextStyle.extraLarge,
+                            textAlign: TextAlign.left,
+                            color: FwColor.globalNeutral550,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      final width = (constraints.maxWidth - 20) / 2;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: buildTextNodes(width),
+                      );
+                    }),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: FwButton(
+                      child: FwText(
+                        Strings.recover,
+                        style: FwTextStyle.mBold,
+                        color: FwColor.white,
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState?.validate() == true) {
+                          final words = this
+                              .textControllers
+                              .map((e) => e.text.trim())
+                              .toList();
+
+                          if (flowType ==
+                              WalletAddImportType.onBoardingRecover) {
+                            Navigator.of(context).push(CreatePin(
+                              flowType,
+                              accountName: accountName,
+                              currentStep: (currentStep ?? 0) + 1,
+                              numberOfSteps: numberOfSteps,
+                              words: words,
+                            ).route());
+                          } else {
+                            ModalLoadingRoute.showLoading(
+                              Strings.pleaseWait,
+                              context,
+                            );
+                            String privateKey =
+                                await ProvWalletFlutter.getPrivateKey(
+                              words.join(' '),
+                            );
+                            await ProvWalletFlutter.saveToWalletService(
+                              words.join(' '),
+                              accountName,
+                            );
+                            ModalLoadingRoute.dismiss(context);
+
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  if (numberOfSteps != null)
+                    ProgressStepper(
+                      (currentStep ?? 0),
+                      numberOfSteps ?? 1,
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                    ),
+                  if (numberOfSteps != null) VerticalSpacer.xxLarge(),
+                ],
+              ),
             ),
-            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-                child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                      child: FwText(
-                                    Strings.enterYourRecoveryPassphrase,
-                                    style: FwTextStyle.extraLarge,
-                                    textAlign: TextAlign.left,
-                                    color: FwColor.globalNeutral550,
-                                  ))
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  final width = (constraints.maxWidth - 20) / 2;
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: buildTextNodes(width),
-                                  );
-                                })),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: FwButton(
-                                    child: FwText(
-                                      Strings.recover,
-                                      style: FwTextStyle.mBold,
-                                      color: FwColor.white,
-                                    ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState?.validate() ==
-                                          true) {
-                                        final words = this
-                                            .textControllers
-                                            .map((e) => e.text.trim())
-                                            .toList();
-
-                                        if (flowType ==
-                                            WalletAddImportType
-                                                .onBoardingRecover) {
-                                          Navigator.of(context).push(CreatePin(
-                                            flowType,
-                                            accountName: accountName,
-                                            currentStep: (currentStep ?? 0) + 1,
-                                            numberOfSteps: numberOfSteps,
-                                            words: words,
-                                          ).route());
-                                        } else {
-                                          ModalLoadingRoute.showLoading(
-                                              Strings.pleaseWait, context);
-                                          String privateKey =
-                                              await ProvWalletFlutter
-                                                  .getPrivateKey(
-                                                      words.join(' '));
-                                          await ProvWalletFlutter
-                                              .saveToWalletService(
-                                                  words.join(' '), accountName);
-                                          ModalLoadingRoute.dismiss(context);
-
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        }
-                                      }
-                                    })),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            if (numberOfSteps != null)
-                              ProgressStepper(
-                                  (currentStep ?? 0), numberOfSteps ?? 1,
-                                  padding:
-                                      EdgeInsets.only(left: 20, right: 20)),
-                            if (numberOfSteps != null) VerticalSpacer.xxLarge()
-                          ],
-                        ))))));
+      ),
+    );
   }
 
   _handleTextControllerTextChange(TextEditingController controller) {
@@ -250,16 +273,16 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 }
 
 class _TextFormField extends StatelessWidget {
-  _TextFormField(
-      {Key? key,
-      this.keyboardType,
-      this.number,
-      this.onChanged,
-      this.validator,
-      this.focusNode,
-      this.handlePaste,
-      this.controller})
-      : super(key: key);
+  _TextFormField({
+    Key? key,
+    this.keyboardType,
+    this.number,
+    this.onChanged,
+    this.validator,
+    this.focusNode,
+    this.handlePaste,
+    this.controller,
+  }) : super(key: key);
 
   final String? number;
   final TextInputType? keyboardType;
@@ -387,9 +410,9 @@ class _TextFormField extends StatelessWidget {
                   Text(
                     number!,
                     style: _decorationStyleOf(context),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           );
         }),
