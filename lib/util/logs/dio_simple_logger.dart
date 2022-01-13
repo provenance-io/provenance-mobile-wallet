@@ -24,8 +24,10 @@ class SimpleLogInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    logError('Error [${err.response?.statusCode}] => ${err.requestOptions.uri}',
-        error: err.error);
+    logError(
+      'Error [${err.response?.statusCode}] => ${err.requestOptions.uri}',
+      error: err.error,
+    );
 
     // debug level - do not send to Crashlytics
     if (err.response?.data != null) logDebug(err.response!.data);

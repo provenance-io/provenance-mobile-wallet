@@ -6,9 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Wrapper around [SharedPreferences] to consolidate keys and consistency.
 class SharedPrefsService {
-  static SharedPrefsService? _instance;
   SharedPrefsService._();
   factory SharedPrefsService() => _instance ??= SharedPrefsService._();
+
+  static SharedPrefsService? _instance;
 
   Future<SharedPreferences> get _pref async =>
       await SharedPreferences.getInstance();
@@ -48,7 +49,7 @@ enum PrefKey {
 
   /// TODO: remove these
   hasShownReturnsDialog,
-  hasShownStartTransactionDialog
+  hasShownStartTransactionDialog,
 }
 
 extension on PrefKey {

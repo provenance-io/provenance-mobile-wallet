@@ -30,7 +30,12 @@ class FwIcons {
 }
 
 class FwIcon extends StatelessWidget {
-  const FwIcon(this.icon, {Key? key, this.color, this.size}) : super(key: key);
+  const FwIcon(
+    this.icon, {
+    Key? key,
+    this.color,
+    this.size,
+  }) : super(key: key);
 
   final String icon;
 

@@ -16,12 +16,36 @@ class VerticalSpacer extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  const VerticalSpacer.xSmall({Key? key}) : this._(Spacing.xSmall, key: key);
-  const VerticalSpacer.small({Key? key}) : this._(Spacing.small, key: key);
-  const VerticalSpacer.medium({Key? key}) : this._(Spacing.medium, key: key);
-  const VerticalSpacer.large({Key? key}) : this._(Spacing.large, key: key);
-  const VerticalSpacer.xLarge({Key? key}) : this._(Spacing.xLarge, key: key);
-  const VerticalSpacer.xxLarge({Key? key}) : this._(Spacing.xxLarge, key: key);
+  const VerticalSpacer.xSmall({Key? key})
+      : this._(
+          Spacing.xSmall,
+          key: key,
+        );
+  const VerticalSpacer.small({Key? key})
+      : this._(
+          Spacing.small,
+          key: key,
+        );
+  const VerticalSpacer.medium({Key? key})
+      : this._(
+          Spacing.medium,
+          key: key,
+        );
+  const VerticalSpacer.large({Key? key})
+      : this._(
+          Spacing.large,
+          key: key,
+        );
+  const VerticalSpacer.xLarge({Key? key})
+      : this._(
+          Spacing.xLarge,
+          key: key,
+        );
+  const VerticalSpacer.xxLarge({Key? key})
+      : this._(
+          Spacing.xxLarge,
+          key: key,
+        );
 
   final double? _height;
 
@@ -37,13 +61,36 @@ class HorizontalSpacer extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  const HorizontalSpacer.xSmall({Key? key}) : this._(Spacing.xSmall, key: key);
-  const HorizontalSpacer.small({Key? key}) : this._(Spacing.small, key: key);
-  const HorizontalSpacer.medium({Key? key}) : this._(Spacing.medium, key: key);
-  const HorizontalSpacer.large({Key? key}) : this._(Spacing.large, key: key);
-  const HorizontalSpacer.xLarge({Key? key}) : this._(Spacing.xLarge, key: key);
+  const HorizontalSpacer.xSmall({Key? key})
+      : this._(
+          Spacing.xSmall,
+          key: key,
+        );
+  const HorizontalSpacer.small({Key? key})
+      : this._(
+          Spacing.small,
+          key: key,
+        );
+  const HorizontalSpacer.medium({Key? key})
+      : this._(
+          Spacing.medium,
+          key: key,
+        );
+  const HorizontalSpacer.large({Key? key})
+      : this._(
+          Spacing.large,
+          key: key,
+        );
+  const HorizontalSpacer.xLarge({Key? key})
+      : this._(
+          Spacing.xLarge,
+          key: key,
+        );
   const HorizontalSpacer.xxLarge({Key? key})
-      : this._(Spacing.xxLarge, key: key);
+      : this._(
+          Spacing.xxLarge,
+          key: key,
+        );
 
   final double? _width;
 

@@ -1,9 +1,4 @@
-// @dart=2.12
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
-
-import 'fw_text.dart';
 
 class FwPrimaryButton extends StatelessWidget {
   const FwPrimaryButton({
@@ -37,6 +32,7 @@ class FwPrimaryButton extends StatelessWidget {
           if (states.contains(MaterialState.disabled)) {
             return Theme.of(context).colorScheme.primary2.withOpacity(0.4);
           }
+
           return showAlternate
               ? Theme.of(context).colorScheme.primary1
               : Theme.of(context).colorScheme.primary;
@@ -47,10 +43,17 @@ class FwPrimaryButton extends StatelessWidget {
               states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.pressed)) {
             return BorderSide(
-                color: Theme.of(context).colorScheme.primary5, width: 8);
+              color: Theme.of(context).colorScheme.primary5,
+              width: 8,
+            );
           }
         }),
-        minimumSize: MaterialStateProperty.all(Size(minimumWidth, 50)),
+        minimumSize: MaterialStateProperty.all(
+          Size(
+            minimumWidth,
+            50,
+          ),
+        ),
       ),
       onPressed: onPressed,
       child: child,
@@ -59,12 +62,12 @@ class FwPrimaryButton extends StatelessWidget {
 }
 
 class FwSecondaryButton extends StatelessWidget {
-  const FwSecondaryButton(
-      {Key? key,
-      required this.child,
-      this.onPressed,
-      this.showAlternate = false})
-      : super(key: key);
+  const FwSecondaryButton({
+    Key? key,
+    required this.child,
+    this.onPressed,
+    this.showAlternate = false,
+  }) : super(key: key);
 
   /// The child to display within the button. This is often just a Text widget.
   final Widget child;
@@ -84,6 +87,7 @@ class FwSecondaryButton extends StatelessWidget {
           if (!showAlternate && !states.contains(MaterialState.disabled)) {
             return Theme.of(context).colorScheme.onBackground;
           }
+
           return Theme.of(context).colorScheme.onPrimary;
         }),
         backgroundColor:
@@ -91,6 +95,7 @@ class FwSecondaryButton extends StatelessWidget {
           if (states.contains(MaterialState.disabled)) {
             return Theme.of(context).colorScheme.black.withOpacity(0.3);
           }
+
           return showAlternate
               ? Theme.of(context).colorScheme.black
               : Theme.of(context).colorScheme.onPrimary;
@@ -101,14 +106,21 @@ class FwSecondaryButton extends StatelessWidget {
               states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.pressed)) {
             return BorderSide(
-                color: Theme.of(context).colorScheme.primary5, width: 8);
+              color: Theme.of(context).colorScheme.primary5,
+              width: 8,
+            );
           }
           if (!states.contains(MaterialState.disabled)) {
             return BorderSide(
-                color: Theme.of(context).colorScheme.black, width: 2);
+              color: Theme.of(context).colorScheme.black,
+              width: 2,
+            );
           }
         }),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
+        minimumSize: MaterialStateProperty.all(const Size(
+          double.infinity,
+          50,
+        )),
       ),
       onPressed: onPressed,
       child: child,
@@ -117,9 +129,12 @@ class FwSecondaryButton extends StatelessWidget {
 }
 
 class FwActionButton extends StatelessWidget {
-  const FwActionButton(
-      {Key? key, this.child, required this.onPressed, this.outlined = false})
-      : label = null,
+  const FwActionButton({
+    Key? key,
+    this.child,
+    required this.onPressed,
+    this.outlined = false,
+  })  : label = null,
         super(key: key);
 
   /// Helper constructor for creating a button with a label.
@@ -155,7 +170,10 @@ class FwActionButton extends StatelessWidget {
           shape: outlined
               ? const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(56.0)),
-                  side: BorderSide(color: Colors.white, width: 1.0),
+                  side: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
+                  ),
                 )
               : null,
           onPressed: onPressed,
@@ -194,12 +212,13 @@ class FwButton extends StatelessWidget {
     required VoidCallback onPressed,
     double minimumWidth = double.maxFinite,
   }) : this(
-            key: key,
-            child: child,
-            enabled: enabled,
-            onPressed: onPressed,
-            minimumWidth: minimumWidth,
-            showAlternate: true);
+          key: key,
+          child: child,
+          enabled: enabled,
+          onPressed: onPressed,
+          minimumWidth: minimumWidth,
+          showAlternate: true,
+        );
 
   /// The child to display within the button. This is often just a Text widget.
   final Widget child;
@@ -247,7 +266,12 @@ class FwButton extends StatelessWidget {
                 ? theme.colorScheme.globalNeutral450
                 : theme.colorScheme.globalNeutral450;
       }),
-      minimumSize: MaterialStateProperty.all(Size(minimumWidth, 50)),
+      minimumSize: MaterialStateProperty.all(
+        Size(
+          minimumWidth,
+          50,
+        ),
+      ),
     );
   }
 }
@@ -257,7 +281,10 @@ class FwTextButton extends StatelessWidget {
     Key? key,
     required this.child,
     required this.onPressed,
-    this.minimumSize = const Size(double.maxFinite, 50),
+    this.minimumSize = const Size(
+      double.maxFinite,
+      50,
+    ),
     this.shrinkWrap = false,
   }) : super(key: key);
 
@@ -265,7 +292,12 @@ class FwTextButton extends StatelessWidget {
     Key? key,
     required Widget child,
     required VoidCallback onPressed,
-  }) : this(key: key, child: child, onPressed: onPressed, shrinkWrap: true);
+  }) : this(
+          key: key,
+          child: child,
+          onPressed: onPressed,
+          shrinkWrap: true,
+        );
 
   /// The child to display within the button. This is often just a Text widget.
   final Widget child;
@@ -284,9 +316,10 @@ class FwTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-          minimumSize: shrinkWrap ? Size.zero : minimumSize,
-          padding: shrinkWrap ? EdgeInsets.zero : null,
-          tapTargetSize: shrinkWrap ? MaterialTapTargetSize.shrinkWrap : null),
+        minimumSize: shrinkWrap ? Size.zero : minimumSize,
+        padding: shrinkWrap ? EdgeInsets.zero : null,
+        tapTargetSize: shrinkWrap ? MaterialTapTargetSize.shrinkWrap : null,
+      ),
       onPressed: onPressed,
       child: child,
     );
@@ -335,24 +368,27 @@ class FwGreyButton extends StatelessWidget {
             ? theme.colorScheme.lightGrey.withOpacity(0.4)
             : theme.colorScheme.lightGrey;
       }),
-      minimumSize: MaterialStateProperty.all(Size(minimumWidth, 50)),
+      minimumSize: MaterialStateProperty.all(Size(
+        minimumWidth,
+        50,
+      )),
     );
   }
 }
 
 class FwPrimaryAndTextButton extends StatelessWidget {
+  const FwPrimaryAndTextButton({
+    Key? key,
+    required this.primaryButtonText,
+    required this.primaryButtonOnPressed,
+    required this.textButtonText,
+    required this.textButtonOnPressed,
+  }) : super(key: key);
+
   final String primaryButtonText;
   final Function()? primaryButtonOnPressed;
   final String textButtonText;
   final Function()? textButtonOnPressed;
-
-  const FwPrimaryAndTextButton(
-      {Key? key,
-      required this.primaryButtonText,
-      required this.primaryButtonOnPressed,
-      required this.textButtonText,
-      required this.textButtonOnPressed})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -368,14 +404,30 @@ class FwPrimaryAndTextButton extends StatelessWidget {
           textButtonText,
           color: FwColor.primary4,
         ),
-      )
+      ),
     ]);
   }
 }
 
 class FwOutlinedButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  const FwOutlinedButton(
+    this._text, {
+    Key? key,
+    required this.onPressed,
+    this.icon,
+    this.largeButton = false,
+    this.showArrow = false,
+    this.center = true,
+    this.fpTextStyle,
+    this.fpTextColor,
+    this.backgroundColor,
+    this.borderColor,
+    this.borderWidth = 1,
+  }) : super(key: key);
+
   final String _text;
+
+  final VoidCallback? onPressed;
 
   /// An icon to appear to the left of [_text]
   final Widget? icon;
@@ -396,21 +448,6 @@ class FwOutlinedButton extends StatelessWidget {
   final Color? borderColor;
   final double borderWidth;
 
-  const FwOutlinedButton(
-    this._text, {
-    Key? key,
-    required this.onPressed,
-    this.icon,
-    this.largeButton = false,
-    this.showArrow = false,
-    this.center = true,
-    this.fpTextStyle,
-    this.fpTextColor,
-    this.backgroundColor,
-    this.borderColor,
-    this.borderWidth = 1,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
@@ -419,12 +456,16 @@ class FwOutlinedButton extends StatelessWidget {
         primary: Colors.white,
         padding: EdgeInsets.zero,
         side: BorderSide(
-            color: borderColor ?? Theme.of(context).colorScheme.lightGrey,
-            width: borderWidth),
+          color: borderColor ?? Theme.of(context).colorScheme.lightGrey,
+          width: borderWidth,
+        ),
         shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(largeButton ? 8 : 4))),
-        minimumSize: const Size(double.maxFinite, 50),
+          borderRadius: BorderRadius.all(Radius.circular(largeButton ? 8 : 4)),
+        ),
+        minimumSize: const Size(
+          double.maxFinite,
+          50,
+        ),
       ),
       onPressed: onPressed,
       child: Padding(
@@ -459,8 +500,10 @@ class FwOutlinedButton extends StatelessWidget {
                 showArrow
                     ? Align(
                         alignment: Alignment.centerRight,
-                        child: FwIcon(FwIcons.back,
-                            color: Theme.of(context).colorScheme.darkGrey),
+                        child: FwIcon(
+                          FwIcons.back,
+                          color: Theme.of(context).colorScheme.darkGrey,
+                        ),
                       )
                     : Container(),
               ],

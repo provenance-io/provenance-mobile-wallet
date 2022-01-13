@@ -8,13 +8,17 @@ import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWords extends StatefulWidget {
+  RecoveryWords(
+    this.flowType,
+    this.accountName, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
+
   final int? currentStep;
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
-
-  RecoveryWords(this.flowType, this.accountName,
-      {this.currentStep, this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -23,8 +27,10 @@ class RecoveryWords extends StatefulWidget {
 }
 
 class RecoveryWordsState extends State<RecoveryWords> {
-  List<String> words = [];
   bool _loading = true;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<String> words = [];
 
   @override
   void initState() {
@@ -40,128 +46,133 @@ class RecoveryWordsState extends State<RecoveryWords> {
     });
   }
 
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return LoadingOverlay(
-        isLoading: _loading,
-        child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-              leading: IconButton(
-                icon: FwIcon(
-                  FwIcons.back,
-                  size: 24,
-                  color: Color(0xFF3D4151),
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+      isLoading: _loading,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: FwIcon(
+              FwIcons.back,
+              size: 24,
+              color: Color(0xFF3D4151),
             ),
-            body: Container(
-                color: Colors.white,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: FwText(
-                            Strings.recoveryPassphrase,
-                            style: FwTextStyle.extraLarge,
-                            textAlign: TextAlign.center,
-                            color: FwColor.globalNeutral550,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: FwText(
-                            Strings.recordTheseWordsInTheCorrectOrder,
-                            style: FwTextStyle.m,
-                            textAlign: TextAlign.center,
-                            color: FwColor.globalNeutral550,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Container(
-                              color: Color(0xFFE9EEF9),
-                              child: Padding(
-                                  padding: EdgeInsets.all(24),
-                                  child: Row(
-                                    children: [
-                                      Wrap(
-                                        direction: Axis.vertical,
-                                        runSpacing: 24.0,
-                                        spacing: 2.0,
-                                        children: [
-                                          ...words
-                                              .mapIndexed((index, e) =>
-                                                  FwText('${index + 1}. $e'))
-                                              .toList(),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              await Clipboard.setData(
-                                                  ClipboardData(
-                                                      text: words.join(' ')));
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(Strings
-                                                        .passphraseCopied)),
-                                              );
-                                            },
-                                            child: FwIcon(
-                                              FwIcons.copy,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ))),
-                        )),
-                        SizedBox(
-                          height: 100,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            child: FwButton(
-                                child: FwText(
-                                  Strings.next,
-                                  style: FwTextStyle.mBold,
-                                  color: FwColor.white,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.only(top: 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: FwText(
+                    Strings.recoveryPassphrase,
+                    style: FwTextStyle.extraLarge,
+                    textAlign: TextAlign.center,
+                    color: FwColor.globalNeutral550,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: FwText(
+                    Strings.recordTheseWordsInTheCorrectOrder,
+                    style: FwTextStyle.m,
+                    textAlign: TextAlign.center,
+                    color: FwColor.globalNeutral550,
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      color: Color(0xFFE9EEF9),
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: Row(
+                          children: [
+                            Wrap(
+                              direction: Axis.vertical,
+                              runSpacing: 24.0,
+                              spacing: 2.0,
+                              children: [
+                                ...words
+                                    .mapIndexed((index, e) =>
+                                        FwText('${index + 1}. $e'))
+                                    .toList(),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Clipboard.setData(
+                                      ClipboardData(text: words.join(' ')),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(Strings.passphraseCopied),
+                                      ),
+                                    );
+                                  },
+                                  child: FwIcon(
+                                    FwIcons.copy,
+                                  ),
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                      RecoveryWordsConfirm(widget.flowType,
-                                              accountName: widget.accountName,
-                                              words: words,
-                                              currentStep:
-                                                  widget.currentStep ?? 0,
-                                              numberOfSteps:
-                                                  widget.numberOfSteps ?? 0)
-                                          .route());
-                                })),
-                        SizedBox(
-                          height: 40,
+                              ],
+                            ),
+                          ],
                         ),
-                        if (widget.numberOfSteps != null)
-                          ProgressStepper(widget.currentStep ?? 0,
-                              widget.numberOfSteps ?? 1,
-                              padding: EdgeInsets.only(left: 20, right: 20)),
-                        if (widget.numberOfSteps != null)
-                          VerticalSpacer.xxLarge()
-                      ],
-                    )))));
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: FwButton(
+                    child: FwText(
+                      Strings.next,
+                      style: FwTextStyle.mBold,
+                      color: FwColor.white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(RecoveryWordsConfirm(
+                        widget.flowType,
+                        accountName: widget.accountName,
+                        words: words,
+                        currentStep: widget.currentStep ?? 0,
+                        numberOfSteps: widget.numberOfSteps ?? 0,
+                      ).route());
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                if (widget.numberOfSteps != null)
+                  ProgressStepper(
+                    widget.currentStep ?? 0,
+                    widget.numberOfSteps ?? 1,
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                  ),
+                if (widget.numberOfSteps != null) VerticalSpacer.xxLarge(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
