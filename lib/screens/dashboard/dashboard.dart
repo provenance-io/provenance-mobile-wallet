@@ -11,7 +11,7 @@ import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/network/models/asset_response.dart';
 import 'package:flutter_tech_wallet/network/services/asset_service.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
-import 'package:flutter_tech_wallet/screens/landing.dart';
+import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -27,7 +27,8 @@ class Dashboard extends StatefulWidget {
   State<StatefulWidget> createState() => DashboardState();
 }
 
-class DashboardState extends State<Dashboard> with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
+class DashboardState extends State<Dashboard>
+    with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   TabController? _tabController;
   String walletAddress = '';
   String walletName = '';
@@ -60,23 +61,27 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
     _tabController = TabController(length: 2, vsync: this);
     ProvWalletFlutter.instance.onAskToSign =
         (String requestId, String message, String description) async {
-        final result =await  FwDialog.showConfirmation(context, title: description, message: message, confirmText: 'Sign', cancelText: 'Decline');
-        ModalLoadingRoute.showLoading("", context);
-        await ProvWalletFlutter.signTransactionFinish(requestId, result == true);
-        ModalLoadingRoute.dismiss(context);
+      final result = await FwDialog.showConfirmation(context,
+          title: description,
+          message: message,
+          confirmText: 'Sign',
+          cancelText: 'Decline');
+      ModalLoadingRoute.showLoading("", context);
+      await ProvWalletFlutter.signTransactionFinish(requestId, result == true);
+      ModalLoadingRoute.dismiss(context);
     };
 
     ProvWalletFlutter.instance.onAskToSend =
         (String requestId, String message, String description, String cost) {
       final map = jsonDecode(message);
 
-
-      SendTransactionInfo info = SendTransactionInfo(fee: cost,
+      SendTransactionInfo info = SendTransactionInfo(
+          fee: cost,
           toAddress: map["toAddress"] as String,
           fromAddress: map["fromAddress"] as String,
           requestId: requestId,
-          amount: "${(map["amount"] as List)
-              .first["amount"]} ${(map["amount"] as List).first["denom"]}");
+          amount:
+              "${(map["amount"] as List).first["amount"]} ${(map["amount"] as List).first["denom"]}");
       Navigator.of(context).push(SendTransactionApproval(info).route());
     };
 
@@ -122,13 +127,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
                 },
                 child: FwIcon(
                   FwIcons.wallet,
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .globalNeutral450,
+                  color: Theme.of(context).colorScheme.globalNeutral450,
                   size: 24,
-                )
-            ),
+                )),
             HorizontalSpacer.medium(),
           ],
           title: FwText(
@@ -139,15 +140,10 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
           leading: Padding(
               padding: EdgeInsets.only(left: 24),
               child: GestureDetector(
-                onTap: () {
-
-                },
+                onTap: () {},
                 child: FwIcon(
                   FwIcons.userAccount,
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .globalNeutral450,
+                  color: Theme.of(context).colorScheme.globalNeutral450,
                   size: 24.0,
                 ),
               )),
@@ -157,16 +153,10 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
           children: [
             Container(
               height: 2,
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .globalNeutral550,
+              color: Theme.of(context).colorScheme.globalNeutral550,
             ),
             Container(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .globalNeutral600Black,
+                color: Theme.of(context).colorScheme.globalNeutral600Black,
                 // height: 50 + inset?.bottom ?? 0,
                 child: TabBar(
                   controller: _tabController,
@@ -177,8 +167,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
                       'Dashboard',
                       FwIcons.wallet,
                     ),
-                    _buildTabItem(
-                        _tabController?.index == 1, 'Transactions',
+                    _buildTabItem(_tabController?.index == 1, 'Transactions',
                         FwIcons.staking),
                   ],
                 ))
@@ -202,245 +191,319 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
                                 padding: EdgeInsets.only(left: 20, right: 20),
                                 child: Container(
                                     decoration: BoxDecoration(
-                                      color: Theme
-                                          .of(context)
+                                      color: Theme.of(context)
                                           .colorScheme
                                           .globalNeutral600Black,
                                       borderRadius: BorderRadius.circular(11.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 17, right: 17),
+                                      padding:
+                                          EdgeInsets.only(left: 17, right: 17),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          SizedBox(height: 24,),
+                                          SizedBox(
+                                            height: 24,
+                                          ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              FwText(
-                                                  'Portfolio Value',
+                                              FwText('Portfolio Value',
                                                   color: FwColor.white,
-                                                  style: FwTextStyle.sBold
-                                              ),
-                                              FwText(
-                                                  '\$0', color: FwColor.white,
+                                                  style: FwTextStyle.sBold),
+                                              FwText('\$0',
+                                                  color: FwColor.white,
                                                   style: FwTextStyle.h6)
                                             ],
                                           ),
-                                          SizedBox(height: 17,),
+                                          SizedBox(
+                                            height: 17,
+                                          ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                width: 100,
-                                                child: GestureDetector(
-                                                onTap: () {
-
-                                                },
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          color: Theme
-                                                              .of(context)
-                                                              .colorScheme
-                                                              .globalNeutral450,
-                                                          borderRadius: BorderRadius
-                                                              .circular(23)
-                                                      ),
-                                                      height: 46,
-                                                      width: 46,
-                                                      child: Center(
-                                                        child: FwIcon(
-                                                          FwIcons.upArrow,
-                                                          size: 24,
-                                                          color: Colors.white,
+                                                  width: 100,
+                                                  child: GestureDetector(
+                                                    onTap: () {},
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .globalNeutral450,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          23)),
+                                                          height: 46,
+                                                          width: 46,
+                                                          child: Center(
+                                                            child: FwIcon(
+                                                              FwIcons.upArrow,
+                                                              size: 24,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+                                                        VerticalSpacer.xSmall(),
+                                                        FwText('Send',
+                                                            color:
+                                                                FwColor.white,
+                                                            style:
+                                                                FwTextStyle.s),
+                                                      ],
                                                     ),
-                                                    VerticalSpacer.xSmall(),
-                                                    FwText(
-                                                        'Send',
-                                                        color: FwColor.white,
-                                                        style: FwTextStyle.s
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                              ),
+                                                  )),
                                               Container(
-                                                width: 100,
-                                                child: GestureDetector(
-                                                onTap: () {
-
-                                                },
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          color: Theme
-                                                              .of(context)
-                                                              .colorScheme
-                                                              .globalNeutral450,
-                                                          borderRadius: BorderRadius
-                                                              .circular(23)
-                                                      ),
-                                                      height: 46,
-                                                      width: 46,
-                                                      child: Center(
-                                                        child: FwIcon(
-                                                          FwIcons.downArrow,
-                                                          size: 24,
-                                                          color: Colors.white,
+                                                  width: 100,
+                                                  child: GestureDetector(
+                                                    onTap: () {},
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .globalNeutral450,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          23)),
+                                                          height: 46,
+                                                          width: 46,
+                                                          child: Center(
+                                                            child: FwIcon(
+                                                              FwIcons.downArrow,
+                                                              size: 24,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+                                                        VerticalSpacer.xSmall(),
+                                                        FwText('Receive',
+                                                            color:
+                                                                FwColor.white,
+                                                            style:
+                                                                FwTextStyle.s)
+                                                      ],
                                                     ),
-                                                    VerticalSpacer.xSmall(),
-                                                    FwText(
-                                                        'Receive',
-                                                        color: FwColor.white,
-                                                        style: FwTextStyle.s
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                              ),
-                                              StreamBuilder<WallectConnectStatus>(
-                                                stream: ProvWalletFlutter.instance
-                                                    .walletConnectStatus.stream,
-                                                initialData: WallectConnectStatus
-                                                    .disconnected,
+                                                  )),
+                                              StreamBuilder<
+                                                  WallectConnectStatus>(
+                                                stream: ProvWalletFlutter
+                                                    .instance
+                                                    .walletConnectStatus
+                                                    .stream,
+                                                initialData:
+                                                    WallectConnectStatus
+                                                        .disconnected,
                                                 builder: (context, snapshot) {
                                                   if (snapshot == null ||
                                                       snapshot.data == null) {
-                                                    return Container(width: 100,);
-                                                  }
-
-                                                  if (snapshot.data ==
-                                                      WallectConnectStatus.disconnected) {
                                                     return Container(
                                                       width: 100,
-                                                      child: GestureDetector(
-                                                      onTap: () async {
-                                                                          final result = await Navigator
-                                                                              .of(context).push(
-                                                                              QRCodeScanner().route());
-                                                                          ProvWalletFlutter.connectWallet(
-                                                                              result as String);
-                                                      },
-                                                      child: Column(
-                                                        children: [
-                                                          Container(
-                                                            decoration: BoxDecoration(
-                                                                color: Theme
-                                                                    .of(context)
-                                                                    .colorScheme
-                                                                    .globalNeutral450,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(23)
-                                                            ),
-                                                            height: 46,
-                                                            width: 46,
-                                                            child: Center(
-                                                              child: FwIcon(
-                                                                FwIcons.walletConnect,
-                                                                size: 15,
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          VerticalSpacer.xSmall(),
-                                                          FwText(
-                                                              'WalletConnect',
-                                                              color: FwColor.white,
-                                                              style: FwTextStyle.s
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )
                                                     );
                                                   }
 
-                                                  return Container(width: 100,);
+                                                  if (snapshot.data ==
+                                                      WallectConnectStatus
+                                                          .disconnected) {
+                                                    return Container(
+                                                        width: 100,
+                                                        child: GestureDetector(
+                                                          onTap: () async {
+                                                            final result =
+                                                                await Navigator.of(
+                                                                        context)
+                                                                    .push(QRCodeScanner()
+                                                                        .route());
+                                                            ProvWalletFlutter
+                                                                .connectWallet(
+                                                                    result
+                                                                        as String);
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .globalNeutral450,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            23)),
+                                                                height: 46,
+                                                                width: 46,
+                                                                child: Center(
+                                                                  child: FwIcon(
+                                                                    FwIcons
+                                                                        .walletConnect,
+                                                                    size: 15,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              VerticalSpacer
+                                                                  .xSmall(),
+                                                              FwText(
+                                                                  'WalletConnect',
+                                                                  color: FwColor
+                                                                      .white,
+                                                                  style:
+                                                                      FwTextStyle
+                                                                          .s)
+                                                            ],
+                                                          ),
+                                                        ));
+                                                  }
+
+                                                  return Container(
+                                                    width: 100,
+                                                  );
                                                 },
                                               )
-
                                             ],
                                           ),
-                                          SizedBox(height: 24,),
+                                          SizedBox(
+                                            height: 24,
+                                          ),
                                         ],
                                       ),
-                                    )
-                                ),
+                                    )),
                               ),
-                              assets.isNotEmpty ? VerticalSpacer.medium() : Container(),
-                              assets.isNotEmpty ? Padding(padding: EdgeInsets.only(left: 20, right: 20), child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [FwText('My Assets', color: FwColor.globalNeutral550, style: FwTextStyle.h6)],)) : Container(),
-                              assets.isNotEmpty ? VerticalSpacer.medium() : Container(),
-                              assets.isNotEmpty ? Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: ListView.separated(
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context, index) {
-                                  final item = assets[index];
-                                  return GestureDetector(
-                                    onTap: () {
-
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.zero,
-                                      child: Container(
-                                        padding: EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(9.0),
-                                        border: Border.all(
-                                          color: Theme.of(context).colorScheme.globalNeutral250,
-
-                                        )
-                                      ),
+                              assets.isNotEmpty
+                                  ? VerticalSpacer.medium()
+                                  : Container(),
+                              assets.isNotEmpty
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            width: 32,
-                                            height: 32,
-                                            child: FwIcon(item.display?.toUpperCase() == 'USD' || item.display?.toUpperCase() == 'USDF' ? FwIcons.dollarIcon : FwIcons.hashLogo, color: Theme.of(context).colorScheme.globalNeutral550, size: 32,),
-                                          ),
-                                          HorizontalSpacer.medium(),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FwText(
-                                                item.display?.toUpperCase() ?? '',
-                                                color: FwColor.globalNeutral550
-                                              ),
-                                              VerticalSpacer.xSmall(),
-                                              FwText(
-                                                  item.displayAmount ?? '',
-                                                  color: FwColor.globalNeutral350
-                                              )
-                                            ],
-                                          ),
-                                          Expanded(
-                                            child: Container(),
-                                          ),
-                                          FwIcon(FwIcons.caret, color: Theme.of(context).colorScheme.globalNeutral550, size: 12.0,)
+                                          FwText('My Assets',
+                                              color: FwColor.globalNeutral550,
+                                              style: FwTextStyle.h6)
                                         ],
-                                      ),
-                                    ),
-                                  )
-                                  );
-                                return Container(height: 2, color: Theme.of(context).colorScheme.globalNeutral450,);
-                              }, separatorBuilder: (context, index) {
-                                return VerticalSpacer.small();
-                              }, itemCount: assets.length, shrinkWrap: true, physics: NeverScrollableScrollPhysics(),)) : Container(),
+                                      ))
+                                  : Container(),
+                              assets.isNotEmpty
+                                  ? VerticalSpacer.medium()
+                                  : Container(),
+                              assets.isNotEmpty
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 20, right: 20),
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.zero,
+                                        itemBuilder: (context, index) {
+                                          final item = assets[index];
+                                          return GestureDetector(
+                                              onTap: () {},
+                                              child: Padding(
+                                                padding: EdgeInsets.zero,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(20),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              9.0),
+                                                      border: Border.all(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .globalNeutral250,
+                                                      )),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width: 32,
+                                                        height: 32,
+                                                        child: FwIcon(
+                                                          item.display?.toUpperCase() ==
+                                                                      'USD' ||
+                                                                  item.display
+                                                                          ?.toUpperCase() ==
+                                                                      'USDF'
+                                                              ? FwIcons
+                                                                  .dollarIcon
+                                                              : FwIcons
+                                                                  .hashLogo,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .colorScheme
+                                                              .globalNeutral550,
+                                                          size: 32,
+                                                        ),
+                                                      ),
+                                                      HorizontalSpacer.medium(),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          FwText(
+                                                              item.display
+                                                                      ?.toUpperCase() ??
+                                                                  '',
+                                                              color: FwColor
+                                                                  .globalNeutral550),
+                                                          VerticalSpacer
+                                                              .xSmall(),
+                                                          FwText(
+                                                              item.displayAmount ??
+                                                                  '',
+                                                              color: FwColor
+                                                                  .globalNeutral350)
+                                                        ],
+                                                      ),
+                                                      Expanded(
+                                                        child: Container(),
+                                                      ),
+                                                      FwIcon(
+                                                        FwIcons.caret,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .globalNeutral550,
+                                                        size: 12.0,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                          return Container(
+                                            height: 2,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .globalNeutral450,
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return VerticalSpacer.small();
+                                        },
+                                        itemCount: assets.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                      ))
+                                  : Container(),
                               VerticalSpacer.medium(),
                               StreamBuilder<String>(
                                   initialData: null,
-                                  stream: ProvWalletFlutter.instance
-                                      .walletAddress.stream,
+                                  stream: ProvWalletFlutter
+                                      .instance.walletAddress.stream,
                                   builder: (context, data) {
                                     if (data.data == null ||
                                         data.data!.isEmpty) {
@@ -454,24 +517,22 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             FwText(
-                                                'Wallet connected: ${data
-                                                    .data!}'
-                                            ),
+                                                'Wallet connected: ${data.data!}'),
                                             SizedBox(
                                               height: 16.0,
                                             ),
-                                            FwButton(child: FwText('Disconnect',
-                                              color: FwColor.white,),
+                                            FwButton(
+                                                child: FwText(
+                                                  'Disconnect',
+                                                  color: FwColor.white,
+                                                ),
                                                 onPressed: () {
                                                   ProvWalletFlutter
                                                       .disconnectWallet();
                                                 })
                                           ],
-                                        )
-                                    );
-                                  }
-                              ),
-
+                                        ));
+                                  }),
                               Expanded(
                                 child: Container(
                                   color: Colors.white,
@@ -480,24 +541,27 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
                               VerticalSpacer.medium(),
                               Padding(
                                   padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: FwButton(child: FwText(
-                                    'Reset Wallet',
-                                  ), onPressed: () async {
-                                    await ProvWalletFlutter.disconnectWallet();
-                                    await ProvWalletFlutter.resetWallet();
-                                    FlutterSecureStorage storage = FlutterSecureStorage();
-                                    await storage.deleteAll();
+                                  child: FwButton(
+                                      child: FwText(
+                                        'Reset Wallet',
+                                      ),
+                                      onPressed: () async {
+                                        await ProvWalletFlutter
+                                            .disconnectWallet();
+                                        await ProvWalletFlutter.resetWallet();
+                                        FlutterSecureStorage storage =
+                                            FlutterSecureStorage();
+                                        await storage.deleteAll();
 
-                                    Navigator.of(context).popUntil((
-                                        route) => true);
-                                    Navigator.push(context, Landing().route());
-                                  })),
+                                        Navigator.of(context)
+                                            .popUntil((route) => true);
+                                        Navigator.push(
+                                            context, Landing().route());
+                                      })),
                               VerticalSpacer.large(),
                             ],
                           ))),
-                  Container(
-                      color: Colors.white,
-                      child: Container())
+                  Container(color: Colors.white, child: Container())
                 ],
               ),
             )
@@ -518,31 +582,21 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin, Rou
             height: 24.0,
             child: isLoading == null || !isLoading
                 ? FwIcon(
-              tabAsset,
-              color: isSelected
-                  ? Theme
-                  .of(context)
-                  .colorScheme
-                  .primary4
-                  : Theme
-                  .of(context)
-                  .colorScheme
-                  .white,
-            )
+                    tabAsset,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary4
+                        : Theme.of(context).colorScheme.white,
+                  )
                 : const CircularProgressIndicator(),
           ),
           Padding(
             padding: EdgeInsets.only(top: 5, bottom: 28),
             child: Text(
               tabName,
-              style: Theme
-                  .of(context)
+              style: Theme.of(context)
                   .textTheme
                   .extraSmallBold
-                  .copyWith(color: Theme
-                  .of(context)
-                  .colorScheme
-                  .white),
+                  .copyWith(color: Theme.of(context).colorScheme.white),
             ),
           )
         ],
