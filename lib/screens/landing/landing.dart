@@ -34,6 +34,7 @@ class _LandingState extends State<Landing> {
   @override
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
+    _pageController.dispose();
     super.dispose();
   }
 
