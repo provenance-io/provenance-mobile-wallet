@@ -8,17 +8,17 @@ import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoverPassphraseEntry extends StatefulWidget {
-  final int? currentStep;
-  final int? numberOfSteps;
-  final String accountName;
-  final WalletAddImportType flowType;
-
   RecoverPassphraseEntry(
     this.flowType,
     this.accountName, {
     this.currentStep,
     this.numberOfSteps,
   });
+
+  final int? currentStep;
+  final int? numberOfSteps;
+  final String accountName;
+  final WalletAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,19 +32,19 @@ class RecoverPassphraseEntry extends StatefulWidget {
 }
 
 class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
-  final int? currentStep;
-  final int? numberOfSteps;
-  final String accountName;
-  final WalletAddImportType flowType;
-  List<TextEditingController> textControllers = <TextEditingController>[];
-  List<FocusNode> focusNodes = <FocusNode>[];
-
   RecoverPassphraseEntryState(
     this.flowType,
     this.accountName, {
     this.currentStep,
     this.numberOfSteps,
   });
+
+  final int? currentStep;
+  final int? numberOfSteps;
+  final String accountName;
+  final WalletAddImportType flowType;
+  List<TextEditingController> textControllers = <TextEditingController>[];
+  List<FocusNode> focusNodes = <FocusNode>[];
 
   final _formKey = GlobalKey<FormState>();
 
