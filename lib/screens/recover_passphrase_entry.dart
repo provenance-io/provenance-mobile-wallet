@@ -295,12 +295,6 @@ class _TextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final Function? handlePaste;
 
-  TextStyle _decorationStyleOf(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return theme.textTheme.medium.copyWith(color: theme.hintColor);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -360,6 +354,11 @@ class _TextFormField extends StatelessWidget {
         }),
       ],
     );
+  }
 
+  TextStyle _decorationStyleOf(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return theme.textTheme.medium.copyWith(color: theme.hintColor);
   }
 }
