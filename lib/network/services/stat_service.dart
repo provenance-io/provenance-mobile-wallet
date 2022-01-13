@@ -3,7 +3,9 @@ import 'dart:math';
 class StatService {
   factory StatService() => _singleton;
   StatService._internal();
+
   static final StatService _singleton = StatService._internal();
+
   static StatService get instance => _singleton;
 
   // TODO: Do this, but for reals.

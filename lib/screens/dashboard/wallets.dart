@@ -188,11 +188,10 @@ class WalletsState extends State<Wallets>
 
 // TODO: Should be StatefulWidget since it's not immutable?
 class WalletItem extends StatelessWidget {
-  WalletItem(
-    this.item,
-    this.reload,
-  );
+  WalletItem(this.item, this.reload);
+
   Offset? _tapPosition;
+
   final WalletDetails item;
   VoidCallback reload;
 

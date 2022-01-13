@@ -115,13 +115,11 @@ class _LandingState extends State<Landing> {
                     color: FwColor.globalNeutral450,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                      AccountName(
-                        WalletAddImportType.onBoardingRecover,
-                        currentStep: 1,
-                        numberOfSteps: 4,
-                      ).route(),
-                    );
+                    Navigator.of(context).push(AccountName(
+                      WalletAddImportType.onBoardingRecover,
+                      currentStep: 1,
+                      numberOfSteps: 4,
+                    ).route());
                   },
                 ),
               ),

@@ -45,9 +45,33 @@ class AddWallet extends StatelessWidget {
                   numberOfSteps: 2,
                 ).route());
               },
-              child: _buildRow(
-                Strings.basicWallet,
-                Strings.standardSingleUserWallet,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          VerticalSpacer.xxLarge(),
+                          FwText(
+                            Strings.basicWallet,
+                            color: FwColor.globalNeutral550,
+                            style: FwTextStyle.m,
+                          ),
+                          VerticalSpacer.medium(),
+                          FwText(
+                            Strings.standardSingleUserWallet,
+                            color: FwColor.globalNeutral450,
+                            style: FwTextStyle.s,
+                          ),
+                          VerticalSpacer.xxLarge(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -62,9 +86,33 @@ class AddWallet extends StatelessWidget {
                   numberOfSteps: 2,
                 ).route());
               },
-              child: _buildRow(
-                Strings.importRecoverWallet,
-                Strings.importExistingWallet,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          VerticalSpacer.xxLarge(),
+                          FwText(
+                            Strings.importRecoverWallet,
+                            color: FwColor.globalNeutral550,
+                            style: FwTextStyle.m,
+                          ),
+                          VerticalSpacer.medium(),
+                          FwText(
+                            Strings.importExistingWallet,
+                            color: FwColor.globalNeutral450,
+                            style: FwTextStyle.s,
+                          ),
+                          VerticalSpacer.xxLarge(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -75,37 +123,6 @@ class AddWallet extends StatelessWidget {
           ),
         ]),
       ),
-    );
-  }
-
-  Widget _buildRow(String title, String subtitle) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                VerticalSpacer.xxLarge(),
-                FwText(
-                  title,
-                  color: FwColor.globalNeutral550,
-                  style: FwTextStyle.m,
-                ),
-                VerticalSpacer.medium(),
-                FwText(
-                  subtitle,
-                  color: FwColor.globalNeutral450,
-                  style: FwTextStyle.s,
-                ),
-                VerticalSpacer.xxLarge(),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

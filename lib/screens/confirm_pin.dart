@@ -37,8 +37,12 @@ class ConfirmPinState extends State<ConfirmPin> {
   var _inputCodes = <int>[];
   var _currentState = 0;
 
+  Color circleColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
+    final accountNameProvider = useTextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -93,10 +97,14 @@ class ConfirmPinState extends State<ConfirmPin> {
               Expanded(
                 flex: Platform.isIOS ? 5 : 6,
                 child: Container(
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 0),
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 0,
+                  ),
                   child: NotificationListener<OverscrollIndicatorNotification>(
                     onNotification: (overscroll) {
-                      overscroll.disallowIndicator();
+                      overscroll.disallowGlow();
 
                       return true;
                     },
@@ -118,7 +126,7 @@ class ConfirmPinState extends State<ConfirmPin> {
                         // buildRemoveIcon(Icons.close),
                         Container(),
                         buildContainerCircle(0),
-                        buildContainerIcon(Icons.arrow_back),
+                        _buildContainerIcon(Icons.arrow_back),
                       ],
                     ),
                   ),
@@ -178,7 +186,27 @@ class ConfirmPinState extends State<ConfirmPin> {
     );
   }
 
-  Widget buildRemoveIcon(IconData icon) {
+  _deleteCode() {
+    setState(() {
+      if (_currentCodeLength > 0) {
+        _currentState = 0;
+        _currentCodeLength--;
+        _inputCodes.removeAt(_currentCodeLength);
+      }
+    });
+  }
+
+  _deleteAllCode() {
+    setState(() {
+      if (_currentCodeLength > 0) {
+        _currentState = 0;
+        _currentCodeLength = 0;
+        _inputCodes.clear();
+      }
+    });
+  }
+
+  Widget _buildRemoveIcon(IconData icon) {
     return InkResponse(
       onTap: () {
         if (0 < _currentCodeLength) {
@@ -210,26 +238,6 @@ class ConfirmPinState extends State<ConfirmPin> {
     );
   }
 
-  _deleteCode() {
-    setState(() {
-      if (_currentCodeLength > 0) {
-        _currentState = 0;
-        _currentCodeLength--;
-        _inputCodes.removeAt(_currentCodeLength);
-      }
-    });
-  }
-
-  _deleteAllCode() {
-    setState(() {
-      if (_currentCodeLength > 0) {
-        _currentState = 0;
-        _currentCodeLength = 0;
-        _inputCodes.clear();
-      }
-    });
-  }
-
   _onCodeClick(int code) async {
     if (_currentCodeLength < 6) {
       setState(() {
@@ -259,9 +267,7 @@ class ConfirmPinState extends State<ConfirmPin> {
     }
   }
 
-  Color circleColor = Colors.white;
-
-  Widget buildContainerIcon(IconData icon) {
+  Widget _buildContainerIcon(IconData icon) {
     return InkResponse(
       onTap: () {
         if (0 < _currentCodeLength) {
@@ -769,6 +775,7 @@ class CodePanel extends StatelessWidget {
         assert(currentLength <= codeLength),
         assert(deleteCode != null),
         assert(status == 0 || status == 1 || status == 2);
+
   final codeLength;
   final currentLength;
   final borderColor;
