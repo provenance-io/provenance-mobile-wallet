@@ -1,8 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
@@ -14,12 +10,8 @@ import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
 import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tech_wallet/util/router_observer.dart';
 
 class Dashboard extends StatefulWidget {
@@ -30,8 +22,9 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   TabController? _tabController;
-  String walletAddress = '';
-  String walletName = '';
+  String _walletAddress = '';
+  String _walletName = '';
+  String _walletValue = '';
   List<AssetResponse> assets = [];
   bool _assetsLoading = true;
 
@@ -64,8 +57,8 @@ class DashboardState extends State<Dashboard>
       final result = await FwDialog.showConfirmation(context,
           title: description,
           message: message,
-          confirmText: 'Sign',
-          cancelText: 'Decline');
+          confirmText: Strings.sign,
+          cancelText: Strings.decline);
       ModalLoadingRoute.showLoading("", context);
       await ProvWalletFlutter.signTransactionFinish(requestId, result == true);
       ModalLoadingRoute.dismiss(context);
@@ -93,13 +86,14 @@ class DashboardState extends State<Dashboard>
   void loadAddress() async {
     final details = await ProvWalletFlutter.getWalletDetails();
     setState(() {
-      walletAddress = details.address;
-      walletName = details.accountName;
+      _walletAddress = details.address;
+      _walletName = details.accountName;
+      _walletValue = '\$0';
     });
 
-    ModalLoadingRoute.showLoading("Loading Assets", context);
+    ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
 
-    final result = await AssetService.getAssets(walletAddress);
+    final result = await AssetService.getAssets(_walletAddress);
 
     ModalLoadingRoute.dismiss(context);
     if (result.isSuccessful) {
@@ -133,7 +127,7 @@ class DashboardState extends State<Dashboard>
             HorizontalSpacer.medium(),
           ],
           title: FwText(
-            walletName,
+            _walletName,
             style: FwTextStyle.h6,
             color: FwColor.globalNeutral550,
           ),
@@ -164,11 +158,11 @@ class DashboardState extends State<Dashboard>
                   tabs: [
                     _buildTabItem(
                       _tabController?.index == 0,
-                      'Dashboard',
+                      Strings.dashboard,
                       FwIcons.wallet,
                     ),
-                    _buildTabItem(_tabController?.index == 1, 'Transactions',
-                        FwIcons.staking),
+                    _buildTabItem(_tabController?.index == 1,
+                        Strings.transactions, FwIcons.staking),
                   ],
                 ))
           ],
@@ -209,10 +203,10 @@ class DashboardState extends State<Dashboard>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              FwText('Portfolio Value',
+                                              FwText(Strings.portfolioValue,
                                                   color: FwColor.white,
                                                   style: FwTextStyle.sBold),
-                                              FwText('\$0',
+                                              FwText(_walletValue,
                                                   color: FwColor.white,
                                                   style: FwTextStyle.h6)
                                             ],
@@ -252,7 +246,7 @@ class DashboardState extends State<Dashboard>
                                                           ),
                                                         ),
                                                         VerticalSpacer.xSmall(),
-                                                        FwText('Send',
+                                                        FwText(Strings.send,
                                                             color:
                                                                 FwColor.white,
                                                             style:
@@ -288,7 +282,7 @@ class DashboardState extends State<Dashboard>
                                                           ),
                                                         ),
                                                         VerticalSpacer.xSmall(),
-                                                        FwText('Receive',
+                                                        FwText(Strings.receive,
                                                             color:
                                                                 FwColor.white,
                                                             style:
@@ -356,7 +350,8 @@ class DashboardState extends State<Dashboard>
                                                               VerticalSpacer
                                                                   .xSmall(),
                                                               FwText(
-                                                                  'WalletConnect',
+                                                                  Strings
+                                                                      .walletConnect,
                                                                   color: FwColor
                                                                       .white,
                                                                   style:
@@ -392,7 +387,7 @@ class DashboardState extends State<Dashboard>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          FwText('My Assets',
+                                          FwText(Strings.myAssets,
                                               color: FwColor.globalNeutral550,
                                               style: FwTextStyle.h6)
                                         ],
@@ -433,6 +428,7 @@ class DashboardState extends State<Dashboard>
                                                         width: 32,
                                                         height: 32,
                                                         child: FwIcon(
+                                                          // TODO: Consolidate code?
                                                           item.display?.toUpperCase() ==
                                                                       'USD' ||
                                                                   item.display
@@ -484,12 +480,6 @@ class DashboardState extends State<Dashboard>
                                                   ),
                                                 ),
                                               ));
-                                          return Container(
-                                            height: 2,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .globalNeutral450,
-                                          );
                                         },
                                         separatorBuilder: (context, index) {
                                           return VerticalSpacer.small();
@@ -516,14 +506,14 @@ class DashboardState extends State<Dashboard>
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            FwText(
-                                                'Wallet connected: ${data.data!}'),
+                                            FwText(Strings.walletConnected(
+                                                data.data)),
                                             SizedBox(
                                               height: 16.0,
                                             ),
                                             FwButton(
                                                 child: FwText(
-                                                  'Disconnect',
+                                                  Strings.disconnect,
                                                   color: FwColor.white,
                                                 ),
                                                 onPressed: () {
@@ -543,7 +533,7 @@ class DashboardState extends State<Dashboard>
                                   padding: EdgeInsets.only(left: 20, right: 20),
                                   child: FwButton(
                                       child: FwText(
-                                        'Reset Wallet',
+                                        Strings.resetWallet,
                                       ),
                                       onPressed: () async {
                                         await ProvWalletFlutter

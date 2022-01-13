@@ -26,7 +26,7 @@ class OnboardingManageSlide extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            LandingStrings.manageYourOwnWallet,
+            Strings.manageYourOwnWallet,
             style: FwTextStyle.extraLarge,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -38,7 +38,7 @@ class OnboardingManageSlide extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            LandingStrings.fullyControlYourWallet,
+            Strings.fullyControlYourWallet,
             style: FwTextStyle.m,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,

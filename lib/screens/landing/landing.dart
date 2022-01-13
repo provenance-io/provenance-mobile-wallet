@@ -95,7 +95,7 @@ class _LandingState extends State<Landing> {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              LandingStrings.createWallet,
+                              Strings.createWallet,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
@@ -113,7 +113,7 @@ class _LandingState extends State<Landing> {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwTextButton(
                             child: FwText(
-                              LandingStrings.restoreWallet,
+                              Strings.restoreWallet,
                               style: FwTextStyle.mBold,
                               color: FwColor.globalNeutral450,
                             ),
@@ -143,7 +143,7 @@ class _LandingState extends State<Landing> {
           child: Visibility(
               visible: _accountExists,
               child: FwOutlinedButton(
-                BiometricStrings.signInWithBiometric(_localAuth.authType),
+                Strings.signInWithBiometric(_localAuth.authType),
                 icon: FwIcon(
                   FwIcons.faceScan,
                   color: Colors.white,

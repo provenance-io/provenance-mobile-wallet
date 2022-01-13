@@ -26,7 +26,7 @@ class OnboardingTradeSlide extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            LandingStrings.trade,
+            Strings.trade,
             style: FwTextStyle.extraLarge,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -38,7 +38,7 @@ class OnboardingTradeSlide extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            LandingStrings.tradeHashText,
+            Strings.tradeHashText,
             style: FwTextStyle.m,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,

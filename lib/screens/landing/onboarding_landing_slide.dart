@@ -50,7 +50,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: FwText(
-            LandingStrings.figureTechWallet,
+            Strings.figureTechWallet,
             style: FwTextStyle.h3,
             textAlign: TextAlign.center,
             color: FwColor.globalNeutral550,
@@ -88,7 +88,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          LandingStrings.marketCap,
+                          Strings.marketCap,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -104,7 +104,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          LandingStrings.validators,
+                          Strings.validators,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -120,7 +120,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          LandingStrings.transactions,
+                          Strings.transactions,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
@@ -136,7 +136,7 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
                           color: FwColor.globalNeutral450,
                         ),
                         FwText(
-                          LandingStrings.avgBlockTime,
+                          Strings.avgBlockTime,
                           style: FwTextStyle.m,
                           color: FwColor.globalNeutral450,
                         )
