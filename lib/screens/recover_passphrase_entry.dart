@@ -290,16 +290,12 @@ class _TextFormField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
   final FocusNode? focusNode;
-  Offset? _tapPosition = Offset(0, 0);
   final Function? handlePaste;
 
   TextStyle _decorationStyleOf(BuildContext context) {
     final theme = Theme.of(context);
-    return theme.textTheme.medium.copyWith(color: theme.hintColor);
-  }
 
-  void _storePosition(TapDownDetails details) {
-    _tapPosition = details.globalPosition;
+    return theme.textTheme.medium.copyWith(color: theme.hintColor);
   }
 
   @override
