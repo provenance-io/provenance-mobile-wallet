@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/screens/confirm_pin.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 
 class CreatePin extends StatefulHookWidget {
   final List<String>? words;
@@ -15,7 +14,8 @@ class CreatePin extends StatefulHookWidget {
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
-  CreatePin(this.flowType, {this.words, this.accountName, this.currentStep, this.numberOfSteps});
+  CreatePin(this.flowType,
+      {this.words, this.accountName, this.currentStep, this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -78,7 +78,7 @@ class CreatePinState extends State<CreatePin> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FwText(
-                            'Set your pin code',
+                            Strings.setYourPinCode,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.left,
                             color: FwColor.globalNeutral550,
@@ -142,7 +142,10 @@ class CreatePinState extends State<CreatePin> {
                     SizedBox(
                       height: 40,
                     ),
-                    if (widget.numberOfSteps != null) ProgressStepper(widget.currentStep ?? 0, widget.numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (widget.numberOfSteps != null)
+                      ProgressStepper(
+                          widget.currentStep ?? 0, widget.numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (widget.numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));

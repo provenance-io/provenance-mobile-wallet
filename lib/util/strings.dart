@@ -114,4 +114,71 @@ class Strings {
       'Are you sure you want to remove this wallet?';
   static const yes = 'Yes';
   static const addressCopied = 'Address copied';
+
+  // Account Name
+  static const nameYourAccount = 'Name your account';
+  static const accountName = 'Account Name';
+  static const nameYourAccountText =
+      'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.';
+  static const continueName = 'Continue';
+
+  // Confirm Pin
+  static const confirmYourPinCode = 'Confirm your pin code';
+  static const yourPinDoesNotMatchPleaseTryAgain =
+      "Your pin doesn't match. Please try again or go back and re-enter your pin.";
+
+  // CreatePin
+  static const setYourPinCode = 'Set your pin code';
+
+  // EnableFaceId
+  static const useFaceId = 'Use Face ID';
+  static const useYourFaceId =
+      'Use your Face ID for faster, easier access to your account.';
+  static const enableFaceId = 'Enable Face ID';
+  static const pleaseWait = 'Please Wait';
+  static const later = 'Later';
+
+  // PrepareRecoveryPhraseIntro
+  static const prepareToWriteDownYourRecoveryPassphrase =
+      'Prepare to write down your recovery passphrase';
+  static const theOnlyWayToRecoverYourAccount =
+      'The only way to recover your account is with this recovery passphrase.';
+  static const warningDoNotShare =
+      'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
+  static const iAmReady = "I'm ready to begin";
+
+  // RecoverPassphraseEntry
+  static const enterYourRecoveryPassphrase = 'Enter your recovery passphrase';
+  static const recover = 'Recover';
+
+  // RecoveryWordsConfirm
+  static const verifyRecoveryPassphrase = 'Verify recovery passphrase';
+  static const next = 'Next';
+  static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
+  static const yourSelectionsDoNotMatch =
+      "Your selections don't match. Please try again.";
+
+  // RecoveryWords
+  static const recoveryPassphrase = 'Recovery passphrase';
+  static const recordTheseWordsInTheCorrectOrder =
+      'Make sure to record these words in the correct order, using the corresponding numbers.';
+  static const passphraseCopied = 'Passphrase Copied';
+
+  // RestoreAccountIntro
+  static const recoverAccount = 'Recover Account';
+  static const inTheFollowingStepsText =
+      "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
+
+  // SendTransactionApproval
+  static const sendTransaction = 'Send Transaction';
+  static const amount = 'Amount';
+  static const fee = 'Fee';
+  static const from = 'From';
+  static const to = 'To';
+  static const approve = 'Approve';
+  static const reject = 'Reject';
+
+  // ValidatePin
+  static const enterYourPinCode = 'Enter your pin code';
+  static const yourPinDoesNotMatch = "Your pin doesn't match.";
 }
