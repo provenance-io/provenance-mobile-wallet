@@ -339,64 +339,6 @@ class _TextFormField extends StatelessWidget {
             ),
           ),
         ),
-        // GestureDetector(
-        // behavior: HitTestBehavior.opaque,
-        //   onTap: () {
-        //     FocusScope.of(context).requestFocus(focusNode);
-        //   },
-        //     onTapDown: (details) {
-        //       _storePosition(details);
-        //     },
-        //   onLongPress: () async {
-        //     final result = await showMenu(context: context,
-        //       position: RelativeRect.fromRect(
-        //           (_tapPosition ?? Offset(0,0)) & Size(40, 40), // smaller rect, the touch area
-        //           Offset.zero & overlay.size // Bigger rect, the entire screen
-        //       ),
-        //       items: [
-        //         PopupMenuItem<bool>(
-        //           value: true,
-        //           child: FwText('Paste'),
-        //         ),
-        //       ],);
-        //
-        //     if (result == true) {
-        //       handlePaste!(controller!);
-        //     }
-        //
-        //   },
-        //   child: IgnorePointer(
-        //     child: TextFormField(
-        //       keyboardType: keyboardType,
-        //       autocorrect: false,
-        //       controller: controller,
-        //       onChanged: onChanged,
-        //       focusNode: focusNode,
-        //       autovalidateMode: AutovalidateMode.onUserInteraction,
-        //       validator: (word) {
-        //         if (word == null || word.isEmpty) {
-        //           return "*required";
-        //         }
-        //
-        //         return null;
-        //       },
-        //       style: Theme.of(context)
-        //           .textTheme
-        //           .medium
-        //           .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
-        //       decoration: InputDecoration(
-        //         fillColor: Colors.white,
-        //         filled: true,
-        //         prefix: Container(
-        //           width: 20,
-        //         ),
-        //         enabledBorder: OutlineInputBorder(
-        //           borderSide: BorderSide(color: theme.colorScheme.midGrey),
-        //         ),
-        //       ),
-        //     )
-        //   )
-        // ),
         Builder(builder: (context) {
           return Column(
             mainAxisSize: MainAxisSize.min,
