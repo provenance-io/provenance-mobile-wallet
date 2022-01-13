@@ -222,9 +222,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
       }
       if (parts.length == 24) {
-        for (var i = 0; i < parts.length; i++) {
-          textControllers[i].text = parts[i];
-        }
+        _putPartsInText(parts);
       }
     }
   }
@@ -238,10 +236,15 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
       }
       if (parts.length == 24) {
-        for (var i = 0; i < parts.length; i++) {
-          textControllers[i].text = parts[i];
-        }
+        _putPartsInText(parts);
       }
+    }
+  }
+
+  _putPartsInText(List<String> parts) {
+    for (var part in parts) {
+      var index = parts.indexOf(part);
+      textControllers[index].text = part;
     }
   }
 }
