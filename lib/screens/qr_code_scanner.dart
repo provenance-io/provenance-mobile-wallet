@@ -1,6 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -59,48 +56,48 @@ class QRCodeScannerState extends State<QRCodeScanner> {
             isLoading: false,
             child: ClipRRect(
                 child: Stack(children: <Widget>[
-                  Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 144 * ratio,
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                              child: QRView(
-                                  key: qrKey,
-                                  onQRViewCreated: _onQRViewCreated,
-                                  overlay: QrScannerOverlayShape(
-                                    borderColor: Colors.red,
-                                    borderRadius: 0,
-                                    borderLength: 0,
-                                    borderWidth: 0,
-                                    cutOutSize: 300,
-                                  )))
-                        ],
-                      )),
-                  // Positioned(
-                  //   left: 0,
-                  //   right: 0,
-                  //   bottom: 0,
-                  //   child: Container(
-                  //     height: 144 * ratio,
-                  //     color: Theme.of(context).colorScheme.background,
-                  //     child: Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Padding(
-                  //               padding: EdgeInsets.only(top: 40),
-                  //               child: FwText(
-                  //                 'Scan QR Code',
-                  //                 style: FwTextStyle.h3,
-                  //                 color: FwColor.black,
-                  //               )),
-                  //         ]),
-                  //   ),
-                  // ),
-                ])));
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 144 * ratio,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                          child: QRView(
+                              key: qrKey,
+                              onQRViewCreated: _onQRViewCreated,
+                              overlay: QrScannerOverlayShape(
+                                borderColor: Colors.red,
+                                borderRadius: 0,
+                                borderLength: 0,
+                                borderWidth: 0,
+                                cutOutSize: 300,
+                              )))
+                    ],
+                  )),
+              // Positioned(
+              //   left: 0,
+              //   right: 0,
+              //   bottom: 0,
+              //   child: Container(
+              //     height: 144 * ratio,
+              //     color: Theme.of(context).colorScheme.background,
+              //     child: Row(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Padding(
+              //               padding: EdgeInsets.only(top: 40),
+              //               child: FwText(
+              //                 'Scan QR Code',
+              //                 style: FwTextStyle.h3,
+              //                 color: FwColor.black,
+              //               )),
+              //         ]),
+              //   ),
+              // ),
+            ])));
       },
     );
   }

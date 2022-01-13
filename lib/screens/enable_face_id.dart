@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/main.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
 import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class EnableFaceId extends StatelessWidget {
@@ -17,7 +16,13 @@ class EnableFaceId extends StatelessWidget {
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
-  EnableFaceId({this.words, this.accountName, this.code, this.currentStep, this.numberOfSteps, this.flowType = WalletAddImportType.onBoardingAdd});
+  EnableFaceId(
+      {this.words,
+      this.accountName,
+      this.code,
+      this.currentStep,
+      this.numberOfSteps,
+      this.flowType = WalletAddImportType.onBoardingAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,7 @@ class EnableFaceId extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'Use Face ID',
+                        Strings.useFaceId,
                         style: FwTextStyle.extraLarge,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -72,7 +77,7 @@ class EnableFaceId extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: FwText(
-                        'Use your Face ID for faster, easier access to your account.',
+                        Strings.useYourFaceId,
                         style: FwTextStyle.m,
                         textAlign: TextAlign.center,
                         color: FwColor.globalNeutral550,
@@ -86,26 +91,35 @@ class EnableFaceId extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwButton(
                             child: FwText(
-                              'Enable Face ID',
+                              Strings.enableFaceId,
                               style: FwTextStyle.mBold,
                               color: FwColor.white,
                             ),
                             onPressed: () async {
-                              ModalLoadingRoute.showLoading("Please Wait", context);
+                              ModalLoadingRoute.showLoading(
+                                  Strings.pleaseWait, context);
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(words?.join(' ') ?? '', accountName ?? '');
+                              final success =
+                                  await ProvWalletFlutter.saveToWalletService(
+                                words?.join(' ') ?? '',
+                                accountName ?? '',
+                                useBiometry: true,
+                              );
                               ModalLoadingRoute.dismiss(context);
-                              LocalAuthHelper.instance.enroll(
-                                  privateKey,
-                                  code?.join() ?? '',
-                                  accountName ?? '',
-                                  true,
-                                  context, () async {
-                                navigatorKey.currentState
-                                    ?.pushReplacement(Dashboard().route());
-                              });
+
+                              if (success) {
+                                LocalAuthHelper.instance.enroll(
+                                    privateKey,
+                                    code?.join() ?? '',
+                                    accountName ?? '',
+                                    true,
+                                    context, () async {
+                                  navigatorKey.currentState
+                                      ?.pushReplacement(Dashboard().route());
+                                });
+                              }
                             })),
                     SizedBox(
                       height: 8,
@@ -114,31 +128,41 @@ class EnableFaceId extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: FwTextButton(
                             child: FwText(
-                              'Later',
+                              Strings.later,
                               style: FwTextStyle.mBold,
                               color: FwColor.globalNeutral450,
                             ),
                             onPressed: () async {
-                              ModalLoadingRoute.showLoading("Please Wait", context);
+                              ModalLoadingRoute.showLoading(
+                                  Strings.pleaseWait, context);
                               String privateKey =
                                   await ProvWalletFlutter.getPrivateKey(
                                       words?.join(' ') ?? '');
-                              await ProvWalletFlutter.saveToWalletService(words?.join(' ') ?? '', accountName ?? '');
+                              final success =
+                                  await ProvWalletFlutter.saveToWalletService(
+                                words?.join(' ') ?? '',
+                                accountName ?? '',
+                                useBiometry: false,
+                              );
                               ModalLoadingRoute.dismiss(context);
-                              LocalAuthHelper.instance.enroll(
-                                  privateKey,
-                                  code?.join() ?? '',
-                                  accountName ?? '',
-                                  false,
-                                  context, () {
-                                navigatorKey.currentState
-                                    ?.pushReplacement(Dashboard().route());
-                              });
+                              if (success) {
+                                LocalAuthHelper.instance.enroll(
+                                    privateKey,
+                                    code?.join() ?? '',
+                                    accountName ?? '',
+                                    false,
+                                    context, () {
+                                  navigatorKey.currentState
+                                      ?.pushReplacement(Dashboard().route());
+                                });
+                              }
                             })),
                     SizedBox(
                       height: 40,
                     ),
-                    if (numberOfSteps != null) ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                    if (numberOfSteps != null)
+                      ProgressStepper(currentStep ?? 0, numberOfSteps ?? 1,
+                          padding: EdgeInsets.only(left: 20, right: 20)),
                     if (numberOfSteps != null) VerticalSpacer.xxLarge()
                   ],
                 ))));

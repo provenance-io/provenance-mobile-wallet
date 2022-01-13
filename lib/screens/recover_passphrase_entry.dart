@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/screens/account_name.dart';
 import 'package:flutter_tech_wallet/screens/create_pin.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoverPassphraseEntry extends StatefulWidget {
@@ -16,11 +13,13 @@ class RecoverPassphraseEntry extends StatefulWidget {
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoverPassphraseEntry(this.flowType, this.accountName, {this.currentStep, this.numberOfSteps});
+  RecoverPassphraseEntry(this.flowType, this.accountName,
+      {this.currentStep, this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
-    return RecoverPassphraseEntryState(flowType, accountName, currentStep: currentStep, numberOfSteps: numberOfSteps);
+    return RecoverPassphraseEntryState(flowType, accountName,
+        currentStep: currentStep, numberOfSteps: numberOfSteps);
   }
 }
 
@@ -30,7 +29,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoverPassphraseEntryState(this.flowType, this.accountName, {this.currentStep, this.numberOfSteps});
+  RecoverPassphraseEntryState(this.flowType, this.accountName,
+      {this.currentStep, this.numberOfSteps});
 
   final _formKey = GlobalKey<FormState>();
   final word1 = TextEditingController();
@@ -180,7 +180,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                 children: [
                                   Flexible(
                                       child: FwText(
-                                    'Enter your recovery passphrase',
+                                    Strings.enterYourRecoveryPassphrase,
                                     style: FwTextStyle.extraLarge,
                                     textAlign: TextAlign.left,
                                     color: FwColor.globalNeutral550,
@@ -390,7 +390,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                 padding: EdgeInsets.only(left: 20, right: 20),
                                 child: FwButton(
                                     child: FwText(
-                                      'Recover',
+                                      Strings.recover,
                                       style: FwTextStyle.mBold,
                                       color: FwColor.white,
                                     ),
@@ -423,7 +423,9 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                           word23.text.trim(),
                                           word24.text.trim()
                                         ];
-                                        if (flowType == WalletAddImportType.onBoardingRecover) {
+                                        if (flowType ==
+                                            WalletAddImportType
+                                                .onBoardingRecover) {
                                           Navigator.of(context).push(CreatePin(
                                             flowType,
                                             accountName: accountName,
@@ -432,11 +434,15 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                                             words: words,
                                           ).route());
                                         } else {
-                                          ModalLoadingRoute.showLoading("Please Wait", context);
+                                          ModalLoadingRoute.showLoading(
+                                              Strings.pleaseWait, context);
                                           String privateKey =
-                                              await ProvWalletFlutter.getPrivateKey(
-                                              words.join(' '));
-                                          await ProvWalletFlutter.saveToWalletService(words.join(' '), accountName);
+                                              await ProvWalletFlutter
+                                                  .getPrivateKey(
+                                                      words.join(' '));
+                                          await ProvWalletFlutter
+                                              .saveToWalletService(
+                                                  words.join(' '), accountName);
                                           ModalLoadingRoute.dismiss(context);
 
                                           Navigator.pop(context);
@@ -449,7 +455,11 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                             SizedBox(
                               height: 40,
                             ),
-                            if (numberOfSteps != null) ProgressStepper((currentStep ?? 0), numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
+                            if (numberOfSteps != null)
+                              ProgressStepper(
+                                  (currentStep ?? 0), numberOfSteps ?? 1,
+                                  padding:
+                                      EdgeInsets.only(left: 20, right: 20)),
                             if (numberOfSteps != null) VerticalSpacer.xxLarge()
                           ],
                         ))))));
@@ -530,14 +540,15 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 }
 
 class _TextFormField extends StatelessWidget {
-  _TextFormField({Key? key,
-    this.keyboardType,
-    this.number,
-    this.onChanged,
-    this.validator,
-    this.focusNode,
-    this.handlePaste,
-    this.controller})
+  _TextFormField(
+      {Key? key,
+      this.keyboardType,
+      this.number,
+      this.onChanged,
+      this.validator,
+      this.focusNode,
+      this.handlePaste,
+      this.controller})
       : super(key: key);
 
   final String? number;
@@ -561,10 +572,8 @@ class _TextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final RenderBox overlay = Overlay
-        .of(context)
-        ?.context
-        .findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context)?.context.findRenderObject() as RenderBox;
     return Stack(
       alignment: Alignment.centerLeft,
       children: <Widget>[
@@ -577,19 +586,15 @@ class _TextFormField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (word) {
             if (word == null || word.isEmpty) {
-              return "*required";
+              return Strings.required;
             }
 
             return null;
           },
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .medium
-              .copyWith(color: Theme
-              .of(context)
-              .colorScheme
-              .globalNeutral550),
+              .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
           decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
@@ -688,14 +693,10 @@ class _TextFormField extends StatelessWidget {
       onChanged: onChanged,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
-      style: Theme
-          .of(context)
+      style: Theme.of(context)
           .textTheme
           .medium
-          .copyWith(color: Theme
-          .of(context)
-          .colorScheme
-          .globalNeutral550),
+          .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,

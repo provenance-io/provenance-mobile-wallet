@@ -43,30 +43,26 @@ class LocalAuthenticationService {
 
   String get authType {
     if (type == null) {
-      return BiometricStrings.biometric;
+      return Strings.biometric;
     }
     if (Platform.isIOS) {
-      return type == BiometricType.face
-          ? BiometricStrings.faceId
-          : BiometricStrings.touchId;
+      return type == BiometricType.face ? Strings.faceId : Strings.touchId;
     }
 
-    return type == BiometricType.face
-        ? BiometricStrings.face
-        : BiometricStrings.fingerPrint;
+    return type == BiometricType.face ? Strings.face : Strings.fingerPrint;
   }
 
   static const iosStrings = IOSAuthMessages(
-    cancelButton: BiometricStrings.cancel,
-    goToSettingsButton: BiometricStrings.settings,
-    goToSettingsDescription: BiometricStrings.setupBiometric,
-    lockOut: BiometricStrings.reEnableBiometric,
+    cancelButton: Strings.cancel,
+    goToSettingsButton: Strings.settings,
+    goToSettingsDescription: Strings.setupBiometric,
+    lockOut: Strings.reEnableBiometric,
   );
 
   static const androidStrings = AndroidAuthMessages(
-    cancelButton: BiometricStrings.cancel,
-    goToSettingsButton: BiometricStrings.settings,
-    goToSettingsDescription: BiometricStrings.setupBiometric,
+    cancelButton: Strings.cancel,
+    goToSettingsButton: Strings.settings,
+    goToSettingsDescription: Strings.setupBiometric,
   );
 
   deleteStorage() async {
@@ -117,8 +113,7 @@ class LocalAuthenticationService {
     try {
       // await FlutterNativeCommands.readyToShowAuthScreen(false);
       _isAuthenticated = await _auth.authenticate(
-        localizedReason:
-            message ?? BiometricStrings.signInWithBiometric(authType),
+        localizedReason: message ?? Strings.signInWithBiometric(authType),
         useErrorDialogs: true,
         stickyAuth: false,
         biometricOnly: false,

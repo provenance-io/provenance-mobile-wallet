@@ -1,15 +1,13 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/common/widgets/word_selector.dart';
 import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
-import 'package:flutter_tech_wallet/screens/account_name.dart';
 import 'package:flutter_tech_wallet/screens/create_pin.dart';
+import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWordsConfirm extends StatefulWidget {
@@ -19,7 +17,11 @@ class RecoveryWordsConfirm extends StatefulWidget {
   final String? accountName;
   final WalletAddImportType flowType;
 
-  RecoveryWordsConfirm(this.flowType, {@required this.words, this.accountName, this.currentStep, this.numberOfSteps});
+  RecoveryWordsConfirm(this.flowType,
+      {@required this.words,
+      this.accountName,
+      this.currentStep,
+      this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -128,7 +130,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: FwText(
-                            'Verify recovery passphrase',
+                            Strings.verifyRecoveryPassphrase,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.center,
                             color: FwColor.globalNeutral550,
@@ -185,7 +187,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: FwButton(
                                 child: FwText(
-                                  'Next',
+                                  Strings.next,
                                   style: FwTextStyle.mBold,
                                   color: FwColor.white,
                                 ),
@@ -195,8 +197,12 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                         SizedBox(
                           height: 40,
                         ),
-                        if (widget.numberOfSteps != null) ProgressStepper((widget.currentStep ?? 0), widget.numberOfSteps ?? 1, padding: EdgeInsets.only(left: 20, right: 20)),
-                        if (widget.numberOfSteps != null) VerticalSpacer.xxLarge()
+                        if (widget.numberOfSteps != null)
+                          ProgressStepper((widget.currentStep ?? 0),
+                              widget.numberOfSteps ?? 1,
+                              padding: EdgeInsets.only(left: 20, right: 20)),
+                        if (widget.numberOfSteps != null)
+                          VerticalSpacer.xxLarge()
                       ],
                     )))));
   }
@@ -209,7 +215,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       await showDialog(
           context: context,
           builder: (context) => ErrorDialog(
-                error: "Please make a selection for the 4 rows.",
+                error: Strings.pleaseMakeASelection,
               ));
     } else if (_selectedWord1 != widget.words?[word1] ||
         _selectedWord2 != widget.words?[word2] ||
@@ -218,7 +224,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       await showDialog(
           context: context,
           builder: (context) => ErrorDialog(
-                error: "Your selections don't match. Please try again.",
+                error: Strings.yourSelectionsDoNotMatch,
               ));
     } else {
       if (widget.flowType == WalletAddImportType.onBoardingAdd) {
@@ -230,11 +236,11 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           numberOfSteps: widget.numberOfSteps,
         ).route());
       } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
-        ModalLoadingRoute.showLoading("Please Wait", context);
-        String privateKey =
-        await ProvWalletFlutter.getPrivateKey(
+        ModalLoadingRoute.showLoading(Strings.pleaseWait, context);
+        String privateKey = await ProvWalletFlutter.getPrivateKey(
             widget.words?.join(' ') ?? '');
-        await ProvWalletFlutter.saveToWalletService(widget.words?.join(' ') ?? '', widget.accountName ?? '');
+        await ProvWalletFlutter.saveToWalletService(
+            widget.words?.join(' ') ?? '', widget.accountName ?? '');
         ModalLoadingRoute.dismiss(context);
         Navigator.pop(context);
         Navigator.pop(context);
