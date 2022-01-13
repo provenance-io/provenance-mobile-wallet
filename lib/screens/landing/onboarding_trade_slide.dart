@@ -1,14 +1,7 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 
-class OnboardingTradeSlide extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _OnboardingTradeSlideState();
-  }
-}
-
-class _OnboardingTradeSlideState extends State<OnboardingTradeSlide> {
+class OnboardingTradeSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
