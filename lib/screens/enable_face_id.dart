@@ -9,20 +9,21 @@ import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class EnableFaceId extends StatelessWidget {
+  EnableFaceId({
+    this.words,
+    this.accountName,
+    this.code,
+    this.currentStep,
+    this.numberOfSteps,
+    this.flowType = WalletAddImportType.onBoardingAdd,
+  });
+
   final List<String>? words;
   final String? accountName;
   final List<int>? code;
   final int? currentStep;
   final int? numberOfSteps;
   final WalletAddImportType flowType;
-
-  EnableFaceId(
-      {this.words,
-      this.accountName,
-      this.code,
-      this.currentStep,
-      this.numberOfSteps,
-      this.flowType = WalletAddImportType.onBoardingAdd});
 
   @override
   Widget build(BuildContext context) {
