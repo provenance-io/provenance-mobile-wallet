@@ -161,6 +161,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: LayoutBuilder(builder: (context, constraints) {
                       final width = (constraints.maxWidth - 20) / 2;
+
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: buildTextNodes(width),
@@ -305,6 +306,7 @@ class _TextFormField extends StatelessWidget {
     final theme = Theme.of(context);
     final RenderBox overlay =
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
+
     return Stack(
       alignment: Alignment.centerLeft,
       children: <Widget>[
