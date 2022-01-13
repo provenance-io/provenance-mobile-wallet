@@ -419,35 +419,5 @@ class _TextFormField extends StatelessWidget {
       ],
     );
 
-    return TextFormField(
-      keyboardType: keyboardType,
-      autocorrect: false,
-      controller: controller,
-      onChanged: onChanged,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: validator,
-      style: Theme.of(context)
-          .textTheme
-          .medium
-          .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
-      decoration: InputDecoration(
-        fillColor: Colors.white,
-        filled: true,
-        prefix: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FwText(
-              number!,
-              style: FwTextStyle.m,
-              color: FwColor.globalNeutral550,
-            ),
-            VerticalSpacer.large()
-          ],
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.midGrey),
-        ),
-      ),
-    );
   }
 }
