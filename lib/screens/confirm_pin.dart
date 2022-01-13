@@ -10,19 +10,21 @@ import 'package:flutter_tech_wallet/screens/enable_face_id.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
+  ConfirmPin(
+    this.flowType, {
+    this.words,
+    this.accountName,
+    this.code,
+    this.currentStep,
+    this.numberOfSteps,
+  });
+
   final List<String>? words;
   final String? accountName;
   final List<int>? code;
   final int? currentStep;
   final int? numberOfSteps;
   final WalletAddImportType flowType;
-
-  ConfirmPin(this.flowType,
-      {this.words,
-      this.accountName,
-      this.code,
-      this.currentStep,
-      this.numberOfSteps});
 
   @override
   State<StatefulWidget> createState() {
@@ -35,127 +37,111 @@ class ConfirmPinState extends State<ConfirmPin> {
   var _inputCodes = <int>[];
   var _currentState = 0;
 
-  _deleteCode() {
-    setState(() {
-      if (_currentCodeLength > 0) {
-        _currentState = 0;
-        _currentCodeLength--;
-        _inputCodes.removeAt(_currentCodeLength);
-      }
-    });
-  }
-
-  _deleteAllCode() {
-    setState(() {
-      if (_currentCodeLength > 0) {
-        _currentState = 0;
-        _currentCodeLength = 0;
-        _inputCodes.clear();
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final accountNameProvider = useTextEditingController();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
-              size: 24,
-              color: Color(0xFF3D4151),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: FwIcon(
+            FwIcons.back,
+            size: 24,
+            color: Color(0xFF3D4151),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FwText(
+                      Strings.confirmYourPinCode,
+                      style: FwTextStyle.extraLarge,
+                      textAlign: TextAlign.left,
+                      color: FwColor.globalNeutral550,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: CodePanel(
+                  codeLength: 6,
+                  currentLength: _currentCodeLength,
+                  status: _currentState,
+                  deleteCode: _deleteCode,
+                  borderColor: Theme.of(context).colorScheme.globalNeutral550,
+                ),
+              ),
+              SizedBox(
+                height: 60,
+              ),
+              Expanded(
+                flex: Platform.isIOS ? 5 : 6,
+                child: Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 0),
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll.disallowIndicator();
+
+                      return true;
+                    },
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      childAspectRatio: 1.6,
+                      mainAxisSpacing: 35,
+                      padding: EdgeInsets.all(8),
+                      children: <Widget>[
+                        buildContainerCircle(1),
+                        buildContainerCircle(2),
+                        buildContainerCircle(3),
+                        buildContainerCircle(4),
+                        buildContainerCircle(5),
+                        buildContainerCircle(6),
+                        buildContainerCircle(7),
+                        buildContainerCircle(8),
+                        buildContainerCircle(9),
+                        // buildRemoveIcon(Icons.close),
+                        Container(),
+                        buildContainerCircle(0),
+                        buildContainerIcon(Icons.arrow_back),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              if (widget.numberOfSteps != null)
+                ProgressStepper(
+                  widget.currentStep ?? 0,
+                  widget.numberOfSteps ?? 1,
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                ),
+              if (widget.numberOfSteps != null) VerticalSpacer.xxLarge(),
+            ],
           ),
         ),
-        body: Container(
-            color: Colors.white,
-            child: Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FwText(
-                            Strings.confirmYourPinCode,
-                            style: FwTextStyle.extraLarge,
-                            textAlign: TextAlign.left,
-                            color: FwColor.globalNeutral550,
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: CodePanel(
-                          codeLength: 6,
-                          currentLength: _currentCodeLength,
-                          status: _currentState,
-                          deleteCode: _deleteCode,
-                          borderColor:
-                              Theme.of(context).colorScheme.globalNeutral550,
-                        )),
-                    SizedBox(
-                      height: 60,
-                    ),
-                    Expanded(
-                      flex: Platform.isIOS ? 5 : 6,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 0),
-                        child: NotificationListener<
-                            OverscrollIndicatorNotification>(
-                          onNotification: (overscroll) {
-                            overscroll.disallowGlow();
-                            return true;
-                          },
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            childAspectRatio: 1.6,
-                            mainAxisSpacing: 35,
-                            padding: EdgeInsets.all(8),
-                            children: <Widget>[
-                              buildContainerCircle(1),
-                              buildContainerCircle(2),
-                              buildContainerCircle(3),
-                              buildContainerCircle(4),
-                              buildContainerCircle(5),
-                              buildContainerCircle(6),
-                              buildContainerCircle(7),
-                              buildContainerCircle(8),
-                              buildContainerCircle(9),
-                              // buildRemoveIcon(Icons.close),
-                              Container(),
-                              buildContainerCircle(0),
-                              buildContainerIcon(Icons.arrow_back),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    if (widget.numberOfSteps != null)
-                      ProgressStepper(
-                          widget.currentStep ?? 0, widget.numberOfSteps ?? 1,
-                          padding: EdgeInsets.only(left: 20, right: 20)),
-                    if (widget.numberOfSteps != null) VerticalSpacer.xxLarge()
-                  ],
-                ))));
+      ),
+    );
   }
 
   Widget buildContainerCircle(int number) {
@@ -182,9 +168,10 @@ class ConfirmPinState extends State<ConfirmPin> {
           child: Text(
             number.toString(),
             style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.normal,
-                color: Theme.of(context).colorScheme.globalNeutral550),
+              fontSize: 28,
+              fontWeight: FontWeight.normal,
+              color: Theme.of(context).colorScheme.globalNeutral550,
+            ),
           ),
         ),
       ),
@@ -223,6 +210,26 @@ class ConfirmPinState extends State<ConfirmPin> {
     );
   }
 
+  _deleteCode() {
+    setState(() {
+      if (_currentCodeLength > 0) {
+        _currentState = 0;
+        _currentCodeLength--;
+        _inputCodes.removeAt(_currentCodeLength);
+      }
+    });
+  }
+
+  _deleteAllCode() {
+    setState(() {
+      if (_currentCodeLength > 0) {
+        _currentState = 0;
+        _currentCodeLength = 0;
+        _inputCodes.clear();
+      }
+    });
+  }
+
   _onCodeClick(int code) async {
     if (_currentCodeLength < 6) {
       setState(() {
@@ -234,10 +241,11 @@ class ConfirmPinState extends State<ConfirmPin> {
         Function eq = const ListEquality().equals;
         if (!eq(_inputCodes, widget.code)) {
           await showDialog(
-              context: context,
-              builder: (context) => ErrorDialog(
-                    error: Strings.yourPinDoesNotMatchPleaseTryAgain,
-                  ));
+            context: context,
+            builder: (context) => ErrorDialog(
+              error: Strings.yourPinDoesNotMatchPleaseTryAgain,
+            ),
+          );
         } else {
           Navigator.of(context).push(EnableFaceId(
             accountName: widget.accountName,
@@ -295,14 +303,14 @@ class ConfirmPinState extends State<ConfirmPin> {
 }
 
 class _TextFormField extends StatelessWidget {
-  const _TextFormField(
-      {Key? key,
-      required this.label,
-      this.keyboardType,
-      this.onChanged,
-      this.validator,
-      this.controller})
-      : super(key: key);
+  const _TextFormField({
+    Key? key,
+    required this.label,
+    this.keyboardType,
+    this.onChanged,
+    this.validator,
+    this.controller,
+  }) : super(key: key);
 
   final String label;
   final TextInputType? keyboardType;
@@ -748,6 +756,19 @@ typedef Future<bool> PassCodeVerify(List<int> passcode);
 // }
 
 class CodePanel extends StatelessWidget {
+  CodePanel({
+    this.codeLength,
+    this.currentLength,
+    this.borderColor,
+    this.foregroundColor,
+    this.deleteCode,
+    this.fingerVerify,
+    this.status,
+  })  : assert(codeLength > 0),
+        assert(currentLength >= 0),
+        assert(currentLength <= codeLength),
+        assert(deleteCode != null),
+        assert(status == 0 || status == 1 || status == 2);
   final codeLength;
   final currentLength;
   final borderColor;
@@ -757,19 +778,6 @@ class CodePanel extends StatelessWidget {
   final W = 16.0;
   final DeleteCode? deleteCode;
   final int? status;
-  CodePanel(
-      {this.codeLength,
-      this.currentLength,
-      this.borderColor,
-      this.foregroundColor,
-      this.deleteCode,
-      this.fingerVerify,
-      this.status})
-      : assert(codeLength > 0),
-        assert(currentLength >= 0),
-        assert(currentLength <= codeLength),
-        assert(deleteCode != null),
-        assert(status == 0 || status == 1 || status == 2);
 
   @override
   Widget build(BuildContext context) {
@@ -804,25 +812,28 @@ class CodePanel extends StatelessWidget {
       for (int i = 1; i <= codeLength; i++) {
         if (i > currentLength) {
           circles.add(SizedBox(
-              width: W,
-              height: H,
-              child: Container(
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: new Border.all(color: color, width: 1.0),
-                    color: foregroundColor),
-              )));
+            width: W,
+            height: H,
+            child: Container(
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                border: new Border.all(color: color, width: 1.0),
+                color: foregroundColor,
+              ),
+            ),
+          ));
         } else {
           circles.add(new SizedBox(
-              width: W,
-              height: H,
-              child: new Container(
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: new Border.all(color: color, width: 1.0),
-                  color: color,
-                ),
-              )));
+            width: W,
+            height: H,
+            child: new Container(
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                border: new Border.all(color: color, width: 1.0),
+                color: color,
+              ),
+            ),
+          ));
         }
       }
     }
@@ -830,15 +841,17 @@ class CodePanel extends StatelessWidget {
     return new SizedBox.fromSize(
       size: new Size(MediaQuery.of(context).size.width, 30.0),
       child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox.fromSize(
-                size: new Size(30.0 * codeLength, H),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: circles,
-                )),
-          ]),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox.fromSize(
+            size: new Size(30.0 * codeLength, H),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: circles,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
