@@ -4,13 +4,6 @@ part 'asset_response.g.dart';
 
 @JsonSerializable()
 class AssetResponse {
-  final String? denom;
-  final String? amount;
-  final String? display;
-  final String? description;
-  final int? exponent;
-  final String? displayAmount;
-
   AssetResponse({
     required this.denom,
     required this.amount,
@@ -20,6 +13,14 @@ class AssetResponse {
     required this.displayAmount,
   });
 
+  final String? denom;
+  final String? amount;
+  final String? display;
+  final String? description;
+  final int? exponent;
+  final String? displayAmount;
+
+  // ignore: member-ordering
   factory AssetResponse.fromJson(Map<String, dynamic> json) =>
       _$AssetResponseFromJson(json);
   Map<String, dynamic> toJson() => _$AssetResponseToJson(this);

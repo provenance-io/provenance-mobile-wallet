@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
-
-import '../fw_text_style.dart';
 
 export '../fw_text_style.dart';
 

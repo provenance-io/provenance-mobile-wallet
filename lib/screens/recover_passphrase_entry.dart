@@ -287,6 +287,8 @@ class _TextFormField extends StatelessWidget {
     this.controller,
   }) : super(key: key);
 
+  Offset? _tapPosition = Offset(0, 0);
+
   final String? number;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
@@ -360,5 +362,9 @@ class _TextFormField extends StatelessWidget {
     final theme = Theme.of(context);
 
     return theme.textTheme.medium.copyWith(color: theme.hintColor);
+  }
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
 import 'package:flutter_tech_wallet/screens/validate_pin.dart';
@@ -9,17 +8,20 @@ import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 
-enum AuthResult { noAccount, success, failure }
+enum AuthResult {
+  noAccount,
+  success,
+  failure,
+}
 
 class LocalAuthHelper {
-  static final LocalAuthHelper _singleton = LocalAuthHelper._internal();
   LocalAuthHelper._internal() {
     initialize();
   }
 
   factory LocalAuthHelper() => _singleton;
 
-  static LocalAuthHelper get instance => _singleton;
+  static final LocalAuthHelper _singleton = LocalAuthHelper._internal();
 
   LocalAuthentication localAuth = LocalAuthentication();
   final storage = SecureStorageService();
@@ -27,12 +29,15 @@ class LocalAuthHelper {
   BiometricType? type;
   bool isEnabled = false;
   String get authType {
+    // ignore: prefer-conditional-expressions
     if (Platform.isIOS) {
       return type == BiometricType.face ? 'Face ID' : 'Touch ID';
     } else {
       return type == BiometricType.face ? 'Face' : 'Fingerprint';
     }
   }
+
+  static LocalAuthHelper get instance => _singleton;
 
   Future<void> initialize() async {
     hasBiometrics = await localAuth.canCheckBiometrics;
@@ -46,26 +51,30 @@ class LocalAuthHelper {
     }
 
     String? bioEnabled = await storage.read(StorageKey.biometricEnabled);
+    // ignore: prefer-conditional-expressions
     if (bioEnabled != null) {
-      if (bioEnabled == 'true') {
-        isEnabled = true;
-      } else {
-        isEnabled = false;
-      }
+      isEnabled = bioEnabled == 'true' ? true : false;
     } else {
       isEnabled = false;
     }
   }
 
-  Future<bool> enroll(String privateKey, String code, String accountName,
-      bool useBiometry, BuildContext context, VoidCallback callback) async {
+  Future<bool> enroll(
+    String privateKey,
+    String code,
+    String accountName,
+    bool useBiometry,
+    BuildContext context,
+    VoidCallback callback,
+  ) async {
     bool success = true;
     if (useBiometry && !hasBiometrics) {
       success = false;
       await showDialog(
-          context: context,
-          builder: (context) =>
-              ErrorDialog(error: 'Failed to enroll, try again in settings'));
+        context: context,
+        builder: (context) =>
+            ErrorDialog(error: 'Failed to enroll, try again in settings'),
+      );
     } else {
       await storage.write(StorageKey.biometricEnabled, useBiometry.toString());
       await storage.write(StorageKey.privateKey, privateKey);
@@ -86,37 +95,45 @@ class LocalAuthHelper {
     final biometricEnabled = await storage.read(StorageKey.biometricEnabled);
     if (biometricEnabled == "true") {
       var result = await localAuth.authenticate(
-          localizedReason: 'Authenticate',
-          biometricOnly: false,
-          iOSAuthStrings: IOSAuthMessages(
-              cancelButton: 'Cancel',
-              goToSettingsButton: 'Setting',
-              goToSettingsDescription: 'Setting Description',
-              lockOut: 'Try again later, your are locked out'));
+        localizedReason: 'Authenticate',
+        biometricOnly: false,
+        iOSAuthStrings: IOSAuthMessages(
+          cancelButton: 'Cancel',
+          goToSettingsButton: 'Setting',
+          goToSettingsDescription: 'Setting Description',
+          lockOut: 'Try again later, your are locked out',
+        ),
+      );
       if (result) {
         final privateKey = await storage.read(StorageKey.privateKey);
         callback(result, privateKey);
+
         return AuthResult.success;
       } else {
         final code = await storage.read(StorageKey.code);
         final wasSuccessful = await Navigator.of(context).push(
-            ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
-                .route());
+          ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
+              .route(),
+        );
         if (wasSuccessful == true) {
           final privateKey = await storage.read(StorageKey.privateKey);
           callback(true, privateKey);
+
           return AuthResult.success;
         }
+
         return AuthResult.failure;
       }
     } else {
       final code = await storage.read(StorageKey.code);
       final wasSuccessful = await Navigator.of(context).push(
-          ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
-              .route());
+        ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
+            .route(),
+      );
       if (wasSuccessful == true) {
         final privateKey = await storage.read(StorageKey.privateKey);
         callback(true, privateKey);
+
         return AuthResult.success;
       }
     }

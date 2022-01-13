@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 
 /// Figma Typopgraphy Text Styles
@@ -32,13 +31,16 @@ enum FwColor {
   globalNeutral600Black,
   globalNeutral450,
   globalNeutral350,
-  globalNeutral500
+  globalNeutral500,
 }
 
 mixin FwColorMixin on Widget {
   FwColor? get color;
 
-  Color? getColor(BuildContext context, {FwColor? altColor}) {
+  Color? getColor(
+    BuildContext context, {
+    FwColor? altColor,
+  }) {
     final theme = Theme.of(context);
 
     switch (altColor ?? color) {

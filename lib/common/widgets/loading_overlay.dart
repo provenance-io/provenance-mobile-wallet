@@ -73,7 +73,7 @@ class LoadingOverlay extends HookWidget {
                 Center(child: progressIndicator),
               ],
             ),
-          )
+          ),
       ],
     );
   }

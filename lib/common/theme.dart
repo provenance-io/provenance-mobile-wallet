@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -171,45 +169,6 @@ class FigurePayThemeData {
     color: Colors.red,
   );
 
-  static final themeData = ThemeData(
-    colorScheme: _colorScheme,
-    appBarTheme: AppBarTheme(
-      color: _colorScheme.primary,
-      iconTheme: IconThemeData(color: _colorScheme.onPrimary),
-    ),
-    bottomAppBarTheme: BottomAppBarTheme(
-      color: _colorScheme.primary,
-    ),
-    canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primary,
-    highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primary,
-    primaryColor: _colorScheme.primary,
-    backgroundColor: Colors.white,
-    scaffoldBackgroundColor: _colorScheme.background,
-    snackBarTheme: const SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-    ),
-    typography: Typography.material2018(
-      platform: defaultTargetPlatform,
-    ),
-    textTheme: _textTheme.apply(bodyColor: _black, displayColor: _black),
-    inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(
-          // unfortunately for some reason this color gets overriden with primary (bug?)
-          // have to set in input implentation
-          borderSide: BorderSide(color: _colorScheme.midGrey)),
-      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-    ),
-    unselectedWidgetColor: _colorScheme.lightGrey,
-    tabBarTheme: TabBarTheme(
-        labelColor: _colorScheme.primary,
-        unselectedLabelColor: _darkGrey,
-        labelStyle: _medium,
-        unselectedLabelStyle: _medium),
-    dividerColor: _lightGrey,
-  );
-
   static const _colorScheme = ColorScheme(
     primary: _primary4,
     primaryVariant: _primary5,
@@ -241,6 +200,53 @@ class FigurePayThemeData {
     caption: _extraSmall,
     // STYLES NOT DEFINED
     overline: _fallback,
+  );
+
+  static final themeData = ThemeData(
+    colorScheme: _colorScheme,
+    appBarTheme: AppBarTheme(
+      color: _colorScheme.primary,
+      iconTheme: IconThemeData(color: _colorScheme.onPrimary),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: _colorScheme.primary,
+    ),
+    canvasColor: _colorScheme.background,
+    toggleableActiveColor: _colorScheme.primary,
+    highlightColor: Colors.transparent,
+    indicatorColor: _colorScheme.primary,
+    primaryColor: _colorScheme.primary,
+    backgroundColor: Colors.white,
+    scaffoldBackgroundColor: _colorScheme.background,
+    snackBarTheme: const SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
+    typography: Typography.material2018(
+      platform: defaultTargetPlatform,
+    ),
+    textTheme: _textTheme.apply(
+      bodyColor: _black,
+      displayColor: _black,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        // unfortunately for some reason this color gets overriden with primary (bug?)
+        // have to set in input implentation
+        borderSide: BorderSide(color: _colorScheme.midGrey),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 12,
+        horizontal: 16,
+      ),
+    ),
+    unselectedWidgetColor: _colorScheme.lightGrey,
+    tabBarTheme: TabBarTheme(
+      labelColor: _colorScheme.primary,
+      unselectedLabelColor: _darkGrey,
+      labelStyle: _medium,
+      unselectedLabelStyle: _medium,
+    ),
+    dividerColor: _lightGrey,
   );
 }
 
