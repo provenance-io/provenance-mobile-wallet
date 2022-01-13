@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -62,16 +61,17 @@ class FwDialog {
                   : null),
           insetPadding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
           contentPadding: EdgeInsets.only(
-              top: Spacing.medium,
-              bottom: content == null ? Spacing.large : 0.0,
-              left: Spacing.medium,
-              right: Spacing.medium),
+            top: Spacing.medium,
+            bottom: content == null ? Spacing.large : 0.0,
+            left: Spacing.medium,
+            right: Spacing.medium,
+          ),
           actions: [
             if (bottom != null) ...[
               Padding(
                 padding: const EdgeInsets.all(Spacing.small),
                 child: bottom,
-              )
+              ),
             ],
           ],
         ),
@@ -106,8 +106,8 @@ class FwDialog {
             FwTextButton(
               child: FwText('Cancel'),
               onPressed: () => Navigator.of(context).pop(),
-            )
-          ]
+            ),
+          ],
         ],
       ),
     );
@@ -178,7 +178,9 @@ class FwDialog {
   // Could possible cleanup (move to specific views) as things change/ get cleaned.
 
   static Future<void> showBiometricsDialog(
-      BuildContext context, String authType) {
+    BuildContext context,
+    String authType,
+  ) {
     return showMessage(
       context,
       title: 'Oops',
@@ -187,8 +189,10 @@ class FwDialog {
     );
   }
 
-  static Future<void> showUpdateNeeded(BuildContext context,
-      {required VoidCallback onTap}) {
+  static Future<void> showUpdateNeeded(
+    BuildContext context, {
+    required VoidCallback onTap,
+  }) {
     return show(
       context,
       barrierDismissible: false,

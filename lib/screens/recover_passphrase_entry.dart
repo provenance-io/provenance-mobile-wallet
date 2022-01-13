@@ -8,31 +8,44 @@ import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoverPassphraseEntry extends StatefulWidget {
+  RecoverPassphraseEntry(
+    this.flowType,
+    this.accountName, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
+
   final int? currentStep;
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoverPassphraseEntry(this.flowType, this.accountName,
-      {this.currentStep, this.numberOfSteps});
-
   @override
   State<StatefulWidget> createState() {
-    return RecoverPassphraseEntryState(flowType, accountName,
-        currentStep: currentStep, numberOfSteps: numberOfSteps);
+    return RecoverPassphraseEntryState(
+      flowType,
+      accountName,
+      currentStep: currentStep,
+      numberOfSteps: numberOfSteps,
+    );
   }
 }
 
 class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
+  RecoverPassphraseEntryState(
+    this.flowType,
+    this.accountName, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
+
+  final _formKey = GlobalKey<FormState>();
+
   final int? currentStep;
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
 
-  RecoverPassphraseEntryState(this.flowType, this.accountName,
-      {this.currentStep, this.numberOfSteps});
-
-  final _formKey = GlobalKey<FormState>();
   final word1 = TextEditingController();
   final word2 = TextEditingController();
   final word3 = TextEditingController();
@@ -150,319 +163,333 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
-              size: 24,
-              color: Color(0xFF3D4151),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: FwIcon(
+            FwIcons.back,
+            size: 24,
+            color: Color(0xFF3D4151),
           ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-                child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: FwText(
+                            Strings.enterYourRecoveryPassphrase,
+                            style: FwTextStyle.extraLarge,
+                            textAlign: TextAlign.left,
+                            color: FwColor.globalNeutral550,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final width = (constraints.maxWidth - 20) / 2;
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                            Container(
+                              width: width,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Flexible(
-                                      child: FwText(
-                                    Strings.enterYourRecoveryPassphrase,
-                                    style: FwTextStyle.extraLarge,
-                                    textAlign: TextAlign.left,
-                                    color: FwColor.globalNeutral550,
-                                  ))
+                                  _TextFormField(
+                                    controller: word1,
+                                    number: '1',
+                                    focusNode: focusNode1,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word2,
+                                    number: '2',
+                                    focusNode: focusNode2,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word3,
+                                    number: '3',
+                                    focusNode: focusNode3,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word4,
+                                    number: '4',
+                                    focusNode: focusNode4,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word5,
+                                    number: '5',
+                                    focusNode: focusNode5,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word6,
+                                    number: '6',
+                                    focusNode: focusNode6,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word7,
+                                    number: '7',
+                                    focusNode: focusNode7,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word8,
+                                    number: '8',
+                                    focusNode: focusNode8,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word9,
+                                    number: '9',
+                                    focusNode: focusNode9,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word10,
+                                    number: '10',
+                                    focusNode: focusNode10,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word11,
+                                    number: '11',
+                                    focusNode: focusNode11,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word12,
+                                    number: '12',
+                                    focusNode: focusNode12,
+                                    handlePaste: handlePaste,
+                                  ),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: 40,
+                            Container(
+                              width: width,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _TextFormField(
+                                    controller: word13,
+                                    number: '13',
+                                    focusNode: focusNode13,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word14,
+                                    number: '14',
+                                    focusNode: focusNode14,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word15,
+                                    number: '15',
+                                    focusNode: focusNode15,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word16,
+                                    number: '16',
+                                    focusNode: focusNode16,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word17,
+                                    number: '17',
+                                    focusNode: focusNode17,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word18,
+                                    number: '18',
+                                    focusNode: focusNode18,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word19,
+                                    number: '19',
+                                    focusNode: focusNode19,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word20,
+                                    number: '20',
+                                    focusNode: focusNode20,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word21,
+                                    number: '21',
+                                    focusNode: focusNode21,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word22,
+                                    number: '22',
+                                    focusNode: focusNode22,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word23,
+                                    number: '23',
+                                    focusNode: focusNode23,
+                                    handlePaste: handlePaste,
+                                  ),
+                                  VerticalSpacer.small(),
+                                  _TextFormField(
+                                    controller: word24,
+                                    number: '24',
+                                    focusNode: focusNode24,
+                                    handlePaste: handlePaste,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  final width = (constraints.maxWidth - 20) / 2;
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                          width: width,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              _TextFormField(
-                                                controller: word1,
-                                                number: '1',
-                                                focusNode: focusNode1,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word2,
-                                                number: '2',
-                                                focusNode: focusNode2,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word3,
-                                                number: '3',
-                                                focusNode: focusNode3,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word4,
-                                                number: '4',
-                                                focusNode: focusNode4,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word5,
-                                                number: '5',
-                                                focusNode: focusNode5,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word6,
-                                                number: '6',
-                                                focusNode: focusNode6,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word7,
-                                                number: '7',
-                                                focusNode: focusNode7,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word8,
-                                                number: '8',
-                                                focusNode: focusNode8,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word9,
-                                                number: '9',
-                                                focusNode: focusNode9,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word10,
-                                                number: '10',
-                                                focusNode: focusNode10,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word11,
-                                                number: '11',
-                                                focusNode: focusNode11,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word12,
-                                                number: '12',
-                                                focusNode: focusNode12,
-                                                handlePaste: handlePaste,
-                                              )
-                                            ],
-                                          )),
-                                      Container(
-                                          width: width,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              _TextFormField(
-                                                controller: word13,
-                                                number: '13',
-                                                focusNode: focusNode13,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word14,
-                                                number: '14',
-                                                focusNode: focusNode14,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word15,
-                                                number: '15',
-                                                focusNode: focusNode15,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word16,
-                                                number: '16',
-                                                focusNode: focusNode16,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word17,
-                                                number: '17',
-                                                focusNode: focusNode17,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word18,
-                                                number: '18',
-                                                focusNode: focusNode18,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word19,
-                                                number: '19',
-                                                focusNode: focusNode19,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word20,
-                                                number: '20',
-                                                focusNode: focusNode20,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word21,
-                                                number: '21',
-                                                focusNode: focusNode21,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word22,
-                                                number: '22',
-                                                focusNode: focusNode22,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word23,
-                                                number: '23',
-                                                focusNode: focusNode23,
-                                                handlePaste: handlePaste,
-                                              ),
-                                              VerticalSpacer.small(),
-                                              _TextFormField(
-                                                controller: word24,
-                                                number: '24',
-                                                focusNode: focusNode24,
-                                                handlePaste: handlePaste,
-                                              )
-                                            ],
-                                          ))
-                                    ],
-                                  );
-                                })),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: FwButton(
-                                    child: FwText(
-                                      Strings.recover,
-                                      style: FwTextStyle.mBold,
-                                      color: FwColor.white,
-                                    ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState?.validate() ==
-                                          true) {
-                                        final words = [
-                                          word1.text.trim(),
-                                          word2.text.trim(),
-                                          word3.text.trim(),
-                                          word4.text.trim(),
-                                          word5.text.trim(),
-                                          word6.text.trim(),
-                                          word7.text.trim(),
-                                          word8.text.trim(),
-                                          word9.text.trim(),
-                                          word10.text.trim(),
-                                          word11.text.trim(),
-                                          word12.text.trim(),
-                                          word13.text.trim(),
-                                          word14.text.trim(),
-                                          word15.text.trim(),
-                                          word16.text.trim(),
-                                          word17.text.trim(),
-                                          word18.text.trim(),
-                                          word19.text.trim(),
-                                          word20.text.trim(),
-                                          word21.text.trim(),
-                                          word22.text.trim(),
-                                          word23.text.trim(),
-                                          word24.text.trim()
-                                        ];
-                                        if (flowType ==
-                                            WalletAddImportType
-                                                .onBoardingRecover) {
-                                          Navigator.of(context).push(CreatePin(
-                                            flowType,
-                                            accountName: accountName,
-                                            currentStep: (currentStep ?? 0) + 1,
-                                            numberOfSteps: numberOfSteps,
-                                            words: words,
-                                          ).route());
-                                        } else {
-                                          ModalLoadingRoute.showLoading(
-                                              Strings.pleaseWait, context);
-                                          String privateKey =
-                                              await ProvWalletFlutter
-                                                  .getPrivateKey(
-                                                      words.join(' '));
-                                          await ProvWalletFlutter
-                                              .saveToWalletService(
-                                                  words.join(' '), accountName);
-                                          ModalLoadingRoute.dismiss(context);
-
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        }
-                                      }
-                                    })),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            if (numberOfSteps != null)
-                              ProgressStepper(
-                                  (currentStep ?? 0), numberOfSteps ?? 1,
-                                  padding:
-                                      EdgeInsets.only(left: 20, right: 20)),
-                            if (numberOfSteps != null) VerticalSpacer.xxLarge()
                           ],
-                        ))))));
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: FwButton(
+                      child: FwText(
+                        Strings.recover,
+                        style: FwTextStyle.mBold,
+                        color: FwColor.white,
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState?.validate() == true) {
+                          final words = [
+                            word1.text.trim(),
+                            word2.text.trim(),
+                            word3.text.trim(),
+                            word4.text.trim(),
+                            word5.text.trim(),
+                            word6.text.trim(),
+                            word7.text.trim(),
+                            word8.text.trim(),
+                            word9.text.trim(),
+                            word10.text.trim(),
+                            word11.text.trim(),
+                            word12.text.trim(),
+                            word13.text.trim(),
+                            word14.text.trim(),
+                            word15.text.trim(),
+                            word16.text.trim(),
+                            word17.text.trim(),
+                            word18.text.trim(),
+                            word19.text.trim(),
+                            word20.text.trim(),
+                            word21.text.trim(),
+                            word22.text.trim(),
+                            word23.text.trim(),
+                            word24.text.trim(),
+                          ];
+                          if (flowType ==
+                              WalletAddImportType.onBoardingRecover) {
+                            Navigator.of(context).push(CreatePin(
+                              flowType,
+                              accountName: accountName,
+                              currentStep: (currentStep ?? 0) + 1,
+                              numberOfSteps: numberOfSteps,
+                              words: words,
+                            ).route());
+                          } else {
+                            ModalLoadingRoute.showLoading(
+                              Strings.pleaseWait,
+                              context,
+                            );
+                            String privateKey =
+                                await ProvWalletFlutter.getPrivateKey(
+                              words.join(' '),
+                            );
+                            await ProvWalletFlutter.saveToWalletService(
+                              words.join(' '),
+                              accountName,
+                            );
+                            ModalLoadingRoute.dismiss(context);
+
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  if (numberOfSteps != null)
+                    ProgressStepper(
+                      (currentStep ?? 0),
+                      numberOfSteps ?? 1,
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                    ),
+                  if (numberOfSteps != null) VerticalSpacer.xxLarge(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   _handleTextControllerTextChange(TextEditingController controller) {
@@ -540,16 +567,18 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 }
 
 class _TextFormField extends StatelessWidget {
-  _TextFormField(
-      {Key? key,
-      this.keyboardType,
-      this.number,
-      this.onChanged,
-      this.validator,
-      this.focusNode,
-      this.handlePaste,
-      this.controller})
-      : super(key: key);
+  _TextFormField({
+    Key? key,
+    this.keyboardType,
+    this.number,
+    this.onChanged,
+    this.validator,
+    this.focusNode,
+    this.handlePaste,
+    this.controller,
+  }) : super(key: key);
+
+  Offset? _tapPosition = Offset(0, 0);
 
   final String? number;
   final TextInputType? keyboardType;
@@ -557,23 +586,15 @@ class _TextFormField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
   final FocusNode? focusNode;
-  Offset? _tapPosition = Offset(0, 0);
+
   final Function? handlePaste;
-
-  TextStyle _decorationStyleOf(BuildContext context) {
-    final theme = Theme.of(context);
-    return theme.textTheme.medium.copyWith(color: theme.hintColor);
-  }
-
-  void _storePosition(TapDownDetails details) {
-    _tapPosition = details.globalPosition;
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final RenderBox overlay =
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
+
     return Stack(
       alignment: Alignment.centerLeft,
       children: <Widget>[
@@ -677,9 +698,9 @@ class _TextFormField extends StatelessWidget {
                   Text(
                     number!,
                     style: _decorationStyleOf(context),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           );
         }),
@@ -708,7 +729,7 @@ class _TextFormField extends StatelessWidget {
               style: FwTextStyle.m,
               color: FwColor.globalNeutral550,
             ),
-            VerticalSpacer.large()
+            VerticalSpacer.large(),
           ],
         ),
         enabledBorder: OutlineInputBorder(
@@ -716,5 +737,15 @@ class _TextFormField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  TextStyle _decorationStyleOf(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return theme.textTheme.medium.copyWith(color: theme.hintColor);
+  }
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
   }
 }

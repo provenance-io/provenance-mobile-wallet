@@ -3,9 +3,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Wrapper around [FlutterSecureStorage] to consolidate keys and consistency.
 class SecureStorageService {
-  static SecureStorageService? _instance;
   SecureStorageService._();
   factory SecureStorageService() => _instance ??= SecureStorageService._();
+
+  static SecureStorageService? _instance;
 
   static const _storage = FlutterSecureStorage();
 
@@ -15,6 +16,7 @@ class SecureStorageService {
 
   Future<String?> read(StorageKey key) async {
     final value = await _storage.read(key: key.name);
+
     return value;
   }
 
@@ -25,7 +27,12 @@ class SecureStorageService {
   Future<void> delete(StorageKey key) => _storage.delete(key: key.name);
 }
 
-enum StorageKey { biometricEnabled, privateKey, code, accountName }
+enum StorageKey {
+  biometricEnabled,
+  privateKey,
+  code,
+  accountName,
+}
 
 extension on StorageKey {
   String get name {

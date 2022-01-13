@@ -21,15 +21,32 @@ extension Log on Object {
 
   void logDebug(dynamic message) => _log.debug(message, type: runtimeType);
 
-  void logError(dynamic message, {dynamic error, StackTrace? stackTrace}) =>
-      _log.error(message,
-          type: runtimeType, error: error, stackTrace: stackTrace);
+  void logError(
+    dynamic message, {
+    dynamic error,
+    StackTrace? stackTrace,
+  }) =>
+      _log.error(
+        message,
+        type: runtimeType,
+        error: error,
+        stackTrace: stackTrace,
+      );
 }
 
 /// For calling from static methods
-void logStatic(Type type, Level level, dynamic message, {dynamic error}) {
+void logStatic(
+  Type type,
+  Level level,
+  dynamic message, {
+  dynamic error,
+}) {
   if (level == Level.error) {
-    _log.error(message, type: type, error: error);
+    _log.error(
+      message,
+      type: type,
+      error: error,
+    );
   } else if (level == Level.debug) {
     _log.debug(message, type: type);
   } else {
@@ -38,18 +55,42 @@ void logStatic(Type type, Level level, dynamic message, {dynamic error}) {
 }
 
 class _Logger extends Logger {
-  _Logger({required LogPrinter printer, LogOutput? output, LogFilter? filter})
-      : super(printer: printer, output: output, filter: filter);
+  _Logger({
+    required LogPrinter printer,
+    LogOutput? output,
+    LogFilter? filter,
+  }) : super(
+          printer: printer,
+          output: output,
+          filter: filter,
+        );
 
-  void info(dynamic message, {required Type type}) =>
-      log(Level.info, ['$type', message], null, null);
+  void info(dynamic message, {required Type type}) => log(
+        Level.info,
+        ['$type', message],
+        null,
+        null,
+      );
 
-  void debug(dynamic message, {required Type type}) =>
-      _log.log(Level.debug, ['$type', message], null, null);
+  void debug(dynamic message, {required Type type}) => _log.log(
+        Level.debug,
+        ['$type', message],
+        null,
+        null,
+      );
 
-  void error(dynamic message,
-          {required Type type, dynamic error, StackTrace? stackTrace}) =>
-      _log.log(Level.error, ['$type', message], error, stackTrace);
+  void error(
+    dynamic message, {
+    required Type type,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) =>
+      _log.log(
+        Level.error,
+        ['$type', message],
+        error,
+        stackTrace,
+      );
 }
 
 class _SimpleScopedPrinter extends SimplePrinter {
@@ -59,16 +100,6 @@ class _SimpleScopedPrinter extends SimplePrinter {
 
   /// If `prettyJson`, a `Map` or `Iterable` will be indented
   final JsonEncoder _encoder;
-
-  @override
-  List<String> log(LogEvent event) {
-    var map = event.message as List<dynamic>;
-    var scope = map[0];
-    var messageStr = _stringifyMessage(map[1]);
-    var errorStr = event.error != null ? '  ERROR: ${event.error}' : '';
-    var timeStr = printTime ? '[${DateTime.now().toIso8601String()}]' : '';
-    return [scope, timeStr, '${_labelFor(event.level)} $messageStr$errorStr'];
-  }
 
   /// Adding emoji prefixes for visual cues because intellij doesn't support
   /// ANSI escape codes for non Java based projects yet
@@ -81,16 +112,29 @@ class _SimpleScopedPrinter extends SimplePrinter {
     Level.wtf: '🆘',
   };
 
+  @override
+  List<String> log(LogEvent event) {
+    var map = event.message as List<dynamic>;
+    var scope = map[0];
+    var messageStr = _stringifyMessage(map[1]);
+    var errorStr = event.error != null ? '  ERROR: ${event.error}' : '';
+    var timeStr = printTime ? '[${DateTime.now().toIso8601String()}]' : '';
+
+    return [
+      scope,
+      timeStr,
+      '${_labelFor(event.level)} $messageStr$errorStr',
+    ];
+  }
+
   String _labelFor(Level level) {
     return levelPrefixes[level]!;
   }
 
   String _stringifyMessage(dynamic message) {
-    if (message is Map || message is Iterable) {
-      return _encoder.convert(message);
-    } else {
-      return message.toString();
-    }
+    return message is Map || message is Iterable
+        ? _encoder.convert(message)
+        : message.toString();
   }
 }
 

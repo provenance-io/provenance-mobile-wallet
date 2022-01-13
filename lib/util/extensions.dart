@@ -8,10 +8,11 @@ extension MaterialPageExt<T> on Widget {
     bool fullScreenDialog = false,
   }) =>
       MaterialPage(
-          key: key ?? ValueKey('$runtimeType'),
-          child: this,
-          name: name,
-          fullscreenDialog: fullScreenDialog);
+        key: key ?? ValueKey('$runtimeType'),
+        child: this,
+        name: name,
+        fullscreenDialog: fullScreenDialog,
+      );
 
   MaterialPageRoute<T> route() => MaterialPageRoute(builder: (_) => this);
 }
