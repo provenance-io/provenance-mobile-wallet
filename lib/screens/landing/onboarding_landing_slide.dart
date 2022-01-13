@@ -1,4 +1,5 @@
 import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:flutter_tech_wallet/network/services/stat_service.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatefulWidget {
@@ -25,14 +26,17 @@ class _OnboardingLandingSlideState extends State<OnboardingLandingSlide> {
     setState(() {
       _isLoading = true;
     });
-    // TODO: Put the service call here.
-    await Future.delayed(Duration(milliseconds: 500));
 
-    setState(() {
-      _marketCap = '\$12.5B';
-      _transactions = '395.8K';
-      _numValidators = 10;
-      _blockTime = '6.36 sec.';
+    StatService.getStats().then((stat) {
+      setState(() {
+        _marketCap = stat.marketCap;
+        _transactions = stat.transactions;
+        _numValidators = stat.validators;
+        _blockTime = stat.blockTime;
+        _isLoading = false;
+      });
+    }).onError((error, stackTrace) {
+      // Do something with the error?
       _isLoading = false;
     });
   }
