@@ -31,7 +31,7 @@ class AccountName extends HookWidget {
         elevation: 0.0,
         leading: IconButton(
           icon: FwIcon(
-            FwIcons.back,
+            FwIcons.close,
             size: 24,
             color: Color(0xFF3D4151),
           ),
