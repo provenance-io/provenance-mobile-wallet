@@ -29,6 +29,12 @@ class AccountName extends HookWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
+        title: FwText(
+          Strings.nameYourAccount,
+          style: FwTextStyle.h5,
+          textAlign: TextAlign.left,
+          color: FwColor.globalNeutral550,
+        ),
         leading: IconButton(
           icon: FwIcon(
             FwIcons.close,
@@ -53,12 +59,6 @@ class AccountName extends HookWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      FwText(
-                        Strings.nameYourAccount,
-                        style: FwTextStyle.extraLarge,
-                        textAlign: TextAlign.left,
-                        color: FwColor.globalNeutral550,
-                      ),
                     ],
                   ),
                 ),
