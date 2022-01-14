@@ -48,93 +48,85 @@ class AccountName extends HookWidget {
         key: _formKey,
         child: Container(
           color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                    ],
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProgressStepper(
+                currentStep ?? 0,
+                numberOfSteps ?? 1,
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 12,
                 ),
-                SizedBox(
-                  height: 40,
+              ),
+              SizedBox(
+                height: 110,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: _TextFormField(
+                  label: Strings.accountName,
+                  validator: (value) {
+                    return value == null || value.isEmpty
+                        ? Strings.required
+                        : null;
+                  },
+                  controller: accountNameProvider,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: _TextFormField(
-                    label: Strings.accountName,
-                    validator: (value) {
-                      return value == null || value.isEmpty
-                          ? Strings.required
-                          : null;
-                    },
-                    controller: accountNameProvider,
-                  ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: FwText(
+                  Strings.nameYourAccountText,
+                  style: FwTextStyle.sBold,
+                  textAlign: TextAlign.left,
+                  color: FwColor.globalNeutral450,
                 ),
-                SizedBox(
-                  height: 24,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+              ),
+              Expanded(child: Container()),
+              SizedBox(
+                height: 24,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: FwButton(
                   child: FwText(
-                    Strings.nameYourAccountText,
-                    style: FwTextStyle.sBold,
-                    textAlign: TextAlign.left,
-                    color: FwColor.globalNeutral450,
+                    Strings.continueName,
+                    style: FwTextStyle.mBold,
+                    color: FwColor.white,
                   ),
-                ),
-                Expanded(child: Container()),
-                SizedBox(
-                  height: 24,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: FwButton(
-                    child: FwText(
-                      Strings.continueName,
-                      style: FwTextStyle.mBold,
-                      color: FwColor.white,
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() == true) {
-                        if (flowType == WalletAddImportType.onBoardingRecover ||
-                            flowType == WalletAddImportType.dashboardRecover) {
-                          Navigator.of(context).push(RestoreAccountIntro(
-                            flowType,
-                            accountNameProvider.text,
-                            currentStep: (currentStep ?? 0) + 1,
-                            numberOfSteps: numberOfSteps,
-                          ).route());
-                        } else if (flowType ==
-                                WalletAddImportType.onBoardingAdd ||
-                            flowType == WalletAddImportType.dashboardAdd) {
-                          Navigator.of(context).push(PrepareRecoveryPhraseIntro(
-                            flowType,
-                            accountNameProvider.text,
-                            currentStep: (currentStep ?? 0) + 1,
-                            numberOfSteps: numberOfSteps,
-                          ).route());
-                        }
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() == true) {
+                      if (flowType == WalletAddImportType.onBoardingRecover ||
+                          flowType == WalletAddImportType.dashboardRecover) {
+                        Navigator.of(context).push(RestoreAccountIntro(
+                          flowType,
+                          accountNameProvider.text,
+                          currentStep: (currentStep ?? 0) + 1,
+                          numberOfSteps: numberOfSteps,
+                        ).route());
+                      } else if (flowType ==
+                              WalletAddImportType.onBoardingAdd ||
+                          flowType == WalletAddImportType.dashboardAdd) {
+                        Navigator.of(context).push(PrepareRecoveryPhraseIntro(
+                          flowType,
+                          accountNameProvider.text,
+                          currentStep: (currentStep ?? 0) + 1,
+                          numberOfSteps: numberOfSteps,
+                        ).route());
                       }
-                    },
-                  ),
+                    }
+                  },
                 ),
-                VerticalSpacer.xxLarge(),
-                if (numberOfSteps != null)
-                  ProgressStepper(
-                    currentStep ?? 0,
-                    numberOfSteps ?? 1,
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                  ),
-                if (numberOfSteps != null) VerticalSpacer.xxLarge(),
-              ],
-            ),
+              ),
+              VerticalSpacer.xxLarge(),
+              VerticalSpacer.xxLarge(),
+            ],
           ),
         ),
       ),
