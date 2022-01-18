@@ -163,7 +163,7 @@ class DashboardState extends State<Dashboard>
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           Container(
-            color: Theme.of(context).colorScheme.globalNeutral600Black,
+            color: Theme.of(context).colorScheme.globalNeutral50,
             // height: 50 + inset?.bottom ?? 0,
             child: TabBar(
               controller: _tabController,
