@@ -212,7 +212,7 @@ class DashboardState extends State<Dashboard>
                     children: [
                       FwText(
                         '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
-                        color: FwColor.globalNeutral550,
+                        color: FwColor.globalNeutral400,
                         style: FwTextStyle.m,
                       ),
                       HorizontalSpacer.small(),
@@ -231,7 +231,7 @@ class DashboardState extends State<Dashboard>
                           child: FwIcon(
                             FwIcons.copy,
                             color:
-                                Theme.of(context).colorScheme.globalNeutral550,
+                                Theme.of(context).colorScheme.globalNeutral400,
                             size: 24,
                           ),
                         ),
