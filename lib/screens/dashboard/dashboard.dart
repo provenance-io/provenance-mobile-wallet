@@ -581,6 +581,10 @@ class DashboardState extends State<Dashboard>
     String tabAsset, {
     isLoading = false,
   }) {
+    var color = isSelected
+        ? Theme.of(context).colorScheme.primary7
+        : Theme.of(context).colorScheme.globalNeutral350;
+
     return Center(
       child: Column(
         children: [
@@ -593,9 +597,7 @@ class DashboardState extends State<Dashboard>
             child: isLoading == null || !isLoading
                 ? FwIcon(
                     tabAsset,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary4
-                        : Theme.of(context).colorScheme.white,
+                    color: color,
                   )
                 : const CircularProgressIndicator(),
           ),
@@ -606,7 +608,7 @@ class DashboardState extends State<Dashboard>
               style: Theme.of(context)
                   .textTheme
                   .extraSmallBold
-                  .copyWith(color: Theme.of(context).colorScheme.white),
+                  .copyWith(color: color),
             ),
           ),
         ],
