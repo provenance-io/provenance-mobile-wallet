@@ -70,48 +70,6 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
     });
   }
 
-  List<Widget> buildTextNodes(double width) {
-    var first = List<Widget>.empty(growable: true);
-    var second = List<Widget>.empty(growable: true);
-    for (var i = 0; i <= 11; i++) {
-      var text1 = _TextFormField(
-        controller: textControllers.elementAt(i),
-        number: '${i + 1}',
-        focusNode: focusNodes.elementAt(i),
-        handlePaste: handlePaste,
-      );
-      var text2 = _TextFormField(
-        controller: textControllers.elementAt(i + 12),
-        number: '${i + 13}',
-        focusNode: focusNodes.elementAt(i + 12),
-        handlePaste: handlePaste,
-      );
-      first.add(text1);
-      second.add(text2);
-      if (i != 12) {
-        first.add(VerticalSpacer.small());
-        second.add(VerticalSpacer.small());
-      }
-    }
-
-    return [
-      Container(
-        width: width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: first,
-        ),
-      ),
-      Container(
-        width: width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: second,
-        ),
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,7 +122,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: buildTextNodes(width),
+                        children: _buildTextNodes(width),
                       );
                     }),
                   ),
@@ -238,6 +196,48 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildTextNodes(double width) {
+    var first = <Widget>[];
+    var second = <Widget>[];
+    for (var i = 0; i < boxCount / 2; i++) {
+      var text1 = _TextFormField(
+        controller: textControllers.elementAt(i),
+        number: '${i + 1}',
+        focusNode: focusNodes.elementAt(i),
+        handlePaste: handlePaste,
+      );
+      var text2 = _TextFormField(
+        controller: textControllers.elementAt(i + 12),
+        number: '${i + 13}',
+        focusNode: focusNodes.elementAt(i + 12),
+        handlePaste: handlePaste,
+      );
+      first.add(text1);
+      second.add(text2);
+      if (i != 12) {
+        first.add(VerticalSpacer.small());
+        second.add(VerticalSpacer.small());
+      }
+    }
+
+    return [
+      Container(
+        width: width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: first,
+        ),
+      ),
+      Container(
+        width: width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: second,
+        ),
+      ),
+    ];
   }
 
   _handleTextControllerTextChange(TextEditingController controller) {
