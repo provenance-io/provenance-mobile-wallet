@@ -158,12 +158,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                               Strings.pleaseWait,
                               context,
                             );
-                            // TODO: What do we do with this?
-                            // ignore: unused_local_variable
-                            String privateKey =
-                                await ProvWalletFlutter.getPrivateKey(
-                              words.join(' '),
-                            );
+
                             await ProvWalletFlutter.saveToWalletService(
                               words.join(' '),
                               accountName,
