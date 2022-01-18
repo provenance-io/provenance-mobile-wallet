@@ -160,7 +160,7 @@ class DashboardState extends State<Dashboard>
         children: [
           Container(
             height: 2,
-            color: Theme.of(context).colorScheme.globalNeutral550,
+            color: Theme.of(context).colorScheme.globalNeutral250,
           ),
           Container(
             color: Theme.of(context).colorScheme.globalNeutral50,
