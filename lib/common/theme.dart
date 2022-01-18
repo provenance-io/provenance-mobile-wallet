@@ -20,6 +20,7 @@ class FigurePayThemeData {
   static const Color _globalNeutral500 = Color(0xFF4C5165);
   static const Color _iconColor = Color(0xFFF5F7FD);
   static const Color _globalNeutral250 = Color(0xFFC9CFE3);
+  static const Color _globalNeutral50 = Color(0xFFF9FCFF);
 
   /// Functional
   static const Color _positive = Color(0xFF4ABB0B);
@@ -271,6 +272,7 @@ extension CustomColorScheme on ColorScheme {
   Color get systemGreen => FigurePayThemeData._systemGreen;
   Color get pickerGrey => FigurePayThemeData._pickerGrey;
   Color get pickerBlack => FigurePayThemeData._pickerBlack;
+  Color get globalNeutral50 => FigurePayThemeData._globalNeutral50;
   Color get globalNeutral550 => FigurePayThemeData._globalNeutral550;
   Color get globalNeutral500 => FigurePayThemeData._globalNeutral500;
   Color get globalNeutral600Black => FigurePayThemeData._globalNeutral600Black;
