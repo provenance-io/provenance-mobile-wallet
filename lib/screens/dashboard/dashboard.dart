@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
@@ -186,53 +187,45 @@ class DashboardState extends State<Dashboard>
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
+        children: _walletAddress.isEmpty
+            ? [
+                Container(),
+              ]
+            : [
                 Container(
                   color: Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .globalNeutral600Black,
-                              borderRadius: BorderRadius.circular(11.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 17, right: 17),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 24,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      FwText(
-                                        Strings.portfolioValue,
-                                        color: FwColor.white,
-                                        style: FwTextStyle.sBold,
-                                      ),
-                                      FwText(
-                                        _walletValue,
-                                        color: FwColor.white,
-                                        style: FwTextStyle.h6,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 17,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FwText(
+                        '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
+                        color: FwColor.globalNeutral550,
+                        style: FwTextStyle.m,
+                      ),
+                      HorizontalSpacer.small(),
+                      GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(
+                            ClipboardData(text: _walletAddress),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: FwText(Strings.addressCopied)),
+                          );
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          child: FwIcon(
+                            FwIcons.copy,
+                            color:
+                                Theme.of(context).colorScheme.globalNeutral550,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                                   ),
                                   Row(
                                     mainAxisAlignment:
