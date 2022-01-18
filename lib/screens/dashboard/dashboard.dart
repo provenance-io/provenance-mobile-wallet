@@ -127,25 +127,38 @@ class DashboardState extends State<Dashboard>
         elevation: 0.0,
         centerTitle: true,
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(Wallets().route());
-            },
-            child: FwIcon(
-              FwIcons.wallet,
-              color: Theme.of(context).colorScheme.globalNeutral450,
-              size: 24,
+          Padding(
+            padding: EdgeInsets.only(
+              right: 24,
+              top: 10,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(Wallets().route());
+              },
+              child: FwIcon(
+                FwIcons.wallet,
+                color: Theme.of(context).colorScheme.globalNeutral450,
+                size: 24.0,
+              ),
             ),
           ),
-          HorizontalSpacer.medium(),
         ],
-        title: FwText(
-          _walletName,
-          style: FwTextStyle.h6,
-          color: FwColor.globalNeutral550,
+        title: Padding(
+          padding: EdgeInsets.only(
+            top: 20,
+          ),
+          child: FwText(
+            _walletName,
+            style: FwTextStyle.h6,
+            color: FwColor.globalNeutral550,
+          ),
         ),
         leading: Padding(
-          padding: EdgeInsets.only(left: 24),
+          padding: EdgeInsets.only(
+            left: 24,
+            top: 10,
+          ),
           child: GestureDetector(
             onTap: () {},
             child: FwIcon(
