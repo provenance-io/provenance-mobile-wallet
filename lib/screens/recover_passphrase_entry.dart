@@ -47,6 +47,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   final WalletAddImportType flowType;
   final textControllers = <TextEditingController>[];
   final focusNodes = <FocusNode>[];
+  static const boxCount = 24;
 
   handlePaste(TextEditingController controller) {
     _pasteWords(controller);
@@ -56,7 +57,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   void initState() {
     super.initState();
 
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < boxCount; i++) {
       var word = TextEditingController();
       addListener(word);
       this.textControllers.add(word);
