@@ -45,8 +45,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
-  List<TextEditingController> textControllers = <TextEditingController>[];
-  List<FocusNode> focusNodes = <FocusNode>[];
+  final textControllers = <TextEditingController>[];
+  final focusNodes = <FocusNode>[];
 
   handlePaste(TextEditingController controller) {
     _pasteWords(controller);
