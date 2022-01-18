@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+10
+version: 1.0.0+12
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -46,7 +46,8 @@ dependencies:
   shared_preferences: ^2.0.6
   uuid: ^3.0.4
   prov_wallet_flutter:
-    git: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
+    path: ../mobile-tech-wallet-flutter-plugin
+
 
 dev_dependencies:
   dart_code_metrics: ^4.9.0

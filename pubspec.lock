@@ -42,7 +42,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.8.1"
   badges:
     dependency: "direct main"
     description:
@@ -119,7 +119,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.0"
   charcode:
     dependency: transitive
     description:
@@ -442,7 +442,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.11"
+    version: "0.12.10"
   meta:
     dependency: transitive
     description:
@@ -551,11 +551,9 @@ packages:
   prov_wallet_flutter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: af71ced127d2aeef99472327d15a07b83c5f4d94
-      url: "git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git"
-    source: git
+      path: "../mobile-tech-wallet-flutter-plugin"
+      relative: true
+    source: path
     version: "0.0.1"
   provider:
     dependency: "direct main"
@@ -757,7 +755,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.2"
   timing:
     dependency: transitive
     description:
@@ -862,7 +860,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.0"
   watcher:
     dependency: transitive
     description:
