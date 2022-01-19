@@ -24,6 +24,12 @@ A mobile wallet.
 2. Run `source ~/.zshrc` or restart Terminal
 
 ### Xcode Configuration
+
+> Before continuing, be sure your Apple ID is added to the Figure 
+> Technologies Inc. (FDT7XCU6W7) Apple development team.  The following
+> steps assume you have selected the Figure Technologies Inc. team when
+> using developer.apple.com
+
 Create a development certificate
 1. Go to the [Apple certificates list](https://developer.apple.com/account/resources/certificates/list)
 2. Click the "+" icon
@@ -49,29 +55,32 @@ Add your device to the development provisioning profile
 7. Once downloaded, double click to install
 
 Verify your signing configuration
-1. Open the workspace `ios/Runner.xcworkspace`
-2. In the Project Navigator window, select the top level Runner directory
-3. Select the Signing & Capabilites tab
-4. Under Signing(Debug and Profile), you should not see any issues
-5. If Xcode was open during any previous steps, it may need to be closed and re-opened
+1. Use an existing XCode workspace or create a sample Flutter app using `flutter create myapp`
+2. Open the workspace (i.e. `ios/Runner.xcworkspace` created by `flutter create `myapp`)
+3. In the Project Navigator window, select the top level Runner directory
+4. Select the Signing & Capabilites tab
+5. Under Signing(Debug and Profile), you should not see any issues
+6. If Xcode was open during any previous steps, it may need to be closed and re-opened
 
 ### Android Studio Configuration
 Download SDKs
 1. Open Android Studio
 2. Open Preferences (Android Studio -> Preferences)
 3. Open SDK Manager (Appearance & Behavior -> System Settings -> Android SDK)
+    1. If the `Android SDK Location` is empty, click `Edit` to 
+       install the Android SDK.
 4. On the SDK Platforms tab, select 
     1. Android 12.0
     2. Android 10.0
     3. Android 9.0
-1. At the lower right-hand corner of the window, check Show Package Details
-2. For each Android version with which you would like to create an emulator, select the Google Play image that matches your system architecture
-6. On the SDK Tools tab, select
+5. At the lower right-hand corner of the window, check Show Package Details
+6. For each Android version with which you would like to create an emulator, select the Google Play image that matches your system architecture
+7. On the SDK Tools tab, select
     1. Android SDK Build-Tools
     2. Android SDK Command-line Tools
     3. Android Emulator
     4. Android SDK Platform-Tools 
-1. Click OK to download and install
+8. Click OK to download and install
 
 ### Visual Studio Code Configuration
 Install the Flutter extension
@@ -86,6 +95,29 @@ Enable Format On Save
 ### Verify Your Configuration
 1. In Terminal, run `flutter doctor`
 2. Fix any issues
+
+### IntelliJ Ultimate Configuration
+Open IntelliJ
+1. Navigate to Preferences | Plugins | Marketplace
+2. Search for the Flutter plugin and install
+3. Restart the IDE
+
+Running `flutter doctor` after installing the IntelliJ Flutter plugin could
+result in an error like:
+```text
+[☠] IntelliJ IDEA Ultimate Edition (the doctor check crashed)
+    ✗ Due to an error, the doctor check did not complete. If the error message below is not helpful, please let us know about this issue at https://github.com/flutter/flutter/issues.
+    ✗ FormatException: Unexpected extension byte (at offset 5)
+```
+
+To resolve this issue, patch the `archive` package version used by your local
+Flutter installation as the problem seems to be partially fixed 
+with `archive:3.1.8`:
+1. Edit `FLUTTER_HOME/packages/flutter_tools/pubspec.yaml` changing `archive` 
+   version to `archive:3.1.8`
+2. Execute `flutter update-packages --force-upgrade` as instructed in that pubspec.yaml
+
+See https://github.com/flutter/flutter/issues/94060#issuecomment-1008040192
 
 ### Run on an iOS Device in Xcode
 1. In Terminal open the root project directory
@@ -106,6 +138,14 @@ Enable Format On Save
 5. Select your device at the bottom right-hand corner of the window
 6. Open a Dart file such as (main.dart)
 7. Run the app (Run -> Start Debugging)
+
+> NOTE when running on an iOS device you may get the error: 
+>   "iproxy" cannot be opened because the developer cannot be verified
+> 
+> To resolve this issue un-quarantive the `iproxy` binary like via Terminal:
+```
+sudo xattr -d com.apple.quarantine $FLUTTER_HOME/bin/cache/artifacts/usbmuxd/iproxy
+```
 
 ### Run on iOS or Android in Android Studio
 1. Open the root project dir in Android Studio
