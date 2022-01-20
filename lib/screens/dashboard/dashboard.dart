@@ -20,6 +20,18 @@ class Dashboard extends StatefulWidget {
   State<StatefulWidget> createState() => DashboardState();
 }
 
+extension AmountList on List<dynamic> {
+  String toDisplay() {
+    return "${this.first["amount"]} ${this.first["denom"]}";
+  }
+}
+
+extension AmountMap on Map<String, dynamic> {
+  String toDisplay() {
+    return "${this["amount"]} ${this["denom"]}";
+  }
+}
+
 class DashboardState extends State<Dashboard>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   TabController? _tabController;
@@ -54,11 +66,9 @@ class DashboardState extends State<Dashboard>
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
     _tabController = TabController(length: 2, vsync: this);
-    ProvWalletFlutter.instance.onAskToSign = (
-      String requestId,
-      String message,
-      String description,
-    ) async {
+    ProvWalletFlutter.instance.onAskToSign = (String requestId,
+        String message,
+        String description,) async {
       final result = await FwDialog.showConfirmation(
         context,
         title: description,
@@ -71,21 +81,30 @@ class DashboardState extends State<Dashboard>
       ModalLoadingRoute.dismiss(context);
     };
 
-    ProvWalletFlutter.instance.onAskToSend = (
-      String requestId,
-      String message,
-      String description,
-      String cost,
-    ) {
+    ProvWalletFlutter.instance.onAskToSend = (String requestId,
+        String message,
+        String description,
+        String cost,) {
       final map = jsonDecode(message);
+
+      String? toAddress = map["toAddress"] ?? map["manager"];
+      if (toAddress == null) {
+        toAddress = map["administrator"];
+      }
+      var amountToDisplay = "";
+      if (map["amount"] != null) {
+        amountToDisplay = (map["amount"] is Map<String, dynamic>)
+            ? (map["amount"] as Map<String, dynamic>).toDisplay()
+            : (map["amount"] as List<dynamic>).toDisplay();
+      }
 
       SendTransactionInfo info = SendTransactionInfo(
         fee: cost,
-        toAddress: map["toAddress"] as String,
-        fromAddress: map["fromAddress"] as String,
+        toAddress: toAddress ?? '',
+        fromAddress: map["fromAddress"] ?? '',
         requestId: requestId,
         amount:
-            "${(map["amount"] as List).first["amount"]} ${(map["amount"] as List).first["denom"]}",
+        amountToDisplay,
       );
       Navigator.of(context).push(SendTransactionApproval(info).route());
     };
