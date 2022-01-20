@@ -5,6 +5,7 @@ import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/network/models/asset_response.dart';
 import 'package:flutter_tech_wallet/network/services/asset_service.dart';
+import 'package:flutter_tech_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
@@ -25,6 +26,8 @@ class DashboardState extends State<Dashboard>
   String _walletName = '';
   String _walletValue = '';
   bool _assetsLoading = true;
+  GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
+  GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
 
   List<AssetResponse> assets = [];
 
@@ -99,6 +102,7 @@ class DashboardState extends State<Dashboard>
       _walletAddress = details.address;
       _walletName = details.accountName;
       _walletValue = '\$0';
+      _walletKey.currentState?.updateValue(_walletValue);
     });
 
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
@@ -108,11 +112,11 @@ class DashboardState extends State<Dashboard>
     ModalLoadingRoute.dismiss(context);
     if (result.isSuccessful) {
       setState(() {
-        assets = result.data ?? [];
+        _landingKey.currentState?.updateAssets(result.data ?? []);
       });
     } else {
       setState(() {
-        assets = [];
+        _landingKey.currentState?.updateAssets([]);
       });
     }
   }
@@ -240,8 +244,8 @@ class DashboardState extends State<Dashboard>
               controller: _tabController,
               children: [
                 DashboardLanding(
-                  assets: assets,
-                  walletValue: _walletValue,
+                  key: _landingKey,
+                  walletKey: _walletKey,
                 ),
                 Container(color: Colors.white, child: Container()),
               ],

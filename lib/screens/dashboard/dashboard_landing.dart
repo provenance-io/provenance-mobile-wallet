@@ -2,32 +2,33 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/button.dart';
 import 'package:flutter_tech_wallet/network/models/asset_response.dart';
+import 'package:flutter_tech_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
-import '../qr_code_scanner.dart';
-
 class DashboardLanding extends StatefulWidget {
   DashboardLanding({
     Key? key,
-    required this.walletValue,
-    required this.assets,
+    required this.walletKey,
   }) : super(key: key);
 
-  final String walletValue;
-  final List<AssetResponse> assets;
+  final GlobalKey<WalletPortfolioState> walletKey;
 
   @override
-  State<StatefulWidget> createState() =>
-      DashboardLandingState(walletValue, assets);
+  State<StatefulWidget> createState() => DashboardLandingState(walletKey);
 }
 
 class DashboardLandingState extends State<DashboardLanding> {
-  DashboardLandingState(this.walletValue, this.assets);
+  DashboardLandingState(this.walletKey);
+  List<AssetResponse> _assets = [];
+  GlobalKey<WalletPortfolioState> walletKey;
 
-  String walletValue;
-  List<AssetResponse> assets;
+  void updateAssets(List<AssetResponse> assets) {
+    setState(() {
+      _assets = assets;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class DashboardLandingState extends State<DashboardLanding> {
               child: ListView.separated(
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
-                  final item = assets[index];
+                  final item = _assets[index];
 
                   return GestureDetector(
                     onTap: () {
@@ -133,14 +134,16 @@ class DashboardLandingState extends State<DashboardLanding> {
                 separatorBuilder: (context, index) {
                   return VerticalSpacer.small();
                 },
-                itemCount: assets.length,
+                itemCount: _assets.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
               ),
             ),
           ]
         : [
-            _buildCurrentPortfolio(),
+            WalletPortfolio(
+              key: walletKey,
+            ),
             Container(),
             Container(),
             Container(),
