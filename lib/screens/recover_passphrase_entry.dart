@@ -265,10 +265,9 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   }
 
   _putPartsInText(List<String> parts) {
-    for (var part in parts) {
-      var index = parts.indexOf(part);
-      if (index > -1) {
-        textControllers[index].text = part;
+    for (var i = 0; i < parts.length; i++) {
+      if (i > textControllers.length) {
+        textControllers[i].text = parts[i];
       }
     }
   }
