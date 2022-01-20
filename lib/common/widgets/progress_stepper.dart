@@ -15,15 +15,24 @@ class ProgressStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> steps = [];
     for (int i = 0; i < numberOfSteps; i++) {
-      steps.add(Container(
-        width: 61,
-        height: 6,
-        color: currentStep - 1 < i ? Color(0xFFC4C4C4) : Color(0xFF9E9E9E),
-      ));
-      steps.add(HorizontalSpacer.small());
+      var color = currentStep - 1 < i ? Color(0xFFC4C4C4) : Color(0xFF9E9E9E);
+      steps.add(
+        Container(
+          height: 6,
+          width: 45,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: color,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            color: color,
+          ),
+        ),
+      );
+      if (currentStep != numberOfSteps - 1) {
+        steps.add(HorizontalSpacer.small());
+      }
     }
-
-    steps.removeLast();
 
     return Padding(
       padding: padding,

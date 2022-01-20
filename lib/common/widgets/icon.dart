@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class FwIcons {
   static const String back = 'back';
+  static const String close = 'close';
   static const String scanCode = '2d_code';
   static const String staking = 'staking';
   static const String wallet = 'wallet';
