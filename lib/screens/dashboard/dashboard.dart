@@ -6,6 +6,7 @@ import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/network/models/asset_response.dart';
 import 'package:flutter_tech_wallet/network/services/asset_service.dart';
+import 'package:flutter_tech_wallet/screens/dashboard/my_account.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
 import 'package:flutter_tech_wallet/screens/landing/landing.dart';
 import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
@@ -146,7 +147,9 @@ class DashboardState extends State<Dashboard>
         leading: Padding(
           padding: EdgeInsets.only(left: 24),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MyAccount().route());
+            },
             child: FwIcon(
               FwIcons.userAccount,
               color: Theme.of(context).colorScheme.globalNeutral450,
