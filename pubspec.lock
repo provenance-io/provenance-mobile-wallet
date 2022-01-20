@@ -551,9 +551,11 @@ packages:
   prov_wallet_flutter:
     dependency: "direct main"
     description:
-      path: "../mobile-tech-wallet-flutter-plugin"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "47ccd589943e16181486633bd62c93ec69948fce"
+      url: "git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git"
+    source: git
     version: "0.0.1"
   provider:
     dependency: "direct main"
