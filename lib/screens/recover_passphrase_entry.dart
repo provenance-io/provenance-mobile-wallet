@@ -197,7 +197,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   List<Widget> _buildTextNodes(double width) {
     var first = <Widget>[];
     var second = <Widget>[];
-    for (var i = 0; i < boxCount / 2; i++) {
+    var halfBoxCount = (boxCount / 2) as int;
+    for (var i = 0; i < halfBoxCount; i++) {
       var text1 = _TextFormField(
         controller: textControllers.elementAt(i),
         number: '${i + 1}',
@@ -205,14 +206,14 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         handlePaste: handlePaste,
       );
       var text2 = _TextFormField(
-        controller: textControllers.elementAt(i + 12),
-        number: '${i + 13}',
-        focusNode: focusNodes.elementAt(i + 12),
+        controller: textControllers.elementAt(i + halfBoxCount),
+        number: '${i + 1 + halfBoxCount}',
+        focusNode: focusNodes.elementAt(i + halfBoxCount),
         handlePaste: handlePaste,
       );
       first.add(text1);
       second.add(text2);
-      if (i != 12) {
+      if (i != halfBoxCount) {
         first.add(VerticalSpacer.small());
         second.add(VerticalSpacer.small());
       }
