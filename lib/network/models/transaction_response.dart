@@ -11,10 +11,10 @@ class TransactionResponse {
     required this.denom,
   });
 
-  final String? toAddress;
-  final String? amount;
-  final String? fromAddress;
-  final String? denom;
+  final String toAddress;
+  final String amount;
+  final String fromAddress;
+  final String denom;
   String get displayAmount {
     return "${this.amount} ${this.denom}";
   }
@@ -46,9 +46,9 @@ TransactionResponse _$TransactionResponseFromMessage(String message) {
   }
 
   return TransactionResponse(
-    toAddress: toAddress,
+    toAddress: toAddress ?? "",
     amount: amount,
-    fromAddress: json['fromAddress'] as String?,
+    fromAddress: json['fromAddress'] ?? "",
     denom: denom,
   );
 }
