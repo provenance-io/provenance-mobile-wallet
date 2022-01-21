@@ -39,6 +39,7 @@ class DashboardState extends State<Dashboard>
   String _walletName = '';
   String _walletValue = '';
   bool _assetsLoading = true;
+  // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
 
@@ -135,10 +136,12 @@ class DashboardState extends State<Dashboard>
     ModalLoadingRoute.dismiss(context);
     if (result.isSuccessful) {
       setState(() {
+        // FIXME: State Management
         _landingKey.currentState?.updateAssets(result.data ?? []);
       });
     } else {
       setState(() {
+        // FIXME: State Management
         _landingKey.currentState?.updateAssets([]);
       });
     }
@@ -269,6 +272,7 @@ class DashboardState extends State<Dashboard>
               controller: _tabController,
               children: [
                 DashboardLanding(
+                  // FIXME: State Management
                   key: _landingKey,
                   walletKey: _walletKey,
                 ),

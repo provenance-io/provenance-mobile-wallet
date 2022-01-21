@@ -13,6 +13,7 @@ class DashboardLanding extends StatefulWidget {
     required this.walletKey,
   }) : super(key: key);
 
+  // FIXME: State Management
   final GlobalKey<WalletPortfolioState> walletKey;
 
   @override
@@ -46,6 +47,7 @@ class DashboardLandingState extends State<DashboardLanding> {
     List<Widget> list = _assets.isNotEmpty
         ? [
             WalletPortfolio(
+              // FIXME: State Management
               key: walletKey,
             ),
             VerticalSpacer.medium(),
