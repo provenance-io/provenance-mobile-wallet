@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 
 /// Figma Typopgraphy Text Styles
@@ -18,13 +17,16 @@ enum FwTextStyle {
   xs,
   xsBold,
   caption,
-  extraLarge
+  extraLarge,
 }
 
 mixin FwTextStyleMixin on Widget {
   FwTextStyle get style;
 
-  TextStyle? textStyle(BuildContext context, {FwTextStyle? altStyle}) {
+  TextStyle? textStyle(
+    BuildContext context, {
+    FwTextStyle? altStyle,
+  }) {
     final theme = Theme.of(context);
 
     switch (altStyle ?? style) {

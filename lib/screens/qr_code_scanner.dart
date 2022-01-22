@@ -3,19 +3,21 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScanner extends StatefulWidget {
+  QRCodeScanner();
+
   @override
   createState() => QRCodeScannerState();
-
-  QRCodeScanner();
 }
 
 class QRCodeScannerState extends State<QRCodeScanner> {
+  QRCodeScannerState();
+
   bool _loading = true;
+  bool _handled = false;
+
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   var qrText = '';
   QRViewController? controller;
-
-  QRCodeScannerState();
 
   @override
   Widget build(BuildContext context) {
@@ -52,30 +54,34 @@ class QRCodeScannerState extends State<QRCodeScanner> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final ratio = constraints.maxHeight / 600;
+
         return LoadingOverlay(
-            isLoading: false,
-            child: ClipRRect(
-                child: Stack(children: <Widget>[
+          isLoading: false,
+          child: ClipRRect(
+            child: Stack(children: <Widget>[
               Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 144 * ratio,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                          child: QRView(
-                              key: qrKey,
-                              onQRViewCreated: _onQRViewCreated,
-                              overlay: QrScannerOverlayShape(
-                                borderColor: Colors.red,
-                                borderRadius: 0,
-                                borderLength: 0,
-                                borderWidth: 0,
-                                cutOutSize: 300,
-                              )))
-                    ],
-                  )),
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 144 * ratio,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: QRView(
+                        key: qrKey,
+                        onQRViewCreated: _onQRViewCreated,
+                        overlay: QrScannerOverlayShape(
+                          borderColor: Colors.red,
+                          borderRadius: 0,
+                          borderLength: 0,
+                          borderWidth: 0,
+                          cutOutSize: 300,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               // Positioned(
               //   left: 0,
               //   right: 0,
@@ -97,12 +103,12 @@ class QRCodeScannerState extends State<QRCodeScanner> {
               //         ]),
               //   ),
               // ),
-            ])));
+            ]),
+          ),
+        );
       },
     );
   }
-
-  bool _handled = false;
 
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();

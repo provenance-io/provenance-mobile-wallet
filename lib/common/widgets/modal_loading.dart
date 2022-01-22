@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tech_wallet/common/fw_design.dart';
 
 class ModalLoading extends StatefulWidget {
+  ModalLoading({
+    this.key,
+    this.loadingMessage,
+  }) : super(key: key);
+
   final String? loadingMessage;
   final Key? key;
-
-  ModalLoading({this.key, this.loadingMessage}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,17 +17,19 @@ class ModalLoading extends StatefulWidget {
 }
 
 class ModalLoadingState extends State<ModalLoading> {
-  String? loadingMessage;
-
   ModalLoadingState({this.loadingMessage});
+
+  String? loadingMessage;
 
   @override
   Widget build(BuildContext context) {
     return LoadingOverlay(
       isLoading: true,
-      child: loadingMessage != null ? FwText(
-        loadingMessage!
-      ) : Container(),
+      child: loadingMessage != null
+          ? FwText(
+              loadingMessage!,
+            )
+          : Container(),
     );
   }
 
@@ -72,6 +75,11 @@ class ModalLoadingRoute extends PopupRoute {
   GlobalKey<ModalLoadingState> loadingState = GlobalKey();
 
   @override
+  final String? barrierLabel;
+
+  static ModalLoadingRoute? instance;
+
+  @override
   Duration get transitionDuration => _kDropdownMenuDuration;
 
   @override
@@ -79,21 +87,6 @@ class ModalLoadingRoute extends PopupRoute {
 
   @override
   Color get barrierColor => Colors.transparent;
-
-  @override
-  final String? barrierLabel;
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return ModalLoading(
-        key: loadingState,
-        loadingMessage: loadingMessage,
-      );
-    });
-  }
 
   static dismiss(BuildContext context) {
     try {
@@ -105,14 +98,37 @@ class ModalLoadingRoute extends PopupRoute {
     instance = null;
   }
 
-  static ModalLoadingRoute? instance;
-
-  static showLoading(String message, BuildContext context) {
+  static showLoading(
+    String message,
+    BuildContext context,
+  ) {
     if (instance != null) {
       instance?.loadingState.currentState?.updateMessage(message);
     } else {
       instance = ModalLoadingRoute(loadingMessage: message);
-      Navigator.push(context, instance!);
+      Navigator.push(
+        context,
+        instance!,
+      );
     }
+  }
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return LayoutBuilder(
+      builder: (
+        BuildContext context,
+        BoxConstraints constraints,
+      ) {
+        return ModalLoading(
+          key: loadingState,
+          loadingMessage: loadingMessage,
+        );
+      },
+    );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: member-ordering
+
 extension StringExtension on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${this.substring(1)}';
@@ -85,6 +87,18 @@ class Strings {
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
   static const resetWallet = 'Reset Wallet';
+
+  // My Account Page
+  static const myAccount = 'My Account';
+  static const linkedServices = 'Linked Services';
+  static const security = 'Security';
+  static const pinCode = 'Pin Code';
+  static const notifications = 'Notifications';
+  static const general = 'General';
+  static const faq = 'FAQ';
+  static const sendFeedback = 'Send Feedback';
+  static const contactUs = 'Contact Us';
+  static const policiesAndTerms = 'Policies & Terms';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';

@@ -3,5 +3,5 @@ enum WalletAddImportType {
   onBoardingRecover,
   dashboardAdd,
   dashboardRecover,
-  justEnableFaceId
+  justEnableFaceId,
 }
