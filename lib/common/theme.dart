@@ -15,11 +15,13 @@ class FigurePayThemeData {
   static const Color _black = Color(0xFF05010C);
   static const Color _globalNeutral550 = Color(0xFF3D4151);
   static const Color _globalNeutral450 = Color(0xFF555B71);
+  static const Color _globalNeutral400 = Color(0xFF6A7187);
   static const Color _globalNeutral600Black = Color(0xFF30323F);
   static const Color _globalNeutral350 = Color(0xFF9196AA);
   static const Color _globalNeutral500 = Color(0xFF4C5165);
   static const Color _iconColor = Color(0xFFF5F7FD);
   static const Color _globalNeutral250 = Color(0xFFC9CFE3);
+  static const Color _globalNeutral50 = Color(0xFFF9FCFF);
 
   /// Functional
   static const Color _positive = Color(0xFF4ABB0B);
@@ -37,6 +39,7 @@ class FigurePayThemeData {
   static const Color _primary4 = Color(0xFF5339D7);
   static const Color _primary5 = Color(0xFF7E6DD6);
   static const Color _primary6 = Color(0xFFDDD8FD);
+  static const Color _primary7 = Color(0xFF573AE6);
 
   /// Secondary
   static const Color _secondary1 = Color(0xFF28CEA8);
@@ -257,6 +260,7 @@ extension CustomColorScheme on ColorScheme {
   Color get primary4 => FigurePayThemeData._primary4;
   Color get primary5 => FigurePayThemeData._primary5;
   Color get primary6 => FigurePayThemeData._primary6;
+  Color get primary7 => FigurePayThemeData._primary7;
   Color get white => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
   Color get lightGrey => FigurePayThemeData._lightGrey;
@@ -271,9 +275,11 @@ extension CustomColorScheme on ColorScheme {
   Color get systemGreen => FigurePayThemeData._systemGreen;
   Color get pickerGrey => FigurePayThemeData._pickerGrey;
   Color get pickerBlack => FigurePayThemeData._pickerBlack;
+  Color get globalNeutral50 => FigurePayThemeData._globalNeutral50;
   Color get globalNeutral550 => FigurePayThemeData._globalNeutral550;
   Color get globalNeutral500 => FigurePayThemeData._globalNeutral500;
   Color get globalNeutral600Black => FigurePayThemeData._globalNeutral600Black;
+  Color get globalNeutral400 => FigurePayThemeData._globalNeutral400;
   Color get globalNeutral450 => FigurePayThemeData._globalNeutral450;
   Color get globalNeutral350 => FigurePayThemeData._globalNeutral350;
   Color get globalNeutral250 => FigurePayThemeData._globalNeutral250;
