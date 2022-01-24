@@ -46,9 +46,9 @@ TransactionResponse _$TransactionResponseFromMessage(String message) {
   }
 
   return TransactionResponse(
-    toAddress: toAddress ?? "",
+    toAddress: toAddress,
     amount: amount,
-    fromAddress: json['fromAddress'] ?? "",
+    fromAddress: json['fromAddress'],
     denom: denom,
   );
 }
