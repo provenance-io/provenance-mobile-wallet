@@ -41,91 +41,93 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 158,
-                    width: 158,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF9196AA),
-                      borderRadius: BorderRadius.all(Radius.circular(79)),
-                    ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProgressStepper(
+              currentStep ?? 0,
+              numberOfSteps ?? 1,
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 12,
+              ),
+            ),
+            SizedBox(
+              height: 70,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 158,
+                  width: 158,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF9196AA),
+                    borderRadius: BorderRadius.all(Radius.circular(79)),
                   ),
-                ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 48,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwText(
+                Strings.prepareToWriteDownYourRecoveryPassphrase,
+                style: FwTextStyle.extraLarge,
+                textAlign: TextAlign.center,
+                color: FwColor.globalNeutral550,
               ),
-              SizedBox(
-                height: 48,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwText(
+                Strings.theOnlyWayToRecoverYourAccount,
+                style: FwTextStyle.m,
+                textAlign: TextAlign.center,
+                color: FwColor.globalNeutral550,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+            ),
+            Expanded(child: Container()),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwText(
+                Strings.warningDoNotShare,
+                style: FwTextStyle.sBold,
+                textAlign: TextAlign.center,
+                color: FwColor.globalNeutral450,
+              ),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwButton(
                 child: FwText(
-                  Strings.prepareToWriteDownYourRecoveryPassphrase,
-                  style: FwTextStyle.extraLarge,
-                  textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  Strings.iAmReady,
+                  style: FwTextStyle.mBold,
+                  color: FwColor.white,
                 ),
+                onPressed: () {
+                  Navigator.of(context).push(RecoveryWords(
+                    flowType,
+                    accountName,
+                    currentStep: currentStep,
+                    numberOfSteps: numberOfSteps,
+                  ).route());
+                },
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
-                  Strings.theOnlyWayToRecoverYourAccount,
-                  style: FwTextStyle.m,
-                  textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
-                ),
-              ),
-              Expanded(child: Container()),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
-                  Strings.warningDoNotShare,
-                  style: FwTextStyle.sBold,
-                  textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral450,
-                ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
-                    Strings.iAmReady,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(RecoveryWords(
-                      flowType,
-                      accountName,
-                      currentStep: currentStep,
-                      numberOfSteps: numberOfSteps,
-                    ).route());
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              if (numberOfSteps != null)
-                ProgressStepper(
-                  currentStep ?? 0,
-                  numberOfSteps ?? 1,
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                ),
-              if (numberOfSteps != null) VerticalSpacer.xxLarge(),
-            ],
-          ),
+            ),
+            VerticalSpacer.xxLarge(),
+            VerticalSpacer.xxLarge(),
+          ],
         ),
       ),
     );
