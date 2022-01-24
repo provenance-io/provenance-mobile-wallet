@@ -55,6 +55,12 @@ class RecoveryWordsState extends State<RecoveryWords> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0.0,
+          title: FwText(
+            Strings.recoveryPassphrase,
+            style: FwTextStyle.h5,
+            textAlign: TextAlign.left,
+            color: FwColor.globalNeutral550,
+          ),
           leading: IconButton(
             icon: FwIcon(
               FwIcons.back,
@@ -73,12 +79,6 @@ class RecoveryWordsState extends State<RecoveryWords> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
-                  child: FwText(
-                    Strings.recoveryPassphrase,
-                    style: FwTextStyle.extraLarge,
-                    textAlign: TextAlign.center,
-                    color: FwColor.globalNeutral550,
-                  ),
                 ),
                 SizedBox(
                   height: 16,
