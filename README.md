@@ -1,4 +1,4 @@
-# flutter_tech_wallet
+# Provenance Wallet
 
 A mobile wallet.
 

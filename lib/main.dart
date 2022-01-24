@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tech_wallet/common/theme.dart';
-import 'package:flutter_tech_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/common/theme.dart';
+import 'package:provenance_wallet/screens/landing/landing.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_tech_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/router_observer.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));

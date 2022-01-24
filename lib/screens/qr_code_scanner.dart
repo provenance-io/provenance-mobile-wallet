@@ -1,4 +1,4 @@
-import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 

@@ -1,4 +1,4 @@
-import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
 
 class ModalLoading extends StatefulWidget {
   ModalLoading({

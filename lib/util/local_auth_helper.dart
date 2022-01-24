@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
-import 'package:flutter_tech_wallet/screens/validate_pin.dart';
-import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/validate_pin.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 

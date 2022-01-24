@@ -1,6 +1,6 @@
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class RenameWalletDialog extends StatelessWidget {
   RenameWalletDialog({@required this.currentName, Key? key}) : super(key: key) {

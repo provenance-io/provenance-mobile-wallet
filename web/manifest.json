@@ -1,6 +1,6 @@
 {
-    "name": "flutter_tech_wallet",
-    "short_name": "flutter_tech_wallet",
+    "name": "provenance_wallet",
+    "short_name": "provenance_wallet",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
