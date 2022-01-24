@@ -11,10 +11,10 @@ class TransactionResponse {
     required this.denom,
   });
 
-  final String toAddress;
-  final String amount;
-  final String fromAddress;
-  final String denom;
+  final String? toAddress;
+  final String? amount;
+  final String? fromAddress;
+  final String? denom;
   String get displayAmount {
     return "${this.amount} ${this.denom}";
   }

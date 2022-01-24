@@ -84,8 +84,8 @@ class DashboardState extends State<Dashboard>
 
       SendTransactionInfo info = SendTransactionInfo(
         fee: cost,
-        toAddress: transaction.toAddress,
-        fromAddress: transaction.fromAddress,
+        toAddress: transaction.toAddress ?? '',
+        fromAddress: transaction.fromAddress ?? '',
         requestId: requestId,
         amount: transaction.displayAmount,
       );
