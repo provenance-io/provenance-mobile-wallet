@@ -30,6 +30,7 @@ enum FwColor {
   globalNeutral550,
   globalNeutral600Black,
   globalNeutral450,
+  globalNeutral400,
   globalNeutral350,
   globalNeutral500,
 }
@@ -84,6 +85,8 @@ mixin FwColorMixin on Widget {
         return theme.colorScheme.lime;
       case FwColor.globalNeutral350:
         return theme.colorScheme.globalNeutral350;
+      case FwColor.globalNeutral400:
+        return theme.colorScheme.globalNeutral400;
       case FwColor.globalNeutral450:
         return theme.colorScheme.globalNeutral450;
       case FwColor.globalNeutral550:
