@@ -3,13 +3,13 @@ import 'package:flutter_tech_wallet/common/fw_design.dart';
 import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
 import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
 import 'package:flutter_tech_wallet/network/models/asset_response.dart';
-import 'package:flutter_tech_wallet/network/models/transaction_response.dart';
 import 'package:flutter_tech_wallet/network/services/asset_service.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/my_account.dart';
 import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
 import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
 import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:prov_wallet_flutter/dtos/transaction_message.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:flutter_tech_wallet/util/router_observer.dart';
 
@@ -76,18 +76,16 @@ class DashboardState extends State<Dashboard>
 
     ProvWalletFlutter.instance.onAskToSend = (
       String requestId,
-      String message,
+      TransactionMessage message,
       String description,
       String cost,
     ) {
-      final transaction = TransactionResponse.fromMessage(message);
-
       SendTransactionInfo info = SendTransactionInfo(
         fee: cost,
-        toAddress: transaction.toAddress ?? '',
-        fromAddress: transaction.fromAddress ?? '',
+        toAddress: message.toAddress ?? '',
+        fromAddress: message.fromAddress ?? '',
         requestId: requestId,
-        amount: transaction.displayAmount,
+        amount: message.displayAmount,
       );
       Navigator.of(context).push(SendTransactionApproval(info).route());
     };
