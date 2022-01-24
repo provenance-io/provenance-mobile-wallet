@@ -1,6 +1,6 @@
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/network/services/stat_service.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/network/services/stat_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.figure.flutter_tech_wallet">
+    package="io.provenance.wallet">
    <application
-        android:label="flutter_tech_wallet"
+        android:label="Provenance Wallet"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

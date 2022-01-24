@@ -2,9 +2,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
-import 'package:flutter_tech_wallet/services/shared_prefs_service.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/services/shared_prefs_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';

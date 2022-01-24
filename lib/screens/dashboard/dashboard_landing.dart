@@ -1,10 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/network/models/asset_response.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/wallet_portfolio.dart';
-import 'package:flutter_tech_wallet/screens/landing/landing.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
+import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class DashboardLanding extends StatefulWidget {

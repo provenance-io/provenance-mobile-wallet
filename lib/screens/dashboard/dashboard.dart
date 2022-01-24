@@ -1,17 +1,17 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
-import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/network/models/asset_response.dart';
-import 'package:flutter_tech_wallet/network/services/asset_service.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/wallet_portfolio.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/my_account.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
-import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
+import 'package:provenance_wallet/screens/dashboard/my_account.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets.dart';
+import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/dtos/transaction_message.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:flutter_tech_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/router_observer.dart';
 
 import 'dashboard_landing.dart';
 

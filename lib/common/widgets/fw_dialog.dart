@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FwDialog {

@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
-import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/add_wallet.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/rename_wallet_dialog.dart';
-import 'package:flutter_tech_wallet/util/router_observer.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
+import 'package:provenance_wallet/screens/dashboard/rename_wallet_dialog.dart';
+import 'package:provenance_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class Wallets extends StatefulWidget {

@@ -1,4 +1,4 @@
-package com.figure.flutter_tech_wallet
+package com.figure.provenance_wallet
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
-import 'package:flutter_tech_wallet/network/models/asset_response.dart';
-import 'package:flutter_tech_wallet/network/services/base_service.dart';
+import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/services/base_service.dart';
 
 class AssetService {
   factory AssetService() => _singleton;
