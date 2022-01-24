@@ -24,6 +24,12 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
+        title: FwText(
+          Strings.createPassphrase,
+          style: FwTextStyle.h5,
+          textAlign: TextAlign.left,
+          color: FwColor.globalNeutral550,
+        ),
         leading: IconButton(
           icon: FwIcon(
             FwIcons.back,
