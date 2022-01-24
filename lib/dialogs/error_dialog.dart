@@ -1,5 +1,5 @@
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 
 class ErrorDialog extends StatelessWidget {
   const ErrorDialog({

@@ -1,19 +1,19 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/common/widgets/fw_dialog.dart';
-import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/network/models/asset_response.dart';
-import 'package:flutter_tech_wallet/network/services/asset_service.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/my_account.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/wallets.dart';
-import 'package:flutter_tech_wallet/screens/landing/landing.dart';
-import 'package:flutter_tech_wallet/screens/qr_code_scanner.dart';
-import 'package:flutter_tech_wallet/screens/send_transaction_approval.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/screens/dashboard/my_account.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets.dart';
+import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:flutter_tech_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/router_observer.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -66,9 +66,11 @@ class DashboardState extends State<Dashboard>
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
     _tabController = TabController(length: 2, vsync: this);
-    ProvWalletFlutter.instance.onAskToSign = (String requestId,
-        String message,
-        String description,) async {
+    ProvWalletFlutter.instance.onAskToSign = (
+      String requestId,
+      String message,
+      String description,
+    ) async {
       final result = await FwDialog.showConfirmation(
         context,
         title: description,
@@ -81,10 +83,12 @@ class DashboardState extends State<Dashboard>
       ModalLoadingRoute.dismiss(context);
     };
 
-    ProvWalletFlutter.instance.onAskToSend = (String requestId,
-        String message,
-        String description,
-        String cost,) {
+    ProvWalletFlutter.instance.onAskToSend = (
+      String requestId,
+      String message,
+      String description,
+      String cost,
+    ) {
       final map = jsonDecode(message);
 
       String? toAddress = map["toAddress"] ?? map["manager"];
@@ -103,8 +107,7 @@ class DashboardState extends State<Dashboard>
         toAddress: toAddress ?? '',
         fromAddress: map["fromAddress"] ?? '',
         requestId: requestId,
-        amount:
-        amountToDisplay,
+        amount: amountToDisplay,
       );
       Navigator.of(context).push(SendTransactionApproval(info).route());
     };

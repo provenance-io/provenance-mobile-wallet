@@ -1,11 +1,11 @@
-import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/common/widgets/modal_loading.dart';
-import 'package:flutter_tech_wallet/main.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
-import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/main.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class EnableFaceId extends StatelessWidget {

@@ -1,15 +1,15 @@
-import 'package:flutter_tech_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/common/widgets/button.dart';
-import 'package:flutter_tech_wallet/screens/account_name.dart';
-import 'package:flutter_tech_wallet/screens/dashboard/dashboard.dart';
-import 'package:flutter_tech_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:flutter_tech_wallet/screens/landing/onboarding_manage_slide.dart';
-import 'package:flutter_tech_wallet/screens/landing/onboarding_trade_slide.dart';
-import 'package:flutter_tech_wallet/services/secure_storage_service.dart';
-import 'package:flutter_tech_wallet/util/local_auth_helper.dart';
-import 'package:flutter_tech_wallet/util/local_authentication_service.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/screens/account_name.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_manage_slide.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_trade_slide.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/local_authentication_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Landing extends StatefulWidget {
   @override

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_tech_wallet/util/logs/dio_simple_logger.dart';
-import 'package:flutter_tech_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 
 const String ACCEPT = 'Accept';
 const String CONTENT_TYPE = 'content-type';

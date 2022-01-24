@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
 
 extension Spacing on double {
   static const xSmall = 4.0;

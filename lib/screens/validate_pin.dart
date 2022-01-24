@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_tech_wallet/common/fw_design.dart';
-import 'package:flutter_tech_wallet/dialogs/error_dialog.dart';
-import 'package:flutter_tech_wallet/util/strings.dart';
+import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ValidatePin extends StatefulHookWidget {
   ValidatePin({this.code});
