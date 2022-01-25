@@ -553,7 +553,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bbbd1cdecfa0093410d1e4a09d7e6edf05a4fb43
+      resolved-ref: dc6ab9a66b4e1d4080518184b2ed002090e1f9f0
       url: "git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git"
     source: git
     version: "0.0.1"
