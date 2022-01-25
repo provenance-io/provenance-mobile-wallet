@@ -1,22 +1,16 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/screens/recover_passphrase_entry.dart';
 import 'package:provenance_wallet/screens/recovery_words.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class PrepareRecoveryPhraseIntro extends StatelessWidget {
-  PrepareRecoveryPhraseIntro(
-    this.flowType,
-    this.accountName, {
-    this.currentStep,
-    this.numberOfSteps,
-  });
+class PresentInformation extends StatelessWidget {
+  PresentInformation(
+    this.info,
+  );
 
-  final int? currentStep;
-  final int? numberOfSteps;
-  final WalletAddImportType flowType;
-
-  final String accountName;
+  final InfoModel info;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +19,7 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.0,
         title: FwText(
-          Strings.createPassphrase,
+          info.title,
           style: FwTextStyle.h5,
           textAlign: TextAlign.left,
           color: FwColor.globalNeutral550,
@@ -46,8 +40,8 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProgressStepper(
-              currentStep ?? 0,
-              numberOfSteps ?? 1,
+              info.currentStep ?? 0,
+              info.numberOfSteps ?? 1,
               padding: EdgeInsets.only(
                 left: 20,
                 right: 20,
@@ -73,37 +67,41 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
             SizedBox(
               height: 48,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwText(
-                Strings.prepareToWriteDownYourRecoveryPassphrase,
-                style: FwTextStyle.extraLarge,
-                textAlign: TextAlign.center,
-                color: FwColor.globalNeutral550,
-              ),
-            ),
+            !info.isExistingAccount
+                ? Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: FwText(
+                      Strings.prepareToWriteDownYourRecoveryPassphrase,
+                      style: FwTextStyle.extraLarge,
+                      textAlign: TextAlign.center,
+                      color: FwColor.globalNeutral550,
+                    ),
+                  )
+                : Container(),
             SizedBox(
               height: 16,
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: FwText(
-                Strings.theOnlyWayToRecoverYourAccount,
+                info.bodyText,
                 style: FwTextStyle.m,
                 textAlign: TextAlign.center,
                 color: FwColor.globalNeutral550,
               ),
             ),
             Expanded(child: Container()),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwText(
-                Strings.warningDoNotShare,
-                style: FwTextStyle.sBold,
-                textAlign: TextAlign.center,
-                color: FwColor.globalNeutral450,
-              ),
-            ),
+            info.isExistingAccount
+                ? Container()
+                : Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: FwText(
+                      Strings.warningDoNotShare,
+                      style: FwTextStyle.sBold,
+                      textAlign: TextAlign.center,
+                      color: FwColor.globalNeutral450,
+                    ),
+                  ),
             SizedBox(
               height: 24,
             ),
@@ -111,17 +109,15 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: FwButton(
                 child: FwText(
-                  Strings.iAmReady,
+                  info.buttonText,
                   style: FwTextStyle.mBold,
                   color: FwColor.white,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(RecoveryWords(
-                    flowType,
-                    accountName,
-                    currentStep: currentStep,
-                    numberOfSteps: numberOfSteps,
-                  ).route());
+                  var widget = info.getNextStep();
+                  if (widget != null) {
+                    Navigator.of(context).push(widget.route());
+                  }
                 },
               ),
             ),
@@ -131,5 +127,52 @@ class PrepareRecoveryPhraseIntro extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class InfoModel {
+  InfoModel(
+    this.flowType,
+    this.accountName,
+    this.title,
+    this.bodyText,
+    this.buttonText, {
+    this.currentStep,
+    this.numberOfSteps,
+  });
+  final int? currentStep;
+  final int? numberOfSteps;
+  final WalletAddImportType flowType;
+
+  final String accountName;
+  final String title;
+  final String bodyText;
+  final String buttonText;
+
+  bool get isExistingAccount {
+    return flowType == WalletAddImportType.onBoardingRecover ||
+        flowType == WalletAddImportType.dashboardRecover;
+  }
+
+  Widget? getNextStep() {
+    if (flowType == WalletAddImportType.onBoardingRecover ||
+        flowType == WalletAddImportType.dashboardRecover) {
+      return RecoverPassphraseEntry(
+        flowType,
+        accountName,
+        currentStep: currentStep,
+        numberOfSteps: numberOfSteps,
+      );
+    } else if (flowType == WalletAddImportType.onBoardingAdd ||
+        flowType == WalletAddImportType.dashboardAdd) {
+      return RecoveryWords(
+        flowType,
+        accountName,
+        currentStep: currentStep,
+        numberOfSteps: numberOfSteps,
+      );
+    } else {
+      return null;
+    }
   }
 }
