@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
@@ -10,6 +9,7 @@ import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:prov_wallet_flutter/dtos/transaction_message.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 
@@ -18,18 +18,6 @@ import 'dashboard_landing.dart';
 class Dashboard extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => DashboardState();
-}
-
-extension AmountList on List<dynamic> {
-  String toDisplay() {
-    return "${this.first["amount"]} ${this.first["denom"]}";
-  }
-}
-
-extension AmountMap on Map<String, dynamic> {
-  String toDisplay() {
-    return "${this["amount"]} ${this["denom"]}";
-  }
 }
 
 class DashboardState extends State<Dashboard>
@@ -88,29 +76,16 @@ class DashboardState extends State<Dashboard>
 
     ProvWalletFlutter.instance.onAskToSend = (
       String requestId,
-      String message,
+      TransactionMessage message,
       String description,
       String cost,
     ) {
-      final map = jsonDecode(message);
-
-      String? toAddress = map["toAddress"] ?? map["manager"];
-      if (toAddress == null) {
-        toAddress = map["administrator"];
-      }
-      var amountToDisplay = "";
-      if (map["amount"] != null) {
-        amountToDisplay = (map["amount"] is Map<String, dynamic>)
-            ? (map["amount"] as Map<String, dynamic>).toDisplay()
-            : (map["amount"] as List<dynamic>).toDisplay();
-      }
-
       SendTransactionInfo info = SendTransactionInfo(
         fee: cost,
-        toAddress: toAddress ?? '',
-        fromAddress: map["fromAddress"] ?? '',
+        toAddress: message.toAddress ?? '',
+        fromAddress: message.fromAddress ?? '',
         requestId: requestId,
-        amount: amountToDisplay,
+        amount: message.displayAmount,
       );
       Navigator.of(context).push(SendTransactionApproval(info).route());
     };
