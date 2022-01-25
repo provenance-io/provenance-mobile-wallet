@@ -153,6 +153,7 @@ class Strings {
   static const later = 'Later';
 
   // PrepareRecoveryPhraseIntro
+  static const createPassphrase = "Create Passphrase";
   static const prepareToWriteDownYourRecoveryPassphrase =
       'Prepare to write down your recovery passphrase';
   static const theOnlyWayToRecoverYourAccount =
