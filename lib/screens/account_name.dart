@@ -2,8 +2,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/prepare_recovery_phrase_intro.dart';
-import 'package:provenance_wallet/screens/restore_account_intro.dart';
+import 'package:provenance_wallet/screens/present_information.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountName extends HookWidget {
@@ -104,21 +103,35 @@ class AccountName extends HookWidget {
                     if (_formKey.currentState?.validate() == true) {
                       if (flowType == WalletAddImportType.onBoardingRecover ||
                           flowType == WalletAddImportType.dashboardRecover) {
-                        Navigator.of(context).push(RestoreAccountIntro(
-                          flowType,
-                          accountNameProvider.text,
-                          currentStep: (currentStep ?? 0) + 1,
-                          numberOfSteps: numberOfSteps,
-                        ).route());
+                        Navigator.of(context).push(
+                          PresentInformation(
+                            InfoModel(
+                              flowType,
+                              accountNameProvider.text,
+                              Strings.recoverAccount,
+                              Strings.inTheFollowingStepsText,
+                              Strings.next,
+                              currentStep: (currentStep ?? 0) + 1,
+                              numberOfSteps: numberOfSteps,
+                            ),
+                          ).route(),
+                        );
                       } else if (flowType ==
                               WalletAddImportType.onBoardingAdd ||
                           flowType == WalletAddImportType.dashboardAdd) {
-                        Navigator.of(context).push(PrepareRecoveryPhraseIntro(
-                          flowType,
-                          accountNameProvider.text,
-                          currentStep: (currentStep ?? 0) + 1,
-                          numberOfSteps: numberOfSteps,
-                        ).route());
+                        Navigator.of(context).push(
+                          PresentInformation(
+                            InfoModel(
+                              flowType,
+                              accountNameProvider.text,
+                              Strings.createPassphrase,
+                              Strings.theOnlyWayToRecoverYourAccount,
+                              Strings.iAmReady,
+                              currentStep: (currentStep ?? 0) + 1,
+                              numberOfSteps: numberOfSteps,
+                            ),
+                          ).route(),
+                        );
                       }
                     }
                   },

@@ -9,7 +9,6 @@ import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/dtos/transaction_message.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 
