@@ -110,7 +110,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         children: [
                           Wrap(
                             direction: Axis.vertical,
-                            runSpacing: 24.0,
+                            runSpacing: 48.0,
                             spacing: 2.0,
                             children: [
                               ...words
