@@ -130,6 +130,12 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0.0,
+          title: FwText(
+            Strings.verifyRecoveryPassphrase,
+            style: FwTextStyle.h6,
+            textAlign: TextAlign.center,
+            color: FwColor.globalNeutral550,
+          ),
           leading: IconButton(
             icon: FwIcon(
               FwIcons.back,
@@ -146,15 +152,6 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: FwText(
-                    Strings.verifyRecoveryPassphrase,
-                    style: FwTextStyle.extraLarge,
-                    textAlign: TextAlign.center,
-                    color: FwColor.globalNeutral550,
-                  ),
-                ),
                 SizedBox(
                   height: 16,
                 ),
