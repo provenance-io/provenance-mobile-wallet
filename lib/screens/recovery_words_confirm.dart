@@ -120,36 +120,35 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           color: Colors.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: loading
-                ? []
-                : [
-                    ProgressStepper(
-                      widget.currentStep ?? 0,
-                      widget.numberOfSteps ?? 1,
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 12,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 56,
-                    ),
-                    _buildWordSelector(0),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    _buildWordSelector(1),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    _buildWordSelector(2),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    _buildWordSelector(3),
-                    Expanded(
-                      child: Container(),
+            children: [
+              ProgressStepper(
+                widget.currentStep ?? 0,
+                widget.numberOfSteps ?? 1,
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 12,
+                ),
+              ),
+              SizedBox(
+                height: 56,
+              ),
+              _buildWordSelector(0),
+              SizedBox(
+                height: 40,
+              ),
+              _buildWordSelector(1),
+              SizedBox(
+                height: 40,
+              ),
+              _buildWordSelector(2),
+              SizedBox(
+                height: 40,
+              ),
+              _buildWordSelector(3),
+              Expanded(
+                child: Container(),
+              ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -174,6 +173,10 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
   }
 
   Widget _buildWordSelector(int index) {
+    if (loading) {
+      return Container();
+    }
+
     var wordGroup = wordGroups[index];
     var trueWordIndex = trueWordsIndex[index];
 
