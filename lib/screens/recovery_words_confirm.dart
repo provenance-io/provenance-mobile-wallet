@@ -242,7 +242,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       await showDialog(
         context: context,
         builder: (context) => ErrorDialog(
-          error: Strings.pleaseAgreeToTheTermsAndTryAgain,
+          error: Strings.youMustAgreeToTheWalletSeedphraseTerms,
         ),
       );
     } else {
