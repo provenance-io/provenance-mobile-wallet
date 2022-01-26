@@ -147,91 +147,89 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         ),
         body: Container(
           color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 16,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ProgressStepper(
+                widget.currentStep ?? 0,
+                widget.numberOfSteps ?? 1,
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 12,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: WordSelector(
-                    words: wordGroup1,
-                    wordNumber: word1 + 1,
-                    onWordSelected: (word) {
-                      _selectedWord1 = word;
-                    },
+              ),
+              SizedBox(
+                height: 56,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: WordSelector(
+                  words: wordGroup1,
+                  wordNumber: word1 + 1,
+                  onWordSelected: (word) {
+                    _selectedWord1 = word;
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: WordSelector(
+                  words: wordGroup2,
+                  wordNumber: word2 + 1,
+                  onWordSelected: (word) {
+                    _selectedWord2 = word;
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: WordSelector(
+                  words: wordGroup3,
+                  wordNumber: word3 + 1,
+                  onWordSelected: (word) {
+                    _selectedWord3 = word;
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: WordSelector(
+                  words: wordGroup4,
+                  wordNumber: word4 + 1,
+                  onWordSelected: (word) {
+                    _selectedWord4 = word;
+                  },
+                ),
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: FwButton(
+                  child: FwText(
+                    Strings.next,
+                    style: FwTextStyle.mBold,
+                    color: FwColor.white,
                   ),
+                  onPressed: () {
+                    _validateWordSelection();
+                  },
                 ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: WordSelector(
-                    words: wordGroup2,
-                    wordNumber: word2 + 1,
-                    onWordSelected: (word) {
-                      _selectedWord2 = word;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: WordSelector(
-                    words: wordGroup3,
-                    wordNumber: word3 + 1,
-                    onWordSelected: (word) {
-                      _selectedWord3 = word;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: WordSelector(
-                    words: wordGroup4,
-                    wordNumber: word4 + 1,
-                    onWordSelected: (word) {
-                      _selectedWord4 = word;
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: FwButton(
-                    child: FwText(
-                      Strings.next,
-                      style: FwTextStyle.mBold,
-                      color: FwColor.white,
-                    ),
-                    onPressed: () {
-                      _validateWordSelection();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                if (widget.numberOfSteps != null)
-                  ProgressStepper(
-                    (widget.currentStep ?? 0),
-                    widget.numberOfSteps ?? 1,
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                  ),
-                if (widget.numberOfSteps != null) VerticalSpacer.xxLarge(),
-              ],
-            ),
+              ),
+              VerticalSpacer.xxLarge(),
+              VerticalSpacer.xxLarge(),
+            ],
           ),
         ),
       ),
