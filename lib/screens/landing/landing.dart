@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
@@ -18,18 +20,24 @@ class Landing extends StatefulWidget {
   }
 }
 
-class _LandingState extends State<Landing> {
+class _LandingState extends State<Landing> with WidgetsBindingObserver {
+  static const _inactivityTimeout = Duration(minutes: 2);
+
   bool _accountExists = false;
   LocalAuthenticationService _localAuth = LocalAuthenticationService();
   LocalAuthHelper _helper = LocalAuthHelper.instance;
   PageController _pageController = PageController();
   double _currentPage = 0;
+  Timer? _inactivityTimer;
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
     checkAccount();
+
+    WidgetsBinding.instance!.addObserver(this);
+
     super.initState();
   }
 
@@ -37,7 +45,27 @@ class _LandingState extends State<Landing> {
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
     _pageController.dispose();
+
+    WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.paused:
+        _inactivityTimer ??= Timer(_inactivityTimeout, () {
+          _inactivityTimer = null;
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        });
+        break;
+      case AppLifecycleState.resumed:
+        _inactivityTimer?.cancel();
+        _inactivityTimer = null;
+        break;
+      default:
+    }
   }
 
   void checkAccount() async {
