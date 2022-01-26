@@ -32,6 +32,7 @@ class RecoveryWordsConfirm extends StatefulWidget {
 }
 
 class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
+  bool _isResponsible = false;
   List<String?> _selectedWords = [
     null,
     null,
@@ -149,23 +150,48 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
               Expanded(
                 child: Container(),
               ),
+              Row(
+                children: [
+                  Checkbox(
+                    fillColor: MaterialStateProperty.all((Color(0xFF949494))),
+                    value: _isResponsible,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isResponsible = value!;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: FwText(
+                      Strings.iAmResponsibleForMyWalletText,
+                      style: FwTextStyle.sBold,
+                      color: FwColor.globalNeutral550,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: FwButton(
-                        child: FwText(
-                          Strings.next,
-                          style: FwTextStyle.mBold,
-                          color: FwColor.white,
-                        ),
-                        onPressed: () {
-                          _validation();
-                        },
-                      ),
-                    ),
-                    VerticalSpacer.xxLarge(),
-                    VerticalSpacer.xxLarge(),
-                  ],
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: FwButton(
+                  child: FwText(
+                    Strings.next,
+                    style: FwTextStyle.mBold,
+                    color: FwColor.white,
+                  ),
+                  onPressed: () {
+                    _validation();
+                  },
+                ),
+              ),
+              VerticalSpacer.xxLarge(),
+              VerticalSpacer.xxLarge(),
+            ],
           ),
         ),
       ),
