@@ -10,7 +10,6 @@ import 'package:provenance_wallet/screens/create_pin.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
-// ignore_for_file: prefer-trailing-comma
 class RecoveryWordsConfirm extends StatefulWidget {
   RecoveryWordsConfirm(
     this.flowType, {
