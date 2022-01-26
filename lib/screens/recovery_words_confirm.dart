@@ -238,6 +238,13 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           error: Strings.yourSelectionsDoNotMatch,
         ),
       );
+    } else if (!_isResponsible) {
+      await showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(
+          error: Strings.pleaseAgreeToTheTermsAndTryAgain,
+        ),
+      );
     } else {
       if (widget.flowType == WalletAddImportType.onBoardingAdd) {
         Navigator.of(context).push(CreatePin(
