@@ -32,36 +32,31 @@ class RecoveryWordsConfirm extends StatefulWidget {
 }
 
 class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
-  String? _selectedWord1;
-  String? _selectedWord2;
-  String? _selectedWord3;
-  String? _selectedWord4;
+  List<String?> _selectedWords = [
+    null,
+    null,
+    null,
+    null,
+  ];
 
   final _random = new Random();
+  List<List<String>> wordGroups = [];
 
-  List<String> wordGroup1 = [];
-  List<String> wordGroup2 = [];
-  List<String> wordGroup3 = [];
-  List<String> wordGroup4 = [];
-
-  int word1 = -1;
-  int word2 = -1;
-  int word3 = -1;
-  int word4 = -1;
+  List<String> trueWords = [];
+  List<int?> trueWordsIndex = [
+    null,
+    null,
+    null,
+    null,
+  ];
 
   bool loading = true;
 
   int next(
     int min,
     int max,
-    Map<int, int> excluding,
   ) {
-    int num = min + _random.nextInt(max - min);
-    while (excluding.containsKey(num)) {
-      num = min + _random.nextInt(max - min);
-    }
-
-    return num;
+    return min + _random.nextInt(max - min);
   }
 
   @override
@@ -70,51 +65,28 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
     super.initState();
   }
 
-  List<String> getWordList(
-    int count,
-    int max,
-    int mustInclude,
-  ) {
-    int index = 0;
-    List<String> words = [];
-    Map<int, int> usedNumbers = {mustInclude: mustInclude};
-    while (index < count - 1) {
-      int num = next(
-        1,
-        max,
-        usedNumbers,
-      );
-      usedNumbers[num] = num;
-      words.add(widget.words?[num] ?? '');
-      index++;
+  List<String> getWordList(List<String>? words, String includedWord) {
+    List<String> selectedWords = [includedWord];
+    for (var i = 0; i < 2; i++) {
+      selectedWords.add(words?[next(0, words.length)] ?? "");
     }
 
-    int insertIndex = next(0, count, {});
-    if (insertIndex == count - 1) {
-      words.add(widget.words?[mustInclude] ?? '');
-    } else {
-      words.insert(insertIndex, widget.words?[mustInclude] ?? '');
-    }
-
-    return words;
+    return selectedWords;
   }
 
-  void setup() async {
-    int max = (widget.words?.length ?? 2) - 1;
-    Map<int, int> usedNumbers = {};
+  void setup() {
+    List<String>? localWords = widget.words?.toList(growable: true);
 
-    word1 = next(0, max, {});
-    usedNumbers[word1] = word1;
-    word2 = next(0, max, usedNumbers);
-    usedNumbers[word2] = word2;
-    word3 = next(0, max, usedNumbers);
-    usedNumbers[word3] = word3;
-    word4 = next(0, max, usedNumbers);
-
-    wordGroup1 = getWordList(3, max, word1);
-    wordGroup2 = getWordList(3, max, word2);
-    wordGroup3 = getWordList(3, max, word3);
-    wordGroup4 = getWordList(3, max, word4);
+    for (var i = 0; i < 4; i++) {
+      var index = next(0, (localWords?.length ?? 2) - 1);
+      var trueWord = localWords?.removeAt(index) ?? "";
+      var trueWordIndex = widget.words?.indexOf(trueWord);
+      trueWordsIndex[i] = trueWordIndex;
+      trueWords.add(trueWord);
+      var wordGroup = getWordList(localWords, trueWord);
+      wordGroup.shuffle();
+      wordGroups.add(wordGroup);
+    }
 
     setState(() {
       loading = false;
@@ -148,108 +120,89 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           color: Colors.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              ProgressStepper(
-                widget.currentStep ?? 0,
-                widget.numberOfSteps ?? 1,
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 12,
-                ),
-              ),
-              SizedBox(
-                height: 56,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: WordSelector(
-                  words: wordGroup1,
-                  wordNumber: word1 + 1,
-                  onWordSelected: (word) {
-                    _selectedWord1 = word;
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: WordSelector(
-                  words: wordGroup2,
-                  wordNumber: word2 + 1,
-                  onWordSelected: (word) {
-                    _selectedWord2 = word;
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: WordSelector(
-                  words: wordGroup3,
-                  wordNumber: word3 + 1,
-                  onWordSelected: (word) {
-                    _selectedWord3 = word;
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: WordSelector(
-                  words: wordGroup4,
-                  wordNumber: word4 + 1,
-                  onWordSelected: (word) {
-                    _selectedWord4 = word;
-                  },
-                ),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
-                    Strings.next,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
-                  ),
-                  onPressed: () {
-                    _validateWordSelection();
-                  },
-                ),
-              ),
-              VerticalSpacer.xxLarge(),
-              VerticalSpacer.xxLarge(),
-            ],
+            children: loading
+                ? []
+                : [
+                    ProgressStepper(
+                      widget.currentStep ?? 0,
+                      widget.numberOfSteps ?? 1,
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 12,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 56,
+                    ),
+                    _buildWordSelector(0),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    _buildWordSelector(1),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    _buildWordSelector(2),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    _buildWordSelector(3),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: FwButton(
+                        child: FwText(
+                          Strings.next,
+                          style: FwTextStyle.mBold,
+                          color: FwColor.white,
+                        ),
+                        onPressed: () {
+                          _validation();
+                        },
+                      ),
+                    ),
+                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.xxLarge(),
+                  ],
           ),
         ),
       ),
     );
   }
 
-  void _validateWordSelection() async {
-    if (_selectedWord1 == null ||
-        _selectedWord2 == null ||
-        _selectedWord3 == null ||
-        _selectedWord4 == null) {
+  Widget _buildWordSelector(int index) {
+    var wordGroup = wordGroups[index];
+    var trueWordIndex = trueWordsIndex[index];
+
+    return wordGroup.isEmpty || (trueWordIndex == null || trueWordIndex == -1)
+        ? Container()
+        : Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: WordSelector(
+              words: wordGroup,
+              wordNumber: trueWordIndex + 1,
+              onWordSelected: (word) {
+                _selectedWords[index] = word;
+              },
+            ),
+          );
+  }
+
+  void _validation() async {
+    if (_selectedWords.any((element) => element == null)) {
       await showDialog(
         context: context,
         builder: (context) => ErrorDialog(
           error: Strings.pleaseMakeASelection,
         ),
       );
-    } else if (_selectedWord1 != widget.words?[word1] ||
-        _selectedWord2 != widget.words?[word2] ||
-        _selectedWord3 != widget.words?[word3] ||
-        _selectedWord4 != widget.words?[word4]) {
+    } else if (_selectedWords[0] != trueWords[0] ||
+        _selectedWords[1] != trueWords[1] ||
+        _selectedWords[2] != trueWords[2] ||
+        _selectedWords[3] != trueWords[3]) {
       await showDialog(
         context: context,
         builder: (context) => ErrorDialog(
