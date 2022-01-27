@@ -144,24 +144,6 @@ class PinPadState extends State<PinPad> {
 
       if (_currentCodeLength == 6) {
         widget.onFinish();
-        // TODO: This code should be moved to the parent Widget/Widget State.
-        // Function eq = const ListEquality().equals;
-        // if (!eq(_inputCodes, widget.code)) {
-        //   await showDialog(
-        //     context: context,
-        //     builder: (context) => ErrorDialog(
-        //       error: Strings.yourPinDoesNotMatchPleaseTryAgain,
-        //     ),
-        //   );
-        // } else {
-        //   Navigator.of(context).push(EnableFaceId(
-        //     accountName: widget.accountName,
-        //     code: widget.code,
-        //     words: widget.words,
-        //     currentStep: (widget.currentStep ?? 0) + 1,
-        //     numberOfSteps: widget.numberOfSteps,
-        //   ).route());
-        // }
       }
     }
   }

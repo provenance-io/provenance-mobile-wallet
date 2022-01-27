@@ -847,6 +847,15 @@ class CodePanel extends StatelessWidget {
         ],
       ),
     );
+  _onFinish(List<int> inputCodes) {
+    Navigator.of(context).push(ConfirmPin(
+      widget.flowType,
+      accountName: widget.accountName,
+      words: widget.words,
+      code: inputCodes,
+      numberOfSteps: widget.numberOfSteps,
+      currentStep: widget.currentStep,
+    ).route());
   }
 }
 //
