@@ -39,84 +39,63 @@ class PinPadState extends State<PinPad> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
-            size: 24,
-            color: Color(0xFF3D4151),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FwText(
-                      Strings.confirmYourPinCode,
-                      style: FwTextStyle.extraLarge,
-                      textAlign: TextAlign.left,
-                      color: FwColor.globalNeutral550,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: CodePanel(
-                  codeLength: 6,
-                  currentLength: _currentCodeLength,
-                  status: _currentState,
-                  deleteCode: _deleteCode,
-                  borderColor: Theme.of(context).colorScheme.globalNeutral550,
-                ),
-              ),
-              SizedBox(
-                height: 60,
-              ),
-              Expanded(
-                flex: Platform.isIOS ? 5 : 6,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 0,
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 48,
+                  child: FwText(
+                    Strings.setAPinCodeToUnlockYourWallet,
+                    style: FwTextStyle.mBold,
+                    textAlign: TextAlign.center,
+                    color: FwColor.globalNeutral550,
                   ),
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification: (overscroll) {
-                      overscroll.disallowIndicator();
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: CodePanel(
+              codeLength: 6,
+              currentLength: _inputCodes.length,
+              status: 0,
+              deleteCode: _deleteCode,
+              borderColor: Theme.of(context).colorScheme.globalNeutral550,
+            ),
+          ),
+          SizedBox(
+            height: 60,
+          ),
+          Expanded(
+            flex: Platform.isIOS ? 5 : 6,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 0,
+              ),
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overscroll) {
+                  overscroll.disallowIndicator();
 
-                      return true;
-                    },
-                    child: _buildGridView(),
-                  ),
-                ),
+                  return true;
+                },
+                child: _buildGridView(),
               ),
-              SizedBox(
-                height: 24,
-              ),
-              SizedBox(
-                height: 40,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
