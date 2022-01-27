@@ -34,7 +34,6 @@ class PinPadState extends State<PinPad> {
   ];
   var _currentCodeLength = 0;
   var _inputCodes = <int>[];
-  var _currentState = 0;
   Color _circleColor = Colors.white;
 
 
@@ -151,7 +150,6 @@ class PinPadState extends State<PinPad> {
   _deleteCode() {
     setState(() {
       if (_currentCodeLength > 0) {
-        _currentState = 0;
         _currentCodeLength--;
         _inputCodes.removeAt(_currentCodeLength);
       }
