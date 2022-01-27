@@ -35,8 +35,8 @@ class PinPadState extends State<PinPad> {
   var _currentCodeLength = 0;
   var _inputCodes = <int>[];
   var _currentState = 0;
+  Color _circleColor = Colors.white;
 
-  Color circleColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -216,11 +216,11 @@ class PinPadState extends State<PinPad> {
       onTap: () {
         if (0 < _currentCodeLength) {
           setState(() {
-            circleColor = Colors.grey.shade300;
+            _circleColor = Colors.grey.shade300;
           });
           Future.delayed(Duration(milliseconds: 200)).then((func) {
             setState(() {
-              circleColor = Colors.white;
+              _circleColor = Colors.white;
             });
           });
         }
@@ -230,7 +230,7 @@ class PinPadState extends State<PinPad> {
         height: 50,
         width: 50,
         decoration: BoxDecoration(
-          color: circleColor,
+          color: _circleColor,
         ),
         child: Center(
           child: Icon(
