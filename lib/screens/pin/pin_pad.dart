@@ -36,6 +36,15 @@ class PinPadState extends State<PinPad> {
   var _inputCodes = <int>[];
   Color _circleColor = Colors.white;
 
+  @override
+  void initState() {
+    if (widget.isConfirming) {
+      setState(() {
+        _numbers.shuffle();
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
