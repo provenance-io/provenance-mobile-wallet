@@ -138,6 +138,8 @@ class Strings {
 
   // Confirm Pin
   static const confirmYourPinCode = 'Confirm your pin code';
+  static const confirmYourPinCodeReminder =
+      "Confirm your pin code. Make sure you remember it as you cannot recover it if you lose it.";
   static const yourPinDoesNotMatchPleaseTryAgain =
       "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
