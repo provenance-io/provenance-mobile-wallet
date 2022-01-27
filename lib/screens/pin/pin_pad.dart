@@ -173,7 +173,7 @@ class PinPadState extends State<PinPad> {
       if (i == _numbers.length - 1) {
         children.add(Container());
         children.add(_buildContainerCircle(_numbers[i]));
-        children.add(_buildContainerIcon(Icons.arrow_back));
+        children.add(_buildDeleteButton());
       } else {
         children.add(_buildContainerCircle(_numbers[i]));
       }
@@ -188,7 +188,7 @@ class PinPadState extends State<PinPad> {
     );
   }
 
-  Widget _buildContainerIcon(IconData icon) {
+  Widget _buildDeleteButton() {
     return InkResponse(
       onTap: () {
         if (0 < _currentCodeLength) {
@@ -211,7 +211,7 @@ class PinPadState extends State<PinPad> {
         ),
         child: Center(
           child: Icon(
-            icon,
+            Icons.arrow_back,
             size: 30,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
