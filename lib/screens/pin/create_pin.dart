@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/screens/confirm_pin.dart';
+import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePin extends StatefulHookWidget {
