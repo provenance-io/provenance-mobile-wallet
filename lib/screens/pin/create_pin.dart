@@ -66,6 +66,7 @@ class CreatePinState extends State<CreatePin> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
+                  subTitle: Strings.setAPinCodeToUnlockYourWallet,
                   isConfirming: false,
                   onFinish: _onFinish,
                 ),
