@@ -143,6 +143,8 @@ class Strings {
 
   // CreatePin
   static const setYourPinCode = 'Set your pin code';
+  static const setAPinCodeToUnlockYourWallet =
+      "Set a pin code to unlock your wallet.";
 
   // EnableFaceId
   static const useFaceId = 'Use Face ID';
