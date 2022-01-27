@@ -32,7 +32,6 @@ class PinPadState extends State<PinPad> {
     9,
     0,
   ];
-  var _currentCodeLength = 0;
   var _inputCodes = <int>[];
   Color _circleColor = Colors.white;
 
@@ -128,22 +127,20 @@ class PinPadState extends State<PinPad> {
 
   _deleteCode() {
     setState(() {
-      if (_currentCodeLength > 0) {
-        _currentCodeLength--;
-        _inputCodes.removeAt(_currentCodeLength);
+      if (_inputCodes.length > 0) {
+        _inputCodes.removeLast();
       }
     });
   }
 
   _onCodeClick(int code) async {
-    if (_currentCodeLength < 6) {
+    if (_inputCodes.length < 6) {
       setState(() {
-        _currentCodeLength++;
         _inputCodes.add(code);
       });
 
-      if (_currentCodeLength == 6) {
-        widget.onFinish();
+      if (_inputCodes.length == 6) {
+        widget.onFinish(this._inputCodes);
       }
     }
   }
@@ -173,7 +170,7 @@ class PinPadState extends State<PinPad> {
   Widget _buildDeleteButton() {
     return InkResponse(
       onTap: () {
-        if (0 < _currentCodeLength) {
+        if (0 < _inputCodes.length) {
           setState(() {
             _circleColor = Colors.grey.shade300;
           });
