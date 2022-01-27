@@ -172,6 +172,10 @@ class Strings {
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
       "Your selections don't match. Please try again.";
+  static const youMustAgreeToTheWalletSeedphraseTerms =
+      "Before clicking Next you must agree to the wallet seedphrase terms.";
+  static const iAmResponsibleForMyWalletText =
+      "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery passphrase';

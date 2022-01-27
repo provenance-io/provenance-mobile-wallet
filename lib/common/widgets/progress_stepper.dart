@@ -29,7 +29,7 @@ class ProgressStepper extends StatelessWidget {
           ),
         ),
       );
-      if (currentStep != numberOfSteps - 1) {
+      if (i != numberOfSteps - 1) {
         steps.add(HorizontalSpacer.small());
       }
     }
