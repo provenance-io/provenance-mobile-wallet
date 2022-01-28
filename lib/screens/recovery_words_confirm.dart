@@ -256,9 +256,6 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         ).route());
       } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
         ModalLoadingRoute.showLoading(Strings.pleaseWait, context);
-        String privateKey = await ProvWalletFlutter.getPrivateKey(
-          widget.words?.join(' ') ?? '',
-        );
         await ProvWalletFlutter.saveToWalletService(
           widget.words?.join(' ') ?? '',
           widget.accountName ?? '',

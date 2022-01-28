@@ -29,7 +29,6 @@ class SecureStorageService {
 
 enum StorageKey {
   biometricEnabled,
-  privateKey,
   code,
   accountName,
 }
@@ -39,8 +38,6 @@ extension on StorageKey {
     switch (this) {
       case StorageKey.biometricEnabled:
         return 'biometricEnabled';
-      case StorageKey.privateKey:
-        return 'privateKey';
       case StorageKey.code:
         return 'code';
       case StorageKey.accountName:

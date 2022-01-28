@@ -98,9 +98,6 @@ class EnableFaceId extends StatelessWidget {
                     Strings.pleaseWait,
                     context,
                   );
-                  String privateKey = await ProvWalletFlutter.getPrivateKey(
-                    words?.join(' ') ?? '',
-                  );
                   final success = await ProvWalletFlutter.saveToWalletService(
                     words?.join(' ') ?? '',
                     accountName ?? '',
@@ -110,7 +107,6 @@ class EnableFaceId extends StatelessWidget {
 
                   if (success) {
                     LocalAuthHelper.instance.enroll(
-                      privateKey,
                       code?.join() ?? '',
                       accountName ?? '',
                       true,
@@ -140,9 +136,6 @@ class EnableFaceId extends StatelessWidget {
                     Strings.pleaseWait,
                     context,
                   );
-                  String privateKey = await ProvWalletFlutter.getPrivateKey(
-                    words?.join(' ') ?? '',
-                  );
                   final success = await ProvWalletFlutter.saveToWalletService(
                     words?.join(' ') ?? '',
                     accountName ?? '',
@@ -151,7 +144,6 @@ class EnableFaceId extends StatelessWidget {
                   ModalLoadingRoute.dismiss(context);
                   if (success) {
                     LocalAuthHelper.instance.enroll(
-                      privateKey,
                       code?.join() ?? '',
                       accountName ?? '',
                       false,
