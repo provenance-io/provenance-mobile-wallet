@@ -37,7 +37,7 @@ class WalletSetupConfirmation extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwText(
-                  Strings.useFaceId,
+                  "Your wallet is now ready to go.",
                   style: FwTextStyle.extraLarge,
                   textAlign: TextAlign.center,
                   color: FwColor.globalNeutral550,
@@ -49,7 +49,7 @@ class WalletSetupConfirmation extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwText(
-                  "Your wallet is now ready to go.",
+                  "Lorem ipsum dolor sit amet",
                   style: FwTextStyle.m,
                   textAlign: TextAlign.center,
                   color: FwColor.globalNeutral550,
@@ -63,7 +63,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwButton(
                   child: FwText(
-                    "Lorem ipsum dolor sit amet",
+                    "Confirm",
                     style: FwTextStyle.mBold,
                     color: FwColor.white,
                   ),
