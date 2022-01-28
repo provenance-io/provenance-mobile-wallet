@@ -40,7 +40,7 @@ class SendTransactionApproval extends StatelessWidget {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
             await ProvWalletFlutter.sendMessageFinish(

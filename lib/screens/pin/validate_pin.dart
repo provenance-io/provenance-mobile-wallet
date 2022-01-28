@@ -37,9 +37,14 @@ class ValidatePinState extends State<ValidatePin> {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(false),
+        ),
+        title: FwText(
+          Strings.enterPin,
+          color: FwColor.globalNeutral550,
+          style: FwTextStyle.h6,
         ),
       ),
       body: Container(

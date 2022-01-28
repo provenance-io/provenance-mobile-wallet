@@ -41,7 +41,7 @@ class ConfirmPinState extends State<ConfirmPin> {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
