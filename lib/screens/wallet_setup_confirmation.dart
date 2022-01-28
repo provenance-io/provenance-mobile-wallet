@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/main.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class WalletSetupConfirmation extends StatelessWidget {
   @override
@@ -37,7 +37,7 @@ class WalletSetupConfirmation extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwText(
-                  "Your wallet is now ready to go.",
+                  Strings.yourWalletIsNowReadyToGo,
                   style: FwTextStyle.extraLarge,
                   textAlign: TextAlign.center,
                   color: FwColor.globalNeutral550,
@@ -49,7 +49,7 @@ class WalletSetupConfirmation extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwText(
-                  "Lorem ipsum dolor sit amet",
+                  Strings.walletConfirmationSubtitleText,
                   style: FwTextStyle.m,
                   textAlign: TextAlign.center,
                   color: FwColor.globalNeutral550,
@@ -63,7 +63,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwButton(
                   child: FwText(
-                    "Confirm",
+                    Strings.confirm,
                     style: FwTextStyle.mBold,
                     color: FwColor.white,
                   ),
