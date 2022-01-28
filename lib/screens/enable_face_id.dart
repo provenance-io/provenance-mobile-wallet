@@ -2,8 +2,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/main.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -123,8 +122,8 @@ class EnableFaceId extends StatelessWidget {
                       true,
                       context,
                       () async {
-                        navigatorKey.currentState
-                            ?.pushReplacement(Dashboard().route());
+                        Navigator.of(context)
+                            .push(WalletSetupConfirmation().route());
                       },
                     );
                   }
@@ -164,8 +163,8 @@ class EnableFaceId extends StatelessWidget {
                       false,
                       context,
                       () {
-                        navigatorKey.currentState
-                            ?.pushReplacement(Dashboard().route());
+                        Navigator.of(context)
+                            .push(WalletSetupConfirmation().route());
                       },
                     );
                   }
