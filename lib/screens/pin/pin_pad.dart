@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class PinPad extends StatefulWidget {
   PinPad({
     required this.onFinish,
     required this.isConfirming,
+    required this.subTitle,
   });
 
   final Function onFinish;
   final bool isConfirming;
+  final String subTitle;
 
   @override
   State<StatefulWidget> createState() {
@@ -35,6 +36,15 @@ class PinPadState extends State<PinPad> {
   var _inputCodes = <int>[];
   Color _circleColor = Colors.white;
 
+  @override
+  void initState() {
+    if (widget.isConfirming) {
+      setState(() {
+        _numbers.shuffle();
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,19 +55,16 @@ class PinPadState extends State<PinPad> {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 48,
-                  child: FwText(
-                    Strings.setAPinCodeToUnlockYourWallet,
-                    style: FwTextStyle.mBold,
-                    textAlign: TextAlign.center,
-                    color: FwColor.globalNeutral550,
-                  ),
+            child: Container(
+              height: 48,
+              child: Center(
+                child: FwText(
+                  widget.subTitle,
+                  style: FwTextStyle.m,
+                  textAlign: TextAlign.center,
+                  color: FwColor.globalNeutral550,
                 ),
-              ],
+              ),
             ),
           ),
           SizedBox(
