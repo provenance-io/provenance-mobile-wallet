@@ -202,6 +202,7 @@ class Strings {
   static const reject = 'Reject';
 
   // ValidatePin
+  static const enterPin = "Enter Pin";
   static const enterYourPinCode = 'Enter your pin code';
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
