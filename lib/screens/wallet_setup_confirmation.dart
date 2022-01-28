@@ -73,9 +73,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(
-                height: 56,
-              ),
+              VerticalSpacer.custom(spacing: 56),
               VerticalSpacer.xxLarge(),
               VerticalSpacer.xxLarge(),
             ],
