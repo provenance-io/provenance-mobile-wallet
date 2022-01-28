@@ -176,19 +176,7 @@ class PinPadState extends State<PinPad> {
 
   Widget _buildDeleteButton() {
     return InkResponse(
-      onTap: () {
-        if (0 < _inputCodes.length) {
-          setState(() {
-            _circleColor = Colors.grey.shade300;
-          });
-          Future.delayed(Duration(milliseconds: 200)).then((func) {
-            setState(() {
-              _circleColor = Colors.white;
-            });
-          });
-        }
-        _deleteCode();
-      },
+      onTap: _deleteCode,
       child: Container(
         height: 50,
         width: 50,
