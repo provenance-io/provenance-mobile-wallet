@@ -39,6 +39,12 @@ class EnableFaceId extends StatelessWidget {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: FwText(
+          Strings.useFaceId,
+          style: FwTextStyle.h5,
+          textAlign: TextAlign.left,
+          color: FwColor.globalNeutral550,
+        ),
       ),
       body: Container(
         color: Colors.white,
@@ -63,13 +69,6 @@ class EnableFaceId extends StatelessWidget {
               SizedBox(
                 height: 48,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
-                  Strings.useFaceId,
-                  style: FwTextStyle.extraLarge,
-                  textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
                 ),
               ),
               SizedBox(
