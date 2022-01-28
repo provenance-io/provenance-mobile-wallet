@@ -196,8 +196,8 @@ class PinPadState extends State<PinPad> {
           color: _circleColor,
         ),
         child: Center(
-          child: Icon(
-            Icons.arrow_back,
+          child: FwIcon(
+            FwIcons.remove,
             size: 30,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
