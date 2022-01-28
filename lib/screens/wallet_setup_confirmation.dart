@@ -68,8 +68,11 @@ class WalletSetupConfirmation extends StatelessWidget {
                     color: FwColor.white,
                   ),
                   onPressed: () {
-                    navigatorKey.currentState
-                        ?.pushReplacement(Dashboard().route());
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      Dashboard().route(),
+                      (route) => route.isFirst,
+                    );
                   },
                 ),
               ),
