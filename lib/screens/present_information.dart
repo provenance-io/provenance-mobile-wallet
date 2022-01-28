@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry.dart';
 import 'package:provenance_wallet/screens/recovery_words.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -54,14 +55,7 @@ class PresentInformation extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: 158,
-                  width: 158,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF9196AA),
-                    borderRadius: BorderRadius.all(Radius.circular(79)),
-                  ),
-                ),
+                ImagePlaceholder(),
               ],
             ),
             SizedBox(
