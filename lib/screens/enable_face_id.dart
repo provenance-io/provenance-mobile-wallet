@@ -48,124 +48,120 @@ class EnableFaceId extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 158,
-                    width: 158,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF9196AA),
-                      borderRadius: BorderRadius.all(Radius.circular(79)),
-                    ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+              ),
+            SizedBox(
+              height: 66,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 158,
+                  width: 158,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF9196AA),
+                    borderRadius: BorderRadius.all(Radius.circular(79)),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 48,
-              ),
                 ),
+              ],
+            ),
+            SizedBox(
+              height: 36,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwText(
+                Strings.useYourFaceId,
+                style: FwTextStyle.m,
+                textAlign: TextAlign.center,
+                color: FwColor.globalNeutral550,
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+            ),
+            Expanded(child: Container()),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwButton(
                 child: FwText(
-                  Strings.useYourFaceId,
-                  style: FwTextStyle.m,
-                  textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  Strings.enable,
+                  style: FwTextStyle.mBold,
+                  color: FwColor.white,
                 ),
-              ),
-              Expanded(child: Container()),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
-                    Strings.enableFaceId,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
-                  ),
-                  onPressed: () async {
-                    ModalLoadingRoute.showLoading(
-                      Strings.pleaseWait,
-                      context,
-                    );
-                    String privateKey = await ProvWalletFlutter.getPrivateKey(
-                      words?.join(' ') ?? '',
-                    );
-                    final success = await ProvWalletFlutter.saveToWalletService(
-                      words?.join(' ') ?? '',
-                      accountName ?? '',
-                      useBiometry: true,
-                    );
-                    ModalLoadingRoute.dismiss(context);
+                onPressed: () async {
+                  ModalLoadingRoute.showLoading(
+                    Strings.pleaseWait,
+                    context,
+                  );
+                  String privateKey = await ProvWalletFlutter.getPrivateKey(
+                    words?.join(' ') ?? '',
+                  );
+                  final success = await ProvWalletFlutter.saveToWalletService(
+                    words?.join(' ') ?? '',
+                    accountName ?? '',
+                    useBiometry: true,
+                  );
+                  ModalLoadingRoute.dismiss(context);
 
-                    if (success) {
-                      LocalAuthHelper.instance.enroll(
-                        privateKey,
-                        code?.join() ?? '',
-                        accountName ?? '',
-                        true,
-                        context,
-                        () async {
-                          navigatorKey.currentState
-                              ?.pushReplacement(Dashboard().route());
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwTextButton(
-                  child: FwText(
-                    Strings.later,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.globalNeutral450,
-                  ),
-                  onPressed: () async {
-                    ModalLoadingRoute.showLoading(
-                      Strings.pleaseWait,
-                      context,
-                    );
-                    String privateKey = await ProvWalletFlutter.getPrivateKey(
-                      words?.join(' ') ?? '',
-                    );
-                    final success = await ProvWalletFlutter.saveToWalletService(
-                      words?.join(' ') ?? '',
+                  if (success) {
+                    LocalAuthHelper.instance.enroll(
+                      privateKey,
+                      code?.join() ?? '',
                       accountName ?? '',
-                      useBiometry: false,
+                      true,
+                      context,
+                      () async {
+                        navigatorKey.currentState
+                            ?.pushReplacement(Dashboard().route());
+                      },
                     );
-                    ModalLoadingRoute.dismiss(context);
-                    if (success) {
-                      LocalAuthHelper.instance.enroll(
-                        privateKey,
-                        code?.join() ?? '',
-                        accountName ?? '',
-                        false,
-                        context,
-                        () {
-                          navigatorKey.currentState
-                              ?.pushReplacement(Dashboard().route());
-                        },
-                      );
-                    }
-                  },
+                  }
+                },
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: FwTextButton(
+                child: FwText(
+                  Strings.later,
+                  style: FwTextStyle.mBold,
+                  color: FwColor.globalNeutral450,
                 ),
+                onPressed: () async {
+                  ModalLoadingRoute.showLoading(
+                    Strings.pleaseWait,
+                    context,
+                  );
+                  String privateKey = await ProvWalletFlutter.getPrivateKey(
+                    words?.join(' ') ?? '',
+                  );
+                  final success = await ProvWalletFlutter.saveToWalletService(
+                    words?.join(' ') ?? '',
+                    accountName ?? '',
+                    useBiometry: false,
+                  );
+                  ModalLoadingRoute.dismiss(context);
+                  if (success) {
+                    LocalAuthHelper.instance.enroll(
+                      privateKey,
+                      code?.join() ?? '',
+                      accountName ?? '',
+                      false,
+                      context,
+                      () {
+                        navigatorKey.currentState
+                            ?.pushReplacement(Dashboard().route());
+                      },
+                    );
+                  }
+                },
               ),
               SizedBox(
                 height: 40,
