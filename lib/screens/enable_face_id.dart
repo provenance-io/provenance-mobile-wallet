@@ -51,7 +51,15 @@ class EnableFaceId extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ProgressStepper(
+              currentStep ?? 0,
+              numberOfSteps ?? 1,
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 12,
               ),
+            ),
             SizedBox(
               height: 66,
             ),
@@ -163,18 +171,10 @@ class EnableFaceId extends StatelessWidget {
                   }
                 },
               ),
-              SizedBox(
-                height: 40,
-              ),
-              if (numberOfSteps != null)
-                ProgressStepper(
-                  currentStep ?? 0,
-                  numberOfSteps ?? 1,
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                ),
-              if (numberOfSteps != null) VerticalSpacer.xxLarge(),
-            ],
-          ),
+            ),
+            VerticalSpacer.xxLarge(),
+            VerticalSpacer.xxLarge(),
+          ],
         ),
       ),
     );
