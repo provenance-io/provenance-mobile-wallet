@@ -175,6 +175,20 @@ class ValidatePinState extends State<ValidatePin> {
     }
   }
 
+  _onFinish(List<int> inputCodes) async {
+    Function eq = const ListEquality().equals;
+    if (!eq(_inputCodes, widget.code)) {
+      await showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(
+          error: Strings.yourPinDoesNotMatch,
+        ),
+      );
+    } else {
+      Navigator.of(context).pop(true);
+    }
+  }
+
   Widget _buildContainerIcon(IconData icon) {
     return InkResponse(
       onTap: () {
