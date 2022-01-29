@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ValidatePin extends StatefulHookWidget {
@@ -49,88 +49,18 @@ class ValidatePinState extends State<ValidatePin> {
       ),
       body: Container(
         color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FwText(
-                      Strings.enterYourPinCode,
-                      style: FwTextStyle.extraLarge,
-                      textAlign: TextAlign.left,
-                      color: FwColor.globalNeutral550,
-                    ),
-                  ],
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: PinPad(
+                subTitle: Strings.enterPinToVerifyYourIdentity,
+                isConfirming: false,
+                onFinish: _onFinish,
               ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: CodePanel(
-                  codeLength: 6,
-                  currentLength: _currentCodeLength,
-                  status: _currentState,
-                  deleteCode: _deleteCode,
-                  borderColor: Theme.of(context).colorScheme.globalNeutral550,
-                ),
-              ),
-              SizedBox(
-                height: 60,
-              ),
-              Expanded(
-                flex: Platform.isIOS ? 5 : 6,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 0,
-                  ),
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification: (overscroll) {
-                      overscroll.disallowGlow();
-
-                      return true;
-                    },
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      childAspectRatio: 1.6,
-                      mainAxisSpacing: 35,
-                      padding: EdgeInsets.all(8),
-                      children: <Widget>[
-                        _buildContainerCircle(1),
-                        _buildContainerCircle(2),
-                        _buildContainerCircle(3),
-                        _buildContainerCircle(4),
-                        _buildContainerCircle(5),
-                        _buildContainerCircle(6),
-                        _buildContainerCircle(7),
-                        _buildContainerCircle(8),
-                        _buildContainerCircle(9),
-                        // buildRemoveIcon(Icons.close),
-                        Container(),
-                        _buildContainerCircle(0),
-                        _buildContainerIcon(Icons.arrow_back),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              SizedBox(
-                height: 40,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
