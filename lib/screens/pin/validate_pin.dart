@@ -66,6 +66,7 @@ class ValidatePinState extends State<ValidatePin> {
     );
   }
 
+// TODO: CLEAN THIS UP!
   _deleteCode() {
     setState(() {
       if (_currentCodeLength > 0) {
