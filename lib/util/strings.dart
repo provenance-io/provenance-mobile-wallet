@@ -203,7 +203,8 @@ class Strings {
 
   // ValidatePin
   static const enterPin = "Enter Pin";
-  static const enterYourPinCode = 'Enter your pin code';
+  static const enterPinToVerifyYourIdentity =
+      'Enter pin to verify your identity.';
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
