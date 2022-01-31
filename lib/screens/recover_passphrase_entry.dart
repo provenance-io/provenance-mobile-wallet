@@ -54,7 +54,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
-      _addListener(word);
+      word.addListener(_handleTextControllerTextChange(word));
       this.textControllers.add(word);
       this.focusNodes.add(FocusNode());
     }
@@ -169,12 +169,6 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         ),
       ),
     );
-  }
-
-  void _addListener(TextEditingController controller) {
-    controller.addListener(() {
-      _handleTextControllerTextChange(controller);
-    });
   }
 
   _handlePaste(TextEditingController controller) {
