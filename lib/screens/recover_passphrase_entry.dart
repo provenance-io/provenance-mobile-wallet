@@ -47,6 +47,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   final WalletAddImportType flowType;
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
+  List<VoidCallback> callbacks = <VoidCallback>[];
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
 
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
-      word.addListener(_handleTextControllerTextChange(word));
+      _addListener(word);
       this.textControllers.add(word);
       this.focusNodes.add(FocusNode());
     }
@@ -64,7 +65,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   void dispose() {
     for (var i = 0; i < textControllers.length; i++) {
       var controller = textControllers[i];
-      controller.removeListener(_handleTextControllerTextChange(controller));
+      var callback = callbacks[i];
+      controller.removeListener(callback);
       controller.dispose();
     }
     super.dispose();
@@ -179,6 +181,14 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         ),
       ),
     );
+  }
+
+  void _addListener(TextEditingController controller) {
+    var func = () {
+      _handleTextControllerTextChange(controller);
+    };
+    controller.addListener(func);
+    callbacks.add(func);
   }
 
   _handlePaste(TextEditingController controller) {
