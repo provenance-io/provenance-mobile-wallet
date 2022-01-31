@@ -61,6 +61,16 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   }
 
   @override
+  void dispose() {
+    for (var i = 0; i < textControllers.length; i++) {
+      var controller = textControllers[i];
+      controller.removeListener(_handleTextControllerTextChange(controller));
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
