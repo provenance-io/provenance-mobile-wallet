@@ -97,7 +97,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 child: FwIcon(
                   FwIcons.upArrow,
                   size: 24,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.white,
                 ),
               ),
             ),
@@ -135,7 +135,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 child: FwIcon(
                   FwIcons.downArrow,
                   size: 24,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.white,
                 ),
               ),
             ),
@@ -193,7 +193,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                       child: FwIcon(
                         FwIcons.walletConnect,
                         size: 15,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.white,
                       ),
                     ),
                   ),

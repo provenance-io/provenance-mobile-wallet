@@ -53,7 +53,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.white,
           elevation: 0.0,
           title: FwText(
             Strings.recoveryPassphrase,
@@ -65,13 +65,13 @@ class RecoveryWordsState extends State<RecoveryWords> {
             icon: FwIcon(
               FwIcons.back,
               size: 24,
-              color: Color(0xFF3D4151),
+              color: Theme.of(context).colorScheme.globalNeutral550,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         body: Container(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

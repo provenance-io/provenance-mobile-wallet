@@ -29,7 +29,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.white,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),

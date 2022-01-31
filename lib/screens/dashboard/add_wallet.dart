@@ -20,7 +20,7 @@ class AddWallet extends StatelessWidget {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -49,7 +49,7 @@ class AddWallet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.white,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +90,7 @@ class AddWallet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.white,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,

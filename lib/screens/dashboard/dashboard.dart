@@ -125,7 +125,7 @@ class DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         centerTitle: true,
         actions: [
@@ -208,7 +208,7 @@ class DashboardState extends State<Dashboard>
           _walletAddress.isEmpty
               ? Container()
               : Container(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -250,7 +250,10 @@ class DashboardState extends State<Dashboard>
                   key: _landingKey,
                   walletKey: _walletKey,
                 ),
-                Container(color: Colors.white, child: Container()),
+                Container(
+                  color: Theme.of(context).colorScheme.white,
+                  child: Container(),
+                ),
               ],
             ),
           ),

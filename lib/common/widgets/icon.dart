@@ -28,6 +28,7 @@ class FwIcons {
   static const String dollarIcon = 'dollar_icon';
   static const String menuIcon = 'menu_icon';
   static const String plus = 'plus';
+  static const String remove = 'remove';
 }
 
 class FwIcon extends StatelessWidget {

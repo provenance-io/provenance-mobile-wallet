@@ -29,7 +29,7 @@ class SendTransactionApproval extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         centerTitle: true,
         title: FwText(
@@ -40,7 +40,7 @@ class SendTransactionApproval extends StatelessWidget {
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
             await ProvWalletFlutter.sendMessageFinish(
@@ -52,7 +52,7 @@ class SendTransactionApproval extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.white,
         child: Padding(
           padding: EdgeInsets.only(
             top: 40,

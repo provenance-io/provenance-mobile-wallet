@@ -160,18 +160,20 @@ class FwActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+
     return Column(
       children: [
         FloatingActionButton(
           elevation: 0.0,
           backgroundColor: outlined
-              ? Theme.of(context).colorScheme.onBackground
-              : Theme.of(context).colorScheme.primary3,
+              ? theme.colorScheme.onBackground
+              : theme.colorScheme.primary3,
           shape: outlined
-              ? const RoundedRectangleBorder(
+              ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(56.0)),
                   side: BorderSide(
-                    color: Colors.white,
+                    color: theme.colorScheme.white,
                     width: 1.0,
                   ),
                 )
@@ -453,7 +455,7 @@ class FwOutlinedButton extends StatelessWidget {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         backgroundColor: backgroundColor ?? Colors.transparent,
-        primary: Colors.white,
+        primary: Theme.of(context).colorScheme.white,
         padding: EdgeInsets.zero,
         side: BorderSide(
           color: borderColor ?? Theme.of(context).colorScheme.lightGrey,

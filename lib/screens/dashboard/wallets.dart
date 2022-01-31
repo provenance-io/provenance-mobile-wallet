@@ -89,7 +89,7 @@ class WalletsState extends State<Wallets>
           icon: FwIcon(
             FwIcons.back,
             size: 24,
-            color: Color(0xFF3D4151),
+            color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -201,7 +201,7 @@ class WalletItem extends StatelessWidget {
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.white,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -301,7 +301,7 @@ class WalletItem extends StatelessWidget {
                   child: Container(
                     width: 60,
                     height: 60,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.white,
                     child: Center(
                       child: FwIcon(
                         FwIcons.menuIcon,

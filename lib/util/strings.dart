@@ -202,7 +202,9 @@ class Strings {
   static const reject = 'Reject';
 
   // ValidatePin
-  static const enterYourPinCode = 'Enter your pin code';
+  static const enterPin = "Enter Pin";
+  static const enterPinToVerifyYourIdentity =
+      'Enter pin to verify your identity.';
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
