@@ -48,29 +48,30 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
 
-  handlePaste(TextEditingController controller) {
-    _pasteWords(controller);
-  }
-
   @override
   void initState() {
     super.initState();
 
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
-      addListener(word);
+      _addListener(word);
       this.textControllers.add(word);
       this.focusNodes.add(FocusNode());
     }
   }
 
-  void addListener(TextEditingController controller) {
+
+  void _addListener(TextEditingController controller) {
     controller.addListener(() {
       _handleTextControllerTextChange(controller);
     });
   }
 
-  List<Widget> buildTextNodes(double width) {
+  _handlePaste(TextEditingController controller) {
+    _pasteWords(controller);
+  }
+
+  List<Widget> _buildTextNodes(double width) {
     var first = List<Widget>.empty(growable: true);
     var second = List<Widget>.empty(growable: true);
     for (var i = 0; i <= 11; i++) {
@@ -78,13 +79,13 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         controller: textControllers.elementAt(i),
         number: '${i + 1}',
         focusNode: focusNodes.elementAt(i),
-        handlePaste: handlePaste,
+        handlePaste: _handlePaste,
       );
       var text2 = _TextFormField(
         controller: textControllers.elementAt(i + 12),
         number: '${i + 13}',
         focusNode: focusNodes.elementAt(i + 12),
-        handlePaste: handlePaste,
+        handlePaste: _handlePaste,
       );
       first.add(text1);
       second.add(text2);
