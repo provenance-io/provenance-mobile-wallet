@@ -219,7 +219,7 @@ class FigurePayThemeData {
     highlightColor: Colors.transparent,
     indicatorColor: _colorScheme.primary,
     primaryColor: _colorScheme.primary,
-    backgroundColor: Colors.white,
+    backgroundColor: _white,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,

@@ -34,7 +34,7 @@ class DashboardLandingState extends State<DashboardLanding> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.white,
       padding: EdgeInsets.only(top: 40),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -187,7 +187,7 @@ class DashboardLandingState extends State<DashboardLanding> {
     ));
     list.add(Expanded(
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.white,
       ),
     ));
     list.add(VerticalSpacer.medium());

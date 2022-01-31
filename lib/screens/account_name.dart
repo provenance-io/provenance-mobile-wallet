@@ -26,7 +26,7 @@ class AccountName extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         title: FwText(
           Strings.nameYourAccount,
@@ -46,7 +46,7 @@ class AccountName extends HookWidget {
       body: Form(
         key: _formKey,
         child: Container(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +180,7 @@ class _TextFormField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           decoration: InputDecoration(
-            fillColor: Colors.white,
+            fillColor: theme.colorScheme.white,
             filled: true,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: theme.colorScheme.midGrey),

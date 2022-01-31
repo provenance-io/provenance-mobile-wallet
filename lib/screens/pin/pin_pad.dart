@@ -116,7 +116,7 @@ class PinPadState extends State<PinPad> {
         height: 50,
         width: 50,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.white,
         ),
         child: Center(
           child: Text(

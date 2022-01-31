@@ -91,7 +91,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.white,
         child: Padding(
           padding: EdgeInsets.only(top: 150),
           child: Column(
@@ -183,7 +183,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
               Strings.signInWithBiometric(_localAuth.authType),
               icon: FwIcon(
                 FwIcons.faceScan,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.white,
               ),
               fpTextStyle: FwTextStyle.mBold,
               fpTextColor: FwColor.white,

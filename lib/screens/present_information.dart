@@ -17,7 +17,7 @@ class PresentInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         title: FwText(
           info.title,
@@ -35,7 +35,7 @@ class PresentInformation extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.white,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

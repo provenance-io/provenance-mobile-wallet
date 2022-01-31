@@ -100,7 +100,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
       isLoading: loading,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.white,
           elevation: 0.0,
           title: FwText(
             Strings.verifyRecoveryPassphrase,
@@ -118,7 +118,7 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
           ),
         ),
         body: Container(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
