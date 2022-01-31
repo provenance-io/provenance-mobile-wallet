@@ -204,4 +204,8 @@ class Strings {
   // ValidatePin
   static const enterYourPinCode = 'Enter your pin code';
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
+
+  // WalletSetupConfirmation
+  static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
+  static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
 }

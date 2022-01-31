@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingTradeSlide extends StatelessWidget {
@@ -11,14 +12,7 @@ class OnboardingTradeSlide extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 158,
-              width: 158,
-              decoration: BoxDecoration(
-                color: Color(0xFF9196AA),
-                borderRadius: BorderRadius.all(Radius.circular(79)),
-              ),
-            ),
+            ImagePlaceholder(),
           ],
         ),
         SizedBox(

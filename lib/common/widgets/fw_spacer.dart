@@ -46,6 +46,11 @@ class VerticalSpacer extends StatelessWidget {
           Spacing.xxLarge,
           key: key,
         );
+  const VerticalSpacer.custom({Key? key, required double spacing})
+      : this._(
+          spacing,
+          key: key,
+        );
 
   final double? _height;
 
