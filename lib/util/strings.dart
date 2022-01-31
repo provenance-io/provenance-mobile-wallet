@@ -167,7 +167,7 @@ class Strings {
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
-  static const enterYourRecoveryPassphrase = 'Enter your recovery passphrase';
+  static const enterRecoveryPassphrase = 'Enter recovery passphrase';
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm

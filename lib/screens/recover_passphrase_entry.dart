@@ -145,7 +145,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                       children: [
                         Flexible(
                           child: FwText(
-                            Strings.enterYourRecoveryPassphrase,
+                            Strings.enterRecoveryPassphrase,
                             style: FwTextStyle.extraLarge,
                             textAlign: TextAlign.left,
                             color: FwColor.globalNeutral550,
