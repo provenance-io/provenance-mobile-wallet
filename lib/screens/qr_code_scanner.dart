@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_wallet/get.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScanner extends StatefulWidget {
@@ -113,7 +114,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();
     Map<String, dynamic> info = {};
-    final isValid = await ProvWalletFlutter.isValidWalletConnectData(qrData);
+    final isValid = await get<WalletService>().isValidWalletConnectData(qrData);
     if (isValid && !_handled) {
       _handled = true;
       Navigator.of(context).pop(qrData);

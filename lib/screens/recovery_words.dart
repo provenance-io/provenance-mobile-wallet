@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWords extends StatefulWidget {
   RecoveryWords(
@@ -38,9 +38,9 @@ class RecoveryWordsState extends State<RecoveryWords> {
     super.initState();
   }
 
-  void generateWords() async {
-    final phraseString = await ProvWalletFlutter.generatePhraseWords;
-    words = phraseString.split(" ");
+  void generateWords() {
+    words = Mnemonic.random(MnemonicStrength.high).toList();
+
     setState(() {
       _loading = false;
     });

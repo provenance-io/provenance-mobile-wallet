@@ -2,15 +2,20 @@ import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/get.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/requests/sign_request.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'dashboard_landing.dart';
 
@@ -30,12 +35,16 @@ class DashboardState extends State<Dashboard>
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
 
+  final _subscriptions = CompositeSubscription();
+
   List<AssetResponse> assets = [];
 
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
+    _subscriptions.dispose();
+
     super.dispose();
   }
 
@@ -56,49 +65,27 @@ class DashboardState extends State<Dashboard>
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
     _tabController = TabController(length: 2, vsync: this);
-    ProvWalletFlutter.instance.onAskToSign = (
-      String requestId,
-      String message,
-      String description,
-    ) async {
-      final result = await FwDialog.showConfirmation(
-        context,
-        title: description,
-        message: message,
-        confirmText: Strings.sign,
-        cancelText: Strings.decline,
-      );
-      ModalLoadingRoute.showLoading("", context);
-      await ProvWalletFlutter.signTransactionFinish(requestId, result);
-      ModalLoadingRoute.dismiss(context);
-    };
 
-    ProvWalletFlutter.instance.onAskToSend = (
-      String requestId,
-      TransactionMessage message,
-      String description,
-      String cost,
-    ) {
-      SendTransactionInfo info = SendTransactionInfo(
-        fee: cost,
-        toAddress: message.toAddress ?? '',
-        fromAddress: message.fromAddress ?? '',
-        requestId: requestId,
-        amount: message.displayAmount,
-      );
-      Navigator.of(context).push(SendTransactionApproval(info).route());
-    };
+    get<WalletService>()
+      ..signRequest.listen(_onSignRequest).addTo(_subscriptions)
+      ..sendRequest.listen(_onSendRequest).addTo(_subscriptions)
+      ..configureServer();
 
-    ProvWalletFlutter.configureServer();
     loadAddress();
     super.initState();
   }
 
   void loadAddress() async {
-    final details = await ProvWalletFlutter.getWalletDetails();
+    final wallet = await get<WalletService>().getSelectedWallet();
+    if (wallet == null) {
+      logError('Failed to load selected wallet');
+
+      return;
+    }
+
     setState(() {
-      _walletAddress = details.address;
-      _walletName = details.accountName;
+      _walletAddress = wallet.address;
+      _walletName = wallet.name;
       _walletValue = '\$0';
       _walletKey.currentState?.updateValue(_walletValue);
     });
@@ -301,5 +288,32 @@ class DashboardState extends State<Dashboard>
         ],
       ),
     );
+  }
+
+  void _onSendRequest(SendRequest sendRequest) {
+    SendTransactionInfo info = SendTransactionInfo(
+      fee: sendRequest.cost,
+      toAddress: sendRequest.message.toAddress ?? '',
+      fromAddress: sendRequest.message.fromAddress ?? '',
+      requestId: sendRequest.id,
+      amount: sendRequest.message.displayAmount,
+    );
+    Navigator.of(context).push(SendTransactionApproval(info).route());
+  }
+
+  void _onSignRequest(SignRequest signRequest) async {
+    final allowed = await FwDialog.showConfirmation(
+      context,
+      title: signRequest.description,
+      message: signRequest.message,
+      confirmText: Strings.sign,
+      cancelText: Strings.decline,
+    );
+    ModalLoadingRoute.showLoading("", context);
+    await get<WalletService>().signTransactionFinish(
+      requestId: signRequest.id,
+      allowed: allowed,
+    );
+    ModalLoadingRoute.dismiss(context);
   }
 }

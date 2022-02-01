@@ -1,11 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/get.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class DashboardLanding extends StatefulWidget {
   DashboardLanding({
@@ -22,6 +23,7 @@ class DashboardLanding extends StatefulWidget {
 
 class DashboardLandingState extends State<DashboardLanding> {
   DashboardLandingState(this.walletKey);
+
   List<AssetResponse> _assets = [];
   GlobalKey<WalletPortfolioState> walletKey;
 
@@ -154,7 +156,7 @@ class DashboardLandingState extends State<DashboardLanding> {
     list.add(VerticalSpacer.medium());
     list.add(StreamBuilder<String>(
       initialData: null,
-      stream: ProvWalletFlutter.instance.walletAddress.stream,
+      stream: get<WalletService>().walletAddress,
       builder: (context, data) {
         if (data.data == null || data.data!.isEmpty) {
           return Container();
@@ -177,7 +179,7 @@ class DashboardLandingState extends State<DashboardLanding> {
                   color: FwColor.white,
                 ),
                 onPressed: () {
-                  ProvWalletFlutter.disconnectWallet();
+                  get<WalletService>().disconnectSession();
                 },
               ),
             ],
@@ -206,8 +208,7 @@ class DashboardLandingState extends State<DashboardLanding> {
           Strings.resetWallet,
         ),
         onPressed: () async {
-          await ProvWalletFlutter.disconnectWallet();
-          await ProvWalletFlutter.resetWallet();
+          await get<WalletService>().resetWallets();
           FlutterSecureStorage storage = FlutterSecureStorage();
           await storage.deleteAll();
 

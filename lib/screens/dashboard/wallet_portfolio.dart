@@ -1,6 +1,8 @@
 import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/get.dart';
+import 'package:provenance_wallet/services/wallet_connect_status.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 import '../qr_code_scanner.dart';
 
@@ -152,9 +154,9 @@ class WalletPortfolioState extends State<WalletPortfolio> {
   }
 
   Widget _buildWalletConnectButton() {
-    return StreamBuilder<WallectConnectStatus>(
-      stream: ProvWalletFlutter.instance.walletConnectStatus.stream,
-      initialData: WallectConnectStatus.disconnected,
+    return StreamBuilder<WalletConnectStatus>(
+      stream: get<WalletService>().status,
+      initialData: WalletConnectStatus.disconnected,
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -162,7 +164,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
           );
         }
 
-        if (snapshot.data == WallectConnectStatus.disconnected) {
+        if (snapshot.data == WalletConnectStatus.disconnected) {
           return Container(
             width: 100,
             child: GestureDetector(
@@ -170,11 +172,11 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 final result = await Navigator.of(
                   context,
                 ).push(
-                  QRCodeScanner().route(),
+                  QRCodeScanner().route<String?>(),
                 );
-                ProvWalletFlutter.connectWallet(
-                  result as String,
-                );
+                if (result != null) {
+                  get<WalletService>().connectWallet(result);
+                }
               },
               child: Column(
                 children: [

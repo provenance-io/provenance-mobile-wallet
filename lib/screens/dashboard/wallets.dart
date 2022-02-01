@@ -2,11 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/get.dart';
 import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
 import 'package:provenance_wallet/screens/dashboard/rename_wallet_dialog.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class Wallets extends StatefulWidget {
   @override
@@ -17,8 +19,8 @@ class Wallets extends StatefulWidget {
 
 class WalletsState extends State<Wallets>
     with RouteAware, WidgetsBindingObserver {
-  List<WalletDetails> wallets = [];
-  WalletDetails? selectedWallet;
+  List<WalletDetails> _wallets = [];
+  WalletDetails? _selectedWallet;
 
   @override
   void dispose() {
@@ -50,12 +52,19 @@ class WalletsState extends State<Wallets>
   void loadWallets() async {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       ModalLoadingRoute.showLoading(Strings.loadingWallets, context);
-      final walletList = await ProvWalletFlutter.getWallets();
+      final walletService = get<WalletService>();
+      final selectedWallet = await walletService.getSelectedWallet();
+      final wallets = await walletService.getWallets();
+      final filteredWallets = wallets
+          .where(
+            (e) => e.id != selectedWallet?.id,
+          )
+          .toList();
+
       ModalLoadingRoute.dismiss(context);
       setState(() {
-        selectedWallet =
-            walletList.where((element) => element.isSelected).first;
-        wallets = walletList.where((element) => !element.isSelected).toList();
+        _selectedWallet = selectedWallet;
+        _wallets = filteredWallets;
       });
     });
   }
@@ -99,8 +108,8 @@ class WalletsState extends State<Wallets>
   }
 
   Widget _buildBody() {
-    if (selectedWallet != null) {
-      final selWallet = selectedWallet!;
+    if (_selectedWallet != null) {
+      final selectedWallet = _selectedWallet!;
 
       return Container(
         color: Theme.of(context).colorScheme.otherBackground,
@@ -123,9 +132,13 @@ class WalletsState extends State<Wallets>
             VerticalSpacer.small(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: WalletItem(selWallet, () {
-                loadWallets();
-              }),
+              child: WalletItem(
+                item: selectedWallet,
+                isSelected: true,
+                reload: () {
+                  loadWallets();
+                },
+              ),
             ),
             _showAllWallets(),
             Expanded(
@@ -142,7 +155,7 @@ class WalletsState extends State<Wallets>
   }
 
   Widget _showAllWallets() {
-    if (wallets.isEmpty) {
+    if (_wallets.isEmpty) {
       return Container();
     }
 
@@ -171,14 +184,18 @@ class WalletsState extends State<Wallets>
             physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              return WalletItem(wallets[index], () {
-                loadWallets();
-              });
+              return WalletItem(
+                item: _wallets[index],
+                isSelected: false,
+                reload: () {
+                  loadWallets();
+                },
+              );
             },
             separatorBuilder: (context, index) {
               return VerticalSpacer.medium();
             },
-            itemCount: wallets.length,
+            itemCount: _wallets.length,
           ),
         ),
       ],
@@ -188,10 +205,15 @@ class WalletsState extends State<Wallets>
 
 // TODO: Should be StatefulWidget since it's not immutable?
 class WalletItem extends StatelessWidget {
-  WalletItem(this.item, this.reload);
+  WalletItem({
+    required this.item,
+    required bool isSelected,
+    required this.reload,
+  }) : _isSelected = isSelected;
 
   Offset? _tapPosition;
 
+  final bool _isSelected;
   final WalletDetails item;
   VoidCallback reload;
 
@@ -211,7 +233,7 @@ class WalletItem extends StatelessWidget {
             child: Row(
               children: [
                 FwText(
-                  item.accountName,
+                  item.name,
                   color: FwColor.globalNeutral550,
                   style: FwTextStyle.m,
                 ),
@@ -248,7 +270,7 @@ class WalletItem extends StatelessWidget {
                             overlay.size, // Bigger rect, the entire screen
                       ),
                       items: [
-                        if (!item.isSelected)
+                        if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.select,
                             child: FwText(Strings.select),
@@ -257,7 +279,7 @@ class WalletItem extends StatelessWidget {
                           value: MenuOperation.rename,
                           child: FwText(Strings.rename),
                         ),
-                        if (!item.isSelected)
+                        if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.delete,
                             child: FwText(Strings.remove),
@@ -265,18 +287,20 @@ class WalletItem extends StatelessWidget {
                       ],
                     );
 
+                    final walletService = get<WalletService>();
+
                     if (result == MenuOperation.rename) {
-                      final result = await showDialog(
+                      final text = await showDialog<String?>(
                         barrierDismissible: false,
                         context: context,
                         builder: (context) => RenameWalletDialog(
-                          currentName: item.accountName,
+                          currentName: item.name,
                         ),
                       );
-                      if (result != null) {
-                        await ProvWalletFlutter.renameWallet(
-                          item.id,
-                          result as String,
+                      if (text != null) {
+                        await walletService.renameWallet(
+                          id: item.id,
+                          name: text,
                         );
                         reload.call();
                       }
@@ -288,11 +312,11 @@ class WalletItem extends StatelessWidget {
                         cancelText: Strings.cancel,
                       );
                       if (dialogResult) {
-                        await ProvWalletFlutter.removeWallet(item.id);
+                        await walletService.removeWallet(id: item.id);
                         reload.call();
                       }
                     } else if (result == MenuOperation.select) {
-                      await ProvWalletFlutter.selectWallet(item.id);
+                      await walletService.selectWallet(id: item.id);
                       reload.call();
                     }
                     var y = 0;

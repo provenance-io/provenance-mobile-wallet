@@ -6,20 +6,21 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/word_selector.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/get.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWordsConfirm extends StatefulWidget {
   RecoveryWordsConfirm(
     this.flowType, {
-    @required this.words,
+    required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final int? currentStep;
   final int? numberOfSteps;
   final String? accountName;
@@ -76,12 +77,12 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
   }
 
   void setup() {
-    List<String>? localWords = widget.words?.toList(growable: true);
+    List<String>? localWords = widget.words.toList(growable: true);
 
     for (var i = 0; i < 4; i++) {
-      var index = next(0, (localWords?.length ?? 2) - 1);
-      var trueWord = localWords?.removeAt(index) ?? "";
-      var trueWordIndex = widget.words?.indexOf(trueWord);
+      var index = next(0, localWords.length - 1);
+      var trueWord = localWords.removeAt(index);
+      var trueWordIndex = widget.words.indexOf(trueWord);
       trueWordsIndex[i] = trueWordIndex;
       trueWords.add(trueWord);
       var wordGroup = getWordList(localWords, trueWord);
@@ -256,9 +257,9 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         ).route());
       } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
         ModalLoadingRoute.showLoading(Strings.pleaseWait, context);
-        await ProvWalletFlutter.saveToWalletService(
-          widget.words?.join(' ') ?? '',
-          widget.accountName ?? '',
+        await get<WalletService>().saveWallet(
+          phrase: widget.words,
+          name: widget.accountName ?? '',
         );
         ModalLoadingRoute.dismiss(context);
         Navigator.pop(context);
