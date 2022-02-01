@@ -25,7 +25,7 @@ class DashboardState extends State<Dashboard>
   String _walletAddress = '';
   String _walletName = '';
   String _walletValue = '';
-  bool _assetsLoading = true;
+  bool _initialLoad = false;
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
@@ -50,6 +50,14 @@ class DashboardState extends State<Dashboard>
     RouterObserver.instance.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute);
     super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant Dashboard oldWidget) {
+    if (!_initialLoad) {
+      this.loadAssets();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -102,23 +110,28 @@ class DashboardState extends State<Dashboard>
       _walletValue = '\$0';
       _walletKey.currentState?.updateValue(_walletValue);
     });
+    this.loadAssets();
+  }
 
+  void loadAssets() async {
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
 
-    final result = await AssetService.getAssets(_walletAddress);
+    //final result = await AssetService.getAssets(_walletAddress);
+    final result = await AssetService.getFakeAssets(_walletAddress);
 
     ModalLoadingRoute.dismiss(context);
-    if (result.isSuccessful) {
-      setState(() {
-        // FIXME: State Management
-        _landingKey.currentState?.updateAssets(result.data ?? []);
-      });
-    } else {
-      setState(() {
-        // FIXME: State Management
-        _landingKey.currentState?.updateAssets([]);
-      });
-    }
+    //if (result.isSuccessful) {
+    setState(() {
+      // FIXME: State Management
+      _landingKey.currentState?.updateAssets(result);
+      _initialLoad = false;
+    });
+    // } else {
+    //   setState(() {
+    //     // FIXME: State Management
+    //     _landingKey.currentState?.updateAssets([]);
+    //   });
+    // }
   }
 
   @override
