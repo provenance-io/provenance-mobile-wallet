@@ -6,6 +6,9 @@ import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/services/sample_wallet_connect_service.dart';
+import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -41,6 +44,13 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
     get.registerLazySingleton<TransactionService>(
       () => TransactionService(),
+    );
+
+    get.registerLazySingleton<WalletService>(
+      () => WalletService(
+        storage: SqliteWalletStorageService(),
+        connect: SampleWalletConnectService(),
+      ),
     );
   }
 

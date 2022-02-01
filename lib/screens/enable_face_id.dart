@@ -4,13 +4,14 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class EnableFaceId extends StatelessWidget {
   EnableFaceId({
-    this.words,
+    required this.words,
     this.accountName,
     this.code,
     this.currentStep,
@@ -18,7 +19,7 @@ class EnableFaceId extends StatelessWidget {
     this.flowType = WalletAddImportType.onBoardingAdd,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final String? accountName;
   final List<int>? code;
   final int? currentStep;
@@ -98,11 +99,13 @@ class EnableFaceId extends StatelessWidget {
                     Strings.pleaseWait,
                     context,
                   );
-                  final success = await ProvWalletFlutter.saveToWalletService(
-                    words?.join(' ') ?? '',
-                    accountName ?? '',
+
+                  final success = await get<WalletService>().saveWallet(
+                    phrase: words,
+                    name: accountName ?? '',
                     useBiometry: true,
                   );
+
                   ModalLoadingRoute.dismiss(context);
 
                   if (success) {
@@ -136,11 +139,13 @@ class EnableFaceId extends StatelessWidget {
                     Strings.pleaseWait,
                     context,
                   );
-                  final success = await ProvWalletFlutter.saveToWalletService(
-                    words?.join(' ') ?? '',
-                    accountName ?? '',
+
+                  final success = await get<WalletService>().saveWallet(
+                    phrase: words,
+                    name: accountName ?? '',
                     useBiometry: false,
                   );
+
                   ModalLoadingRoute.dismiss(context);
                   if (success) {
                     LocalAuthHelper.instance.enroll(

@@ -2,9 +2,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/wallet_connect_status.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class WalletPortfolio extends StatefulWidget {
   @override
@@ -153,9 +154,9 @@ class WalletPortfolioState extends State<WalletPortfolio> {
   }
 
   Widget _buildWalletConnectButton() {
-    return StreamBuilder<WallectConnectStatus>(
-      stream: ProvWalletFlutter.instance.walletConnectStatus.stream,
-      initialData: WallectConnectStatus.disconnected,
+    return StreamBuilder<WalletConnectStatus>(
+      stream: get<WalletService>().status,
+      initialData: WalletConnectStatus.disconnected,
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -167,17 +168,17 @@ class WalletPortfolioState extends State<WalletPortfolio> {
           width: 100,
           child: GestureDetector(
             onTap: () async {
-              if (snapshot.data == WallectConnectStatus.disconnected) {
+              if (snapshot.data == WalletConnectStatus.disconnected) {
                 final result = await Navigator.of(
                   context,
                 ).push(
-                  QRCodeScanner().route(),
+                  QRCodeScanner().route<String?>(),
                 );
-                ProvWalletFlutter.connectWallet(
-                  result as String,
-                );
+                if (result != null) {
+                  get<WalletService>().connectWallet(result);
+                }
               } else {
-                ProvWalletFlutter.disconnectWallet();
+                get<WalletService>().disconnectSession();
               }
             },
             child: Column(
@@ -195,7 +196,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                   width: 46,
                   child: Center(
                     child: PwIcon(
-                      snapshot.data == WallectConnectStatus.disconnected
+                      snapshot.data == WalletConnectStatus.disconnected
                           ? PwIcons.walletConnect
                           : PwIcons.close,
                       size: 15,
@@ -205,7 +206,7 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 ),
                 VerticalSpacer.xSmall(),
                 PwText(
-                  snapshot.data == WallectConnectStatus.disconnected
+                  snapshot.data == WalletConnectStatus.disconnected
                       ? Strings.walletConnect
                       : Strings.disconnect,
                   color: PwColor.white,

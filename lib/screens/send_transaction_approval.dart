@@ -1,8 +1,9 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class SendTransactionInfo {
   SendTransactionInfo({
@@ -43,9 +44,9 @@ class SendTransactionApproval extends StatelessWidget {
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
-            await ProvWalletFlutter.sendMessageFinish(
-              details.requestId,
-              false,
+            await get<WalletService>().sendMessageFinish(
+              requestId: details.requestId,
+              allowed: false,
             );
             Navigator.of(context).pop();
           },
@@ -173,9 +174,9 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    await ProvWalletFlutter.sendMessageFinish(
-                      details.requestId,
-                      true,
+                    await get<WalletService>().sendMessageFinish(
+                      requestId: details.requestId,
+                      allowed: true,
                     );
                     ModalLoadingRoute.dismiss(context);
                     Navigator.of(context).pop();
@@ -195,9 +196,9 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    await ProvWalletFlutter.sendMessageFinish(
-                      details.requestId,
-                      false,
+                    await get<WalletService>().sendMessageFinish(
+                      requestId: details.requestId,
+                      allowed: false,
                     );
                     ModalLoadingRoute.dismiss(context);
                     Navigator.of(context).pop();

@@ -11,9 +11,11 @@ import 'package:provenance_wallet/screens/dashboard/transactions/transaction_lan
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/requests/sign_request.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -76,40 +78,11 @@ class DashboardState extends State<Dashboard>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
-    ProvWalletFlutter.instance.onAskToSign = (
-      String requestId,
-      String message,
-      String description,
-    ) async {
-      final result = await PwDialog.showConfirmation(
-        context,
-        title: description,
-        message: message,
-        confirmText: Strings.sign,
-        cancelText: Strings.decline,
-      );
-      ModalLoadingRoute.showLoading("", context);
-      await ProvWalletFlutter.signTransactionFinish(requestId, result);
-      ModalLoadingRoute.dismiss(context);
-    };
+    get<WalletService>()
+      ..signRequest.listen(_onSignRequest).addTo(_subscriptions)
+      ..sendRequest.listen(_onSendRequest).addTo(_subscriptions)
+      ..configureServer();
 
-    ProvWalletFlutter.instance.onAskToSend = (
-      String requestId,
-      TransactionMessage message,
-      String description,
-      String cost,
-    ) {
-      SendTransactionInfo info = SendTransactionInfo(
-        fee: cost,
-        toAddress: message.toAddress ?? '',
-        fromAddress: message.fromAddress ?? '',
-        requestId: requestId,
-        amount: message.displayAmount,
-      );
-      Navigator.of(context).push(SendTransactionApproval(info).route());
-    };
-
-    ProvWalletFlutter.configureServer();
     loadAddress();
 
     _initDeepLinks(context);
@@ -118,10 +91,15 @@ class DashboardState extends State<Dashboard>
   }
 
   void loadAddress() async {
-    final details = await ProvWalletFlutter.getWalletDetails();
+    final wallet = await get<WalletService>().getSelectedWallet();
+    if (wallet == null) {
+      logError('Failed to load selected wallet');
+
+      return;
+    }
     setState(() {
-      _walletAddress = details.address;
-      _walletName = details.accountName;
+      _walletAddress = wallet.address;
+      _walletName = wallet.name;
     });
     this.loadAssets();
   }
@@ -270,6 +248,33 @@ class DashboardState extends State<Dashboard>
     );
   }
 
+  void _onSendRequest(SendRequest sendRequest) {
+    SendTransactionInfo info = SendTransactionInfo(
+      fee: sendRequest.cost,
+      toAddress: sendRequest.message.toAddress ?? '',
+      fromAddress: sendRequest.message.fromAddress ?? '',
+      requestId: sendRequest.id,
+      amount: sendRequest.message.displayAmount,
+    );
+    Navigator.of(context).push(SendTransactionApproval(info).route());
+  }
+
+  void _onSignRequest(SignRequest signRequest) async {
+    final allowed = await PwDialog.showConfirmation(
+      context,
+      title: signRequest.description,
+      message: signRequest.message,
+      confirmText: Strings.sign,
+      cancelText: Strings.decline,
+    );
+    ModalLoadingRoute.showLoading("", context);
+    await get<WalletService>().signTransactionFinish(
+      requestId: signRequest.id,
+      allowed: allowed,
+    );
+    ModalLoadingRoute.dismiss(context);
+  }
+
   void _setCurrentTab() {
     setState(() {
       _currentTabIndex = _tabController.index;
@@ -303,10 +308,10 @@ class DashboardState extends State<Dashboard>
   Future _handleWalletConnectLink(String? data) async {
     if (data != null) {
       final decodedData = Uri.decodeComponent(data);
-      final isValid =
-          await ProvWalletFlutter.isValidWalletConnectData(decodedData);
+      final walletService = get<WalletService>();
+      final isValid = await walletService.isValidWalletConnectData(decodedData);
       if (isValid) {
-        final success = await ProvWalletFlutter.connectWallet(decodedData);
+        final success = await walletService.connectWallet(decodedData);
         if (!success) {
           logDebug('Wallet connection failed');
         }

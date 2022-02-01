@@ -33,7 +33,7 @@ dependencies:
   qr_code_scanner: ^0.5.1
   intl: ^0.17.0
   qr_flutter: ^4.0.0
-  rxdart: ^0.27.1
+  rxdart: ^0.27.3
   uni_links: ^0.5.1
   logger: ^1.0.0
   flutter_secure_storage: ^4.2.0
@@ -45,11 +45,17 @@ dependencies:
   shared_preferences: ^2.0.6
   uuid: ^3.0.4
   faker: ^2.0.0
+  path:
   prov_wallet_flutter:
-    # path: ../mobile-tech-wallet-flutter-plugin
+    path: ../mobile-tech-wallet-flutter-plugin
+    # git:
+    #   url: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
+    #   ref: 8b9395b5a46cce8f2d3de72a4aff503ce950bf7d
+  provenance_dart:
     git:
-      url: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
-      ref: 8b9395b5a46cce8f2d3de72a4aff503ce950bf7d
+      url: git@github.com:provenance-io/provenance-dart.git
+      ref: 57672f667fbce061fca5ad07e6afc861d92a68df
+  sqflite: ^2.0.2
   get_it: ^7.2.0
 
 dev_dependencies:
