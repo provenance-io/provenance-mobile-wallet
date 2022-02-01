@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.0.10
   shared_preferences: ^2.0.6
   uuid: ^3.0.4
+  faker: ^2.0.0
   prov_wallet_flutter:
     git: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
 
