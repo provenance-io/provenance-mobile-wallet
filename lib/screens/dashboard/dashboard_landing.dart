@@ -151,39 +151,6 @@ class DashboardLandingState extends State<DashboardLanding> {
             Container(),
           ];
     list.add(VerticalSpacer.medium());
-    list.add(StreamBuilder<String>(
-      initialData: null,
-      stream: ProvWalletFlutter.instance.walletAddress.stream,
-      builder: (context, data) {
-        if (data.data == null || data.data!.isEmpty) {
-          return Container();
-        }
-
-        return Padding(
-          padding: EdgeInsets.only(left: 32, right: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FwButton(
-                child: FwText(
-                  Strings.disconnect,
-                  color: FwColor.white,
-                ),
-                onPressed: () {
-                  ProvWalletFlutter.disconnectWallet();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    ));
-    list.add(Expanded(
-      child: Container(
-        color: Theme.of(context).colorScheme.white,
-      ),
-    ));
-    list.add(VerticalSpacer.medium());
     list.add(_buildResetButton());
     list.add(VerticalSpacer.large());
 
