@@ -87,6 +87,9 @@ class Strings {
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
   static const resetWallet = 'Reset Wallet';
+  static const loadingTransactions = 'Loading Transactions';
+  static const noTransactionsText =
+      'When you have transactions they will appear here.';
 
   // My Account Page
   static const myAccount = 'My Account';

@@ -4,6 +4,8 @@ import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/screens/dashboard/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
@@ -29,6 +31,7 @@ class DashboardState extends State<Dashboard>
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
+  GlobalKey<TransactionLandingState> _transactionKey = GlobalKey();
 
   List<AssetResponse> assets = [];
 
@@ -118,12 +121,14 @@ class DashboardState extends State<Dashboard>
 
     //final result = await AssetService.getAssets(_walletAddress);
     final result = await AssetService.getFakeAssets(_walletAddress);
-
+    final transactions =
+        await TransactionService.getFakeTransactions(_walletAddress);
     ModalLoadingRoute.dismiss(context);
     //if (result.isSuccessful) {
     setState(() {
       // FIXME: State Management
       _landingKey.currentState?.updateAssets(result);
+      _transactionKey.currentState?.updateTransactions(transactions);
       _initialLoad = false;
     });
     // } else {
@@ -263,9 +268,9 @@ class DashboardState extends State<Dashboard>
                   key: _landingKey,
                   walletKey: _walletKey,
                 ),
-                Container(
-                  color: Theme.of(context).colorScheme.white,
-                  child: Container(),
+                TransactionLanding(
+                  // FIXME: State Management
+                  key: _transactionKey,
                 ),
               ],
             ),
