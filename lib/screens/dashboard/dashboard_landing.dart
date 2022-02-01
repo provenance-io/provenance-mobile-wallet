@@ -137,7 +137,7 @@ class DashboardLandingState extends State<DashboardLanding> {
                 },
                 itemCount: _assets.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
               ),
             ),
           ]
