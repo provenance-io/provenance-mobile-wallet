@@ -65,10 +65,9 @@ class DashboardLandingState extends State<DashboardLanding> {
               ),
             ),
             VerticalSpacer.medium(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+            Expanded(
               child: ListView.separated(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.only(left: 20, right: 20),
                 itemBuilder: (context, index) {
                   final item = _assets[index];
 
