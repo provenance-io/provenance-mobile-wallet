@@ -164,12 +164,6 @@ class DashboardLandingState extends State<DashboardLanding> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FwText(
-                Strings.walletConnected(data.data),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
               FwButton(
                 child: FwText(
                   Strings.disconnect,
