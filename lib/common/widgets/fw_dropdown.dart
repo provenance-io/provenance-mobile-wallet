@@ -15,7 +15,7 @@ class FwDropDown extends StatefulWidget {
 }
 
 class _FwDropDownState extends State<FwDropDown> {
-  String dropdownValue = "";
+  late String dropdownValue;
 
   @override
   void initState() {
