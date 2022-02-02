@@ -27,6 +27,7 @@ enum FwColor {
   // accent
   lime,
   // new
+  globalNeutral150,
   globalNeutral550,
   globalNeutral600Black,
   globalNeutral450,
@@ -83,6 +84,8 @@ mixin FwColorMixin on Widget {
         return theme.colorScheme.secondaryVariant;
       case FwColor.lime:
         return theme.colorScheme.lime;
+      case FwColor.globalNeutral150:
+        return theme.colorScheme.globalNeutral150;
       case FwColor.globalNeutral350:
         return theme.colorScheme.globalNeutral350;
       case FwColor.globalNeutral400:
