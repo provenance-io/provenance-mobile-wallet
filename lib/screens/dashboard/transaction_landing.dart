@@ -50,6 +50,7 @@ class TransactionLandingState extends State<TransactionLanding> {
                       "USDF",
                     ],
                   ),
+                  HorizontalSpacer.medium(),
                   FwDropDown(
                     initialValue: "All Transactions",
                     items: [
@@ -76,13 +77,6 @@ class TransactionLandingState extends State<TransactionLanding> {
                       padding: EdgeInsets.zero,
                       child: Container(
                         padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Theme.of(context).dividerColor,
-                            ),
-                          ),
-                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -131,12 +125,15 @@ class TransactionLandingState extends State<TransactionLanding> {
                                 ),
                               ],
                             ),
-                            FwIcon(
-                              FwIcons.caret,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .globalNeutral550,
-                              size: 12.0,
+                            Padding(
+                              padding: EdgeInsets.only(left: 16),
+                              child: FwIcon(
+                                FwIcons.caret,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .globalNeutral550,
+                                size: 12.0,
+                              ),
                             ),
                           ],
                         ),
@@ -145,7 +142,13 @@ class TransactionLandingState extends State<TransactionLanding> {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Container();
+                  return Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 0,
+                    color: Theme.of(context).dividerColor,
+                  );
                 },
                 itemCount: _transactions.length,
                 shrinkWrap: true,
@@ -160,10 +163,13 @@ class TransactionLandingState extends State<TransactionLanding> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FwText(
-                    Strings.noTransactionsText,
-                    color: FwColor.globalNeutral550,
-                    style: FwTextStyle.h7,
+                  Expanded(
+                    child: FwText(
+                      Strings.noTransactionsText,
+                      color: FwColor.globalNeutral550,
+                      style: FwTextStyle.h7,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
