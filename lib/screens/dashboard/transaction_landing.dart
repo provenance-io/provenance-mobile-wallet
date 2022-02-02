@@ -25,7 +25,7 @@ class TransactionLandingState extends State<TransactionLanding> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.white,
-      padding: EdgeInsets.only(top: 40),
+      padding: EdgeInsets.only(top: 30),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: _buildBody(),
@@ -168,7 +168,6 @@ class TransactionLandingState extends State<TransactionLanding> {
                 physics: AlwaysScrollableScrollPhysics(),
               ),
             ),
-            VerticalSpacer.large(),
           ]
         : [
             Padding(
