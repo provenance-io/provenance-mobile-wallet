@@ -78,7 +78,12 @@ class DashboardLandingState extends State<DashboardLanding> {
                     child: Padding(
                       padding: EdgeInsets.zero,
                       child: Container(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.only(
+                          right: 16,
+                          left: 16,
+                          top: 12,
+                          bottom: 12,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(9.0),
                           border: Border.all(
