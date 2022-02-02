@@ -7,8 +7,8 @@ class FwDropDown extends StatefulWidget {
     required this.items,
   }) : super(key: key);
 
-  String initialValue;
-  List<String> items;
+  final String initialValue;
+  final List<String> items;
 
   @override
   State<FwDropDown> createState() => _FwDropDownState();
@@ -26,9 +26,13 @@ class _FwDropDownState extends State<FwDropDown> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      dropdownColor: Theme.of(context).colorScheme.globalNeutral150,
+      underline: Container(),
       value: dropdownValue,
-      icon: FwIcon(FwIcons.chevron),
-      style: Theme.of(context).textTheme.small,
+      icon: Padding(
+        padding: EdgeInsets.only(left: 16),
+        child: FwIcon(FwIcons.chevron),
+      ),
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
@@ -37,7 +41,11 @@ class _FwDropDownState extends State<FwDropDown> {
       items: widget.items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: FwText(
+            value,
+            color: FwColor.globalNeutral550,
+            style: FwTextStyle.s,
+          ),
         );
       }).toList(),
     );

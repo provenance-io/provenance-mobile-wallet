@@ -42,22 +42,31 @@ class TransactionLandingState extends State<TransactionLanding> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   // FIXME: get the right items for these.
-                  FwDropDown(
-                    initialValue: "All Assets",
-                    items: [
-                      "All Assets",
-                      "Hash",
-                      "USDF",
-                    ],
+                  Container(
+                    padding: EdgeInsets.only(right: 10, left: 10),
+                    color: Theme.of(context).colorScheme.globalNeutral150,
+                    child: FwDropDown(
+                      initialValue: "All Assets",
+                      items: [
+                        "All Assets",
+                        "Hash",
+                        "USDF",
+                      ],
+                    ),
                   ),
                   HorizontalSpacer.medium(),
-                  FwDropDown(
-                    initialValue: "All Transactions",
-                    items: [
-                      "All Transactions",
-                      "Purchase",
-                      "Deposit",
-                    ],
+                  // FIXME: get the right items for these.
+                  Container(
+                    padding: EdgeInsets.only(right: 10, left: 10),
+                    color: Theme.of(context).colorScheme.globalNeutral150,
+                    child: FwDropDown(
+                      initialValue: "All Transactions",
+                      items: [
+                        "All Transactions",
+                        "Purchase",
+                        "Deposit",
+                      ],
+                    ),
                   ),
                 ],
               ),
