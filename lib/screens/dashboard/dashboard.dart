@@ -23,11 +23,12 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
-  TabController? _tabController;
+  late TabController _tabController;
   String _walletAddress = '';
   String _walletName = '';
   String _walletValue = '';
   bool _initialLoad = false;
+  int _currentTab = 0;
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
@@ -39,6 +40,8 @@ class DashboardState extends State<Dashboard>
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
+    _tabController.removeListener(_setCurrentTab);
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -65,8 +68,9 @@ class DashboardState extends State<Dashboard>
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_setCurrentTab);
+    WidgetsBinding.instance?.addObserver(this);
     ProvWalletFlutter.instance.onAskToSign = (
       String requestId,
       String message,
@@ -206,12 +210,12 @@ class DashboardState extends State<Dashboard>
               indicatorColor: Colors.transparent,
               tabs: [
                 _buildTabItem(
-                  _tabController?.index == 0,
+                  0,
                   Strings.dashboard,
                   FwIcons.wallet,
                 ),
                 _buildTabItem(
-                  _tabController?.index == 1,
+                  1,
                   Strings.transactions,
                   FwIcons.staking,
                 ),
@@ -280,16 +284,18 @@ class DashboardState extends State<Dashboard>
     );
   }
 
+  void _setCurrentTab() {
+    setState(() {
+      _currentTab = _tabController.index;
+    });
+  }
+
   Widget _buildTabItem(
-    bool isSelected,
+    int index,
     String tabName,
     String tabAsset, {
     isLoading = false,
   }) {
-    var color = isSelected
-        ? Theme.of(context).colorScheme.primary7
-        : Theme.of(context).colorScheme.globalNeutral350;
-
     return Center(
       child: Column(
         children: [
@@ -302,7 +308,9 @@ class DashboardState extends State<Dashboard>
             child: isLoading == null || !isLoading
                 ? FwIcon(
                     tabAsset,
-                    color: color,
+                    color: _currentTab == index
+                        ? Theme.of(context).colorScheme.primary7
+                        : Theme.of(context).colorScheme.globalNeutral350,
                   )
                 : const CircularProgressIndicator(),
           ),
@@ -310,10 +318,11 @@ class DashboardState extends State<Dashboard>
             padding: EdgeInsets.only(top: 5, bottom: 28),
             child: Text(
               tabName,
-              style: Theme.of(context)
-                  .textTheme
-                  .extraSmallBold
-                  .copyWith(color: color),
+              style: Theme.of(context).textTheme.extraSmallBold.copyWith(
+                    color: _currentTab == index
+                        ? Theme.of(context).colorScheme.primary7
+                        : Theme.of(context).colorScheme.globalNeutral350,
+                  ),
             ),
           ),
         ],
