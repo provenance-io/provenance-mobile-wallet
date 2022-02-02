@@ -12,7 +12,9 @@ enum FwTextStyle {
   h7,
   m,
   mBold,
+  mSemiBold,
   s,
+  sSemiBold,
   sBold,
   xs,
   xsBold,
@@ -50,8 +52,12 @@ mixin FwTextStyleMixin on Widget {
         return theme.textTheme.medium;
       case FwTextStyle.mBold:
         return theme.textTheme.mediumBold;
+      case FwTextStyle.mSemiBold:
+        return theme.textTheme.mediumSemiBold;
       case FwTextStyle.s:
         return theme.textTheme.small;
+      case FwTextStyle.sSemiBold:
+        return theme.textTheme.smallSemiBold;
       case FwTextStyle.sBold:
         return theme.textTheme.smallBold;
       case FwTextStyle.xs:

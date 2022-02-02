@@ -131,10 +131,26 @@ class FigurePayThemeData {
     letterSpacing: 0.32,
   );
 
+  static const TextStyle _mediumSemiBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    height: 24.48 / 15.0,
+    letterSpacing: 0.32,
+  );
+
   static const TextStyle _small = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 12,
     fontWeight: FontWeight.w300,
+    height: 15.72 / 12.0,
+    letterSpacing: 0.32,
+  );
+
+  static const TextStyle _smallSemiBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 12.8,
+    fontWeight: FontWeight.w500,
     height: 15.72 / 12.0,
     letterSpacing: 0.32,
   );
@@ -292,7 +308,9 @@ extension CustomTextTheme on TextTheme {
   TextStyle get headline0 => FigurePayThemeData._headline0;
   TextStyle get mediumBold => FigurePayThemeData._mediumBold;
   TextStyle get medium => FigurePayThemeData._medium;
+  TextStyle get mediumSemiBold => FigurePayThemeData._mediumSemiBold;
   TextStyle get smallBold => FigurePayThemeData._smallBold;
+  TextStyle get smallSemiBold => FigurePayThemeData._smallSemiBold;
   TextStyle get small => FigurePayThemeData._small;
   TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;

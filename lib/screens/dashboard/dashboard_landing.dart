@@ -110,11 +110,13 @@ class DashboardLandingState extends State<DashboardLanding> {
                                 FwText(
                                   item.display?.toUpperCase() ?? '',
                                   color: FwColor.globalNeutral550,
+                                  style: FwTextStyle.mSemiBold,
                                 ),
                                 VerticalSpacer.xSmall(),
                                 FwText(
                                   item.displayAmount ?? '',
                                   color: FwColor.globalNeutral350,
+                                  style: FwTextStyle.sSemiBold,
                                 ),
                               ],
                             ),
