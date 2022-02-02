@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/dashboard/transaction_landing.dart';
@@ -35,6 +36,7 @@ class DashboardState extends State<Dashboard>
   GlobalKey<TransactionLandingState> _transactionKey = GlobalKey();
 
   List<AssetResponse> assets = [];
+  List<TransactionResponse> transactions = [];
 
   @override
   void dispose() {
@@ -130,6 +132,8 @@ class DashboardState extends State<Dashboard>
     ModalLoadingRoute.dismiss(context);
     //if (result.isSuccessful) {
     setState(() {
+      this.assets = result;
+      this.transactions = transactions;
       // FIXME: State Management
       _landingKey.currentState?.updateAssets(result);
       _transactionKey.currentState?.updateTransactions(transactions);
@@ -287,6 +291,9 @@ class DashboardState extends State<Dashboard>
   void _setCurrentTab() {
     setState(() {
       _currentTab = _tabController.index;
+      _walletKey.currentState?.updateValue(_walletValue);
+      _landingKey.currentState?.updateAssets(assets);
+      _transactionKey.currentState?.updateTransactions(transactions);
     });
   }
 
