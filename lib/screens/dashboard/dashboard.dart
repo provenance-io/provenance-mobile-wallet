@@ -177,7 +177,7 @@ class DashboardState extends State<Dashboard>
             top: 20,
           ),
           child: FwText(
-            _walletName,
+            _currentTab == 0 ? _walletName : "Transaction Details",
             style: FwTextStyle.h6,
             color: FwColor.globalNeutral550,
           ),
