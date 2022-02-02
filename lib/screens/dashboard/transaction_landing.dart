@@ -109,11 +109,13 @@ class TransactionLandingState extends State<TransactionLanding> {
                                   // FIXME: Transactions have no 'display' property atm.
                                   'HASH',
                                   color: FwColor.globalNeutral500,
+                                  style: FwTextStyle.sBold,
                                 ),
                                 VerticalSpacer.xSmall(),
                                 FwText(
                                   item.type ?? '',
                                   color: FwColor.globalNeutral450,
+                                  style: FwTextStyle.s,
                                 ),
                               ],
                             ),
@@ -125,12 +127,14 @@ class TransactionLandingState extends State<TransactionLanding> {
                                   // FIXME: Transactions currently only have 'feeAmount'.
                                   '\$50.00',
                                   color: FwColor.globalNeutral500,
+                                  style: FwTextStyle.sBold,
                                 ),
                                 VerticalSpacer.xSmall(),
                                 FwText(
                                   // FIXME: Format the date to be 'Mmm dd'.
                                   item.time ?? '',
                                   color: FwColor.globalNeutral450,
+                                  style: FwTextStyle.s,
                                 ),
                               ],
                             ),
