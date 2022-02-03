@@ -25,7 +25,7 @@ class DashboardState extends State<Dashboard>
   String _walletAddress = '';
   String _walletName = '';
   String _walletValue = '';
-  bool _initialLoad = false;
+  // TODO: When should we reload?
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
@@ -50,14 +50,6 @@ class DashboardState extends State<Dashboard>
     RouterObserver.instance.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute);
     super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant Dashboard oldWidget) {
-    if (!_initialLoad) {
-      this.loadAssets();
-    }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -124,7 +116,6 @@ class DashboardState extends State<Dashboard>
     setState(() {
       // FIXME: State Management
       _landingKey.currentState?.updateAssets(result);
-      _initialLoad = false;
     });
     // } else {
     //   setState(() {
