@@ -7,7 +7,7 @@ import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
-import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
+import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
@@ -15,7 +15,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 
-import 'dashboard_landing.dart';
+import 'landing/dashboard_landing.dart';
 
 class Dashboard extends StatefulWidget {
   @override
