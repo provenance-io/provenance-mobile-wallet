@@ -5,13 +5,13 @@ part 'transaction_response.g.dart';
 @JsonSerializable()
 class TransactionResponse {
   TransactionResponse({
-    required this.address,
-    required this.feeAmount,
-    required this.id,
-    required this.signer,
-    required this.status,
-    required this.time,
-    required this.type,
+    this.address,
+    this.feeAmount,
+    this.id,
+    this.signer,
+    this.status,
+    this.time,
+    this.type,
   });
 
   final String? address;
