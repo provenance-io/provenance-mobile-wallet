@@ -162,11 +162,11 @@ class WalletPortfolioState extends State<WalletPortfolio> {
           );
         }
 
-        if (snapshot.data == WallectConnectStatus.disconnected) {
-          return Container(
-            width: 100,
-            child: GestureDetector(
-              onTap: () async {
+        return Container(
+          width: 100,
+          child: GestureDetector(
+            onTap: () async {
+              if (snapshot.data == WallectConnectStatus.disconnected) {
                 final result = await Navigator.of(
                   context,
                 ).push(
@@ -175,42 +175,44 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 ProvWalletFlutter.connectWallet(
                   result as String,
                 );
-              },
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.globalNeutral450,
-                      borderRadius: BorderRadius.circular(
-                        23,
-                      ),
-                    ),
-                    height: 46,
-                    width: 46,
-                    child: Center(
-                      child: FwIcon(
-                        FwIcons.walletConnect,
-                        size: 15,
-                        color: Theme.of(context).colorScheme.white,
-                      ),
+              } else {
+                ProvWalletFlutter.disconnectWallet();
+              }
+            },
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.globalNeutral450,
+                    borderRadius: BorderRadius.circular(
+                      23,
                     ),
                   ),
-                  VerticalSpacer.xSmall(),
-                  FwText(
-                    Strings.walletConnect,
-                    color: FwColor.white,
-                    style: FwTextStyle.s,
+                  height: 46,
+                  width: 46,
+                  child: Center(
+                    child: FwIcon(
+                      snapshot.data == WallectConnectStatus.disconnected
+                          ? FwIcons.walletConnect
+                          : FwIcons.close,
+                      size: 15,
+                      color: Theme.of(context).colorScheme.white,
+                    ),
                   ),
-                ],
-              ),
+                ),
+                VerticalSpacer.xSmall(),
+                FwText(
+                  snapshot.data == WallectConnectStatus.disconnected
+                      ? Strings.walletConnect
+                      : Strings.disconnect,
+                  color: FwColor.white,
+                  style: FwTextStyle.s,
+                ),
+              ],
             ),
-          );
-        }
-
-        return Container(
-          width: 100,
+          ),
         );
       },
     );

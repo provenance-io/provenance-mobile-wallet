@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/services/base_service.dart';
+import 'package:faker/faker.dart';
 
 class AssetService {
   factory AssetService() => _singleton;
@@ -36,5 +37,44 @@ class AssetService {
     );
 
     return data;
+  }
+
+// TODO: Remove me when we get actual data
+  static Future<List<AssetResponse>> getFakeAssets(
+    String provenanceAddresses,
+  ) async {
+    final faker = Faker();
+    final List<AssetResponse> assets = [];
+
+    for (var i = 0; i < faker.randomGenerator.integer(10, min: 5); i++) {
+      assets.add(_getFakeAsset());
+    }
+
+    await Future.delayed(
+      Duration(
+        milliseconds: faker.randomGenerator.integer(1000, min: 500),
+      ),
+    );
+
+    return assets;
+  }
+
+// TODO: Remove me when we get actual data
+  static AssetResponse _getFakeAsset() {
+    var faker = Faker();
+    var amount = faker.randomGenerator.decimal(min: 50).toStringAsFixed(2);
+
+    return AssetResponse(
+      denom: faker.currency.code(),
+      amount: amount,
+      display: faker.randomGenerator.element([
+        "USD",
+        "USDF",
+        "HASH",
+      ]),
+      description: "FAKE DATA",
+      exponent: faker.randomGenerator.integer(10),
+      displayAmount: amount,
+    );
   }
 }

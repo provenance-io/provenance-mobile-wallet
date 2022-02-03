@@ -65,10 +65,9 @@ class DashboardLandingState extends State<DashboardLanding> {
               ),
             ),
             VerticalSpacer.medium(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+            Expanded(
               child: ListView.separated(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.only(left: 20, right: 20),
                 itemBuilder: (context, index) {
                   final item = _assets[index];
 
@@ -138,7 +137,7 @@ class DashboardLandingState extends State<DashboardLanding> {
                 },
                 itemCount: _assets.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
               ),
             ),
           ]
@@ -151,45 +150,6 @@ class DashboardLandingState extends State<DashboardLanding> {
             Container(),
             Container(),
           ];
-    list.add(VerticalSpacer.medium());
-    list.add(StreamBuilder<String>(
-      initialData: null,
-      stream: ProvWalletFlutter.instance.walletAddress.stream,
-      builder: (context, data) {
-        if (data.data == null || data.data!.isEmpty) {
-          return Container();
-        }
-
-        return Padding(
-          padding: EdgeInsets.only(left: 32, right: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FwText(
-                Strings.walletConnected(data.data),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              FwButton(
-                child: FwText(
-                  Strings.disconnect,
-                  color: FwColor.white,
-                ),
-                onPressed: () {
-                  ProvWalletFlutter.disconnectWallet();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    ));
-    list.add(Expanded(
-      child: Container(
-        color: Theme.of(context).colorScheme.white,
-      ),
-    ));
     list.add(VerticalSpacer.medium());
     list.add(_buildResetButton());
     list.add(VerticalSpacer.large());
