@@ -231,7 +231,61 @@ class DashboardState extends State<Dashboard>
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        children: _buildColumnChildren(_currentTabIndex),
+        children: [
+          _walletAddress.isNotEmpty && _currentTabIndex == 0
+              ? Container(
+                  color: Theme.of(context).colorScheme.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FwText(
+                        '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
+                        color: FwColor.globalNeutral400,
+                        style: FwTextStyle.m,
+                      ),
+                      HorizontalSpacer.small(),
+                      GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(
+                            ClipboardData(text: _walletAddress),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: FwText(Strings.addressCopied)),
+                          );
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          child: FwIcon(
+                            FwIcons.copy,
+                            color:
+                                Theme.of(context).colorScheme.globalNeutral400,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                DashboardLanding(
+                  // FIXME: State Management
+                  key: _landingKey,
+                  walletKey: _walletKey,
+                ),
+                TransactionLanding(
+                  // FIXME: State Management
+                  key: _transactionKey,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -243,68 +297,5 @@ class DashboardState extends State<Dashboard>
       _landingKey.currentState?.updateAssets(assets);
       _transactionKey.currentState?.updateTransactions(transactions);
     });
-  }
-
-  List<Widget> _buildColumnChildren(int index) {
-    List<Widget> children = [
-      Expanded(
-        child: TabBarView(
-          controller: _tabController,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            DashboardLanding(
-              // FIXME: State Management
-              key: _landingKey,
-              walletKey: _walletKey,
-            ),
-            TransactionLanding(
-              // FIXME: State Management
-              key: _transactionKey,
-            ),
-          ],
-        ),
-      ),
-    ];
-
-    if (_walletAddress.isNotEmpty && index == 0) {
-      children.insert(
-        0,
-        Container(
-          color: Theme.of(context).colorScheme.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FwText(
-                '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
-                color: FwColor.globalNeutral400,
-                style: FwTextStyle.m,
-              ),
-              HorizontalSpacer.small(),
-              GestureDetector(
-                onTap: () {
-                  Clipboard.setData(
-                    ClipboardData(text: _walletAddress),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: FwText(Strings.addressCopied)),
-                  );
-                },
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  child: FwIcon(
-                    FwIcons.copy,
-                    color: Theme.of(context).colorScheme.globalNeutral400,
-                    size: 24,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return children;
   }
 }
