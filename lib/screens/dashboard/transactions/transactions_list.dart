@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dropdown.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionsList extends StatefulWidget {
   TransactionsList({
@@ -29,11 +30,12 @@ class TransactionsListState extends State<TransactionsList> {
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
                 child: FwDropDown(
-                  initialValue: "All Assets",
+                  initialValue: Strings.dropDownAllAssets,
                   items: [
-                    "All Assets",
-                    "Hash",
-                    "USDF",
+                    Strings.dropDownAllAssets,
+                    Strings.dropDownHashAsset,
+                    Strings.dropDownUsdAsset,
+                    Strings.dropDownUsdfAsset,
                   ],
                 ),
               ),
@@ -43,11 +45,11 @@ class TransactionsListState extends State<TransactionsList> {
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
                 child: FwDropDown(
-                  initialValue: "All Transactions",
+                  initialValue: Strings.dropDownAllTransactions,
                   items: [
-                    "All Transactions",
-                    "Purchase",
-                    "Deposit",
+                    Strings.dropDownAllTransactions,
+                    Strings.dropDownPurchaseTransaction,
+                    Strings.dropDownDepositTransaction,
                   ],
                 ),
               ),
@@ -89,7 +91,7 @@ class TransactionsListState extends State<TransactionsList> {
                           children: [
                             FwText(
                               // FIXME: Transactions have no 'display' property atm.
-                              'HASH',
+                              Strings.dropDownHashAsset.toUpperCase(),
                               color: FwColor.globalNeutral500,
                               style: FwTextStyle.sBold,
                             ),

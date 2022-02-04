@@ -8,7 +8,7 @@ class TransactionService {
 
   static final TransactionService _singleton = TransactionService._internal();
 
-  static String get assetServiceBasePathv1 =>
+  static String get transactionServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
   static TransactionService get instance => _singleton;
 
@@ -16,7 +16,7 @@ class TransactionService {
     String provenanceAddresses,
   ) async {
     final data = await BaseService.instance.GET(
-      '$assetServiceBasePathv1/$provenanceAddresses/transactions',
+      '$transactionServiceBasePath/$provenanceAddresses/transactions',
       listConverter: (json) {
         if (json is String) {
           return <TransactionResponse>[];

@@ -213,4 +213,14 @@ class Strings {
   // WalletSetupConfirmation
   static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
   static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
+
+  // TransactionsList
+  static const dropDownAllAssets = "All Assets";
+  static const dropDownHashAsset = "Hash";
+  static const dropDownUsdAsset = "USD";
+  static const dropDownUsdfAsset = "USDF";
+
+  static const dropDownAllTransactions = "All Transactions";
+  static const dropDownPurchaseTransaction = "Purchase";
+  static const dropDownDepositTransaction = "Deposit";
 }
