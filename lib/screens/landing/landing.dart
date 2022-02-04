@@ -204,11 +204,11 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
     List<Widget> steps = [];
     final numberOfSteps = 3;
     for (int i = 0; i < numberOfSteps; i++) {
-      var color = _currentPage < i ? Color(0xFFC4C4C4) : Color(0xFF9E9E9E);
+      var color = _currentPage == i ? Color(0xFF8B90A7) : Color(0xFFF3F4F6);
       steps.add(
         Container(
-          height: 6,
-          width: 45,
+          height: 4,
+          width: 30,
           decoration: BoxDecoration(
             border: Border.all(
               color: color,
