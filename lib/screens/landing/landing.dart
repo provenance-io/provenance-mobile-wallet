@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_manage_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_trade_slide.dart';
+import 'package:provenance_wallet/screens/landing/page_indicator.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
@@ -108,10 +109,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 ),
               ),
               VerticalSpacer.medium(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildPageIndicator(),
-              ),
+              PageIndicator(currentPageIndex: _currentPage.round()),
               VerticalSpacer.large(),
               _buildFaceIdButton(),
               Padding(
@@ -198,31 +196,5 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
         ),
       ],
     );
-  }
-
-  List<Widget> _buildPageIndicator() {
-    List<Widget> steps = [];
-    final numberOfSteps = 3;
-    for (int i = 0; i < numberOfSteps; i++) {
-      var color = _currentPage == i ? Color(0xFF8B90A7) : Color(0xFFF3F4F6);
-      steps.add(
-        Container(
-          height: 4,
-          width: 30,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: color,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            color: color,
-          ),
-        ),
-      );
-      if (i != numberOfSteps) {
-        steps.add(HorizontalSpacer.small());
-      }
-    }
-
-    return steps;
   }
 }
