@@ -201,12 +201,29 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
   }
 
   List<Widget> _buildPageIndicator() {
-    List<Widget> list = [];
-    for (int i = 0; i < 3; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    List<Widget> steps = [];
+    final numberOfSteps = 3;
+    for (int i = 0; i < numberOfSteps; i++) {
+      var color = _currentPage < i ? Color(0xFFC4C4C4) : Color(0xFF9E9E9E);
+      steps.add(
+        Container(
+          height: 6,
+          width: 45,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: color,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            color: color,
+          ),
+        ),
+      );
+      if (i != numberOfSteps) {
+        steps.add(HorizontalSpacer.small());
+      }
     }
 
-    return list;
+    return steps;
   }
 
   Widget _indicator(bool isActive) {
