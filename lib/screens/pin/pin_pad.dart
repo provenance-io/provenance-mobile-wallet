@@ -97,7 +97,7 @@ class PinPadState extends State<PinPad> {
 
                   return true;
                 },
-                child: _buildGridView(),
+                child: _buildGridView(context),
               ),
             ),
           ),
@@ -106,7 +106,7 @@ class PinPadState extends State<PinPad> {
     );
   }
 
-  Widget _buildContainerCircle(int number) {
+  Widget _buildContainerCircle(BuildContext context, int number) {
     return InkResponse(
       highlightColor: Colors.red,
       onTap: () {
@@ -152,16 +152,16 @@ class PinPadState extends State<PinPad> {
     }
   }
 
-  Widget _buildGridView() {
+  Widget _buildGridView(BuildContext context) {
     var children = <Widget>[];
 
     for (var i = 0; i < _numbers.length; i++) {
       if (i == _numbers.length - 1) {
         children.add(Container());
-        children.add(_buildContainerCircle(_numbers[i]));
-        children.add(_buildDeleteButton());
+        children.add(_buildContainerCircle(context, _numbers[i]));
+        children.add(_buildDeleteButton(context));
       } else {
-        children.add(_buildContainerCircle(_numbers[i]));
+        children.add(_buildContainerCircle(context, _numbers[i]));
       }
     }
 
@@ -174,7 +174,7 @@ class PinPadState extends State<PinPad> {
     );
   }
 
-  Widget _buildDeleteButton() {
+  Widget _buildDeleteButton(BuildContext context) {
     return InkResponse(
       onTap: _deleteCode,
       child: Container(

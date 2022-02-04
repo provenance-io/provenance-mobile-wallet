@@ -5,9 +5,11 @@ import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/screens/landing/face_id_button.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_manage_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_trade_slide.dart';
+import 'package:provenance_wallet/screens/landing/page_indicator.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
@@ -108,12 +110,13 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 ),
               ),
               VerticalSpacer.medium(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildPageIndicator(),
-              ),
+              PageIndicator(currentPageIndex: _currentPage.round()),
               VerticalSpacer.large(),
-              _buildFaceIdButton(),
+              FaceIdButton(
+                authType: _localAuth.authType,
+                accountExists: _accountExists,
+                doAuth: doAuth,
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwButton(
@@ -165,70 +168,5 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
     setState(() {
       _currentPage = _pageController.page ?? 0;
     });
-  }
-
-  Widget _buildFaceIdButton() {
-    if (!_accountExists) {
-      return Container();
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Visibility(
-            visible: _accountExists,
-            child: FwOutlinedButton(
-              Strings.signInWithBiometric(_localAuth.authType),
-              icon: FwIcon(
-                FwIcons.faceScan,
-                color: Theme.of(context).colorScheme.white,
-              ),
-              fpTextStyle: FwTextStyle.mBold,
-              fpTextColor: FwColor.white,
-              backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
-              borderColor: Theme.of(context).colorScheme.globalNeutral450,
-              onPressed: () => doAuth(),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildPageIndicator() {
-    List<Widget> list = [];
-    for (int i = 0; i < 3; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
-    }
-
-    return list;
-  }
-
-  Widget _indicator(bool isActive) {
-    return Container(
-      height: 10,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 0),
-        margin: EdgeInsets.symmetric(horizontal: 4.0),
-        height: isActive ? 10 : 8.0,
-        width: isActive ? 12 : 8.0,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.transparent,
-            ),
-          ],
-          shape: BoxShape.circle,
-          color: isActive
-              ? Theme.of(context).colorScheme.globalNeutral600Black
-              : Color(0XFFC4C4C4),
-        ),
-      ),
-    );
   }
 }

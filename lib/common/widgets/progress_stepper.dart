@@ -10,35 +10,40 @@ class ProgressStepper extends StatelessWidget {
   final int numberOfSteps;
   final int currentStep;
   final EdgeInsets padding;
+// FIXME: Apply theme colors when possible.
+  final Color secondary400 = Color(0xFF03B5B2);
+  final Color neutral500 = Color(0xFF464B5D);
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> steps = [];
-    for (int i = 0; i < numberOfSteps; i++) {
-      var color = currentStep - 1 < i ? Color(0xFFC4C4C4) : Color(0xFF9E9E9E);
-      steps.add(
-        Container(
-          height: 6,
-          width: 45,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: color,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            color: color,
-          ),
-        ),
-      );
-      if (i != numberOfSteps - 1) {
-        steps.add(HorizontalSpacer.small());
-      }
-    }
-
     return Padding(
-      padding: padding,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: steps,
+      padding: EdgeInsets.only(left: 20, right: 20),
+      child: Stack(
+        children: [
+          Container(
+            height: 3,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: neutral500,
+              ),
+              borderRadius: BorderRadius.circular(80),
+              color: neutral500,
+            ),
+          ),
+          FractionallySizedBox(
+            widthFactor: currentStep / numberOfSteps,
+            child: Container(
+              height: 3,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: secondary400,
+                ),
+                borderRadius: BorderRadius.circular(80),
+                color: secondary400,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
