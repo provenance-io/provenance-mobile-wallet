@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/screens/landing/face_id_button.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_manage_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_trade_slide.dart';
@@ -111,7 +112,11 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
               VerticalSpacer.medium(),
               PageIndicator(currentPageIndex: _currentPage.round()),
               VerticalSpacer.large(),
-              _buildFaceIdButton(),
+              FaceIdButton(
+                authType: _localAuth.authType,
+                accountExists: _accountExists,
+                doAuth: doAuth,
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: FwButton(
@@ -163,38 +168,5 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
     setState(() {
       _currentPage = _pageController.page ?? 0;
     });
-  }
-
-  Widget _buildFaceIdButton() {
-    if (!_accountExists) {
-      return Container();
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Visibility(
-            visible: _accountExists,
-            child: FwOutlinedButton(
-              Strings.signInWithBiometric(_localAuth.authType),
-              icon: FwIcon(
-                FwIcons.faceScan,
-                color: Theme.of(context).colorScheme.white,
-              ),
-              fpTextStyle: FwTextStyle.mBold,
-              fpTextColor: FwColor.white,
-              backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
-              borderColor: Theme.of(context).colorScheme.globalNeutral450,
-              onPressed: () => doAuth(),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ],
-    );
   }
 }
