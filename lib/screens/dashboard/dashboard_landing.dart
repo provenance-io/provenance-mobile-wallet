@@ -78,7 +78,12 @@ class DashboardLandingState extends State<DashboardLanding> {
                     child: Padding(
                       padding: EdgeInsets.zero,
                       child: Container(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.only(
+                          right: 16,
+                          left: 16,
+                          top: 12,
+                          bottom: 12,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(9.0),
                           border: Border.all(
@@ -110,11 +115,13 @@ class DashboardLandingState extends State<DashboardLanding> {
                                 FwText(
                                   item.display?.toUpperCase() ?? '',
                                   color: FwColor.globalNeutral550,
+                                  style: FwTextStyle.mSemiBold,
                                 ),
                                 VerticalSpacer.xSmall(),
                                 FwText(
                                   item.displayAmount ?? '',
                                   color: FwColor.globalNeutral350,
+                                  style: FwTextStyle.sSemiBold,
                                 ),
                               ],
                             ),

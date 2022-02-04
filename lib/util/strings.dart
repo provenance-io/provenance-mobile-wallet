@@ -87,6 +87,9 @@ class Strings {
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
   static const resetWallet = 'Reset Wallet';
+  static const loadingTransactions = 'Loading Transactions';
+  static const noTransactionsText =
+      'When you have transactions they will appear here.';
 
   // My Account Page
   static const myAccount = 'My Account';
@@ -210,4 +213,14 @@ class Strings {
   // WalletSetupConfirmation
   static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
   static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
+
+  // TransactionsList
+  static const dropDownAllAssets = "All Assets";
+  static const dropDownHashAsset = "Hash";
+  static const dropDownUsdAsset = "USD";
+  static const dropDownUsdfAsset = "USDF";
+
+  static const dropDownAllTransactions = "All Transactions";
+  static const dropDownPurchaseTransaction = "Purchase";
+  static const dropDownDepositTransaction = "Deposit";
 }

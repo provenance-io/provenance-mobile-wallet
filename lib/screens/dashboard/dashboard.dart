@@ -3,7 +3,10 @@ import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
@@ -21,21 +24,26 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
-  TabController? _tabController;
+  late TabController _tabController;
   String _walletAddress = '';
   String _walletName = '';
   String _walletValue = '';
-  // TODO: When should we reload?
+  bool _initialLoad = false;
+  int _currentTab = 0;
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
+  GlobalKey<TransactionLandingState> _transactionKey = GlobalKey();
 
   List<AssetResponse> assets = [];
+  List<TransactionResponse> transactions = [];
 
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
+    _tabController.removeListener(_setCurrentTab);
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -53,9 +61,18 @@ class DashboardState extends State<Dashboard>
   }
 
   @override
+  void didUpdateWidget(covariant Dashboard oldWidget) {
+    if (!_initialLoad) {
+      this.loadAssets();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_setCurrentTab);
+    WidgetsBinding.instance?.addObserver(this);
     ProvWalletFlutter.instance.onAskToSign = (
       String requestId,
       String message,
@@ -110,12 +127,17 @@ class DashboardState extends State<Dashboard>
 
     //final result = await AssetService.getAssets(_walletAddress);
     final result = await AssetService.getFakeAssets(_walletAddress);
-
+    final transactions =
+        await TransactionService.getFakeTransactions(_walletAddress);
     ModalLoadingRoute.dismiss(context);
     //if (result.isSuccessful) {
     setState(() {
+      this.assets = result;
+      this.transactions = transactions;
       // FIXME: State Management
       _landingKey.currentState?.updateAssets(result);
+      _transactionKey.currentState?.updateTransactions(transactions);
+      _initialLoad = false;
     });
     // } else {
     //   setState(() {
@@ -192,12 +214,12 @@ class DashboardState extends State<Dashboard>
               indicatorColor: Colors.transparent,
               tabs: [
                 _buildTabItem(
-                  _tabController?.index == 0,
+                  0,
                   Strings.dashboard,
                   FwIcons.wallet,
                 ),
                 _buildTabItem(
-                  _tabController?.index == 1,
+                  1,
                   Strings.transactions,
                   FwIcons.staking,
                 ),
@@ -254,9 +276,9 @@ class DashboardState extends State<Dashboard>
                   key: _landingKey,
                   walletKey: _walletKey,
                 ),
-                Container(
-                  color: Theme.of(context).colorScheme.white,
-                  child: Container(),
+                TransactionLanding(
+                  // FIXME: State Management
+                  key: _transactionKey,
                 ),
               ],
             ),
@@ -266,16 +288,21 @@ class DashboardState extends State<Dashboard>
     );
   }
 
+  void _setCurrentTab() {
+    setState(() {
+      _currentTab = _tabController.index;
+      _walletKey.currentState?.updateValue(_walletValue);
+      _landingKey.currentState?.updateAssets(assets);
+      _transactionKey.currentState?.updateTransactions(transactions);
+    });
+  }
+
   Widget _buildTabItem(
-    bool isSelected,
+    int index,
     String tabName,
     String tabAsset, {
     isLoading = false,
   }) {
-    var color = isSelected
-        ? Theme.of(context).colorScheme.primary7
-        : Theme.of(context).colorScheme.globalNeutral350;
-
     return Center(
       child: Column(
         children: [
@@ -288,7 +315,9 @@ class DashboardState extends State<Dashboard>
             child: isLoading == null || !isLoading
                 ? FwIcon(
                     tabAsset,
-                    color: color,
+                    color: _currentTab == index
+                        ? Theme.of(context).colorScheme.primary7
+                        : Theme.of(context).colorScheme.globalNeutral350,
                   )
                 : const CircularProgressIndicator(),
           ),
@@ -296,10 +325,11 @@ class DashboardState extends State<Dashboard>
             padding: EdgeInsets.only(top: 5, bottom: 28),
             child: Text(
               tabName,
-              style: Theme.of(context)
-                  .textTheme
-                  .extraSmallBold
-                  .copyWith(color: color),
+              style: Theme.of(context).textTheme.extraSmallBold.copyWith(
+                    color: _currentTab == index
+                        ? Theme.of(context).colorScheme.primary7
+                        : Theme.of(context).colorScheme.globalNeutral350,
+                  ),
             ),
           ),
         ],

@@ -22,6 +22,7 @@ class FigurePayThemeData {
   static const Color _iconColor = Color(0xFFF5F7FD);
   static const Color _globalNeutral250 = Color(0xFFC9CFE3);
   static const Color _globalNeutral50 = Color(0xFFF9FCFF);
+  static const Color _globalNeutral150 = Color(0xFFE9EEF9);
 
   /// Functional
   static const Color _positive = Color(0xFF4ABB0B);
@@ -130,10 +131,26 @@ class FigurePayThemeData {
     letterSpacing: 0.32,
   );
 
+  static const TextStyle _mediumSemiBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    height: 24.48 / 15.0,
+    letterSpacing: 0.32,
+  );
+
   static const TextStyle _small = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 12,
     fontWeight: FontWeight.w300,
+    height: 15.72 / 12.0,
+    letterSpacing: 0.32,
+  );
+
+  static const TextStyle _smallSemiBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 12.8,
+    fontWeight: FontWeight.w500,
     height: 15.72 / 12.0,
     letterSpacing: 0.32,
   );
@@ -276,6 +293,7 @@ extension CustomColorScheme on ColorScheme {
   Color get pickerGrey => FigurePayThemeData._pickerGrey;
   Color get pickerBlack => FigurePayThemeData._pickerBlack;
   Color get globalNeutral50 => FigurePayThemeData._globalNeutral50;
+  Color get globalNeutral150 => FigurePayThemeData._globalNeutral150;
   Color get globalNeutral550 => FigurePayThemeData._globalNeutral550;
   Color get globalNeutral500 => FigurePayThemeData._globalNeutral500;
   Color get globalNeutral600Black => FigurePayThemeData._globalNeutral600Black;
@@ -290,7 +308,9 @@ extension CustomTextTheme on TextTheme {
   TextStyle get headline0 => FigurePayThemeData._headline0;
   TextStyle get mediumBold => FigurePayThemeData._mediumBold;
   TextStyle get medium => FigurePayThemeData._medium;
+  TextStyle get mediumSemiBold => FigurePayThemeData._mediumSemiBold;
   TextStyle get smallBold => FigurePayThemeData._smallBold;
+  TextStyle get smallSemiBold => FigurePayThemeData._smallSemiBold;
   TextStyle get small => FigurePayThemeData._small;
   TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;

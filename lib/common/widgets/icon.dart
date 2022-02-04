@@ -29,6 +29,7 @@ class FwIcons {
   static const String menuIcon = 'menu_icon';
   static const String plus = 'plus';
   static const String remove = 'remove';
+  static const String chevron = 'chevron';
 }
 
 class FwIcon extends StatelessWidget {
