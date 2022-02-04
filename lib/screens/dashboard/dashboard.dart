@@ -6,6 +6,7 @@ import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
@@ -177,7 +178,7 @@ class DashboardState extends State<Dashboard>
             top: 20,
           ),
           child: FwText(
-            _currentTab == 0 ? _walletName : "Transaction Details",
+            _currentTabIndex == 0 ? _walletName : "Transaction Details",
             style: FwTextStyle.h6,
             color: FwColor.globalNeutral550,
           ),
@@ -213,13 +214,13 @@ class DashboardState extends State<Dashboard>
               controller: _tabController,
               indicatorColor: Colors.transparent,
               tabs: [
-                _buildTabItem(
-                  0,
+                TabItem(
+                  0 == _currentTabIndex,
                   Strings.dashboard,
                   FwIcons.wallet,
                 ),
-                _buildTabItem(
-                  1,
+                TabItem(
+                  1 == _currentTabIndex,
                   Strings.transactions,
                   FwIcons.staking,
                 ),
@@ -305,45 +306,5 @@ class DashboardState extends State<Dashboard>
     }
 
     return children;
-  }
-
-  Widget _buildTabItem(
-    int index,
-    String tabName,
-    String tabAsset, {
-    isLoading = false,
-  }) {
-    return Center(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: 24.0,
-            height: 24.0,
-            child: isLoading == null || !isLoading
-                ? FwIcon(
-                    tabAsset,
-                    color: _currentTab == index
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
-                  )
-                : const CircularProgressIndicator(),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 28),
-            child: Text(
-              tabName,
-              style: Theme.of(context).textTheme.extraSmallBold.copyWith(
-                    color: _currentTab == index
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
