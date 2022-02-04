@@ -29,7 +29,7 @@ class DashboardState extends State<Dashboard>
   String _walletName = '';
   String _walletValue = '';
   bool _initialLoad = false;
-  int _currentTab = 0;
+  int _currentTabIndex = 0;
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
@@ -230,14 +230,14 @@ class DashboardState extends State<Dashboard>
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        children: _buildColumnChildren(_currentTab),
+        children: _buildColumnChildren(_currentTabIndex),
       ),
     );
   }
 
   void _setCurrentTab() {
     setState(() {
-      _currentTab = _tabController.index;
+      _currentTabIndex = _tabController.index;
       _walletKey.currentState?.updateValue(_walletValue);
       _landingKey.currentState?.updateAssets(assets);
       _transactionKey.currentState?.updateTransactions(transactions);
