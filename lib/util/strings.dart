@@ -90,6 +90,7 @@ class Strings {
   static const loadingTransactions = 'Loading Transactions';
   static const noTransactionsText =
       'When you have transactions they will appear here.';
+  static const transactionDetails = "Transaction Details";
 
   // My Account Page
   static const myAccount = 'My Account';
