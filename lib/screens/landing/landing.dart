@@ -225,27 +225,4 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
 
     return steps;
   }
-
-  Widget _indicator(bool isActive) {
-    return Container(
-      height: 10,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 0),
-        margin: EdgeInsets.symmetric(horizontal: 4.0),
-        height: isActive ? 10 : 8.0,
-        width: isActive ? 12 : 8.0,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.transparent,
-            ),
-          ],
-          shape: BoxShape.circle,
-          color: isActive
-              ? Theme.of(context).colorScheme.globalNeutral600Black
-              : Color(0XFFC4C4C4),
-        ),
-      ),
-    );
-  }
 }
