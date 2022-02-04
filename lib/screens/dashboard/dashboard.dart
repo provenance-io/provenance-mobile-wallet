@@ -6,8 +6,9 @@ import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
-import 'package:provenance_wallet/screens/dashboard/wallet_portfolio.dart';
+import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
@@ -15,7 +16,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 
-import 'dashboard_landing.dart';
+import 'landing/dashboard_landing.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class DashboardState extends State<Dashboard>
   String _walletName = '';
   String _walletValue = '';
   bool _initialLoad = false;
-  int _currentTab = 0;
+  int _currentTabIndex = 0;
   // FIXME: State Management
   GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
@@ -177,7 +178,7 @@ class DashboardState extends State<Dashboard>
             top: 20,
           ),
           child: FwText(
-            _walletName,
+            _currentTabIndex == 0 ? _walletName : "Transaction Details",
             style: FwTextStyle.h6,
             color: FwColor.globalNeutral550,
           ),
@@ -213,13 +214,13 @@ class DashboardState extends State<Dashboard>
               controller: _tabController,
               indicatorColor: Colors.transparent,
               tabs: [
-                _buildTabItem(
-                  0,
+                TabItem(
+                  0 == _currentTabIndex,
                   Strings.dashboard,
                   FwIcons.wallet,
                 ),
-                _buildTabItem(
-                  1,
+                TabItem(
+                  1 == _currentTabIndex,
                   Strings.transactions,
                   FwIcons.staking,
                 ),
@@ -231,9 +232,8 @@ class DashboardState extends State<Dashboard>
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _walletAddress.isEmpty
-              ? Container()
-              : Container(
+          _walletAddress.isNotEmpty && _currentTabIndex == 0
+              ? Container(
                   color: Theme.of(context).colorScheme.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -266,10 +266,12 @@ class DashboardState extends State<Dashboard>
                       ),
                     ],
                   ),
-                ),
+                )
+              : Container(),
           Expanded(
             child: TabBarView(
               controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 DashboardLanding(
                   // FIXME: State Management
@@ -290,50 +292,10 @@ class DashboardState extends State<Dashboard>
 
   void _setCurrentTab() {
     setState(() {
-      _currentTab = _tabController.index;
+      _currentTabIndex = _tabController.index;
       _walletKey.currentState?.updateValue(_walletValue);
       _landingKey.currentState?.updateAssets(assets);
       _transactionKey.currentState?.updateTransactions(transactions);
     });
-  }
-
-  Widget _buildTabItem(
-    int index,
-    String tabName,
-    String tabAsset, {
-    isLoading = false,
-  }) {
-    return Center(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: 24.0,
-            height: 24.0,
-            child: isLoading == null || !isLoading
-                ? FwIcon(
-                    tabAsset,
-                    color: _currentTab == index
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
-                  )
-                : const CircularProgressIndicator(),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 28),
-            child: Text(
-              tabName,
-              style: Theme.of(context).textTheme.extraSmallBold.copyWith(
-                    color: _currentTab == index
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

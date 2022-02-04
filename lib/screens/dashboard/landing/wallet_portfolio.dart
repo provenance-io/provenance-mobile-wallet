@@ -1,8 +1,7 @@
 import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-
-import '../qr_code_scanner.dart';
 
 class WalletPortfolio extends StatefulWidget {
   WalletPortfolio({
