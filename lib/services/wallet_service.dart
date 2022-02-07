@@ -75,15 +75,15 @@ class WalletService {
     Coin coin = Coin.testNet,
   }) async {
     final seed = Mnemonic.createSeed(phrase);
-    final wallet = Wallet.fromSeed(seed, coin);
+    final pKey = PrivateKey.fromSeed(seed, coin);
 
     final id = await _storage.addWallet(
       name: name,
-      address: wallet.address,
+      address: pKey.defaultKey().publicKey.address,
       coin: coin,
     );
 
-    final privateKey = wallet.privateKey.serialize(
+    final privateKey = pKey.serialize(
       publicKeyOnly: false,
     );
 
