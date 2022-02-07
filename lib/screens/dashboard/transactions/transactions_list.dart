@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dropdown.dart';
+import 'package:provenance_wallet/common/widgets/fw_list_divider.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -147,13 +148,7 @@ class TransactionsListState extends State<TransactionsList> {
               );
             },
             separatorBuilder: (context, index) {
-              return Divider(
-                height: 1,
-                thickness: 1,
-                indent: 0,
-                endIndent: 0,
-                color: Theme.of(context).dividerColor,
-              );
+              return FwListDivider();
             },
             itemCount: widget.transactions.length,
             shrinkWrap: true,

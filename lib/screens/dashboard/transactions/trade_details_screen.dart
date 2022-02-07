@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/widgets/fw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
@@ -64,7 +65,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTransaction,
               endChild: Container(
@@ -101,7 +102,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsFromAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
@@ -138,7 +139,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
@@ -175,7 +176,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsOrderType,
               endChild: FwText(
@@ -184,7 +185,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: // FIXME: Need amount.
@@ -194,7 +195,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsPricePerUnit,
               endChild: // FIXME: Need 'Price Per Unit'.
@@ -204,7 +205,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTotalPurchase,
               endChild: // FIXME: Need 'Total Purchase Price'.
@@ -214,7 +215,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: FwText(
@@ -223,7 +224,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: FwText(
@@ -232,7 +233,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: FwTextStyle.m,
               ),
             ),
-            _Divider(),
+            FwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsBlock,
               endChild: // FIXME: Need 'Block'.
@@ -245,19 +246,6 @@ class TradeDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Divider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      indent: 20,
-      endIndent: 20,
-      color: Theme.of(context).dividerColor,
     );
   }
 }
