@@ -48,6 +48,7 @@ dependencies:
   faker: ^2.0.0
   prov_wallet_flutter:
     git: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
+  get_it: ^7.2.0
 
 dev_dependencies:
   dart_code_metrics: ^4.9.0
