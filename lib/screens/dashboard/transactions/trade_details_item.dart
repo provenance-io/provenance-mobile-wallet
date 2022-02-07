@@ -14,17 +14,20 @@ class TradeDetailsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        FwText(
-          title,
-          color: FwColor.globalNeutral350,
-          style: FwTextStyle.m,
-        ),
-        Expanded(child: Container()),
-        endChild,
-      ],
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FwText(
+            title,
+            color: FwColor.globalNeutral350,
+            style: FwTextStyle.m,
+          ),
+          Expanded(child: Container()),
+          endChild,
+        ],
+      ),
     );
   }
 }
