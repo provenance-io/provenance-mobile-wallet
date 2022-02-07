@@ -224,4 +224,7 @@ class Strings {
   static const dropDownAllTransactions = "All Transactions";
   static const dropDownPurchaseTransaction = "Purchase";
   static const dropDownDepositTransaction = "Deposit";
+
+  // TradeDetailsScreen
+  static const tradeDetailsTitle = "Trade Details";
 }
