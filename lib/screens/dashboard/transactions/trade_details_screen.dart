@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -74,11 +75,27 @@ class TradeDetailsScreen extends StatelessWidget {
                       style: FwTextStyle.m,
                       color: FwColor.globalNeutral600Black,
                     ),
-                    FwIcon(
-                      FwIcons.new_window,
-                      color:
-                          Theme.of(context).colorScheme.globalNeutral600Black,
-                      size: 24.0,
+                    GestureDetector(
+                      onTap: () async {
+                        // FIXME: Navigate to explorer in the browser? Remove this ASAP.
+                        await showDialog(
+                          context: context,
+                          builder: (context) => ErrorDialog(
+                            error: "Coming Soon",
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        child: FwIcon(
+                          FwIcons.new_window,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .globalNeutral600Black,
+                          size: 24.0,
+                        ),
+                      ),
                     ),
                   ],
                 ),
