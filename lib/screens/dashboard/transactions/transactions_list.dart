@@ -1,15 +1,20 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dropdown.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionsList extends StatefulWidget {
   TransactionsList({
     Key? key,
     required this.transactions,
+    required this.walletName,
+    required this.walletAddress,
   }) : super(key: key);
 
   final List<TransactionResponse> transactions;
+  final String walletName;
+  final String walletAddress;
   @override
   State<StatefulWidget> createState() => TransactionsListState();
 }
@@ -65,7 +70,11 @@ class TransactionsListState extends State<TransactionsList> {
 
               return GestureDetector(
                 onTap: () {
-                  // TODO: go to transaction/trade details.
+                  Navigator.of(context).push(TradeDetailsScreen(
+                    transaction: item,
+                    walletName: widget.walletName,
+                    walletAddress: widget.walletAddress,
+                  ).route());
                 },
                 child: Padding(
                   padding: EdgeInsets.zero,
