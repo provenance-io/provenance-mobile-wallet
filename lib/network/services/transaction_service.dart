@@ -65,9 +65,9 @@ class TransactionService {
     var amount = faker.randomGenerator.decimal().toStringAsFixed(2);
 
     return TransactionResponse(
-      address:
-          faker.randomGenerator.fromPatternToHex(['########################']),
-      feeAmount: amount,
+      address: faker.randomGenerator
+          .fromPatternToHex(['#########################################']),
+      feeAmount: '$amount USD',
       id: faker.randomGenerator.integer(100000).toString(),
       signer: faker.person.name(),
       status: faker.randomGenerator.element([
