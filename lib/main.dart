@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -15,9 +14,7 @@ void main() async {
   );
 
   runApp(
-    ProviderScope(
-      child: ProvenanceWalletApp(),
-    ),
+    ProvenanceWalletApp(),
   );
 }
 
