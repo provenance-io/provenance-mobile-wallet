@@ -31,6 +31,7 @@ class FwIcons {
   static const String remove = 'remove';
   static const String chevron = 'chevron';
   static const String new_window = "new_window";
+  static const String provenance = "provenance";
 }
 
 class FwIcon extends StatelessWidget {
