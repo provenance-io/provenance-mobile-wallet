@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -20,11 +20,11 @@ class OnboardingLandingSlide extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
-          child: FwText(
+          child: PwText(
             Strings.manageYourOwnWallet,
-            style: FwTextStyle.extraLarge,
+            style: PwTextStyle.extraLarge,
             textAlign: TextAlign.center,
-            color: FwColor.globalNeutral550,
+            color: PwColor.globalNeutral550,
           ),
         ),
         SizedBox(
@@ -32,11 +32,11 @@ class OnboardingLandingSlide extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
-          child: FwText(
+          child: PwText(
             Strings.fullyControlYourWallet,
-            style: FwTextStyle.m,
+            style: PwTextStyle.m,
             textAlign: TextAlign.center,
-            color: FwColor.globalNeutral550,
+            color: PwColor.globalNeutral550,
           ),
         ),
       ],

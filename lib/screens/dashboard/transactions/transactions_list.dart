@@ -1,6 +1,6 @@
-import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/common/widgets/fw_dropdown.dart';
-import 'package:provenance_wallet/common/widgets/fw_list_divider.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -35,7 +35,7 @@ class TransactionsListState extends State<TransactionsList> {
               Container(
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
-                child: FwDropDown(
+                child: PwDropDown(
                   initialValue: Strings.dropDownAllAssets,
                   items: [
                     Strings.dropDownAllAssets,
@@ -50,7 +50,7 @@ class TransactionsListState extends State<TransactionsList> {
               Container(
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
-                child: FwDropDown(
+                child: PwDropDown(
                   initialValue: Strings.dropDownAllTransactions,
                   items: [
                     Strings.dropDownAllTransactions,
@@ -90,8 +90,8 @@ class TransactionsListState extends State<TransactionsList> {
                           width: 32,
                           height: 32,
                           // FIXME: Transactions have no 'display' property atm.
-                          child: FwIcon(
-                            FwIcons.hashLogo,
+                          child: PwIcon(
+                            PwIcons.hashLogo,
                             color:
                                 Theme.of(context).colorScheme.globalNeutral550,
                             size: 32,
@@ -101,17 +101,17 @@ class TransactionsListState extends State<TransactionsList> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FwText(
+                            PwText(
                               // FIXME: Transactions have no 'display' property atm.
                               Strings.dropDownHashAsset.toUpperCase(),
-                              color: FwColor.globalNeutral500,
-                              style: FwTextStyle.sBold,
+                              color: PwColor.globalNeutral500,
+                              style: PwTextStyle.sBold,
                             ),
                             VerticalSpacer.xSmall(),
-                            FwText(
+                            PwText(
                               item.type ?? '',
-                              color: FwColor.globalNeutral450,
-                              style: FwTextStyle.s,
+                              color: PwColor.globalNeutral450,
+                              style: PwTextStyle.s,
                             ),
                           ],
                         ),
@@ -119,25 +119,25 @@ class TransactionsListState extends State<TransactionsList> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FwText(
+                            PwText(
                               // FIXME: Transactions currently only have 'feeAmount'.
                               '\$50.00',
-                              color: FwColor.globalNeutral500,
-                              style: FwTextStyle.sBold,
+                              color: PwColor.globalNeutral500,
+                              style: PwTextStyle.sBold,
                             ),
                             VerticalSpacer.xSmall(),
-                            FwText(
+                            PwText(
                               // FIXME: Format the date to be 'Mmm dd'.
                               item.time ?? '',
-                              color: FwColor.globalNeutral450,
-                              style: FwTextStyle.s,
+                              color: PwColor.globalNeutral450,
+                              style: PwTextStyle.s,
                             ),
                           ],
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 16),
-                          child: FwIcon(
-                            FwIcons.caret,
+                          child: PwIcon(
+                            PwIcons.caret,
                             color:
                                 Theme.of(context).colorScheme.globalNeutral550,
                             size: 12.0,
@@ -150,7 +150,7 @@ class TransactionsListState extends State<TransactionsList> {
               );
             },
             separatorBuilder: (context, index) {
-              return FwListDivider();
+              return PwListDivider();
             },
             itemCount: widget.transactions.length,
             shrinkWrap: true,

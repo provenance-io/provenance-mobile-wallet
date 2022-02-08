@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 class PinPad extends StatefulWidget {
   PinPad({
@@ -58,11 +58,11 @@ class PinPadState extends State<PinPad> {
             child: Container(
               height: 48,
               child: Center(
-                child: FwText(
+                child: PwText(
                   widget.subTitle,
-                  style: FwTextStyle.m,
+                  style: PwTextStyle.m,
                   textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  color: PwColor.globalNeutral550,
                 ),
               ),
             ),
@@ -184,8 +184,8 @@ class PinPadState extends State<PinPad> {
           color: _circleColor,
         ),
         child: Center(
-          child: FwIcon(
-            FwIcons.remove,
+          child: PwIcon(
+            PwIcons.remove,
             size: 30,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),

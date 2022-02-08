@@ -1,12 +1,12 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 class TradeDetailsItem extends StatelessWidget {
   TradeDetailsItem({required this.title, required this.endChild});
   TradeDetailsItem.fromStrings({required this.title, required String value}) {
-    endChild = FwText(
+    endChild = PwText(
       value,
-      color: FwColor.globalNeutral500,
-      style: FwTextStyle.m,
+      color: PwColor.globalNeutral500,
+      style: PwTextStyle.m,
     );
   }
   final String title;
@@ -19,10 +19,10 @@ class TradeDetailsItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FwText(
+          PwText(
             title,
-            color: FwColor.globalNeutral350,
-            style: FwTextStyle.m,
+            color: PwColor.globalNeutral350,
+            style: PwTextStyle.m,
           ),
           Expanded(child: Container()),
           endChild,

@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -55,15 +55,15 @@ class RecoveryWordsState extends State<RecoveryWords> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.white,
           elevation: 0.0,
-          title: FwText(
+          title: PwText(
             Strings.recoveryPassphrase,
-            style: FwTextStyle.h5,
+            style: PwTextStyle.h5,
             textAlign: TextAlign.left,
-            color: FwColor.globalNeutral550,
+            color: PwColor.globalNeutral550,
           ),
           leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
+            icon: PwIcon(
+              PwIcons.back,
               size: 24,
               color: Theme.of(context).colorScheme.globalNeutral550,
             ),
@@ -89,11 +89,11 @@ class RecoveryWordsState extends State<RecoveryWords> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
+                child: PwText(
                   Strings.recordTheseWordsInTheCorrectOrder,
-                  style: FwTextStyle.m,
+                  style: PwTextStyle.m,
                   textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  color: PwColor.globalNeutral550,
                 ),
               ),
               SizedBox(
@@ -115,7 +115,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                             children: [
                               ...words
                                   .mapIndexed(
-                                    (index, e) => FwText('${index + 1}. $e'),
+                                    (index, e) => PwText('${index + 1}. $e'),
                                   )
                                   .toList(),
                               GestureDetector(
@@ -129,8 +129,8 @@ class RecoveryWordsState extends State<RecoveryWords> {
                                     ),
                                   );
                                 },
-                                child: FwIcon(
-                                  FwIcons.copy,
+                                child: PwIcon(
+                                  PwIcons.copy,
                                 ),
                               ),
                             ],
@@ -146,11 +146,11 @@ class RecoveryWordsState extends State<RecoveryWords> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.next,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(RecoveryWordsConfirm(

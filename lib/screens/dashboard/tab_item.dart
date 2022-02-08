@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 class TabItem extends StatelessWidget {
   TabItem(
@@ -22,7 +22,7 @@ class TabItem extends StatelessWidget {
             width: Spacing.large,
             height: Spacing.large,
             child: !isLoading
-                ? FwIcon(
+                ? PwIcon(
                     tabAsset,
                     color: isCurrent
                         ? Theme.of(context).colorScheme.primary7

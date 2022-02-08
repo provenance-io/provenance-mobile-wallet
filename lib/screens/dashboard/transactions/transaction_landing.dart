@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/no_transactions_placeholder.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transactions_list.dart';

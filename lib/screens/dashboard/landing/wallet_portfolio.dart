@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -41,15 +41,15 @@ class WalletPortfolioState extends State<WalletPortfolio> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.portfolioValue,
-                    color: FwColor.white,
-                    style: FwTextStyle.sBold,
+                    color: PwColor.white,
+                    style: PwTextStyle.sBold,
                   ),
-                  FwText(
+                  PwText(
                     _walletValue,
-                    color: FwColor.white,
-                    style: FwTextStyle.h6,
+                    color: PwColor.white,
+                    style: PwTextStyle.h6,
                   ),
                 ],
               ),
@@ -93,18 +93,18 @@ class WalletPortfolioState extends State<WalletPortfolio> {
               height: 46,
               width: 46,
               child: Center(
-                child: FwIcon(
-                  FwIcons.upArrow,
+                child: PwIcon(
+                  PwIcons.upArrow,
                   size: 24,
                   color: Theme.of(context).colorScheme.white,
                 ),
               ),
             ),
             VerticalSpacer.xSmall(),
-            FwText(
+            PwText(
               Strings.send,
-              color: FwColor.white,
-              style: FwTextStyle.s,
+              color: PwColor.white,
+              style: PwTextStyle.s,
             ),
           ],
         ),
@@ -131,18 +131,18 @@ class WalletPortfolioState extends State<WalletPortfolio> {
               height: 46,
               width: 46,
               child: Center(
-                child: FwIcon(
-                  FwIcons.downArrow,
+                child: PwIcon(
+                  PwIcons.downArrow,
                   size: 24,
                   color: Theme.of(context).colorScheme.white,
                 ),
               ),
             ),
             VerticalSpacer.xSmall(),
-            FwText(
+            PwText(
               Strings.receive,
-              color: FwColor.white,
-              style: FwTextStyle.s,
+              color: PwColor.white,
+              style: PwTextStyle.s,
             ),
           ],
         ),
@@ -192,22 +192,22 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                   height: 46,
                   width: 46,
                   child: Center(
-                    child: FwIcon(
+                    child: PwIcon(
                       snapshot.data == WallectConnectStatus.disconnected
-                          ? FwIcons.walletConnect
-                          : FwIcons.close,
+                          ? PwIcons.walletConnect
+                          : PwIcons.close,
                       size: 15,
                       color: Theme.of(context).colorScheme.white,
                     ),
                   ),
                 ),
                 VerticalSpacer.xSmall(),
-                FwText(
+                PwText(
                   snapshot.data == WallectConnectStatus.disconnected
                       ? Strings.walletConnect
                       : Strings.disconnect,
-                  color: FwColor.white,
-                  style: FwTextStyle.s,
+                  color: PwColor.white,
+                  style: PwTextStyle.s,
                 ),
               ],
             ),

@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -32,13 +32,13 @@ class SendTransactionApproval extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         centerTitle: true,
-        title: FwText(
+        title: PwText(
           Strings.sendTransaction,
-          color: FwColor.globalNeutral600Black,
+          color: PwColor.globalNeutral600Black,
         ),
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
@@ -65,15 +65,15 @@ class SendTransactionApproval extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.amount,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral350,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral350,
                   ),
-                  FwText(
+                  PwText(
                     details.amount,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral500,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral500,
                   ),
                 ],
               ),
@@ -90,15 +90,15 @@ class SendTransactionApproval extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.fee,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral350,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral350,
                   ),
-                  FwText(
+                  PwText(
                     details.fee,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral500,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral500,
                   ),
                 ],
               ),
@@ -115,19 +115,19 @@ class SendTransactionApproval extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.from,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral350,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral350,
                   ),
                   SizedBox(
                     width: 40,
                   ),
                   Flexible(
-                    child: FwText(
+                    child: PwText(
                       details.fromAddress,
-                      style: FwTextStyle.m,
-                      color: FwColor.globalNeutral500,
+                      style: PwTextStyle.m,
+                      color: PwColor.globalNeutral500,
                     ),
                   ),
                 ],
@@ -145,19 +145,19 @@ class SendTransactionApproval extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.to,
-                    style: FwTextStyle.m,
-                    color: FwColor.globalNeutral350,
+                    style: PwTextStyle.m,
+                    color: PwColor.globalNeutral350,
                   ),
                   SizedBox(
                     width: 40,
                   ),
                   Flexible(
-                    child: FwText(
+                    child: PwText(
                       details.toAddress,
-                      style: FwTextStyle.m,
-                      color: FwColor.globalNeutral500,
+                      style: PwTextStyle.m,
+                      color: PwColor.globalNeutral500,
                     ),
                   ),
                 ],
@@ -165,11 +165,11 @@ class SendTransactionApproval extends StatelessWidget {
               Expanded(child: Container()),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.approve,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
@@ -187,11 +187,11 @@ class SendTransactionApproval extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwTextButton(
-                  child: FwText(
+                child: PwTextButton(
+                  child: PwText(
                     Strings.reject,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.globalNeutral450,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.globalNeutral450,
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);

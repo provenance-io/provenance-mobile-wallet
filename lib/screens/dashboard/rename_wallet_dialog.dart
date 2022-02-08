@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -48,8 +48,8 @@ class RenameWalletDialog extends StatelessWidget {
                 ),
               ),
               const VerticalSpacer.xxLarge(),
-              FwPrimaryButton(
-                child: FwText(Strings.confirm),
+              PwPrimaryButton(
+                child: PwText(Strings.confirm),
                 onPressed: () async {
                   if (_formKey.currentState?.validate() == true) {
                     if (_nameController.text.trim() == currentName) {
@@ -61,8 +61,8 @@ class RenameWalletDialog extends StatelessWidget {
                 },
               ),
               const VerticalSpacer.small(),
-              FwTextButton(
-                child: FwText(Strings.cancel),
+              PwTextButton(
+                child: PwText(Strings.cancel),
                 onPressed: () => Navigator.of(context).pop(null),
               ),
             ],
@@ -96,7 +96,7 @@ class _TextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FwText(label),
+        PwText(label),
         const VerticalSpacer.small(),
         TextFormField(
           keyboardType: keyboardType,

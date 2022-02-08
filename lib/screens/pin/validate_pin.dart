@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -24,17 +24,17 @@ class ValidatePinState extends State<ValidatePin> {
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),
-        title: FwText(
+        title: PwText(
           Strings.enterPin,
-          color: FwColor.globalNeutral550,
-          style: FwTextStyle.h6,
+          color: PwColor.globalNeutral550,
+          style: PwTextStyle.h6,
         ),
       ),
       body: Container(

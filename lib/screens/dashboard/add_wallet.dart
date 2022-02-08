@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -11,14 +11,14 @@ class AddWallet extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.otherBackground,
         elevation: 0.0,
         centerTitle: true,
-        title: FwText(
+        title: PwText(
           Strings.chooseWalletType,
-          color: FwColor.globalNeutral550,
-          style: FwTextStyle.h6,
+          color: PwColor.globalNeutral550,
+          style: PwTextStyle.h6,
         ),
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
@@ -55,16 +55,16 @@ class AddWallet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           VerticalSpacer.xxLarge(),
-                          FwText(
+                          PwText(
                             Strings.basicWallet,
-                            color: FwColor.globalNeutral550,
-                            style: FwTextStyle.m,
+                            color: PwColor.globalNeutral550,
+                            style: PwTextStyle.m,
                           ),
                           VerticalSpacer.medium(),
-                          FwText(
+                          PwText(
                             Strings.standardSingleUserWallet,
-                            color: FwColor.globalNeutral450,
-                            style: FwTextStyle.s,
+                            color: PwColor.globalNeutral450,
+                            style: PwTextStyle.s,
                           ),
                           VerticalSpacer.xxLarge(),
                         ],
@@ -96,16 +96,16 @@ class AddWallet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           VerticalSpacer.xxLarge(),
-                          FwText(
+                          PwText(
                             Strings.importRecoverWallet,
-                            color: FwColor.globalNeutral550,
-                            style: FwTextStyle.m,
+                            color: PwColor.globalNeutral550,
+                            style: PwTextStyle.m,
                           ),
                           VerticalSpacer.medium(),
-                          FwText(
+                          PwText(
                             Strings.importExistingWallet,
-                            color: FwColor.globalNeutral450,
-                            style: FwTextStyle.s,
+                            color: PwColor.globalNeutral450,
+                            style: PwTextStyle.s,
                           ),
                           VerticalSpacer.xxLarge(),
                         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/common/widgets/fw_divider.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
@@ -13,7 +13,7 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountState extends State<MyAccount> {
-  static const _divider = FwDivider(
+  static const _divider = PwDivider(
     indent: Spacing.large,
     endIndent: Spacing.large,
     height: 1,
@@ -27,17 +27,17 @@ class _MyAccountState extends State<MyAccount> {
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.close,
+          icon: PwIcon(
+            PwIcons.close,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral500,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: FwText(
+        title: PwText(
           Strings.myAccount,
-          color: FwColor.globalNeutral550,
-          style: FwTextStyle.h6,
+          color: PwColor.globalNeutral550,
+          style: PwTextStyle.h6,
         ),
       ),
       body: Container(
@@ -129,10 +129,10 @@ class _CategoryLabel extends StatelessWidget {
         top: Spacing.large,
         bottom: Spacing.small,
       ),
-      child: FwText(
+      child: PwText(
         text,
-        color: FwColor.globalNeutral550,
-        style: FwTextStyle.mBold,
+        color: PwColor.globalNeutral550,
+        style: PwTextStyle.mBold,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -172,8 +172,8 @@ class _LinkItem extends StatelessWidget {
                 margin: EdgeInsets.only(
                   right: Spacing.large,
                 ),
-                child: FwIcon(
-                  FwIcons.caret,
+                child: PwIcon(
+                  PwIcons.caret,
                 ),
               ),
             ),
@@ -293,10 +293,10 @@ class _ItemLabel extends StatelessWidget {
       margin: EdgeInsets.symmetric(
         horizontal: Spacing.medium,
       ),
-      child: FwText(
+      child: PwText(
         text,
-        color: FwColor.globalNeutral500,
-        style: FwTextStyle.sBold,
+        color: PwColor.globalNeutral500,
+        style: PwTextStyle.sBold,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -319,9 +319,9 @@ class _ItemCount extends StatelessWidget {
         color: Theme.of(context).colorScheme.midGrey,
       ),
       padding: EdgeInsets.all(6),
-      child: FwText(
+      child: PwText(
         count.toString(),
-        style: FwTextStyle.xsBold,
+        style: PwTextStyle.xsBold,
       ),
     );
   }

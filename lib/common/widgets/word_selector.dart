@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 typedef OnWordSelected(String word);
 
@@ -27,9 +27,9 @@ class WordSelectorState extends State<WordSelector> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FwText(
+        PwText(
           'Select word #${widget.wordNumber}',
-          style: FwTextStyle.m,
+          style: PwTextStyle.m,
         ),
         SizedBox(
           height: 8,
@@ -53,9 +53,9 @@ class WordSelectorState extends State<WordSelector> {
                                 BorderRadius.all(Radius.circular(22.0)),
                           ),
                           child: Center(
-                            child: FwText(
+                            child: PwText(
                               e,
-                              color: FwColor.white,
+                              color: PwColor.white,
                             ),
                           ),
                         ),

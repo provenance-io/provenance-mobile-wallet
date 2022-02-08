@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
@@ -30,11 +30,11 @@ class WalletSetupConfirmation extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
+                child: PwText(
                   Strings.yourWalletIsNowReadyToGo,
-                  style: FwTextStyle.extraLarge,
+                  style: PwTextStyle.extraLarge,
                   textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  color: PwColor.globalNeutral550,
                 ),
               ),
               SizedBox(
@@ -42,11 +42,11 @@ class WalletSetupConfirmation extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
+                child: PwText(
                   Strings.walletConfirmationSubtitleText,
-                  style: FwTextStyle.m,
+                  style: PwTextStyle.m,
                   textAlign: TextAlign.center,
-                  color: FwColor.globalNeutral550,
+                  color: PwColor.globalNeutral550,
                 ),
               ),
               Expanded(child: Container()),
@@ -55,11 +55,11 @@ class WalletSetupConfirmation extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.confirm,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(

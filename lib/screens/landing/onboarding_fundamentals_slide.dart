@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -50,11 +50,11 @@ class _OnboardingFundamentalsSlideState
       children: [
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
-          child: FwText(
+          child: PwText(
             Strings.figureTechWallet,
-            style: FwTextStyle.h3,
+            style: PwTextStyle.h3,
             textAlign: TextAlign.center,
-            color: FwColor.globalNeutral550,
+            color: PwColor.globalNeutral550,
           ),
         ),
         SizedBox(
@@ -83,15 +83,15 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FwText(
+                        PwText(
                           _marketCap,
-                          style: FwTextStyle.h4,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.h4,
+                          color: PwColor.globalNeutral450,
                         ),
-                        FwText(
+                        PwText(
                           Strings.marketCap,
-                          style: FwTextStyle.m,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.m,
+                          color: PwColor.globalNeutral450,
                         ),
                       ],
                     ),
@@ -99,15 +99,15 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FwText(
+                        PwText(
                           '$_numValidators',
-                          style: FwTextStyle.h4,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.h4,
+                          color: PwColor.globalNeutral450,
                         ),
-                        FwText(
+                        PwText(
                           Strings.validators,
-                          style: FwTextStyle.m,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.m,
+                          color: PwColor.globalNeutral450,
                         ),
                       ],
                     ),
@@ -115,15 +115,15 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FwText(
+                        PwText(
                           _transactions,
-                          style: FwTextStyle.h4,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.h4,
+                          color: PwColor.globalNeutral450,
                         ),
-                        FwText(
+                        PwText(
                           Strings.transactions,
-                          style: FwTextStyle.m,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.m,
+                          color: PwColor.globalNeutral450,
                         ),
                       ],
                     ),
@@ -131,15 +131,15 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FwText(
+                        PwText(
                           _blockTime,
-                          style: FwTextStyle.h4,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.h4,
+                          color: PwColor.globalNeutral450,
                         ),
-                        FwText(
+                        PwText(
                           Strings.avgBlockTime,
-                          style: FwTextStyle.m,
-                          color: FwColor.globalNeutral450,
+                          style: PwTextStyle.m,
+                          color: PwColor.globalNeutral450,
                         ),
                       ],
                     ),

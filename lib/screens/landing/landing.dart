@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
@@ -124,11 +124,11 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.createWallet,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(AccountName(
@@ -144,11 +144,11 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwTextButton(
-                  child: FwText(
+                child: PwTextButton(
+                  child: PwText(
                     Strings.restoreWallet,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.globalNeutral450,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.globalNeutral450,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(AccountName(

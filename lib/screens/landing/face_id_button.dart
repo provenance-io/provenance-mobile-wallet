@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -25,14 +25,14 @@ class FaceIdButton extends StatelessWidget {
           padding: EdgeInsets.only(left: 20, right: 20),
           child: Visibility(
             visible: accountExists,
-            child: FwOutlinedButton(
+            child: PwOutlinedButton(
               Strings.signInWithBiometric(authType),
-              icon: FwIcon(
-                FwIcons.faceScan,
+              icon: PwIcon(
+                PwIcons.faceScan,
                 color: Theme.of(context).colorScheme.white,
               ),
-              fpTextStyle: FwTextStyle.mBold,
-              fpTextColor: FwColor.white,
+              fpTextStyle: PwTextStyle.mBold,
+              fpTextColor: PwColor.white,
               backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
               borderColor: Theme.of(context).colorScheme.globalNeutral450,
               onPressed: () => doAuth(),

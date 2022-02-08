@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/word_selector.dart';
@@ -102,15 +102,15 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.white,
           elevation: 0.0,
-          title: FwText(
+          title: PwText(
             Strings.verifyRecoveryPassphrase,
-            style: FwTextStyle.h6,
+            style: PwTextStyle.h6,
             textAlign: TextAlign.center,
-            color: FwColor.globalNeutral550,
+            color: PwColor.globalNeutral550,
           ),
           leading: IconButton(
-            icon: FwIcon(
-              FwIcons.back,
+            icon: PwIcon(
+              PwIcons.back,
               size: 24,
               color: Theme.of(context).colorScheme.globalNeutral550,
             ),
@@ -162,10 +162,10 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
                     },
                   ),
                   Expanded(
-                    child: FwText(
+                    child: PwText(
                       Strings.iAmResponsibleForMyWalletText,
-                      style: FwTextStyle.sBold,
-                      color: FwColor.globalNeutral550,
+                      style: PwTextStyle.sBold,
+                      color: PwColor.globalNeutral550,
                     ),
                   ),
                   SizedBox(
@@ -178,11 +178,11 @@ class RecoveryWordsConfirmState extends State<RecoveryWordsConfirm> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.next,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     _validation();

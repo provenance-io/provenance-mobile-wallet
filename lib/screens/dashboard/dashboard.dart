@@ -1,7 +1,7 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
@@ -86,7 +86,7 @@ class DashboardState extends State<Dashboard>
       String message,
       String description,
     ) async {
-      final result = await FwDialog.showConfirmation(
+      final result = await PwDialog.showConfirmation(
         context,
         title: description,
         message: message,
@@ -175,8 +175,8 @@ class DashboardState extends State<Dashboard>
               onTap: () {
                 Navigator.of(context).push(Wallets().route());
               },
-              child: FwIcon(
-                FwIcons.wallet,
+              child: PwIcon(
+                PwIcons.wallet,
                 color: Theme.of(context).colorScheme.globalNeutral450,
                 size: 24.0,
               ),
@@ -187,10 +187,10 @@ class DashboardState extends State<Dashboard>
           padding: EdgeInsets.only(
             top: 20,
           ),
-          child: FwText(
+          child: PwText(
             _currentTabIndex == 0 ? _walletName : Strings.transactionDetails,
-            style: FwTextStyle.h6,
-            color: FwColor.globalNeutral550,
+            style: PwTextStyle.h6,
+            color: PwColor.globalNeutral550,
           ),
         ),
         leading: Padding(
@@ -202,8 +202,8 @@ class DashboardState extends State<Dashboard>
             onTap: () {
               Navigator.of(context).push(MyAccount().route());
             },
-            child: FwIcon(
-              FwIcons.userAccount,
+            child: PwIcon(
+              PwIcons.userAccount,
               color: Theme.of(context).colorScheme.globalNeutral450,
               size: 24.0,
             ),
@@ -227,12 +227,12 @@ class DashboardState extends State<Dashboard>
                 TabItem(
                   0 == _currentTabIndex,
                   Strings.dashboard,
-                  FwIcons.wallet,
+                  PwIcons.wallet,
                 ),
                 TabItem(
                   1 == _currentTabIndex,
                   Strings.transactions,
-                  FwIcons.staking,
+                  PwIcons.staking,
                 ),
               ],
             ),
@@ -248,10 +248,10 @@ class DashboardState extends State<Dashboard>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FwText(
+                      PwText(
                         '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
-                        color: FwColor.globalNeutral400,
-                        style: FwTextStyle.m,
+                        color: PwColor.globalNeutral400,
+                        style: PwTextStyle.m,
                       ),
                       HorizontalSpacer.small(),
                       GestureDetector(
@@ -260,14 +260,14 @@ class DashboardState extends State<Dashboard>
                             ClipboardData(text: _walletAddress),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: FwText(Strings.addressCopied)),
+                            SnackBar(content: PwText(Strings.addressCopied)),
                           );
                         },
                         child: Container(
                           width: 24,
                           height: 24,
-                          child: FwIcon(
-                            FwIcons.copy,
+                          child: PwIcon(
+                            PwIcons.copy,
                             color:
                                 Theme.of(context).colorScheme.globalNeutral400,
                             size: 24,

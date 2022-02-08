@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 class ModalLoading extends StatefulWidget {
   ModalLoading({
@@ -26,7 +26,7 @@ class ModalLoadingState extends State<ModalLoading> {
     return LoadingOverlay(
       isLoading: true,
       child: loadingMessage != null
-          ? FwText(
+          ? PwText(
               loadingMessage!,
             )
           : Container(),
