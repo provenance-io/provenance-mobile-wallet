@@ -6,9 +6,7 @@ abstract class WalletStorageService {
 
   Future<List<WalletDetails>> getWallets();
 
-  Future<WalletDetails?> getWallet({
-    required String id,
-  });
+  Future<WalletDetails?> getWallet(String id);
 
   Future<WalletDetails?> getSelectedWallet();
 
@@ -21,13 +19,19 @@ abstract class WalletStorageService {
     required String name,
   });
 
-  Future<String> addWallet({
+  Future<bool> addWallet({
     required String name,
-    required String address,
-    required Coin coin,
+    required PrivateKey privateKey,
+    required bool useBiometry
   });
 
-  Future removeWallet({required String id});
+  Future<PrivateKey?> loadKey(String id);
+
+  Future removeWallet(String id);
 
   Future removeAllWallets();
+
+  Future<bool> getUseBiometry();
+
+  Future<bool> setUseBiometry(bool useBiometry);
 }

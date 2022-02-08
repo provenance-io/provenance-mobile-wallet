@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -46,91 +46,73 @@ class WalletService {
   Future<WalletDetails?> selectWallet({required String id}) =>
       _storage.selectWallet(id: id);
 
-  Future<WalletDetails?> getSelectedWallet() => _storage.getSelectedWallet();
+  Future<WalletDetails?> getSelectedWallet() =>_storage.getSelectedWallet();
 
-  Future<List<WalletDetails>> getWallets() => _storage.getWallets();
+    Future<List<WalletDetails>> getWallets() => _storage.getWallets();
 
-  Future<bool> getUseBiometry() async => ProvWalletFlutter.getUseBiometry();
+    Future<bool> getUseBiometry() async =>  _storage.getUseBiometry();
 
-  Future setUseBiometry({
-    required bool useBiometry,
-  }) =>
-      ProvWalletFlutter.setUseBiometry(
-        useBiometry: useBiometry,
-      );
+    Future setUseBiometry({
+      required bool useBiometry,
+    }) =>
+        _storage.setUseBiometry(useBiometry);
 
-  Future renameWallet({
-    required String id,
-    required String name,
-  }) =>
-      _storage.renameWallet(
-        id: id,
+    Future renameWallet({
+      required String id,
+      required String name,
+    }) =>
+        _storage.renameWallet(
+          id: id,
+          name: name,
+        );
+
+    Future<bool> saveWallet({
+      required List<String> phrase,
+      required String name,
+      bool? useBiometry,
+      Coin coin = Coin.testNet,
+    }) async {
+      final seed = Mnemonic.createSeed(phrase);
+      final privateKey = PrivateKey.fromSeed(seed, coin);
+
+      return _storage.addWallet(
         name: name,
+        privateKey: privateKey,
+        useBiometry: useBiometry ?? false,
       );
-
-  Future<bool> saveWallet({
-    required List<String> phrase,
-    required String name,
-    bool? useBiometry,
-    Coin coin = Coin.testNet,
-  }) async {
-    final seed = Mnemonic.createSeed(phrase);
-    final pKey = PrivateKey.fromSeed(seed, coin);
-
-    final id = await _storage.addWallet(
-      name: name,
-      address: pKey.defaultKey().publicKey.address,
-      coin: coin,
-    );
-
-    final privateKey = pKey.serialize(
-      publicKeyOnly: false,
-    );
-
-    final success = await ProvWalletFlutter.encryptKey(
-      id: id,
-      privateKey: privateKey,
-      useBiometry: useBiometry,
-    );
-
-    if (!success) {
-      await _storage.removeWallet(id: id);
     }
 
-    return success;
-  }
+    Future removeWallet({required String id}) => _storage.removeWallet(id);
 
-  Future removeWallet({required String id}) => _storage.removeWallet(id: id);
+    Future resetWallets() async {
+      await _connect.disconnectSession();
+      await _storage.removeAllWallets();
+    }
 
-  Future resetWallets() async {
-    await _connect.disconnectSession();
-    await _storage.removeAllWallets();
-  }
+    Future disconnectSession() => _connect.disconnectSession();
 
-  Future disconnectSession() => _connect.disconnectSession();
+    Future connectWallet(String qrData) => _connect.connectWallet(qrData);
 
-  Future connectWallet(String qrData) => _connect.connectWallet(qrData);
+    Future configureServer() => _connect.configureServer();
 
-  Future configureServer() => _connect.configureServer();
+    Future signTransactionFinish({
+      required String requestId,
+      required bool allowed,
+    }) =>
+        _connect.signTransactionFinish(
+          requestId: requestId,
+          allowed: allowed,
+        );
 
-  Future signTransactionFinish({
-    required String requestId,
-    required bool allowed,
-  }) =>
-      _connect.signTransactionFinish(
-        requestId: requestId,
-        allowed: allowed,
-      );
+    Future sendMessageFinish({
+      required requestId,
+      required bool allowed,
+    }) =>
+        _connect.sendMessageFinish(
+          requestId: requestId,
+          allowed: allowed,
+        );
 
-  Future sendMessageFinish({
-    required requestId,
-    required bool allowed,
-  }) =>
-      _connect.sendMessageFinish(
-        requestId: requestId,
-        allowed: allowed,
-      );
-
-  Future isValidWalletConnectData(String qrData) =>
-      _connect.isValidWalletConnectData(qrData);
+    Future isValidWalletConnectData(String qrData) =>
+        _connect.isValidWalletConnectData(qrData);
 }

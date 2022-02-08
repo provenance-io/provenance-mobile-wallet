@@ -46,11 +46,6 @@ dependencies:
   uuid: ^3.0.4
   faker: ^2.0.0
   path:
-  prov_wallet_flutter:
-    path: ../mobile-tech-wallet-flutter-plugin
-    # git:
-    #   url: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
-    #   ref: 8b9395b5a46cce8f2d3de72a4aff503ce950bf7d
   provenance_dart:
     git:
       url: git@github.com:provenance-io/provenance-dart.git
@@ -64,6 +59,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.0.6
   json_serializable: ^6.0.0
+  mockito: ^5.0.17
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

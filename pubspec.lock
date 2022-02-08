@@ -513,6 +513,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  mockito:
+    dependency: "direct dev"
+    description:
+      name: mockito
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   ninja_asn1:
     dependency: transitive
     description:
@@ -611,13 +618,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  prov_wallet_flutter:
-    dependency: "direct main"
-    description:
-      path: "../mobile-tech-wallet-flutter-plugin"
-      relative: true
-    source: path
-    version: "0.0.1"
   provenance_dart:
     dependency: "direct main"
     description:

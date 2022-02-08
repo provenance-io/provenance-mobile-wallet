@@ -6,7 +6,7 @@ import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_storage_service.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SqliteWalletStorageService implements WalletStorageService {
+class SqliteWalletStorageService {
   static const _version = 1;
   static const _name = 'wallet.db';
   static const _sqlCreateTableConfig = '''

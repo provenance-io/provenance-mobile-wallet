@@ -1,4 +1,4 @@
-import 'package:prov_wallet_flutter/dtos/transaction_message.dart';
+import 'package:provenance_wallet/model/transaction_message.dart';
 
 class SendRequest {
   SendRequest({
