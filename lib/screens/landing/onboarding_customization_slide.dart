@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class OnboardingTradeSlide extends StatelessWidget {
+class OnboardingCustomizationSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

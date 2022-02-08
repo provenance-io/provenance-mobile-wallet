@@ -6,9 +6,9 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/face_id_button.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_manage_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_trade_slide.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/page_indicator.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -108,9 +108,9 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PageView(
                   controller: _pageController,
                   children: [
+                    OnboardingFundamentalsSlide(),
+                    OnboardingCustomizationSlide(),
                     OnboardingLandingSlide(),
-                    OnboardingTradeSlide(),
-                    OnboardingManageSlide(),
                   ],
                 ),
               ),
