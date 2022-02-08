@@ -22,6 +22,7 @@ enum PwTextStyle {
   caption,
   large,
   extraLarge,
+  logo,
 }
 
 mixin PwTextStyleMixin on Widget {
@@ -74,6 +75,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.large;
       case PwTextStyle.extraLarge:
         return theme.textTheme.extraLarge;
+      case PwTextStyle.logo:
+        return theme.textTheme.logo;
     }
   }
 }

@@ -26,7 +26,7 @@ class OnboardingLandingSlide extends StatelessWidget {
           ),
           child: PwText(
             Strings.provenanceTitle,
-            style: PwTextStyle.large,
+            style: PwTextStyle.logo,
             textAlign: TextAlign.center,
             color: PwColor.white,
           ),

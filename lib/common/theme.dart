@@ -108,7 +108,7 @@ class FigurePayThemeData {
     height: 16.0 / 15.0,
   );
 
-  static const TextStyle _large = TextStyle(
+  static const TextStyle _logo = TextStyle(
     fontFamily: 'Montserrat',
     fontSize: 19.5,
     fontWeight: FontWeight.w700,
@@ -333,6 +333,8 @@ extension CustomTextTheme on TextTheme {
   TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;
   TextStyle get headline7 => FigurePayThemeData._headline7;
-  TextStyle get large => FigurePayThemeData._large;
+  TextStyle get large =>
+      FigurePayThemeData._logo.copyWith(fontWeight: FontWeight.w600);
+  TextStyle get logo => FigurePayThemeData._logo;
   TextStyle get extraLarge => FigurePayThemeData._extraLarge;
 }
