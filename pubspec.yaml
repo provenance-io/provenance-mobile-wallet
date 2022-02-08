@@ -30,10 +30,8 @@ dependencies:
     sdk: flutter
   flutter_hooks: ^0.17.0
   flutter_svg: ^0.22.0
-  hooks_riverpod: ^0.14.0+4
   qr_code_scanner: ^0.5.1
   intl: ^0.17.0
-  provider: null # remove after invoice_service cleanup
   qr_flutter: ^4.0.0
   rxdart: ^0.27.1
   uni_links: ^0.5.1
