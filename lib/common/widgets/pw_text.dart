@@ -1,12 +1,12 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-export '../fw_text_style.dart';
+export '../pw_text_style.dart';
 
-class FwText extends StatelessWidget with FwTextStyleMixin, FwColorMixin {
-  const FwText(
+class PwText extends StatelessWidget with PwTextStyleMixin, PwColorMixin {
+  const PwText(
     this.data, {
     Key? key,
-    this.style = FwTextStyle.m,
+    this.style = PwTextStyle.m,
     this.color,
     this.overflow,
     this.textAlign = TextAlign.start,
@@ -19,10 +19,10 @@ class FwText extends StatelessWidget with FwTextStyleMixin, FwColorMixin {
   final String data;
 
   @override
-  final FwTextStyle style;
+  final PwTextStyle style;
 
   @override
-  final FwColor? color;
+  final PwColor? color;
 
   final TextOverflow? overflow;
   final TextAlign? textAlign;

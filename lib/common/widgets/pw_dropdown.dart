@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-class FwDropDown extends StatefulWidget {
-  FwDropDown({
+class PwDropDown extends StatefulWidget {
+  PwDropDown({
     Key? key,
     required this.initialValue,
     required this.items,
@@ -11,10 +11,10 @@ class FwDropDown extends StatefulWidget {
   final List<String> items;
 
   @override
-  State<FwDropDown> createState() => _FwDropDownState();
+  State<PwDropDown> createState() => _PwDropDownState();
 }
 
-class _FwDropDownState extends State<FwDropDown> {
+class _PwDropDownState extends State<PwDropDown> {
   late String dropdownValue;
 
   @override
@@ -31,7 +31,7 @@ class _FwDropDownState extends State<FwDropDown> {
       value: dropdownValue,
       icon: Padding(
         padding: EdgeInsets.only(left: 16),
-        child: FwIcon(FwIcons.chevron),
+        child: PwIcon(PwIcons.chevron),
       ),
       onChanged: (String? newValue) {
         setState(() {
@@ -41,10 +41,10 @@ class _FwDropDownState extends State<FwDropDown> {
       items: widget.items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: FwText(
+          child: PwText(
             value,
-            color: FwColor.globalNeutral550,
-            style: FwTextStyle.s,
+            color: PwColor.globalNeutral550,
+            style: PwTextStyle.s,
           ),
         );
       }).toList(),

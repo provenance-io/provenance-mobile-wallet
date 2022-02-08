@@ -4,11 +4,11 @@ library fp_design;
 export 'package:flutter/material.dart';
 
 export '../util/extensions.dart';
-export 'fw_color.dart';
-export 'fw_text_style.dart';
+export 'pw_color.dart';
+export 'pw_text_style.dart';
 export 'theme.dart';
-export 'widgets/fw_spacer.dart';
-export 'widgets/fw_text.dart';
+export 'widgets/pw_spacer.dart';
+export 'widgets/pw_text.dart';
 export 'widgets/icon.dart';
 export 'widgets/loading_overlay.dart';
 export 'widgets/progress_stepper.dart';

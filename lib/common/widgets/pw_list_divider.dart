@@ -1,6 +1,6 @@
-import '../fw_design.dart';
+import '../pw_design.dart';
 
-class FwListDivider extends StatelessWidget {
+class PwListDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
