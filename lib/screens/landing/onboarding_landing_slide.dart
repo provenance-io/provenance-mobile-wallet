@@ -45,6 +45,7 @@ class OnboardingLandingSlide extends StatelessWidget {
             color: PwColor.white,
           ),
         ),
+        VerticalSpacer.custom(spacing: 155),
       ],
     );
   }
