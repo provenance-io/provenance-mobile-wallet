@@ -60,12 +60,13 @@ class Strings {
   static const restoreWallet = 'Restore Wallet';
 
   // Fundamentals Slide
-  static const figureTechWallet =
-      'Figure Tech Wallet is Lorem ipsum dolor sit amet, consectetur ';
+  static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
   static const marketCap = 'Market Cap';
   static const validators = 'Validators';
   static const transactions = 'Transactions';
   static const avgBlockTime = 'Avg Block Time';
+  static const fundamentalsDescription =
+      "Contract execution in seconds instead of weeks";
 
   // Customization Slide
   static const trade = 'Trade ';
