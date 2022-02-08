@@ -21,8 +21,6 @@ void main() async {
   );
 }
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 class ProvenanceWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,6 @@ class ProvenanceWalletApp extends StatelessWidget {
       title: Strings.appName,
       theme: FigurePayThemeData.themeData,
       debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
