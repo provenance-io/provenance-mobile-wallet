@@ -51,17 +51,21 @@ class _OnboardingFundamentalsSlideState
         Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: PwText(
-            Strings.figureTechWallet,
-            style: PwTextStyle.h3,
+            Strings.strongFundamentals,
+            style: PwTextStyle.large,
             textAlign: TextAlign.center,
-            color: PwColor.globalNeutral550,
+            color: PwColor.white,
           ),
         ),
         SizedBox(
           height: 48,
         ),
         Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 64,
+          ),
           child: GridView.count(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
@@ -83,15 +87,29 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PwText(
-                          _marketCap,
-                          style: PwTextStyle.h4,
-                          color: PwColor.globalNeutral450,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 7),
+                              child: PwText(
+                                _marketCap.substring(0, 1),
+                                style: PwTextStyle.h4,
+                                color: PwColor.white,
+                              ),
+                            ),
+                            PwText(
+                              _marketCap.substring(1),
+                              style: PwTextStyle.h3,
+                              color: PwColor.white,
+                            ),
+                          ],
                         ),
                         PwText(
                           Strings.marketCap,
-                          style: PwTextStyle.m,
-                          color: PwColor.globalNeutral450,
+                          style: PwTextStyle.m_p,
+                          color: PwColor.white,
                         ),
                       ],
                     ),
@@ -101,13 +119,13 @@ class _OnboardingFundamentalsSlideState
                       children: [
                         PwText(
                           '$_numValidators',
-                          style: PwTextStyle.h4,
-                          color: PwColor.globalNeutral450,
+                          style: PwTextStyle.h3,
+                          color: PwColor.white,
                         ),
                         PwText(
                           Strings.validators,
-                          style: PwTextStyle.m,
-                          color: PwColor.globalNeutral450,
+                          style: PwTextStyle.m_p,
+                          color: PwColor.white,
                         ),
                       ],
                     ),
@@ -115,15 +133,33 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PwText(
-                          _transactions,
-                          style: PwTextStyle.h4,
-                          color: PwColor.globalNeutral450,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            PwText(
+                              _transactions.substring(
+                                0,
+                                _transactions.length - 1,
+                              ),
+                              style: PwTextStyle.h3,
+                              color: PwColor.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 5),
+                              child: PwText(
+                                _transactions
+                                    .substring(_transactions.length - 1),
+                                style: PwTextStyle.h4,
+                                color: PwColor.white,
+                              ),
+                            ),
+                          ],
                         ),
                         PwText(
                           Strings.transactions,
-                          style: PwTextStyle.m,
-                          color: PwColor.globalNeutral450,
+                          style: PwTextStyle.m_p,
+                          color: PwColor.white,
                         ),
                       ],
                     ),
@@ -131,20 +167,52 @@ class _OnboardingFundamentalsSlideState
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PwText(
-                          _blockTime,
-                          style: PwTextStyle.h4,
-                          color: PwColor.globalNeutral450,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            PwText(
+                              _blockTime.substring(
+                                0,
+                                _blockTime.length - 3,
+                              ),
+                              style: PwTextStyle.h3,
+                              color: PwColor.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 4),
+                              child: PwText(
+                                _blockTime.substring(_blockTime.length - 3),
+                                style: PwTextStyle.h4,
+                                color: PwColor.white,
+                              ),
+                            ),
+                          ],
                         ),
                         PwText(
                           Strings.avgBlockTime,
-                          style: PwTextStyle.m,
-                          color: PwColor.globalNeutral450,
+                          style: PwTextStyle.m_p,
+                          color: PwColor.white,
                         ),
                       ],
                     ),
                   ],
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            right: 20,
+            left: 20,
+          ),
+          child: PwText(
+            Strings.fundamentalsDescription,
+            style: PwTextStyle.m_p,
+            color: PwColor.white,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        VerticalSpacer.custom(
+          spacing: 80,
         ),
       ],
     );
