@@ -69,9 +69,9 @@ class Strings {
       "Contract execution in seconds instead of weeks";
 
   // Customization Slide
-  static const trade = 'Trade ';
-  static const tradeHashText =
-      'Trade Hash, etc lorem ipsum with confidence blah blah blah';
+  static const powerfulCustomization = 'POWERFUL\nCUSTOMIZATION ';
+  static const customizationDescription =
+      'Fully control your wallet and crypto, and manage it independently. ';
 
   // Landing Slide
   static const provenanceTitle = 'PROVENANCE\nWALLET';
