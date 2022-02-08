@@ -33,6 +33,9 @@ extension StringExtension on String {
 // TODO: Localization
 
 class Strings {
+  // App
+  static const appName = 'Provenance Wallet';
+
   // Biometric Strings
   static const biometric = 'Biometric';
   static const faceId = 'Face ID';

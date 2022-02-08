@@ -70,5 +70,7 @@
 	<false/>
 	<key>ProvenanceRPCEndpoint</key>
 	<string>https://api.test.provenance.io</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

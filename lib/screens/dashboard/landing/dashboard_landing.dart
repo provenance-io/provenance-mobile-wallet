@@ -1,10 +1,8 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_connect_no_assets.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_connect_with_assets.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class DashboardLanding extends StatefulWidget {
   DashboardLanding({
