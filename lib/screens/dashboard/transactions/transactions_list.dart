@@ -70,6 +70,7 @@ class TransactionsListState extends State<TransactionsList> {
               final item = widget.transactions[index];
 
               return GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   // TODO: Finding a "tappable" area is difficult and janky. Fix me.
                   Navigator.of(context).push(TradeDetailsScreen(
