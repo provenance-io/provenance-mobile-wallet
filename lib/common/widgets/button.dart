@@ -264,9 +264,7 @@ class FwButton extends StatelessWidget {
             ? showAlternate
                 ? theme.colorScheme.globalNeutral450.withOpacity(0.5)
                 : theme.colorScheme.globalNeutral450.withOpacity(0.4)
-            : showAlternate
-                ? theme.colorScheme.globalNeutral450
-                : theme.colorScheme.globalNeutral450;
+            : theme.colorScheme.globalNeutral450;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(
