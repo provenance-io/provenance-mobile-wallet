@@ -74,17 +74,17 @@ class FigurePayThemeData {
   );
 
   static const TextStyle _headline3 = TextStyle(
-    fontFamily: 'Poppins',
-    fontSize: 28,
-    fontWeight: FontWeight.w400,
-    height: 40.8 / 30.0,
+    fontFamily: 'Montserrat',
+    fontSize: 37.68,
+    fontWeight: FontWeight.w300,
+    height: 45.93 / 37.68,
   );
 
   static const TextStyle _headline4 = TextStyle(
-    fontFamily: 'Poppins',
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
-    height: 23.54 / 22.0,
+    fontFamily: 'Montserrat',
+    fontSize: 24,
+    fontWeight: FontWeight.w300,
+    height: 29.26 / 24.0,
   );
 
   static const TextStyle _headline5 = TextStyle(
