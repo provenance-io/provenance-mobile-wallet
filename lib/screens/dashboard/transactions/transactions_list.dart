@@ -1,15 +1,21 @@
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dropdown.dart';
+import 'package:provenance_wallet/common/widgets/fw_list_divider.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionsList extends StatefulWidget {
   TransactionsList({
     Key? key,
     required this.transactions,
+    required this.walletName,
+    required this.walletAddress,
   }) : super(key: key);
 
   final List<TransactionResponse> transactions;
+  final String walletName;
+  final String walletAddress;
   @override
   State<StatefulWidget> createState() => TransactionsListState();
 }
@@ -64,8 +70,14 @@ class TransactionsListState extends State<TransactionsList> {
               final item = widget.transactions[index];
 
               return GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  // TODO: go to transaction/trade details.
+                  // TODO: Finding a "tappable" area is difficult and janky. Fix me.
+                  Navigator.of(context).push(TradeDetailsScreen(
+                    transaction: item,
+                    walletName: widget.walletName,
+                    walletAddress: widget.walletAddress,
+                  ).route());
                 },
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -138,13 +150,7 @@ class TransactionsListState extends State<TransactionsList> {
               );
             },
             separatorBuilder: (context, index) {
-              return Divider(
-                height: 1,
-                thickness: 1,
-                indent: 0,
-                endIndent: 0,
-                color: Theme.of(context).dividerColor,
-              );
+              return FwListDivider();
             },
             itemCount: widget.transactions.length,
             shrinkWrap: true,

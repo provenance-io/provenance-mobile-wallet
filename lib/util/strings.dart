@@ -224,4 +224,18 @@ class Strings {
   static const dropDownAllTransactions = "All Transactions";
   static const dropDownPurchaseTransaction = "Purchase";
   static const dropDownDepositTransaction = "Deposit";
+
+  // TradeDetailsScreen
+  static const tradeDetailsTitle = "Trade Details";
+  static const tradeDetailsWallet = "Wallet";
+  static const tradeDetailsTransaction = "Transaction #";
+  static const tradeDetailsFromAddress = "From Address";
+  static const tradeDetailsToAddress = "To Address";
+  static const tradeDetailsOrderType = "Order Type";
+  static const tradeDetailsAmount = "Amount";
+  static const tradeDetailsPricePerUnit = "Price Per Unit";
+  static const tradeDetailsTotalPurchase = "Total Purchase Price";
+  static const tradeDetailsFee = "Fee";
+  static const tradeDetailsTimeStamp = "Time Stamp";
+  static const tradeDetailsBlock = "Block #";
 }

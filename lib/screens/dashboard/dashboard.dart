@@ -281,6 +281,8 @@ class DashboardState extends State<Dashboard>
                 TransactionLanding(
                   // FIXME: State Management
                   key: _transactionKey,
+                  walletAddress: _walletAddress,
+                  walletName: _walletName,
                 ),
               ],
             ),
