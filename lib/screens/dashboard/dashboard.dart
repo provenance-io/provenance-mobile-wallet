@@ -136,26 +136,26 @@ class DashboardState extends State<Dashboard>
   void loadAssets() async {
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
 
-    //final result = await AssetService.getAssets(_walletAddress);
-    final result = await AssetService.getFakeAssets(_walletAddress);
+    final result = await AssetService.getAssets(_walletAddress);
     final transactions =
-        await TransactionService.getFakeTransactions(_walletAddress);
+        await TransactionService.getTransactions(_walletAddress);
     ModalLoadingRoute.dismiss(context);
-    //if (result.isSuccessful) {
     setState(() {
-      this.assets = result;
-      this.transactions = transactions;
+      if (result.isSuccessful) {
+        this.assets = result.data ?? [];
+      }
+
       // FIXME: State Management
-      _landingKey.currentState?.updateAssets(result);
-      _transactionKey.currentState?.updateTransactions(transactions);
+      _landingKey.currentState?.updateAssets(this.assets);
+
+      if (transactions.isSuccessful) {
+        this.transactions = transactions.data ?? [];
+      }
+
+      // FIXME: State Management
+      _transactionKey.currentState?.updateTransactions(this.transactions);
       _initialLoad = false;
     });
-    // } else {
-    //   setState(() {
-    //     // FIXME: State Management
-    //     _landingKey.currentState?.updateAssets([]);
-    //   });
-    // }
   }
 
   @override
