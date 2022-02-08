@@ -108,6 +108,21 @@ class FigurePayThemeData {
     height: 16.0 / 15.0,
   );
 
+  static const TextStyle _large = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 19.5,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 10,
+  );
+
+  static const TextStyle _provenanceMedium = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.55,
+    letterSpacing: 0.32,
+  );
+
   static const TextStyle _extraLarge = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 25,
@@ -118,8 +133,8 @@ class FigurePayThemeData {
 
   static const TextStyle _medium = TextStyle(
     fontFamily: 'GothicA1',
-    fontSize: 16,
-    fontWeight: FontWeight.w300,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
     height: 15.55 / 15.0,
     letterSpacing: 0.32,
   );
@@ -310,6 +325,7 @@ extension CustomTextTheme on TextTheme {
   TextStyle get headline0 => FigurePayThemeData._headline0;
   TextStyle get mediumBold => FigurePayThemeData._mediumBold;
   TextStyle get medium => FigurePayThemeData._medium;
+  TextStyle get pWMedium => FigurePayThemeData._provenanceMedium;
   TextStyle get mediumSemiBold => FigurePayThemeData._mediumSemiBold;
   TextStyle get smallBold => FigurePayThemeData._smallBold;
   TextStyle get smallSemiBold => FigurePayThemeData._smallSemiBold;
@@ -317,5 +333,6 @@ extension CustomTextTheme on TextTheme {
   TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;
   TextStyle get headline7 => FigurePayThemeData._headline7;
+  TextStyle get large => FigurePayThemeData._large;
   TextStyle get extraLarge => FigurePayThemeData._extraLarge;
 }
