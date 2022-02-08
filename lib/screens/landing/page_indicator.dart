@@ -5,8 +5,8 @@ class PageIndicator extends StatelessWidget {
     required this.currentPageIndex,
   });
   // TODO: Make sure that these colors make it into the theme.
-  final Color _active = Color(0xFF8B90A7);
-  final Color _inActive = Color(0xFFF3F4F6);
+  final Color _active = Color(0xFFF3F4F6);
+  final Color _inActive = Color(0xFF8B90A7);
 
   final int currentPageIndex;
 
