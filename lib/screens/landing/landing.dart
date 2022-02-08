@@ -108,9 +108,9 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PageView(
                   controller: _pageController,
                   children: [
+                    OnboardingLandingSlide(),
                     OnboardingFundamentalsSlide(),
                     OnboardingCustomizationSlide(),
-                    OnboardingLandingSlide(),
                   ],
                 ),
               ),
