@@ -127,7 +127,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PwButton(
                   child: PwText(
                     Strings.createWallet,
-                    style: PwTextStyle.mBold,
+                    style: PwTextStyle.m,
                     color: PwColor.white,
                   ),
                   onPressed: () {
@@ -147,8 +147,8 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PwTextButton(
                   child: PwText(
                     Strings.restoreWallet,
-                    style: PwTextStyle.mBold,
-                    color: PwColor.globalNeutral450,
+                    style: PwTextStyle.m,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(AccountName(

@@ -41,6 +41,7 @@ class FigurePayThemeData {
   static const Color _primary5 = Color(0xFF7E6DD6);
   static const Color _primary6 = Color(0xFFDDD8FD);
   static const Color _primary7 = Color(0xFF573AE6);
+  static const Color _primary550 = Color(0xFF1B66EA);
 
   /// Secondary
   static const Color _secondary1 = Color(0xFF28CEA8);
@@ -278,6 +279,7 @@ extension CustomColorScheme on ColorScheme {
   Color get primary5 => FigurePayThemeData._primary5;
   Color get primary6 => FigurePayThemeData._primary6;
   Color get primary7 => FigurePayThemeData._primary7;
+  Color get primaryP500 => FigurePayThemeData._primary550;
   Color get white => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
   Color get lightGrey => FigurePayThemeData._lightGrey;
