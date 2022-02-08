@@ -559,8 +559,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: dc6ab9a66b4e1d4080518184b2ed002090e1f9f0
+      ref: "8b9395b5a46cce8f2d3de72a4aff503ce950bf7d"
+      resolved-ref: "8b9395b5a46cce8f2d3de72a4aff503ce950bf7d"
       url: "git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git"
     source: git
     version: "0.0.1"
