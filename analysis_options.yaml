@@ -1,11 +1,13 @@
 analyzer:
+  exclude:
+    - lib/firebase_options.dart
   plugins:
     - dart_code_metrics
 
 dart_code_metrics:
   anti-patterns:
-    # - long-method
-    # - long-parameter-list
+  # - long-method
+  # - long-parameter-list
   metrics:
     cyclomatic-complexity: 20
     maximum-nesting-level: 5

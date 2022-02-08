@@ -1,3 +1,4 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/fw_design.dart';
 import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
@@ -15,6 +16,8 @@ import 'package:provenance_wallet/screens/send_transaction_approval.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'landing/dashboard_landing.dart';
 
@@ -36,6 +39,8 @@ class DashboardState extends State<Dashboard>
   GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
   GlobalKey<TransactionLandingState> _transactionKey = GlobalKey();
 
+  final _subscriptions = CompositeSubscription();
+
   List<AssetResponse> assets = [];
   List<TransactionResponse> transactions = [];
 
@@ -45,6 +50,8 @@ class DashboardState extends State<Dashboard>
     RouterObserver.instance.routeObserver.unsubscribe(this);
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
+    _subscriptions.dispose();
+
     super.dispose();
   }
 
@@ -109,6 +116,9 @@ class DashboardState extends State<Dashboard>
 
     ProvWalletFlutter.configureServer();
     loadAddress();
+
+    _initDeepLinks(context);
+
     super.initState();
   }
 
@@ -299,5 +309,43 @@ class DashboardState extends State<Dashboard>
       _landingKey.currentState?.updateAssets(assets);
       _transactionKey.currentState?.updateTransactions(transactions);
     });
+  }
+
+  Future _initDeepLinks(BuildContext context) async {
+    final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (initialLink != null) {
+      await _handleDynamicLink(initialLink);
+    }
+
+    FirebaseDynamicLinks.instance.onLink
+        .listen(_handleDynamicLink)
+        .addTo(_subscriptions);
+  }
+
+  Future _handleDynamicLink(PendingDynamicLinkData linkData) async {
+    final path = linkData.link.path;
+    switch (path) {
+      case '/wallet-connect':
+        final data = linkData.link.queryParameters['data'];
+        _handleWalletConnectLink(data);
+        break;
+      default:
+        logError('Unhandled dynamic link: $path');
+        break;
+    }
+  }
+
+  Future _handleWalletConnectLink(String? data) async {
+    if (data != null) {
+      final isValid = await ProvWalletFlutter.isValidWalletConnectData(data);
+      if (isValid) {
+        final success = await ProvWalletFlutter.connectWallet(data);
+        if (!success) {
+          logDebug('Wallet connection failed');
+        }
+      } else {
+        logError('Invalid wallet connect data');
+      }
+    }
   }
 }

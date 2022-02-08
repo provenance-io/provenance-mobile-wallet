@@ -39,8 +39,9 @@ dependencies:
   uni_links: ^0.5.1
   logger: ^1.0.0
   flutter_secure_storage: ^4.2.0
-  firebase_core: ^1.7.0
-  firebase_crashlytics: ^2.2.3
+  firebase_core: ^1.12.0
+  firebase_crashlytics: ^2.5.0
+  firebase_dynamic_links: ^4.0.5
   local_auth: ^1.1.6
   url_launcher: ^6.0.10
   shared_preferences: ^2.0.6
