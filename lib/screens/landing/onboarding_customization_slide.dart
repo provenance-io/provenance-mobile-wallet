@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingCustomizationSlide extends StatelessWidget {
@@ -24,7 +25,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/images/customization.png"),
+            Image.asset(AssetPaths.images.coins),
           ],
         ),
         VerticalSpacer.xxLarge(),
