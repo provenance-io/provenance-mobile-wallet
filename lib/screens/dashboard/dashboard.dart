@@ -337,9 +337,11 @@ class DashboardState extends State<Dashboard>
 
   Future _handleWalletConnectLink(String? data) async {
     if (data != null) {
-      final isValid = await ProvWalletFlutter.isValidWalletConnectData(data);
+      final decodedData = Uri.decodeComponent(data);
+      final isValid =
+          await ProvWalletFlutter.isValidWalletConnectData(decodedData);
       if (isValid) {
-        final success = await ProvWalletFlutter.connectWallet(data);
+        final success = await ProvWalletFlutter.connectWallet(decodedData);
         if (!success) {
           logDebug('Wallet connection failed');
         }
