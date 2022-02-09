@@ -3,20 +3,14 @@ import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
 
 class TransactionService {
-  factory TransactionService() => _singleton;
-  TransactionService._internal();
-
-  static final TransactionService _singleton = TransactionService._internal();
-
-  static String get transactionServiceBasePath =>
+  static String get _transactionServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
-  static TransactionService get instance => _singleton;
 
   static Future<BaseResponse<List<TransactionResponse>>> getTransactions(
-    String provenanceAddresses,
+    String provenanceAddress,
   ) async {
     final data = await BaseService.instance.GET(
-      '$transactionServiceBasePath/$provenanceAddresses/transactions',
+      '$_transactionServiceBasePath/$provenanceAddress/transactions',
       listConverter: (json) {
         if (json is String) {
           return <TransactionResponse>[];

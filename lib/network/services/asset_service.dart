@@ -3,20 +3,14 @@ import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
 
 class AssetService {
-  factory AssetService() => _singleton;
-  AssetService._internal();
-
-  static final AssetService _singleton = AssetService._internal();
-
-  static String get assetServiceBasePathv1 =>
+  String get _assetServiceBasePathv1 =>
       '/service-mobile-wallet/external/api/v1/address';
-  static AssetService get instance => _singleton;
 
-  static Future<BaseResponse<List<AssetResponse>>> getAssets(
+  Future<BaseResponse<List<AssetResponse>>> getAssets(
     String provenanceAddresses,
   ) async {
     final data = await BaseService.instance.GET(
-      '$assetServiceBasePathv1/$provenanceAddresses/assets',
+      '$_assetServiceBasePathv1/$provenanceAddresses/assets',
       listConverter: (json) {
         if (json is String) {
           return <AssetResponse>[];
@@ -39,8 +33,8 @@ class AssetService {
     return data;
   }
 
-// TODO: Remove me when we get actual data
-  static Future<List<AssetResponse>> getFakeAssets(
+// TODO: Remove me when we can mock
+  Future<List<AssetResponse>> getFakeAssets(
     String provenanceAddresses,
   ) async {
     final faker = Faker();
@@ -59,8 +53,8 @@ class AssetService {
     return assets;
   }
 
-// TODO: Remove me when we get actual data
-  static AssetResponse _getFakeAsset() {
+// TODO: Remove me when we can mock
+  AssetResponse _getFakeAsset() {
     var faker = Faker();
     var amount = faker.randomGenerator.decimal(min: 50).toStringAsFixed(2);
 
