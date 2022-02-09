@@ -1,15 +1,8 @@
 import 'dart:math';
 
 class StatService {
-  factory StatService() => _singleton;
-  StatService._internal();
-
-  static final StatService _singleton = StatService._internal();
-
-  static StatService get instance => _singleton;
-
   // TODO: Do this, but for reals.
-  static Future<OnboardingStat> getStats() async {
+  Future<OnboardingStat> getStats() async {
     await Future.delayed(Duration(milliseconds: 500));
     var random = new Random();
 

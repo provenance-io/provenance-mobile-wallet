@@ -2,9 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/firebase_options.dart';
+import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
+
+import 'util/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +21,21 @@ void main() async {
   );
 }
 
-class ProvenanceWalletApp extends StatelessWidget {
+class ProvenanceWalletApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ProvenanceWalletAppState();
+}
+
+class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    get.registerLazySingleton<StatService>(
+      () => StatService(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
