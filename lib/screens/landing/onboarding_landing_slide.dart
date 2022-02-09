@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatelessWidget {
@@ -13,8 +14,7 @@ class OnboardingLandingSlide extends StatelessWidget {
           children: [
             PwIcon(
               PwIcons.provenance,
-              // TODO: Put this in the theme once Figure colors are purged.
-              color: Color(0xFF3F80F3),
+              color: Theme.of(context).colorScheme.primaryP1,
             ),
           ],
         ),
@@ -39,7 +39,6 @@ class OnboardingLandingSlide extends StatelessWidget {
           ),
           child: PwText(
             Strings.provenanceWalletDescription,
-            // TODO: Fix this style when Figure colors are purged.
             style: PwTextStyle.m_p,
             textAlign: TextAlign.center,
             color: PwColor.white,

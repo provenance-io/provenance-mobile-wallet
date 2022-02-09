@@ -1,12 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 
 class PageIndicator extends StatelessWidget {
   PageIndicator({
     required this.currentPageIndex,
   });
-  // TODO: Make sure that these colors make it into the theme.
-  final Color _active = Color(0xFFF3F4F6);
-  final Color _inActive = Color(0xFF8B90A7);
 
   final int currentPageIndex;
 
@@ -20,10 +18,10 @@ class PageIndicator extends StatelessWidget {
           width: 30,
           decoration: BoxDecoration(
             border: Border.all(
-              color: _getColor(0),
+              color: _getColor(0, context),
             ),
             borderRadius: BorderRadius.circular(20),
-            color: _getColor(0),
+            color: _getColor(0, context),
           ),
         ),
         HorizontalSpacer.small(),
@@ -32,10 +30,10 @@ class PageIndicator extends StatelessWidget {
           width: 30,
           decoration: BoxDecoration(
             border: Border.all(
-              color: _getColor(1),
+              color: _getColor(1, context),
             ),
             borderRadius: BorderRadius.circular(20),
-            color: _getColor(1),
+            color: _getColor(1, context),
           ),
         ),
         HorizontalSpacer.small(),
@@ -44,17 +42,19 @@ class PageIndicator extends StatelessWidget {
           width: 30,
           decoration: BoxDecoration(
             border: Border.all(
-              color: _getColor(2),
+              color: _getColor(2, context),
             ),
             borderRadius: BorderRadius.circular(20),
-            color: _getColor(2),
+            color: _getColor(2, context),
           ),
         ),
       ],
     );
   }
 
-  Color _getColor(int index) {
-    return currentPageIndex == index ? _active : _inActive;
+  Color _getColor(int index, BuildContext context) {
+    return currentPageIndex == index
+        ? Theme.of(context).colorScheme.indicatorActive
+        : Theme.of(context).colorScheme.indicatorInActive;
   }
 }
