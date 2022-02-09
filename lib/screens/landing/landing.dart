@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart'
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/page_indicator.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -95,7 +96,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
+            image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
           ),
         ),
