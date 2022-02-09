@@ -19,7 +19,7 @@ class FundamentalsBloc extends Disposable {
   ValueStream<String> get blockTime => _blockTime.stream;
 
   void load() async {
-    var stats = await _service.getStats();
+    final stats = await _service.getStats();
 
     _marketCap.value = stats.marketCap;
     _validatorsCount.value = stats.validators;

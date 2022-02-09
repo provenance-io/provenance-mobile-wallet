@@ -17,7 +17,7 @@ class _OnboardingFundamentalsSlideState
   void initState() {
     super.initState();
 
-    get.registerLazySingleton(() => FundamentalsBloc());
+    get.registerSingleton(() => FundamentalsBloc());
     get<FundamentalsBloc>().load();
   }
 
