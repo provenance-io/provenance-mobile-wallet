@@ -13,12 +13,11 @@ class OnboardingFundamentalsSlide extends StatefulWidget {
 
 class _OnboardingFundamentalsSlideState
     extends State<OnboardingFundamentalsSlide> {
-
   @override
   void initState() {
     super.initState();
 
-    get.registerLazySingleton(() => FundamentalsBloc());
+    get.registerSingleton(() => FundamentalsBloc());
     get<FundamentalsBloc>().load();
   }
 
