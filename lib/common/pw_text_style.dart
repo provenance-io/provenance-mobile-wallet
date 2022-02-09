@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-/// Figma Typopgraphy Text Styles
-enum FwTextStyle {
+/// Provenance Typopgraphy Text Styles
+enum PwTextStyle {
   h0,
   h1,
   h2,
@@ -22,51 +22,51 @@ enum FwTextStyle {
   extraLarge,
 }
 
-mixin FwTextStyleMixin on Widget {
-  FwTextStyle get style;
+mixin PwTextStyleMixin on Widget {
+  PwTextStyle get style;
 
   TextStyle? textStyle(
     BuildContext context, {
-    FwTextStyle? altStyle,
+    PwTextStyle? altStyle,
   }) {
     final theme = Theme.of(context);
 
     switch (altStyle ?? style) {
-      case FwTextStyle.h0:
+      case PwTextStyle.h0:
         return theme.textTheme.headline0;
-      case FwTextStyle.h1:
+      case PwTextStyle.h1:
         return theme.textTheme.headline1;
-      case FwTextStyle.h2:
+      case PwTextStyle.h2:
         return theme.textTheme.headline2;
-      case FwTextStyle.h3:
+      case PwTextStyle.h3:
         return theme.textTheme.headline3;
-      case FwTextStyle.h4:
+      case PwTextStyle.h4:
         return theme.textTheme.headline4;
-      case FwTextStyle.h5:
+      case PwTextStyle.h5:
         return theme.textTheme.headline5;
-      case FwTextStyle.h6:
+      case PwTextStyle.h6:
         return theme.textTheme.headline6;
-      case FwTextStyle.h7:
+      case PwTextStyle.h7:
         return theme.textTheme.headline7;
-      case FwTextStyle.m:
+      case PwTextStyle.m:
         return theme.textTheme.medium;
-      case FwTextStyle.mBold:
+      case PwTextStyle.mBold:
         return theme.textTheme.mediumBold;
-      case FwTextStyle.mSemiBold:
+      case PwTextStyle.mSemiBold:
         return theme.textTheme.mediumSemiBold;
-      case FwTextStyle.s:
+      case PwTextStyle.s:
         return theme.textTheme.small;
-      case FwTextStyle.sSemiBold:
+      case PwTextStyle.sSemiBold:
         return theme.textTheme.smallSemiBold;
-      case FwTextStyle.sBold:
+      case PwTextStyle.sBold:
         return theme.textTheme.smallBold;
-      case FwTextStyle.xs:
+      case PwTextStyle.xs:
         return theme.textTheme.extraSmall;
-      case FwTextStyle.xsBold:
+      case PwTextStyle.xsBold:
         return theme.textTheme.extraSmallBold;
-      case FwTextStyle.caption:
+      case PwTextStyle.caption:
         return theme.textTheme.caption;
-      case FwTextStyle.extraLarge:
+      case PwTextStyle.extraLarge:
         return theme.textTheme.extraLarge;
     }
   }

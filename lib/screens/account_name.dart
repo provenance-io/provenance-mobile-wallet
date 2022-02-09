@@ -1,6 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/present_information.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -28,15 +28,15 @@ class AccountName extends HookWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
-        title: FwText(
+        title: PwText(
           Strings.nameYourAccount,
-          style: FwTextStyle.h5,
+          style: PwTextStyle.h5,
           textAlign: TextAlign.left,
-          color: FwColor.globalNeutral550,
+          color: PwColor.globalNeutral550,
         ),
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.close,
+          icon: PwIcon(
+            PwIcons.close,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
@@ -80,11 +80,11 @@ class AccountName extends HookWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwText(
+                child: PwText(
                   Strings.nameYourAccountText,
-                  style: FwTextStyle.sBold,
+                  style: PwTextStyle.sBold,
                   textAlign: TextAlign.left,
-                  color: FwColor.globalNeutral450,
+                  color: PwColor.globalNeutral450,
                 ),
               ),
               Expanded(child: Container()),
@@ -93,11 +93,11 @@ class AccountName extends HookWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: FwButton(
-                  child: FwText(
+                child: PwButton(
+                  child: PwText(
                     Strings.continueName,
-                    style: FwTextStyle.mBold,
-                    color: FwColor.white,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() == true) {
@@ -170,7 +170,7 @@ class _TextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FwText(label),
+        PwText(label),
         const VerticalSpacer.small(),
         TextFormField(
           keyboardType: keyboardType,

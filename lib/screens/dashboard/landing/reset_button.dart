@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -11,8 +11,8 @@ class ResetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20),
-      child: FwButton(
-        child: FwText(
+      child: PwButton(
+        child: PwText(
           Strings.resetWallet,
         ),
         onPressed: () async {

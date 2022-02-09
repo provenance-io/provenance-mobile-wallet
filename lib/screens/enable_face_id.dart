@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -32,18 +32,18 @@ class EnableFaceId extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: FwText(
+        title: PwText(
           Strings.useFaceId,
-          style: FwTextStyle.h5,
+          style: PwTextStyle.h5,
           textAlign: TextAlign.left,
-          color: FwColor.globalNeutral550,
+          color: PwColor.globalNeutral550,
         ),
       ),
       body: Container(
@@ -74,11 +74,11 @@ class EnableFaceId extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwText(
+              child: PwText(
                 Strings.useYourFaceId,
-                style: FwTextStyle.m,
+                style: PwTextStyle.m,
                 textAlign: TextAlign.center,
-                color: FwColor.globalNeutral550,
+                color: PwColor.globalNeutral550,
               ),
             ),
             Expanded(child: Container()),
@@ -87,11 +87,11 @@ class EnableFaceId extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwButton(
-                child: FwText(
+              child: PwButton(
+                child: PwText(
                   Strings.enable,
-                  style: FwTextStyle.mBold,
-                  color: FwColor.white,
+                  style: PwTextStyle.mBold,
+                  color: PwColor.white,
                 ),
                 onPressed: () async {
                   ModalLoadingRoute.showLoading(
@@ -129,11 +129,11 @@ class EnableFaceId extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwTextButton(
-                child: FwText(
+              child: PwTextButton(
+                child: PwText(
                   Strings.later,
-                  style: FwTextStyle.mBold,
-                  color: FwColor.globalNeutral450,
+                  style: PwTextStyle.mBold,
+                  color: PwColor.globalNeutral450,
                 ),
                 onPressed: () async {
                   ModalLoadingRoute.showLoading(

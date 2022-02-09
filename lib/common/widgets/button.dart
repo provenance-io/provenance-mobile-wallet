@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-class FwPrimaryButton extends StatelessWidget {
-  const FwPrimaryButton({
+class PwPrimaryButton extends StatelessWidget {
+  const PwPrimaryButton({
     Key? key,
     required this.child,
     this.onPressed,
@@ -61,8 +61,8 @@ class FwPrimaryButton extends StatelessWidget {
   }
 }
 
-class FwSecondaryButton extends StatelessWidget {
-  const FwSecondaryButton({
+class PwSecondaryButton extends StatelessWidget {
+  const PwSecondaryButton({
     Key? key,
     required this.child,
     this.onPressed,
@@ -128,8 +128,8 @@ class FwSecondaryButton extends StatelessWidget {
   }
 }
 
-class FwActionButton extends StatelessWidget {
-  const FwActionButton({
+class PwActionButton extends StatelessWidget {
+  const PwActionButton({
     Key? key,
     this.child,
     required this.onPressed,
@@ -138,7 +138,7 @@ class FwActionButton extends StatelessWidget {
         super(key: key);
 
   /// Helper constructor for creating a button with a label.
-  const FwActionButton.withLabel({
+  const PwActionButton.withLabel({
     Key? key,
     this.child,
     required this.onPressed,
@@ -197,8 +197,8 @@ class FwActionButton extends StatelessWidget {
   }
 }
 
-class FwButton extends StatelessWidget {
-  const FwButton({
+class PwButton extends StatelessWidget {
+  const PwButton({
     Key? key,
     required this.child,
     this.enabled = true,
@@ -207,7 +207,7 @@ class FwButton extends StatelessWidget {
     this.minimumWidth = double.maxFinite,
   }) : super(key: key);
 
-  const FwButton.alternate({
+  const PwButton.alternate({
     Key? key,
     required Widget child,
     bool enabled = true,
@@ -276,8 +276,8 @@ class FwButton extends StatelessWidget {
   }
 }
 
-class FwTextButton extends StatelessWidget {
-  const FwTextButton({
+class PwTextButton extends StatelessWidget {
+  const PwTextButton({
     Key? key,
     required this.child,
     required this.onPressed,
@@ -288,7 +288,7 @@ class FwTextButton extends StatelessWidget {
     this.shrinkWrap = false,
   }) : super(key: key);
 
-  const FwTextButton.shrinkWrap({
+  const PwTextButton.shrinkWrap({
     Key? key,
     required Widget child,
     required VoidCallback onPressed,
@@ -326,8 +326,8 @@ class FwTextButton extends StatelessWidget {
   }
 }
 
-class FwGreyButton extends StatelessWidget {
-  const FwGreyButton({
+class PwGreyButton extends StatelessWidget {
+  const PwGreyButton({
     Key? key,
     required this.text,
     this.enabled = true,
@@ -352,7 +352,7 @@ class FwGreyButton extends StatelessWidget {
     return TextButton(
       style: _buttonStyle(context),
       onPressed: enabled ? onPressed : null,
-      child: FwText(text),
+      child: PwText(text),
     );
   }
 
@@ -376,8 +376,8 @@ class FwGreyButton extends StatelessWidget {
   }
 }
 
-class FwPrimaryAndTextButton extends StatelessWidget {
-  const FwPrimaryAndTextButton({
+class PwPrimaryAndTextButton extends StatelessWidget {
+  const PwPrimaryAndTextButton({
     Key? key,
     required this.primaryButtonText,
     required this.primaryButtonOnPressed,
@@ -393,24 +393,24 @@ class FwPrimaryAndTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      FwPrimaryButton(
-        child: FwText(primaryButtonText),
+      PwPrimaryButton(
+        child: PwText(primaryButtonText),
         onPressed: primaryButtonOnPressed,
       ),
       const VerticalSpacer.small(),
       TextButton(
         onPressed: textButtonOnPressed,
-        child: FwText(
+        child: PwText(
           textButtonText,
-          color: FwColor.primary4,
+          color: PwColor.primary4,
         ),
       ),
     ]);
   }
 }
 
-class FwOutlinedButton extends StatelessWidget {
-  const FwOutlinedButton(
+class PwOutlinedButton extends StatelessWidget {
+  const PwOutlinedButton(
     this._text, {
     Key? key,
     required this.onPressed,
@@ -442,8 +442,8 @@ class FwOutlinedButton extends StatelessWidget {
   /// To center the [_text] and [icon]. If [showArrow] is true, that will not be centered
   final bool center;
 
-  final FwTextStyle? fpTextStyle;
-  final FwColor? fpTextColor;
+  final PwTextStyle? fpTextStyle;
+  final PwColor? fpTextColor;
   final Color? backgroundColor;
   final Color? borderColor;
   final double borderWidth;
@@ -489,10 +489,10 @@ class FwOutlinedButton extends StatelessWidget {
                       icon != null
                           ? const HorizontalSpacer.medium()
                           : Container(),
-                      FwText(
+                      PwText(
                         _text,
-                        style: fpTextStyle ?? FwTextStyle.m,
-                        color: fpTextColor ?? FwColor.darkGrey,
+                        style: fpTextStyle ?? PwTextStyle.m,
+                        color: fpTextColor ?? PwColor.darkGrey,
                       ),
                     ],
                   ),
@@ -500,8 +500,8 @@ class FwOutlinedButton extends StatelessWidget {
                 showArrow
                     ? Align(
                         alignment: Alignment.centerRight,
-                        child: FwIcon(
-                          FwIcons.back,
+                        child: PwIcon(
+                          PwIcons.back,
                           color: Theme.of(context).colorScheme.darkGrey,
                         ),
                       )

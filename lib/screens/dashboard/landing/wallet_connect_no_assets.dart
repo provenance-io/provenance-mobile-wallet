@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 
 import 'wallet_portfolio.dart';

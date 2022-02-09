@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// All the Icons for Figure Tech Wallet. Imported from Figma SVGs.
 ///
 /// TODO: Remove these classes in favor of icon data:
-/// Ideally, we can deprecate [FwIcon] by creating a custom font using
+/// Ideally, we can deprecate [PwIcon] by creating a custom font using
 /// http://fluttericon.com and simply using the icons as IconData, like so:
 /// ```dart
 /// Icon(FigureIcons.creditCard);
 /// ```
 ///
 
-class FwIcons {
+class PwIcons {
   static const String back = 'back';
   static const String close = 'close';
   static const String scanCode = '2d_code';
@@ -31,10 +31,11 @@ class FwIcons {
   static const String remove = 'remove';
   static const String chevron = 'chevron';
   static const String new_window = "new_window";
+  static const String provenance = "provenance";
 }
 
-class FwIcon extends StatelessWidget {
-  const FwIcon(
+class PwIcon extends StatelessWidget {
+  const PwIcon(
     this.icon, {
     Key? key,
     this.color,

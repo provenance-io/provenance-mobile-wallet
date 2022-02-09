@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
@@ -79,18 +79,18 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: FwText(
+        title: PwText(
           Strings.enterRecoveryPassphrase,
-          style: FwTextStyle.h6,
+          style: PwTextStyle.h6,
           textAlign: TextAlign.left,
-          color: FwColor.globalNeutral550,
+          color: PwColor.globalNeutral550,
         ),
       ),
       body: Form(
@@ -128,11 +128,11 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
-                  child: FwButton(
-                    child: FwText(
+                  child: PwButton(
+                    child: PwText(
                       Strings.recover,
-                      style: FwTextStyle.mBold,
-                      color: FwColor.white,
+                      style: PwTextStyle.mBold,
+                      color: PwColor.white,
                     ),
                     onPressed: () async {
                       if (_formKey.currentState?.validate() == true) {

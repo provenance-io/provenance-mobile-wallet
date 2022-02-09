@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/common/widgets/fw_dialog.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
 import 'package:provenance_wallet/screens/dashboard/rename_wallet_dialog.dart';
@@ -72,22 +72,22 @@ class WalletsState extends State<Wallets>
             onTap: () {
               Navigator.of(context).push(AddWallet().route());
             },
-            child: FwIcon(
-              FwIcons.plus,
+            child: PwIcon(
+              PwIcons.plus,
               color: Theme.of(context).colorScheme.globalNeutral450,
               size: 24,
             ),
           ),
           HorizontalSpacer.medium(),
         ],
-        title: FwText(
+        title: PwText(
           Strings.wallets,
-          color: FwColor.globalNeutral550,
-          style: FwTextStyle.h6,
+          color: PwColor.globalNeutral550,
+          style: PwTextStyle.h6,
         ),
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
@@ -112,10 +112,10 @@ class WalletsState extends State<Wallets>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  FwText(
+                  PwText(
                     Strings.selectedWallet,
-                    color: FwColor.globalNeutral550,
-                    style: FwTextStyle.sBold,
+                    color: PwColor.globalNeutral550,
+                    style: PwTextStyle.sBold,
                   ),
                 ],
               ),
@@ -155,10 +155,10 @@ class WalletsState extends State<Wallets>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              FwText(
+              PwText(
                 Strings.allWallets,
-                color: FwColor.globalNeutral550,
-                style: FwTextStyle.sBold,
+                color: PwColor.globalNeutral550,
+                style: PwTextStyle.sBold,
               ),
             ],
           ),
@@ -210,10 +210,10 @@ class WalletItem extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Row(
               children: [
-                FwText(
+                PwText(
                   item.accountName,
-                  color: FwColor.globalNeutral550,
-                  style: FwTextStyle.m,
+                  color: PwColor.globalNeutral550,
+                  style: PwTextStyle.m,
                 ),
                 HorizontalSpacer.small(),
                 Container(
@@ -224,10 +224,10 @@ class WalletItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13.0),
                   ),
                   child: Center(
-                    child: FwText(
+                    child: PwText(
                       Strings.basic,
-                      color: FwColor.globalNeutral550,
-                      style: FwTextStyle.xs,
+                      color: PwColor.globalNeutral550,
+                      style: PwTextStyle.xs,
                     ),
                   ),
                 ),
@@ -251,16 +251,16 @@ class WalletItem extends StatelessWidget {
                         if (!item.isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.select,
-                            child: FwText(Strings.select),
+                            child: PwText(Strings.select),
                           ),
                         PopupMenuItem<MenuOperation>(
                           value: MenuOperation.rename,
-                          child: FwText(Strings.rename),
+                          child: PwText(Strings.rename),
                         ),
                         if (!item.isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.delete,
-                            child: FwText(Strings.remove),
+                            child: PwText(Strings.remove),
                           ),
                       ],
                     );
@@ -281,7 +281,7 @@ class WalletItem extends StatelessWidget {
                         reload.call();
                       }
                     } else if (result == MenuOperation.delete) {
-                      final dialogResult = await FwDialog.showConfirmation(
+                      final dialogResult = await PwDialog.showConfirmation(
                         context,
                         message: Strings.removeThisWallet,
                         confirmText: Strings.yes,
@@ -303,8 +303,8 @@ class WalletItem extends StatelessWidget {
                     height: 60,
                     color: Theme.of(context).colorScheme.white,
                     child: Center(
-                      child: FwIcon(
-                        FwIcons.menuIcon,
+                      child: PwIcon(
+                        PwIcons.menuIcon,
                         color: Theme.of(context).colorScheme.globalNeutral550,
                       ),
                     ),
@@ -318,24 +318,24 @@ class WalletItem extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Row(
               children: [
-                FwText(
+                PwText(
                   '${item.address.substring(0, 5)}...${item.address.substring(30)}',
-                  color: FwColor.globalNeutral550,
-                  style: FwTextStyle.m,
+                  color: PwColor.globalNeutral550,
+                  style: PwTextStyle.m,
                 ),
                 HorizontalSpacer.medium(),
                 GestureDetector(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: item.address));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: FwText(Strings.addressCopied)),
+                      SnackBar(content: PwText(Strings.addressCopied)),
                     );
                   },
                   child: Container(
                     width: 24,
                     height: 24,
-                    child: FwIcon(
-                      FwIcons.copy,
+                    child: PwIcon(
+                      PwIcons.copy,
                       color: Theme.of(context).colorScheme.globalNeutral550,
                       size: 24,
                     ),

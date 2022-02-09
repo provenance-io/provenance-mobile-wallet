@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -26,8 +26,8 @@ class QRCodeScannerState extends State<QRCodeScanner> {
         backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
         elevation: 0.0,
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.white,
           ),

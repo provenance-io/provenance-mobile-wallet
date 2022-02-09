@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -33,11 +33,11 @@ class ErrorDialog extends StatelessWidget {
                 left: 20,
                 right: 20,
               ),
-              child: FwButton(
-                child: FwText(
+              child: PwButton(
+                child: PwText(
                   'OK',
-                  style: FwTextStyle.mBold,
-                  color: FwColor.white,
+                  style: PwTextStyle.mBold,
+                  color: PwColor.white,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();

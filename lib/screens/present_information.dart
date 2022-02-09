@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry.dart';
@@ -19,15 +19,15 @@ class PresentInformation extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.white,
         elevation: 0.0,
-        title: FwText(
+        title: PwText(
           info.title,
-          style: FwTextStyle.h5,
+          style: PwTextStyle.h5,
           textAlign: TextAlign.left,
-          color: FwColor.globalNeutral550,
+          color: PwColor.globalNeutral550,
         ),
         leading: IconButton(
-          icon: FwIcon(
-            FwIcons.back,
+          icon: PwIcon(
+            PwIcons.back,
             size: 24,
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
@@ -64,11 +64,11 @@ class PresentInformation extends StatelessWidget {
             !info.isExistingAccount
                 ? Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
-                    child: FwText(
+                    child: PwText(
                       Strings.prepareToWriteDownYourRecoveryPassphrase,
-                      style: FwTextStyle.extraLarge,
+                      style: PwTextStyle.extraLarge,
                       textAlign: TextAlign.center,
-                      color: FwColor.globalNeutral550,
+                      color: PwColor.globalNeutral550,
                     ),
                   )
                 : Container(),
@@ -77,11 +77,11 @@ class PresentInformation extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwText(
+              child: PwText(
                 info.bodyText,
-                style: FwTextStyle.m,
+                style: PwTextStyle.m,
                 textAlign: TextAlign.center,
-                color: FwColor.globalNeutral550,
+                color: PwColor.globalNeutral550,
               ),
             ),
             Expanded(child: Container()),
@@ -89,11 +89,11 @@ class PresentInformation extends StatelessWidget {
                 ? Container()
                 : Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
-                    child: FwText(
+                    child: PwText(
                       Strings.warningDoNotShare,
-                      style: FwTextStyle.sBold,
+                      style: PwTextStyle.sBold,
                       textAlign: TextAlign.center,
-                      color: FwColor.globalNeutral450,
+                      color: PwColor.globalNeutral450,
                     ),
                   ),
             SizedBox(
@@ -101,11 +101,11 @@ class PresentInformation extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: FwButton(
-                child: FwText(
+              child: PwButton(
+                child: PwText(
                   info.buttonText,
-                  style: FwTextStyle.mBold,
-                  color: FwColor.white,
+                  style: PwTextStyle.mBold,
+                  color: PwColor.white,
                 ),
                 onPressed: () {
                   var widget = info.getNextStep();

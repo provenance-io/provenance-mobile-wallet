@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -31,10 +31,10 @@ class WalletConnectWithAssets extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              FwText(
+              PwText(
                 Strings.myAssets,
-                color: FwColor.globalNeutral550,
-                style: FwTextStyle.h6,
+                color: PwColor.globalNeutral550,
+                style: PwTextStyle.h6,
               ),
             ],
           ),
@@ -71,11 +71,11 @@ class WalletConnectWithAssets extends StatelessWidget {
                         Container(
                           width: 32,
                           height: 32,
-                          child: FwIcon(
+                          child: PwIcon(
                             item.display?.toUpperCase() == 'USD' ||
                                     item.display?.toUpperCase() == 'USDF'
-                                ? FwIcons.dollarIcon
-                                : FwIcons.hashLogo,
+                                ? PwIcons.dollarIcon
+                                : PwIcons.hashLogo,
                             color:
                                 Theme.of(context).colorScheme.globalNeutral550,
                             size: 32,
@@ -85,22 +85,22 @@ class WalletConnectWithAssets extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FwText(
+                            PwText(
                               item.display?.toUpperCase() ?? '',
-                              color: FwColor.globalNeutral550,
-                              style: FwTextStyle.mSemiBold,
+                              color: PwColor.globalNeutral550,
+                              style: PwTextStyle.mSemiBold,
                             ),
                             VerticalSpacer.xSmall(),
-                            FwText(
+                            PwText(
                               item.displayAmount ?? '',
-                              color: FwColor.globalNeutral350,
-                              style: FwTextStyle.sSemiBold,
+                              color: PwColor.globalNeutral350,
+                              style: PwTextStyle.sSemiBold,
                             ),
                           ],
                         ),
                         Expanded(child: Container()),
-                        FwIcon(
-                          FwIcons.caret,
+                        PwIcon(
+                          PwIcons.caret,
                           color: Theme.of(context).colorScheme.globalNeutral550,
                           size: 12.0,
                         ),

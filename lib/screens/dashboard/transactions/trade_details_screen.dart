@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:provenance_wallet/common/fw_design.dart';
-import 'package:provenance_wallet/common/widgets/fw_list_divider.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
@@ -30,10 +30,10 @@ class TradeDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.only(
             top: 20,
           ),
-          child: FwText(
+          child: PwText(
             Strings.tradeDetailsTitle,
-            style: FwTextStyle.h6,
-            color: FwColor.globalNeutral550,
+            style: PwTextStyle.h6,
+            color: PwColor.globalNeutral550,
           ),
         ),
         leading: Padding(
@@ -45,8 +45,8 @@ class TradeDetailsScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: FwIcon(
-              FwIcons.back,
+            child: PwIcon(
+              PwIcons.back,
               color: Theme.of(context).colorScheme.globalNeutral450,
               size: 24.0,
             ),
@@ -59,22 +59,22 @@ class TradeDetailsScreen extends StatelessWidget {
           children: [
             TradeDetailsItem(
               title: Strings.tradeDetailsWallet,
-              endChild: FwText(
+              endChild: PwText(
                 walletName,
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTransaction,
               endChild: Container(
                 child: Row(
                   children: [
-                    FwText(
+                    PwText(
                       transaction.id ?? "",
-                      style: FwTextStyle.m,
-                      color: FwColor.globalNeutral600Black,
+                      style: PwTextStyle.m,
+                      color: PwColor.globalNeutral600Black,
                     ),
                     GestureDetector(
                       onTap: () async {
@@ -89,8 +89,8 @@ class TradeDetailsScreen extends StatelessWidget {
                       child: Container(
                         width: 24,
                         height: 24,
-                        child: FwIcon(
-                          FwIcons.new_window,
+                        child: PwIcon(
+                          PwIcons.new_window,
                           color: Theme.of(context)
                               .colorScheme
                               .globalNeutral600Black,
@@ -102,17 +102,17 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsFromAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
                   Container(
                 child: Row(
                   children: [
-                    FwText(
+                    PwText(
                       '${transaction.address?.substring(0, 3)}...${transaction.address?.substring(36)}',
-                      style: FwTextStyle.m,
-                      color: FwColor.globalNeutral600Black,
+                      style: PwTextStyle.m,
+                      color: PwColor.globalNeutral600Black,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -120,14 +120,14 @@ class TradeDetailsScreen extends StatelessWidget {
                           ClipboardData(text: transaction.address),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: FwText(Strings.addressCopied)),
+                          SnackBar(content: PwText(Strings.addressCopied)),
                         );
                       },
                       child: Container(
                         width: 24,
                         height: 24,
-                        child: FwIcon(
-                          FwIcons.copy,
+                        child: PwIcon(
+                          PwIcons.copy,
                           color: Theme.of(context)
                               .colorScheme
                               .globalNeutral600Black,
@@ -139,17 +139,17 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
                   Container(
                 child: Row(
                   children: [
-                    FwText(
+                    PwText(
                       '${walletAddress.substring(0, 3)}...${walletAddress.substring(36)}',
-                      style: FwTextStyle.m,
-                      color: FwColor.globalNeutral600Black,
+                      style: PwTextStyle.m,
+                      color: PwColor.globalNeutral600Black,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -157,14 +157,14 @@ class TradeDetailsScreen extends StatelessWidget {
                           ClipboardData(text: walletAddress),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: FwText(Strings.addressCopied)),
+                          SnackBar(content: PwText(Strings.addressCopied)),
                         );
                       },
                       child: Container(
                         width: 24,
                         height: 24,
-                        child: FwIcon(
-                          FwIcons.copy,
+                        child: PwIcon(
+                          PwIcons.copy,
                           color: Theme.of(context)
                               .colorScheme
                               .globalNeutral600Black,
@@ -176,71 +176,71 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsOrderType,
-              endChild: FwText(
+              endChild: PwText(
                 transaction.type ?? "",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: // FIXME: Need amount.
-                  FwText(
+                  PwText(
                 "20.000000000 Hash",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsPricePerUnit,
               endChild: // FIXME: Need 'Price Per Unit'.
-                  FwText(
+                  PwText(
                 "0.020 USD",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTotalPurchase,
               endChild: // FIXME: Need 'Total Purchase Price'.
-                  FwText(
+                  PwText(
                 "50.00 USD",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsFee,
-              endChild: FwText(
+              endChild: PwText(
                 transaction.feeAmount ?? "",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsTimeStamp,
-              endChild: FwText(
+              endChild: PwText(
                 transaction.time ?? "",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
-            FwListDivider(),
+            PwListDivider(),
             TradeDetailsItem(
               title: Strings.tradeDetailsBlock,
               endChild: // FIXME: Need 'Block'.
-                  FwText(
+                  PwText(
                 "4831429",
-                color: FwColor.globalNeutral500,
-                style: FwTextStyle.m,
+                color: PwColor.globalNeutral500,
+                style: PwTextStyle.m,
               ),
             ),
           ],

@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-class FwDivider extends StatelessWidget with FwColorMixin {
-  const FwDivider({
+class PwDivider extends StatelessWidget with PwColorMixin {
+  const PwDivider({
     this.color,
     this.indent,
     this.endIndent,
@@ -10,7 +10,7 @@ class FwDivider extends StatelessWidget with FwColorMixin {
   }) : super(key: key);
 
   @override
-  final FwColor? color;
+  final PwColor? color;
 
   final double? indent;
 

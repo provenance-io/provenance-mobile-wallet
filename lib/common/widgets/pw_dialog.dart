@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FwDialog {
-  FwDialog._();
+class PwDialog {
+  PwDialog._();
 
   /// Foundational design function for displaying dialogs. Only use when [showError],
   /// [showConfirmation], or [showMessage] can't be used
@@ -41,10 +41,10 @@ class FwDialog {
                   header,
                   const VerticalSpacer.xLarge(),
                 ],
-                FwText(
+                PwText(
                   title,
-                  style: FwTextStyle.h4,
-                  color: FwColor.black,
+                  style: PwTextStyle.h4,
+                  color: PwColor.black,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -52,10 +52,10 @@ class FwDialog {
           ),
           content: content ??
               (message != null
-                  ? FwText(
+                  ? PwText(
                       message,
-                      style: FwTextStyle.m,
-                      color: FwColor.black,
+                      style: PwTextStyle.m,
+                      color: PwColor.black,
                       textAlign: TextAlign.center,
                     )
                   : null),
@@ -94,8 +94,8 @@ class FwDialog {
       message: message ?? 'Unknown Error',
       bottom: Column(
         children: [
-          FwPrimaryButton(
-            child: FwText('OK'),
+          PwPrimaryButton(
+            child: PwText('OK'),
             onPressed: () {
               Navigator.of(context).pop();
               okAction?.call();
@@ -103,8 +103,8 @@ class FwDialog {
           ),
           if (showCancel) ...[
             const VerticalSpacer.small(),
-            FwTextButton(
-              child: FwText('Cancel'),
+            PwTextButton(
+              child: PwText('Cancel'),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -134,14 +134,14 @@ class FwDialog {
       content: content,
       bottom: Column(
         children: [
-          FwPrimaryButton(
-            child: FwText(confirmText ?? cancelText),
+          PwPrimaryButton(
+            child: PwText(confirmText ?? cancelText),
             onPressed: () => Navigator.of(context).pop(true),
           ),
           const VerticalSpacer.small(),
           if (confirmText != null) ...[
-            FwTextButton(
-              child: FwText(cancelText),
+            PwTextButton(
+              child: PwText(cancelText),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             if (footer != null) ...[
@@ -199,15 +199,15 @@ class FwDialog {
       title: 'Update Needed',
       content: GestureDetector(
         onTap: onTap,
-        child: const FwText(
+        child: const PwText(
           'Please update to the latest version of Figure Tech Wallet in order to continue using the app. Thank you!',
-          style: FwTextStyle.m,
-          color: FwColor.black,
+          style: PwTextStyle.m,
+          color: PwColor.black,
           textAlign: TextAlign.center,
         ),
       ),
-      bottom: FwPrimaryButton(
-        child: FwText('Force Update'),
+      bottom: PwPrimaryButton(
+        child: PwText('Force Update'),
         onPressed: () {
           final url = Platform.isIOS
               ? 'https://apps.apple.com/us/app/figure-pay/id1529369990'

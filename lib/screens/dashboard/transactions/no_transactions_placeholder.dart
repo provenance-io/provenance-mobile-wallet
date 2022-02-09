@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class NoTransactionsPlaceholder extends StatelessWidget {
@@ -13,10 +13,10 @@ class NoTransactionsPlaceholder extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: FwText(
+                child: PwText(
                   Strings.noTransactionsText,
-                  color: FwColor.globalNeutral550,
-                  style: FwTextStyle.h7,
+                  color: PwColor.globalNeutral550,
+                  style: PwTextStyle.h7,
                   textAlign: TextAlign.center,
                 ),
               ),

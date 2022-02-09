@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/fw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-class FwShowModalBottomSheet {
-  FwShowModalBottomSheet(
+class PwShowModalBottomSheet {
+  PwShowModalBottomSheet(
     this.context, {
     this.normalChild,
     this.fractionalChild,
