@@ -1,7 +1,6 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
@@ -10,9 +9,6 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
-import 'package:provenance_wallet/screens/send_transaction_approval.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
-import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -78,10 +74,10 @@ class DashboardState extends State<Dashboard>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
-    get<WalletService>()
-      ..signRequest.listen(_onSignRequest).addTo(_subscriptions)
-      ..sendRequest.listen(_onSendRequest).addTo(_subscriptions)
-      ..configureServer();
+    // get<WalletService>()
+    //   ..signRequest.listen(_onSignRequest).addTo(_subscriptions)
+    //   ..sendRequest.listen(_onSendRequest).addTo(_subscriptions)
+    //   ..configureServer();
 
     loadAddress();
 
@@ -248,33 +244,6 @@ class DashboardState extends State<Dashboard>
     );
   }
 
-  void _onSendRequest(SendRequest sendRequest) {
-    SendTransactionInfo info = SendTransactionInfo(
-      fee: sendRequest.cost,
-      toAddress: sendRequest.message.toAddress ?? '',
-      fromAddress: sendRequest.message.fromAddress ?? '',
-      requestId: sendRequest.id,
-      amount: sendRequest.message.displayAmount,
-    );
-    Navigator.of(context).push(SendTransactionApproval(info).route());
-  }
-
-  void _onSignRequest(SignRequest signRequest) async {
-    final allowed = await PwDialog.showConfirmation(
-      context,
-      title: signRequest.description,
-      message: signRequest.message,
-      confirmText: Strings.sign,
-      cancelText: Strings.decline,
-    );
-    ModalLoadingRoute.showLoading("", context);
-    await get<WalletService>().signTransactionFinish(
-      requestId: signRequest.id,
-      allowed: allowed,
-    );
-    ModalLoadingRoute.dismiss(context);
-  }
-
   void _setCurrentTab() {
     setState(() {
       _currentTabIndex = _tabController.index;
@@ -311,7 +280,10 @@ class DashboardState extends State<Dashboard>
       final walletService = get<WalletService>();
       final isValid = await walletService.isValidWalletConnectData(decodedData);
       if (isValid) {
-        final success = await walletService.connectWallet(decodedData);
+        await walletService.connectWallet(decodedData);
+        final walletConnect = walletService.currentWalletConnect!;
+        final success = await walletConnect.connectWallet();
+
         if (!success) {
           logDebug('Wallet connection failed');
         }

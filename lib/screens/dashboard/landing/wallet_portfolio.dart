@@ -1,13 +1,30 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/services/wallet_connect_status.dart';
+import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/requests/sign_request.dart';
+import 'package:provenance_wallet/services/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+typedef Future<void> OnAddressCaptured(String address);
+
 class WalletPortfolio extends StatefulWidget {
+  WalletPortfolio(
+    this.isConnectedToWallet,
+    this.onAddressCaptured, {
+    Key? key,
+  }) : super(key: key);
+
+  final OnAddressCaptured onAddressCaptured;
+  final bool isConnectedToWallet;
+
   @override
   State<StatefulWidget> createState() => WalletPortfolioState();
 }
@@ -154,69 +171,57 @@ class WalletPortfolioState extends State<WalletPortfolio> {
   }
 
   Widget _buildWalletConnectButton() {
-    return StreamBuilder<WalletConnectStatus>(
-      stream: get<WalletService>().status,
-      initialData: WalletConnectStatus.disconnected,
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return Container(
-            width: 100,
-          );
-        }
+    if (widget.isConnectedToWallet) {
+      return Container(
+        width: 100,
+      );
+    }
 
-        return Container(
-          width: 100,
-          child: GestureDetector(
-            onTap: () async {
-              if (snapshot.data == WalletConnectStatus.disconnected) {
-                final result = await Navigator.of(
+    return Container(
+      width: 100,
+      child: GestureDetector(
+        onTap: () async {
+          final result = await Navigator.of(
+            context,
+          ).push(
+            QRCodeScanner().route<String?>(),
+          );
+          if (result == null) {
+            return;
+          }
+
+          widget.onAddressCaptured(result);
+        },
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(
                   context,
-                ).push(
-                  QRCodeScanner().route<String?>(),
-                );
-                if (result != null) {
-                  get<WalletService>().connectWallet(result);
-                }
-              } else {
-                get<WalletService>().disconnectSession();
-              }
-            },
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.globalNeutral450,
-                    borderRadius: BorderRadius.circular(
-                      23,
-                    ),
-                  ),
-                  height: 46,
-                  width: 46,
-                  child: Center(
-                    child: PwIcon(
-                      snapshot.data == WalletConnectStatus.disconnected
-                          ? PwIcons.walletConnect
-                          : PwIcons.close,
-                      size: 15,
-                      color: Theme.of(context).colorScheme.white,
-                    ),
-                  ),
+                ).colorScheme.globalNeutral450,
+                borderRadius: BorderRadius.circular(
+                  23,
                 ),
-                VerticalSpacer.xSmall(),
-                PwText(
-                  snapshot.data == WalletConnectStatus.disconnected
-                      ? Strings.walletConnect
-                      : Strings.disconnect,
-                  color: PwColor.white,
-                  style: PwTextStyle.s,
+              ),
+              height: 46,
+              width: 46,
+              child: Center(
+                child: PwIcon(
+                  PwIcons.walletConnect,
+                  size: 15,
+                  color: Theme.of(context).colorScheme.white,
                 ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+            VerticalSpacer.xSmall(),
+            PwText(
+              Strings.walletConnect,
+              color: PwColor.white,
+              style: PwTextStyle.s,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

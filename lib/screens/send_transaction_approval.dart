@@ -44,11 +44,11 @@ class SendTransactionApproval extends StatelessWidget {
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
-            await get<WalletService>().sendMessageFinish(
-              requestId: details.requestId,
-              allowed: false,
-            );
-            Navigator.of(context).pop();
+            // await get<WalletService>().sendMessageFinish(
+            //   requestId: details.requestId,
+            //   allowed: false,
+            // );
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -174,12 +174,12 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    await get<WalletService>().sendMessageFinish(
-                      requestId: details.requestId,
-                      allowed: true,
-                    );
+                    // await get<WalletService>().sendMessageFinish(
+                    //   requestId: details.requestId,
+                    //   allowed: true,
+                    // );
                     ModalLoadingRoute.dismiss(context);
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(true);
                   },
                 ),
               ),
@@ -196,12 +196,12 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    await get<WalletService>().sendMessageFinish(
-                      requestId: details.requestId,
-                      allowed: false,
-                    );
+                    // await get<WalletService>().sendMessageFinish(
+                    //   requestId: details.requestId,
+                    //   allowed: false,
+                    // );
                     ModalLoadingRoute.dismiss(context);
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(false);
                   },
                 ),
               ),

@@ -18,7 +18,7 @@ class ResetButton extends StatelessWidget {
         ),
         onPressed: () async {
           final walletService = get<WalletService>();
-          await walletService.disconnectSession();
+          await walletService.currentWalletConnect?.disconnectSession();
           await walletService.resetWallets();
           FlutterSecureStorage storage = FlutterSecureStorage();
           await storage.deleteAll();

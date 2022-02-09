@@ -4,8 +4,8 @@ import 'package:provenance_wallet/services/cipher_service.dart';
 
 main() {
   MethodChannel? _channel;
-  Map<String,dynamic>? _results;
-  Map<String,dynamic>? _methodArgs;
+  Map<String, dynamic>? _results;
+  Map<String, dynamic>? _methodArgs;
 
   CipherService? _cipherService;
 
@@ -18,8 +18,8 @@ main() {
   }
 
   setUp(() {
-    _results = <String,dynamic>{};
-    _methodArgs = <String,dynamic>{};
+    _results = <String, dynamic>{};
+    _methodArgs = <String, dynamic>{};
 
     _channel = const MethodChannel('prov_wallet_flutter');
 
@@ -28,16 +28,22 @@ main() {
 
   group("encryptKey", () {
     final id = "TestId";
-    final bip32Serialized = "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
+    final bip32Serialized =
+        "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
 
     testWidgets('success', (tester) async {
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(_channel!, _channelHandler);
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(_channel!, _channelHandler);
 
       _results!["encryptKey"] = true;
-      final result = await _cipherService!.encryptKey(id: id, privateKey: bip32Serialized, useBiometry: true);
+      final result = await _cipherService!.encryptKey(
+        id: id,
+        privateKey: bip32Serialized,
+        useBiometry: true,
+      );
 
       expect(result, true);
-      expect(_methodArgs!["encryptKey"], <String,dynamic>{
+      expect(_methodArgs!["encryptKey"], <String, dynamic>{
         "id": id,
         "private_key": bip32Serialized,
         "use_biometry": true,
@@ -46,17 +52,19 @@ main() {
   });
 
   group("decryptKey", () {
-    final bip32Serialized = "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
+    final bip32Serialized =
+        "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
     final id = "TestId";
 
     testWidgets('success', (tester) async {
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(_channel!, _channelHandler);
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(_channel!, _channelHandler);
 
       _results!["decryptKey"] = bip32Serialized;
 
       final result = await _cipherService!.decryptKey(id: id);
       expect(result, bip32Serialized);
-      expect(_methodArgs!["decryptKey"], <String,dynamic>{
+      expect(_methodArgs!["decryptKey"], <String, dynamic>{
         "id": id,
       });
     });
@@ -64,7 +72,8 @@ main() {
 
   group("getUseBiometry", () {
     testWidgets('success', (tester) async {
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(_channel!, _channelHandler);
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(_channel!, _channelHandler);
 
       _results!["getUseBiometry"] = true;
 
@@ -75,7 +84,8 @@ main() {
 
   group("setUseBiometry", () {
     testWidgets('success', (tester) async {
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(_channel!, _channelHandler);
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(_channel!, _channelHandler);
 
       _results!["setUseBiometry"] = false;
 
