@@ -33,9 +33,7 @@ class DashboardLandingState extends State<DashboardLanding> {
     return Container(
       color: Theme.of(context).colorScheme.white,
       padding: EdgeInsets.only(top: 40),
-      child: _assets.isEmpty
-          ? WalletConnectNoAssets(walletKey: walletKey)
-          : WalletConnectWithAssets(walletKey: walletKey, assets: _assets),
+      child: WalletConnectSection(),
     );
   }
 }
