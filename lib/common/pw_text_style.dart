@@ -24,6 +24,8 @@ enum PwTextStyle {
   large,
   extraLarge,
   logo,
+  subhead,
+  body,
 }
 
 mixin PwTextStyleMixin on Widget {
@@ -78,6 +80,10 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.extraLarge;
       case PwTextStyle.logo:
         return theme.textTheme.logo;
+      case PwTextStyle.subhead:
+        return theme.textTheme.subhead;
+      case PwTextStyle.body:
+        return theme.textTheme.body;
     }
   }
 }

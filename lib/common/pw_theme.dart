@@ -5,7 +5,10 @@ class ProvenanceThemeData {
   // Keep private. Expose only through colorScheme or ThemeData.
   /// Greys
   static const Color _neutral800 = Color(0xFF09090C);
+  static const Color _neutral750 = Color(0xFF1A1C23);
+  static const Color _neutral550 = Color(0xFF464B5D);
   static const Color _neutral500 = Color(0xFF4C5165);
+  static const Color _neutral250 = Color(0xFFA2A7B9);
 
   // Page Indicator
   static const Color _indicatorActive = Color(0xFFF3F4F6);
@@ -99,21 +102,18 @@ class ProvenanceThemeData {
     fontSize: 14,
     fontWeight: FontWeight.w400,
     height: 22.4 / 14,
-    letterSpacing: 22 * 0.04,
   );
   static const TextStyle _bodyBold = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    height: 22.4 / 14,
-    letterSpacing: 22 * 0.04,
   );
   static const TextStyle _subhead = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    height: 22.4 / 14,
-    letterSpacing: 22 * 0.04,
+    //height: 22.4 / 14,
+    //letterSpacing: 22 * 0.04,
   );
   static const TextStyle _footnote = TextStyle(
     fontFamily: 'GothicA1',
@@ -126,7 +126,10 @@ class ProvenanceThemeData {
 
 extension CustomColorScheme on ColorScheme {
   Color get provenanceNeutral800 => ProvenanceThemeData._neutral800;
+  Color get provenanceNeutral750 => ProvenanceThemeData._neutral750;
+  Color get provenanceNeutral550 => ProvenanceThemeData._neutral550;
   Color get provenanceNeutral500 => ProvenanceThemeData._neutral500;
+  Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
 
   Color get logo => ProvenanceThemeData._provenanceLogo;
   Color get primaryP500 => ProvenanceThemeData._primary2;
@@ -141,4 +144,6 @@ extension CustomTextTheme on TextTheme {
   TextStyle get large =>
       ProvenanceThemeData._logo.copyWith(fontWeight: FontWeight.w600);
   TextStyle get logo => ProvenanceThemeData._logo;
+  TextStyle get subhead => ProvenanceThemeData._subhead;
+  TextStyle get body => ProvenanceThemeData._body;
 }

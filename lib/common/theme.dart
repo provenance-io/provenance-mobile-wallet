@@ -196,8 +196,8 @@ class FigurePayThemeData {
     secondaryVariant: _secondary2,
     background: _light,
     surface: _light,
-    onBackground: _black,
-    onSurface: _black,
+    onBackground: _white,
+    onSurface: _white,
     error: _error,
     onError: _white,
     onPrimary: _white,
@@ -245,8 +245,8 @@ class FigurePayThemeData {
       platform: defaultTargetPlatform,
     ),
     textTheme: _textTheme.apply(
-      bodyColor: _black,
-      displayColor: _black,
+      bodyColor: _white,
+      displayColor: _white,
     ),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
