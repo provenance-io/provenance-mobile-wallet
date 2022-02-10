@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/present_information.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -125,16 +126,11 @@ class AccountName extends HookWidget {
                               WalletAddImportType.onBoardingAdd ||
                           flowType == WalletAddImportType.dashboardAdd) {
                         Navigator.of(context).push(
-                          PresentInformation(
-                            InfoModel(
-                              flowType,
-                              accountNameProvider.text,
-                              Strings.createPassphrase,
-                              Strings.theOnlyWayToRecoverYourAccount,
-                              Strings.iAmReady,
-                              currentStep: (currentStep ?? 0) + 1,
-                              numberOfSteps: numberOfSteps,
-                            ),
+                          CreatePassphraseScreen(
+                            flowType,
+                            accountNameProvider.text,
+                            currentStep: (currentStep ?? 0) + 1,
+                            numberOfSteps: numberOfSteps,
                           ).route(),
                         );
                       }
