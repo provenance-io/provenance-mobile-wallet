@@ -1,28 +1,21 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class WalletPortfolio extends StatefulWidget {
-  WalletPortfolio({
-    Key? key,
-  }) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => WalletPortfolioState();
 }
 
 class WalletPortfolioState extends State<WalletPortfolio> {
-  String _walletValue = "";
-
-  void updateValue(String text) {
-    setState(() {
-      _walletValue = text;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final assetStream = get<DashboardBloc>().assetList;
+
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: Container(
@@ -46,10 +39,19 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                     color: PwColor.white,
                     style: PwTextStyle.sBold,
                   ),
-                  PwText(
-                    _walletValue,
-                    color: PwColor.white,
-                    style: PwTextStyle.h6,
+                  StreamBuilder<List<AssetResponse>>(
+                    initialData: assetStream.value,
+                    stream: assetStream,
+                    builder: (context, snapshot) {
+                      final assets = snapshot.data ?? [];
+
+                      return PwText(
+                        // FIXME: How do we get portfolio value?
+                        '\$0',
+                        color: PwColor.white,
+                        style: PwTextStyle.h6,
+                      );
+                    },
                   ),
                 ],
               ),

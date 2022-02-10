@@ -5,14 +5,13 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
-import 'package:provenance_wallet/network/services/asset_service.dart';
-import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
@@ -31,13 +30,8 @@ class DashboardState extends State<Dashboard>
   late TabController _tabController;
   String _walletAddress = '';
   String _walletName = '';
-  String _walletValue = '';
   bool _initialLoad = false;
   int _currentTabIndex = 0;
-  // FIXME: State Management
-  GlobalKey<WalletPortfolioState> _walletKey = GlobalKey();
-  GlobalKey<DashboardLandingState> _landingKey = GlobalKey();
-  GlobalKey<TransactionLandingState> _transactionKey = GlobalKey();
 
   final _subscriptions = CompositeSubscription();
 
@@ -78,6 +72,7 @@ class DashboardState extends State<Dashboard>
 
   @override
   void initState() {
+    get.registerLazySingleton<DashboardBloc>(() => DashboardBloc());
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
@@ -127,35 +122,14 @@ class DashboardState extends State<Dashboard>
     setState(() {
       _walletAddress = details.address;
       _walletName = details.accountName;
-      _walletValue = '\$0';
-      _walletKey.currentState?.updateValue(_walletValue);
     });
     this.loadAssets();
   }
 
   void loadAssets() async {
     ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
-
-    final result = await AssetService.getAssets(_walletAddress);
-    final transactions =
-        await TransactionService.getTransactions(_walletAddress);
+    get<DashboardBloc>().load(_walletAddress);
     ModalLoadingRoute.dismiss(context);
-    setState(() {
-      if (result.isSuccessful) {
-        this.assets = result.data ?? [];
-      }
-
-      // FIXME: State Management
-      _landingKey.currentState?.updateAssets(this.assets);
-
-      if (transactions.isSuccessful) {
-        this.transactions = transactions.data ?? [];
-      }
-
-      // FIXME: State Management
-      _transactionKey.currentState?.updateTransactions(this.transactions);
-      _initialLoad = false;
-    });
   }
 
   @override
@@ -283,14 +257,8 @@ class DashboardState extends State<Dashboard>
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                DashboardLanding(
-                  // FIXME: State Management
-                  key: _landingKey,
-                  walletKey: _walletKey,
-                ),
+                DashboardLanding(),
                 TransactionLanding(
-                  // FIXME: State Management
-                  key: _transactionKey,
                   walletAddress: _walletAddress,
                   walletName: _walletName,
                 ),
@@ -305,9 +273,6 @@ class DashboardState extends State<Dashboard>
   void _setCurrentTab() {
     setState(() {
       _currentTabIndex = _tabController.index;
-      _walletKey.currentState?.updateValue(_walletValue);
-      _landingKey.currentState?.updateAssets(assets);
-      _transactionKey.currentState?.updateTransactions(transactions);
     });
   }
 
