@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 
 class PwPrimaryButton extends StatelessWidget {
   const PwPrimaryButton({
@@ -100,7 +101,6 @@ class PwSecondaryButton extends StatelessWidget {
               ? Theme.of(context).colorScheme.black
               : Theme.of(context).colorScheme.onPrimary;
         }),
-        // FIXME: Border should appear on the outside as per design
         side: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
           if (states.contains(MaterialState.focused) ||
               states.contains(MaterialState.hovered) ||

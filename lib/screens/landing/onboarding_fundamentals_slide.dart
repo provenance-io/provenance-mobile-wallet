@@ -113,7 +113,7 @@ class _OnboardingFundamentalsSlideState
 
                       return PwText(
                         '$numValidators',
-                        style: PwTextStyle.h4,
+                        style: PwTextStyle.h3,
                         color: PwColor.white,
                       );
                     },
