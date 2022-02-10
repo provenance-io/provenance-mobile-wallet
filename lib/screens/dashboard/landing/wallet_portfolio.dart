@@ -46,10 +46,9 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                       final assets = snapshot.data ?? [];
 
                       return PwText(
-                        assets
-                            .map((e) => double.tryParse(e.amount ?? "") ?? 0)
-                            .reduce((value, element) => value + element)
-                            .toStringAsFixed(2),
+                        assets.isNotEmpty
+                            ? '\$${assets.map((e) => double.tryParse(e.amount ?? "") ?? 0).reduce((value, element) => value + element).toStringAsFixed(2)}'
+                            : '\$0',
                         color: PwColor.white,
                         style: PwTextStyle.h6,
                       );
