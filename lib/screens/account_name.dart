@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
-import 'package:provenance_wallet/screens/present_information.dart';
+import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountName extends HookWidget {
@@ -110,16 +110,11 @@ class AccountName extends HookWidget {
                       if (flowType == WalletAddImportType.onBoardingRecover ||
                           flowType == WalletAddImportType.dashboardRecover) {
                         Navigator.of(context).push(
-                          PresentInformation(
-                            InfoModel(
-                              flowType,
-                              accountNameProvider.text,
-                              Strings.recoverAccount,
-                              Strings.inTheFollowingStepsText,
-                              Strings.next,
-                              currentStep: (currentStep ?? 0) + 1,
-                              numberOfSteps: numberOfSteps,
-                            ),
+                          RecoverAccountScreen(
+                            flowType,
+                            accountNameProvider.text,
+                            currentStep: (currentStep ?? 0) + 1,
+                            numberOfSteps: numberOfSteps,
                           ).route(),
                         );
                       } else if (flowType ==
