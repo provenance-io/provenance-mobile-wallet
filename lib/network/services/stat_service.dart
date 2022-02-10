@@ -9,8 +9,8 @@ class StatService {
     return OnboardingStat(
       '\$${random.nextInt(5) + 10}.${random.nextInt(9)}B',
       random.nextInt(5) + 10,
-      '${random.nextInt(395) + 400}.${random.nextInt(9)}K',
-      '${random.nextInt(6) + 2}.${random.nextInt(99)} sec.',
+      '${random.nextInt(395) + 400}.${random.nextInt(9)}k',
+      '${random.nextInt(6) + 2}.${random.nextInt(99)}sec',
     );
   }
 }

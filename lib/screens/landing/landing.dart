@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
-import 'package:provenance_wallet/screens/landing/face_id_button.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
@@ -109,34 +108,35 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PageView(
                   controller: _pageController,
                   children: [
+                    OnboardingLandingSlide(),
                     OnboardingFundamentalsSlide(),
                     OnboardingCustomizationSlide(),
-                    OnboardingLandingSlide(),
                   ],
                 ),
               ),
               VerticalSpacer.medium(),
               PageIndicator(currentPageIndex: _currentPage.round()),
               VerticalSpacer.large(),
-              FaceIdButton(
-                authType: _localAuth.authType,
-                accountExists: _accountExists,
-                doAuth: doAuth,
-              ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: PwButton(
                   child: PwText(
-                    Strings.createWallet,
-                    style: PwTextStyle.mBold,
+                    _accountExists
+                        ? Strings.continueName
+                        : Strings.createWallet,
+                    style: PwTextStyle.m,
                     color: PwColor.white,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(AccountName(
-                      WalletAddImportType.onBoardingAdd,
-                      currentStep: 1,
-                      numberOfSteps: 4,
-                    ).route());
+                    if (_accountExists) {
+                      doAuth();
+                    } else {
+                      Navigator.of(context).push(AccountName(
+                        WalletAddImportType.onBoardingAdd,
+                        currentStep: 1,
+                        numberOfSteps: 4,
+                      ).route());
+                    }
                   },
                 ),
               ),
@@ -148,8 +148,8 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 child: PwTextButton(
                   child: PwText(
                     Strings.restoreWallet,
-                    style: PwTextStyle.mBold,
-                    color: PwColor.globalNeutral450,
+                    style: PwTextStyle.m,
+                    color: PwColor.white,
                   ),
                   onPressed: () {
                     Navigator.of(context).push(AccountName(

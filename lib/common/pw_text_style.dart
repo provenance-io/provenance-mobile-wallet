@@ -11,6 +11,7 @@ enum PwTextStyle {
   h6,
   h7,
   m,
+  m_p,
   mBold,
   mSemiBold,
   s,
@@ -19,7 +20,9 @@ enum PwTextStyle {
   xs,
   xsBold,
   caption,
+  large,
   extraLarge,
+  logo,
 }
 
 mixin PwTextStyleMixin on Widget {
@@ -50,6 +53,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.headline7;
       case PwTextStyle.m:
         return theme.textTheme.medium;
+      case PwTextStyle.m_p:
+        return theme.textTheme.pWMedium;
       case PwTextStyle.mBold:
         return theme.textTheme.mediumBold;
       case PwTextStyle.mSemiBold:
@@ -66,8 +71,12 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.extraSmallBold;
       case PwTextStyle.caption:
         return theme.textTheme.caption;
+      case PwTextStyle.large:
+        return theme.textTheme.large;
       case PwTextStyle.extraLarge:
         return theme.textTheme.extraLarge;
+      case PwTextStyle.logo:
+        return theme.textTheme.logo;
     }
   }
 }

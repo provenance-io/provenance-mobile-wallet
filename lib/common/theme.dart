@@ -41,6 +41,7 @@ class FigurePayThemeData {
   static const Color _primary5 = Color(0xFF7E6DD6);
   static const Color _primary6 = Color(0xFFDDD8FD);
   static const Color _primary7 = Color(0xFF573AE6);
+  static const Color _primary550 = Color(0xFF1B66EA);
 
   /// Secondary
   static const Color _secondary1 = Color(0xFF28CEA8);
@@ -73,17 +74,17 @@ class FigurePayThemeData {
   );
 
   static const TextStyle _headline3 = TextStyle(
-    fontFamily: 'Poppins',
-    fontSize: 28,
-    fontWeight: FontWeight.w400,
-    height: 40.8 / 30.0,
+    fontFamily: 'Montserrat',
+    fontSize: 37.68,
+    fontWeight: FontWeight.w300,
+    height: 45.93 / 37.68,
   );
 
   static const TextStyle _headline4 = TextStyle(
-    fontFamily: 'Poppins',
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
-    height: 23.54 / 22.0,
+    fontFamily: 'Montserrat',
+    fontSize: 24,
+    fontWeight: FontWeight.w300,
+    height: 29.26 / 24.0,
   );
 
   static const TextStyle _headline5 = TextStyle(
@@ -107,6 +108,21 @@ class FigurePayThemeData {
     height: 16.0 / 15.0,
   );
 
+  static const TextStyle _logo = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 19.5,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 10,
+  );
+
+  static const TextStyle _provenanceMedium = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.55,
+    letterSpacing: 0.32,
+  );
+
   static const TextStyle _extraLarge = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 25,
@@ -117,8 +133,8 @@ class FigurePayThemeData {
 
   static const TextStyle _medium = TextStyle(
     fontFamily: 'GothicA1',
-    fontSize: 16,
-    fontWeight: FontWeight.w300,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
     height: 15.55 / 15.0,
     letterSpacing: 0.32,
   );
@@ -278,6 +294,7 @@ extension CustomColorScheme on ColorScheme {
   Color get primary5 => FigurePayThemeData._primary5;
   Color get primary6 => FigurePayThemeData._primary6;
   Color get primary7 => FigurePayThemeData._primary7;
+  Color get primaryP500 => FigurePayThemeData._primary550;
   Color get white => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
   Color get lightGrey => FigurePayThemeData._lightGrey;
@@ -308,6 +325,7 @@ extension CustomTextTheme on TextTheme {
   TextStyle get headline0 => FigurePayThemeData._headline0;
   TextStyle get mediumBold => FigurePayThemeData._mediumBold;
   TextStyle get medium => FigurePayThemeData._medium;
+  TextStyle get pWMedium => FigurePayThemeData._provenanceMedium;
   TextStyle get mediumSemiBold => FigurePayThemeData._mediumSemiBold;
   TextStyle get smallBold => FigurePayThemeData._smallBold;
   TextStyle get smallSemiBold => FigurePayThemeData._smallSemiBold;
@@ -315,5 +333,8 @@ extension CustomTextTheme on TextTheme {
   TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;
   TextStyle get headline7 => FigurePayThemeData._headline7;
+  TextStyle get large =>
+      FigurePayThemeData._logo.copyWith(fontWeight: FontWeight.w600);
+  TextStyle get logo => FigurePayThemeData._logo;
   TextStyle get extraLarge => FigurePayThemeData._extraLarge;
 }

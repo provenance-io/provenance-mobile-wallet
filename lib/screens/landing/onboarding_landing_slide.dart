@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatelessWidget {
@@ -12,33 +11,41 @@ class OnboardingLandingSlide extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImagePlaceholder(),
+            PwIcon(
+              PwIcons.provenance,
+              // TODO: Put this in the theme once Figure colors are purged.
+              color: Color(0xFF3F80F3),
+            ),
           ],
         ),
-        SizedBox(
-          height: 48,
-        ),
         Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 40,
+          ),
           child: PwText(
-            Strings.manageYourOwnWallet,
-            style: PwTextStyle.extraLarge,
+            Strings.provenanceTitle,
+            style: PwTextStyle.logo,
             textAlign: TextAlign.center,
-            color: PwColor.globalNeutral550,
+            color: PwColor.white,
           ),
         ),
-        SizedBox(
-          height: 16,
-        ),
         Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 64,
+          ),
           child: PwText(
-            Strings.fullyControlYourWallet,
-            style: PwTextStyle.m,
+            Strings.provenanceWalletDescription,
+            // TODO: Fix this style when Figure colors are purged.
+            style: PwTextStyle.m_p,
             textAlign: TextAlign.center,
-            color: PwColor.globalNeutral550,
+            color: PwColor.white,
           ),
         ),
+        VerticalSpacer.custom(spacing: 155),
       ],
     );
   }

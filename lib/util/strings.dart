@@ -59,23 +59,24 @@ class Strings {
   static const createWallet = 'Create Wallet';
   static const restoreWallet = 'Restore Wallet';
 
-  // Landing Slide
-  static const figureTechWallet =
-      'Figure Tech Wallet is Lorem ipsum dolor sit amet, consectetur ';
+  // Fundamentals Slide
+  static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
   static const marketCap = 'Market Cap';
   static const validators = 'Validators';
   static const transactions = 'Transactions';
   static const avgBlockTime = 'Avg Block Time';
+  static const fundamentalsDescription =
+      "Contract execution in seconds instead of weeks";
 
-  // Trade Slide
-  static const trade = 'Trade ';
-  static const tradeHashText =
-      'Trade Hash, etc lorem ipsum with confidence blah blah blah';
+  // Customization Slide
+  static const powerfulCustomization = 'POWERFUL\nCUSTOMIZATION ';
+  static const customizationDescription =
+      'Fully control your wallet and crypto, and manage it independently. ';
 
-  // Manage Slide
-  static const manageYourOwnWallet = 'Manage your own wallet';
-  static const fullyControlYourWallet =
-      'Fully control your wallet and crypto, and manage it independently.';
+  // Landing Slide
+  static const provenanceTitle = 'PROVENANCE\nWALLET';
+  static const provenanceWalletDescription =
+      'A wallet provides an easy way to manage multiple blockchain accounts.';
 
   // Dashboard Page
   static const loadingAssets = 'Loading Assets';

@@ -6,10 +6,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:get_it/get_it.dart';
 
 class FundamentalsBloc extends Disposable {
-  final _marketCap = BehaviorSubject.seeded("");
+  final _marketCap = BehaviorSubject.seeded("     ");
   final _validatorsCount = BehaviorSubject.seeded(0);
-  final _transactions = BehaviorSubject.seeded("");
-  final _blockTime = BehaviorSubject.seeded("");
+  final _transactions = BehaviorSubject.seeded("     ");
+  final _blockTime = BehaviorSubject.seeded("     ");
 
   final _service = get<StatService>();
 

@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingCustomizationSlide extends StatelessWidget {
@@ -9,34 +9,37 @@ class OnboardingCustomizationSlide extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: Spacing.xxLarge,
+          ),
+          child: PwText(
+            Strings.powerfulCustomization,
+            style: PwTextStyle.large,
+            textAlign: TextAlign.center,
+            color: PwColor.white,
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImagePlaceholder(),
+            Image.asset(AssetPaths.images.coins),
           ],
         ),
-        SizedBox(
-          height: 48,
-        ),
+        VerticalSpacer.xxLarge(),
         Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: PwText(
-            Strings.trade,
-            style: PwTextStyle.extraLarge,
-            textAlign: TextAlign.center,
-            color: PwColor.globalNeutral550,
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 98,
           ),
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
           child: PwText(
-            Strings.tradeHashText,
-            style: PwTextStyle.m,
+            Strings.customizationDescription,
+            style: PwTextStyle.m_p,
             textAlign: TextAlign.center,
-            color: PwColor.globalNeutral550,
+            color: PwColor.white,
           ),
         ),
       ],
