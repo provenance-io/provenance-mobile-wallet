@@ -40,7 +40,6 @@ class AccountName extends HookWidget {
             icon: PwIcon(
               PwIcons.close,
               size: 14,
-              //color: Theme.of(context).colorScheme.globalNeutral550,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
