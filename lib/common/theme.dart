@@ -287,7 +287,6 @@ extension CustomColorScheme on ColorScheme {
   Color get black => FigurePayThemeData._black;
   Color get positive => FigurePayThemeData._positive;
   Color get warning => FigurePayThemeData._warning;
-  Color get error => FigurePayThemeData._error;
   Color get darkGrey => FigurePayThemeData._darkGrey;
   Color get lime => FigurePayThemeData._lime;
   Color get systemGreen => FigurePayThemeData._systemGreen;

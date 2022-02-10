@@ -22,6 +22,8 @@ class ProvenanceThemeData {
 
   static const Color _provenanceLogo = Color(0xFF3F80F3);
 
+  static const Color _error = Color(0xFFED6E74);
+
   // ----- PROVENANCE TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
 
@@ -137,6 +139,7 @@ extension CustomColorScheme on ColorScheme {
   Color get indicatorActive => ProvenanceThemeData._indicatorActive;
   Color get indicatorInActive => ProvenanceThemeData._indicatorInActive;
   Color get secondary400 => ProvenanceThemeData._secondary400;
+  Color get error => ProvenanceThemeData._error;
 }
 
 extension CustomTextTheme on TextTheme {
@@ -146,4 +149,5 @@ extension CustomTextTheme on TextTheme {
   TextStyle get logo => ProvenanceThemeData._logo;
   TextStyle get subhead => ProvenanceThemeData._subhead;
   TextStyle get body => ProvenanceThemeData._body;
+  TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
 }
