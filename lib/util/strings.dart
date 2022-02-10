@@ -168,12 +168,13 @@ class Strings {
 
   // PrepareRecoveryPhraseIntro
   static const createPassphrase = "Create Passphrase";
-  static const prepareToWriteDownYourRecoveryPassphrase =
-      'Prepare to write down your recovery passphrase';
+  static const savePassphrase = "SAVE PASSPHRASE";
+  static const prepareToWriteDownYourRecoveryPhrase =
+      'Prepare to write down your recovery phrase.';
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone, as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
