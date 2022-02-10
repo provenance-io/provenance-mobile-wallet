@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 
 class FigurePayThemeData {
   /// ----- FIGMA COLORS -----
@@ -225,17 +226,17 @@ class FigurePayThemeData {
   static final themeData = ThemeData(
     colorScheme: _colorScheme,
     appBarTheme: AppBarTheme(
-      color: _colorScheme.primary,
+      color: _colorScheme.primaryP500,
       iconTheme: IconThemeData(color: _colorScheme.onPrimary),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: _colorScheme.primary,
     ),
     canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primary,
+    toggleableActiveColor: _colorScheme.primaryP500,
     highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primary,
-    primaryColor: _colorScheme.primary,
+    indicatorColor: _colorScheme.primaryP500,
+    primaryColor: _colorScheme.primaryP500,
     backgroundColor: _white,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
