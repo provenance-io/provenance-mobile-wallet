@@ -7,7 +7,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 import 'wallet_portfolio.dart';
 
-class WalletConnectWithAssets extends StatelessWidget {
+class WalletConnectSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final assetStream = get<DashboardBloc>().assetList;
