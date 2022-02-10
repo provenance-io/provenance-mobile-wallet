@@ -72,6 +72,7 @@ class DashboardState extends State<Dashboard>
 
   @override
   void initState() {
+    get.registerLazySingleton<DashboardBloc>(() => DashboardBloc());
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
@@ -90,7 +91,6 @@ class DashboardState extends State<Dashboard>
       ModalLoadingRoute.showLoading("", context);
       await ProvWalletFlutter.signTransactionFinish(requestId, result);
       ModalLoadingRoute.dismiss(context);
-      get.registerLazySingleton<DashboardBloc>(() => DashboardBloc());
     };
 
     ProvWalletFlutter.instance.onAskToSend = (
