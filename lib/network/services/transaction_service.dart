@@ -3,10 +3,10 @@ import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
 
 class TransactionService {
-  static String get _transactionServiceBasePath =>
+  String get _transactionServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
 
-  static Future<BaseResponse<List<TransactionResponse>>> getTransactions(
+  Future<BaseResponse<List<TransactionResponse>>> getTransactions(
     String provenanceAddress,
   ) async {
     final data = await BaseService.instance.GET(
@@ -33,8 +33,8 @@ class TransactionService {
     return data;
   }
 
-// TODO: Remove me when we get actual data
-  static Future<List<TransactionResponse>> getFakeTransactions(
+  // TODO: Remove me when we can mock
+  Future<List<TransactionResponse>> getFakeTransactions(
     String provenanceAddresses,
   ) async {
     final faker = Faker();
@@ -53,8 +53,8 @@ class TransactionService {
     return transactions;
   }
 
-// TODO: Remove me when we get actual data
-  static TransactionResponse _getFakeTransaction() {
+  // TODO: Remove me when we can mock
+  TransactionResponse _getFakeTransaction() {
     var faker = Faker();
     var amount = faker.randomGenerator.decimal().toStringAsFixed(2);
 
