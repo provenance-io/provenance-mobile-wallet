@@ -182,7 +182,7 @@ class Strings {
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm
-  static const verifyRecoveryPassphrase = 'Verify recovery passphrase';
+  static const verifyPassphrase = 'Verify passphrase';
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
