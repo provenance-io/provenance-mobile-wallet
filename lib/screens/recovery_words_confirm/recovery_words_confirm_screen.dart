@@ -108,26 +108,33 @@ class RecoveryWordsConfirmScreenState
                     VerticalSpacer.xLarge(),
                     WordSelector(index: 3),
                     VerticalSpacer.largeX3(),
-                    Row(
-                      children: [
-                        Checkbox(
-                          fillColor: MaterialStateProperty.all(
-                            Theme.of(context).colorScheme.primaryP500,
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: Spacing.xxLarge,
+                        left: 20,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            fillColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.primaryP500,
+                            ),
+                            value: _isResponsible,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isResponsible = value ?? false;
+                              });
+                            },
                           ),
-                          value: _isResponsible,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isResponsible = value ?? false;
-                            });
-                          },
-                        ),
-                        Expanded(
-                          child: PwText(
-                            Strings.iAmResponsibleForMyWalletText,
-                            style: PwTextStyle.body,
+                          Expanded(
+                            child: PwText(
+                              Strings.iAmResponsibleForMyWalletText,
+                              style: PwTextStyle.body,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: Container(),
