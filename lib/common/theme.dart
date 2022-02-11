@@ -240,6 +240,7 @@ class FigurePayThemeData {
     backgroundColor: _white,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
+      backgroundColor: _globalNeutral600Black,
       behavior: SnackBarBehavior.floating,
     ),
     typography: Typography.material2018(
