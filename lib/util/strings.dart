@@ -188,7 +188,7 @@ class Strings {
   static const yourSelectionsDoNotMatch =
       "Your selections don't match. Please try again.";
   static const youMustAgreeToTheWalletSeedphraseTerms =
-      "Before clicking Next you must agree to the wallet seedphrase terms.";
+      "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
       "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
