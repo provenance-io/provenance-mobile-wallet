@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_storage_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteWalletStorageService {

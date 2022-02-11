@@ -1,8 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -17,9 +17,7 @@ class ResetButton extends StatelessWidget {
           Strings.resetWallet,
         ),
         onPressed: () async {
-          final walletService = get<WalletService>();
-          await walletService.currentWalletConnect?.disconnectSession();
-          await walletService.resetWallets();
+          await get<DashboardBloc>().resetWallets();
           FlutterSecureStorage storage = FlutterSecureStorage();
           await storage.deleteAll();
 

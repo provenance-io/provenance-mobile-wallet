@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/rename_wallet_dialog.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
@@ -288,7 +289,7 @@ class WalletItem extends StatelessWidget {
                       ],
                     );
 
-                    final walletService = get<WalletService>();
+                    final bloc = get<DashboardBloc>();
 
                     if (result == MenuOperation.rename) {
                       final text = await showDialog<String?>(
@@ -299,7 +300,7 @@ class WalletItem extends StatelessWidget {
                         ),
                       );
                       if (text != null) {
-                        await walletService.renameWallet(
+                        await bloc.renameWallet(
                           id: item.id,
                           name: text,
                         );
@@ -313,11 +314,11 @@ class WalletItem extends StatelessWidget {
                         cancelText: Strings.cancel,
                       );
                       if (dialogResult) {
-                        await walletService.removeWallet(id: item.id);
+                        await bloc.removeWallet(id: item.id);
                         reload.call();
                       }
                     } else if (result == MenuOperation.select) {
-                      await walletService.selectWallet(id: item.id);
+                      await bloc.selectWallet(id: item.id);
                       reload.call();
                     }
                     var y = 0;

@@ -1,35 +1,16 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/screens/send_transaction_approval.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
-import 'package:provenance_wallet/services/requests/sign_request.dart';
-import 'package:provenance_wallet/services/wallet_connect_service.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 typedef Future<void> OnAddressCaptured(String address);
 
-class WalletPortfolio extends StatefulWidget {
-  WalletPortfolio(
-    this.isConnectedToWallet,
-    this.onAddressCaptured, {
-    Key? key,
-  }) : super(key: key);
+class WalletPortfolio extends StatelessWidget {
+  const WalletPortfolio({Key? key}) : super(key: key);
 
-  final OnAddressCaptured onAddressCaptured;
-  final bool isConnectedToWallet;
-
-  @override
-  State<StatefulWidget> createState() => WalletPortfolioState();
-}
-
-class WalletPortfolioState extends State<WalletPortfolio> {
   @override
   Widget build(BuildContext context) {
     final assetStream = get<DashboardBloc>().assetList;
@@ -171,57 +152,64 @@ class WalletPortfolioState extends State<WalletPortfolio> {
   }
 
   Widget _buildWalletConnectButton() {
-    if (widget.isConnectedToWallet) {
-      return Container(
-        width: 100,
-      );
-    }
+    final bloc = get<DashboardBloc>();
 
-    return Container(
-      width: 100,
-      child: GestureDetector(
-        onTap: () async {
-          final result = await Navigator.of(
-            context,
-          ).push(
-            QRCodeScanner().route<String?>(),
-          );
-          if (result == null) {
-            return;
-          }
+    return StreamBuilder<WalletConnectionServiceStatus>(
+      initialData: bloc.connectionStatus.value,
+      stream: bloc.connectionStatus,
+      builder: (context, snapshot) {
+        final connected =
+            snapshot.data == WalletConnectionServiceStatus.connected;
 
-          widget.onAddressCaptured(result);
-        },
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(
+        return Container(
+          width: 100,
+          child: GestureDetector(
+            onTap: () async {
+              if (!connected) {
+                final addressData = await Navigator.of(
                   context,
-                ).colorScheme.globalNeutral450,
-                borderRadius: BorderRadius.circular(
-                  23,
+                ).push(
+                  QRCodeScanner().route<String?>(),
+                );
+                if (addressData != null) {
+                  bloc.connectWallet(addressData);
+                }
+              } else {
+                bloc.disconnectWallet();
+              }
+            },
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.globalNeutral450,
+                    borderRadius: BorderRadius.circular(
+                      23,
+                    ),
+                  ),
+                  height: 46,
+                  width: 46,
+                  child: Center(
+                    child: PwIcon(
+                      !connected ? PwIcons.walletConnect : PwIcons.close,
+                      size: 15,
+                      color: Theme.of(context).colorScheme.white,
+                    ),
+                  ),
                 ),
-              ),
-              height: 46,
-              width: 46,
-              child: Center(
-                child: PwIcon(
-                  PwIcons.walletConnect,
-                  size: 15,
-                  color: Theme.of(context).colorScheme.white,
+                VerticalSpacer.xSmall(),
+                PwText(
+                  !connected ? Strings.walletConnect : Strings.disconnect,
+                  color: PwColor.white,
+                  style: PwTextStyle.s,
                 ),
-              ),
+              ],
             ),
-            VerticalSpacer.xSmall(),
-            PwText(
-              Strings.walletConnect,
-              color: PwColor.white,
-              style: PwTextStyle.s,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

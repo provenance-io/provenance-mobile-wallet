@@ -5,10 +5,11 @@ import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_storage_service.dart';
 
-class WalletStorageServiceImp
-  implements WalletStorageService
-{
-  WalletStorageServiceImp(this._sqliteWalletStorageService, this._cipherService);
+class WalletStorageServiceImp implements WalletStorageService {
+  WalletStorageServiceImp(
+    this._sqliteWalletStorageService,
+    this._cipherService,
+  );
 
   final SqliteWalletStorageService _sqliteWalletStorageService;
   final CipherService _cipherService;
@@ -17,14 +18,14 @@ class WalletStorageServiceImp
   Future<bool> addWallet({
     required String name,
     required PrivateKey privateKey,
-    required bool useBiometry
+    required bool useBiometry,
   }) async {
     final publicKey = privateKey.defaultKey().publicKey;
 
     final id = await _sqliteWalletStorageService.addWallet(
-        name: name,
-        address: publicKey.address,
-        coin: publicKey.coin
+      name: name,
+      address: publicKey.address,
+      coin: publicKey.coin,
     );
 
     final privateKeyStr = privateKey.serialize(
@@ -37,7 +38,7 @@ class WalletStorageServiceImp
       useBiometry: useBiometry,
     );
 
-    if(!success) {
+    if (!success) {
       await _sqliteWalletStorageService.removeWallet(id: id);
     }
 
@@ -79,7 +80,10 @@ class WalletStorageServiceImp
   }
 
   @override
-  Future<WalletDetails?> renameWallet({required String id, required String name}) {
+  Future<WalletDetails?> renameWallet({
+    required String id,
+    required String name,
+  }) {
     return _sqliteWalletStorageService.renameWallet(id: id, name: name);
   }
 

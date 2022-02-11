@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/services/wallet_connect_service.dart';
+import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 

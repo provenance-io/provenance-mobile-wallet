@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -44,10 +44,10 @@ class SendTransactionApproval extends StatelessWidget {
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
-            // await get<WalletService>().sendMessageFinish(
-            //   requestId: details.requestId,
-            //   allowed: false,
-            // );
+            await get<DashboardBloc>().sendMessageFinish(
+              requestId: details.requestId,
+              allowed: false,
+            );
             Navigator.of(context).pop(false);
           },
         ),
@@ -174,10 +174,10 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    // await get<WalletService>().sendMessageFinish(
-                    //   requestId: details.requestId,
-                    //   allowed: true,
-                    // );
+                    await get<DashboardBloc>().sendMessageFinish(
+                      requestId: details.requestId,
+                      allowed: true,
+                    );
                     ModalLoadingRoute.dismiss(context);
                     Navigator.of(context).pop(true);
                   },

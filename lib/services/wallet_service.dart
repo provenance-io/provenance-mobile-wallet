@@ -1,59 +1,29 @@
 import 'dart:async';
-import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/src/proto/gas.dart';
-import 'package:provenance_dart/src/proto/proto_gen/cosmos/tx/v1beta1/tx.pb.dart';
-import 'package:provenance_dart/src/proto/raw_tx_response.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_connect_service_imp.dart';
-import 'package:provenance_wallet/services/wallet_connect_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_storage_service.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 
-import '../extension/coin_helper.dart';
-
-class _SignerImp implements proto.Signer {
-  _SignerImp(this._privateKey);
-
-  final PrivateKey _privateKey;
-
-  @override
-  String get address => pubKey.address;
-
-  @override
-  PublicKey get pubKey => _privateKey.defaultKey().publicKey;
-
-  @override
-  List<int> sign(List<int> data) {
-    return _privateKey.signData(Hash.sha256(data))..removeLast();
-  }
-}
-
-class WalletService
-  implements TransactionHandler {
+class WalletService {
   WalletService({
     required WalletStorageService storage,
-  })  : _storage = storage;
+  }) : _storage = storage;
 
   final WalletStorageService _storage;
 
-  WalletConnectService? _currentWalletConnect;
+  Future<WalletDetails?> selectWallet({required String id}) async {
+    return await _storage.selectWallet(id: id);
+  }
 
-  WalletConnectService? get currentWalletConnect => _currentWalletConnect;
-
-  Future<WalletDetails?> selectWallet({required String id}) =>
-      _storage.selectWallet(id: id)
-        .then((walletDetails) {
-            _currentWalletConnect?.disconnectSession();
-
-            return walletDetails;
-        });
-
-  Future<WalletDetails?> getSelectedWallet() =>_storage.getSelectedWallet();
+  Future<WalletDetails?> getSelectedWallet() => _storage.getSelectedWallet();
 
   Future<List<WalletDetails>> getWallets() => _storage.getWallets();
 
-  Future<bool> getUseBiometry() async =>  _storage.getUseBiometry();
+  Future<bool> getUseBiometry() async => _storage.getUseBiometry();
 
   Future setUseBiometry({
     required bool useBiometry,
@@ -85,68 +55,58 @@ class WalletService
     );
   }
 
-  Future removeWallet({required String id}) => _storage.removeWallet(id);
+  Future<void> removeWallet({required String id}) => _storage.removeWallet(id);
 
-  Future resetWallets() async {
-    await _currentWalletConnect?.disconnectSession();
-
+  Future<void> resetWallets() async {
     await _storage.removeAllWallets();
   }
 
-  Future<void> connectWallet(String qrData) async {
-    final address = WalletConnectAddress.create(qrData);
+  Future<WalletConnectSession?> connectWallet(String addressData) async {
+    WalletConnectSession? session;
 
-    if(address == null) {
-      throw Exception("Invalid wallet connect address");
-    }
-
-    final currentWallet = await getSelectedWallet();
-    final pKey = await _storage.loadKey(currentWallet!.id);
-    if(pKey == null) {
-      throw Exception("Failed to location the private key");
-    }
-
-    await _currentWalletConnect?.disconnectSession();
-
-    final walletConnect = WalletConnection(address);
-    _currentWalletConnect = WalletConnectServiceImp(pKey, walletConnect, this);
-    _currentWalletConnect!.status.listen((event) {
-      if(event == WalletConnectionServiceStatus.disconnected) {
-        _currentWalletConnect = null;
+    try {
+      final currentWallet = await getSelectedWallet();
+      final privateKey = await _storage.loadKey(currentWallet!.id);
+      if (privateKey == null) {
+        throw Exception("Failed to location the private key");
       }
-    });
+
+      final address = WalletConnectAddress.create(addressData);
+      if (address == null) {
+        logStatic(
+          WalletConnectSession,
+          Level.error,
+          'Invalid wallet connect address: $addressData',
+        );
+
+        return null;
+      }
+
+      final connection = WalletConnection(address);
+
+      final transactionHandler = WalletConnectTransactionHandler();
+
+      final delegate = WalletConnectSessionDelegate(
+        privateKey: privateKey,
+        transactionHandler: transactionHandler,
+      );
+
+      final newSession = await WalletConnectSession(
+        connection: connection,
+        delegate: delegate,
+      );
+
+      final success = await newSession.connect();
+      if (success) {
+        session = newSession;
+      }
+    } on Exception catch (e) {
+      logError('Failed to connect session: $e');
+    }
+
+    return session;
   }
 
   Future isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);
-
-  /* TransactionHandler */
-  @override
-  Future<GasEstimate> estimateGas(TxBody txBody, PrivateKey privateKey) async {
-    final publicKey = privateKey.defaultKey().publicKey;
-    final coin = publicKey.coin;
-    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
-
-    final account = await pbClient.getBaseAccount(publicKey.address);
-    final signer = _SignerImp(privateKey);
-    final baseReqSigner = proto.BaseReqSigner(signer, account);
-
-    final baseReq = proto.BaseReq(txBody,  [ baseReqSigner ], coin.chainId);
-
-    return pbClient.estimateTx(baseReq);
-  }
-
-  @override
-  Future<RawTxResponsePair> executeTransaction(TxBody txBody, PrivateKey privateKey) async {
-    final publicKey = privateKey.defaultKey().publicKey;
-    final coin = publicKey.coin;
-
-    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
-    final account = await pbClient.getBaseAccount(publicKey.address);
-    final signer = _SignerImp(privateKey);
-
-    final baseReqSigner = proto.BaseReqSigner(signer, account);
-
-    return pbClient.estimateAndBroadcastTx(txBody, [ baseReqSigner ]);
-  }
 }
