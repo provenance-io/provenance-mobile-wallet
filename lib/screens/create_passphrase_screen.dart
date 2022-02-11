@@ -29,93 +29,103 @@ class CreatePassphraseScreen extends StatelessWidget {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ProgressStepper(
-              currentStep ?? 0,
-              numberOfSteps ?? 1,
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-              ),
-            ),
-            VerticalSpacer.largeX6(),
-            VerticalSpacer.xxLarge(),
-            PwText(
-              Strings.savePassphrase,
-              style: PwTextStyle.headline2,
-              textAlign: TextAlign.center,
-            ),
-            VerticalSpacer.large(),
-            Padding(
-              padding: EdgeInsets.only(
-                right: Spacing.xxLarge,
-                left: Spacing.xxLarge,
-              ),
-              child: PwText(
-                Strings.prepareToWriteDownYourRecoveryPhrase,
-                style: PwTextStyle.body,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            VerticalSpacer.large(),
-            Padding(
-              padding: EdgeInsets.only(
-                right: Spacing.xxLarge,
-                left: Spacing.xxLarge,
-              ),
-              child: PwText(
-                Strings.theOnlyWayToRecoverYourAccount,
-                style: PwTextStyle.body,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            VerticalSpacer.large(),
-            VerticalSpacer.medium(),
-            Image.asset(
-              AssetPaths.images.createPassphrase,
-              width: 180,
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwText(
-                Strings.warningDoNotShare,
-                style: PwTextStyle.body,
-                textAlign: TextAlign.center,
-                color: PwColor.error,
-              ),
-            ),
-            VerticalSpacer.xxLarge(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwButton(
-                child: PwText(
-                  Strings.continueName,
-                  style: PwTextStyle.mBold,
-                  color: PwColor.white,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: viewportConstraints,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ProgressStepper(
+                      currentStep ?? 0,
+                      numberOfSteps ?? 1,
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 12,
+                      ),
+                    ),
+                    VerticalSpacer.largeX6(),
+                    VerticalSpacer.xxLarge(),
+                    PwText(
+                      Strings.savePassphrase,
+                      style: PwTextStyle.headline2,
+                      textAlign: TextAlign.center,
+                    ),
+                    VerticalSpacer.large(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: Spacing.xxLarge,
+                        left: Spacing.xxLarge,
+                      ),
+                      child: PwText(
+                        Strings.prepareToWriteDownYourRecoveryPhrase,
+                        style: PwTextStyle.body,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    VerticalSpacer.large(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: Spacing.xxLarge,
+                        left: Spacing.xxLarge,
+                      ),
+                      child: PwText(
+                        Strings.theOnlyWayToRecoverYourAccount,
+                        style: PwTextStyle.body,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    VerticalSpacer.large(),
+                    VerticalSpacer.medium(),
+                    Image.asset(
+                      AssetPaths.images.createPassphrase,
+                      width: 180,
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: PwText(
+                        Strings.warningDoNotShare,
+                        style: PwTextStyle.body,
+                        textAlign: TextAlign.center,
+                        color: PwColor.error,
+                      ),
+                    ),
+                    VerticalSpacer.xxLarge(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: PwButton(
+                        child: PwText(
+                          Strings.continueName,
+                          style: PwTextStyle.mBold,
+                          color: PwColor.white,
+                        ),
+                        onPressed: () {
+                          if (flowType == WalletAddImportType.onBoardingAdd ||
+                              flowType == WalletAddImportType.dashboardAdd) {
+                            Navigator.of(context).push(RecoveryWords(
+                              flowType,
+                              accountName,
+                              currentStep: currentStep,
+                              numberOfSteps: numberOfSteps,
+                            ).route());
+                          }
+                        },
+                      ),
+                    ),
+                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.xxLarge(),
+                  ],
                 ),
-                onPressed: () {
-                  if (flowType == WalletAddImportType.onBoardingAdd ||
-                      flowType == WalletAddImportType.dashboardAdd) {
-                    Navigator.of(context).push(RecoveryWords(
-                      flowType,
-                      accountName,
-                      currentStep: currentStep,
-                      numberOfSteps: numberOfSteps,
-                    ).route());
-                  }
-                },
               ),
-            ),
-            VerticalSpacer.xxLarge(),
-            VerticalSpacer.xxLarge(),
-          ],
+            );
+          },
         ),
       ),
     );
