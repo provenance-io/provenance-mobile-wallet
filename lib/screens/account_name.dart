@@ -70,7 +70,11 @@ class AccountName extends HookWidget {
               ),
               VerticalSpacer.xxLarge(),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: Spacing.small,
+                ),
                 child: _TextFormField(
                   label: Strings.accountName,
                   validator: (value) {
