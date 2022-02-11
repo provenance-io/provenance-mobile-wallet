@@ -66,67 +66,93 @@ class RecoveryWordsConfirmScreenState
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ProgressStepper(
-              widget.currentStep ?? 0,
-              widget.numberOfSteps ?? 1,
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: viewportConstraints,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ProgressStepper(
+                      widget.currentStep ?? 0,
+                      widget.numberOfSteps ?? 1,
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 12,
+                      ),
+                    ),
+                    VerticalSpacer.largeX3(),
+                    _error.isNotEmpty
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              bottom: Spacing.xLarge,
+                              right: Spacing.xxLarge,
+                              left: Spacing.xxLarge,
+                            ),
+                            child: PwText(
+                              _error,
+                              style: PwTextStyle.body,
+                              color: PwColor.error,
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Container(),
+                    WordSelector(index: 0),
+                    VerticalSpacer.xLarge(),
+                    WordSelector(index: 1),
+                    VerticalSpacer.xLarge(),
+                    WordSelector(index: 2),
+                    VerticalSpacer.xLarge(),
+                    WordSelector(index: 3),
+                    VerticalSpacer.largeX3(),
+                    Row(
+                      children: [
+                        Checkbox(
+                          fillColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.primaryP500,
+                          ),
+                          value: _isResponsible,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isResponsible = value ?? false;
+                            });
+                          },
+                        ),
+                        Expanded(
+                          child: PwText(
+                            Strings.iAmResponsibleForMyWalletText,
+                            style: PwTextStyle.body,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: PwButton(
+                        child: PwText(
+                          Strings.continueName,
+                          style: PwTextStyle.mBold,
+                          color: PwColor.white,
+                        ),
+                        onPressed: () {
+                          _validation();
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            VerticalSpacer.largeX3(),
-            WordSelector(index: 0),
-            VerticalSpacer.xLarge(),
-            WordSelector(index: 1),
-            VerticalSpacer.xLarge(),
-            WordSelector(index: 2),
-            VerticalSpacer.xLarge(),
-            WordSelector(index: 3),
-            VerticalSpacer.largeX3(),
-            Row(
-              children: [
-                Checkbox(
-                  fillColor: MaterialStateProperty.all(
-                    Theme.of(context).colorScheme.primaryP500,
-                  ),
-                  value: _isResponsible,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isResponsible = value ?? false;
-                    });
-                  },
-                ),
-                Expanded(
-                  child: PwText(
-                    Strings.iAmResponsibleForMyWalletText,
-                    style: PwTextStyle.body,
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwButton(
-                child: PwText(
-                  Strings.continueName,
-                  style: PwTextStyle.mBold,
-                  color: PwColor.white,
-                ),
-                onPressed: () {
-                  _validation();
-                },
-              ),
-            ),
-            VerticalSpacer.xxLarge(),
-            VerticalSpacer.xxLarge(),
-          ],
+            );
+          },
         ),
       ),
     );
