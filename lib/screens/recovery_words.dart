@@ -2,7 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -52,26 +54,12 @@ class RecoveryWordsState extends State<RecoveryWords> {
       isLoading: _loading,
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.white,
-          elevation: 0.0,
-          title: PwText(
-            Strings.recoveryPassphrase,
-            style: PwTextStyle.h5,
-            textAlign: TextAlign.left,
-            color: PwColor.globalNeutral550,
-          ),
-          leading: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
-              size: 24,
-              color: Theme.of(context).colorScheme.globalNeutral550,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+        appBar: PwAppBar(
+          title: Strings.recoveryPassphrase,
+          leadingIcon: PwIcons.back,
         ),
         body: Container(
-          color: Theme.of(context).colorScheme.white,
+          color: Theme.of(context).colorScheme.provenanceNeutral750,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -84,38 +72,64 @@ class RecoveryWordsState extends State<RecoveryWords> {
                   top: 12,
                 ),
               ),
-              SizedBox(
-                height: 56,
-              ),
+              VerticalSpacer.largeX3(),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(
+                  left: Spacing.xxLarge,
+                  right: Spacing.xxLarge,
+                ),
                 child: PwText(
                   Strings.recordTheseWordsInTheCorrectOrder,
-                  style: PwTextStyle.m,
+                  style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.globalNeutral550,
                 ),
               ),
-              SizedBox(
-                height: 40,
-              ),
+              VerticalSpacer.large(),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(
+                    left: Spacing.xxLarge,
+                    right: Spacing.xxLarge,
+                  ),
                   child: Container(
-                    color: Color(0xFFE9EEF9),
+                    color: Theme.of(context).colorScheme.provenanceNeutral700,
                     child: Padding(
-                      padding: EdgeInsets.all(24),
+                      padding: EdgeInsets.only(
+                        left: Spacing.xxLarge,
+                        right: Spacing.xxLarge,
+                        top: Spacing.large,
+                        bottom: Spacing.large,
+                      ),
                       child: Row(
                         children: [
                           Wrap(
                             direction: Axis.vertical,
-                            runSpacing: 48.0,
-                            spacing: 2.0,
+                            //runSpacing: Spacing.small,
+                            spacing: Spacing.medium,
                             children: [
                               ...words
                                   .mapIndexed(
-                                    (index, e) => PwText('${index + 1}. $e'),
+                                    (index, e) => SizedBox(
+                                      width: 122,
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: Spacing.small,
+                                            ),
+                                            child: PwText(
+                                              '${index + 1}',
+                                              style: PwTextStyle.body,
+                                              color: PwColor.neutral250,
+                                            ),
+                                          ),
+                                          PwText(
+                                            e,
+                                            style: PwTextStyle.body,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   )
                                   .toList(),
                               GestureDetector(
@@ -124,13 +138,17 @@ class RecoveryWordsState extends State<RecoveryWords> {
                                     ClipboardData(text: words.join(' ')),
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                       content: Text(Strings.passphraseCopied),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .provenanceNeutral700,
                                     ),
                                   );
                                 },
                                 child: PwIcon(
                                   PwIcons.copy,
+                                  color: Theme.of(context).colorScheme.white,
                                 ),
                               ),
                             ],
@@ -141,9 +159,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 100,
-              ),
+              VerticalSpacer.medium(),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: PwButton(
