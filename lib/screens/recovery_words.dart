@@ -5,7 +5,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm.dart';
+import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
@@ -169,7 +169,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                     color: PwColor.white,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(RecoveryWordsConfirm(
+                    Navigator.of(context).push(RecoveryWordsConfirmScreen(
                       widget.flowType,
                       accountName: widget.accountName,
                       words: words,
