@@ -6,7 +6,6 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
