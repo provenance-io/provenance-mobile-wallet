@@ -108,7 +108,7 @@ class RecoveryWordsConfirmScreenState
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwButton(
                 child: PwText(
-                  Strings.next,
+                  Strings.continueName,
                   style: PwTextStyle.mBold,
                   color: PwColor.white,
                 ),
