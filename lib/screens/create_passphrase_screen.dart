@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/recovery_words.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -22,24 +23,9 @@ class CreatePassphraseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
-        elevation: 0.0,
-        title: PwText(
-          Strings.createPassphrase,
-          style: PwTextStyle.subhead,
-          textAlign: TextAlign.left,
-        ),
-        leading: Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
-              size: 14,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+      appBar: PwAppBar(
+        title: Strings.createPassphrase,
+        leadingIcon: PwIcons.back,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
