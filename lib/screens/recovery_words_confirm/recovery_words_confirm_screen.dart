@@ -36,6 +36,7 @@ class RecoveryWordsConfirmScreen extends StatefulWidget {
 class RecoveryWordsConfirmScreenState
     extends State<RecoveryWordsConfirmScreen> {
   bool _isResponsible = false;
+  String _error = "";
 
   @override
   void initState() {
@@ -48,6 +49,12 @@ class RecoveryWordsConfirmScreenState
   void dispose() {
     get.unregister<RecoveryWordsBloc>();
     super.dispose();
+  }
+
+  void setError(String error) {
+    setState(() {
+      _error = error;
+    });
   }
 
   @override
@@ -131,30 +138,16 @@ class RecoveryWordsConfirmScreenState
     final trueWords = bloc.trueWords.value;
 
     if (selectedWords.any((element) => element == null)) {
-      await showDialog(
-        context: context,
-        builder: (context) => ErrorDialog(
-          error: Strings.pleaseMakeASelection,
-        ),
-      );
+      setError(Strings.pleaseMakeASelection);
     } else if (selectedWords[0] != trueWords[0] ||
         selectedWords[1] != trueWords[1] ||
         selectedWords[2] != trueWords[2] ||
         selectedWords[3] != trueWords[3]) {
-      await showDialog(
-        context: context,
-        builder: (context) => ErrorDialog(
-          error: Strings.yourSelectionsDoNotMatch,
-        ),
-      );
+      setError(Strings.yourSelectionsDoNotMatch);
     } else if (!_isResponsible) {
-      await showDialog(
-        context: context,
-        builder: (context) => ErrorDialog(
-          error: Strings.youMustAgreeToTheWalletSeedphraseTerms,
-        ),
-      );
+      setError(Strings.youMustAgreeToTheWalletSeedphraseTerms);
     } else {
+      setError("");
       if (widget.flowType == WalletAddImportType.onBoardingAdd) {
         Navigator.of(context).push(CreatePin(
           widget.flowType,
