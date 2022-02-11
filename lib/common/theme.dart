@@ -237,7 +237,7 @@ class FigurePayThemeData {
     highlightColor: Colors.transparent,
     indicatorColor: _colorScheme.primaryP500,
     primaryColor: _colorScheme.primaryP500,
-    backgroundColor: _white,
+    backgroundColor: _globalNeutral600Black,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
       backgroundColor: _globalNeutral600Black,
