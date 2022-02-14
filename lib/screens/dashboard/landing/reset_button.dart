@@ -23,9 +23,8 @@ class ResetButton extends StatelessWidget {
           FlutterSecureStorage storage = FlutterSecureStorage();
           await storage.deleteAll();
 
-          Navigator.of(context).popUntil((route) => true);
-          // Pretty sure that this is creating an additional view on the stack when one already exists.
-          // If this is just for development no change is needed.
+          Navigator.of(context).popUntil((route) => route.isFirst);
+
           Navigator.push(context, Landing().route());
         },
       ),
