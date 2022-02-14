@@ -223,7 +223,6 @@ class Strings {
 
   // WalletSetupConfirmation
   static const walletCreated = "WALLET CREATED";
-  static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
 
   // TransactionsList
   static const dropDownAllAssets = "All Assets";
