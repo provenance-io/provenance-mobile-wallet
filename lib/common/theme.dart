@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 
 class FigurePayThemeData {
   /// ----- FIGMA COLORS -----
@@ -196,8 +197,8 @@ class FigurePayThemeData {
     secondaryVariant: _secondary2,
     background: _light,
     surface: _light,
-    onBackground: _black,
-    onSurface: _black,
+    onBackground: _white,
+    onSurface: _white,
     error: _error,
     onError: _white,
     onPrimary: _white,
@@ -225,17 +226,17 @@ class FigurePayThemeData {
   static final themeData = ThemeData(
     colorScheme: _colorScheme,
     appBarTheme: AppBarTheme(
-      color: _colorScheme.primary,
+      color: _colorScheme.primaryP500,
       iconTheme: IconThemeData(color: _colorScheme.onPrimary),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: _colorScheme.primary,
     ),
     canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primary,
+    toggleableActiveColor: _colorScheme.primaryP500,
     highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primary,
-    primaryColor: _colorScheme.primary,
+    indicatorColor: _colorScheme.primaryP500,
+    primaryColor: _colorScheme.primaryP500,
     backgroundColor: _white,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
@@ -245,8 +246,8 @@ class FigurePayThemeData {
       platform: defaultTargetPlatform,
     ),
     textTheme: _textTheme.apply(
-      bodyColor: _black,
-      displayColor: _black,
+      bodyColor: _white,
+      displayColor: _white,
     ),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
@@ -286,7 +287,6 @@ extension CustomColorScheme on ColorScheme {
   Color get black => FigurePayThemeData._black;
   Color get positive => FigurePayThemeData._positive;
   Color get warning => FigurePayThemeData._warning;
-  Color get error => FigurePayThemeData._error;
   Color get darkGrey => FigurePayThemeData._darkGrey;
   Color get lime => FigurePayThemeData._lime;
   Color get systemGreen => FigurePayThemeData._systemGreen;

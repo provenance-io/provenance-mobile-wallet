@@ -14,7 +14,7 @@ class OnboardingLandingSlide extends StatelessWidget {
           children: [
             PwIcon(
               PwIcons.provenance,
-              color: Theme.of(context).colorScheme.primaryP1,
+              color: Theme.of(context).colorScheme.logo,
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 
 /// Figma Typopgraphy Text Styles
 enum PwColor {
@@ -34,6 +35,7 @@ enum PwColor {
   globalNeutral400,
   globalNeutral350,
   globalNeutral500,
+  neutral250,
 }
 
 mixin PwColorMixin on Widget {
@@ -98,6 +100,8 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.globalNeutral600Black;
       case PwColor.globalNeutral500:
         return theme.colorScheme.globalNeutral500;
+      case PwColor.neutral250:
+        return theme.colorScheme.provenanceNeutral250;
       default:
         return null;
     }

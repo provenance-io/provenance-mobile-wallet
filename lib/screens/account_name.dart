@@ -1,8 +1,10 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/present_information.dart';
+import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
+import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountName extends HookWidget {
@@ -26,27 +28,28 @@ class AccountName extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
         elevation: 0.0,
         title: PwText(
           Strings.nameYourAccount,
-          style: PwTextStyle.h5,
+          style: PwTextStyle.subhead,
           textAlign: TextAlign.left,
-          color: PwColor.globalNeutral550,
         ),
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.close,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: IconButton(
+            icon: PwIcon(
+              PwIcons.close,
+              size: 14,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Form(
         key: _formKey,
         child: Container(
-          color: Theme.of(context).colorScheme.white,
+          color: Theme.of(context).colorScheme.provenanceNeutral750,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,12 +60,30 @@ class AccountName extends HookWidget {
                 padding: EdgeInsets.only(
                   left: 20,
                   right: 20,
-                  top: 12,
+                  top: Spacing.medium,
                 ),
               ),
-              SizedBox(
-                height: 110,
+              VerticalSpacer.largeX3(),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: PwText(
+                  Strings.nameYourAccountText,
+                  style: PwTextStyle.body,
+                  textAlign: TextAlign.center,
+                  color: PwColor.white,
+                ),
               ),
+              VerticalSpacer.small(),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: PwText(
+                  Strings.infoIsStoredLocallyText,
+                  style: PwTextStyle.body,
+                  textAlign: TextAlign.center,
+                  color: PwColor.white,
+                ),
+              ),
+              VerticalSpacer.xxLarge(),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: _TextFormField(
@@ -75,22 +96,7 @@ class AccountName extends HookWidget {
                   controller: accountNameProvider,
                 ),
               ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: PwText(
-                  Strings.nameYourAccountText,
-                  style: PwTextStyle.sBold,
-                  textAlign: TextAlign.left,
-                  color: PwColor.globalNeutral450,
-                ),
-              ),
               Expanded(child: Container()),
-              SizedBox(
-                height: 24,
-              ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: PwButton(
@@ -104,32 +110,22 @@ class AccountName extends HookWidget {
                       if (flowType == WalletAddImportType.onBoardingRecover ||
                           flowType == WalletAddImportType.dashboardRecover) {
                         Navigator.of(context).push(
-                          PresentInformation(
-                            InfoModel(
-                              flowType,
-                              accountNameProvider.text,
-                              Strings.recoverAccount,
-                              Strings.inTheFollowingStepsText,
-                              Strings.next,
-                              currentStep: (currentStep ?? 0) + 1,
-                              numberOfSteps: numberOfSteps,
-                            ),
+                          RecoverAccountScreen(
+                            flowType,
+                            accountNameProvider.text,
+                            currentStep: (currentStep ?? 0) + 1,
+                            numberOfSteps: numberOfSteps,
                           ).route(),
                         );
                       } else if (flowType ==
                               WalletAddImportType.onBoardingAdd ||
                           flowType == WalletAddImportType.dashboardAdd) {
                         Navigator.of(context).push(
-                          PresentInformation(
-                            InfoModel(
-                              flowType,
-                              accountNameProvider.text,
-                              Strings.createPassphrase,
-                              Strings.theOnlyWayToRecoverYourAccount,
-                              Strings.iAmReady,
-                              currentStep: (currentStep ?? 0) + 1,
-                              numberOfSteps: numberOfSteps,
-                            ),
+                          CreatePassphraseScreen(
+                            flowType,
+                            accountNameProvider.text,
+                            currentStep: (currentStep ?? 0) + 1,
+                            numberOfSteps: numberOfSteps,
                           ).route(),
                         );
                       }
@@ -170,9 +166,13 @@ class _TextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PwText(label),
+        PwText(
+          label,
+          color: PwColor.white,
+        ),
         const VerticalSpacer.small(),
         TextFormField(
+          style: theme.textTheme.body.copyWith(color: theme.colorScheme.white),
           keyboardType: keyboardType,
           autocorrect: false,
           controller: controller,
@@ -180,10 +180,15 @@ class _TextFormField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           decoration: InputDecoration(
-            fillColor: theme.colorScheme.white,
+            hintText: label,
+            hintStyle: theme.textTheme.body
+                .copyWith(color: theme.colorScheme.provenanceNeutral250),
+            fillColor: theme.colorScheme.provenanceNeutral750,
             filled: true,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: theme.colorScheme.midGrey),
+              borderSide: BorderSide(
+                color: theme.colorScheme.provenanceNeutral250,
+              ),
             ),
           ),
         ),

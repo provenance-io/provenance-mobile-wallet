@@ -138,10 +138,12 @@ class Strings {
   static const addressCopied = 'Address copied';
 
   // Account Name
-  static const nameYourAccount = 'Name your account';
+  static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
   static const nameYourAccountText =
-      'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.';
+      'Name your account to easily identify it while using the Provenance Wallet.';
+  static const infoIsStoredLocallyText =
+      "These names are stored locally, and can only be seen by you.";
   static const continueName = 'Continue';
 
   // Confirm Pin
@@ -166,12 +168,13 @@ class Strings {
 
   // PrepareRecoveryPhraseIntro
   static const createPassphrase = "Create Passphrase";
-  static const prepareToWriteDownYourRecoveryPassphrase =
-      'Prepare to write down your recovery passphrase';
+  static const savePassphrase = "SAVE PASSPHRASE";
+  static const prepareToWriteDownYourRecoveryPhrase =
+      'Prepare to write down your recovery phrase.';
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone, as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
