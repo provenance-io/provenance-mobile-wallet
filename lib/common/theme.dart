@@ -226,17 +226,17 @@ class FigurePayThemeData {
   static final themeData = ThemeData(
     colorScheme: _colorScheme,
     appBarTheme: AppBarTheme(
-      color: _colorScheme.primaryP500,
+      color: _colorScheme.primary500,
       iconTheme: IconThemeData(color: _colorScheme.onPrimary),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: _colorScheme.primary,
     ),
     canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primaryP500,
+    toggleableActiveColor: _colorScheme.primary500,
     highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primaryP500,
-    primaryColor: _colorScheme.primaryP500,
+    indicatorColor: _colorScheme.primary500,
+    primaryColor: _colorScheme.primary500,
     backgroundColor: _globalNeutral600Black,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
+import 'package:provenance_wallet/screens/pin/container_circle.dart';
+import 'package:provenance_wallet/screens/pin/delete_button.dart';
 
 class PinPad extends StatefulWidget {
   PinPad({
@@ -60,9 +63,8 @@ class PinPadState extends State<PinPad> {
               child: Center(
                 child: PwText(
                   widget.subTitle,
-                  style: PwTextStyle.m,
+                  style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.globalNeutral550,
                 ),
               ),
             ),
@@ -220,12 +222,15 @@ class CodePanel extends StatelessWidget {
         if (i > currentLength) {
           circles.add(SizedBox(
             width: W,
-            height: H,
+            height: 3,
             child: Container(
               decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                border: new Border.all(color: color, width: 1.0),
-                color: foregroundColor,
+                shape: BoxShape.rectangle,
+                border: new Border.all(
+                  color: Theme.of(context).colorScheme.white,
+                  width: 1.0,
+                ),
+                color: Theme.of(context).colorScheme.white,
               ),
             ),
           ));
@@ -236,8 +241,11 @@ class CodePanel extends StatelessWidget {
             child: new Container(
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
-                border: new Border.all(color: color, width: 1.0),
-                color: color,
+                border: new Border.all(
+                  color: Theme.of(context).colorScheme.primary500,
+                  width: 1.0,
+                ),
+                color: Theme.of(context).colorScheme.primary500,
               ),
             ),
           ));
