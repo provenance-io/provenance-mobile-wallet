@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
-import 'package:provenance_wallet/screens/pin/container_circle.dart';
-import 'package:provenance_wallet/screens/pin/delete_button.dart';
+import 'package:provenance_wallet/screens/pin/code_panel.dart';
+import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 
 class PinPad extends StatefulWidget {
   PinPad({
@@ -69,9 +67,7 @@ class PinPadState extends State<PinPad> {
               ),
             ),
           ),
-          SizedBox(
-            height: 24,
-          ),
+          VerticalSpacer.largeX6(),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: CodePanel(
@@ -79,12 +75,10 @@ class PinPadState extends State<PinPad> {
               currentLength: _inputCodes.length,
               status: 0,
               deleteCode: _deleteCode,
-              borderColor: Theme.of(context).colorScheme.globalNeutral550,
+              borderColor: Theme.of(context).colorScheme.white,
             ),
           ),
-          SizedBox(
-            height: 60,
-          ),
+          VerticalSpacer.xxLarge(),
           Expanded(
             flex: Platform.isIOS ? 5 : 6,
             child: Container(
@@ -135,22 +129,39 @@ class PinPadState extends State<PinPad> {
       if (i == _numbers.length - 1) {
         children.add(Container());
 
-        children.add(ContainerCircle(
-          number: _numbers[i],
-          onCodeClick: _onCodeClick,
+        children.add(ContainerCircleButton(
+          child: PwText(
+            _numbers[i].toString(),
+            style: PwTextStyle.display2,
+          ),
+          onClick: () {
+            _onCodeClick(_numbers[i]);
+          },
         ));
-        children.add(DeleteButton(
-          deleteNumber: _deleteCode,
+        //children.add(Container());
+        children.add(ContainerCircleButton(
+          child: PwIcon(
+            PwIcons.remove,
+            size: 22,
+            color: Theme.of(context).colorScheme.white,
+          ),
+          onClick: _deleteCode,
         ));
       } else {
-        children.add(ContainerCircle(
-          number: _numbers[i],
-          onCodeClick: _onCodeClick,
+        children.add(ContainerCircleButton(
+          child: PwText(
+            _numbers[i].toString(),
+            style: PwTextStyle.display2,
+          ),
+          onClick: () {
+            _onCodeClick(_numbers[i]);
+          },
         ));
       }
     }
 
     return GridView.count(
+      clipBehavior: Clip.none,
       crossAxisCount: 3,
       childAspectRatio: 1.6,
       mainAxisSpacing: 35,

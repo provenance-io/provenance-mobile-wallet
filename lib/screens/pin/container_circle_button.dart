@@ -1,21 +1,21 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 
-class ContainerCircle extends StatefulWidget {
-  const ContainerCircle({
+class ContainerCircleButton extends StatefulWidget {
+  const ContainerCircleButton({
     Key? key,
-    required this.number,
-    required this.onCodeClick,
+    required this.child,
+    required this.onClick,
   }) : super(key: key);
 
-  final int number;
-  final Function onCodeClick;
+  final Widget child;
+  final Function onClick;
 
   @override
-  State<StatefulWidget> createState() => _ContainerCircleState();
+  State<StatefulWidget> createState() => _ContainerCircleButtonState();
 }
 
-class _ContainerCircleState extends State<ContainerCircle>
+class _ContainerCircleButtonState extends State<ContainerCircleButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -23,9 +23,7 @@ class _ContainerCircleState extends State<ContainerCircle>
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
-        microseconds: 5,
-      ),
+      duration: Duration.zero,
       lowerBound: 0.0,
       upperBound: 1.0,
     );
@@ -50,7 +48,7 @@ class _ContainerCircleState extends State<ContainerCircle>
         setState(() {
           _controller.value = 1;
         });
-        widget.onCodeClick(widget.number);
+        widget.onClick();
       },
       onTapUp: (details) {
         setState(() {
@@ -58,8 +56,8 @@ class _ContainerCircleState extends State<ContainerCircle>
         });
       },
       child: Container(
-        height: 50,
-        width: 50,
+        height: 92,
+        width: 92,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [
@@ -80,10 +78,7 @@ class _ContainerCircleState extends State<ContainerCircle>
           ],
         ),
         child: Center(
-          child: PwText(
-            widget.number.toString(),
-            style: PwTextStyle.display2,
-          ),
+          child: widget.child,
         ),
       ),
     );
