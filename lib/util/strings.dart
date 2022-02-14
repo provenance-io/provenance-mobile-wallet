@@ -159,12 +159,12 @@ class Strings {
       "Set a pin code to unlock your wallet.";
 
   // EnableFaceId
-  static const useFaceId = 'Use Face ID';
+  static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
       'Use your Face ID for faster, easier access to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
-  static const later = 'Later';
+  static const skipForNow = 'Skip for now';
 
   // PrepareRecoveryPhraseIntro
   static const createPassphrase = "Create Passphrase";
