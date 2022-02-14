@@ -154,7 +154,7 @@ class Strings {
       "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
   // CreatePin
-  static const setYourPinCode = 'Set your pin code';
+  static const setPinCode = 'Set Pin Code';
   static const setAPinCodeToUnlockYourWallet =
       "Set a pin code to unlock your wallet.";
 
