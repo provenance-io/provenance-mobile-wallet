@@ -222,7 +222,7 @@ class Strings {
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
-  static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
+  static const walletCreated = "WALLET CREATED";
   static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
 
   // TransactionsList
