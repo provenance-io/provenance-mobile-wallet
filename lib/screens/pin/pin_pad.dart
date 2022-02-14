@@ -106,32 +106,6 @@ class PinPadState extends State<PinPad> {
     );
   }
 
-  Widget _buildContainerCircle(BuildContext context, int number) {
-    return InkResponse(
-      highlightColor: Colors.red,
-      onTap: () {
-        _onCodeClick(number);
-      },
-      child: Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.white,
-        ),
-        child: Center(
-          child: Text(
-            number.toString(),
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.normal,
-              color: Theme.of(context).colorScheme.globalNeutral550,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   _deleteCode() {
     setState(() {
       if (_inputCodes.length > 0) {
@@ -158,10 +132,19 @@ class PinPadState extends State<PinPad> {
     for (var i = 0; i < _numbers.length; i++) {
       if (i == _numbers.length - 1) {
         children.add(Container());
-        children.add(_buildContainerCircle(context, _numbers[i]));
-        children.add(_buildDeleteButton(context));
+
+        children.add(ContainerCircle(
+          number: _numbers[i],
+          onCodeClick: _onCodeClick,
+        ));
+        children.add(DeleteButton(
+          deleteNumber: _deleteCode,
+        ));
       } else {
-        children.add(_buildContainerCircle(context, _numbers[i]));
+        children.add(ContainerCircle(
+          number: _numbers[i],
+          onCodeClick: _onCodeClick,
+        ));
       }
     }
 
@@ -171,26 +154,6 @@ class PinPadState extends State<PinPad> {
       mainAxisSpacing: 35,
       padding: EdgeInsets.all(8),
       children: children,
-    );
-  }
-
-  Widget _buildDeleteButton(BuildContext context) {
-    return InkResponse(
-      onTap: _deleteCode,
-      child: Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: _circleColor,
-        ),
-        child: Center(
-          child: PwIcon(
-            PwIcons.remove,
-            size: 30,
-            color: Theme.of(context).colorScheme.globalNeutral550,
-          ),
-        ),
-      ),
     );
   }
 }
