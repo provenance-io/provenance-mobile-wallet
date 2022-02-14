@@ -147,7 +147,7 @@ class Strings {
   static const continueName = 'Continue';
 
   // Confirm Pin
-  static const confirmYourPinCode = 'Confirm your pin code';
+  static const verifyPinCode = 'Verify Pin Code';
   static const confirmYourPinCodeReminder =
       "Confirm your pin code. Make sure you remember it as you cannot recover it if you lose it.";
   static const yourPinDoesNotMatchPleaseTryAgain =
