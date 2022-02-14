@@ -32,6 +32,7 @@ class PwIcons {
   static const String chevron = 'chevron';
   static const String new_window = "new_window";
   static const String provenance = "provenance";
+  static const String face_id = "face_id";
 }
 
 class PwIcon extends StatelessWidget {
