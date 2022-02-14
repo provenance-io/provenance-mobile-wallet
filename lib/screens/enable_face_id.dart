@@ -1,8 +1,9 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/image_placeholder.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -28,26 +29,12 @@ class EnableFaceId extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: PwText(
-          Strings.useFaceId,
-          style: PwTextStyle.h5,
-          textAlign: TextAlign.left,
-          color: PwColor.globalNeutral550,
-        ),
+      appBar: PwAppBar(
+        title: Strings.faceId,
+        leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.provenanceNeutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -60,25 +47,34 @@ class EnableFaceId extends StatelessWidget {
                 top: 12,
               ),
             ),
-            SizedBox(
-              height: 66,
+            VerticalSpacer.custom(
+              spacing: 104,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ImagePlaceholder(),
+                PwIcon(
+                  PwIcons.face_id,
+                  color: Theme.of(context).colorScheme.white,
+                ),
               ],
             ),
-            SizedBox(
-              height: 36,
+            VerticalSpacer.largeX4(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: PwText(
+                Strings.useFaceIdTitle,
+                style: PwTextStyle.h4,
+                textAlign: TextAlign.center,
+              ),
             ),
+            VerticalSpacer.large(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwText(
                 Strings.useYourFaceId,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
                 textAlign: TextAlign.center,
-                color: PwColor.globalNeutral550,
               ),
             ),
             Expanded(child: Container()),
@@ -124,16 +120,14 @@ class EnableFaceId extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(
-              height: 8,
-            ),
+            VerticalSpacer.small(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwTextButton(
                 child: PwText(
-                  Strings.later,
-                  style: PwTextStyle.mBold,
-                  color: PwColor.globalNeutral450,
+                  Strings.skipForNow,
+                  style: PwTextStyle.subhead,
+                  color: PwColor.white,
                 ),
                 onPressed: () async {
                   ModalLoadingRoute.showLoading(
@@ -165,7 +159,6 @@ class EnableFaceId extends StatelessWidget {
                 },
               ),
             ),
-            VerticalSpacer.xxLarge(),
             VerticalSpacer.xxLarge(),
           ],
         ),
