@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+export 'dtos/transaction_message.dart';
 
 class CipherService {
-  CipherService();
-
-  static const MethodChannel _channel =
-      const MethodChannel('prov_wallet_flutter');
+  static const _channel = const MethodChannel('prov_wallet_flutter');
 
   Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');

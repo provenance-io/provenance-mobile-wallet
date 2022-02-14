@@ -5,6 +5,7 @@
 import Foundation
 import UserNotifications
 import UIKit
+import SwiftyJSON
 
 public class Utilities {
 	public static func plistString(_ key: String) -> String {
@@ -23,7 +24,9 @@ public class Utilities {
 		if let logMessage = message as? String {
 			NSLog(logMessage)
 		} else if let logMessage = message as? NSError {
-			NSLog("%@", logMessage)		
+			NSLog("%@", logMessage)
+		} else if let logMessage = message as? JSON {
+			NSLog("%@", logMessage.stringValue)
 		} else if let logMessage = message as? NSObject {
 			NSLog("%@", logMessage)
 		}

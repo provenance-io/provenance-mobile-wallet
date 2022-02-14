@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/cipher_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_storage_service_imp.dart';
@@ -20,7 +20,8 @@ main() {
     _mockSqliteService = MockSqliteWalletStorageService();
     _mockCipherService = MockCipherService();
 
-    _storageService = WalletStorageServiceImp(_mockSqliteService!, _mockCipherService!);
+    _storageService =
+        WalletStorageServiceImp(_mockSqliteService!, _mockCipherService!);
   });
 
   group("addWallet", () {
@@ -28,28 +29,28 @@ main() {
     final id = "TestId";
 
     setUp(() {
-      final bip32Serialized = "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
+      final bip32Serialized =
+          "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
       privateKey = PrivateKey.fromBip32(bip32Serialized);
     });
 
     test('success', () async {
       when(_mockSqliteService!.addWallet(
-          name: anyNamed("name"),
-          address: anyNamed("address"),
-          coin: anyNamed("coin"),
+        name: anyNamed("name"),
+        address: anyNamed("address"),
+        coin: anyNamed("coin"),
       )).thenAnswer((_) => Future.value(id));
 
       when(_mockCipherService!.encryptKey(
-          id: anyNamed("id"),
-          privateKey: anyNamed("privateKey"),
-          useBiometry: anyNamed("useBiometry"),
-      ))
-      .thenAnswer((_) => Future.value(true));
+        id: anyNamed("id"),
+        privateKey: anyNamed("privateKey"),
+        useBiometry: anyNamed("useBiometry"),
+      )).thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.addWallet(
-          name: "Name",
-          privateKey: privateKey!,
-          useBiometry: true,
+        name: "Name",
+        privateKey: privateKey!,
+        useBiometry: true,
       );
 
       expect(result, true);
@@ -77,18 +78,20 @@ main() {
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
-        () =>_storageService!.addWallet(
-            name: "Name",
-            privateKey: privateKey!,
-            useBiometry: true,
+        () => _storageService!.addWallet(
+          name: "Name",
+          privateKey: privateKey!,
+          useBiometry: true,
         ),
-          throwsA(exception),);
+        throwsA(exception),
+      );
 
       verifyNoMoreInteractions(_mockCipherService);
     });
 
     testWidgets('error while encrypting key', (tester) async {
-      when(_mockSqliteService!.removeWallet(id: anyNamed("id"))).thenAnswer((_) => Future.value());
+      when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
+          .thenAnswer((_) => Future.value());
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         address: anyNamed("address"),
@@ -96,16 +99,15 @@ main() {
       )).thenAnswer((_) => Future.value(id));
 
       when(_mockCipherService!.encryptKey(
-          id: anyNamed("id"),
-          privateKey: anyNamed("privateKey"),
-          useBiometry: anyNamed("useBiometry"),
-      ))
-          .thenAnswer((_) => Future.value(false));
+        id: anyNamed("id"),
+        privateKey: anyNamed("privateKey"),
+        useBiometry: anyNamed("useBiometry"),
+      )).thenAnswer((_) => Future.value(false));
 
       final result = await _storageService!.addWallet(
-          name: "Name",
-          privateKey: privateKey!,
-          useBiometry: true,
+        name: "Name",
+        privateKey: privateKey!,
+        useBiometry: true,
       );
 
       verify(_mockSqliteService!.removeWallet(id: id));
@@ -114,23 +116,32 @@ main() {
     });
   });
 
-  group("getSelectedWallet", ()  {
+  group("getSelectedWallet", () {
     test("success", () async {
-      final walletDetails = WalletDetails(id: "id1", address: "Address1", name: "Name1",);
+      final walletDetails = WalletDetails(
+        id: "id1",
+        address: "Address1",
+        name: "Name1",
+      );
 
-      when(_mockSqliteService!.getSelectedWallet()).thenAnswer((_) => Future.value(walletDetails));
+      when(_mockSqliteService!.getSelectedWallet())
+          .thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.getSelectedWallet();
       expect(result, walletDetails);
     });
   });
 
-  group("getWallet", ()  {
+  group("getWallet", () {
     test("success", () async {
-      final walletDetails = WalletDetails(id: "id1", address: "Address1", name: "Name1",);
+      final walletDetails = WalletDetails(
+        id: "id1",
+        address: "Address1",
+        name: "Name1",
+      );
 
       when(_mockSqliteService!.getWallet(id: anyNamed("id")))
-            .thenAnswer((_) => Future.value(walletDetails));
+          .thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.getWallet("walletId");
       expect(result, walletDetails);
@@ -138,29 +149,38 @@ main() {
     });
   });
 
-  group("getWallets", ()  {
+  group("getWallets", () {
     test("success", () async {
-        final walletDetails = [
-          WalletDetails(id: "id1", address: "Address1", name: "Name1",),
-          WalletDetails(id: "id2", address: "Address2", name: "Name2",),
-        ];
+      final walletDetails = [
+        WalletDetails(
+          id: "id1",
+          address: "Address1",
+          name: "Name1",
+        ),
+        WalletDetails(
+          id: "id2",
+          address: "Address2",
+          name: "Name2",
+        ),
+      ];
 
-        when(_mockSqliteService!.getWallets()).thenAnswer((_) => Future.value(walletDetails));
+      when(_mockSqliteService!.getWallets())
+          .thenAnswer((_) => Future.value(walletDetails));
 
-        final result = await _storageService!.getWallets();
-        expect(result, walletDetails);
+      final result = await _storageService!.getWallets();
+      expect(result, walletDetails);
     });
   });
 
   group("loadKey", () {
-    final bip32Serialized = "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
+    final bip32Serialized =
+        "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
     final id = "TestId";
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.decryptKey(
-          id: anyNamed("id"),
-      ))
-          .thenAnswer((_) => Future.value(bip32Serialized));
+        id: anyNamed("id"),
+      )).thenAnswer((_) => Future.value(bip32Serialized));
 
       final privateKey = await _storageService!.loadKey(id);
       expect(privateKey!.rawHex, PrivateKey.fromBip32(bip32Serialized).rawHex);
@@ -171,7 +191,8 @@ main() {
 
   group("removeAllWallets", () {
     testWidgets('success', (tester) async {
-      when(_mockSqliteService!.removeAllWallets()).thenAnswer((_) => Future.value());
+      when(_mockSqliteService!.removeAllWallets())
+          .thenAnswer((_) => Future.value());
       await _storageService!.removeAllWallets();
       verify(_mockSqliteService!.removeAllWallets());
     });
@@ -181,7 +202,8 @@ main() {
     final id = "TestId";
 
     testWidgets('success', (tester) async {
-      when(_mockSqliteService!.removeWallet(id: anyNamed("id"))).thenAnswer((_) => Future.value());
+      when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
+          .thenAnswer((_) => Future.value());
       await _storageService!.removeWallet(id);
 
       verify(_mockSqliteService!.removeWallet(id: id));
@@ -190,9 +212,11 @@ main() {
 
   group("renameWallet", () {
     testWidgets('success', (tester) async {
-      when(_mockSqliteService!.renameWallet(
+      when(
+        _mockSqliteService!.renameWallet(
           id: anyNamed("id"),
-          name: anyNamed("name"),),
+          name: anyNamed("name"),
+        ),
       ).thenAnswer((_) => Future.value());
 
       await _storageService!.renameWallet(id: "Id", name: "Name");
@@ -203,9 +227,15 @@ main() {
 
   group("selectWallet", () {
     testWidgets('success', (tester) async {
-      final walletDetails = WalletDetails(id: "Id", address: "Address", name: "Name",);
-      when(_mockSqliteService!.selectWallet(
-          id: anyNamed("id"),),
+      final walletDetails = WalletDetails(
+        id: "Id",
+        address: "Address",
+        name: "Name",
+      );
+      when(
+        _mockSqliteService!.selectWallet(
+          id: anyNamed("id"),
+        ),
       ).thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.selectWallet(id: "Id");
@@ -215,8 +245,10 @@ main() {
     });
 
     testWidgets('null', (tester) async {
-      when(_mockSqliteService!.selectWallet(
-          id: anyNamed("id"),),
+      when(
+        _mockSqliteService!.selectWallet(
+          id: anyNamed("id"),
+        ),
       ).thenAnswer((_) => Future.value(null));
 
       final result = await _storageService!.selectWallet(id: "Id");
@@ -226,7 +258,8 @@ main() {
 
   group("getUseBiometry", () {
     testWidgets('success', (tester) async {
-      when(_mockCipherService!.getUseBiometry()).thenAnswer((_) => Future.value(true));
+      when(_mockCipherService!.getUseBiometry())
+          .thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.getUseBiometry();
       verifyNoMoreInteractions(_mockSqliteService);
@@ -236,7 +269,8 @@ main() {
 
   group("setUseBiometry", () {
     testWidgets('success', (tester) async {
-      when(_mockCipherService!.setUseBiometry(useBiometry: anyNamed("useBiometry")))
+      when(_mockCipherService!
+              .setUseBiometry(useBiometry: anyNamed("useBiometry")))
           .thenAnswer((_) => Future.value(false));
 
       final result = await _storageService!.setUseBiometry(true);

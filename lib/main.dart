@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/landing/landing.dart';
-import 'package:provenance_wallet/services/cipher_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service_imp.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/services/cipher_service.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 main() {
   MethodChannel? _channel;

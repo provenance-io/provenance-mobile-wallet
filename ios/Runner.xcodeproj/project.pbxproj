@@ -10,11 +10,6 @@
 		12878F7D27ADB81F005AE305 /* Runner.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FA06BE9A27304134007EDFC7 /* Runner.entitlements */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		5528361727B41804005F8078 /* SwiftProvWalletFlutterPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528361627B41804005F8078 /* SwiftProvWalletFlutterPlugin.swift */; };
-		5528361927B4180D005F8078 /* CipherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528361827B4180D005F8078 /* CipherService.swift */; };
-		5528361C27B4186D005F8078 /* ProvenanceWalletError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528361A27B4186C005F8078 /* ProvenanceWalletError.swift */; };
-		5528361D27B4186D005F8078 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528361B27B4186D005F8078 /* ErrorHandler.swift */; };
-		5528361F27B418D1005F8078 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528361E27B418D1005F8078 /* Utilities.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		9348627D889232239C74D837 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE5A9F2C41085C1430F2B16E /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -27,11 +22,6 @@
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		30A2B30E273C4BB400F5BC89 /* prov_wallet_flutter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = prov_wallet_flutter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		5528361627B41804005F8078 /* SwiftProvWalletFlutterPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftProvWalletFlutterPlugin.swift; sourceTree = "<group>"; };
-		5528361827B4180D005F8078 /* CipherService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CipherService.swift; sourceTree = "<group>"; };
-		5528361A27B4186C005F8078 /* ProvenanceWalletError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvenanceWalletError.swift; sourceTree = "<group>"; };
-		5528361B27B4186D005F8078 /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
-		5528361E27B418D1005F8078 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -104,11 +94,6 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				5528361E27B418D1005F8078 /* Utilities.swift */,
-				5528361B27B4186D005F8078 /* ErrorHandler.swift */,
-				5528361A27B4186C005F8078 /* ProvenanceWalletError.swift */,
-				5528361827B4180D005F8078 /* CipherService.swift */,
-				5528361627B41804005F8078 /* SwiftProvWalletFlutterPlugin.swift */,
 				FA06BE9A27304134007EDFC7 /* Runner.entitlements */,
 				FA06BE9927304129007EDFC7 /* RunnerRelease.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -282,11 +267,6 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				5528361F27B418D1005F8078 /* Utilities.swift in Sources */,
-				5528361C27B4186D005F8078 /* ProvenanceWalletError.swift in Sources */,
-				5528361D27B4186D005F8078 /* ErrorHandler.swift in Sources */,
-				5528361927B4180D005F8078 /* CipherService.swift in Sources */,
-				5528361727B41804005F8078 /* SwiftProvWalletFlutterPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

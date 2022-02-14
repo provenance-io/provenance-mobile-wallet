@@ -6,7 +6,7 @@ import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/wallet.dart' as _i5;
-import 'package:provenance_wallet/services/cipher_service.dart' as _i6;
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart' as _i6;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i4;
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart'
     as _i2;

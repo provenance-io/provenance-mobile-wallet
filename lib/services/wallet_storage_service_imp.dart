@@ -1,6 +1,6 @@
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/src/wallet/private_key.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/cipher_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_storage_service.dart';

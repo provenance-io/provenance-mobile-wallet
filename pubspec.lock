@@ -639,6 +639,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  prov_wallet_flutter:
+    dependency: "direct main"
+    description:
+      path: "packages/prov_wallet_flutter"
+      relative: true
+    source: path
+    version: "0.0.1"
   provenance_dart:
     dependency: "direct main"
     description:

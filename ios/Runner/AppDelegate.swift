@@ -9,10 +9,6 @@ import Flutter
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
 
-      
-      let registrar = self.registrar(forPlugin: "CipherService")
-      
-      SwiftProvWalletFlutterPlugin.register(with: registrar!)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
