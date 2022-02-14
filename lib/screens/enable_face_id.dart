@@ -35,133 +35,146 @@ class EnableFaceId extends StatelessWidget {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ProgressStepper(
-              currentStep ?? 0,
-              numberOfSteps ?? 1,
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-              ),
-            ),
-            VerticalSpacer.custom(
-              spacing: 104,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PwIcon(
-                  PwIcons.face_id,
-                  color: Theme.of(context).colorScheme.white,
-                ),
-              ],
-            ),
-            VerticalSpacer.largeX4(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwText(
-                Strings.useFaceIdTitle,
-                style: PwTextStyle.h4,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            VerticalSpacer.large(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwText(
-                Strings.useYourFaceId,
-                style: PwTextStyle.body,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(child: Container()),
-            SizedBox(
-              height: 24,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwButton(
-                child: PwText(
-                  Strings.enable,
-                  style: PwTextStyle.mBold,
-                  color: PwColor.white,
-                ),
-                onPressed: () async {
-                  ModalLoadingRoute.showLoading(
-                    Strings.pleaseWait,
-                    context,
-                  );
-                  String privateKey = await ProvWalletFlutter.getPrivateKey(
-                    words?.join(' ') ?? '',
-                  );
-                  final success = await ProvWalletFlutter.saveToWalletService(
-                    words?.join(' ') ?? '',
-                    accountName ?? '',
-                    useBiometry: true,
-                  );
-                  ModalLoadingRoute.dismiss(context);
+        child: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: viewportConstraints,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ProgressStepper(
+                    currentStep ?? 0,
+                    numberOfSteps ?? 1,
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 12,
+                    ),
+                  ),
+                  VerticalSpacer.custom(
+                    spacing: 104,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PwIcon(
+                        PwIcons.face_id,
+                        color: Theme.of(context).colorScheme.white,
+                      ),
+                    ],
+                  ),
+                  VerticalSpacer.largeX4(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: PwText(
+                      Strings.useFaceIdTitle,
+                      style: PwTextStyle.h4,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  VerticalSpacer.large(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: PwText(
+                      Strings.useYourFaceId,
+                      style: PwTextStyle.body,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(child: Container()),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: PwButton(
+                      child: PwText(
+                        Strings.enable,
+                        style: PwTextStyle.mBold,
+                        color: PwColor.white,
+                      ),
+                      onPressed: () async {
+                        ModalLoadingRoute.showLoading(
+                          Strings.pleaseWait,
+                          context,
+                        );
+                        String privateKey =
+                            await ProvWalletFlutter.getPrivateKey(
+                          words?.join(' ') ?? '',
+                        );
+                        final success =
+                            await ProvWalletFlutter.saveToWalletService(
+                          words?.join(' ') ?? '',
+                          accountName ?? '',
+                          useBiometry: true,
+                        );
+                        ModalLoadingRoute.dismiss(context);
 
-                  if (success) {
-                    LocalAuthHelper.instance.enroll(
-                      privateKey,
-                      code?.join() ?? '',
-                      accountName ?? '',
-                      true,
-                      context,
-                      () async {
-                        Navigator.of(context)
-                            .push(WalletSetupConfirmation().route());
+                        if (success) {
+                          LocalAuthHelper.instance.enroll(
+                            privateKey,
+                            code?.join() ?? '',
+                            accountName ?? '',
+                            true,
+                            context,
+                            () async {
+                              Navigator.of(context)
+                                  .push(WalletSetupConfirmation().route());
+                            },
+                          );
+                        }
                       },
-                    );
-                  }
-                },
+                    ),
+                  ),
+                  VerticalSpacer.small(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: PwTextButton(
+                      child: PwText(
+                        Strings.skipForNow,
+                        style: PwTextStyle.subhead,
+                        color: PwColor.white,
+                      ),
+                      onPressed: () async {
+                        ModalLoadingRoute.showLoading(
+                          Strings.pleaseWait,
+                          context,
+                        );
+                        String privateKey =
+                            await ProvWalletFlutter.getPrivateKey(
+                          words?.join(' ') ?? '',
+                        );
+                        final success =
+                            await ProvWalletFlutter.saveToWalletService(
+                          words?.join(' ') ?? '',
+                          accountName ?? '',
+                          useBiometry: false,
+                        );
+                        ModalLoadingRoute.dismiss(context);
+                        if (success) {
+                          LocalAuthHelper.instance.enroll(
+                            privateKey,
+                            code?.join() ?? '',
+                            accountName ?? '',
+                            false,
+                            context,
+                            () {
+                              Navigator.of(context)
+                                  .push(WalletSetupConfirmation().route());
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  VerticalSpacer.xxLarge(),
+                ],
               ),
             ),
-            VerticalSpacer.small(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwTextButton(
-                child: PwText(
-                  Strings.skipForNow,
-                  style: PwTextStyle.subhead,
-                  color: PwColor.white,
-                ),
-                onPressed: () async {
-                  ModalLoadingRoute.showLoading(
-                    Strings.pleaseWait,
-                    context,
-                  );
-                  String privateKey = await ProvWalletFlutter.getPrivateKey(
-                    words?.join(' ') ?? '',
-                  );
-                  final success = await ProvWalletFlutter.saveToWalletService(
-                    words?.join(' ') ?? '',
-                    accountName ?? '',
-                    useBiometry: false,
-                  );
-                  ModalLoadingRoute.dismiss(context);
-                  if (success) {
-                    LocalAuthHelper.instance.enroll(
-                      privateKey,
-                      code?.join() ?? '',
-                      accountName ?? '',
-                      false,
-                      context,
-                      () {
-                        Navigator.of(context)
-                            .push(WalletSetupConfirmation().route());
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-            VerticalSpacer.xxLarge(),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
