@@ -99,72 +99,63 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
             fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 150),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  children: [
-                    OnboardingLandingSlide(),
-                    OnboardingFundamentalsSlide(),
-                    OnboardingCustomizationSlide(),
-                  ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                children: [
+                  OnboardingLandingSlide(),
+                  OnboardingFundamentalsSlide(),
+                  OnboardingCustomizationSlide(),
+                ],
+              ),
+            ),
+            PageIndicator(currentPageIndex: _currentPage.round()),
+            VerticalSpacer.xxLarge(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: PwButton(
+                child: PwText(
+                  _accountExists ? Strings.continueName : Strings.createWallet,
+                  style: PwTextStyle.bodyBold,
+                  color: PwColor.white,
                 ),
-              ),
-              VerticalSpacer.medium(),
-              PageIndicator(currentPageIndex: _currentPage.round()),
-              VerticalSpacer.large(),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: PwButton(
-                  child: PwText(
-                    _accountExists
-                        ? Strings.continueName
-                        : Strings.createWallet,
-                    style: PwTextStyle.m,
-                    color: PwColor.white,
-                  ),
-                  onPressed: () {
-                    if (_accountExists) {
-                      doAuth();
-                    } else {
-                      Navigator.of(context).push(AccountName(
-                        WalletAddImportType.onBoardingAdd,
-                        currentStep: 1,
-                        numberOfSteps: 4,
-                      ).route());
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: PwTextButton(
-                  child: PwText(
-                    Strings.restoreWallet,
-                    style: PwTextStyle.m,
-                    color: PwColor.white,
-                  ),
-                  onPressed: () {
+                onPressed: () {
+                  if (_accountExists) {
+                    doAuth();
+                  } else {
                     Navigator.of(context).push(AccountName(
-                      WalletAddImportType.onBoardingRecover,
+                      WalletAddImportType.onBoardingAdd,
                       currentStep: 1,
                       numberOfSteps: 4,
                     ).route());
-                  },
+                  }
+                },
+              ),
+            ),
+            VerticalSpacer.large(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: PwTextButton(
+                child: PwText(
+                  Strings.recoverWallet,
+                  style: PwTextStyle.body,
+                  color: PwColor.white,
                 ),
+                onPressed: () {
+                  Navigator.of(context).push(AccountName(
+                    WalletAddImportType.onBoardingRecover,
+                    currentStep: 1,
+                    numberOfSteps: 4,
+                  ).route());
+                },
               ),
-              SizedBox(
-                height: 40,
-              ),
-            ],
-          ),
+            ),
+            VerticalSpacer.largeX4(),
+          ],
         ),
       ),
     );
