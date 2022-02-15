@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
+import 'package:provenance_wallet/screens/recovery_words_confirm/word_button.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -55,31 +55,10 @@ class WordSelectorState extends State<WordSelector> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: words
-                    .map((e) => GestureDetector(
-                          child: Container(
-                            height: 42,
-                            width: 98,
-                            decoration: BoxDecoration(
-                              color: e == selectedWord
-                                  ? colorScheme.secondary700
-                                  : colorScheme.provenanceNeutral700,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0)),
-                              border: Border.all(
-                                color: e == selectedWord
-                                    ? colorScheme.secondary400
-                                    : colorScheme.provenanceNeutral700,
-                              ),
-                            ),
-                            child: Center(
-                              child: PwText(
-                                e,
-                                color: PwColor.white,
-                                style: PwTextStyle.bodyBold,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
+                    .map((e) => WordButton(
+                          word: e,
+                          isSelected: e == selectedWord,
+                          setSelected: () {
                             setState(() {
                               selectedWord = e;
                               bloc.wordSelected(e, widget.index);
