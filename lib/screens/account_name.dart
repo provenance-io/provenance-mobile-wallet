@@ -14,7 +14,7 @@ class AccountName extends HookWidget {
     this.numberOfSteps,
   });
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final List<String>? words;
   final int? currentStep;
