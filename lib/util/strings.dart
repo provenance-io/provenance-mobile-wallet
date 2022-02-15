@@ -95,6 +95,7 @@ class Strings {
   static const noTransactionsText =
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
+  static const profile = "Profile";
 
   // My Account Page
   static const myAccount = 'My Account';
