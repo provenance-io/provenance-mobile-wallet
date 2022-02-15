@@ -63,7 +63,7 @@
 	<key>ProvenanceAPIEndpoint</key>
 	<string>http://rpc-0.test.provenance.io:26657</string>
 	<key>ProvenanceGRPCEndpoint</key>
-	<string>grpc-pn-zz18godox4npnh6i.test.nodes.figure.tech</string>
+	<string>grpc.test.provenance.io</string>
 	<key>ProvenanceGRPCPort</key>
 	<string>443</string>
 	<key>ProvenanceMainnet</key>
