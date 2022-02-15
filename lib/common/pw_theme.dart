@@ -124,9 +124,8 @@ class ProvenanceThemeData {
   static const TextStyle _footnote = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 12,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w400,
     height: 19.2 / 12,
-    letterSpacing: 19 * 0.04,
   );
 }
 
@@ -159,5 +158,6 @@ extension CustomTextTheme on TextTheme {
   TextStyle get body => ProvenanceThemeData._body;
   TextStyle get bodyBold => ProvenanceThemeData._bodyBold;
   TextStyle get display2 => ProvenanceThemeData._display2;
+  TextStyle get footnote => ProvenanceThemeData._footnote;
   TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
 }
