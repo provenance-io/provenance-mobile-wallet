@@ -198,6 +198,9 @@ class Strings {
       'Make sure to record these words in the correct order, using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
 
+  // BackupComplete
+  static const backupComplete = "Backup Complete";
+
   // RestoreAccountIntro
   static const recoverAccount = 'Recover Account';
   static const inTheFollowingStepsText =

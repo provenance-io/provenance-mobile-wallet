@@ -2,15 +2,12 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/backup_complete_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   RecoveryWordsConfirmScreen(
@@ -180,31 +177,14 @@ class RecoveryWordsConfirmScreenState
     } else if (!_isResponsible) {
       setError(Strings.youMustAgreeToTheWalletSeedphraseTerms);
     } else {
+      Navigator.of(context).push(BackupCompleteScreen(
+        widget.flowType,
+        words: widget.words,
+        accountName: widget.accountName,
+        currentStep: (widget.currentStep ?? 0) + 1,
+        numberOfSteps: widget.numberOfSteps,
+      ).route());
       setError("");
-      if (widget.flowType == WalletAddImportType.onBoardingAdd) {
-        Navigator.of(context).push(CreatePin(
-          widget.flowType,
-          words: widget.words,
-          accountName: widget.accountName,
-          currentStep: (widget.currentStep ?? 0) + 1,
-          numberOfSteps: widget.numberOfSteps,
-        ).route());
-      } else if (widget.flowType == WalletAddImportType.dashboardAdd) {
-        ModalLoadingRoute.showLoading(Strings.pleaseWait, context);
-        await ProvWalletFlutter.getPrivateKey(
-          widget.words?.join(' ') ?? '',
-        );
-        await ProvWalletFlutter.saveToWalletService(
-          widget.words?.join(' ') ?? '',
-          widget.accountName ?? '',
-        );
-        ModalLoadingRoute.dismiss(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-      }
     }
   }
 }
