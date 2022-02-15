@@ -39,7 +39,6 @@ class AccountName extends HookWidget {
           child: IconButton(
             icon: PwIcon(
               PwIcons.close,
-              size: 14,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -133,8 +132,7 @@ class AccountName extends HookWidget {
                   },
                 ),
               ),
-              VerticalSpacer.xxLarge(),
-              VerticalSpacer.xxLarge(),
+              VerticalSpacer.large(),
             ],
           ),
         ),
