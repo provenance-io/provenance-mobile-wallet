@@ -1,7 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';

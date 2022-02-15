@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 /// Figma Typopgraphy Text Styles
 enum PwColor {
