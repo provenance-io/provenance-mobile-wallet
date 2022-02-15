@@ -5,7 +5,6 @@ class DashboardLanding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.white,
       padding: EdgeInsets.only(top: 40),
       child: WalletConnectSection(),
     );
