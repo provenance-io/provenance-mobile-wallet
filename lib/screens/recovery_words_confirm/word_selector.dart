@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class WordSelector extends StatefulWidget {
   WordSelector({
@@ -37,8 +38,8 @@ class WordSelectorState extends State<WordSelector> {
 
               return PwText(
                 (trueWordIndex == null || trueWordIndex == -1)
-                    ? 'Select word'
-                    : 'Select word #${trueWordIndex + 1}',
+                    ? Strings.selectWord
+                    : Strings.selectWordIndex('${trueWordIndex + 1}'),
                 style: PwTextStyle.body,
               );
             },
