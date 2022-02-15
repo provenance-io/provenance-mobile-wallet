@@ -57,6 +57,6 @@ class _SignerImp implements Signer {
 
   @override
   List<int> sign(List<int> data) {
-    return _privateKey.signData(Hash.sha256(data))..removeLast();
+    return _privateKey.defaultKey().signData(Hash.sha256(data))..removeLast();
   }
 }
