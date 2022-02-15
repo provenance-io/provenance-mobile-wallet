@@ -119,10 +119,19 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final completer = Completer<bool>();
     _completerLookup[id] = completer;
 
+    final txBody = TxBody(
+      messages: [
+        proposedMessage.toAny(),
+      ],
+    );
+
+    final estimatedGas =
+        await _transactionHandler.estimateGas(txBody, _privateKey);
+
     final sendRequest = SendRequest(
       id: id,
       description: description,
-      cost: "",
+      cost: '${estimatedGas.fees} nhash',
       message: TransactionMessage(
         fromAddress: proposedMessage.fromAddress,
         toAddress: proposedMessage.toAddress,
@@ -138,13 +147,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return null;
     }
 
-    final txBody = TxBody(
-      messages: [
-        proposedMessage.toAny(),
-      ],
-    );
+    final response =
+        await _transactionHandler.executeTransaction(txBody, _privateKey);
 
-    return _transactionHandler.executeTransaction(txBody, _privateKey);
+    return response;
   }
 
   @override
