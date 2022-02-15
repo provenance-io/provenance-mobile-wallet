@@ -24,8 +24,8 @@ class CodePanel extends StatelessWidget {
   final borderColor;
   final bool? fingerVerify;
   final foregroundColor;
-  final H = 16.0;
-  final W = 16.0;
+  static const height = 16.0;
+  static const width = 16.0;
   final DeleteCode? deleteCode;
   final int? status;
 
@@ -39,8 +39,8 @@ class CodePanel extends StatelessWidget {
       do {
         circles.add(
           SizedBox(
-            width: W,
-            height: H,
+            width: width,
+            height: height,
             child: new Container(
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
@@ -62,7 +62,7 @@ class CodePanel extends StatelessWidget {
       for (int i = 1; i <= codeLength; i++) {
         if (i > currentLength) {
           circles.add(SizedBox(
-            width: W,
+            width: width,
             height: 3,
             child: Container(
               decoration: new BoxDecoration(
@@ -77,8 +77,8 @@ class CodePanel extends StatelessWidget {
           ));
         } else {
           circles.add(new SizedBox(
-            width: W,
-            height: H,
+            width: width,
+            height: height,
             child: new Container(
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
@@ -100,7 +100,7 @@ class CodePanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox.fromSize(
-            size: new Size(30.0 * codeLength, H),
+            size: new Size(30.0 * codeLength, height),
             child: new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: circles,
