@@ -15,17 +15,17 @@ enum PwColor {
   error,
   warning,
   // primary
-  primary1,
-  primary2,
-  primary3,
+  //primary1,
+  //primary2,
+  //primary3,
   primary4,
-  primary5,
-  primary6,
+  //primary5,
+  //primary6,
   // secondary
   secondary1,
   secondary2,
   // accent
-  lime,
+  //lime,
   // new
   globalNeutral150,
   globalNeutral550,
@@ -67,24 +67,12 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.error;
       case PwColor.warning:
         return theme.colorScheme.warning;
-      case PwColor.primary1:
-        return theme.colorScheme.primary1;
-      case PwColor.primary2:
-        return theme.colorScheme.primary2;
-      case PwColor.primary3:
-        return theme.colorScheme.primary3;
       case PwColor.primary4:
         return theme.colorScheme.primary4;
-      case PwColor.primary5:
-        return theme.colorScheme.primary5;
-      case PwColor.primary6:
-        return theme.colorScheme.primary6;
       case PwColor.secondary1:
         return theme.colorScheme.secondary;
       case PwColor.secondary2:
         return theme.colorScheme.secondaryVariant;
-      case PwColor.lime:
-        return theme.colorScheme.lime;
       case PwColor.globalNeutral150:
         return theme.colorScheme.globalNeutral150;
       case PwColor.globalNeutral350:
