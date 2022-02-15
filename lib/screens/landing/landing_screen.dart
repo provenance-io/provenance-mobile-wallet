@@ -15,14 +15,15 @@ import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class Landing extends StatefulWidget {
+class LandingScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _LandingState();
+    return _LandingScreenState();
   }
 }
 
-class _LandingState extends State<Landing> with WidgetsBindingObserver {
+class _LandingScreenState extends State<LandingScreen>
+    with WidgetsBindingObserver {
   static const _inactivityTimeout = Duration(minutes: 2);
 
   bool _accountExists = false;

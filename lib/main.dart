@@ -53,7 +53,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
-      home: Landing(),
+      home: LandingScreen(),
     );
   }
 }

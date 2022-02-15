@@ -24,7 +24,7 @@ class ResetButton extends StatelessWidget {
           Navigator.of(context).popUntil((route) => true);
           // Pretty sure that this is creating an additional view on the stack when one already exists.
           // If this is just for development no change is needed.
-          Navigator.push(context, Landing().route());
+          Navigator.push(context, LandingScreen().route());
         },
       ),
     );
