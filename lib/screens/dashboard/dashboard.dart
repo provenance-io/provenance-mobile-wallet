@@ -1,6 +1,7 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
@@ -11,6 +12,7 @@ import 'package:provenance_wallet/screens/dashboard/transactions/transaction_lan
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -73,7 +75,7 @@ class DashboardState extends State<Dashboard>
   @override
   void initState() {
     get.registerLazySingleton<DashboardBloc>(() => DashboardBloc());
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
     ProvWalletFlutter.instance.onAskToSign = (
@@ -136,9 +138,8 @@ class DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
-        centerTitle: true,
         actions: [
           Padding(
             padding: EdgeInsets.only(
@@ -184,88 +185,115 @@ class DashboardState extends State<Dashboard>
           ),
         ),
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 2,
-            color: Theme.of(context).colorScheme.globalNeutral250,
-          ),
-          Container(
-            color: Theme.of(context).colorScheme.globalNeutral50,
-            // height: 50 + inset?.bottom ?? 0,
-            child: TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.transparent,
-              tabs: [
-                TabItem(
-                  0 == _currentTabIndex,
-                  Strings.dashboard,
-                  PwIcons.wallet,
-                ),
-                TabItem(
-                  1 == _currentTabIndex,
-                  Strings.transactions,
-                  PwIcons.staking,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _walletAddress.isNotEmpty && _currentTabIndex == 0
-              ? Container(
-                  color: Theme.of(context).colorScheme.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      PwText(
-                        '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
-                        color: PwColor.globalNeutral400,
-                        style: PwTextStyle.m,
-                      ),
-                      HorizontalSpacer.small(),
-                      GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(
-                            ClipboardData(text: _walletAddress),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: PwText(Strings.addressCopied)),
-                          );
-                        },
-                        child: Container(
-                          width: 24,
-                          height: 24,
-                          child: PwIcon(
-                            PwIcons.copy,
-                            color:
-                                Theme.of(context).colorScheme.globalNeutral400,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ],
+      bottomNavigationBar: Container(
+        color: Theme.of(context).colorScheme.provenanceNeutral800,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            VerticalSpacer.large(),
+            Container(
+              //color: Theme.of(context).colorScheme.provenanceNeutral800,
+              // height: 50 + inset?.bottom ?? 0,
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                tabs: [
+                  TabItem(
+                    0 == _currentTabIndex,
+                    Strings.dashboard,
+                    PwIcons.dashboard,
                   ),
-                )
-              : Container(),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                DashboardLanding(),
-                TransactionLanding(
-                  walletAddress: _walletAddress,
-                  walletName: _walletName,
-                ),
-              ],
+                  TabItem(
+                    1 == _currentTabIndex,
+                    Strings.transactions,
+                    PwIcons.staking,
+                  ),
+                  TabItem(
+                    2 == _currentTabIndex,
+                    Strings.profile,
+                    PwIcons.userAccount,
+                  ),
+                ],
+              ),
             ),
+          ],
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AssetPaths.images.background),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                right: Spacing.xxLarge,
+                left: Spacing.xxLarge,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  PwIcon(PwIcons.ellipsis),
+                ],
+              ),
+            ),
+            // _walletAddress.isNotEmpty && _currentTabIndex == 0
+            //     ? Container(
+            //         color: Theme.of(context).colorScheme.provenanceNeutral800,
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             PwText(
+            //               '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
+            //               color: PwColor.globalNeutral400,
+            //               style: PwTextStyle.m,
+            //             ),
+            //             HorizontalSpacer.small(),
+            //             GestureDetector(
+            //               onTap: () {
+            //                 Clipboard.setData(
+            //                   ClipboardData(text: _walletAddress),
+            //                 );
+            //                 ScaffoldMessenger.of(context).showSnackBar(
+            //                   SnackBar(content: PwText(Strings.addressCopied)),
+            //                 );
+            //               },
+            //               child: Container(
+            //                 width: 24,
+            //                 height: 24,
+            //                 child: PwIcon(
+            //                   PwIcons.copy,
+            //                   color: Theme.of(context)
+            //                       .colorScheme
+            //                       .globalNeutral400,
+            //                   size: 24,
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       )
+            //     : Container(),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  DashboardLanding(),
+                  TransactionLanding(
+                    walletAddress: _walletAddress,
+                    walletName: _walletName,
+                  ),
+                  MyAccount(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
