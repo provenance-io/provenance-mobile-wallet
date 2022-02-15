@@ -57,7 +57,7 @@ class Strings {
 
   // Landing Page
   static const createWallet = 'Create Wallet';
-  static const restoreWallet = 'Restore Wallet';
+  static const recoverWallet = 'Recover Wallet';
 
   // Fundamentals Slide
   static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
