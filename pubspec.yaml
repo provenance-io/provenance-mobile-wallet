@@ -72,7 +72,6 @@ flutter:
   assets:
     - assets/
     - assets/images/background.png
-    - assets/images/customization.png
     - assets/images/savePassphrase.png
     - assets/images/recoverAccount.png
   # To add assets to your application, add an assets section, like this:

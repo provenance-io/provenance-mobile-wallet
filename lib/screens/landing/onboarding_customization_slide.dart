@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -25,7 +26,11 @@ class OnboardingCustomizationSlide extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(AssetPaths.images.coins),
+            SvgPicture.asset(
+              AssetPaths.images.coins,
+              width: 180,
+              height: 180,
+            ),
           ],
         ),
         VerticalSpacer.xxLarge(),
