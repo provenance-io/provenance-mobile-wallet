@@ -26,6 +26,8 @@ enum PwTextStyle {
   logo,
   subhead,
   body,
+  bodyBold,
+  headline1,
   headline2,
 }
 
@@ -87,6 +89,10 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.body;
       case PwTextStyle.headline2:
         return theme.textTheme.provenanceHeadline2;
+      case PwTextStyle.headline1:
+        return theme.textTheme.provenanceHeadline1;
+      case PwTextStyle.bodyBold:
+        return theme.textTheme.bodyBold;
     }
   }
 }
