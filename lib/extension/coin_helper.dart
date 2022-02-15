@@ -10,8 +10,8 @@ extension CoinHelper on wallet.Coin {
 
   String get address {
     switch(this) {
-      case wallet.Coin.mainNet: return "grpcs://grpc-pn-zz18godox4npnh6i.nodes.figure.tech:443";
-      case wallet.Coin.testNet: return "grpcs://grpc-pn-zz18godox4npnh6i.test.nodes.figure.tech:443";
+      case wallet.Coin.mainNet: return "grpcs://grpc.provenance.io:443";
+      case wallet.Coin.testNet: return "grpcs://grpc.test.provenance.io:443";
     }
   }
 }
