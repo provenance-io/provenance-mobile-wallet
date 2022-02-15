@@ -248,4 +248,8 @@ class Strings {
   static const tradeDetailsFee = "Fee";
   static const tradeDetailsTimeStamp = "Time Stamp";
   static const tradeDetailsBlock = "Block #";
+
+  //WordSelector
+  static const selectWord = 'Select word';
+  static String selectWordIndex(String index) => 'Select word #${index}';
 }
