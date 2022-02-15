@@ -6,6 +6,7 @@ class ProvenanceThemeData {
   /// Greys
   static const Color _neutral800 = Color(0xFF09090C);
   static const Color _neutral750 = Color(0xFF1A1C23);
+  static const Color _neutral700 = Color(0xFF2C2F3A);
   static const Color _neutral550 = Color(0xFF464B5D);
   static const Color _neutral500 = Color(0xFF4C5165);
   static const Color _neutral250 = Color(0xFFA2A7B9);
@@ -19,6 +20,7 @@ class ProvenanceThemeData {
 
   /// Secondary
   static const Color _secondary400 = Color(0xFF03B5B2);
+  static const Color _secondary700 = Color(0xFF013C3B);
 
   static const Color _provenanceLogo = Color(0xFF3F80F3);
 
@@ -129,6 +131,7 @@ class ProvenanceThemeData {
 extension CustomColorScheme on ColorScheme {
   Color get provenanceNeutral800 => ProvenanceThemeData._neutral800;
   Color get provenanceNeutral750 => ProvenanceThemeData._neutral750;
+  Color get provenanceNeutral700 => ProvenanceThemeData._neutral700;
   Color get provenanceNeutral550 => ProvenanceThemeData._neutral550;
   Color get provenanceNeutral500 => ProvenanceThemeData._neutral500;
   Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
@@ -138,6 +141,7 @@ extension CustomColorScheme on ColorScheme {
 
   Color get indicatorActive => ProvenanceThemeData._indicatorActive;
   Color get indicatorInActive => ProvenanceThemeData._indicatorInActive;
+  Color get secondary700 => ProvenanceThemeData._secondary700;
   Color get secondary400 => ProvenanceThemeData._secondary400;
   Color get error => ProvenanceThemeData._error;
 }
@@ -149,5 +153,6 @@ extension CustomTextTheme on TextTheme {
   TextStyle get logo => ProvenanceThemeData._logo;
   TextStyle get subhead => ProvenanceThemeData._subhead;
   TextStyle get body => ProvenanceThemeData._body;
+  TextStyle get bodyBold => ProvenanceThemeData._bodyBold;
   TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
 }

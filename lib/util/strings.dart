@@ -182,13 +182,13 @@ class Strings {
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm
-  static const verifyRecoveryPassphrase = 'Verify recovery passphrase';
+  static const verifyPassphrase = 'Verify passphrase';
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
       "Your selections don't match. Please try again.";
   static const youMustAgreeToTheWalletSeedphraseTerms =
-      "Before clicking Next you must agree to the wallet seedphrase terms.";
+      "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
       "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
@@ -245,4 +245,8 @@ class Strings {
   static const tradeDetailsFee = "Fee";
   static const tradeDetailsTimeStamp = "Time Stamp";
   static const tradeDetailsBlock = "Block #";
+
+  //WordSelector
+  static const selectWord = 'Select word';
+  static String selectWordIndex(String index) => 'Select word #${index}';
 }
