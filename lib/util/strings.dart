@@ -242,4 +242,8 @@ class Strings {
   static const tradeDetailsFee = "Fee";
   static const tradeDetailsTimeStamp = "Time Stamp";
   static const tradeDetailsBlock = "Block #";
+
+  // SendScreen
+  static const sendTitle = "Send";
+  static const noRecentSends = "No recent sends";
 }

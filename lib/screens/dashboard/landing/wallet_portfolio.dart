@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -81,7 +82,12 @@ class WalletPortfolioState extends State<WalletPortfolio> {
       width: 100,
       child: GestureDetector(
         onTap: () {
-          // TODO: 'Send' logic here.
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => SendFlow()
+          ))
+              .then((result) {
+                print(result);
+          });
         },
         child: Column(
           children: [
@@ -171,7 +177,9 @@ class WalletPortfolioState extends State<WalletPortfolio> {
                 final result = await Navigator.of(
                   context,
                 ).push(
-                  QRCodeScanner().route(),
+                  QRCodeScanner(
+                    isValidCallback: ProvWalletFlutter.isValidWalletConnectData,
+                  ).route(),
                 );
                 ProvWalletFlutter.connectWallet(
                   result as String,

@@ -35,7 +35,7 @@ class TransactionsListState extends State<TransactionsList> {
               Container(
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
-                child: PwDropDown(
+                child: PwDropDown.fromStrings(
                   initialValue: Strings.dropDownAllAssets,
                   items: [
                     Strings.dropDownAllAssets,
@@ -50,7 +50,7 @@ class TransactionsListState extends State<TransactionsList> {
               Container(
                 padding: EdgeInsets.only(right: 10, left: 10),
                 color: Theme.of(context).colorScheme.globalNeutral150,
-                child: PwDropDown(
+                child: PwDropDown.fromStrings(
                   initialValue: Strings.dropDownAllTransactions,
                   items: [
                     Strings.dropDownAllTransactions,
