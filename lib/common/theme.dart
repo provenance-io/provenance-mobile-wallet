@@ -10,6 +10,7 @@ class ProvenanceThemeData {
   static const Color _neutral550 = Color(0xFF464B5D);
   static const Color _neutral500 = Color(0xFF4C5165);
   static const Color _neutral250 = Color(0xFFA2A7B9);
+  static const Color _neutral50 = Color(0xFFF3F4F6);
 
   // Page Indicator
   static const Color _indicatorActive = Color(0xFFF3F4F6);
@@ -88,7 +89,7 @@ class ProvenanceThemeData {
   );
   static const TextStyle _headline2 = TextStyle(
     fontFamily: 'Montserrat',
-    fontSize: 21,
+    fontSize: 16,
     fontWeight: FontWeight.w600,
     fontStyle: FontStyle.normal,
     height: 25.6 / 21,
@@ -427,6 +428,7 @@ extension CustomColorScheme on ColorScheme {
   Color get provenanceNeutral550 => ProvenanceThemeData._neutral550;
   Color get provenanceNeutral500 => ProvenanceThemeData._neutral500;
   Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
+  Color get provenanceNeutral50 => ProvenanceThemeData._neutral50;
 
   Color get logo => ProvenanceThemeData._provenanceLogo;
   Color get primaryP500 => ProvenanceThemeData._primary500;

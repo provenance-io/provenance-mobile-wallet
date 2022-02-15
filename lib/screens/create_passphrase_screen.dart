@@ -72,6 +72,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 Strings.prepareToWriteDownYourRecoveryPhrase,
                 style: PwTextStyle.body,
                 textAlign: TextAlign.center,
+                color: PwColor.neutral50,
               ),
             ),
             VerticalSpacer.large(),
@@ -84,6 +85,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 Strings.theOnlyWayToRecoverYourAccount,
                 style: PwTextStyle.body,
                 textAlign: TextAlign.center,
+                color: PwColor.neutral50,
               ),
             ),
             VerticalSpacer.large(),
@@ -96,7 +98,10 @@ class CreatePassphraseScreen extends StatelessWidget {
               child: Container(),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(
+                left: Spacing.xxLarge,
+                right: Spacing.xxLarge,
+              ),
               child: PwText(
                 Strings.warningDoNotShare,
                 style: PwTextStyle.body,
@@ -126,8 +131,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 },
               ),
             ),
-            VerticalSpacer.xxLarge(),
-            VerticalSpacer.xxLarge(),
+            VerticalSpacer.largeX4(),
           ],
         ),
       ),
