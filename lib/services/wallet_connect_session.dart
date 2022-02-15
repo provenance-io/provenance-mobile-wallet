@@ -63,7 +63,9 @@ class WalletConnectSession {
     _status.add(WalletConnectionServiceStatus.disconnected);
     _address.value = null;
 
-    await _connection.disconnect();
+    if (_connection.value != WalletConnectState.disconnected) {
+      await _connection.disconnect();
+    }
 
     return true;
   }
