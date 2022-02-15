@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 // TODO: Remove me? If this is just for development, that is.

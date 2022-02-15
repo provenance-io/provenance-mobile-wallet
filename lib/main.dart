@@ -5,7 +5,7 @@ import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
-import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
