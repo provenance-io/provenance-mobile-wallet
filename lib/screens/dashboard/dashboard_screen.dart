@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_ta
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
-import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -195,16 +195,11 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _onSendRequest(SendRequest sendRequest) async {
-    SendTransactionInfo info = SendTransactionInfo(
-      fee: sendRequest.cost,
-      toAddress: sendRequest.message.toAddress ?? '',
-      fromAddress: sendRequest.message.fromAddress ?? '',
-      requestId: sendRequest.id,
-      amount: sendRequest.message.displayAmount,
+    final screen = TransactionConfirmScreen(
+      request: sendRequest,
     );
 
-    final approved =
-        await Navigator.of(context).push(SendTransactionApproval(info).route());
+    final approved = await Navigator.of(context).push(screen.route());
 
     await get<DashboardBloc>().sendMessageFinish(
       requestId: sendRequest.id,
