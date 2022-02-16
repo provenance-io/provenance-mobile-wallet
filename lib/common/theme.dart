@@ -468,4 +468,5 @@ extension CustomTextTheme on TextTheme {
   TextStyle get bodyBold => ProvenanceThemeData._bodyBold;
   TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
   TextStyle get provenanceHeadline1 => ProvenanceThemeData._headline1;
+  TextStyle get display2 => ProvenanceThemeData._display2;
 }

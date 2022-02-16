@@ -147,24 +147,24 @@ class Strings {
   static const continueName = 'Continue';
 
   // Confirm Pin
-  static const confirmYourPinCode = 'Confirm your pin code';
+  static const verifyPinCode = 'Verify Pin Code';
   static const confirmYourPinCodeReminder =
       "Confirm your pin code. Make sure you remember it as you cannot recover it if you lose it.";
   static const yourPinDoesNotMatchPleaseTryAgain =
       "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
   // CreatePin
-  static const setYourPinCode = 'Set your pin code';
+  static const setPinCode = 'Set Pin Code';
   static const setAPinCodeToUnlockYourWallet =
       "Set a pin code to unlock your wallet.";
 
   // EnableFaceId
-  static const useFaceId = 'Use Face ID';
+  static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
       'Use your Face ID for faster, easier access to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
-  static const later = 'Later';
+  static const skipForNow = 'Skip for now';
 
   // PrepareRecoveryPhraseIntro
   static const createPassphrase = "Create Passphrase";
@@ -222,8 +222,7 @@ class Strings {
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
-  static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
-  static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
+  static const walletCreated = "WALLET CREATED";
 
   // TransactionsList
   static const dropDownAllAssets = "All Assets";

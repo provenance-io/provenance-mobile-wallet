@@ -114,7 +114,7 @@ class RecoveryWordsConfirmScreenState
                         children: [
                           Checkbox(
                             fillColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.primaryP500,
+                              Theme.of(context).colorScheme.primary500,
                             ),
                             value: _isResponsible,
                             onChanged: (bool? value) {

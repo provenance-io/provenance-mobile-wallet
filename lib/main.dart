@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
@@ -18,6 +19,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
   runApp(
     ProvenanceWalletApp(),
   );
