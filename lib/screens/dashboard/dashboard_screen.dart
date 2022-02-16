@@ -8,10 +8,7 @@ import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_ta
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
-import 'package:provenance_wallet/screens/dashboard/wallets.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -157,43 +154,6 @@ class DashboardScreenState extends State<DashboardScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // _walletAddress.isNotEmpty && _currentTabIndex == 0
-            //     ? Container(
-            //         color: Theme.of(context).colorScheme.provenanceNeutral800,
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             PwText(
-            //               '${_walletAddress.substring(0, 3)}...${_walletAddress.substring(36)}',
-            //               color: PwColor.globalNeutral400,
-            //               style: PwTextStyle.m,
-            //             ),
-            //             HorizontalSpacer.small(),
-            //             GestureDetector(
-            //               onTap: () {
-            //                 Clipboard.setData(
-            //                   ClipboardData(text: _walletAddress),
-            //                 );
-            //                 ScaffoldMessenger.of(context).showSnackBar(
-            //                   SnackBar(content: PwText(Strings.addressCopied)),
-            //                 );
-            //               },
-            //               child: Container(
-            //                 width: 24,
-            //                 height: 24,
-            //                 child: PwIcon(
-            //                   PwIcons.copy,
-            //                   color: Theme.of(context)
-            //                       .colorScheme
-            //                       .globalNeutral400,
-            //                   size: 24,
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     : Container(),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
