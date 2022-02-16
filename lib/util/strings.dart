@@ -206,14 +206,14 @@ class Strings {
   static const inTheFollowingStepsText =
       "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
 
-  // SendTransactionApproval
-  static const sendTransaction = 'Send Transaction';
-  static const amount = 'Amount';
-  static const fee = 'Fee';
-  static const from = 'From';
-  static const to = 'To';
-  static const approve = 'Approve';
-  static const reject = 'Reject';
+  // Session Confirmation
+  static const sessionApprove = 'Approve';
+  static const sessionReject = 'Reject';
+
+  // Transaction Confirmation
+  static const transaction = 'Transaction';
+  static const transactionApprove = 'Approve';
+  static const transactionDecline = 'Decline';
 
   // ValidatePin
   static const enterPin = "Enter Pin";
