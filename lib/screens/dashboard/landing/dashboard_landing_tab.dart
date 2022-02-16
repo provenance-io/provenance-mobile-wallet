@@ -80,8 +80,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           padding: EdgeInsets.only(
                             right: 16,
                             left: 16,
-                            top: 12,
-                            bottom: 12,
+                            top: 20,
+                            bottom: 20,
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
