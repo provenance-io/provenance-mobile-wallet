@@ -104,7 +104,7 @@ class ProvenanceThemeData {
     fontSize: 18,
     fontWeight: FontWeight.w700,
     height: 28.8 / 18,
-    letterSpacing: 29 * 0.04,
+    //letterSpacing: 29 * 0.04,
   );
   static const TextStyle _body = TextStyle(
     fontFamily: 'GothicA1',
@@ -475,4 +475,5 @@ extension CustomTextTheme on TextTheme {
   TextStyle get display1 => ProvenanceThemeData._display1;
   TextStyle get display2 => ProvenanceThemeData._display2;
   TextStyle get footnote => ProvenanceThemeData._footnote;
+  TextStyle get title => ProvenanceThemeData._title;
 }

@@ -39,8 +39,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         children: [
                           PwText(
                             Strings.myAssets,
-                            color: PwColor.globalNeutral550,
-                            style: PwTextStyle.h6,
+                            style: PwTextStyle.title,
                           ),
                         ],
                       ),
