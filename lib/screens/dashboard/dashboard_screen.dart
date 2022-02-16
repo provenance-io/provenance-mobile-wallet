@@ -8,7 +8,9 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_transaction_approval.dart';
+import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -127,46 +129,60 @@ class DashboardScreenState extends State<DashboardScreen>
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
-          Padding(
-            padding: EdgeInsets.only(
-              right: 24,
-              top: 10,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(Wallets().route());
-              },
-              child: PwIcon(
-                PwIcons.wallet,
-                color: Theme.of(context).colorScheme.globalNeutral450,
-                size: 24.0,
-              ),
-            ),
+          StreamBuilder<WalletConnectionServiceStatus>(
+            initialData: _bloc.connectionStatus.value,
+            stream: _bloc.connectionStatus,
+            builder: (context, snapshot) {
+              final connected =
+                  snapshot.data == WalletConnectionServiceStatus.connected;
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: Spacing.xxLarge,
+                ),
+                child: GestureDetector(
+                  onTap: () async {
+                    if (connected) {
+                      _bloc.disconnectWallet();
+                    }
+                    final addressData = await Navigator.of(
+                      context,
+                    ).push(
+                      QRCodeScanner().route<String?>(),
+                    );
+                    if (addressData != null) {
+                      _bloc.connectWallet(addressData);
+                    }
+                  },
+                  child: PwIcon(
+                    PwIcons.qr,
+                    color: Theme.of(context).colorScheme.white,
+                    size: 48.0,
+                  ),
+                ),
+              );
+            },
           ),
         ],
-        title: Padding(
-          padding: EdgeInsets.only(
-            top: 20,
-          ),
-          child: PwText(
-            _currentTabIndex == 0 ? _walletName : Strings.transactionDetails,
-            style: PwTextStyle.h6,
-            color: PwColor.globalNeutral550,
-          ),
+        centerTitle: false,
+        title: PwText(
+          _currentTabIndex == 0 ? _walletName : Strings.transactionDetails,
+          style: PwTextStyle.subhead,
         ),
         leading: Padding(
           padding: EdgeInsets.only(
-            left: 24,
-            top: 10,
+            left: Spacing.large,
+            top: 18,
+            bottom: 18,
           ),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MyAccount().route());
+              Navigator.of(context).push(Wallets().route());
             },
             child: PwIcon(
-              PwIcons.userAccount,
-              color: Theme.of(context).colorScheme.globalNeutral450,
-              size: 24.0,
+              PwIcons.ellipsis,
+              color: Theme.of(context).colorScheme.white,
+              size: 20,
             ),
           ),
         ),
@@ -215,18 +231,6 @@ class DashboardScreenState extends State<DashboardScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: EdgeInsets.only(
-                right: Spacing.xxLarge,
-                left: Spacing.xxLarge,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  PwIcon(PwIcons.ellipsis),
-                ],
-              ),
-            ),
             // _walletAddress.isNotEmpty && _currentTabIndex == 0
             //     ? Container(
             //         color: Theme.of(context).colorScheme.provenanceNeutral800,
