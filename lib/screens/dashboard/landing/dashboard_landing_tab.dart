@@ -19,6 +19,9 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
     final assetStream = get<DashboardBloc>().assetList;
 
     return Container(
+      padding: EdgeInsets.only(
+        top: Spacing.xxLarge,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,7 +36,10 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
               return assets.isEmpty
                   ? Container()
                   : Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
+                      padding: EdgeInsets.only(
+                        left: Spacing.xxLarge,
+                        right: Spacing.xxLarge,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -55,7 +61,10 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 final assets = snapshot.data ?? [];
 
                 return ListView.separated(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(
+                    left: Spacing.xxLarge,
+                    right: Spacing.xxLarge,
+                  ),
                   itemBuilder: (context, index) {
                     final item = assets[index];
 
