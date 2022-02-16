@@ -10,4 +10,5 @@ class Images {
   final String createPassphrase = 'assets/images/savePassphrase.png';
   final String recoverAccount = 'assets/images/recoverAccount.png';
   final String backupComplete = 'assets/images/backupComplete.png';
+  final String walletFinished = 'assets/images/walletFinished.png';
 }
