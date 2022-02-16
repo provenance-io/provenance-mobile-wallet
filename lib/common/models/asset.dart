@@ -42,7 +42,7 @@ class Asset {
       case "ETF":
         return AssetPaths.images.etf;
       default:
-        return PwIcons.hashLogo;
+        return 'assets/${PwIcons.hashLogo}.svg';
     }
   }
 }
