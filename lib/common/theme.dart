@@ -1,6 +1,137 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
+
+class ProvenanceThemeData {
+  /// ----- PROVENANCE COLORS -----
+  // Keep private. Expose only through colorScheme or ThemeData.
+  /// Greys
+  static const Color _neutral800 = Color(0xFF09090C);
+  static const Color _neutral750 = Color(0xFF1A1C23);
+  static const Color _neutral700 = Color(0xFF2C2F3A);
+  static const Color _neutral550 = Color(0xFF464B5D);
+  static const Color _neutral500 = Color(0xFF4C5165);
+  static const Color _neutral250 = Color(0xFFA2A7B9);
+  static const Color _neutral50 = Color(0xFFF3F4F6);
+
+  // Page Indicator
+  static const Color _indicatorActive = Color(0xFFF3F4F6);
+  static const Color _indicatorInActive = Color(0xFF8B90A7);
+
+  /// Primary
+  static const Color _primary700 = Color(0xFF022460);
+  static const Color _primary650 = Color(0xFF01368F);
+  static const Color _primary500 = Color(0xFF357EFD);
+  static const Color _primary550 = Color(0xFF1B66EA);
+
+  /// Secondary
+  static const Color _secondary400 = Color(0xFF03B5B2);
+  static const Color _secondary700 = Color(0xFF013C3B);
+
+  static const Color _provenanceLogo = Color(0xFF3F80F3);
+
+  static const Color _error = Color(0xFFED6E74);
+
+  // ----- PROVENANCE TYPOGRAPHY -----
+  // Keep private. Expose only through ThemeData.
+
+  // Landing Page TextStyles
+  static const TextStyle _headline3 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 37.68,
+    fontWeight: FontWeight.w300,
+    height: 45.93 / 37.68,
+  );
+
+  static const TextStyle _headline4 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 24,
+    fontWeight: FontWeight.w300,
+    height: 29.26 / 24.0,
+  );
+
+  static const TextStyle _logo = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 19.5,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 10,
+  );
+
+  static const TextStyle _medium = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.55,
+    letterSpacing: 0.32,
+  );
+  static const TextStyle _display1 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 44,
+    fontWeight: FontWeight.w300,
+    height: 53.64 / 44,
+    letterSpacing: 54 * 0.02,
+  );
+  static const TextStyle _display2 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 38,
+    fontWeight: FontWeight.w300,
+    height: 46.32 / 38,
+    letterSpacing: 46 * 0.02,
+  );
+  static const TextStyle _displayBody = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    height: 24.8 / 16,
+    letterSpacing: 25 * 0.04,
+  );
+  static const TextStyle _headline1 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 21,
+    fontWeight: FontWeight.w600,
+    height: 25.6 / 21,
+    letterSpacing: 31 * 0.32,
+  );
+  static const TextStyle _headline2 = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    height: 25.6 / 21,
+    letterSpacing: 20 * 0.32,
+  );
+  static const TextStyle _title = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    height: 28.8 / 18,
+    letterSpacing: 29 * 0.04,
+  );
+  static const TextStyle _body = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 22.4 / 14,
+  );
+  static const TextStyle _bodyBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+  );
+  static const TextStyle _subhead = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    //height: 22.4 / 14,
+    //letterSpacing: 22 * 0.04,
+  );
+  static const TextStyle _footnote = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+    height: 19.2 / 12,
+    letterSpacing: 19 * 0.04,
+  );
+}
 
 class FigurePayThemeData {
   /// ----- FIGMA COLORS -----
@@ -35,20 +166,12 @@ class FigurePayThemeData {
   static const Color _pickerBlack = Color(0xFF474749);
 
   /// Primary
-  static const Color _primary1 = Color(0xFF190050);
-  static const Color _primary2 = Color(0xFF42368E);
-  static const Color _primary3 = Color(0xFF432BBA);
   static const Color _primary4 = Color(0xFF5339D7);
-  static const Color _primary5 = Color(0xFF7E6DD6);
-  static const Color _primary6 = Color(0xFFDDD8FD);
   static const Color _primary7 = Color(0xFF573AE6);
 
   /// Secondary
   static const Color _secondary1 = Color(0xFF28CEA8);
   static const Color _secondary2 = Color(0xFF2BBAA0);
-
-  /// Accent
-  static const Color _lime = Color(0xFFDBF72C);
 
   // ----- FIGMA TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
@@ -191,15 +314,15 @@ class FigurePayThemeData {
   );
 
   static const _colorScheme = ColorScheme(
-    primary: _primary4,
-    primaryVariant: _primary5,
-    secondary: _secondary1,
-    secondaryVariant: _secondary2,
-    background: _light,
+    primary: ProvenanceThemeData._primary500,
+    primaryVariant: ProvenanceThemeData._primary550,
+    secondary: ProvenanceThemeData._secondary400,
+    secondaryVariant: ProvenanceThemeData._secondary400,
+    background: ProvenanceThemeData._neutral750,
     surface: _light,
     onBackground: _white,
     onSurface: _white,
-    error: _error,
+    error: ProvenanceThemeData._error,
     onError: _white,
     onPrimary: _white,
     onSecondary: _white,
@@ -226,17 +349,17 @@ class FigurePayThemeData {
   static final themeData = ThemeData(
     colorScheme: _colorScheme,
     appBarTheme: AppBarTheme(
-      color: _colorScheme.primary500,
+      color: _colorScheme.primaryP500,
       iconTheme: IconThemeData(color: _colorScheme.onPrimary),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: _colorScheme.primary,
     ),
     canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primary500,
+    toggleableActiveColor: _colorScheme.primaryP500,
     highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primary500,
-    primaryColor: _colorScheme.primary500,
+    indicatorColor: _colorScheme.primaryP500,
+    primaryColor: _colorScheme.primaryP500,
     backgroundColor: _globalNeutral600Black,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
@@ -273,12 +396,12 @@ class FigurePayThemeData {
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get primary1 => FigurePayThemeData._primary1;
-  Color get primary2 => FigurePayThemeData._primary2;
-  Color get primary3 => FigurePayThemeData._primary3;
+  //Color get primary1 => FigurePayThemeData._primary1;
+  //Color get primary2 => FigurePayThemeData._primary2;
+  //Color get primary3 => FigurePayThemeData._primary3;
   Color get primary4 => FigurePayThemeData._primary4;
-  Color get primary5 => FigurePayThemeData._primary5;
-  Color get primary6 => FigurePayThemeData._primary6;
+  //Color get primary5 => FigurePayThemeData._primary5;
+  //Color get primary6 => FigurePayThemeData._primary6;
   Color get primary7 => FigurePayThemeData._primary7;
   Color get white => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
@@ -289,7 +412,7 @@ extension CustomColorScheme on ColorScheme {
   Color get positive => FigurePayThemeData._positive;
   Color get warning => FigurePayThemeData._warning;
   Color get darkGrey => FigurePayThemeData._darkGrey;
-  Color get lime => FigurePayThemeData._lime;
+  //Color get lime => FigurePayThemeData._lime;
   Color get systemGreen => FigurePayThemeData._systemGreen;
   Color get pickerGrey => FigurePayThemeData._pickerGrey;
   Color get pickerBlack => FigurePayThemeData._pickerBlack;
@@ -303,6 +426,27 @@ extension CustomColorScheme on ColorScheme {
   Color get globalNeutral350 => FigurePayThemeData._globalNeutral350;
   Color get globalNeutral250 => FigurePayThemeData._globalNeutral250;
   Color get otherBackground => FigurePayThemeData._otherBackground;
+
+// Provenance themes
+  Color get provenanceNeutral800 => ProvenanceThemeData._neutral800;
+  Color get provenanceNeutral700 => ProvenanceThemeData._neutral700;
+  Color get provenanceNeutral750 => ProvenanceThemeData._neutral750;
+  Color get provenanceNeutral550 => ProvenanceThemeData._neutral550;
+  Color get provenanceNeutral500 => ProvenanceThemeData._neutral500;
+  Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
+  Color get provenanceNeutral50 => ProvenanceThemeData._neutral50;
+
+  Color get logo => ProvenanceThemeData._provenanceLogo;
+  Color get primaryP700 => ProvenanceThemeData._primary700;
+  Color get primaryP650 => ProvenanceThemeData._primary650;
+  Color get primaryP500 => ProvenanceThemeData._primary500;
+  Color get primaryP550 => ProvenanceThemeData._primary550;
+
+  Color get indicatorActive => ProvenanceThemeData._indicatorActive;
+  Color get indicatorInActive => ProvenanceThemeData._indicatorInActive;
+  Color get secondary400 => ProvenanceThemeData._secondary400;
+  Color get secondary700 => ProvenanceThemeData._secondary700;
+  Color get error => ProvenanceThemeData._error;
 }
 
 extension CustomTextTheme on TextTheme {
@@ -317,4 +461,16 @@ extension CustomTextTheme on TextTheme {
   TextStyle get extraSmall => FigurePayThemeData._extraSmall;
   TextStyle get headline7 => FigurePayThemeData._headline7;
   TextStyle get extraLarge => FigurePayThemeData._extraLarge;
+
+// Provenance themes
+  TextStyle get pWMedium => ProvenanceThemeData._medium;
+  TextStyle get large =>
+      ProvenanceThemeData._logo.copyWith(fontWeight: FontWeight.w600);
+  TextStyle get logo => ProvenanceThemeData._logo;
+  TextStyle get subhead => ProvenanceThemeData._subhead;
+  TextStyle get body => ProvenanceThemeData._body;
+  TextStyle get bodyBold => ProvenanceThemeData._bodyBold;
+  TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
+  TextStyle get provenanceHeadline1 => ProvenanceThemeData._headline1;
+  TextStyle get display2 => ProvenanceThemeData._display2;
 }

@@ -76,7 +76,6 @@ flutter:
   assets:
     - assets/
     - assets/images/background.png
-    - assets/images/customization.png
     - assets/images/savePassphrase.png
     - assets/images/recoverAccount.png
     - assets/images/backupComplete.png

@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -13,33 +14,36 @@ class OnboardingCustomizationSlide extends StatelessWidget {
             constraints: viewportConstraints,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding: EdgeInsets.only(
                     left: 20,
                     right: 20,
-                    bottom: Spacing.xxLarge,
                   ),
                   child: PwText(
                     Strings.powerfulCustomization,
-                    style: PwTextStyle.large,
+                    style: PwTextStyle.headline1,
                     textAlign: TextAlign.center,
                     color: PwColor.white,
                   ),
                 ),
+                VerticalSpacer.largeX4(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(AssetPaths.images.coins),
+                    SvgPicture.asset(
+                      AssetPaths.images.coins,
+                      width: 180,
+                      height: 180,
+                    ),
                   ],
                 ),
-                VerticalSpacer.xxLarge(),
+                VerticalSpacer.largeX5(),
                 Padding(
                   padding: EdgeInsets.only(
                     left: 20,
                     right: 20,
-                    bottom: 98,
                   ),
                   child: PwText(
                     Strings.customizationDescription,
@@ -48,6 +52,8 @@ class OnboardingCustomizationSlide extends StatelessWidget {
                     color: PwColor.white,
                   ),
                 ),
+                VerticalSpacer.xxLarge(),
+                VerticalSpacer.largeX5(),
               ],
             ),
           ),

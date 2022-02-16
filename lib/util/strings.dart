@@ -57,7 +57,7 @@ class Strings {
 
   // Landing Page
   static const createWallet = 'Create Wallet';
-  static const restoreWallet = 'Restore Wallet';
+  static const recoverWallet = 'Recover Wallet';
 
   // Fundamentals Slide
   static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
@@ -66,7 +66,7 @@ class Strings {
   static const transactions = 'Transactions';
   static const avgBlockTime = 'Avg Block Time';
   static const fundamentalsDescription =
-      "Contract execution in seconds instead of weeks";
+      "Contract execution in seconds\ninstead of weeks";
 
   // Customization Slide
   static const powerfulCustomization = 'POWERFUL\nCUSTOMIZATION ';

@@ -40,25 +40,23 @@ class _OnboardingFundamentalsSlideState
             constraints: viewportConstraints,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwText(
                     Strings.strongFundamentals,
-                    style: PwTextStyle.large,
+                    style: PwTextStyle.headline1,
                     textAlign: TextAlign.center,
                     color: PwColor.white,
                   ),
                 ),
-                SizedBox(
-                  height: 48,
-                ),
+                VerticalSpacer.largeX4(),
                 Padding(
                   padding: EdgeInsets.only(
                     left: 20,
                     right: 20,
-                    bottom: 64,
+                    bottom: Spacing.largeX5,
                   ),
                   child: GridView.count(
                     padding: EdgeInsets.zero,
@@ -66,7 +64,7 @@ class _OnboardingFundamentalsSlideState
                     physics: NeverScrollableScrollPhysics(),
                     crossAxisSpacing: 0.0,
                     crossAxisCount: 2,
-                    mainAxisSpacing: 0.0,
+                    mainAxisSpacing: Spacing.xxLarge,
                     childAspectRatio: 1.89,
                     children: [
                       Column(
@@ -229,9 +227,8 @@ class _OnboardingFundamentalsSlideState
                     textAlign: TextAlign.center,
                   ),
                 ),
-                VerticalSpacer.custom(
-                  spacing: 80,
-                ),
+                VerticalSpacer.xxLarge(),
+                VerticalSpacer.largeX5(),
               ],
             ),
           ),

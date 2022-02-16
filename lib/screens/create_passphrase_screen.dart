@@ -1,8 +1,6 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/recovery_words.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -23,9 +21,24 @@ class CreatePassphraseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PwAppBar(
-        title: Strings.createPassphrase,
-        leadingIcon: PwIcons.back,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        elevation: 0.0,
+        title: PwText(
+          Strings.createPassphrase,
+          style: PwTextStyle.subhead,
+          textAlign: TextAlign.left,
+        ),
+        leading: Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: IconButton(
+            icon: PwIcon(
+              PwIcons.back,
+              size: 14,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
@@ -65,6 +78,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                         Strings.prepareToWriteDownYourRecoveryPhrase,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
+                        color: PwColor.neutral50,
                       ),
                     ),
                     VerticalSpacer.large(),
@@ -77,6 +91,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                         Strings.theOnlyWayToRecoverYourAccount,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
+                        color: PwColor.neutral50,
                       ),
                     ),
                     VerticalSpacer.large(),
@@ -89,7 +104,10 @@ class CreatePassphraseScreen extends StatelessWidget {
                       child: Container(),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
+                      padding: EdgeInsets.only(
+                        left: Spacing.xxLarge,
+                        right: Spacing.xxLarge,
+                      ),
                       child: PwText(
                         Strings.warningDoNotShare,
                         style: PwTextStyle.body,
@@ -119,8 +137,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    VerticalSpacer.xxLarge(),
-                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.largeX4(),
                   ],
                 ),
               ),

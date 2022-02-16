@@ -7,7 +7,7 @@ import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/stat_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
-import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_storage_service_imp.dart';
@@ -71,7 +71,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
-      home: Landing(),
+      home: LandingScreen(),
     );
   }
 }

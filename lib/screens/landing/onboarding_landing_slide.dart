@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatelessWidget {
@@ -7,7 +6,7 @@ class OnboardingLandingSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -18,24 +17,18 @@ class OnboardingLandingSlide extends StatelessWidget {
             ),
           ],
         ),
-        Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 40,
-          ),
-          child: PwText(
-            Strings.provenanceTitle,
-            style: PwTextStyle.logo,
-            textAlign: TextAlign.center,
-            color: PwColor.white,
-          ),
+        VerticalSpacer.largeX3(),
+        PwText(
+          Strings.provenanceTitle,
+          style: PwTextStyle.logo,
+          textAlign: TextAlign.center,
+          color: PwColor.white,
         ),
+        VerticalSpacer.largeX5(),
         Padding(
           padding: EdgeInsets.only(
             left: 20,
             right: 20,
-            top: 64,
           ),
           child: PwText(
             Strings.provenanceWalletDescription,
@@ -44,7 +37,8 @@ class OnboardingLandingSlide extends StatelessWidget {
             color: PwColor.white,
           ),
         ),
-        VerticalSpacer.custom(spacing: 155),
+        VerticalSpacer.largeX6(),
+        VerticalSpacer.largeX5(),
       ],
     );
   }

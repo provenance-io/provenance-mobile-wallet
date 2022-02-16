@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 class PwAppBar extends StatefulWidget implements PreferredSizeWidget {
   PwAppBar({
@@ -36,7 +35,6 @@ class _PwAppBarState extends State<PwAppBar> {
         child: IconButton(
           icon: PwIcon(
             widget.leadingIcon ?? PwIcons.close,
-            size: 14,
           ),
           onPressed: () {
             if (widget.leadingIconOnPress != null) {
