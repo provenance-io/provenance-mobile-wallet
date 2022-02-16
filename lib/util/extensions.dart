@@ -14,7 +14,7 @@ extension MaterialPageExt<T> on Widget {
         fullscreenDialog: fullScreenDialog,
       );
 
-  MaterialPageRoute<T> route() => MaterialPageRoute(builder: (_) => this);
+  MaterialPageRoute<T> route<T>() => MaterialPageRoute<T>(builder: (_) => this);
 }
 
 extension DoubleExt on double {

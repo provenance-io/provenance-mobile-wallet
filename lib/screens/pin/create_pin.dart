@@ -10,13 +10,13 @@ import 'package:provenance_wallet/util/strings.dart';
 class CreatePin extends StatefulHookWidget {
   CreatePin(
     this.flowType, {
-    this.words,
+    required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final String? accountName;
   final int? currentStep;
   final int? numberOfSteps;
