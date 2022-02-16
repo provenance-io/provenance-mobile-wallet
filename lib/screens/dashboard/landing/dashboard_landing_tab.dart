@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
@@ -81,14 +82,6 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             top: 12,
                             bottom: 12,
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .globalNeutral250,
-                            ),
-                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -138,7 +131,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return VerticalSpacer.small();
+                    return PwListDivider();
                   },
                   itemCount: assets.length,
                   shrinkWrap: true,

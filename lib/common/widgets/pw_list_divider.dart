@@ -6,9 +6,7 @@ class PwListDivider extends StatelessWidget {
     return Divider(
       height: 1,
       thickness: 1,
-      indent: 20,
-      endIndent: 20,
-      color: Theme.of(context).dividerColor,
+      color: Theme.of(context).colorScheme.provenanceNeutral600,
     );
   }
 }

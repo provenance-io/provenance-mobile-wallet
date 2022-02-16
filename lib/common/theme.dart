@@ -8,6 +8,7 @@ class ProvenanceThemeData {
   static const Color _neutral800 = Color(0xFF09090C);
   static const Color _neutral750 = Color(0xFF1A1C23);
   static const Color _neutral700 = Color(0xFF2C2F3A);
+  static const Color _neutral600 = Color(0xFF3D4151);
   static const Color _neutral550 = Color(0xFF464B5D);
   static const Color _neutral500 = Color(0xFF4C5165);
   static const Color _neutral250 = Color(0xFFA2A7B9);
@@ -429,8 +430,9 @@ extension CustomColorScheme on ColorScheme {
 
 // Provenance themes
   Color get provenanceNeutral800 => ProvenanceThemeData._neutral800;
-  Color get provenanceNeutral700 => ProvenanceThemeData._neutral700;
   Color get provenanceNeutral750 => ProvenanceThemeData._neutral750;
+  Color get provenanceNeutral700 => ProvenanceThemeData._neutral700;
+  Color get provenanceNeutral600 => ProvenanceThemeData._neutral600;
   Color get provenanceNeutral550 => ProvenanceThemeData._neutral550;
   Color get provenanceNeutral500 => ProvenanceThemeData._neutral500;
   Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
