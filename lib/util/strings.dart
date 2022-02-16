@@ -28,6 +28,18 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return this.replaceAll(RegExp(r'[^\d]+'), '');
   }
+
+  String abbreviateAddress() {
+    final left = 10;
+    final right = 3;
+    final dots = '.....';
+
+    if (this.length > left + dots.length + right) {
+      return '${substring(0, left)}${dots}${substring(this.length - right)}';
+    }
+
+    return this;
+  }
 }
 
 // TODO: Localization
@@ -214,6 +226,16 @@ class Strings {
   static const transaction = 'Transaction';
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
+  static const transactionDataToggle = 'Data';
+  static const transactionListToggle = 'List';
+  static const transactionNanoHash = 'nhash';
+  static const transactionPlatformName = 'Figure Equity Solutions';
+  static const transactionPlatformAddress = 'equity.figure.com';
+  static const transactionFieldPlatform = 'Platform';
+  static const transactionFieldFee = 'Fee';
+  static const transactionFieldAmount = 'Amount';
+  static const transactionFieldFromAddress = 'From Address';
+  static const transactionFieldToAddress = 'To Address';
 
   // ValidatePin
   static const enterPin = "Enter Pin";

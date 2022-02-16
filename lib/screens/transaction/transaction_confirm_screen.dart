@@ -1,11 +1,11 @@
-import 'dart:collection';
-
-import 'package:pretty_json/pretty_json.dart';
+import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/transaction/transaction_message_default.dart';
+import 'package:provenance_wallet/screens/transaction/transaction_message_send.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+
+typedef Widget MessageBuilder(SendRequest request);
 
 class TransactionConfirmScreen extends StatefulWidget {
   TransactionConfirmScreen({
@@ -21,29 +21,11 @@ class TransactionConfirmScreen extends StatefulWidget {
 }
 
 class _TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
-  String? prettyData;
+  final _builders = <Type, MessageBuilder>{
+    MsgSend: (request) => TransactionMessageSend(request: request),
+  };
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final json = LinkedHashMap<String, dynamic>();
-    json['@type'] = '/${widget.request.message.info_.qualifiedMessageName}';
-
-    Object? jsonBody;
-    try {
-      jsonBody = widget.request.message.toProto3Json();
-    } on Exception catch (e) {
-      logError('Failed conversion to proto3 json');
-      ErrorDialog.fromException(e);
-    }
-
-    if (jsonBody is Map<String, dynamic>) {
-      json.addAll(jsonBody);
-    }
-
-    prettyData = prettyJson(json);
-  }
+  var _isDataView = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,29 +37,33 @@ class _TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
         centerTitle: true,
         title: PwText(
           Strings.transaction,
-          color: PwColor.white,
+          color: PwColor.neutralNeutral,
           style: PwTextStyle.subhead,
         ),
         automaticallyImplyLeading: false,
+        actions: [
+          if (_builders.containsKey(widget.request.message.runtimeType))
+            MaterialButton(
+              onPressed: () {
+                setState(() {
+                  _isDataView = !_isDataView;
+                });
+              },
+              child: PwText(
+                _isDataView
+                    ? Strings.transactionListToggle
+                    : Strings.transactionDataToggle,
+                color: PwColor.primaryP500,
+                style: PwTextStyle.body,
+              ),
+            ),
+        ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(
-                  top: Spacing.xxLarge,
-                  left: Spacing.largeX3,
-                  right: Spacing.largeX3,
-                  bottom: Spacing.xxLarge,
-                ),
-                child: PwText(
-                  prettyData ?? '',
-                  maxLines: 1000,
-                ),
-              ),
-            ),
+            child: _buildMessage(),
           ),
           Container(
             padding: EdgeInsets.only(
@@ -99,7 +85,7 @@ class _TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
                     width: double.infinity,
                     child: PwText(
                       Strings.transactionApprove,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                       textAlign: TextAlign.center,
                     ),
@@ -115,7 +101,7 @@ class _TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
                     width: double.infinity,
                     child: PwText(
                       Strings.transactionDecline,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                       textAlign: TextAlign.center,
                     ),
@@ -127,5 +113,16 @@ class _TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildMessage() {
+    final request = widget.request;
+    final builder = _builders[request.message.runtimeType];
+
+    if (_isDataView || builder == null) {
+      return TransactionMessageDefault(request: request);
+    }
+
+    return builder.call(request);
   }
 }
