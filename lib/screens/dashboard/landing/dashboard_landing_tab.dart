@@ -1,3 +1,4 @@
+import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
@@ -28,7 +29,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         children: [
           WalletPortfolio(),
           VerticalSpacer.medium(),
-          StreamBuilder<List<AssetResponse>>(
+          StreamBuilder<List<Asset>>(
             initialData: assetStream.value,
             stream: assetStream,
             builder: (context, snapshot) {
@@ -55,7 +56,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
           VerticalSpacer.medium(),
           Expanded(
-            child: StreamBuilder<List<AssetResponse>>(
+            child: StreamBuilder<List<Asset>>(
               initialData: assetStream.value,
               stream: assetStream,
               builder: (context, snapshot) {
@@ -89,8 +90,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 width: 32,
                                 height: 32,
                                 child: PwIcon(
-                                  item.display?.toUpperCase() == 'USD' ||
-                                          item.display?.toUpperCase() == 'USDF'
+                                  item.display == 'USD' ||
+                                          item.display == 'USDF'
                                       ? PwIcons.dollarIcon
                                       : PwIcons.hashLogo,
                                   color: Theme.of(context)
@@ -104,13 +105,13 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   PwText(
-                                    item.display?.toUpperCase() ?? '',
+                                    item.display.toUpperCase(),
                                     color: PwColor.globalNeutral550,
                                     style: PwTextStyle.mSemiBold,
                                   ),
                                   VerticalSpacer.xSmall(),
                                   PwText(
-                                    item.displayAmount ?? '',
+                                    item.displayAmount,
                                     color: PwColor.globalNeutral350,
                                     style: PwTextStyle.sSemiBold,
                                   ),

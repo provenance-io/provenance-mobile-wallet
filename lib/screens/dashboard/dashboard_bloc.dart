@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
-import 'package:provenance_wallet/network/models/transaction_response.dart';
+import 'package:provenance_wallet/common/models/asset.dart';
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
@@ -23,10 +23,9 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<TransactionResponse>> _transactionList =
+  final BehaviorSubject<List<Transaction>> _transactionList =
       BehaviorSubject.seeded([]);
-  final BehaviorSubject<List<AssetResponse>> _assetList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
   final _sendRequest = PublishSubject<SendRequest>();
   final _signRequest = PublishSubject<SignRequest>();
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
@@ -39,9 +38,8 @@ class DashboardBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
-  ValueStream<List<TransactionResponse>> get transactionList =>
-      _transactionList.stream;
-  ValueStream<List<AssetResponse>> get assetList => _assetList.stream;
+  ValueStream<List<Transaction>> get transactionList => _transactionList.stream;
+  ValueStream<List<Asset>> get assetList => _assetList.stream;
   Stream<SendRequest> get sendRequest => _sendRequest.stream;
   Stream<SignRequest> get signRequest => _signRequest.stream;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest.stream;
