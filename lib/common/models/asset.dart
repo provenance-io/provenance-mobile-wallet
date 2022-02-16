@@ -33,7 +33,7 @@ class Asset {
   final int exponent;
   final String displayAmount;
 
-  String get icon {
+  String get image {
     switch (display) {
       case "USDF":
         return AssetPaths.images.usdf;
