@@ -1,7 +1,6 @@
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
@@ -105,15 +104,14 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   PwText(
-                                    item.display.toUpperCase(),
-                                    color: PwColor.globalNeutral550,
-                                    style: PwTextStyle.mSemiBold,
+                                    item.display,
+                                    style: PwTextStyle.bodyBold,
                                   ),
                                   VerticalSpacer.xSmall(),
                                   PwText(
                                     item.displayAmount,
-                                    color: PwColor.globalNeutral350,
-                                    style: PwTextStyle.sSemiBold,
+                                    color: PwColor.neutral200,
+                                    style: PwTextStyle.footnote,
                                   ),
                                 ],
                               ),
