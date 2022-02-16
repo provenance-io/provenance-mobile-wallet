@@ -1,4 +1,3 @@
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_theme.dart';
@@ -6,19 +5,21 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class BackupCompleteScreen extends StatelessWidget {
   const BackupCompleteScreen(
     this.flowType, {
-    @required this.words,
+    required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final WalletAddImportType flowType;
   final String? accountName;
   final int? currentStep;
@@ -103,12 +104,10 @@ class BackupCompleteScreen extends StatelessWidget {
                               Strings.pleaseWait,
                               context,
                             );
-                            await ProvWalletFlutter.getPrivateKey(
-                              words?.join(' ') ?? '',
-                            );
-                            await ProvWalletFlutter.saveToWalletService(
-                              words?.join(' ') ?? '',
-                              accountName ?? '',
+
+                            await get<WalletService>().saveWallet(
+                              phrase: words,
+                              name: accountName ?? '',
                             );
                             ModalLoadingRoute.dismiss(context);
                             Navigator.pop(context);
