@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 abstract class SendBlocNavigator {
   Future<String?> scanAddress();
 
-  Future<void> showSelectAmount(String address, String denom);
+  Future<void> showSelectAmount(String address, Asset denom);
 
   Future<void> showAllRecentSends();
 
@@ -83,11 +83,11 @@ class SendBloc extends Disposable {
     return _navigator.scanAddress();
   }
 
-  Future<void> next(String address, String denom) {
+  Future<void> next(String address, Asset? denom) {
     if(address.isEmpty) {
       throw Exception("You must supply a receiving address");
     }
-    if(denom.isEmpty) {
+    if(denom == null) {
       throw Exception("You must supply a receiving denomination");
     }
 

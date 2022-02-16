@@ -34,7 +34,7 @@ class RecentSendCell extends StatelessWidget {
 
   Widget _buildChild() {
     return (recentAddress == null)?
-        PwText("View All") :
+        PwText(Strings.ViewAllLabel) :
         Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -59,7 +59,7 @@ class RecentSendCell extends StatelessWidget {
 
 class RecentSendList extends StatelessWidget {
   RecentSendList(
-      this.resentSends,
+      this.recentAddresses,
       this.onRecentSendClicked,
       this.onViewAllClicked,
       {
@@ -67,23 +67,23 @@ class RecentSendList extends StatelessWidget {
       })
     : super(key: key);
 
-  final List<RecentAddress> resentSends;
+  final List<RecentAddress> recentAddresses;
   final void Function(RecentAddress address) onRecentSendClicked;
   final VoidCallback  onViewAllClicked;
 
   @override
   Widget build(BuildContext context) {
-    if(resentSends.isEmpty) {
+    if(recentAddresses.isEmpty) {
       return Center (
         child: PwText(Strings.noRecentSends),
       );
     }
 
     return ListView.separated(
-      itemCount: resentSends.length + 1,
+      itemCount: recentAddresses.length + 1,
       separatorBuilder: (context, index) => PwDivider(),
       itemBuilder: (context, index) {
-        final address = (index < resentSends.length)? resentSends[index] : null;
+        final address = (index < recentAddresses.length)? recentAddresses[index] : null;
         final cell = RecentSendCell(
           address,
         );

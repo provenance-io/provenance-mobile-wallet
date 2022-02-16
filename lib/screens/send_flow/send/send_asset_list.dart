@@ -17,7 +17,12 @@ class SendAssetCell extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(Spacing.xSmall),
-          child: Image.network(asset.imageUrl),
+          child: Image.network(
+            asset.imageUrl,
+            errorBuilder: (context, error, stackTrace,) {
+              return Container();
+            },
+          ),
         ),
         HorizontalSpacer.small(),
         Expanded(
@@ -92,6 +97,5 @@ class SendAssetList extends StatelessWidget {
       ),
       child: child,
     );
-
   }
 }

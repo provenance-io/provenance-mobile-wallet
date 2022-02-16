@@ -72,7 +72,7 @@ class SendPageState extends State<SendPage> {
       children: [
         Padding(
           padding: LabelPadding,
-          child: PwText("Select Amount"),
+          child: PwText(Strings.sendPageSelectAmount),
         ),
         ValueListenableBuilder<List<Asset>>(
           valueListenable: _assets,
@@ -91,7 +91,7 @@ class SendPageState extends State<SendPage> {
         ),
         Padding(
           padding: LabelPadding,
-          child: PwText("Send to Address"),
+          child: PwText(Strings.sendPageSendToAddressLabel),
         ),
         Row(
           children: [
@@ -99,7 +99,7 @@ class SendPageState extends State<SendPage> {
                 child: TextField(
                   controller: _addressController,
                   decoration: InputDecoration(
-                    hintText: "paste or scan QR code",
+                    hintText: Strings.sendPageScanQrCode,
                   ),
                 ),
             ),
@@ -135,7 +135,7 @@ class SendPageState extends State<SendPage> {
         ),
         Padding(
           padding: LabelPadding,
-          child: PwText("Recent addresses"),
+          child: PwText(Strings.sendPageRecentAddress),
         ),
         Expanded(
           child: ValueListenableBuilder<List<RecentAddress>>(
@@ -149,7 +149,7 @@ class SendPageState extends State<SendPage> {
           ),
         ),
         PwButton(
-            child: PwText("Next"),
+            child: PwText(Strings.nextButtonLabel),
             onPressed: _next,
         ),
         VerticalSpacer.large(),
@@ -167,7 +167,7 @@ class SendPageState extends State<SendPage> {
 
   Future<void> _next() async {
     try {
-      await _bloc!.next(_addressController.text, _denomNotifier.value?.denom ?? "");
+      await _bloc!.next(_addressController.text, _denomNotifier.value);
     }
     catch(e) {
       showDialog(

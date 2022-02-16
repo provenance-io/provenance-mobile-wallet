@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class SendFlow extends FlowBase {
   @override
@@ -21,7 +22,7 @@ class SendFlowState
   void initState() {
     super.initState();
 
-    get.registerLazySingleton<SendBloc>(() => SendBloc(this));
+     get.registerSingleton<SendBloc>(SendBloc(this));
   }
 
   @override
@@ -86,9 +87,8 @@ class SendFlowState
     return showPage((context) => QRCodeScanner());
   }
 
-  Future<void> showSelectAmount(String address, String denom) {
-    // return Future.value();
-    completeFlow([ address, denom ]);
+  Future<void> showSelectAmount(String address, Asset asset) {
+    completeFlow([ address, asset ]);
     return Future.value();
   }
 
@@ -111,7 +111,7 @@ class SendFlowState
         context: context,
         builder: (context) {
           return ErrorDialog(
-            error: "Not Implemented",
+            error: Strings.NotImplementedMessage,
           );
         },);
 

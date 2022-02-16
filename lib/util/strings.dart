@@ -36,6 +36,8 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
+  static const NotImplementedMessage = "Not Implemented";
+
   // Biometric Strings
   static const biometric = 'Biometric';
   static const faceId = 'Face ID';
@@ -246,4 +248,10 @@ class Strings {
   // SendScreen
   static const sendTitle = "Send";
   static const noRecentSends = "No recent sends";
+  static const ViewAllLabel = "View All";
+  static const nextButtonLabel = "Next";
+  static const sendPageRecentAddress = "Recent addresses";
+  static const sendPageSelectAmount = "Select Amount";
+  static const sendPageScanQrCode = "paste or scan QR code";
+  static const sendPageSendToAddressLabel = "Send to Address";
 }
