@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 class ContainerCircleButton extends StatefulWidget {
   const ContainerCircleButton({
@@ -64,14 +63,14 @@ class _ContainerCircleButtonState extends State<ContainerCircleButton>
             BoxShadow(
               color: Theme.of(context)
                   .colorScheme
-                  .primary700
+                  .primaryP700
                   .withOpacity(_controller.value),
               spreadRadius: 20,
             ),
             BoxShadow(
               color: Theme.of(context)
                   .colorScheme
-                  .primary650
+                  .primaryP650
                   .withOpacity(_controller.value),
               spreadRadius: 0,
             ),

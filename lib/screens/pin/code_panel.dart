@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 typedef void DeleteCode();
 typedef Future<bool> PassCodeVerify(List<int> passcode);
@@ -83,10 +82,10 @@ class CodePanel extends StatelessWidget {
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
                 border: new Border.all(
-                  color: Theme.of(context).colorScheme.primary500,
+                  color: Theme.of(context).colorScheme.primaryP500,
                   width: 1.0,
                 ),
-                color: Theme.of(context).colorScheme.primary500,
+                color: Theme.of(context).colorScheme.primaryP500,
               ),
             ),
           ));

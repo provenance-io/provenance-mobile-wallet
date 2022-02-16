@@ -72,7 +72,7 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void checkAccount() async {
-    final storage = await SecureStorageService().read(StorageKey.privateKey);
+    final storage = await SecureStorageService().read(StorageKey.accountName);
     if (storage != null && storage.isNotEmpty) {
       setState(() {
         _accountExists = true;
@@ -83,8 +83,8 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void doAuth() {
-    LocalAuthHelper.instance.auth(context, (result, privateKey) {
-      if (result == true) {
+    LocalAuthHelper.instance.auth(context, (result) {
+      if (result) {
         Navigator.of(context).push(Dashboard().route());
       }
     });

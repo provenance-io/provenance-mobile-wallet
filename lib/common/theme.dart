@@ -18,6 +18,8 @@ class ProvenanceThemeData {
   static const Color _indicatorInActive = Color(0xFF8B90A7);
 
   /// Primary
+  static const Color _primary700 = Color(0xFF022460);
+  static const Color _primary650 = Color(0xFF01368F);
   static const Color _primary500 = Color(0xFF357EFD);
   static const Color _primary550 = Color(0xFF1B66EA);
 
@@ -435,6 +437,8 @@ extension CustomColorScheme on ColorScheme {
   Color get provenanceNeutral50 => ProvenanceThemeData._neutral50;
 
   Color get logo => ProvenanceThemeData._provenanceLogo;
+  Color get primaryP700 => ProvenanceThemeData._primary700;
+  Color get primaryP650 => ProvenanceThemeData._primary650;
   Color get primaryP500 => ProvenanceThemeData._primary500;
   Color get primaryP550 => ProvenanceThemeData._primary550;
 
