@@ -37,6 +37,8 @@ enum PwColor {
   neutral250,
   neutral200,
   neutral50,
+  neutralNeutral,
+  primaryP500,
 }
 
 mixin PwColorMixin on Widget {
@@ -95,6 +97,10 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.provenanceNeutral200;
       case PwColor.neutral50:
         return theme.colorScheme.provenanceNeutral50;
+      case PwColor.neutralNeutral:
+        return theme.colorScheme.white;
+      case PwColor.primaryP500:
+        return theme.colorScheme.primaryP500;
       default:
         return null;
     }

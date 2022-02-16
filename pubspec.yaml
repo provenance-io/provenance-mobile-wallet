@@ -46,6 +46,7 @@ dependencies:
   uuid: ^3.0.4
   faker: ^2.0.0
   path:
+  pretty_json: ^2.0.0
   prov_wallet_flutter:
     path: packages/prov_wallet_flutter
   provenance_dart:

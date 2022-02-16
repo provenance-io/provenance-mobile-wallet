@@ -28,6 +28,18 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return this.replaceAll(RegExp(r'[^\d]+'), '');
   }
+
+  String abbreviateAddress() {
+    final left = 10;
+    final right = 3;
+    final dots = '.....';
+
+    if (this.length > left + dots.length + right) {
+      return '${substring(0, left)}${dots}${substring(this.length - right)}';
+    }
+
+    return this;
+  }
 }
 
 // TODO: Localization
@@ -207,14 +219,24 @@ class Strings {
   static const inTheFollowingStepsText =
       "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
 
-  // SendTransactionApproval
-  static const sendTransaction = 'Send Transaction';
-  static const amount = 'Amount';
-  static const fee = 'Fee';
-  static const from = 'From';
-  static const to = 'To';
-  static const approve = 'Approve';
-  static const reject = 'Reject';
+  // Session Confirmation
+  static const sessionApprove = 'Approve';
+  static const sessionReject = 'Reject';
+
+  // Transaction Confirmation
+  static const transaction = 'Transaction';
+  static const transactionApprove = 'Approve';
+  static const transactionDecline = 'Decline';
+  static const transactionDataToggle = 'Data';
+  static const transactionListToggle = 'List';
+  static const transactionNanoHash = 'nhash';
+  static const transactionPlatformName = 'Figure Equity Solutions';
+  static const transactionPlatformAddress = 'equity.figure.com';
+  static const transactionFieldPlatform = 'Platform';
+  static const transactionFieldFee = 'Fee';
+  static const transactionFieldAmount = 'Amount';
+  static const transactionFieldFromAddress = 'From Address';
+  static const transactionFieldToAddress = 'To Address';
 
   // ValidatePin
   static const enterPin = "Enter Pin";
