@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PwDialog {
@@ -218,44 +216,5 @@ class PwDialog {
         },
       ),
     );
-  }
-
-  static Future<bool> showSessionConfirmation(
-    BuildContext context,
-    RemoteClientDetails remoteClientDetails,
-  ) async {
-    final result = await show<bool>(
-      context,
-      barrierDismissible: false,
-      title: remoteClientDetails.name,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (remoteClientDetails.icons.isNotEmpty)
-            Image.network(
-              remoteClientDetails.icons.first,
-            ),
-          PwText(
-            remoteClientDetails.description,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-      bottom: Column(
-        children: [
-          PwPrimaryButton(
-            child: PwText(Strings.approve),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-          const VerticalSpacer.small(),
-          PwTextButton(
-            child: PwText(Strings.reject),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-        ],
-      ),
-    );
-
-    return result ?? false;
   }
 }

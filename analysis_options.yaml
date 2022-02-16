@@ -1,7 +1,6 @@
 analyzer:
   exclude:
     - lib/firebase_options.dart
-    - test/**/*.mocks.dart
   plugins:
     - dart_code_metrics
 

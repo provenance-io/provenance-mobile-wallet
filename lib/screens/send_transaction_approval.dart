@@ -1,9 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class SendTransactionInfo {
   SendTransactionInfo({
@@ -44,11 +43,11 @@ class SendTransactionApproval extends StatelessWidget {
             color: Theme.of(context).colorScheme.globalNeutral550,
           ),
           onPressed: () async {
-            await get<DashboardBloc>().sendMessageFinish(
-              requestId: details.requestId,
-              allowed: false,
+            await ProvWalletFlutter.sendMessageFinish(
+              details.requestId,
+              false,
             );
-            Navigator.of(context).pop(false);
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -174,12 +173,12 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    await get<DashboardBloc>().sendMessageFinish(
-                      requestId: details.requestId,
-                      allowed: true,
+                    await ProvWalletFlutter.sendMessageFinish(
+                      details.requestId,
+                      true,
                     );
                     ModalLoadingRoute.dismiss(context);
-                    Navigator.of(context).pop(true);
+                    Navigator.of(context).pop();
                   },
                 ),
               ),
@@ -196,12 +195,12 @@ class SendTransactionApproval extends StatelessWidget {
                   ),
                   onPressed: () async {
                     ModalLoadingRoute.showLoading("", context);
-                    // await get<WalletService>().sendMessageFinish(
-                    //   requestId: details.requestId,
-                    //   allowed: false,
-                    // );
+                    await ProvWalletFlutter.sendMessageFinish(
+                      details.requestId,
+                      false,
+                    );
                     ModalLoadingRoute.dismiss(context);
-                    Navigator.of(context).pop(false);
+                    Navigator.of(context).pop();
                   },
                 ),
               ),

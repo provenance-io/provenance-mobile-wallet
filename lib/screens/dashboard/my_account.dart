@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class MyAccount extends StatefulWidget {
   const MyAccount({Key? key}) : super(key: key);
@@ -56,8 +56,8 @@ class _MyAccountState extends State<MyAccount> {
               _CategoryLabel(Strings.security),
               _FutureToggleItem(
                 text: Strings.faceId,
-                getValue: get<WalletService>().getUseBiometry,
-                setValue: (value) => get<WalletService>().setUseBiometry(
+                getValue: ProvWalletFlutter.getUseBiometry,
+                setValue: (value) => ProvWalletFlutter.setUseBiometry(
                   useBiometry: value,
                 ),
               ),
@@ -194,7 +194,7 @@ class _FutureToggleItem extends StatefulWidget {
 
   final String text;
   final Future<bool> Function() getValue;
-  final Future Function(bool) setValue;
+  final Future<bool> Function(bool) setValue;
 
   @override
   __FutureToggleItemState createState() => __FutureToggleItemState();

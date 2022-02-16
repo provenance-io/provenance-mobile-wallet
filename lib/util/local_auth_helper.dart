@@ -60,6 +60,7 @@ class LocalAuthHelper {
   }
 
   Future<bool> enroll(
+    String privateKey,
     String code,
     String accountName,
     bool useBiometry,
@@ -76,6 +77,7 @@ class LocalAuthHelper {
       );
     } else {
       await storage.write(StorageKey.biometricEnabled, useBiometry.toString());
+      await storage.write(StorageKey.privateKey, privateKey);
       await storage.write(StorageKey.code, code);
       await storage.write(StorageKey.accountName, accountName);
       callback();
@@ -84,8 +86,8 @@ class LocalAuthHelper {
     return success;
   }
 
-  Future<AuthResult> auth(BuildContext context, Function(bool) callback) async {
-    final accountExists = await storage.read(StorageKey.accountName);
+  Future<AuthResult> auth(BuildContext context, Function callback) async {
+    final accountExists = await storage.read(StorageKey.privateKey);
     if (accountExists == null || accountExists.isEmpty) {
       return AuthResult.noAccount;
     }
@@ -103,7 +105,8 @@ class LocalAuthHelper {
         ),
       );
       if (result) {
-        callback(result);
+        final privateKey = await storage.read(StorageKey.privateKey);
+        callback(result, privateKey);
 
         return AuthResult.success;
       } else {
@@ -113,7 +116,8 @@ class LocalAuthHelper {
               .route(),
         );
         if (wasSuccessful == true) {
-          callback(true);
+          final privateKey = await storage.read(StorageKey.privateKey);
+          callback(true, privateKey);
 
           return AuthResult.success;
         }
@@ -127,7 +131,8 @@ class LocalAuthHelper {
             .route(),
       );
       if (wasSuccessful == true) {
-        callback(true);
+        final privateKey = await storage.read(StorageKey.privateKey);
+        callback(true, privateKey);
 
         return AuthResult.success;
       }

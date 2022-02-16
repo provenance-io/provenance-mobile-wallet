@@ -12,14 +12,14 @@ import 'package:provenance_wallet/util/strings.dart';
 class ConfirmPin extends StatefulHookWidget {
   ConfirmPin(
     this.flowType, {
-    required this.words,
+    this.words,
     this.accountName,
     this.code,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String> words;
+  final List<String>? words;
   final String? accountName;
   final List<int>? code;
   final int? currentStep;

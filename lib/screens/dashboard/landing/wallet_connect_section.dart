@@ -7,14 +7,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 import 'wallet_portfolio.dart';
 
-class WalletConnectSection extends StatefulWidget {
-  const WalletConnectSection({Key? key}) : super(key: key);
-
-  @override
-  _WalletConnectSectionState createState() => _WalletConnectSectionState();
-}
-
-class _WalletConnectSectionState extends State<WalletConnectSection> {
+class WalletConnectSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final assetStream = get<DashboardBloc>().assetList;

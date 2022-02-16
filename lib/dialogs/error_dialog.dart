@@ -7,15 +7,6 @@ class ErrorDialog extends StatelessWidget {
     this.error,
   }) : super(key: key);
 
-  factory ErrorDialog.fromException(dynamic exception, { Key? key }) {
-    final msg = exception.toString().replaceFirst(RegExp('^[^:]+: '), "");
-
-    return ErrorDialog(
-      key: key,
-      error: msg,
-    );
-  }
-
   final String? error;
 
   @override

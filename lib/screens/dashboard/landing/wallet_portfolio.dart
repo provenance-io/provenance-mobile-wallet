@@ -2,15 +2,16 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
-typedef Future<void> OnAddressCaptured(String address);
+class WalletPortfolio extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => WalletPortfolioState();
+}
 
-class WalletPortfolio extends StatelessWidget {
-  const WalletPortfolio({Key? key}) : super(key: key);
-
+class WalletPortfolioState extends State<WalletPortfolio> {
   @override
   Widget build(BuildContext context) {
     final assetStream = get<DashboardBloc>().assetList;
@@ -152,30 +153,31 @@ class WalletPortfolio extends StatelessWidget {
   }
 
   Widget _buildWalletConnectButton() {
-    final bloc = get<DashboardBloc>();
-
-    return StreamBuilder<WalletConnectionServiceStatus>(
-      initialData: bloc.connectionStatus.value,
-      stream: bloc.connectionStatus,
+    return StreamBuilder<WallectConnectStatus>(
+      stream: ProvWalletFlutter.instance.walletConnectStatus.stream,
+      initialData: WallectConnectStatus.disconnected,
       builder: (context, snapshot) {
-        final connected =
-            snapshot.data == WalletConnectionServiceStatus.connected;
+        if (snapshot.data == null) {
+          return Container(
+            width: 100,
+          );
+        }
 
         return Container(
           width: 100,
           child: GestureDetector(
             onTap: () async {
-              if (!connected) {
-                final addressData = await Navigator.of(
+              if (snapshot.data == WallectConnectStatus.disconnected) {
+                final result = await Navigator.of(
                   context,
                 ).push(
-                  QRCodeScanner().route<String?>(),
+                  QRCodeScanner().route(),
                 );
-                if (addressData != null) {
-                  bloc.connectWallet(addressData);
-                }
+                ProvWalletFlutter.connectWallet(
+                  result as String,
+                );
               } else {
-                bloc.disconnectWallet();
+                ProvWalletFlutter.disconnectWallet();
               }
             },
             child: Column(
@@ -193,7 +195,9 @@ class WalletPortfolio extends StatelessWidget {
                   width: 46,
                   child: Center(
                     child: PwIcon(
-                      !connected ? PwIcons.walletConnect : PwIcons.close,
+                      snapshot.data == WallectConnectStatus.disconnected
+                          ? PwIcons.walletConnect
+                          : PwIcons.close,
                       size: 15,
                       color: Theme.of(context).colorScheme.white,
                     ),
@@ -201,7 +205,9 @@ class WalletPortfolio extends StatelessWidget {
                 ),
                 VerticalSpacer.xSmall(),
                 PwText(
-                  !connected ? Strings.walletConnect : Strings.disconnect,
+                  snapshot.data == WallectConnectStatus.disconnected
+                      ? Strings.walletConnect
+                      : Strings.disconnect,
                   color: PwColor.white,
                   style: PwTextStyle.s,
                 ),

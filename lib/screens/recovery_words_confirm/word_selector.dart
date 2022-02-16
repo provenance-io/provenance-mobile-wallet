@@ -18,6 +18,8 @@ class WordSelector extends StatefulWidget {
 }
 
 class WordSelectorState extends State<WordSelector> {
+  String? selectedWord;
+
   @override
   Widget build(BuildContext context) {
     final bloc = get<RecoveryWordsBloc>();
@@ -48,7 +50,7 @@ class WordSelectorState extends State<WordSelector> {
             stream: bloc.wordGroups,
             builder: (context, snapshot) {
               final words = snapshot.data?[widget.index] ?? [];
-              final selectedWord = bloc.selectedWords.value[widget.index];
+              final colorScheme = Theme.of(context).colorScheme;
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,6 +60,7 @@ class WordSelectorState extends State<WordSelector> {
                           isSelected: e == selectedWord,
                           setSelected: () {
                             setState(() {
+                              selectedWord = e;
                               bloc.wordSelected(e, widget.index);
                             });
                           },
