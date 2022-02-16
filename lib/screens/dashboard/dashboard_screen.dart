@@ -199,7 +199,9 @@ class DashboardScreenState extends State<DashboardScreen>
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  DashboardLandingTab(),
+                  DashboardLandingTab(
+                    walletName: _walletName,
+                  ),
                   TransactionLanding(
                     walletAddress: _walletAddress,
                     walletName: _walletName,
