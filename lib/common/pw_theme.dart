@@ -16,7 +16,9 @@ class ProvenanceThemeData {
   static const Color _indicatorInActive = Color(0xFF8B90A7);
 
   /// Primary
-  static const Color _primary2 = Color(0xFF1B66EA);
+  static const Color _primary500 = Color(0xFF1B66EA);
+  static const Color _primary650 = Color(0xFF01368F);
+  static const Color _primary700 = Color(0xFF022460);
 
   /// Secondary
   static const Color _secondary400 = Color(0xFF03B5B2);
@@ -137,7 +139,9 @@ extension CustomColorScheme on ColorScheme {
   Color get provenanceNeutral250 => ProvenanceThemeData._neutral250;
 
   Color get logo => ProvenanceThemeData._provenanceLogo;
-  Color get primaryP500 => ProvenanceThemeData._primary2;
+  Color get primary500 => ProvenanceThemeData._primary500;
+  Color get primary650 => ProvenanceThemeData._primary650;
+  Color get primary700 => ProvenanceThemeData._primary700;
 
   Color get indicatorActive => ProvenanceThemeData._indicatorActive;
   Color get indicatorInActive => ProvenanceThemeData._indicatorInActive;
@@ -154,5 +158,6 @@ extension CustomTextTheme on TextTheme {
   TextStyle get subhead => ProvenanceThemeData._subhead;
   TextStyle get body => ProvenanceThemeData._body;
   TextStyle get bodyBold => ProvenanceThemeData._bodyBold;
+  TextStyle get display2 => ProvenanceThemeData._display2;
   TextStyle get provenanceHeadline2 => ProvenanceThemeData._headline2;
 }
