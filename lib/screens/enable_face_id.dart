@@ -101,21 +101,16 @@ class EnableFaceId extends StatelessWidget {
                           Strings.pleaseWait,
                           context,
                         );
-                        String privateKey =
-                            await ProvWalletFlutter.getPrivateKey(
-                          words?.join(' ') ?? '',
-                        );
-                        final success =
-                            await ProvWalletFlutter.saveToWalletService(
-                          words?.join(' ') ?? '',
-                          accountName ?? '',
+
+                        final success = await get<WalletService>().saveWallet(
+                          phrase: words,
+                          name: accountName ?? '',
                           useBiometry: true,
                         );
                         ModalLoadingRoute.dismiss(context);
 
                         if (success) {
                           LocalAuthHelper.instance.enroll(
-                            privateKey,
                             code?.join() ?? '',
                             accountName ?? '',
                             true,
@@ -143,20 +138,14 @@ class EnableFaceId extends StatelessWidget {
                           Strings.pleaseWait,
                           context,
                         );
-                        String privateKey =
-                            await ProvWalletFlutter.getPrivateKey(
-                          words?.join(' ') ?? '',
-                        );
-                        final success =
-                            await ProvWalletFlutter.saveToWalletService(
-                          words?.join(' ') ?? '',
-                          accountName ?? '',
-                          useBiometry: false,
+                        final success = await get<WalletService>().saveWallet(
+                          phrase: words,
+                          name: accountName ?? '',
+                          useBiometry: true,
                         );
                         ModalLoadingRoute.dismiss(context);
                         if (success) {
                           LocalAuthHelper.instance.enroll(
-                            privateKey,
                             code?.join() ?? '',
                             accountName ?? '',
                             false,
