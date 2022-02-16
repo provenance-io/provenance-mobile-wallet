@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:protobuf/protobuf.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_dart/wallet.dart';
@@ -113,8 +112,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return null;
     }
 
-    final sendCoin = proposedMessage.amount.first;
-
     final id = Uuid().v1().toString();
     final completer = Completer<bool>();
     _completerLookup[id] = completer;
@@ -125,19 +122,14 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       ],
     );
 
-    final estimatedGas =
+    final gasEstimate =
         await _transactionHandler.estimateGas(txBody, _privateKey);
 
     final sendRequest = SendRequest(
       id: id,
       description: description,
-      cost: '${estimatedGas.fees} nhash',
-      message: TransactionMessage(
-        fromAddress: proposedMessage.fromAddress,
-        toAddress: proposedMessage.toAddress,
-        amount: sendCoin.amount,
-        denom: sendCoin.denom,
-      ),
+      message: proposedMessage,
+      gasEstimate: gasEstimate,
     );
 
     _sendRequest.add(sendRequest);

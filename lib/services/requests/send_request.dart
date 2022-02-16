@@ -1,15 +1,16 @@
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:protobuf/protobuf.dart';
+import 'package:provenance_dart/proto.dart';
 
 class SendRequest {
   SendRequest({
     required this.id,
-    required this.message,
     required this.description,
-    required this.cost,
+    required this.message,
+    required this.gasEstimate,
   });
 
   final String id;
-  final TransactionMessage message;
   final String description;
-  final String cost;
+  final GeneratedMessage message;
+  final GasEstimate gasEstimate;
 }

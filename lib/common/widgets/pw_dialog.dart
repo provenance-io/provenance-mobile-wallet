@@ -244,12 +244,12 @@ class PwDialog {
       bottom: Column(
         children: [
           PwPrimaryButton(
-            child: PwText(Strings.approve),
+            child: PwText(Strings.sessionApprove),
             onPressed: () => Navigator.of(context).pop(true),
           ),
           const VerticalSpacer.small(),
           PwTextButton(
-            child: PwText(Strings.reject),
+            child: PwText(Strings.sessionReject),
             onPressed: () => Navigator.of(context).pop(false),
           ),
         ],
