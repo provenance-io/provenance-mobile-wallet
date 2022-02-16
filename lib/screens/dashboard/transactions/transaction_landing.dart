@@ -1,5 +1,5 @@
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/no_transactions_placeholder.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transactions_list.dart';
 
@@ -19,9 +19,9 @@ class TransactionLanding extends StatefulWidget {
 }
 
 class TransactionLandingState extends State<TransactionLanding> {
-  List<TransactionResponse> _transactions = [];
+  List<Transaction> _transactions = [];
 
-  void updateTransactions(List<TransactionResponse> transactions) {
+  void updateTransactions(List<Transaction> transactions) {
     setState(() {
       _transactions = transactions;
     });

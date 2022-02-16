@@ -1,7 +1,7 @@
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -13,7 +13,7 @@ class TransactionsList extends StatefulWidget {
     required this.walletAddress,
   }) : super(key: key);
 
-  final List<TransactionResponse> transactions;
+  final List<Transaction> transactions;
   final String walletName;
   final String walletAddress;
   @override
@@ -109,7 +109,7 @@ class TransactionsListState extends State<TransactionsList> {
                             ),
                             VerticalSpacer.xSmall(),
                             PwText(
-                              item.type ?? '',
+                              item.type,
                               color: PwColor.globalNeutral450,
                               style: PwTextStyle.s,
                             ),
@@ -128,7 +128,7 @@ class TransactionsListState extends State<TransactionsList> {
                             VerticalSpacer.xSmall(),
                             PwText(
                               // FIXME: Format the date to be 'Mmm dd'.
-                              item.time ?? '',
+                              item.time,
                               color: PwColor.globalNeutral450,
                               style: PwTextStyle.s,
                             ),
