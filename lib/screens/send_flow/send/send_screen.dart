@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
@@ -35,9 +36,9 @@ class SendPage extends StatefulWidget {
 
 class SendPageState extends State<SendPage> {
   final _addressController = TextEditingController();
-  final _denomNotifier = ValueNotifier<Asset?>(null);
+  final _denomNotifier = ValueNotifier<SendAsset?>(null);
   final _recentSends = ValueNotifier<List<RecentAddress>>(<RecentAddress>[]);
-  final _assets = ValueNotifier<List<Asset>>(<Asset>[]);
+  final _assets = ValueNotifier<List<SendAsset>>(<SendAsset>[]);
   SendBloc? _bloc;
 
   @override
@@ -74,10 +75,10 @@ class SendPageState extends State<SendPage> {
           padding: LabelPadding,
           child: PwText(Strings.sendPageSelectAmount),
         ),
-        ValueListenableBuilder<List<Asset>>(
+        ValueListenableBuilder<List<SendAsset>>(
           valueListenable: _assets,
           builder: (context, assets, child,) {
-            return ValueListenableBuilder<Asset?>(
+            return ValueListenableBuilder<SendAsset?>(
               valueListenable: _denomNotifier,
               builder: (context, selectedAsset, child,) {
                 return SendAssetList(

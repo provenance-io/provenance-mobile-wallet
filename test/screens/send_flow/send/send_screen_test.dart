@@ -5,13 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
-import '../send_screen_test.mocks.dart';
+import 'send_screen_test.mocks.dart';
 
 final get = GetIt.instance;
 
@@ -56,8 +57,8 @@ main() {
   });
 
   group("SendPage", () {
-    final asset1 = Asset("Hash", "1", "1.30", "http://test.com",);
-    final asset2 = Asset("USD", "1", "1", "http://test1.com",);
+    final asset1 = SendAsset("Hash", "1", "1.30", "http://test.com",);
+    final asset2 = SendAsset("USD", "1", "1", "http://test1.com",);
 
     final recentAddress1 = RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
     final recentAddress2 = RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
@@ -91,7 +92,7 @@ main() {
 
         var sendListFind = find.byType(SendAssetList);
         var sendList = tester.widget<SendAssetList>(sendListFind);
-        expect(sendList.assets, <Asset>[]);
+        expect(sendList.assets, <SendAsset>[]);
 
         _streamController!.add(SendBlocState([ asset1, asset2 ], <RecentAddress>[]));
         await tester.pumpAndSettle();
@@ -164,7 +165,7 @@ main() {
 
         expect(sendList.recentAddresses, <RecentAddress>[]);
 
-        _streamController!.add(SendBlocState(<Asset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
         await tester.pumpAndSettle();
 
         sendListFind = find.byType(RecentSendList);
@@ -173,7 +174,7 @@ main() {
       });
 
       testWidgets("recentSend clicked", (tester) async {
-        _streamController!.add(SendBlocState(<Asset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
         await _build(tester);
         await tester.pumpAndSettle();
 
@@ -183,7 +184,7 @@ main() {
       });
 
       testWidgets("View All clicked", (tester) async {
-        _streamController!.add(SendBlocState(<Asset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
         await _build(tester);
         await tester.pumpAndSettle();
 

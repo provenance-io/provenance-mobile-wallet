@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 
 main() {
   group("SendAssetCell", () {
-    Future<void> _build(WidgetTester tester, Asset asset) {
+    Future<void> _build(WidgetTester tester, SendAsset asset) {
       return tester.pumpWidget(
         Material(
           child: Directionality(
@@ -19,7 +20,7 @@ main() {
     }
 
     testWidgets("Contents", (tester) async {
-      final asset = Asset("Hash", "123", "52", "http://test.com",);
+      final asset = SendAsset("Hash", "123", "52", "http://test.com",);
       await _build(tester, asset);
 
       final textFind = find.byType(PwText);
@@ -32,11 +33,11 @@ main() {
   });
 
   group("SendAssetList", () {
-    Asset? assetSelected;
+    SendAsset? assetSelected;
 
-    void OnAssetSelected(Asset asset) => assetSelected = asset;
+    void OnAssetSelected(SendAsset asset) => assetSelected = asset;
 
-    Future<void> _build(WidgetTester tester, List<Asset> assets, Asset? selectedAsset,) {
+    Future<void> _build(WidgetTester tester, List<SendAsset> assets, SendAsset? selectedAsset,) {
       return tester.pumpWidget(
         MaterialApp(
           home: Material(
@@ -50,11 +51,11 @@ main() {
       );
     }
 
-    final asset1 = Asset("Hash", "1", "1.30", "http://test.com",);
-    final asset2 = Asset("USD", "1", "1", "http://test1.com",);
+    final asset1 = SendAsset("Hash", "1", "1.30", "http://test.com",);
+    final asset2 = SendAsset("USD", "1", "1", "http://test1.com",);
 
     testWidgets("Contents empty assets", (tester)  async {
-      await _build(tester, <Asset>[], null,);
+      await _build(tester, <SendAsset>[], null,);
       expect(find.text("Loading assets"), findsOneWidget);
       expect(find.byType(PwDropDown), findsNothing);
     });
@@ -63,7 +64,7 @@ main() {
       await _build(tester, [ asset1, asset2 ], null,);
       expect(find.text("Loading assets"), findsNothing);
 
-      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<Asset>);
+      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
       expect(dropDownFind, findsOneWidget);
 
       final cellFind = find.descendant(of: dropDownFind, matching: find.byType(SendAssetCell));
@@ -74,8 +75,8 @@ main() {
       await _build(tester, [ asset1, asset2 ], null,);
       expect(find.text("Loading assets"), findsNothing);
 
-      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<Asset>);
-      final dropDown = tester.widget<PwDropDown<Asset>>(dropDownFind);
+      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
+      final dropDown = tester.widget<PwDropDown<SendAsset>>(dropDownFind);
       expect(dropDown.initialValue, asset1);
     });
 
@@ -83,8 +84,8 @@ main() {
       await _build(tester, [ asset1, asset2 ], asset2,);
       expect(find.text("Loading assets"), findsNothing);
 
-      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<Asset>);
-      final dropDown = tester.widget<PwDropDown<Asset>>(dropDownFind);
+      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
+      final dropDown = tester.widget<PwDropDown<SendAsset>>(dropDownFind);
       expect(dropDown.initialValue, asset2);
     });
 
@@ -92,7 +93,7 @@ main() {
       await _build(tester, [ asset1, asset2 ], asset2,);
       expect(find.text("Loading assets"), findsNothing);
 
-      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<Asset>);
+      final dropDownFind = find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
       await tester.tap(dropDownFind);
       await tester.pumpAndSettle();
 

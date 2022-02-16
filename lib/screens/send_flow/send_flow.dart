@@ -2,8 +2,11 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -14,15 +17,18 @@ class SendFlow extends FlowBase {
 
 class SendFlowState
     extends FlowBaseState<SendFlow>
-    implements SendBlocNavigator
+    implements SendBlocNavigator,
+              SendAmountBlocNavigator
 {
   final  _navigatorKey = GlobalKey<NavigatorState>();
+
+  String? _receivingAddress;
+  SendAsset? _asset;
 
   @override
   void initState() {
     super.initState();
-
-     get.registerSingleton<SendBloc>(SendBloc(this));
+    get.registerLazySingleton<SendBloc>(() => SendBloc(this));
   }
 
   @override
@@ -72,6 +78,8 @@ class SendFlowState
           borderSide: borderSide,
         ),
         hintStyle: TextStyle(color: borderColor),
+        suffixStyle: TextStyle(color: borderColor),
+        counterStyle: TextStyle(color: borderColor),
       ),
     );
 
@@ -87,9 +95,20 @@ class SendFlowState
     return showPage((context) => QRCodeScanner());
   }
 
-  Future<void> showSelectAmount(String address, Asset asset) {
-    completeFlow([ address, asset ]);
-    return Future.value();
+  Future<void> showSelectAmount(String address, SendAsset asset) {
+    _asset = asset;
+    _receivingAddress = address;
+
+    final bloc = SendAmountBloc(
+        _receivingAddress!,
+        _asset!,
+        this
+    )..init();
+    
+    get.registerSingleton(bloc);
+    
+    return showPage((context) => SendAmountScreen())
+            .whenComplete(() => get.unregister<SendAmountBloc>());
   }
 
   Widget createStartPage() {
@@ -115,5 +134,14 @@ class SendFlowState
           );
         },);
 
+  }
+
+  /* SendAmountBlocNavigator */
+
+  @override
+  Future<void> showReviewSend(String amountToSend, String fee, String note) {
+    // return Future.value();
+    completeFlow([ _asset, _receivingAddress, amountToSend, fee ]);
+    return Future.value();
   }
 }

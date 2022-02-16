@@ -1,24 +1,16 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 
 abstract class SendBlocNavigator {
   Future<String?> scanAddress();
 
-  Future<void> showSelectAmount(String address, Asset denom);
+  Future<void> showSelectAmount(String address, SendAsset asset);
 
   Future<void> showAllRecentSends();
 
   Future<void> showRecentSendDetails(RecentAddress recentAddress);
-}
-
-class Asset {
-  Asset(this.denom, this.amount, this.fiatValue, this.imageUrl);
-
-  final String denom;
-  final String amount;
-  final String fiatValue;
-  final String imageUrl;
 }
 
 class RecentAddress {
@@ -31,7 +23,7 @@ class RecentAddress {
 class SendBlocState {
   SendBlocState(this.availableAssets, this.recentSendAddresses);
 
-  final List<Asset> availableAssets;
+  final List<SendAsset> availableAssets;
 
   final List<RecentAddress> recentSendAddresses;
 }
@@ -49,8 +41,8 @@ class SendBloc extends Disposable {
         Duration(milliseconds: 600),
         () {
           final assets = [
-            Asset("Hash", "302.02", "\$523.25", "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hash.png"),
-            Asset("USD", "51.15", "\$51.15", "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=021"),
+            SendAsset("Hash", "302.02", "\$523.25", "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hash.png"),
+            SendAsset("USD", "51.15", "\$51.15", "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=021"),
           ];
 
           final sends = List.generate(15, (index) {
@@ -83,14 +75,14 @@ class SendBloc extends Disposable {
     return _navigator.scanAddress();
   }
 
-  Future<void> next(String address, Asset? denom) {
+  Future<void> next(String address, SendAsset? asset) {
     if(address.isEmpty) {
       throw Exception("You must supply a receiving address");
     }
-    if(denom == null) {
-      throw Exception("You must supply a receiving denomination");
+    if(asset == null) {
+      throw Exception("You must supply an asset");
     }
 
-    return _navigator.showSelectAmount(address, denom);
+    return _navigator.showSelectAmount(address, asset);
   }
 }

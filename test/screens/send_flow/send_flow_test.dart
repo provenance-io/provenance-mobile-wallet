@@ -5,11 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 
-import 'send_screen_test.mocks.dart';
 
 final get = GetIt.instance;
 
@@ -70,5 +72,18 @@ main() {
       expect(dialogFind, findsOneWidget);
       expect(find.descendant(of: dialogFind, matching: find.text("Not Implemented")), findsOneWidget);
     });
+    //
+    // testWidgets("showSelectAmount", (tester) async {
+    //   final asset = SendAsset("Hash", "100", "200", "http://test");
+    //   await _build(tester);
+    //
+    //   state!.showSelectAmount("Address", asset);
+    //   await tester.pumpAndSettle();
+    //
+    //   expect(find.byType(SendAmountScreen), findsOneWidget);
+    //   final amountBloc = get<SendAmountBloc>();
+    //   expect(amountBloc.asset, asset);
+    //   expect(amountBloc.receivingAddress, "Address");
+    // });
   });
 }

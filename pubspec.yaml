@@ -51,6 +51,7 @@ dependencies:
       url: git@github.com:FigureTechnologies/mobile-tech-wallet-flutter-plugin.git
       ref: 8b9395b5a46cce8f2d3de72a4aff503ce950bf7d
   get_it: ^7.2.0
+  decimal: ^2.1.0
 
 dev_dependencies:
   dart_code_metrics: ^4.9.0

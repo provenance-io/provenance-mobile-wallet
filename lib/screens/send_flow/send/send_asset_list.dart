@@ -1,12 +1,13 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 
 class SendAssetCell extends StatelessWidget {
   SendAssetCell(this.asset, { Key? key })
       : super(key: key);
 
-  final Asset asset;
+  final SendAsset asset;
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,9 @@ class SendAssetList extends StatelessWidget {
   SendAssetList(this.assets, this.selectedAsset, this.onAssetChanged, { Key? key })
     : super(key: key);
 
-  final List<Asset> assets;
-  final Asset? selectedAsset;
-  final void Function(Asset asset) onAssetChanged;
+  final List<SendAsset> assets;
+  final SendAsset? selectedAsset;
+  final void Function(SendAsset asset) onAssetChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class SendAssetList extends StatelessWidget {
         orElse: () => assets.first,
       );
 
-      child = PwDropDown<Asset>(
+      child = PwDropDown<SendAsset>(
         isExpanded: true,
         itemHeight: 50,
         initialValue: selectedAsset,
