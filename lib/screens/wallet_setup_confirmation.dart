@@ -65,7 +65,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                         onPressed: () async {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            Dashboard().route(),
+                            DashboardScreen().route(),
                             (route) => route.isFirst,
                           );
                         },

@@ -85,7 +85,7 @@ class _LandingScreenState extends State<LandingScreen>
   void doAuth() {
     LocalAuthHelper.instance.auth(context, (result) {
       if (result) {
-        Navigator.of(context).push(Dashboard().route());
+        Navigator.of(context).push(DashboardScreen().route());
       }
     });
   }

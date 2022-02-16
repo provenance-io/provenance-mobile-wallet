@@ -22,12 +22,12 @@ import 'package:rxdart/rxdart.dart';
 
 import 'landing/dashboard_landing.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => DashboardState();
+  State<StatefulWidget> createState() => DashboardScreenState();
 }
 
-class DashboardState extends State<Dashboard>
+class DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   late TabController _tabController;
   String _walletAddress = '';
@@ -68,7 +68,7 @@ class DashboardState extends State<Dashboard>
   }
 
   @override
-  void didUpdateWidget(covariant Dashboard oldWidget) {
+  void didUpdateWidget(covariant DashboardScreen oldWidget) {
     if (!_initialLoad) {
       this.loadAssets();
     }
