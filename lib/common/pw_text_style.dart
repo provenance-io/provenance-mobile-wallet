@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 /// Provenance Typopgraphy Text Styles
 enum PwTextStyle {
@@ -26,8 +25,9 @@ enum PwTextStyle {
   logo,
   subhead,
   body,
-  headline2,
   bodyBold,
+  headline1,
+  headline2,
   display2,
   footnote,
 }
@@ -90,6 +90,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.body;
       case PwTextStyle.headline2:
         return theme.textTheme.provenanceHeadline2;
+      case PwTextStyle.headline1:
+        return theme.textTheme.provenanceHeadline1;
       case PwTextStyle.bodyBold:
         return theme.textTheme.bodyBold;
       case PwTextStyle.display2:

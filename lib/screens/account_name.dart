@@ -1,7 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
@@ -16,7 +15,7 @@ class AccountName extends HookWidget {
     this.numberOfSteps,
   });
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final List<String>? words;
   final int? currentStep;
@@ -77,6 +76,7 @@ class AccountName extends HookWidget {
                 ),
                 child: _TextFormField(
                   label: Strings.accountName,
+                  autofocus: true,
                   validator: (value) {
                     return value == null || value.isEmpty
                         ? Strings.required
@@ -122,8 +122,7 @@ class AccountName extends HookWidget {
                   },
                 ),
               ),
-              VerticalSpacer.xxLarge(),
-              VerticalSpacer.xxLarge(),
+              VerticalSpacer.large(),
             ],
           ),
         ),
@@ -140,6 +139,7 @@ class _TextFormField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.controller,
+    this.autofocus = false,
   }) : super(key: key);
 
   final String label;
@@ -147,6 +147,7 @@ class _TextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -159,24 +160,37 @@ class _TextFormField extends StatelessWidget {
           label,
           color: PwColor.white,
         ),
-        const VerticalSpacer.small(),
-        TextFormField(
-          style: theme.textTheme.body.copyWith(color: theme.colorScheme.white),
-          keyboardType: keyboardType,
-          autocorrect: false,
-          controller: controller,
-          onChanged: onChanged,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          decoration: InputDecoration(
-            hintText: label,
-            hintStyle: theme.textTheme.body
-                .copyWith(color: theme.colorScheme.provenanceNeutral250),
-            fillColor: theme.colorScheme.provenanceNeutral750,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: theme.colorScheme.provenanceNeutral250,
+        VerticalSpacer.small(),
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.provenanceNeutral550,
+                spreadRadius: 6,
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: TextFormField(
+            autofocus: autofocus,
+            style:
+                theme.textTheme.body.copyWith(color: theme.colorScheme.white),
+            keyboardType: keyboardType,
+            autocorrect: false,
+            controller: controller,
+            onChanged: onChanged,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: validator,
+            decoration: InputDecoration(
+              hintText: label,
+              hintStyle: theme.textTheme.body
+                  .copyWith(color: theme.colorScheme.provenanceNeutral250),
+              fillColor: theme.colorScheme.provenanceNeutral750,
+              filled: true,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: theme.colorScheme.provenanceNeutral250,
+                ),
               ),
             ),
           ),

@@ -1,8 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/landing/landing.dart';
+import 'package:provenance_wallet/screens/landing/landing_screen.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 // TODO: Remove me? If this is just for development, that is.
@@ -16,15 +17,13 @@ class ResetButton extends StatelessWidget {
           Strings.resetWallet,
         ),
         onPressed: () async {
-          await ProvWalletFlutter.disconnectWallet();
-          await ProvWalletFlutter.resetWallet();
+          await get<DashboardBloc>().resetWallets();
           FlutterSecureStorage storage = FlutterSecureStorage();
           await storage.deleteAll();
 
-          Navigator.of(context).popUntil((route) => true);
-          // Pretty sure that this is creating an additional view on the stack when one already exists.
-          // If this is just for development no change is needed.
-          Navigator.push(context, Landing().route());
+          Navigator.of(context).popUntil((route) => route.isFirst);
+
+          Navigator.push(context, LandingScreen().route());
         },
       ),
     );

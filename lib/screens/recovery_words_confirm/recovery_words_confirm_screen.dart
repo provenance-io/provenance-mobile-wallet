@@ -1,6 +1,5 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/backup_complete_screen.dart';
@@ -12,13 +11,13 @@ import 'package:provenance_wallet/util/strings.dart';
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   RecoveryWordsConfirmScreen(
     this.flowType, {
-    @required this.words,
+    required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final int? currentStep;
   final int? numberOfSteps;
   final String? accountName;
@@ -115,7 +114,7 @@ class RecoveryWordsConfirmScreenState
                         children: [
                           Checkbox(
                             fillColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.primary500,
+                              Theme.of(context).colorScheme.primaryP500,
                             ),
                             value: _isResponsible,
                             onChanged: (bool? value) {

@@ -15,14 +15,15 @@ import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class Landing extends StatefulWidget {
+class LandingScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _LandingState();
+    return _LandingScreenState();
   }
 }
 
-class _LandingState extends State<Landing> with WidgetsBindingObserver {
+class _LandingScreenState extends State<LandingScreen>
+    with WidgetsBindingObserver {
   static const _inactivityTimeout = Duration(minutes: 2);
 
   bool _accountExists = false;
@@ -71,7 +72,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
   }
 
   void checkAccount() async {
-    final storage = await SecureStorageService().read(StorageKey.privateKey);
+    final storage = await SecureStorageService().read(StorageKey.accountName);
     if (storage != null && storage.isNotEmpty) {
       setState(() {
         _accountExists = true;
@@ -82,8 +83,8 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
   }
 
   void doAuth() {
-    LocalAuthHelper.instance.auth(context, (result, privateKey) {
-      if (result == true) {
+    LocalAuthHelper.instance.auth(context, (result) {
+      if (result) {
         Navigator.of(context).push(Dashboard().route());
       }
     });
@@ -101,8 +102,8 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            VerticalSpacer.custom(spacing: 150),
             Expanded(
               child: PageView(
                 controller: _pageController,
@@ -113,15 +114,14 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 ],
               ),
             ),
-            VerticalSpacer.medium(),
             PageIndicator(currentPageIndex: _currentPage.round()),
-            VerticalSpacer.large(),
+            VerticalSpacer.xxLarge(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwButton(
                 child: PwText(
                   _accountExists ? Strings.continueName : Strings.createWallet,
-                  style: PwTextStyle.m,
+                  style: PwTextStyle.bodyBold,
                   color: PwColor.white,
                 ),
                 onPressed: () {
@@ -137,15 +137,13 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 },
               ),
             ),
-            SizedBox(
-              height: 8,
-            ),
+            VerticalSpacer.large(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwTextButton(
                 child: PwText(
-                  Strings.restoreWallet,
-                  style: PwTextStyle.m,
+                  Strings.recoverWallet,
+                  style: PwTextStyle.body,
                   color: PwColor.white,
                 ),
                 onPressed: () {
@@ -157,9 +155,7 @@ class _LandingState extends State<Landing> with WidgetsBindingObserver {
                 },
               ),
             ),
-            SizedBox(
-              height: 40,
-            ),
+            VerticalSpacer.largeX4(),
           ],
         ),
       ),
