@@ -1,44 +1,34 @@
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/recovery_words.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class CreatePassphraseScreen extends StatelessWidget {
-  const CreatePassphraseScreen(
-    this.flowType,
-    this.accountName, {
+class BackupCompleteScreen extends StatelessWidget {
+  const BackupCompleteScreen(
+    this.flowType, {
+    @required this.words,
+    this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
+  final List<String>? words;
   final WalletAddImportType flowType;
-  final String accountName;
+  final String? accountName;
   final int? currentStep;
   final int? numberOfSteps;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
-        elevation: 0.0,
-        title: PwText(
-          Strings.createPassphrase,
-          style: PwTextStyle.subhead,
-          textAlign: TextAlign.left,
-        ),
-        leading: Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
-              size: 14,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+      appBar: PwAppBar(
+        title: Strings.backupComplete,
+        leadingIcon: PwIcons.back,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.provenanceNeutral750,
@@ -64,22 +54,9 @@ class CreatePassphraseScreen extends StatelessWidget {
                     VerticalSpacer.largeX6(),
                     VerticalSpacer.xxLarge(),
                     PwText(
-                      Strings.savePassphrase,
+                      Strings.backupComplete.toUpperCase(),
                       style: PwTextStyle.headline2,
                       textAlign: TextAlign.center,
-                    ),
-                    VerticalSpacer.large(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        right: Spacing.xxLarge,
-                        left: Spacing.xxLarge,
-                      ),
-                      child: PwText(
-                        Strings.prepareToWriteDownYourRecoveryPhrase,
-                        style: PwTextStyle.body,
-                        textAlign: TextAlign.center,
-                        color: PwColor.neutral50,
-                      ),
                     ),
                     VerticalSpacer.large(),
                     Padding(
@@ -91,28 +68,17 @@ class CreatePassphraseScreen extends StatelessWidget {
                         Strings.theOnlyWayToRecoverYourAccount,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
-                        color: PwColor.neutral50,
                       ),
                     ),
                     VerticalSpacer.large(),
                     VerticalSpacer.medium(),
                     Image.asset(
-                      AssetPaths.images.createPassphrase,
+                      AssetPaths.images.backupComplete,
                       width: 180,
                     ),
                     Expanded(
                       child: Container(),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: PwText(
-                        Strings.warningDoNotShare,
-                        style: PwTextStyle.body,
-                        textAlign: TextAlign.center,
-                        color: PwColor.error,
-                      ),
-                    ),
-                    VerticalSpacer.xxLarge(),
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
@@ -121,15 +87,35 @@ class CreatePassphraseScreen extends StatelessWidget {
                           style: PwTextStyle.mBold,
                           color: PwColor.white,
                         ),
-                        onPressed: () {
-                          if (flowType == WalletAddImportType.onBoardingAdd ||
-                              flowType == WalletAddImportType.dashboardAdd) {
-                            Navigator.of(context).push(RecoveryWords(
+                        onPressed: () async {
+                          if (flowType == WalletAddImportType.onBoardingAdd) {
+                            Navigator.of(context).push(CreatePin(
                               flowType,
-                              accountName,
-                              currentStep: currentStep,
+                              words: words,
+                              accountName: accountName,
+                              currentStep: (currentStep ?? 0) + 1,
                               numberOfSteps: numberOfSteps,
                             ).route());
+                          } else if (flowType ==
+                              WalletAddImportType.dashboardAdd) {
+                            ModalLoadingRoute.showLoading(
+                              Strings.pleaseWait,
+                              context,
+                            );
+                            await ProvWalletFlutter.getPrivateKey(
+                              words?.join(' ') ?? '',
+                            );
+                            await ProvWalletFlutter.saveToWalletService(
+                              words?.join(' ') ?? '',
+                              accountName ?? '',
+                            );
+                            ModalLoadingRoute.dismiss(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                           }
                         },
                       ),

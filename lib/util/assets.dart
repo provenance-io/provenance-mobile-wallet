@@ -9,4 +9,5 @@ class Images {
   final String coins = "assets/coins.svg";
   final String createPassphrase = 'assets/images/savePassphrase.png';
   final String recoverAccount = 'assets/images/recoverAccount.png';
+  final String backupComplete = 'assets/images/backupComplete.png';
 }

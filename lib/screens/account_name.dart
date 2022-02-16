@@ -2,6 +2,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -26,23 +27,8 @@ class AccountName extends HookWidget {
     final accountNameProvider = useTextEditingController();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
-        elevation: 0.0,
-        title: PwText(
-          Strings.nameYourAccount,
-          style: PwTextStyle.subhead,
-          textAlign: TextAlign.left,
-        ),
-        leading: Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.close,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+      appBar: PwAppBar(
+        title: Strings.nameYourAccount,
       ),
       body: Form(
         key: _formKey,
@@ -83,7 +69,11 @@ class AccountName extends HookWidget {
               ),
               VerticalSpacer.xxLarge(),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: Spacing.small,
+                ),
                 child: _TextFormField(
                   label: Strings.accountName,
                   autofocus: true,
