@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -86,17 +87,12 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                width: 32,
-                                height: 32,
-                                child: PwIcon(
-                                  item.display == 'USD' ||
-                                          item.display == 'USDF'
-                                      ? PwIcons.dollarIcon
-                                      : PwIcons.hashLogo,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .globalNeutral550,
-                                  size: 32,
+                                width: 40,
+                                height: 40,
+                                child: SvgPicture.asset(
+                                  item.image,
+                                  width: 40,
+                                  height: 40,
                                 ),
                               ),
                               HorizontalSpacer.medium(),
