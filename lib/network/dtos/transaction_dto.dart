@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'transaction_response.g.dart';
+part 'transaction_dto.g.dart';
 
 @JsonSerializable()
-class TransactionResponse {
-  TransactionResponse({
+class TransactionDto {
+  TransactionDto({
     this.address,
     this.feeAmount,
     this.id,
@@ -23,7 +23,7 @@ class TransactionResponse {
   final String? type;
 
   // ignore: member-ordering
-  factory TransactionResponse.fromJson(Map<String, dynamic> json) =>
-      _$TransactionResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionResponseToJson(this);
+  factory TransactionDto.fromJson(Map<String, dynamic> json) =>
+      _$TransactionDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionDtoToJson(this);
 }

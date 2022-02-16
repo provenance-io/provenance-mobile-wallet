@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction_response.dart';
+part of 'transaction_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TransactionResponse _$TransactionResponseFromJson(Map<String, dynamic> json) =>
-    TransactionResponse(
+TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
+    TransactionDto(
       address: json['address'] as String?,
       feeAmount: json['feeAmount'] as String?,
       id: json['id'] as String?,
@@ -17,8 +17,7 @@ TransactionResponse _$TransactionResponseFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String?,
     );
 
-Map<String, dynamic> _$TransactionResponseToJson(
-        TransactionResponse instance) =>
+Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
     <String, dynamic>{
       'address': instance.address,
       'feeAmount': instance.feeAmount,
