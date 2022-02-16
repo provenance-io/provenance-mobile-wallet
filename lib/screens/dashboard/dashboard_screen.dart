@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/network/models/asset_response.dart';
 import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
@@ -21,8 +22,6 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
-
-import 'landing/dashboard_landing.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -194,8 +193,6 @@ class DashboardScreenState extends State<DashboardScreen>
           children: [
             VerticalSpacer.large(),
             Container(
-              //color: Theme.of(context).colorScheme.provenanceNeutral800,
-              // height: 50 + inset?.bottom ?? 0,
               child: TabBar(
                 controller: _tabController,
                 indicatorColor: Colors.transparent,
@@ -273,7 +270,7 @@ class DashboardScreenState extends State<DashboardScreen>
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  DashboardLanding(),
+                  DashboardLandingTab(),
                   TransactionLanding(
                     walletAddress: _walletAddress,
                     walletName: _walletName,
