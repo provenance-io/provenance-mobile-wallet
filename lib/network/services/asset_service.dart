@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/models/asset.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/dtos/asset_dto.dart';
 import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
 
@@ -21,7 +21,7 @@ class AssetService {
 
         try {
           assets.addAll(json.map((t) {
-            return Asset(dto: AssetResponse.fromJson(t));
+            return Asset(dto: AssetDto.fromJson(t));
           }).toList());
         } catch (e) {
           return assets;

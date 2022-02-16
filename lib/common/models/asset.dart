@@ -1,9 +1,9 @@
 import 'package:provenance_wallet/common/widgets/icon.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/network/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
 
 class Asset {
-  Asset({required AssetResponse dto})
+  Asset({required AssetDto dto})
       : assert(dto.amount != null),
         assert(dto.denom != null),
         assert(dto.description != null),

@@ -1,8 +1,8 @@
+import 'package:provenance_wallet/common/models/asset.dart';
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
-import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
@@ -39,8 +39,8 @@ class DashboardScreenState extends State<DashboardScreen>
   final _subscriptions = CompositeSubscription();
   final _bloc = DashboardBloc();
 
-  List<AssetResponse> assets = [];
-  List<TransactionResponse> transactions = [];
+  List<Asset> assets = [];
+  List<Transaction> transactions = [];
 
   @override
   void dispose() {
