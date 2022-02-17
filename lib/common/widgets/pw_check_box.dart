@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 
 class PwCheckBox extends StatefulWidget {
   const PwCheckBox({
@@ -14,7 +13,7 @@ class PwCheckBox extends StatefulWidget {
 }
 
 class _PwCheckBoxState extends State<PwCheckBox> {
-  bool _selected = true;
+  bool _selected = false;
 
   @override
   Widget build(BuildContext context) {
