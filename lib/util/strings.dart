@@ -206,7 +206,7 @@ class Strings {
       "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
   // RecoveryWords
-  static const recoveryPassphrase = 'Recovery passphrase';
+  static const recoveryPassphrase = 'Recovery Passphrase';
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order, using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
