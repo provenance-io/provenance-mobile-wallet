@@ -6,9 +6,9 @@ import Foundation
 
 class CipherService: NSObject {
 	
-	static let secKeyName = "main"
-	static let cipherKeyName = "cipher"
-	static let useBiometryKeyName = "useBiometry"
+	static let secKeyTag = "main"
+	static let keyCipher = "cipher"
+	static let keyUseBiometry = "useBiometry"
 	
 	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
 		var keyDict: Dictionary<String, String>
@@ -48,7 +48,7 @@ class CipherService: NSObject {
 	}
 	
 	static func getUseBiometry() -> Bool {
-		return UserDefaults.standard.bool(forKey: useBiometryKeyName)
+		return UserDefaults.standard.bool(forKey: keyUseBiometry)
 	}
 	
 	static func setUseBiometry(useBiometry: Bool) throws -> Bool {
@@ -72,7 +72,7 @@ class CipherService: NSObject {
 	}
 	
 	private static func getCipher() throws -> Data {
-		guard let cipher = UserDefaults.standard.data(forKey: cipherKeyName) else {
+		guard let cipher = UserDefaults.standard.data(forKey: keyCipher) else {
 			throw ProvenanceWalletError(kind: .cipherNotFound,
 										message: "Cipher not found.",
 										messages: nil,
@@ -83,18 +83,18 @@ class CipherService: NSObject {
 	}
 	
 	private static func tryGetCipher() -> Data? {
-		return UserDefaults.standard.data(forKey: cipherKeyName)
+		return UserDefaults.standard.data(forKey: keyCipher)
 	}
 	
 	
 	private static func setCipher(cipher: Data) {
-		UserDefaults.standard.set(cipher, forKey: cipherKeyName)
+		UserDefaults.standard.set(cipher, forKey: keyCipher)
 	}
 	
 	private static func encrypt(plainText: String) throws -> Data {
 		let algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorVariableIVX963SHA256AESGCM
 		guard let secKey = loadSecKey() else {
-			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyName) not found", messages: nil,
+			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyTag) not found", messages: nil,
 			                            underlyingError: nil)
 		}
 		guard let publicKey: SecKey = SecKeyCopyPublicKey(secKey) else {
@@ -123,7 +123,7 @@ class CipherService: NSObject {
 		}
 		
 		guard let secKey = loadSecKey() else {
-			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyName) not found", messages: nil,
+			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyTag) not found", messages: nil,
 			                            underlyingError: nil)
 		}
 
@@ -178,7 +178,7 @@ class CipherService: NSObject {
 			throw ProvenanceWalletError(kind: .accessError, message: "Failed to create access control", messages: nil, underlyingError: nil)
 		}
 		
-		let tag = secKeyName.data(using: .utf8)!
+		let tag = secKeyTag.data(using: .utf8)!
 		let attributes: [String: Any] = [
 			kSecAttrKeyType as String: kSecAttrKeyTypeEC,
 			kSecAttrKeySizeInBits as String: 256,
@@ -199,7 +199,7 @@ class CipherService: NSObject {
 		
 		let success = testDecrypt()
 		if (success) {
-			UserDefaults.standard.set(useBiometry, forKey: useBiometryKeyName)
+			UserDefaults.standard.set(useBiometry, forKey: keyUseBiometry)
 		} else {
 			let _ = deleteSecKey()
 		}
@@ -223,7 +223,7 @@ class CipherService: NSObject {
 	}
 
 	private static func loadSecKey() -> SecKey? {
-		let tag = secKeyName.data(using: .utf8)!
+		let tag = secKeyTag.data(using: .utf8)!
 		let query: [String: Any] = [
 			kSecClass as String: kSecClassKey,
 			kSecAttrApplicationTag as String: tag,
@@ -240,7 +240,7 @@ class CipherService: NSObject {
 	}
 	
 	private static func deleteSecKey() -> Bool {
-		let tag = secKeyName.data(using: .utf8)!
+		let tag = secKeyTag.data(using: .utf8)!
 		
 		let query: [String: Any] = [
 			kSecClass as String: kSecClassKey,
