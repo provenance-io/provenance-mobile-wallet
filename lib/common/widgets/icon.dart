@@ -36,6 +36,7 @@ class PwIcons {
   static const String dashboard = "dashboard";
   static const String ellipsis = "ellipsis";
   static const String qr = "qr";
+  static const String check = "check";
 }
 
 class PwIcon extends StatelessWidget {
