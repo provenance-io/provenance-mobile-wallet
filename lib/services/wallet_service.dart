@@ -107,6 +107,6 @@ class WalletService {
     return session;
   }
 
-  Future isValidWalletConnectData(String qrData) =>
+  Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);
 }

@@ -3,8 +3,16 @@ import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+typedef IsValidCallback = Future<bool> Function(String input);
+
 class QRCodeScanner extends StatefulWidget {
-  QRCodeScanner();
+  QRCodeScanner({
+    Key? key,
+    this.isValidCallback
+  })
+  : super(key: key);
+
+  final IsValidCallback? isValidCallback;
 
   @override
   createState() => QRCodeScannerState();
@@ -87,7 +95,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
               //   left: 0,
               //   right: 0,
               //   bottom: 0,
-              //   child: Container(
+               //   child: Container(
               //     height: 144 * ratio,
               //     color: Theme.of(context).colorScheme.background,
               //     child: Row(
@@ -114,7 +122,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();
     Map<String, dynamic> info = {};
-    final isValid = await get<WalletService>().isValidWalletConnectData(qrData);
+    final isValid = await widget.isValidCallback?.call(qrData) ?? true;
     if (isValid && !_handled) {
       _handled = true;
       Navigator.of(context).pop(qrData);

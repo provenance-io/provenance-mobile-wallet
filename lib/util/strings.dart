@@ -48,6 +48,8 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
+  static const NotImplementedMessage = "Not Implemented";
+
   // Biometric Strings
   static const biometric = 'Biometric';
   static const faceId = 'Face ID';
@@ -274,4 +276,29 @@ class Strings {
   //WordSelector
   static const selectWord = 'select word';
   static String selectWordIndex(String index) => 'select word #${index}';
+
+  // SendScreen
+  static const sendTitle = "Send";
+  static const noRecentSends = "No recent sends";
+  static const ViewAllLabel = "View All";
+  static const nextButtonLabel = "Next";
+  static const sendPageRecentAddress = "Recent addresses";
+  static const sendPageSelectAmount = "Select Amount";
+  static const sendPageScanQrCode = "paste or scan QR code";
+  static const sendPageSendToAddressLabel = "Send to Address";
+
+  // SendAmountScreen
+  static const sendAmountTitle = "Send Amount";
+  static const sendAmountHint = "Enter the amount to send";
+  static const sendAmountNextButton = "Next";
+  static const sendAmountNoteHint = "Note";
+  static const sendAmountAvailable = "available";
+  static const sendAmountNoteSuffix = "Click to add a note";
+  static const sendAmountLoadingFeeEstimate = "Acquiring Estimate";
+  static const sendAmountTransactionLabel = "Transaction";
+  static const sendAmountErrorTooManyDecimalPlaces = "too many decimal places";
+  static const sendAmountErrorInsufficient = "Insufficient";
+  static const sendAmountErrorInvalidAmount = "is an invalid amount";
+  static const sendAmountErrorGasEstimateNotReady =
+      "The estimated fee is not ready";
 }
