@@ -148,9 +148,7 @@ class RecoveryWordsConfirmScreenState
                         },
                       ),
                     ),
-                    Expanded(
-                      child: Container(),
-                    ),
+                    VerticalSpacer.largeX4(),
                   ],
                 ),
               ),
