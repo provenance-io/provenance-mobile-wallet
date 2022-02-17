@@ -1,4 +1,3 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
