@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/network/models/transaction_response.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -14,7 +14,7 @@ class TradeDetailsScreen extends StatelessWidget {
     required this.walletAddress,
   }) : super(key: key);
 
-  final TransactionResponse transaction;
+  final Transaction transaction;
   // FIXME: I want these two Strings to be part of a Bloc.
   final String walletName;
   final String walletAddress;
@@ -72,7 +72,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     PwText(
-                      transaction.id ?? "",
+                      transaction.id,
                       style: PwTextStyle.m,
                       color: PwColor.globalNeutral600Black,
                     ),
@@ -110,7 +110,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     PwText(
-                      '${transaction.address?.substring(0, 3)}...${transaction.address?.substring(36)}',
+                      '${transaction.address.substring(0, 3)}...${transaction.address.substring(36)}',
                       style: PwTextStyle.m,
                       color: PwColor.globalNeutral600Black,
                     ),
@@ -180,7 +180,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsOrderType,
               endChild: PwText(
-                transaction.type ?? "",
+                transaction.type,
                 color: PwColor.globalNeutral500,
                 style: PwTextStyle.m,
               ),
@@ -219,7 +219,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: PwText(
-                transaction.feeAmount ?? "",
+                transaction.feeAmount,
                 color: PwColor.globalNeutral500,
                 style: PwTextStyle.m,
               ),
@@ -228,7 +228,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
-                transaction.time ?? "",
+                transaction.time,
                 color: PwColor.globalNeutral500,
                 style: PwTextStyle.m,
               ),

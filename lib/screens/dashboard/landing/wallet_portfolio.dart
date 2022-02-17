@@ -1,5 +1,6 @@
+import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/network/models/asset_response.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
@@ -16,137 +17,82 @@ class WalletPortfolio extends StatelessWidget {
     final assetStream = get<DashboardBloc>().assetList;
 
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.globalNeutral600Black,
-          borderRadius: BorderRadius.circular(11.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 17, right: 17),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 24,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  PwText(
-                    Strings.portfolioValue,
-                    color: PwColor.white,
-                    style: PwTextStyle.sBold,
-                  ),
-                  StreamBuilder<List<AssetResponse>>(
-                    initialData: assetStream.value,
-                    stream: assetStream,
-                    builder: (context, snapshot) {
-                      final assets = snapshot.data ?? [];
+      padding: EdgeInsets.only(
+        left: Spacing.xxLarge,
+        right: Spacing.xxLarge,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PwText(
+            Strings.portfolioValue,
+            color: PwColor.white,
+            style: PwTextStyle.subhead,
+          ),
+          StreamBuilder<List<Asset>>(
+            initialData: assetStream.value,
+            stream: assetStream,
+            builder: (context, snapshot) {
+              final assets = snapshot.data ?? [];
 
-                      return PwText(
-                        // FIXME: How do we get portfolio value?
-                        '\$0',
-                        color: PwColor.white,
-                        style: PwTextStyle.h6,
-                      );
-                    },
-                  ),
-                ],
+              return PwText(
+                // FIXME: How do we get portfolio value?
+                '\$0',
+                color: PwColor.white,
+                style: PwTextStyle.display2,
+              );
+            },
+          ),
+          VerticalSpacer.xLarge(),
+          Row(
+            children: [
+              PwButton(
+                minimumWidth: 150,
+                child: Column(
+                  children: [
+                    PwIcon(
+                      PwIcons.upArrow,
+                      size: 24,
+                      color: Theme.of(context).colorScheme.white,
+                    ),
+                    VerticalSpacer.xSmall(),
+                    PwText(
+                      Strings.send,
+                      color: PwColor.white,
+                      style: PwTextStyle.bodyBold,
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  // TODO: 'Send' logic here.
+                },
               ),
-              SizedBox(
-                height: 17,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildSendButton(context),
-                  _buildReceiveButton(context),
-                  _buildWalletConnectButton(),
-                ],
-              ),
-              SizedBox(
-                height: 24,
+              HorizontalSpacer.small(),
+              PwButton(
+                minimumWidth: 150,
+                child: Column(
+                  children: [
+                    PwIcon(
+                      PwIcons.downArrow,
+                      size: 24,
+                      color: Theme.of(context).colorScheme.white,
+                    ),
+                    VerticalSpacer.xSmall(),
+                    PwText(
+                      Strings.receive,
+                      color: PwColor.white,
+                      style: PwTextStyle.bodyBold,
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  // TODO: 'Receive' logic here.
+                },
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSendButton(BuildContext context) {
-    return Container(
-      width: 100,
-      child: GestureDetector(
-        onTap: () {
-          // TODO: 'Send' logic here.
-        },
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.globalNeutral450,
-                borderRadius: BorderRadius.circular(
-                  23,
-                ),
-              ),
-              height: 46,
-              width: 46,
-              child: Center(
-                child: PwIcon(
-                  PwIcons.upArrow,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.white,
-                ),
-              ),
-            ),
-            VerticalSpacer.xSmall(),
-            PwText(
-              Strings.send,
-              color: PwColor.white,
-              style: PwTextStyle.s,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReceiveButton(BuildContext context) {
-    return Container(
-      width: 100,
-      child: GestureDetector(
-        onTap: () {
-          // TODO: 'Receive' logic here.
-        },
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.globalNeutral450,
-                borderRadius: BorderRadius.circular(
-                  23,
-                ),
-              ),
-              height: 46,
-              width: 46,
-              child: Center(
-                child: PwIcon(
-                  PwIcons.downArrow,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.white,
-                ),
-              ),
-            ),
-            VerticalSpacer.xSmall(),
-            PwText(
-              Strings.receive,
-              color: PwColor.white,
-              style: PwTextStyle.s,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

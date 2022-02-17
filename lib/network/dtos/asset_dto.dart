@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'asset_response.g.dart';
+part 'asset_dto.g.dart';
 
 @JsonSerializable()
-class AssetResponse {
-  AssetResponse({
+class AssetDto {
+  AssetDto({
     required this.denom,
     required this.amount,
     required this.display,
@@ -21,7 +21,7 @@ class AssetResponse {
   final String? displayAmount;
 
   // ignore: member-ordering
-  factory AssetResponse.fromJson(Map<String, dynamic> json) =>
-      _$AssetResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$AssetResponseToJson(this);
+  factory AssetDto.fromJson(Map<String, dynamic> json) =>
+      _$AssetDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$AssetDtoToJson(this);
 }

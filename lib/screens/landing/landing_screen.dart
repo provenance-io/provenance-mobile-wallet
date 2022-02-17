@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
@@ -85,7 +85,7 @@ class _LandingScreenState extends State<LandingScreen>
   void doAuth() {
     LocalAuthHelper.instance.auth(context, (result) {
       if (result) {
-        Navigator.of(context).push(Dashboard().route());
+        Navigator.of(context).push(DashboardScreen().route());
       }
     });
   }

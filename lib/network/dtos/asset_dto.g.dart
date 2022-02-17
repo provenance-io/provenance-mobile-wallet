@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'asset_response.dart';
+part of 'asset_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AssetResponse _$AssetResponseFromJson(Map<String, dynamic> json) =>
-    AssetResponse(
+AssetDto _$AssetDtoFromJson(Map<String, dynamic> json) => AssetDto(
       denom: json['denom'] as String?,
       amount: json['amount'] as String?,
       display: json['display'] as String?,
@@ -16,8 +15,7 @@ AssetResponse _$AssetResponseFromJson(Map<String, dynamic> json) =>
       displayAmount: json['displayAmount'] as String?,
     );
 
-Map<String, dynamic> _$AssetResponseToJson(AssetResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AssetDtoToJson(AssetDto instance) => <String, dynamic>{
       'denom': instance.denom,
       'amount': instance.amount,
       'display': instance.display,
