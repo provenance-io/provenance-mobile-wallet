@@ -53,7 +53,9 @@ class WordSelectorState extends State<WordSelector> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: words
-                    .map((e) => WordButton(
+                    .map((e) {
+                      return [
+                        WordButton(
                           word: e,
                           isSelected: e == selectedWord,
                           setSelected: () {
@@ -61,7 +63,11 @@ class WordSelectorState extends State<WordSelector> {
                               bloc.wordSelected(e, widget.index);
                             });
                           },
-                        ))
+                        ),
+                        HorizontalSpacer.small(),
+                      ];
+                    })
+                    .expand((element) => element)
                     .toList(),
               );
             },
