@@ -31,6 +31,7 @@ class DashboardBloc extends Disposable {
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
   final _connectionStatus =
       BehaviorSubject.seeded(WalletConnectionServiceStatus.disconnected);
+  final BehaviorSubject<String?> _address = BehaviorSubject.seeded(null);
 
   final _subscriptions = CompositeSubscription();
   final _sessionSubscriptions = CompositeSubscription();
@@ -45,6 +46,7 @@ class DashboardBloc extends Disposable {
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest.stream;
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
       _connectionStatus.stream;
+  ValueStream<String?> get address => _address.stream;
 
   // TODO: Catch and display errors?
   void load(String walletAddress) async {
@@ -63,7 +65,8 @@ class DashboardBloc extends Disposable {
       session.sessionRequest
           .listen(_sessionRequest.add)
           .addTo(_sessionSubscriptions);
-      session.status.listen(_onSessonStatus).addTo(_sessionSubscriptions);
+      session.status.listen(_onSessionStatus).addTo(_sessionSubscriptions);
+      session.address.listen(_onAddress).addTo(_sessionSubscriptions);
       _walletSession = session;
     }
   }
@@ -123,7 +126,7 @@ class DashboardBloc extends Disposable {
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
-    return  get<WalletService>().isValidWalletConnectData(address);
+    return get<WalletService>().isValidWalletConnectData(address);
   }
 
   Future<void> removeWallet({required String id}) async {
@@ -190,7 +193,15 @@ class DashboardBloc extends Disposable {
     }
   }
 
-  void _onSessonStatus(WalletConnectionServiceStatus status) {
+  void _onAddress(String? address) {
+    _address.value = address;
+
+    if (WalletConnectionServiceStatus.disconnected == _connectionStatus.value) {
+      _sessionSubscriptions.clear();
+    }
+  }
+
+  void _onSessionStatus(WalletConnectionServiceStatus status) {
     _connectionStatus.value = status;
 
     if (status == WalletConnectionServiceStatus.disconnected) {
