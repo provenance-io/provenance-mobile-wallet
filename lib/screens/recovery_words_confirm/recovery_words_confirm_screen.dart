@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_check_box.dart';
 import 'package:provenance_wallet/screens/backup_complete_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
@@ -112,21 +113,20 @@ class RecoveryWordsConfirmScreenState
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Checkbox(
-                            fillColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.primaryP500,
-                            ),
-                            value: _isResponsible,
-                            onChanged: (bool? value) {
+                          PwCheckBox(
+                            onSelect: (isChecked) {
                               setState(() {
-                                _isResponsible = value ?? false;
+                                _isResponsible = isChecked;
                               });
                             },
                           ),
                           Expanded(
-                            child: PwText(
-                              Strings.iAmResponsibleForMyWalletText,
-                              style: PwTextStyle.body,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: PwText(
+                                Strings.iAmResponsibleForMyWalletText,
+                                style: PwTextStyle.body,
+                              ),
                             ),
                           ),
                         ],
