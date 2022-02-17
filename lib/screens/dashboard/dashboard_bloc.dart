@@ -122,6 +122,10 @@ class DashboardBloc extends Disposable {
     );
   }
 
+  Future<bool> isValidWalletConnectAddress(String address) {
+    return  get<WalletService>().isValidWalletConnectData(address);
+  }
+
   Future<void> removeWallet({required String id}) async {
     await get<WalletService>().removeWallet(id: id);
   }
