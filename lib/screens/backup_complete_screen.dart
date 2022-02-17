@@ -53,7 +53,7 @@ class BackupCompleteScreen extends StatelessWidget {
                       ),
                     ),
                     VerticalSpacer.largeX6(),
-                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.largeX5(),
                     PwText(
                       Strings.backupComplete.toUpperCase(),
                       style: PwTextStyle.headline2,
@@ -71,8 +71,7 @@ class BackupCompleteScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    VerticalSpacer.large(),
-                    VerticalSpacer.medium(),
+                    VerticalSpacer.xxLarge(),
                     Image.asset(
                       AssetPaths.images.backupComplete,
                       width: 180,
@@ -119,8 +118,7 @@ class BackupCompleteScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    VerticalSpacer.xxLarge(),
-                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.largeX4(),
                   ],
                 ),
               ),
