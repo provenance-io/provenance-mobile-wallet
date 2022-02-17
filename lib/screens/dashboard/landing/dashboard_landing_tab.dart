@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -139,6 +140,31 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           ],
                         ),
                       );
+              },
+            ),
+            StreamBuilder<String?>(
+              initialData: get<DashboardBloc>().address.value,
+              stream: get<DashboardBloc>().address,
+              builder: (context, data) {
+                if (data.data == null || data.data!.isEmpty) {
+                  return Container();
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: Spacing.xxLarge,
+                    right: Spacing.xxLarge,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PwText(
+                        Strings.walletConnected(data.data),
+                        style: PwTextStyle.caption,
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
             VerticalSpacer.medium(),
