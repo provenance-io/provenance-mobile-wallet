@@ -71,6 +71,14 @@ class CipherService: NSObject {
 		return success
 	}
 	
+	static func reset() -> Bool {
+		let success = deleteSecKey()
+		UserDefaults.standard.removeObject(forKey: keyUseBiometry)
+		UserDefaults.standard.removeObject(forKey: keyCipher)
+		
+		return success
+	}
+	
 	private static func getCipher() throws -> Data {
 		guard let cipher = UserDefaults.standard.data(forKey: keyCipher) else {
 			throw ProvenanceWalletError(kind: .cipherNotFound,

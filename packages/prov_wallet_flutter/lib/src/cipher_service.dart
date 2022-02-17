@@ -55,4 +55,8 @@ class CipherService {
 
     return result;
   }
+
+  Future<bool> reset() async {
+    return await _channel.invokeMethod('reset');
+  }
 }

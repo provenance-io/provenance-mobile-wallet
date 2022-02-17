@@ -68,6 +68,10 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			}
 			
 			result(success)
+		} else if (call.method == "reset") {
+			let success = CipherService.reset()
+			
+			result(success)
 		}
 	}
 }
