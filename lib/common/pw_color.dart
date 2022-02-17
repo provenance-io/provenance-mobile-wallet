@@ -15,17 +15,17 @@ enum PwColor {
   error,
   warning,
   // primary
-  primary1,
-  primary2,
-  primary3,
+  //primary1,
+  //primary2,
+  //primary3,
   primary4,
-  primary5,
-  primary6,
+  //primary5,
+  //primary6,
   // secondary
   secondary1,
   secondary2,
   // accent
-  lime,
+  //lime,
   // new
   globalNeutral150,
   globalNeutral550,
@@ -34,6 +34,11 @@ enum PwColor {
   globalNeutral400,
   globalNeutral350,
   globalNeutral500,
+  neutral250,
+  neutral200,
+  neutral50,
+  neutralNeutral,
+  primaryP500,
 }
 
 mixin PwColorMixin on Widget {
@@ -66,24 +71,12 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.error;
       case PwColor.warning:
         return theme.colorScheme.warning;
-      case PwColor.primary1:
-        return theme.colorScheme.primary1;
-      case PwColor.primary2:
-        return theme.colorScheme.primary2;
-      case PwColor.primary3:
-        return theme.colorScheme.primary3;
       case PwColor.primary4:
         return theme.colorScheme.primary4;
-      case PwColor.primary5:
-        return theme.colorScheme.primary5;
-      case PwColor.primary6:
-        return theme.colorScheme.primary6;
       case PwColor.secondary1:
         return theme.colorScheme.secondary;
       case PwColor.secondary2:
         return theme.colorScheme.secondaryVariant;
-      case PwColor.lime:
-        return theme.colorScheme.lime;
       case PwColor.globalNeutral150:
         return theme.colorScheme.globalNeutral150;
       case PwColor.globalNeutral350:
@@ -98,6 +91,16 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.globalNeutral600Black;
       case PwColor.globalNeutral500:
         return theme.colorScheme.globalNeutral500;
+      case PwColor.neutral250:
+        return theme.colorScheme.provenanceNeutral250;
+      case PwColor.neutral200:
+        return theme.colorScheme.provenanceNeutral200;
+      case PwColor.neutral50:
+        return theme.colorScheme.provenanceNeutral50;
+      case PwColor.neutralNeutral:
+        return theme.colorScheme.white;
+      case PwColor.primaryP500:
+        return theme.colorScheme.primaryP500;
       default:
         return null;
     }

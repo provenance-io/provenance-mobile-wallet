@@ -4,8 +4,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
 class RecoverPassphraseEntry extends StatefulWidget {
   RecoverPassphraseEntry(
@@ -155,10 +156,11 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                             context,
                           );
 
-                          await ProvWalletFlutter.saveToWalletService(
-                            words.join(' '),
-                            accountName,
+                          await get<WalletService>().saveWallet(
+                            phrase: words,
+                            name: accountName,
                           );
+
                           ModalLoadingRoute.dismiss(context);
 
                           Navigator.pop(context);

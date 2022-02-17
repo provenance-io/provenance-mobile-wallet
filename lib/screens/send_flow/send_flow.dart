@@ -48,29 +48,9 @@ class SendFlowState
     );
 
     final copy = theme.copyWith(
-      scaffoldBackgroundColor: Colors.black,
       canvasColor: Colors.grey,
-      appBarTheme: theme.appBarTheme.copyWith(
-        color: Colors.black,
-        titleTextStyle: theme.appBarTheme.titleTextStyle?.copyWith(
-          color: Colors.white
-        ),
-      ),
-      colorScheme: theme.colorScheme.copyWith(
-        primary: Colors.white,
-      ),
-      textTheme: theme.textTheme.apply(
-          displayColor: Colors.white,
-          bodyColor: Colors.white,
-          decorationColor: Colors.white,
-      ),
       iconTheme: theme.iconTheme.copyWith(
         color: borderColor,
-      ),
-      buttonTheme: theme.buttonTheme.copyWith(
-        colorScheme: theme.buttonTheme.colorScheme?.copyWith(
-          primary: Color.fromARGB(255, 0x2E, 0x69, 0xE2,),
-        ),
       ),
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         enabledBorder: OutlineInputBorder(

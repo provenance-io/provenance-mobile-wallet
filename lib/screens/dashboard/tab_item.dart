@@ -19,26 +19,24 @@ class TabItem extends StatelessWidget {
         children: [
           VerticalSpacer.custom(spacing: 10),
           SizedBox(
-            width: Spacing.large,
-            height: Spacing.large,
+            width: Spacing.xLarge,
+            height: Spacing.xLarge,
             child: !isLoading
                 ? PwIcon(
                     tabAsset,
+                    size: 24,
                     color: isCurrent
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
+                        ? Theme.of(context).colorScheme.white
+                        : Theme.of(context).colorScheme.provenanceNeutral550,
                   )
                 : const CircularProgressIndicator(),
           ),
           Padding(
             padding: EdgeInsets.only(top: 5, bottom: 28),
-            child: Text(
+            child: PwText(
               tabName,
-              style: Theme.of(context).textTheme.extraSmallBold.copyWith(
-                    color: isCurrent
-                        ? Theme.of(context).colorScheme.primary7
-                        : Theme.of(context).colorScheme.globalNeutral350,
-                  ),
+              style: PwTextStyle.footnote,
+              color: PwColor.white,
             ),
           ),
         ],

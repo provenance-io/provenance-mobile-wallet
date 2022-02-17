@@ -1,0 +1,230 @@
+---
+format_version: '11'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: flutter
+trigger_map:
+- push_branch: master
+  workflow: build
+- push_branch: develop
+  workflow: build
+- pull_request_target_branch: master
+  workflow: PR
+- pull_request_target_branch: develop
+  workflow: PR
+workflows:
+  build:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@6: {}
+    - flutter-installer@0:
+        inputs:
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - is_update: 'false'
+    - cache-pull@2: {}
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # Flutter Test hangs without this
+            dart pub global activate junitreport
+
+            # or run a script from your repository, like:
+            # bash ./path/to/script.sh
+            # not just bash, e.g.:
+            # ruby ./path/to/script.rb
+    - flutter-test@1:
+        inputs:
+        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+    - custom-test-results-export@0:
+        inputs:
+        - search_pattern: "*"
+        - test_name: flutterTest
+    - flutter-build@0:
+        inputs:
+        - platform: android
+        - android_output_type: appbundle
+        is_always_run: true
+    - cache-push@2: {}
+    - slack@3:
+        inputs:
+        - channel: ''
+        - emoji: ''
+        - text: "$ICON_SUCCESS  *Build Succeeded!* $BITRISE_GIT_BRANCH"
+        - icon_url: ''
+        - emoji_on_error: ''
+        - text_on_error: "$ICON_FAILURE  *Build Failed!* $BITRISE_GIT_BRANCH"
+        - icon_url_on_error: ''
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+        - color: "$COLOR_SUCCESS"
+        - pretext: ''
+        - color_on_error: "$COLOR_FAILURE"
+        - pretext_on_error: ''
+    - deploy-to-bitrise-io@2: {}
+  deploy:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@6: {}
+    - flutter-installer@0:
+        inputs:
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+    - cache-pull@2:
+        inputs:
+        - is_debug_mode: 'true'
+    - ios-auto-provision-appstoreconnect@2.2:
+        inputs:
+        - verbose_log: 'yes'
+        - distribution_type: app-store
+    - set-xcode-build-number@1:
+        inputs:
+        - plist_path: "$BITRISE_SOURCE_DIR/ios/Runner/Info.plist"
+    - change-android-versioncode-and-versionname@1:
+        inputs:
+        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
+    - flutter-build@0:
+        inputs:
+        - android_output_type: appbundle
+    - sign-apk@1: {}
+    - xcode-archive@4:
+        inputs:
+        - configuration: ''
+        - cache_level: none
+        - distribution_method: app-store
+        - export_method: app-store
+    - deploy-to-itunesconnect-application-loader@1:
+        inputs:
+        - password: "$APPLE_ID_PW"
+        - app_password: "$APPLE_ID_APP_PW"
+        - itunescon_user: "$APPLE_ID_EMAIL"
+    - google-play-deploy@3.7:
+        inputs:
+        - package_name: io.provenance.wallet
+        - track: internal
+        - service_account_json_key_path: "$BITRISEIO_BITRISEIO_ANDROID_SVC_ACCT_JSON_URL_URL"
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/ios/iphoneos/Runner.app/Info.plist`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" build/ios/iphoneos/Runner.app/Info.plist`
+            envman add --key GIT_TAG --value "v$VERSION+$BUILD"
+    - git-tag@1:
+        inputs:
+        - tag: "$GIT_TAG"
+    - slack@3:
+        inputs:
+        - channel: ''
+        - text: "$ICON_SUCCESS  *Deploy Succeeded!*"
+        - pretext: ''
+        - channel_on_error: ''
+        - text_on_error: "$ICON_FAILURE  *Deploy Failed!*"
+        - pretext_on_error: ''
+        - emoji: ''
+        - color: "$COLOR_SUCCESS"
+        - icon_url: ''
+        - webhook_url_on_error: ''
+        - color_on_error: "$COLOR_FAILURE"
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+    - cache-push@2: {}
+    after_run: []
+  PR:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@6: {}
+    - flutter-installer@0:
+        inputs:
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - is_update: 'false'
+    - cache-pull@2: {}
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # Flutter Test hangs without this
+            dart pub global activate junitreport
+
+            # or run a script from your repository, like:
+            # bash ./path/to/script.sh
+            # not just bash, e.g.:
+            # ruby ./path/to/script.rb
+        title: Activate junitreport
+    - flutter-test@1:
+        inputs:
+        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+    - custom-test-results-export@0:
+        inputs:
+        - search_pattern: "*"
+        - test_name: flutterTest
+    - flutter-build@0:
+        inputs:
+        - platform: android
+        - android_output_type: appbundle
+        is_always_run: true
+    - cache-push@2: {}
+    - slack@3:
+        inputs:
+        - channel: ''
+        - emoji: ''
+        - text: "$ICON_SUCCESS  *PR Build Succeeded!* $BITRISE_GIT_BRANCH"
+        - icon_url: ''
+        - emoji_on_error: ''
+        - text_on_error: "$ICON_FAILURE  *PR Build Failed!* $BITRISE_GIT_BRANCH"
+        - icon_url_on_error: ''
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+        - pretext_on_error: ''
+        - color_on_error: "$ICON_FAILURE"
+        - pretext: ''
+        - color: "$COLOR_SUCCESS"
+    - deploy-to-bitrise-io@2: {}
+meta:
+  bitrise.io:
+    stack: osx-xcode-12.5.x
+app:
+  envs:
+  - opts:
+      is_expand: false
+    BITRISE_FLUTTER_PROJECT_LOCATION: "."
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: Runner
+  - opts:
+      is_expand: false
+    BITRISE_EXPORT_METHOD: app-store
+  - opts:
+      is_expand: false
+    IOS_INFO_PLIST: ios/Runner/Info.plist
+  - opts:
+      is_expand: false
+    SLACK_CHANNEL: flutter-deployment
+  - opts:
+      is_expand: false
+    ICON_SUCCESS: ":white_check_mark:"
+  - opts:
+      is_expand: false
+    ICON_FAILURE: ":x:"
+  - opts:
+      is_expand: false
+    COLOR_SUCCESS: "#52BF8C"
+  - opts:
+      is_expand: false
+    COLOR_FAILURE: "#EE4959"

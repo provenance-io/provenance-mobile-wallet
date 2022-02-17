@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/services/remote_client_details.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PwDialog {
@@ -13,7 +15,7 @@ class PwDialog {
   static Future<T?> show<T>(
     BuildContext context, {
     Widget? header,
-    String title = 'Figure Tech Wallet',
+    String title = 'Provenance Wallet',
     String? message,
     Widget? content,
     Widget? bottom,
@@ -185,7 +187,7 @@ class PwDialog {
       context,
       title: 'Oops',
       message:
-          'Sorry, you need to have $authType enabled on your device in order to use Figure Pay.',
+          'Sorry, you need to have $authType enabled on your device in order to use Provenance Wallet.',
     );
   }
 
@@ -200,7 +202,7 @@ class PwDialog {
       content: GestureDetector(
         onTap: onTap,
         child: const PwText(
-          'Please update to the latest version of Figure Tech Wallet in order to continue using the app. Thank you!',
+          'Please update to the latest version of Provenance Wallet in order to continue using the app. Thank you!',
           style: PwTextStyle.m,
           color: PwColor.black,
           textAlign: TextAlign.center,
@@ -210,11 +212,51 @@ class PwDialog {
         child: PwText('Force Update'),
         onPressed: () {
           final url = Platform.isIOS
+              // FIXME: Get the correct urls.
               ? 'https://apps.apple.com/us/app/figure-pay/id1529369990'
               : 'https://play.google.com/store/apps/details?id=com.figure.mobile.figurepay';
           launch(url);
         },
       ),
     );
+  }
+
+  static Future<bool> showSessionConfirmation(
+    BuildContext context,
+    RemoteClientDetails remoteClientDetails,
+  ) async {
+    final result = await show<bool>(
+      context,
+      barrierDismissible: false,
+      title: remoteClientDetails.name,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (remoteClientDetails.icons.isNotEmpty)
+            Image.network(
+              remoteClientDetails.icons.first,
+            ),
+          PwText(
+            remoteClientDetails.description,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      bottom: Column(
+        children: [
+          PwPrimaryButton(
+            child: PwText(Strings.sessionApprove),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+          const VerticalSpacer.small(),
+          PwTextButton(
+            child: PwText(Strings.sessionReject),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+        ],
+      ),
+    );
+
+    return result ?? false;
   }
 }

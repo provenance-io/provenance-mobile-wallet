@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/enable_face_id.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
@@ -10,14 +11,14 @@ import 'package:provenance_wallet/util/strings.dart';
 class ConfirmPin extends StatefulHookWidget {
   ConfirmPin(
     this.flowType, {
-    this.words,
+    required this.words,
     this.accountName,
     this.code,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final String? accountName;
   final List<int>? code;
   final int? currentStep;
@@ -34,25 +35,12 @@ class ConfirmPinState extends State<ConfirmPin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: PwText(
-          Strings.confirmYourPinCode,
-          color: PwColor.globalNeutral550,
-          style: PwTextStyle.h6,
-        ),
+      appBar: PwAppBar(
+        title: Strings.verifyPinCode,
+        leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.provenanceNeutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +58,7 @@ class ConfirmPinState extends State<ConfirmPin> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.confirmYourPinCodeReminder,
+                  subTitle: Strings.setAPinCodeToUnlockYourWallet,
                   isConfirming: true,
                   onFinish: _onFinish,
                 ),

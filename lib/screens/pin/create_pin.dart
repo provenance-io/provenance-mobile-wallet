@@ -1,6 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -8,13 +9,13 @@ import 'package:provenance_wallet/util/strings.dart';
 class CreatePin extends StatefulHookWidget {
   CreatePin(
     this.flowType, {
-    this.words,
+    required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
   });
 
-  final List<String>? words;
+  final List<String> words;
   final String? accountName;
   final int? currentStep;
   final int? numberOfSteps;
@@ -30,25 +31,12 @@ class CreatePinState extends State<CreatePin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: PwText(
-          Strings.setYourPinCode,
-          color: PwColor.globalNeutral550,
-          style: PwTextStyle.h6,
-        ),
+      appBar: PwAppBar(
+        title: Strings.setPinCode,
+        leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.provenanceNeutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

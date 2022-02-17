@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 /// Provenance Typopgraphy Text Styles
 enum PwTextStyle {
@@ -24,6 +23,15 @@ enum PwTextStyle {
   large,
   extraLarge,
   logo,
+  subhead,
+  body,
+  bodyBold,
+  headline1,
+  headline2,
+  display1,
+  display2,
+  footnote,
+  title,
 }
 
 mixin PwTextStyleMixin on Widget {
@@ -78,6 +86,24 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.extraLarge;
       case PwTextStyle.logo:
         return theme.textTheme.logo;
+      case PwTextStyle.subhead:
+        return theme.textTheme.subhead;
+      case PwTextStyle.body:
+        return theme.textTheme.body;
+      case PwTextStyle.headline2:
+        return theme.textTheme.provenanceHeadline2;
+      case PwTextStyle.headline1:
+        return theme.textTheme.provenanceHeadline1;
+      case PwTextStyle.bodyBold:
+        return theme.textTheme.bodyBold;
+      case PwTextStyle.display1:
+        return theme.textTheme.display1;
+      case PwTextStyle.display2:
+        return theme.textTheme.display2;
+      case PwTextStyle.footnote:
+        return theme.textTheme.footnote;
+      case PwTextStyle.title:
+        return theme.textTheme.title;
     }
   }
 }

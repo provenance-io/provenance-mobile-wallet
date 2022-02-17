@@ -28,6 +28,18 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return this.replaceAll(RegExp(r'[^\d]+'), '');
   }
+
+  String abbreviateAddress() {
+    final left = 10;
+    final right = 3;
+    final dots = '.....';
+
+    if (this.length > left + dots.length + right) {
+      return '${substring(0, left)}${dots}${substring(this.length - right)}';
+    }
+
+    return this;
+  }
 }
 
 // TODO: Localization
@@ -59,7 +71,7 @@ class Strings {
 
   // Landing Page
   static const createWallet = 'Create Wallet';
-  static const restoreWallet = 'Restore Wallet';
+  static const recoverWallet = 'Recover Wallet';
 
   // Fundamentals Slide
   static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
@@ -68,7 +80,7 @@ class Strings {
   static const transactions = 'Transactions';
   static const avgBlockTime = 'Avg Block Time';
   static const fundamentalsDescription =
-      "Contract execution in seconds instead of weeks";
+      "Contract execution in seconds\ninstead of weeks";
 
   // Customization Slide
   static const powerfulCustomization = 'POWERFUL\nCUSTOMIZATION ';
@@ -97,6 +109,7 @@ class Strings {
   static const noTransactionsText =
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
+  static const profile = "Profile";
 
   // My Account Page
   static const myAccount = 'My Account';
@@ -140,40 +153,43 @@ class Strings {
   static const addressCopied = 'Address copied';
 
   // Account Name
-  static const nameYourAccount = 'Name your account';
+  static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
   static const nameYourAccountText =
-      'Name your account to easily identify it while using the Figure Tech Wallet. These names are stored locally, and can only be seen by you.';
+      'Name your account to easily identify it while using the Provenance Wallet.';
+  static const infoIsStoredLocallyText =
+      "These names are stored locally, and can only be seen by you.";
   static const continueName = 'Continue';
 
   // Confirm Pin
-  static const confirmYourPinCode = 'Confirm your pin code';
+  static const verifyPinCode = 'Verify Pin Code';
   static const confirmYourPinCodeReminder =
       "Confirm your pin code. Make sure you remember it as you cannot recover it if you lose it.";
   static const yourPinDoesNotMatchPleaseTryAgain =
       "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
   // CreatePin
-  static const setYourPinCode = 'Set your pin code';
+  static const setPinCode = 'Set Pin Code';
   static const setAPinCodeToUnlockYourWallet =
       "Set a pin code to unlock your wallet.";
 
   // EnableFaceId
-  static const useFaceId = 'Use Face ID';
+  static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
       'Use your Face ID for faster, easier access to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
-  static const later = 'Later';
+  static const skipForNow = 'Skip for now';
 
   // PrepareRecoveryPhraseIntro
   static const createPassphrase = "Create Passphrase";
-  static const prepareToWriteDownYourRecoveryPassphrase =
-      'Prepare to write down your recovery passphrase';
+  static const savePassphrase = "SAVE PASSPHRASE";
+  static const prepareToWriteDownYourRecoveryPhrase =
+      'Prepare to write down your recovery phrase.';
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Warning: Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone, as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
@@ -181,13 +197,13 @@ class Strings {
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm
-  static const verifyRecoveryPassphrase = 'Verify recovery passphrase';
+  static const verifyPassphrase = 'Verify passphrase';
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
       "Your selections don't match. Please try again.";
   static const youMustAgreeToTheWalletSeedphraseTerms =
-      "Before clicking Next you must agree to the wallet seedphrase terms.";
+      "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
       "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
@@ -197,19 +213,32 @@ class Strings {
       'Make sure to record these words in the correct order, using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
 
+  // BackupComplete
+  static const backupComplete = "Backup Complete";
+
   // RestoreAccountIntro
   static const recoverAccount = 'Recover Account';
   static const inTheFollowingStepsText =
       "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
 
-  // SendTransactionApproval
-  static const sendTransaction = 'Send Transaction';
-  static const amount = 'Amount';
-  static const fee = 'Fee';
-  static const from = 'From';
-  static const to = 'To';
-  static const approve = 'Approve';
-  static const reject = 'Reject';
+  // Session Confirmation
+  static const sessionApprove = 'Approve';
+  static const sessionReject = 'Reject';
+
+  // Transaction Confirmation
+  static const transaction = 'Transaction';
+  static const transactionApprove = 'Approve';
+  static const transactionDecline = 'Decline';
+  static const transactionDataToggle = 'Data';
+  static const transactionListToggle = 'List';
+  static const transactionNanoHash = 'nhash';
+  static const transactionPlatformName = 'Figure Equity Solutions';
+  static const transactionPlatformAddress = 'equity.figure.com';
+  static const transactionFieldPlatform = 'Platform';
+  static const transactionFieldFee = 'Fee';
+  static const transactionFieldAmount = 'Amount';
+  static const transactionFieldFromAddress = 'From Address';
+  static const transactionFieldToAddress = 'To Address';
 
   // ValidatePin
   static const enterPin = "Enter Pin";
@@ -218,8 +247,7 @@ class Strings {
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
-  static const yourWalletIsNowReadyToGo = "Your wallet is now ready to go.";
-  static const walletConfirmationSubtitleText = "Lorem ipsum dolor sit amet";
+  static const walletCreated = "WALLET CREATED";
 
   // TransactionsList
   static const dropDownAllAssets = "All Assets";
@@ -244,6 +272,10 @@ class Strings {
   static const tradeDetailsFee = "Fee";
   static const tradeDetailsTimeStamp = "Time Stamp";
   static const tradeDetailsBlock = "Block #";
+
+  //WordSelector
+  static const selectWord = 'Select word';
+  static String selectWordIndex(String index) => 'Select word #${index}';
 
   // SendScreen
   static const sendTitle = "Send";

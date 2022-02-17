@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_theme.dart';
 
 class PwPrimaryButton extends StatelessWidget {
   const PwPrimaryButton({
@@ -31,11 +30,11 @@ class PwPrimaryButton extends StatelessWidget {
         backgroundColor:
             MaterialStateProperty.resolveWith((Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
-            return Theme.of(context).colorScheme.primary2.withOpacity(0.4);
+            return Theme.of(context).colorScheme.primary4.withOpacity(0.4);
           }
 
           return showAlternate
-              ? Theme.of(context).colorScheme.primary1
+              ? Theme.of(context).colorScheme.primary4
               : Theme.of(context).colorScheme.primary;
         }),
         // FIXME: Border should appear on the outside as per design
@@ -44,7 +43,7 @@ class PwPrimaryButton extends StatelessWidget {
               states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.pressed)) {
             return BorderSide(
-              color: Theme.of(context).colorScheme.primary5,
+              color: Theme.of(context).colorScheme.primary4,
               width: 8,
             );
           }
@@ -106,7 +105,7 @@ class PwSecondaryButton extends StatelessWidget {
               states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.pressed)) {
             return BorderSide(
-              color: Theme.of(context).colorScheme.primary5,
+              color: Theme.of(context).colorScheme.primary4,
               width: 8,
             );
           }
@@ -168,7 +167,7 @@ class PwActionButton extends StatelessWidget {
           elevation: 0.0,
           backgroundColor: outlined
               ? theme.colorScheme.onBackground
-              : theme.colorScheme.primary3,
+              : theme.colorScheme.primary4,
           shape: outlined
               ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(56.0)),
@@ -262,8 +261,8 @@ class PwButton extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         return states.contains(MaterialState.disabled)
             ? showAlternate
-                ? theme.colorScheme.primaryP500.withOpacity(0.5)
-                : theme.colorScheme.primaryP500.withOpacity(0.4)
+                ? theme.colorScheme.primaryP550.withOpacity(0.5)
+                : theme.colorScheme.primaryP550.withOpacity(0.4)
             : theme.colorScheme.primaryP500;
       }),
       minimumSize: MaterialStateProperty.all(
