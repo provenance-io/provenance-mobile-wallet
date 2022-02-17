@@ -92,7 +92,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(Wallets().route());
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Wallets(),
+                ),
+              );
             },
             child: PwIcon(
               PwIcons.ellipsis,
