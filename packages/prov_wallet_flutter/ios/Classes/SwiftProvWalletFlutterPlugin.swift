@@ -51,6 +51,21 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			}
 			
 			result(key)
+		} else if (call.method == "removeKey") {
+			var success = false
+			
+			do {
+				let argsFormatted = call.arguments as? Dictionary<String, Any>
+				guard let id = argsFormatted?["id"] as? String else {
+					throw PluginError.invalidArgument("id is required")
+				}
+				
+				success = try CipherService.removeKey(id: id)
+			} catch {
+				ErrorHandler.show(title: "Remove Key", message: error.localizedDescription, completionHandler: nil)
+			}
+			
+			result(success)
 		} else if (call.method == "getUseBiometry") {
 			let useBiometry = CipherService.getUseBiometry()
 			

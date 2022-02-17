@@ -47,6 +47,24 @@ class CipherService: NSObject {
 		return plainText
 	}
 	
+	static func removeKey(id: String) throws -> Bool {
+		let cipher = try getCipher()
+		let serializedKeys = try decrypt(cipherText: cipher)
+		var keyDict = deserializePrivateKeys(str: serializedKeys)
+		let value = keyDict.removeValue(forKey: id)
+		
+		var success = false
+		if (value != nil) {
+			let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
+			let newCipherText = try encrypt(plainText: newSerializedKeys)
+			
+			setCipher(cipher: newCipherText)
+			success = true
+		}
+		
+		return success
+	}
+	
 	static func getUseBiometry() -> Bool {
 		return UserDefaults.standard.bool(forKey: keyUseBiometry)
 	}
