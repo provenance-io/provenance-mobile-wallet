@@ -81,8 +81,8 @@ class RecoveryWordsState extends State<RecoveryWords> {
                       VerticalSpacer.largeX3(),
                       Padding(
                         padding: EdgeInsets.only(
-                          left: Spacing.largeX4,
-                          right: Spacing.largeX4,
+                          left: Spacing.xxLarge,
+                          right: Spacing.xxLarge,
                         ),
                         child: PwText(
                           Strings.recordTheseWordsInTheCorrectOrder,
@@ -149,7 +149,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                           ),
                         ),
                       ),
-                      VerticalSpacer.large(),
+                      VerticalSpacer.xLarge(),
                       GestureDetector(
                         onTap: () async {
                           await Clipboard.setData(
@@ -173,7 +173,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                           color: Theme.of(context).colorScheme.white,
                         ),
                       ),
-                      VerticalSpacer.large(),
+                      VerticalSpacer.xLarge(),
                       Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: PwButton(
