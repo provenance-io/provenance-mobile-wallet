@@ -1,6 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 typedef IsValidCallback = Future<bool> Function(String input);
@@ -8,9 +6,8 @@ typedef IsValidCallback = Future<bool> Function(String input);
 class QRCodeScanner extends StatefulWidget {
   QRCodeScanner({
     Key? key,
-    this.isValidCallback
-  })
-  : super(key: key);
+    this.isValidCallback,
+  }) : super(key: key);
 
   final IsValidCallback? isValidCallback;
 
@@ -95,7 +92,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
               //   left: 0,
               //   right: 0,
               //   bottom: 0,
-               //   child: Container(
+              //   child: Container(
               //     height: 144 * ratio,
               //     color: Theme.of(context).colorScheme.background,
               //     child: Row(

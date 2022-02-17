@@ -15,12 +15,9 @@ class SendFlow extends FlowBase {
   State<StatefulWidget> createState() => SendFlowState();
 }
 
-class SendFlowState
-    extends FlowBaseState<SendFlow>
-    implements SendBlocNavigator,
-              SendAmountBlocNavigator
-{
-  final  _navigatorKey = GlobalKey<NavigatorState>();
+class SendFlowState extends FlowBaseState<SendFlow>
+    implements SendBlocNavigator, SendAmountBlocNavigator {
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   String? _receivingAddress;
   SendAsset? _asset;
@@ -64,8 +61,8 @@ class SendFlowState
     );
 
     return Theme(
-        data: copy,
-        child: super.build(context),
+      data: copy,
+      child: super.build(context),
     );
   }
 
@@ -80,15 +77,15 @@ class SendFlowState
     _receivingAddress = address;
 
     final bloc = SendAmountBloc(
-        _receivingAddress!,
-        _asset!,
-        this
+      _receivingAddress!,
+      _asset!,
+      this,
     )..init();
-    
+
     get.registerSingleton(bloc);
-    
+
     return showPage((context) => SendAmountScreen())
-            .whenComplete(() => get.unregister<SendAmountBloc>());
+        .whenComplete(() => get.unregister<SendAmountBloc>());
   }
 
   Widget createStartPage() {
@@ -102,26 +99,37 @@ class SendFlowState
         return ErrorDialog(
           error: "Not Implemented",
         );
-      },);
+      },
+    );
   }
 
   Future<void> showRecentSendDetails(RecentAddress recentAddress) {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: Strings.NotImplementedMessage,
-          );
-        },);
-
+      context: context,
+      builder: (context) {
+        return ErrorDialog(
+          error: Strings.NotImplementedMessage,
+        );
+      },
+    );
   }
 
   /* SendAmountBlocNavigator */
 
   @override
-  Future<void> showReviewSend(String amountToSend, String fee, String note) {
+  Future<void> showReviewSend(
+    String amountToSend,
+    String fee,
+    String note,
+  ) {
     // return Future.value();
-    completeFlow([ _asset, _receivingAddress, amountToSend, fee ]);
+    completeFlow([
+      _asset,
+      _receivingAddress,
+      amountToSend,
+      fee,
+    ]);
+
     return Future.value();
   }
 }

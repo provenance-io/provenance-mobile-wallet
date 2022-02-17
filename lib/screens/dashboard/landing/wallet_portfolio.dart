@@ -67,9 +67,12 @@ class WalletPortfolio extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => SendFlow(),
-                  ));
+                    ),
+                  );
                 },
               ),
               HorizontalSpacer.small(),
@@ -120,7 +123,7 @@ class WalletPortfolio extends StatelessWidget {
                   context,
                 ).push(
                   QRCodeScanner(
-                    isValidCallback: bloc.isValidWalletConnectAddress
+                    isValidCallback: bloc.isValidWalletConnectAddress,
                   ).route(),
                 );
                 if (addressData != null) {
