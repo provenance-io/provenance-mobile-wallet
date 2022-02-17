@@ -33,6 +33,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
+  flutter_lints: ^1.0.4
   flutter_secure_storage: ^4.2.0
   flutter_svg: ^0.22.0
   get_it: ^7.2.0
