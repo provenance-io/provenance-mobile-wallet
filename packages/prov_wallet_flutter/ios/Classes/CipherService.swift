@@ -149,7 +149,7 @@ class CipherService: NSObject {
 		}
 		
 		guard let secKey = loadSecKey() else {
-			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyTag) not found", messages: nil,
+			throw ProvenanceWalletError(kind: .keyNotFound, message: "SecKey not found", messages: nil,
 			                            underlyingError: nil)
 		}
 

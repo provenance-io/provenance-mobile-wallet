@@ -32,7 +32,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				
 				success = true
 			} catch {
-				ErrorHandler.show(title: "Encrypt", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Encrypt", error: error)
 			}
 			
 			result(success)
@@ -47,7 +47,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				
 				key = try CipherService.decryptKey(id: id)
 			} catch {
-				ErrorHandler.show(title: "Decrypt", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Decrypt", error: error)
 			}
 			
 			result(key)
@@ -62,7 +62,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				
 				success = try CipherService.removeKey(id: id)
 			} catch {
-				ErrorHandler.show(title: "Remove Key", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Remove Key", error: error)
 			}
 			
 			result(success)
@@ -79,7 +79,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				
 				success = try CipherService.setUseBiometry(useBiometry: useBiometry)
 			} catch {
-				ErrorHandler.show(title: "Set Biometry", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Set Biometry", error: error)
 			}
 			
 			result(success)
@@ -88,6 +88,11 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			
 			result(success)
 		}
+	}
+	
+	private func showError(title: String, error: Error) {
+		let message = error is ProvenanceWalletError ? (error as! ProvenanceWalletError).message : error.localizedDescription
+		ErrorHandler.show(title: title, message: message, completionHandler: nil)
 	}
 }
 
