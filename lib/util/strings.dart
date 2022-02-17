@@ -195,7 +195,7 @@ class Strings {
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm
-  static const verifyPassphrase = 'Verify passphrase';
+  static const verifyPassphrase = 'Verify Passphrase';
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
@@ -272,6 +272,6 @@ class Strings {
   static const tradeDetailsBlock = "Block #";
 
   //WordSelector
-  static const selectWord = 'Select word';
-  static String selectWordIndex(String index) => 'Select word #${index}';
+  static const selectWord = 'select word';
+  static String selectWordIndex(String index) => 'select word #${index}';
 }
