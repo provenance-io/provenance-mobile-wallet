@@ -93,6 +93,7 @@ flutter:
     - assets/images/recoverAccount.png
     - assets/images/backupComplete.png
     - assets/images/walletFinished.png
+    - assets/images/coins.png
     - assets/images/etf.svg
     - assets/images/usdf.svg
     - assets/images/inu.svg
