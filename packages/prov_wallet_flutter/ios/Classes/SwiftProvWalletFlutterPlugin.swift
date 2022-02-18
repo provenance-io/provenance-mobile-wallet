@@ -26,7 +26,9 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				guard let privateKey = argsFormatted?["private_key"] as? String else {
 					throw PluginError.invalidArgument("privateKey is required")
 				}
-				let useBiometry = argsFormatted?["use_biometry"] as? Bool
+				guard let useBiometry = argsFormatted?["use_biometry"] as? Bool else {
+					throw PluginError.invalidArgument("useBiometry is required")
+				}
 			
 				try CipherService.encryptKey(id: id, plainText: privateKey, useBiometry: useBiometry)
 				
@@ -77,16 +79,17 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				let argsFormatted = call.arguments as? Dictionary<String, Any>
 				let useBiometry = argsFormatted?["use_biometry"] as? Bool ?? true
 				
-				success = try CipherService.setUseBiometry(useBiometry: useBiometry)
+				try CipherService.setUseBiometry(useBiometry: useBiometry)
+				success = true
 			} catch {
 				showError(title: "Set Biometry", error: error)
 			}
 			
 			result(success)
 		} else if (call.method == "reset") {
-			let success = CipherService.reset()
+			CipherService.reset()
 			
-			result(success)
+			result(true)
 		}
 	}
 	
