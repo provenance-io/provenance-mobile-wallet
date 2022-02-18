@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
@@ -206,12 +207,20 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         number: '${i + 1}',
         focusNode: focusNodes.elementAt(i),
         handlePaste: _handlePaste,
+        formatters: [
+          TextOnlyFormatter(),
+          LowerCaseTextFormatter(),
+        ],
       );
       var text2 = _TextFormField(
         controller: textControllers.elementAt(i + 12),
         number: '${i + 13}',
         focusNode: focusNodes.elementAt(i + 12),
         handlePaste: _handlePaste,
+        formatters: [
+          TextOnlyFormatter(),
+          LowerCaseTextFormatter(),
+        ],
       );
       first.add(text1);
       second.add(text2);
@@ -273,6 +282,28 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   }
 }
 
+
+class TextOnlyFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.replaceAll(RegExp('[^a-z]'), ""),
+      selection: newValue.selection,
+    );
+  }
+}
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
+
 class _TextFormField extends StatelessWidget {
   _TextFormField({
     Key? key,
@@ -283,6 +314,7 @@ class _TextFormField extends StatelessWidget {
     this.focusNode,
     this.handlePaste,
     this.controller,
+    this.formatters,
   }) : super(key: key);
 
   Offset? _tapPosition = Offset(0, 0);
@@ -294,6 +326,7 @@ class _TextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final Function? handlePaste;
+  final List<TextInputFormatter>? formatters;
 
   @override
   Widget build(BuildContext context) {
@@ -311,9 +344,15 @@ class _TextFormField extends StatelessWidget {
           onChanged: onChanged,
           focusNode: focusNode,
           autovalidateMode: AutovalidateMode.onUserInteraction,
+          inputFormatters: formatters,
           validator: (word) {
             if (word == null || word.isEmpty) {
               return Strings.required;
+            }
+
+            const wordList = WordList.english;
+            if(!wordList.words.contains(word)) {
+              return "$word is not a valid word";
             }
 
             return null;
