@@ -225,6 +225,11 @@ class Strings {
   static const sessionApprove = 'Approve';
   static const sessionReject = 'Reject';
 
+  // Transaction
+  static String transactionErrorUnsupportedMessage(String messageName) =>
+      'Unsupported message type: $messageName';
+  static const transactionSuccessTitle = 'Success';
+
   // Transaction Confirmation
   static const transaction = 'Transaction';
   static const transactionApprove = 'Approve';
@@ -294,10 +299,11 @@ class Strings {
   static const sendAmountNoteHint = "Note";
   static const sendAmountAvailable = "available";
   static const sendAmountNoteSuffix = "Click to add a note";
-  static const sendAmountLoadingFeeEstimate= "Acquiring Estimate";
+  static const sendAmountLoadingFeeEstimate = "Acquiring Estimate";
   static const sendAmountTransactionLabel = "Transaction";
   static const sendAmountErrorTooManyDecimalPlaces = "too many decimal places";
   static const sendAmountErrorInsufficient = "Insufficient";
   static const sendAmountErrorInvalidAmount = "is an invalid amount";
-  static const sendAmountErrorGasEstimateNotReady= "The estimated fee is not ready";
+  static const sendAmountErrorGasEstimateNotReady =
+      "The estimated fee is not ready";
 }
