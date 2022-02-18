@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -20,25 +21,12 @@ class ValidatePinState extends State<ValidatePin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(false),
-        ),
-        title: PwText(
-          Strings.enterPin,
-          color: PwColor.globalNeutral550,
-          style: PwTextStyle.h6,
-        ),
+      appBar: PwAppBar(
+        leadingIconOnPress: () => Navigator.of(context).pop(false),
+        title: Strings.enterPin,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.provenanceNeutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
