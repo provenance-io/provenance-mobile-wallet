@@ -356,7 +356,7 @@ class WalletItem extends StatelessWidget {
             child: Row(
               children: [
                 PwText(
-                  '${item.address.substring(0, 5)}...${item.address.substring(30)}',
+                  item.address.abbreviateAddress(),
                   color: PwColor.globalNeutral550,
                   style: PwTextStyle.m,
                 ),
@@ -368,7 +368,7 @@ class WalletItem extends StatelessWidget {
                       SnackBar(content: PwText(Strings.addressCopied)),
                     );
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: 24,
                     height: 24,
                     child: PwIcon(
