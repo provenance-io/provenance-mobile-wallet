@@ -7,7 +7,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
-import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
@@ -127,7 +127,7 @@ class DashboardScreenState extends State<DashboardScreen>
                 physics: NeverScrollableScrollPhysics(),
                 children: const [
                   DashboardLandingTab(),
-                  TransactionLanding(),
+                  TransactionLandingTab(),
                   MyAccount(),
                 ],
               ),
