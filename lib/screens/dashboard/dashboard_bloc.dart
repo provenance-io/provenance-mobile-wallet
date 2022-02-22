@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -31,6 +32,8 @@ class DashboardBloc extends Disposable {
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
   final _connectionStatus =
       BehaviorSubject.seeded(WalletConnectionServiceStatus.disconnected);
+  final _error = PublishSubject<String>();
+  final _response = PublishSubject<WalletConnectTxResponse>();
 
   final _subscriptions = CompositeSubscription();
   final _sessionSubscriptions = CompositeSubscription();
@@ -38,13 +41,15 @@ class DashboardBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
-  ValueStream<List<Transaction>> get transactionList => _transactionList.stream;
-  ValueStream<List<Asset>> get assetList => _assetList.stream;
-  Stream<SendRequest> get sendRequest => _sendRequest.stream;
-  Stream<SignRequest> get signRequest => _signRequest.stream;
-  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest.stream;
+  ValueStream<List<Transaction>> get transactionList => _transactionList;
+  ValueStream<List<Asset>> get assetList => _assetList;
+  Stream<SendRequest> get sendRequest => _sendRequest;
+  Stream<SignRequest> get signRequest => _signRequest;
+  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
-      _connectionStatus.stream;
+      _connectionStatus;
+  Stream<String> get error => _error;
+  Stream<WalletConnectTxResponse> get response => _response;
 
   // TODO: Catch and display errors?
   void load(String walletAddress) async {
@@ -64,6 +69,8 @@ class DashboardBloc extends Disposable {
           .listen(_sessionRequest.add)
           .addTo(_sessionSubscriptions);
       session.status.listen(_onSessonStatus).addTo(_sessionSubscriptions);
+      session.error.listen(_error.add).addTo(_sessionSubscriptions);
+      session.response.listen(_response.add).addTo(_sessionSubscriptions);
       _walletSession = session;
     }
   }
@@ -123,7 +130,7 @@ class DashboardBloc extends Disposable {
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
-    return  get<WalletService>().isValidWalletConnectData(address);
+    return get<WalletService>().isValidWalletConnectData(address);
   }
 
   Future<void> removeWallet({required String id}) async {
@@ -145,6 +152,8 @@ class DashboardBloc extends Disposable {
     _signRequest.close();
     _sessionRequest.close();
     _connectionStatus.close();
+    _error.close();
+    _response.close();
     _walletSession?.disconnect();
   }
 
