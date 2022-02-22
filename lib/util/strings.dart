@@ -225,6 +225,11 @@ class Strings {
   static const sessionApprove = 'Approve';
   static const sessionReject = 'Reject';
 
+  // Transaction
+  static String transactionErrorUnsupportedMessage(String messageName) =>
+      'Unsupported message type: $messageName';
+  static const transactionSuccessTitle = 'Success';
+
   // Transaction Confirmation
   static const transaction = 'Transaction';
   static const transactionApprove = 'Approve';

@@ -5,106 +5,101 @@
 import Foundation
 
 class CipherService: NSObject {
+	static let keyCipher = "cipher"
+	static let keyUseBiometry = "useBiometry"
 	
-	static let secKeyName = "main"
-	static let cipherKeyName = "cipher"
-	static let useBiometryKeyName = "useBiometry"
+	static let secKeyTagBiometry = "io.provenance.wallet.biometry".data(using: .utf8)!
+	static let secKeyTagPasscode = "io.provenance.wallet.passcode".data(using: .utf8)!
 	
-	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
-		var keyDict: Dictionary<String, String>
-		
-		let cipher = tryGetCipher()
-		if (cipher == nil) {
-			let _ = try createSecKey(useBiometry: useBiometry)
-			keyDict = Dictionary<String, String>()
-		} else {
-			let serializedKeys = try decrypt(cipherText: cipher!)
-			keyDict = deserializePrivateKeys(str: serializedKeys)
-			
-			if (useBiometry != getUseBiometry()) {
-				let _ = try createSecKey(useBiometry: useBiometry)
-			}
-		}
+	static func encryptKey(id: String, plainText: String, useBiometry: Bool = getUseBiometry()) throws {
+		let cipher = getCipher()
+		let serializedKeys = try decrypt(cipherText: cipher)
+		var keyDict = deserializePrivateKeys(str: serializedKeys)
 		
 		keyDict[id] = plainText
 		let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
-		let newCipherText = try encrypt(plainText: newSerializedKeys)
+		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: useBiometry)
 		
-		setCipher(cipher: newCipherText)
+		saveCipher(cipher: newCipherText)
+		saveUseBiometry(useBiometry: useBiometry)
 	}
 	
 	static func decryptKey(id: String) throws -> String {
-		let cipher = try getCipher()
+		let cipher = getCipher()
 		let serializedKeys = try decrypt(cipherText: cipher)
 		let keyDict = deserializePrivateKeys(str: serializedKeys)
 		guard let plainText = keyDict[id] else {
-			throw ProvenanceWalletError(kind: .keyNotFound,
-										message: "Key not found for id \(id)",
-										messages: nil,
-										underlyingError: nil)
+			throw ProvenanceWalletError(kind: .walletKeyNotFound, message: "Decrypt failed: wallet key not found")
 		}
 		
 		return plainText
 	}
 	
-	static func getUseBiometry() -> Bool {
-		return UserDefaults.standard.bool(forKey: useBiometryKeyName)
-	}
-	
-	static func setUseBiometry(useBiometry: Bool) throws -> Bool {
-		var success = false
+	static func removeKey(id: String) throws -> Bool {
+		let cipher = getCipher()
+		let serializedKeys = try decrypt(cipherText: cipher)
+		var keyDict = deserializePrivateKeys(str: serializedKeys)
+		let value = keyDict.removeValue(forKey: id)
 		
-		let current = getUseBiometry()
-		if (current != useBiometry) {
-			let cipher = try getCipher()
-			let serializedKeys = try decrypt(cipherText: cipher)
-			let created = try createSecKey(useBiometry: useBiometry)
-			if (created) {
-				let cipher = try encrypt(plainText: serializedKeys)
-				setCipher(cipher: cipher)
-				success = true
-			} else {
-				Utilities.log("Set use biometry failed. Could not create sec key.")
-			}
+		var success = false
+		if (value != nil) {
+			let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
+			let newCipherText = try encrypt(plainText: newSerializedKeys)
+			
+			saveCipher(cipher: newCipherText)
+			success = true
 		}
 		
 		return success
 	}
 	
-	private static func getCipher() throws -> Data {
-		guard let cipher = UserDefaults.standard.data(forKey: cipherKeyName) else {
-			throw ProvenanceWalletError(kind: .cipherNotFound,
-										message: "Cipher not found.",
-										messages: nil,
-										underlyingError: nil)
+	static func setUseBiometry(useBiometry: Bool) throws {
+		let current = getUseBiometry()
+		if (current != useBiometry) {
+			let cipher = getCipher()
+			let serializedKeys = try decrypt(cipherText: cipher)
+			
+			let newCipher = try encrypt(plainText: serializedKeys, useBiometry: useBiometry)
+			saveCipher(cipher: newCipher)
+			saveUseBiometry(useBiometry: useBiometry)
+		}
+	}
+	
+	static func reset() {
+		UserDefaults.standard.removeObject(forKey: keyUseBiometry)
+		UserDefaults.standard.removeObject(forKey: keyCipher)
+	}
+	
+	static func getUseBiometry() -> Bool {
+		return UserDefaults.standard.bool(forKey: keyUseBiometry)
+	}
+	
+	private static func getCipher() -> Data {
+		return UserDefaults.standard.data(forKey: keyCipher) ?? "".data(using: .utf8)!
+	}
+
+	private static func saveCipher(cipher: Data) {
+		UserDefaults.standard.set(cipher, forKey: keyCipher)
+	}
+	
+	private static func saveUseBiometry(useBiometry: Bool) {
+		UserDefaults.standard.set(useBiometry, forKey: keyUseBiometry)
+	}
+	
+	private static func encrypt(plainText: String, useBiometry: Bool = getUseBiometry()) throws -> Data {
+		if (plainText.isEmpty) {
+			return "".data(using: .utf8)!
 		}
 		
-		return cipher
-	}
-	
-	private static func tryGetCipher() -> Data? {
-		return UserDefaults.standard.data(forKey: cipherKeyName)
-	}
-	
-	
-	private static func setCipher(cipher: Data) {
-		UserDefaults.standard.set(cipher, forKey: cipherKeyName)
-	}
-	
-	private static func encrypt(plainText: String) throws -> Data {
 		let algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorVariableIVX963SHA256AESGCM
-		guard let secKey = loadSecKey() else {
-			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyName) not found", messages: nil,
-			                            underlyingError: nil)
-		}
+		let secKey = try loadSecKey(useBiometry: useBiometry)
+		
 		guard let publicKey: SecKey = SecKeyCopyPublicKey(secKey) else {
-			throw ProvenanceWalletError(kind: .publicKeyError, message: "Could not create public key", messages: nil,
-			                            underlyingError: nil)
+			throw ProvenanceWalletError(kind: .publicKeyError, message: "Could not create public key")
 		}
 
 		guard SecKeyIsAlgorithmSupported(publicKey, .encrypt, algorithm) else {
-			throw ProvenanceWalletError(kind: .unsupportedAlgorithm, message: "Encryption Algorithm is not supported",
-			                            messages: nil, underlyingError: nil)
+			throw ProvenanceWalletError(kind: .unsupportedAlgorithm, message: "Encryption algorithm is not supported")
 		}
 		var error: Unmanaged<CFError>?
 
@@ -114,6 +109,7 @@ class CipherService: NSObject {
 		                                                 &error) as Data? else {
 			throw error!.takeRetainedValue() as Error
 		}
+		
 		return cipherText
 	}
 
@@ -122,63 +118,47 @@ class CipherService: NSObject {
 			return ""
 		}
 		
-		guard let secKey = loadSecKey() else {
-			throw ProvenanceWalletError(kind: .keyNotFound, message: "\(secKeyName) not found", messages: nil,
-			                            underlyingError: nil)
-		}
+		let secKey = try loadSecKey()
 
 		let algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorVariableIVX963SHA256AESGCM
 		guard SecKeyIsAlgorithmSupported(secKey, .decrypt, algorithm) else {
-			throw ProvenanceWalletError(kind: .unsupportedAlgorithm, message: "Decryption Algorithm is not supported",
-			                            messages: nil, underlyingError: nil)
+			throw ProvenanceWalletError(kind: .unsupportedAlgorithm, message: "Decryption algorithm is not supported")
 		}
 
 		var error: Unmanaged<CFError>?
 
-		guard let data = SecKeyCreateDecryptedData(secKey, algorithm, cipherText as CFData,
-		                                                &error) as Data? else {
+		guard let data = SecKeyCreateDecryptedData(secKey, algorithm, cipherText as CFData, &error) as Data? else {
 			throw error!.takeRetainedValue() as Error
 		}
 		
 		guard let serializedKeys = String(data: data, encoding: .utf8) else {
-			throw ProvenanceWalletError(kind: .dataPersistence,
-										message: "Bad encoding",
-										messages: nil, underlyingError: nil)
+			throw ProvenanceWalletError(kind: .dataPersistence, message: "Bad encoding")
 		}
 		
 		return serializedKeys
 	}
 
-	/**
-	 
-	 - Returns: private key, public key tuple
-	 - Throws: cipher errors
-	 */
-	static func createSecKey(useBiometry: Bool?) throws -> Bool {
-		let secKey = loadSecKey()
-		if (secKey != nil) {
-			let _ = deleteSecKey()
-		}
-		
+	private static func createSecKey(useBiometry: Bool) throws {
 		var flags: SecAccessControlCreateFlags = [
 			.privateKeyUsage,
 		]
 		
-		let doUseBiometry = useBiometry ?? CipherService.getUseBiometry()
-		if (doUseBiometry) {
+		var tag: Data
+		if (useBiometry) {
+			tag = secKeyTagBiometry
 			flags.insert(.biometryAny)
 		} else {
 			flags.insert(.devicePasscode)
+			tag = secKeyTagPasscode
 		}
 
 		guard let access = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
 		                                             kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
                                                      flags,
 														   nil) else {
-			throw ProvenanceWalletError(kind: .accessError, message: "Failed to create access control", messages: nil, underlyingError: nil)
+			throw ProvenanceWalletError(kind: .accessError, message: "Failed to create access control")
 		}
 		
-		let tag = secKeyName.data(using: .utf8)!
 		let attributes: [String: Any] = [
 			kSecAttrKeyType as String: kSecAttrKeyTypeEC,
 			kSecAttrKeySizeInBits as String: 256,
@@ -196,34 +176,10 @@ class CipherService: NSObject {
 			Utilities.log(error)
 			throw error
 		}
-		
-		let success = testDecrypt()
-		if (success) {
-			UserDefaults.standard.set(useBiometry, forKey: useBiometryKeyName)
-		} else {
-			let _ = deleteSecKey()
-		}
-		
-		return success
-	}
-	
-	private static func testDecrypt() -> Bool {
-		var success = false
-		
-		do {
-			let expectedValue = "test"
-			let testCipher = try encrypt(plainText: expectedValue)
-			let actualValue = try decrypt(cipherText: testCipher)
-			success = expectedValue == actualValue
-		} catch {
-			Utilities.log(error)
-		}
-		
-		return success
 	}
 
-	private static func loadSecKey() -> SecKey? {
-		let tag = secKeyName.data(using: .utf8)!
+	private static func loadSecKey(useBiometry: Bool = getUseBiometry()) throws -> SecKey {
+		let tag = useBiometry ? secKeyTagBiometry : secKeyTagPasscode
 		let query: [String: Any] = [
 			kSecClass as String: kSecClassKey,
 			kSecAttrApplicationTag as String: tag,
@@ -232,30 +188,18 @@ class CipherService: NSObject {
 		]
 
 		var item: CFTypeRef?
-		let status = SecItemCopyMatching(query as CFDictionary, &item)
-		guard status == errSecSuccess else {
-			return nil
+		var status = SecItemCopyMatching(query as CFDictionary, &item)
+		if (status == errSecItemNotFound) {
+			try createSecKey(useBiometry: true)
+			try createSecKey(useBiometry: false)
+			status = SecItemCopyMatching(query as CFDictionary, &item)
 		}
-		return (item as! SecKey)
-	}
-	
-	private static func deleteSecKey() -> Bool {
-		let tag = secKeyName.data(using: .utf8)!
-		
-		let query: [String: Any] = [
-			kSecClass as String: kSecClassKey,
-			kSecAttrApplicationTag as String: tag,
-			kSecAttrKeyType as String: kSecAttrKeyTypeEC,
-		]
-
-		let status = SecItemDelete(query as CFDictionary)
 		
 		if (status != errSecSuccess) {
-			let message = SecCopyErrorMessageString(status, nil)
-			Utilities.log(message)
+			throw ProvenanceWalletError(kind: .secKeyNotFound, message: "Failed to find sec key")
 		}
-
-		return status == errSecSuccess
+		
+		return (item as! SecKey)
 	}
 	
 	private static func deserializePrivateKeys(str: String) -> Dictionary<String, String> {

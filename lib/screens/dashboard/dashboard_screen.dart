@@ -1,3 +1,4 @@
+import 'package:grpc/grpc.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -9,6 +10,7 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
+import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -78,6 +80,8 @@ class DashboardScreenState extends State<DashboardScreen>
     _bloc.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
     _bloc.signRequest.listen(_onSignRequest).addTo(_subscriptions);
     _bloc.sessionRequest.listen(_onSessionRequest).addTo(_subscriptions);
+    _bloc.error.listen(_onError).addTo(_subscriptions);
+    _bloc.response.listen(_onResponse).addTo(_subscriptions);
 
     get.registerSingleton<DashboardBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
@@ -223,5 +227,28 @@ class DashboardScreenState extends State<DashboardScreen>
     );
 
     ModalLoadingRoute.dismiss(context);
+  }
+
+  void _onError(String message) {
+    logError(message);
+    PwDialog.showError(
+      context,
+      message: message,
+    );
+  }
+
+  void _onResponse(WalletConnectTxResponse response) {
+    if (response.code == StatusCode.ok) {
+      PwDialog.showMessage(
+        context,
+        title: Strings.transactionSuccessTitle,
+        message: response.message ?? '',
+      );
+    } else {
+      PwDialog.showError(
+        context,
+        message: response.message ?? '',
+      );
+    }
   }
 }

@@ -277,16 +277,25 @@ class WalletItem extends StatelessWidget {
                         if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.select,
-                            child: PwText(Strings.select),
+                            child: PwText(
+                              Strings.select,
+                              color: PwColor.globalNeutral550,
+                            ),
                           ),
                         PopupMenuItem<MenuOperation>(
                           value: MenuOperation.rename,
-                          child: PwText(Strings.rename),
+                          child: PwText(
+                            Strings.rename,
+                            color: PwColor.globalNeutral550,
+                          ),
                         ),
                         if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.delete,
-                            child: PwText(Strings.remove),
+                            child: PwText(
+                              Strings.remove,
+                              color: PwColor.globalNeutral550,
+                            ),
                           ),
                       ],
                     );
