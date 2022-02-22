@@ -22,7 +22,7 @@ class TransactionMessageDefault extends StatelessWidget
       createPlatformTabeRow(),
       createFieldTableRow(
         Strings.transactionFieldFee,
-        '$fee ${Strings.transactionNanoHash}',
+        '$fee ${Strings.transactionDenomHash}',
       ),
     ];
 

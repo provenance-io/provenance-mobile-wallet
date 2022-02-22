@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -25,7 +23,7 @@ class _TransactionDataState extends State<TransactionData> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final json = LinkedHashMap<String, dynamic>();
+    final json = <String, dynamic>{};
     json['@type'] = '/${widget.request.message.info_.qualifiedMessageName}';
 
     Object? jsonBody;
@@ -45,9 +43,18 @@ class _TransactionDataState extends State<TransactionData> {
 
   @override
   Widget build(BuildContext context) {
-    return PwText(
-      prettyData ?? '',
-      color: PwColor.neutralNeutral,
+    return Container(
+      padding: EdgeInsets.all(
+        Spacing.large,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.provenanceNeutral700,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: PwText(
+        prettyData ?? '',
+        color: PwColor.secondary2,
+      ),
     );
   }
 }

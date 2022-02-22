@@ -199,11 +199,18 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _onSendRequest(SendRequest sendRequest) async {
-    final screen = TransactionConfirmScreen(
-      request: sendRequest,
+    final approved = await showGeneralDialog<bool?>(
+      context: context,
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return TransactionConfirmScreen(
+          request: sendRequest,
+        );
+      },
     );
-
-    final approved = await Navigator.of(context).push(screen.route());
 
     await get<DashboardBloc>().sendMessageFinish(
       requestId: sendRequest.id,

@@ -8,13 +8,12 @@ mixin TransactionMessageMixin on Widget {
     return SliverList(
       delegate: SliverChildListDelegate.fixed(
         [
-          VerticalSpacer.xxLarge(),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: Spacing.largeX3,
             ),
             child: Table(
-              columnWidths: {
+              columnWidths: const {
                 0: IntrinsicColumnWidth(),
                 1: FlexColumnWidth(),
               },
@@ -49,7 +48,7 @@ mixin TransactionMessageMixin on Widget {
           child: Column(
             textDirection: TextDirection.ltr,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+            children: const [
               TransactionFieldValue(
                 text: Strings.transactionPlatformName,
               ),
