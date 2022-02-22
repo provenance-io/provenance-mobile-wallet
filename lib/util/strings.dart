@@ -197,7 +197,7 @@ class Strings {
   static const recover = 'Recover';
 
   // RecoveryWordsConfirm
-  static const verifyPassphrase = 'Verify passphrase';
+  static const verifyPassphrase = 'Verify Passphrase';
   static const next = 'Next';
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
@@ -208,7 +208,7 @@ class Strings {
       "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
 
   // RecoveryWords
-  static const recoveryPassphrase = 'Recovery passphrase';
+  static const recoveryPassphrase = 'Recovery Passphrase';
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order, using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
@@ -279,8 +279,8 @@ class Strings {
   static const tradeDetailsBlock = "Block #";
 
   //WordSelector
-  static const selectWord = 'Select word';
-  static String selectWordIndex(String index) => 'Select word #${index}';
+  static const selectWord = 'select word';
+  static String selectWordIndex(String index) => 'select word #${index}';
 
   // SendScreen
   static const sendTitle = "Send";

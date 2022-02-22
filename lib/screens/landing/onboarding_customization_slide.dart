@@ -32,9 +32,8 @@ class OnboardingCustomizationSlide extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
+                    Image.asset(
                       AssetPaths.images.coins,
-                      width: 180,
                       height: 180,
                     ),
                   ],
