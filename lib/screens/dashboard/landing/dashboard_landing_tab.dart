@@ -6,7 +6,6 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -134,7 +133,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
+                          children: const [
                             PwText(
                               Strings.myAssets,
                               style: PwTextStyle.title,
@@ -201,7 +200,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 40,
                                   height: 40,
                                   child: SvgPicture.asset(
