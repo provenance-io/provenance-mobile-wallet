@@ -29,7 +29,7 @@ abstract class WalletStorageService {
 
   Future removeWallet(String id);
 
-  Future removeAllWallets();
+  Future<bool> removeAllWallets();
 
   Future<bool> getUseBiometry();
 

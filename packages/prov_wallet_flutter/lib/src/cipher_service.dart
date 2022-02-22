@@ -55,4 +55,16 @@ class CipherService {
 
     return result;
   }
+
+  Future<bool> removeKey({required String id}) async {
+    var params = {
+      'id': id,
+    };
+
+    return await _channel.invokeMethod('removeKey', params);
+  }
+
+  Future<bool> reset() async {
+    return await _channel.invokeMethod('reset');
+  }
 }
