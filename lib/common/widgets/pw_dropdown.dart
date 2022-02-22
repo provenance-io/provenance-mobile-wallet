@@ -61,7 +61,11 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
       value: dropdownValue,
       icon: Padding(
         padding: EdgeInsets.only(left: 16),
-        child: PwIcon(PwIcons.chevron),
+        child: PwIcon(
+          PwIcons.chevron,
+          // TODO: Need some kind of neutral instead of white when dealing with colors.
+          color: Theme.of(context).colorScheme.white,
+        ),
       ),
       onChanged: _onChange,
       items: widget.items.map<DropdownMenuItem<X>>((X value) {
