@@ -77,7 +77,7 @@ class WalletStorageServiceImp implements WalletStorageService {
   }
 
   @override
-  Future removeWallet(String id) async {
+  Future<bool> removeWallet(String id) async {
     final success = await _cipherService.removeKey(id: id);
     if (success) {
       await _sqliteWalletStorageService.removeWallet(id: id);
