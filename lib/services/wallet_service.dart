@@ -91,7 +91,7 @@ class WalletService {
         transactionHandler: transactionHandler,
       );
 
-      final newSession = await WalletConnectSession(
+      final newSession = WalletConnectSession(
         connection: connection,
         delegate: delegate,
       );

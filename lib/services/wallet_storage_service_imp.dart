@@ -1,5 +1,4 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_dart/src/wallet/private_key.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
@@ -68,15 +67,23 @@ class WalletStorageServiceImp implements WalletStorageService {
   }
 
   @override
-  Future removeAllWallets() async {
-    // TODO: add code to remove wallets in secure storage
+  Future<bool> removeAllWallets() async {
+    final success = await _cipherService.reset();
+    if (success) {
+      await _sqliteWalletStorageService.removeAllWallets();
+    }
 
-    return _sqliteWalletStorageService.removeAllWallets();
+    return success;
   }
 
   @override
-  Future removeWallet(String id) {
-    return _sqliteWalletStorageService.removeWallet(id: id);
+  Future removeWallet(String id) async {
+    final success = await _cipherService.removeKey(id: id);
+    if (success) {
+      await _sqliteWalletStorageService.removeWallet(id: id);
+    }
+
+    return success;
   }
 
   @override

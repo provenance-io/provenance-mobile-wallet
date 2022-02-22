@@ -5,13 +5,11 @@ struct ProvenanceWalletError: Error {
 		case accessError
 		case dataPersistence
 		case unsupportedAlgorithm
-		case cipherNotFound
-		case keyNotFound
+		case walletKeyNotFound
+		case secKeyNotFound
 		case publicKeyError
 		case walletSaveError
 	}
 	let kind: ErrorKind
 	let message: String
-	let messages: [String]?
-	let underlyingError: Error?
 }

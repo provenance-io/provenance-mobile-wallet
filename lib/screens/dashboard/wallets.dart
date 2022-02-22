@@ -12,6 +12,8 @@ import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Wallets extends StatefulWidget {
+  const Wallets({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return WalletsState();
@@ -121,7 +123,7 @@ class WalletsState extends State<Wallets>
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: const [
                   PwText(
                     Strings.selectedWallet,
                     color: PwColor.globalNeutral550,
@@ -275,16 +277,25 @@ class WalletItem extends StatelessWidget {
                         if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.select,
-                            child: PwText(Strings.select),
+                            child: PwText(
+                              Strings.select,
+                              color: PwColor.globalNeutral550,
+                            ),
                           ),
                         PopupMenuItem<MenuOperation>(
                           value: MenuOperation.rename,
-                          child: PwText(Strings.rename),
+                          child: PwText(
+                            Strings.rename,
+                            color: PwColor.globalNeutral550,
+                          ),
                         ),
                         if (!_isSelected)
                           PopupMenuItem<MenuOperation>(
                             value: MenuOperation.delete,
-                            child: PwText(Strings.remove),
+                            child: PwText(
+                              Strings.remove,
+                              color: PwColor.globalNeutral550,
+                            ),
                           ),
                       ],
                     );

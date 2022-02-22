@@ -26,13 +26,15 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				guard let privateKey = argsFormatted?["private_key"] as? String else {
 					throw PluginError.invalidArgument("privateKey is required")
 				}
-				let useBiometry = argsFormatted?["use_biometry"] as? Bool
+				guard let useBiometry = argsFormatted?["use_biometry"] as? Bool else {
+					throw PluginError.invalidArgument("useBiometry is required")
+				}
 			
 				try CipherService.encryptKey(id: id, plainText: privateKey, useBiometry: useBiometry)
 				
 				success = true
 			} catch {
-				ErrorHandler.show(title: "Encrypt", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Encrypt", error: error)
 			}
 			
 			result(success)
@@ -47,10 +49,25 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				
 				key = try CipherService.decryptKey(id: id)
 			} catch {
-				ErrorHandler.show(title: "Decrypt", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Decrypt", error: error)
 			}
 			
 			result(key)
+		} else if (call.method == "removeKey") {
+			var success = false
+			
+			do {
+				let argsFormatted = call.arguments as? Dictionary<String, Any>
+				guard let id = argsFormatted?["id"] as? String else {
+					throw PluginError.invalidArgument("id is required")
+				}
+				
+				success = try CipherService.removeKey(id: id)
+			} catch {
+				showError(title: "Remove Key", error: error)
+			}
+			
+			result(success)
 		} else if (call.method == "getUseBiometry") {
 			let useBiometry = CipherService.getUseBiometry()
 			
@@ -62,13 +79,23 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				let argsFormatted = call.arguments as? Dictionary<String, Any>
 				let useBiometry = argsFormatted?["use_biometry"] as? Bool ?? true
 				
-				success = try CipherService.setUseBiometry(useBiometry: useBiometry)
+				try CipherService.setUseBiometry(useBiometry: useBiometry)
+				success = true
 			} catch {
-				ErrorHandler.show(title: "Set Biometry", message: error.localizedDescription, completionHandler: nil)
+				showError(title: "Set Biometry", error: error)
 			}
 			
 			result(success)
+		} else if (call.method == "reset") {
+			CipherService.reset()
+			
+			result(true)
 		}
+	}
+	
+	private func showError(title: String, error: Error) {
+		let message = error is ProvenanceWalletError ? (error as! ProvenanceWalletError).message : error.localizedDescription
+		ErrorHandler.show(title: title, message: message, completionHandler: nil)
 	}
 }
 
