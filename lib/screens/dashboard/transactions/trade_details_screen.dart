@@ -110,7 +110,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     PwText(
-                      '${transaction.address.substring(0, 3)}...${transaction.address.substring(36)}',
+                      transaction.address.abbreviateAddress(),
                       style: PwTextStyle.m,
                       color: PwColor.globalNeutral600Black,
                     ),
@@ -147,7 +147,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     PwText(
-                      '${walletAddress.substring(0, 3)}...${walletAddress.substring(36)}',
+                      walletAddress.abbreviateAddress(),
                       style: PwTextStyle.m,
                       color: PwColor.globalNeutral600Black,
                     ),
