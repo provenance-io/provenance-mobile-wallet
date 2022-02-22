@@ -191,9 +191,12 @@ main() {
 
   group("removeAllWallets", () {
     testWidgets('success', (tester) async {
+      when(_mockCipherService!.reset()).thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeAllWallets())
           .thenAnswer((_) => Future.value());
       await _storageService!.removeAllWallets();
+
+      verify(_mockCipherService!.reset());
       verify(_mockSqliteService!.removeAllWallets());
     });
   });
@@ -202,10 +205,13 @@ main() {
     final id = "TestId";
 
     testWidgets('success', (tester) async {
+      when(_mockCipherService!.removeKey(id: anyNamed("id")))
+          .thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
           .thenAnswer((_) => Future.value());
       await _storageService!.removeWallet(id);
 
+      verify(_mockCipherService!.removeKey(id: id));
       verify(_mockSqliteService!.removeWallet(id: id));
     });
   });
