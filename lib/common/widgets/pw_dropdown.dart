@@ -27,16 +27,22 @@ class PwDropDown<X> extends StatefulWidget {
     Key? key,
     required String initialValue,
     required List<String> items,
-  })
-  {
+  }) {
     return PwDropDown<String>(
       initialValue: initialValue,
       items: items,
       key: key,
-      builder: (item) => PwText(
-        item,
-        color: PwColor.globalNeutral550,
-        style: PwTextStyle.s,
+      isExpanded: true,
+      builder: (item) => Expanded(
+        child: Row(
+          children: [
+            PwText(
+              item,
+              color: PwColor.neutralNeutral,
+              style: PwTextStyle.body,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -56,7 +62,8 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
     return DropdownButton<X>(
       isExpanded: widget.isExpanded,
       itemHeight: widget.itemHeight,
-      dropdownColor: widget.dropdownColor ?? Theme.of(context).colorScheme.globalNeutral150,
+      dropdownColor: widget.dropdownColor ??
+          Theme.of(context).colorScheme.provenanceNeutral750,
       underline: Container(),
       value: dropdownValue,
       icon: Padding(
@@ -82,7 +89,7 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
       dropdownValue = newValue!;
     });
 
-    if(widget.onValueChanged != null) {
+    if (widget.onValueChanged != null) {
       widget.onValueChanged!.call(newValue!);
     }
   }
