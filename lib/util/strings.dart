@@ -2,7 +2,7 @@
 
 extension StringExtension on String {
   String capitalize() {
-    return '${this[0].toUpperCase()}${this.substring(1)}';
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 
   String displayPhone() {
@@ -14,31 +14,29 @@ extension StringExtension on String {
   }
 
   double coinAmount() {
-    return double.parse("${this.replaceAll(RegExp(r'[^\d\.]+'), '')}") * 100;
+    return double.parse(replaceAll(RegExp(r'[^\d\.]+'), '')) * 100;
   }
 
   double amount() {
-    return double.parse(this.removeNonDollarValue());
+    return double.parse(removeNonDollarValue());
   }
 
   String removeNonDollarValue() {
-    return this.replaceAll(RegExp(r'[^\d\.]+'), '');
+    return replaceAll(RegExp(r'[^\d\.]+'), '');
   }
 
   String sanitizePhoneNumber() {
-    return this.replaceAll(RegExp(r'[^\d]+'), '');
+    return replaceAll(RegExp(r'[^\d]+'), '');
   }
 
   String abbreviateAddress() {
-    final left = 10;
-    final right = 3;
-    final dots = '.....';
+    const left = 3;
+    const right = 8;
+    const dots = '...';
 
-    if (this.length > left + dots.length + right) {
-      return '${substring(0, left)}${dots}${substring(this.length - right)}';
-    }
-
-    return this;
+    return length > left + dots.length + right
+        ? '${substring(0, left)}$dots${substring(length - right)}'
+        : this;
   }
 }
 
@@ -280,7 +278,7 @@ class Strings {
 
   //WordSelector
   static const selectWord = 'select word';
-  static String selectWordIndex(String index) => 'select word #${index}';
+  static String selectWordIndex(String index) => 'select word #$index';
 
   // SendScreen
   static const sendTitle = "Send";
