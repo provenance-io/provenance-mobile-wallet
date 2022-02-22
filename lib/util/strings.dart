@@ -187,7 +187,7 @@ class Strings {
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
@@ -203,12 +203,12 @@ class Strings {
   static const youMustAgreeToTheWalletSeedphraseTerms =
       "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
-      "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
+      "I agree that I am solely responsible for my wallet and cannot recover my account if the passphrase is lost.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery Passphrase';
   static const recordTheseWordsInTheCorrectOrder =
-      'Make sure to record these words in the correct order, using the corresponding numbers.';
+      'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
 
   // BackupComplete
