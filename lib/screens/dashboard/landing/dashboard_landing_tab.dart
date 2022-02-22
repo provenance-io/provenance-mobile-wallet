@@ -99,7 +99,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 final walletAddress = snapshot.data ?? "";
 
                 return PwText(
-                  "(${walletAddress.abbreviateAddress()})",
+                  " (${walletAddress.abbreviateAddress()})",
                   style: PwTextStyle.body,
                 );
               },
