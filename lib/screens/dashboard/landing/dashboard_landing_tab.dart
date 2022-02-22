@@ -16,9 +16,7 @@ import '../wallets.dart';
 class DashboardLandingTab extends StatefulWidget {
   const DashboardLandingTab({
     Key? key,
-    required this.walletName,
   }) : super(key: key);
-  final String walletName;
 
   @override
   _DashboardLandingTabState createState() => _DashboardLandingTabState();
@@ -79,9 +77,34 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
         ],
         centerTitle: false,
-        title: PwText(
-          widget.walletName,
-          style: PwTextStyle.subhead,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StreamBuilder<String>(
+              initialData: bloc.walletName.value,
+              stream: bloc.walletName,
+              builder: (context, snapshot) {
+                final walletName = snapshot.data ?? "";
+
+                return PwText(
+                  walletName,
+                  style: PwTextStyle.subhead,
+                );
+              },
+            ),
+            StreamBuilder<String>(
+              initialData: bloc.walletAddress.value,
+              stream: bloc.walletAddress,
+              builder: (context, snapshot) {
+                final walletAddress = snapshot.data ?? "";
+
+                return PwText(
+                  "(${walletAddress.abbreviateAddress()})",
+                  style: PwTextStyle.body,
+                );
+              },
+            ),
+          ],
         ),
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,

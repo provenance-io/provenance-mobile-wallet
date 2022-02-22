@@ -2,20 +2,16 @@ import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionsList extends StatefulWidget {
-  TransactionsList({
+  const TransactionsList({
     Key? key,
-    required this.transactions,
-    required this.walletName,
-    required this.walletAddress,
   }) : super(key: key);
 
-  final List<Transaction> transactions;
-  final String walletName;
-  final String walletAddress;
   @override
   State<StatefulWidget> createState() => TransactionsListState();
 }
@@ -23,6 +19,8 @@ class TransactionsList extends StatefulWidget {
 class TransactionsListState extends State<TransactionsList> {
   @override
   Widget build(BuildContext context) {
+    final bloc = get<DashboardBloc>();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -63,99 +61,107 @@ class TransactionsListState extends State<TransactionsList> {
           ),
         ),
         VerticalSpacer.medium(),
-        Expanded(
-          child: ListView.separated(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            itemBuilder: (context, index) {
-              final item = widget.transactions[index];
+        StreamBuilder<List<Transaction>>(
+          initialData: bloc.transactionList.value,
+          stream: bloc.transactionList,
+          builder: (context, snapshot) {
+            final transactions = snapshot.data ?? [];
 
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  // TODO: Finding a "tappable" area is difficult and janky. Fix me.
-                  Navigator.of(context).push(TradeDetailsScreen(
-                    transaction: item,
-                    walletName: widget.walletName,
-                    walletAddress: widget.walletAddress,
-                  ).route());
-                },
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          // FIXME: Transactions have no 'display' property atm.
-                          child: PwIcon(
-                            PwIcons.hashLogo,
-                            color:
-                                Theme.of(context).colorScheme.globalNeutral550,
-                            size: 32,
-                          ),
-                        ),
-                        HorizontalSpacer.medium(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            return Expanded(
+              child: ListView.separated(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                itemBuilder: (context, index) {
+                  final item = transactions[index];
+
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      // TODO: Finding a "tappable" area is difficult and janky. Fix me.
+                      Navigator.of(context).push(TradeDetailsScreen(
+                        transaction: item,
+                      ).route());
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.zero,
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            PwText(
+                            Container(
+                              width: 32,
+                              height: 32,
                               // FIXME: Transactions have no 'display' property atm.
-                              Strings.dropDownHashAsset.toUpperCase(),
-                              color: PwColor.globalNeutral500,
-                              style: PwTextStyle.sBold,
+                              child: PwIcon(
+                                PwIcons.hashLogo,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .globalNeutral550,
+                                size: 32,
+                              ),
                             ),
-                            VerticalSpacer.xSmall(),
-                            PwText(
-                              item.type,
-                              color: PwColor.globalNeutral450,
-                              style: PwTextStyle.s,
+                            HorizontalSpacer.medium(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PwText(
+                                  // FIXME: Transactions have no 'display' property atm.
+                                  Strings.dropDownHashAsset.toUpperCase(),
+                                  color: PwColor.globalNeutral500,
+                                  style: PwTextStyle.sBold,
+                                ),
+                                VerticalSpacer.xSmall(),
+                                PwText(
+                                  item.type,
+                                  color: PwColor.globalNeutral450,
+                                  style: PwTextStyle.s,
+                                ),
+                              ],
+                            ),
+                            Expanded(child: Container()),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PwText(
+                                  // FIXME: Transactions currently only have 'feeAmount'.
+                                  '\$50.00',
+                                  color: PwColor.globalNeutral500,
+                                  style: PwTextStyle.sBold,
+                                ),
+                                VerticalSpacer.xSmall(),
+                                PwText(
+                                  // FIXME: Format the date to be 'Mmm dd'.
+                                  item.time,
+                                  color: PwColor.globalNeutral450,
+                                  style: PwTextStyle.s,
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 16),
+                              child: PwIcon(
+                                PwIcons.caret,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .globalNeutral550,
+                                size: 12.0,
+                              ),
                             ),
                           ],
                         ),
-                        Expanded(child: Container()),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PwText(
-                              // FIXME: Transactions currently only have 'feeAmount'.
-                              '\$50.00',
-                              color: PwColor.globalNeutral500,
-                              style: PwTextStyle.sBold,
-                            ),
-                            VerticalSpacer.xSmall(),
-                            PwText(
-                              // FIXME: Format the date to be 'Mmm dd'.
-                              item.time,
-                              color: PwColor.globalNeutral450,
-                              style: PwTextStyle.s,
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: PwIcon(
-                            PwIcons.caret,
-                            color:
-                                Theme.of(context).colorScheme.globalNeutral550,
-                            size: 12.0,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return PwListDivider();
-            },
-            itemCount: widget.transactions.length,
-            shrinkWrap: true,
-            physics: AlwaysScrollableScrollPhysics(),
-          ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return PwListDivider();
+                },
+                itemCount: transactions.length,
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+              ),
+            );
+          },
         ),
         VerticalSpacer.large(),
       ],
