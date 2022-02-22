@@ -84,20 +84,18 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           widget.walletName,
           style: PwTextStyle.subhead,
         ),
-        leading: Padding(
-          padding: EdgeInsets.only(
-            left: Spacing.large,
-            top: 18,
-            bottom: 18,
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Wallets(),
-                ),
-              );
-            },
+        leading: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            // TODO: This should be a modal.
+            Navigator.of(context).push(Wallets().route());
+          },
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: Spacing.large,
+              top: 18,
+              bottom: 18,
+            ),
             child: PwIcon(
               PwIcons.ellipsis,
               color: Theme.of(context).colorScheme.white,
