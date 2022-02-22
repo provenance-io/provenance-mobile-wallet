@@ -38,23 +38,32 @@ class SendBloc extends Disposable {
 
   Future<void> load() {
     return Future.delayed(
-        Duration(milliseconds: 600),
-        () {
-          final assets = [
-            SendAsset("Hash", "302.02", "\$523.25", "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hash.png"),
-            SendAsset("USD", "51.15", "\$51.15", "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=021"),
-          ];
+      Duration(milliseconds: 600),
+      () {
+        final assets = [
+          SendAsset(
+            "Hash",
+            "302.02",
+            "\$523.25",
+            "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hash.png",
+          ),
+          SendAsset(
+            "USD",
+            "51.15",
+            "\$51.15",
+            "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=021",
+          ),
+        ];
 
-          final sends = List.generate(15, (index) {
-            return RecentAddress(
-              "tp1n38hkvvq4zfkagmd37dt68llff0vksjy620j6u",
-              DateTime.now().subtract(Duration(days: index)),
-            );
-          })
-          .toList();
+        final sends = List.generate(15, (index) {
+          return RecentAddress(
+            "tp1n38hkvvq4zfkagmd37dt68llff0vksjy620j6u",
+            DateTime.now().subtract(Duration(days: index)),
+          );
+        }).toList();
 
-          _stateStreamController.add(SendBlocState(assets, sends));
-        },
+        _stateStreamController.add(SendBlocState(assets, sends));
+      },
     );
   }
 
@@ -76,10 +85,10 @@ class SendBloc extends Disposable {
   }
 
   Future<void> next(String address, SendAsset? asset) {
-    if(address.isEmpty) {
+    if (address.isEmpty) {
       throw Exception("You must supply a receiving address");
     }
-    if(asset == null) {
+    if (asset == null) {
       throw Exception("You must supply an asset");
     }
 

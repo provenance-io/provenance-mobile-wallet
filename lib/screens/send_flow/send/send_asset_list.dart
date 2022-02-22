@@ -4,8 +4,7 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 
 class SendAssetCell extends StatelessWidget {
-  SendAssetCell(this.asset, { Key? key })
-      : super(key: key);
+  SendAssetCell(this.asset, {Key? key}) : super(key: key);
 
   final SendAsset asset;
 
@@ -20,14 +19,21 @@ class SendAssetCell extends StatelessWidget {
           padding: EdgeInsets.all(Spacing.xSmall),
           child: Image.network(
             asset.imageUrl,
-            errorBuilder: (context, error, stackTrace,) {
+            errorBuilder: (
+              context,
+              error,
+              stackTrace,
+            ) {
               return Container();
             },
           ),
         ),
         HorizontalSpacer.small(),
         Expanded(
-          child: PwText(asset.denom, maxLines: 1,),
+          child: PwText(
+            asset.denom,
+            maxLines: 1,
+          ),
         ),
         Column(
           mainAxisSize: MainAxisSize.max,
@@ -36,10 +42,10 @@ class SendAssetCell extends StatelessWidget {
           children: [
             Expanded(child: PwText("${asset.fiatValue}")),
             Expanded(
-                child: PwText(
-                  "${asset.amount} ${asset.denom}",
-                  style: PwTextStyle.caption,
-                ),
+              child: PwText(
+                "${asset.amount} ${asset.denom}",
+                style: PwTextStyle.caption,
+              ),
             ),
           ],
         ),
@@ -49,8 +55,12 @@ class SendAssetCell extends StatelessWidget {
 }
 
 class SendAssetList extends StatelessWidget {
-  SendAssetList(this.assets, this.selectedAsset, this.onAssetChanged, { Key? key })
-    : super(key: key);
+  SendAssetList(
+    this.assets,
+    this.selectedAsset,
+    this.onAssetChanged, {
+    Key? key,
+  }) : super(key: key);
 
   final List<SendAsset> assets;
   final SendAsset? selectedAsset;
@@ -62,15 +72,14 @@ class SendAssetList extends StatelessWidget {
 
     Widget child;
 
-    if(assets.isEmpty) {
+    if (assets.isEmpty) {
       child = Center(
         child: PwText("Loading assets"),
       );
-    }
-    else {
+    } else {
       final selectedDenom = this.selectedAsset?.denom ?? "";
       final selectedAsset = assets.firstWhere(
-            (asset) => asset.denom == selectedDenom,
+        (asset) => asset.denom == selectedDenom,
         orElse: () => assets.first,
       );
 
@@ -87,8 +96,8 @@ class SendAssetList extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-          vertical: Spacing.small,
-          horizontal: Spacing.small
+        vertical: Spacing.small,
+        horizontal: Spacing.small,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
