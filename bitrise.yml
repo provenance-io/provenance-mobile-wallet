@@ -31,20 +31,8 @@ workflows:
             # debug log
             set -x
 
-            # Flutter Test hangs without this
-            dart pub global activate junitreport
-
-            # or run a script from your repository, like:
-            # bash ./path/to/script.sh
-            # not just bash, e.g.:
-            # ruby ./path/to/script.rb
-    - flutter-test@1:
-        inputs:
-        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-    - custom-test-results-export@0:
-        inputs:
-        - search_pattern: "*"
-        - test_name: flutterTest
+            flutter test -r expanded
+        title: Flutter Test
     - flutter-build@0:
         inputs:
         - platform: android
@@ -157,21 +145,8 @@ workflows:
             # debug log
             set -x
 
-            # Flutter Test hangs without this
-            dart pub global activate junitreport
-
-            # or run a script from your repository, like:
-            # bash ./path/to/script.sh
-            # not just bash, e.g.:
-            # ruby ./path/to/script.rb
-        title: Activate junitreport
-    - flutter-test@1:
-        inputs:
-        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-    - custom-test-results-export@0:
-        inputs:
-        - search_pattern: "*"
-        - test_name: flutterTest
+            flutter test -r expanded
+        title: Flutter Test
     - flutter-build@0:
         inputs:
         - platform: android
