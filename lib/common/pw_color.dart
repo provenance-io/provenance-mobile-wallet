@@ -64,7 +64,7 @@ mixin PwColorMixin on Widget {
       case PwColor.neutralNeutral:
         return theme.colorScheme.neutralNeutral;
       case PwColor.primaryP500:
-        return theme.colorScheme.primaryP500;
+        return theme.colorScheme.primary500;
       default:
         return null;
     }

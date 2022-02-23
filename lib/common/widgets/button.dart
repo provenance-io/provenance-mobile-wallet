@@ -261,9 +261,9 @@ class PwButton extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         return states.contains(MaterialState.disabled)
             ? showAlternate
-                ? theme.colorScheme.primaryP550.withOpacity(0.5)
-                : theme.colorScheme.primaryP550.withOpacity(0.4)
-            : theme.colorScheme.primaryP500;
+                ? theme.colorScheme.primary550.withOpacity(0.5)
+                : theme.colorScheme.primary550.withOpacity(0.4)
+            : theme.colorScheme.primary500;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(
@@ -311,7 +311,7 @@ class PwTextButton extends StatelessWidget {
         style: PwTextStyle.bodyBold,
         color: PwColor.neutralNeutral,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primaryP550,
+      backgroundColor: Theme.of(context).colorScheme.primary550,
       onPressed: onPressed,
     );
   }

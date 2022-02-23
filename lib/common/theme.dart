@@ -172,17 +172,17 @@ class ProvenanceThemeData {
   static final themeData = ThemeData(
     colorScheme: _colorScheme,
     appBarTheme: AppBarTheme(
-      color: _colorScheme.primaryP500,
+      color: _colorScheme.primary500,
       iconTheme: IconThemeData(color: _colorScheme.onPrimary),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: _colorScheme.primary,
     ),
     canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primaryP500,
+    toggleableActiveColor: _colorScheme.primary500,
     highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primaryP500,
-    primaryColor: _colorScheme.primaryP500,
+    indicatorColor: _colorScheme.primary500,
+    primaryColor: _colorScheme.primary500,
     backgroundColor: _neutral750,
     scaffoldBackgroundColor: _colorScheme.background,
     snackBarTheme: const SnackBarThemeData(
@@ -255,9 +255,9 @@ extension CustomColorScheme on ColorScheme {
 
   Color get logo => ProvenanceThemeData._provenanceLogo;
   Color get primary700 => ProvenanceThemeData._primary700;
-  Color get primaryP650 => ProvenanceThemeData._primary650;
-  Color get primaryP550 => ProvenanceThemeData._primary550;
-  Color get primaryP500 => ProvenanceThemeData._primary500;
+  Color get primary650 => ProvenanceThemeData._primary650;
+  Color get primary550 => ProvenanceThemeData._primary550;
+  Color get primary500 => ProvenanceThemeData._primary500;
   Color get primary400 => ProvenanceThemeData._primary400;
 
   Color get indicatorActive => ProvenanceThemeData._indicatorActive;

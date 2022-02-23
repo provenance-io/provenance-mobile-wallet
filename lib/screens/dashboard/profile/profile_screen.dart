@@ -244,7 +244,7 @@ class _ToggleItem extends StatelessWidget {
                     value: value!,
                     onToggle: onChanged,
                     inactiveColor: Theme.of(context).colorScheme.neutral450,
-                    activeColor: Theme.of(context).colorScheme.primaryP550,
+                    activeColor: Theme.of(context).colorScheme.primary550,
                     toggleColor: Theme.of(context).colorScheme.neutral800,
                     padding: 3,
                     height: 20,
