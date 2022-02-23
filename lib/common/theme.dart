@@ -200,14 +200,14 @@ class ProvenanceThemeData {
       border: OutlineInputBorder(
         // unfortunately for some reason this color gets overriden with primary (bug?)
         // have to set in input implentation
-        borderSide: BorderSide(color: _colorScheme.midGrey),
+        borderSide: BorderSide(color: _colorScheme.neutral250),
       ),
       contentPadding: EdgeInsets.symmetric(
         vertical: 12,
         horizontal: 16,
       ),
     ),
-    unselectedWidgetColor: _colorScheme.lightGrey,
+    unselectedWidgetColor: _colorScheme.neutral250,
     tabBarTheme: TabBarTheme(
       labelColor: _colorScheme.primary,
       unselectedLabelColor: _neutral550,
