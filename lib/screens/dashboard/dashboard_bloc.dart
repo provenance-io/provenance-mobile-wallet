@@ -65,9 +65,9 @@ class DashboardBloc extends Disposable {
     var name = details?.name ?? "";
     _walletAddress.value = address;
     _walletName.value = name;
-    _assetList.value = (await _assetService.getFakeAssets(address));
+    _assetList.value = (await _assetService.getAssets(address)).data ?? [];
     _transactionList.value =
-        (await _transactionService.getFakeTransactions(address));
+        (await _transactionService.getTransactions(address)).data ?? [];
   }
 
   Future<void> connectWallet(String addressData) async {
