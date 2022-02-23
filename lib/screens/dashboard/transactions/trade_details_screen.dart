@@ -71,7 +71,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 },
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsTransaction,
               endChild: Container(
@@ -108,7 +110,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsFromAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
@@ -145,7 +149,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
@@ -190,7 +196,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsOrderType,
               endChild: PwText(
@@ -199,7 +207,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: // FIXME: Need amount.
@@ -209,7 +219,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsPricePerUnit,
               endChild: // FIXME: Need 'Price Per Unit'.
@@ -219,7 +231,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsTotalPurchase,
               endChild: // FIXME: Need 'Total Purchase Price'.
@@ -229,7 +243,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: PwText(
@@ -238,7 +254,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
@@ -247,7 +265,9 @@ class TradeDetailsScreen extends StatelessWidget {
                 style: PwTextStyle.m,
               ),
             ),
-            PwListDivider(),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
             TradeDetailsItem(
               title: Strings.tradeDetailsBlock,
               endChild: // FIXME: Need 'Block'.
