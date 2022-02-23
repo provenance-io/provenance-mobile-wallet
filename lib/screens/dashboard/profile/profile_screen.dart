@@ -242,27 +242,38 @@ class _ToggleItem extends StatelessWidget {
     return Container(
       height: 64,
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.large,
+        horizontal: Spacing.xxLarge,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _ItemLabel(
             text: text,
           ),
           Expanded(
-            child: Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.only(
-                right: Spacing.medium,
-              ),
-              child: value == null
-                  ? Container()
-                  : CupertinoSwitch(
-                      value: value!,
-                      onChanged: onChanged,
-                      trackColor: Theme.of(context).colorScheme.midGrey,
-                    ),
+            child: Container(),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            margin: EdgeInsets.only(
+              right: Spacing.medium,
             ),
+            child: value == null
+                ? Container()
+                : FlutterSwitch(
+                    value: value!,
+                    onToggle: onChanged,
+                    inactiveColor:
+                        Theme.of(context).colorScheme.provenanceNeutral450,
+                    activeColor: Theme.of(context).colorScheme.primaryP550,
+                    toggleColor:
+                        Theme.of(context).colorScheme.provenanceNeutral800,
+                    padding: 3,
+                    height: 20,
+                    width: 40,
+                    borderRadius: Spacing.large,
+                    toggleSize: 14.0,
+                  ),
           ),
         ],
       ),
