@@ -3,11 +3,11 @@ import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TradeDetailsScreen extends StatelessWidget {
   const TradeDetailsScreen({
@@ -59,13 +59,14 @@ class TradeDetailsScreen extends StatelessWidget {
                   HorizontalSpacer.large(),
                   GestureDetector(
                     onTap: () async {
-                      // FIXME: Navigate to explorer in the browser? Remove this ASAP.
-                      await showDialog(
-                        context: context,
-                        builder: (context) => ErrorDialog(
-                          error: "Coming Soon",
-                        ),
-                      );
+                      // TODO: Change this url based on flavor.
+                      final url =
+                          'https://explorer.provenance.io/tx/${transaction.id}';
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
                     },
                     child: SizedBox(
                       width: 20,
