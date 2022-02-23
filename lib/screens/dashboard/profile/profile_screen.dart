@@ -5,14 +5,14 @@ import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class MyAccount extends StatefulWidget {
-  const MyAccount({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _MyAccountState createState() => _MyAccountState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _MyAccountState extends State<MyAccount> {
+class _ProfileScreenState extends State<ProfileScreen> {
   static const _divider = PwDivider(
     indent: Spacing.large,
     endIndent: Spacing.large,
