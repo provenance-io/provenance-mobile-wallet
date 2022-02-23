@@ -135,6 +135,87 @@ class ProvenanceThemeData {
     height: 19.2 / 12,
     //letterSpacing: 19 * 0.04,
   );
+
+  static const _colorScheme = ColorScheme(
+    primary: _primary500,
+    primaryVariant: _primary550,
+    secondary: _secondary400,
+    secondaryVariant: _secondary400,
+    background: _neutral750,
+    surface: _neutral50,
+    onBackground: _neutralNeutral,
+    onSurface: _neutralNeutral,
+    error: _error,
+    onError: _neutralNeutral,
+    onPrimary: _neutralNeutral,
+    onSecondary: _neutralNeutral,
+    brightness: Brightness.light,
+  );
+
+  static final TextTheme _textTheme = TextTheme(
+    headline1: _headline1,
+    headline2: _headline2,
+    headline3: _headline3,
+    headline4: _headline4,
+    headline5: _display1,
+    headline6: _display2,
+    subtitle1: _medium,
+    subtitle2: _displayBody,
+    bodyText1: _body,
+    bodyText2: _bodyBold,
+    button: _bodyBold,
+    caption: _footnote,
+    // STYLES NOT DEFINED
+    overline: _body,
+  );
+
+  static final themeData = ThemeData(
+    colorScheme: _colorScheme,
+    appBarTheme: AppBarTheme(
+      color: _colorScheme.primaryP500,
+      iconTheme: IconThemeData(color: _colorScheme.onPrimary),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: _colorScheme.primary,
+    ),
+    canvasColor: _colorScheme.background,
+    toggleableActiveColor: _colorScheme.primaryP500,
+    highlightColor: Colors.transparent,
+    indicatorColor: _colorScheme.primaryP500,
+    primaryColor: _colorScheme.primaryP500,
+    backgroundColor: _neutral750,
+    scaffoldBackgroundColor: _colorScheme.background,
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: _neutral750,
+      behavior: SnackBarBehavior.floating,
+    ),
+    typography: Typography.material2018(
+      platform: defaultTargetPlatform,
+    ),
+    textTheme: _textTheme.apply(
+      bodyColor: _neutralNeutral,
+      displayColor: _neutralNeutral,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        // unfortunately for some reason this color gets overriden with primary (bug?)
+        // have to set in input implentation
+        borderSide: BorderSide(color: _colorScheme.midGrey),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 12,
+        horizontal: 16,
+      ),
+    ),
+    unselectedWidgetColor: _colorScheme.lightGrey,
+    tabBarTheme: TabBarTheme(
+      labelColor: _colorScheme.primary,
+      unselectedLabelColor: _neutral550,
+      labelStyle: _medium,
+      unselectedLabelStyle: _medium,
+    ),
+    dividerColor: _neutral600,
+  );
 }
 
 class FigurePayThemeData {
@@ -225,87 +306,6 @@ class FigurePayThemeData {
     height: 15.6 / 10.0,
     letterSpacing: 0.32,
     color: Colors.red,
-  );
-
-  static const _colorScheme = ColorScheme(
-    primary: ProvenanceThemeData._primary500,
-    primaryVariant: ProvenanceThemeData._primary550,
-    secondary: ProvenanceThemeData._secondary400,
-    secondaryVariant: ProvenanceThemeData._secondary400,
-    background: ProvenanceThemeData._neutral750,
-    surface: _light,
-    onBackground: _white,
-    onSurface: _white,
-    error: ProvenanceThemeData._error,
-    onError: _white,
-    onPrimary: _white,
-    onSecondary: _white,
-    brightness: Brightness.light,
-  );
-
-  static final TextTheme _textTheme = TextTheme(
-    headline1: _headline1,
-    headline2: _headline2,
-    headline3: _headline3,
-    headline4: _headline4,
-    headline5: _headline5,
-    headline6: _headline6,
-    subtitle1: _mediumBold.copyWith(color: _darkGrey),
-    subtitle2: _medium.copyWith(color: _darkGrey),
-    bodyText1: _medium,
-    bodyText2: _small,
-    button: _mediumBold,
-    caption: _extraSmall,
-    // STYLES NOT DEFINED
-    overline: _fallback,
-  );
-
-  static final themeData = ThemeData(
-    colorScheme: _colorScheme,
-    appBarTheme: AppBarTheme(
-      color: _colorScheme.primaryP500,
-      iconTheme: IconThemeData(color: _colorScheme.onPrimary),
-    ),
-    bottomAppBarTheme: BottomAppBarTheme(
-      color: _colorScheme.primary,
-    ),
-    canvasColor: _colorScheme.background,
-    toggleableActiveColor: _colorScheme.primaryP500,
-    highlightColor: Colors.transparent,
-    indicatorColor: _colorScheme.primaryP500,
-    primaryColor: _colorScheme.primaryP500,
-    backgroundColor: _globalNeutral600Black,
-    scaffoldBackgroundColor: _colorScheme.background,
-    snackBarTheme: const SnackBarThemeData(
-      backgroundColor: _globalNeutral600Black,
-      behavior: SnackBarBehavior.floating,
-    ),
-    typography: Typography.material2018(
-      platform: defaultTargetPlatform,
-    ),
-    textTheme: _textTheme.apply(
-      bodyColor: _white,
-      displayColor: _white,
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(
-        // unfortunately for some reason this color gets overriden with primary (bug?)
-        // have to set in input implentation
-        borderSide: BorderSide(color: _colorScheme.midGrey),
-      ),
-      contentPadding: EdgeInsets.symmetric(
-        vertical: 12,
-        horizontal: 16,
-      ),
-    ),
-    unselectedWidgetColor: _colorScheme.lightGrey,
-    tabBarTheme: TabBarTheme(
-      labelColor: _colorScheme.primary,
-      unselectedLabelColor: _darkGrey,
-      labelStyle: _medium,
-      unselectedLabelStyle: _medium,
-    ),
-    dividerColor: _lightGrey,
   );
 }
 

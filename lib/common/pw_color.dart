@@ -46,7 +46,7 @@ mixin PwColorMixin on Widget {
       case PwColor.error:
         return theme.colorScheme.error;
       case PwColor.primary4:
-        return theme.colorScheme.primary4;
+        return theme.colorScheme.primary400;
       case PwColor.secondary1:
         return theme.colorScheme.secondary;
       case PwColor.secondary2:
