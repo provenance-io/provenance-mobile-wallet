@@ -27,14 +27,16 @@ class TradeDetailsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+        horizontal: Spacing.largeX3,
+        vertical: Spacing.xLarge,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           PwText(
             title,
-            color: PwColor.globalNeutral350,
-            style: PwTextStyle.m,
+            style: PwTextStyle.body,
           ),
           Expanded(child: Container()),
           endChild,

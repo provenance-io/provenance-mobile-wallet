@@ -165,8 +165,7 @@ class TradeDetailsScreen extends StatelessWidget {
               title: Strings.tradeDetailsOrderType,
               endChild: PwText(
                 transaction.type,
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -177,8 +176,7 @@ class TradeDetailsScreen extends StatelessWidget {
               endChild: // FIXME: Need amount.
                   PwText(
                 "20.000000000 Hash",
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -189,8 +187,7 @@ class TradeDetailsScreen extends StatelessWidget {
               endChild: // FIXME: Need 'Price Per Unit'.
                   PwText(
                 "0.020 USD",
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -201,8 +198,7 @@ class TradeDetailsScreen extends StatelessWidget {
               endChild: // FIXME: Need 'Total Purchase Price'.
                   PwText(
                 "50.00 USD",
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -212,8 +208,7 @@ class TradeDetailsScreen extends StatelessWidget {
               title: Strings.tradeDetailsFee,
               endChild: PwText(
                 transaction.feeAmount,
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -223,8 +218,7 @@ class TradeDetailsScreen extends StatelessWidget {
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
                 transaction.time,
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
             PwListDivider(
@@ -235,8 +229,7 @@ class TradeDetailsScreen extends StatelessWidget {
               endChild: // FIXME: Need 'Block'.
                   PwText(
                 "4831429",
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+                style: PwTextStyle.body,
               ),
             ),
           ],
