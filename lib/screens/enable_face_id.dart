@@ -93,7 +93,7 @@ class EnableFaceId extends StatelessWidget {
                       child: PwText(
                         Strings.enable,
                         style: PwTextStyle.mBold,
-                        color: PwColor.white,
+                        color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
                         ModalLoadingRoute.showLoading(
@@ -130,7 +130,7 @@ class EnableFaceId extends StatelessWidget {
                       child: PwText(
                         Strings.skipForNow,
                         style: PwTextStyle.subhead,
-                        color: PwColor.white,
+                        color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
                         ModalLoadingRoute.showLoading(

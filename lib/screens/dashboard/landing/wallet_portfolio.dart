@@ -28,7 +28,7 @@ class WalletPortfolio extends StatelessWidget {
         children: [
           PwText(
             Strings.portfolioValue,
-            color: PwColor.white,
+            color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
           StreamBuilder<List<Asset>>(
@@ -40,7 +40,7 @@ class WalletPortfolio extends StatelessWidget {
               return PwText(
                 // FIXME: How do we get portfolio value?
                 '\$0',
-                color: PwColor.white,
+                color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
               );
             },
@@ -60,7 +60,7 @@ class WalletPortfolio extends StatelessWidget {
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.send,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
@@ -87,7 +87,7 @@ class WalletPortfolio extends StatelessWidget {
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.receive,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
@@ -156,7 +156,7 @@ class WalletPortfolio extends StatelessWidget {
                 VerticalSpacer.xSmall(),
                 PwText(
                   !connected ? Strings.walletConnect : Strings.disconnect,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                   style: PwTextStyle.s,
                 ),
               ],

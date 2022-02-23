@@ -122,7 +122,7 @@ class _LandingScreenState extends State<LandingScreen>
                 child: PwText(
                   _accountExists ? Strings.continueName : Strings.createWallet,
                   style: PwTextStyle.bodyBold,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
                   if (_accountExists) {
@@ -144,7 +144,7 @@ class _LandingScreenState extends State<LandingScreen>
                 child: PwText(
                   Strings.recoverWallet,
                   style: PwTextStyle.body,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(AccountName(

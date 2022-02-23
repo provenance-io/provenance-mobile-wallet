@@ -34,7 +34,7 @@ class WordButton extends StatelessWidget {
           child: Center(
             child: PwText(
               word,
-              color: PwColor.white,
+              color: PwColor.neutralNeutral,
               style: PwTextStyle.bodyBold,
             ),
           ),

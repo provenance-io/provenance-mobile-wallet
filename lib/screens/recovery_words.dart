@@ -180,7 +180,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                           child: PwText(
                             Strings.continueName,
                             style: PwTextStyle.bodyBold,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                           onPressed: () {
                             Navigator.of(context)

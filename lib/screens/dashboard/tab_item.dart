@@ -36,7 +36,7 @@ class TabItem extends StatelessWidget {
             child: PwText(
               tabName,
               style: PwTextStyle.footnote,
-              color: PwColor.white,
+              color: PwColor.neutralNeutral,
             ),
           ),
         ],

@@ -7,7 +7,7 @@ class ErrorDialog extends StatelessWidget {
     this.error,
   }) : super(key: key);
 
-  factory ErrorDialog.fromException(dynamic exception, { Key? key }) {
+  factory ErrorDialog.fromException(dynamic exception, {Key? key}) {
     final msg = exception.toString().replaceFirst(RegExp('^[^:]+: '), "");
 
     return ErrorDialog(
@@ -46,7 +46,7 @@ class ErrorDialog extends StatelessWidget {
                 child: PwText(
                   'OK',
                   style: PwTextStyle.mBold,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();

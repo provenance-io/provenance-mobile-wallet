@@ -54,7 +54,7 @@ class AccountName extends HookWidget {
                   Strings.nameYourAccountText,
                   style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
               ),
               VerticalSpacer.small(),
@@ -64,7 +64,7 @@ class AccountName extends HookWidget {
                   Strings.infoIsStoredLocallyText,
                   style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
               ),
               VerticalSpacer.xxLarge(),
@@ -92,7 +92,7 @@ class AccountName extends HookWidget {
                   child: PwText(
                     Strings.continueName,
                     style: PwTextStyle.mBold,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() == true) {
@@ -158,7 +158,7 @@ class _TextFormField extends StatelessWidget {
       children: [
         PwText(
           label,
-          color: PwColor.white,
+          color: PwColor.neutralNeutral,
         ),
         VerticalSpacer.small(),
         Container(

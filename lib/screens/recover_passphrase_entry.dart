@@ -133,7 +133,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
                     child: PwText(
                       Strings.recover,
                       style: PwTextStyle.mBold,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                     ),
                     onPressed: () async {
                       if (_formKey.currentState?.validate() == true) {
