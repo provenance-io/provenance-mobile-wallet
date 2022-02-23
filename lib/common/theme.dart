@@ -129,9 +129,9 @@ class ProvenanceThemeData {
   static const TextStyle _footnote = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 12,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w400,
     height: 19.2 / 12,
-    letterSpacing: 19 * 0.04,
+    //letterSpacing: 19 * 0.04,
   );
 }
 
