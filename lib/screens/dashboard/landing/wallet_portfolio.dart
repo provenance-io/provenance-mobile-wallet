@@ -5,7 +5,6 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -67,9 +66,12 @@ class WalletPortfolio extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => SendFlow(),
-                  ));
+                    ),
+                  );
                 },
               ),
               HorizontalSpacer.small(),
@@ -120,7 +122,7 @@ class WalletPortfolio extends StatelessWidget {
                   context,
                 ).push(
                   QRCodeScanner(
-                    isValidCallback: bloc.isValidWalletConnectAddress
+                    isValidCallback: bloc.isValidWalletConnectAddress,
                   ).route(),
                 );
                 if (addressData != null) {

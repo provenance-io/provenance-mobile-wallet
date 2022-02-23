@@ -32,6 +32,7 @@ class DashboardBloc extends Disposable {
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
   final _connectionStatus =
       BehaviorSubject.seeded(WalletConnectionServiceStatus.disconnected);
+  final BehaviorSubject<String?> _address = BehaviorSubject.seeded(null);
   final _error = PublishSubject<String>();
   final _response = PublishSubject<WalletConnectTxResponse>();
 
@@ -47,7 +48,8 @@ class DashboardBloc extends Disposable {
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
-      _connectionStatus;
+      _connectionStatus.stream;
+  ValueStream<String?> get address => _address.stream;
   Stream<String> get error => _error;
   Stream<WalletConnectTxResponse> get response => _response;
 
@@ -68,7 +70,8 @@ class DashboardBloc extends Disposable {
       session.sessionRequest
           .listen(_sessionRequest.add)
           .addTo(_sessionSubscriptions);
-      session.status.listen(_onSessonStatus).addTo(_sessionSubscriptions);
+      session.status.listen(_onSessionStatus).addTo(_sessionSubscriptions);
+      session.address.listen(_onAddress).addTo(_sessionSubscriptions);
       session.error.listen(_error.add).addTo(_sessionSubscriptions);
       session.response.listen(_response.add).addTo(_sessionSubscriptions);
       _walletSession = session;
@@ -199,7 +202,15 @@ class DashboardBloc extends Disposable {
     }
   }
 
-  void _onSessonStatus(WalletConnectionServiceStatus status) {
+  void _onAddress(String? address) {
+    _address.value = address;
+
+    if (WalletConnectionServiceStatus.disconnected == _connectionStatus.value) {
+      _sessionSubscriptions.clear();
+    }
+  }
+
+  void _onSessionStatus(WalletConnectionServiceStatus status) {
     _connectionStatus.value = status;
 
     if (status == WalletConnectionServiceStatus.disconnected) {

@@ -12,6 +12,8 @@ import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Wallets extends StatefulWidget {
+  const Wallets({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return WalletsState();
@@ -121,7 +123,7 @@ class WalletsState extends State<Wallets>
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: const [
                   PwText(
                     Strings.selectedWallet,
                     color: PwColor.globalNeutral550,
