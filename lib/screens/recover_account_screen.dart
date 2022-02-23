@@ -96,7 +96,7 @@ class RecoverAccountScreen extends StatelessWidget {
                 onPressed: () {
                   if (flowType == WalletAddImportType.onBoardingRecover ||
                       flowType == WalletAddImportType.dashboardRecover) {
-                    Navigator.of(context).push(RecoverPassphraseEntry(
+                    Navigator.of(context).push(RecoverPassphraseEntryScreen(
                       flowType,
                       accountName,
                       currentStep: currentStep,

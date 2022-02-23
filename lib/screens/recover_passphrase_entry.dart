@@ -9,8 +9,8 @@ import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class RecoverPassphraseEntry extends StatefulWidget {
-  RecoverPassphraseEntry(
+class RecoverPassphraseEntryScreen extends StatefulWidget {
+  RecoverPassphraseEntryScreen(
     this.flowType,
     this.accountName, {
     this.currentStep,
@@ -24,7 +24,7 @@ class RecoverPassphraseEntry extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RecoverPassphraseEntryState(
+    return RecoverPassphraseEntryScreenState(
       flowType,
       accountName,
       currentStep: currentStep,
@@ -33,8 +33,9 @@ class RecoverPassphraseEntry extends StatefulWidget {
   }
 }
 
-class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
-  RecoverPassphraseEntryState(
+class RecoverPassphraseEntryScreenState
+    extends State<RecoverPassphraseEntryScreen> {
+  RecoverPassphraseEntryScreenState(
     this.flowType,
     this.accountName, {
     this.currentStep,
