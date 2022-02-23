@@ -66,7 +66,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: Strings.appName,
-      theme: FigurePayThemeData.themeData,
+      theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
