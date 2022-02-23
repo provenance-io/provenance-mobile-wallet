@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -57,8 +58,8 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
       _addListener(word);
-      this.textControllers.add(word);
-      this.focusNodes.add(FocusNode());
+      textControllers.add(word);
+      focusNodes.add(FocusNode());
     }
   }
 
@@ -76,111 +77,116 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.neutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: PwText(
-          Strings.enterRecoveryPassphrase,
-          style: PwTextStyle.h6,
-          textAlign: TextAlign.left,
-          color: PwColor.neutral550,
-        ),
+      appBar: PwAppBar(
+        title: Strings.enterRecoveryPassphrase,
+        leadingIcon: PwIcons.back,
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Container(
-            color: Theme.of(context).colorScheme.neutralNeutral,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ProgressStepper(
-                  (currentStep ?? 0),
-                  numberOfSteps ?? 1,
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 12,
-                    bottom: 40,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    final width = (constraints.maxWidth - 20) / 2;
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: _buildTextNodes(width),
-                    );
-                  }),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: PwButton(
-                    child: PwText(
-                      Strings.recover,
-                      style: PwTextStyle.mBold,
-                      color: PwColor.neutralNeutral,
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState?.validate() == true) {
-                        final words = this
-                            .textControllers
-                            .map((e) => e.text.trim())
-                            .toList();
-
-                        if (flowType == WalletAddImportType.onBoardingRecover) {
-                          Navigator.of(context).push(CreatePin(
-                            flowType,
-                            accountName: accountName,
-                            currentStep: (currentStep ?? 0) + 1,
-                            numberOfSteps: numberOfSteps,
-                            words: words,
-                          ).route());
-                        } else {
-                          ModalLoadingRoute.showLoading(
-                            Strings.pleaseWait,
-                            context,
-                          );
-
-                          await get<WalletService>().saveWallet(
-                            phrase: words,
-                            name: accountName,
-                          );
-
-                          ModalLoadingRoute.dismiss(context);
-
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                VerticalSpacer.xxLarge(),
-                VerticalSpacer.xxLarge(),
-              ],
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ProgressStepper(
+            (currentStep ?? 0),
+            numberOfSteps ?? 1,
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 12,
+              bottom: 40,
             ),
           ),
-        ),
+          Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              itemBuilder: (context, index) {
+                final textController = textControllers[index];
+                final focusNode = focusNodes[index];
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    VerticalSpacer.xxLarge(),
+                    SizedBox(
+                      height: 22,
+                      child: Row(
+                        children: [
+                          PwText(
+                            "Passphrase ${index + 1}",
+                          ),
+                        ],
+                      ),
+                    ),
+                    VerticalSpacer.small(),
+                    SizedBox(
+                      height: 42,
+                      child: _TextFormField(
+                        controller: textController,
+                        focusNode: focusNode,
+                        handlePaste: _handlePaste,
+                      ),
+                    ),
+                    index != textControllers.length - 1
+                        ? Container()
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Spacing.largeX4,
+                            ),
+                            child: PwButton(
+                              child: PwText(
+                                Strings.continueName,
+                                style: PwTextStyle.bodyBold,
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState?.validate() == true) {
+                                  final words = textControllers
+                                      .map((e) => e.text.trim())
+                                      .toList();
+
+                                  if (flowType ==
+                                      WalletAddImportType.onBoardingRecover) {
+                                    Navigator.of(context).push(CreatePin(
+                                      flowType,
+                                      accountName: accountName,
+                                      currentStep: (currentStep ?? 0) + 1,
+                                      numberOfSteps: numberOfSteps,
+                                      words: words,
+                                    ).route());
+                                  } else {
+                                    ModalLoadingRoute.showLoading(
+                                      Strings.pleaseWait,
+                                      context,
+                                    );
+
+                                    await get<WalletService>().saveWallet(
+                                      phrase: words,
+                                      name: accountName,
+                                    );
+
+                                    ModalLoadingRoute.dismiss(context);
+
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                  ],
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Container();
+              },
+              itemCount: textControllers.length,
+              shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -197,51 +203,9 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
     _pasteWords(controller);
   }
 
-  List<Widget> _buildTextNodes(double width) {
-    var first = List<Widget>.empty(growable: true);
-    var second = List<Widget>.empty(growable: true);
-    for (var i = 0; i <= 11; i++) {
-      var text1 = _TextFormField(
-        controller: textControllers.elementAt(i),
-        number: '${i + 1}',
-        focusNode: focusNodes.elementAt(i),
-        handlePaste: _handlePaste,
-      );
-      var text2 = _TextFormField(
-        controller: textControllers.elementAt(i + 12),
-        number: '${i + 13}',
-        focusNode: focusNodes.elementAt(i + 12),
-        handlePaste: _handlePaste,
-      );
-      first.add(text1);
-      second.add(text2);
-      if (i != 12) {
-        first.add(VerticalSpacer.small());
-        second.add(VerticalSpacer.small());
-      }
-    }
-
-    return [
-      Container(
-        width: width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: first,
-        ),
-      ),
-      Container(
-        width: width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: second,
-        ),
-      ),
-    ];
-  }
-
   _handleTextControllerTextChange(TextEditingController controller) {
     String pastedText = controller.text;
-    if (pastedText.length > 0) {
+    if (pastedText.isNotEmpty) {
       List<String> parts = pastedText.split(' ');
       if (parts.length == 48) {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
@@ -277,7 +241,6 @@ class _TextFormField extends StatelessWidget {
   _TextFormField({
     Key? key,
     this.keyboardType,
-    this.number,
     this.onChanged,
     this.validator,
     this.focusNode,
@@ -285,9 +248,6 @@ class _TextFormField extends StatelessWidget {
     this.controller,
   }) : super(key: key);
 
-  Offset? _tapPosition = Offset(0, 0);
-
-  final String? number;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
@@ -298,61 +258,29 @@ class _TextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final RenderBox overlay =
-        Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
-    return Stack(
-      alignment: Alignment.centerLeft,
-      children: <Widget>[
-        TextFormField(
-          keyboardType: keyboardType,
-          autocorrect: false,
-          controller: controller,
-          onChanged: onChanged,
-          focusNode: focusNode,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (word) {
-            if (word == null || word.isEmpty) {
-              return Strings.required;
-            }
+    return TextFormField(
+      keyboardType: keyboardType,
+      autocorrect: false,
+      controller: controller,
+      onChanged: onChanged,
+      focusNode: focusNode,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (word) {
+        if (word == null || word.isEmpty) {
+          return Strings.required;
+        }
 
-            return null;
-          },
-          style: Theme.of(context)
-              .textTheme
-              .medium
-              .copyWith(color: Theme.of(context).colorScheme.neutral550),
-          decoration: InputDecoration(
-            fillColor: Theme.of(context).colorScheme.neutralNeutral,
-            filled: true,
-            prefix: Container(
-              width: 20,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: theme.colorScheme.midGrey),
-            ),
-          ),
+        return null;
+      },
+      style: Theme.of(context).textTheme.body,
+      decoration: InputDecoration(
+        fillColor: Theme.of(context).colorScheme.neutral750,
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.neutral250),
         ),
-        Builder(builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  HorizontalSpacer.small(),
-                  Text(
-                    number!,
-                    style: _decorationStyleOf(context),
-                  ),
-                ],
-              ),
-            ],
-          );
-        }),
-      ],
+      ),
     );
   }
 
@@ -360,9 +288,5 @@ class _TextFormField extends StatelessWidget {
     final theme = Theme.of(context);
 
     return theme.textTheme.medium.copyWith(color: theme.hintColor);
-  }
-
-  void _storePosition(TapDownDetails details) {
-    _tapPosition = details.globalPosition;
   }
 }
