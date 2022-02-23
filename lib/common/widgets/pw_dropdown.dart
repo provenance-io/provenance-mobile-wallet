@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwDropDown<X> extends StatefulWidget {
-  PwDropDown({
+  const PwDropDown({
     Key? key,
     required this.initialValue,
     required this.items,
@@ -33,16 +33,14 @@ class PwDropDown<X> extends StatefulWidget {
       items: items,
       key: key,
       isExpanded: true,
-      builder: (item) => Expanded(
-        child: Row(
-          children: [
-            PwText(
-              item,
-              color: PwColor.neutralNeutral,
-              style: PwTextStyle.body,
-            ),
-          ],
-        ),
+      builder: (item) => Row(
+        children: [
+          PwText(
+            item,
+            color: PwColor.neutralNeutral,
+            style: PwTextStyle.body,
+          ),
+        ],
       ),
     );
   }
@@ -70,7 +68,6 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
         padding: EdgeInsets.only(left: 16),
         child: PwIcon(
           PwIcons.chevron,
-          // TODO: Need some kind of neutral instead of white when dealing with colors.
           color: Theme.of(context).colorScheme.neutralNeutral,
         ),
       ),
