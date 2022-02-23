@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_divider.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -13,91 +14,81 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static const _divider = PwDivider(
-    indent: Spacing.large,
-    endIndent: Spacing.large,
-    height: 1,
-  );
+  static const _divider = PwListDivider();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
+      backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
+        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
         elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.close,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral500,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: Container(),
         title: PwText(
-          Strings.myAccount,
-          color: PwColor.globalNeutral550,
-          style: PwTextStyle.h6,
+          Strings.profile,
+          style: PwTextStyle.subhead,
         ),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            textDirection: TextDirection.ltr,
-            children: [
-              _CategoryLabel(Strings.security),
-              _FutureToggleItem(
-                text: Strings.faceId,
-                getValue: get<WalletService>().getUseBiometry,
-                setValue: (value) => get<WalletService>().setUseBiometry(
-                  useBiometry: value,
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          textDirection: TextDirection.ltr,
+          children: [
+            _CategoryLabel(Strings.security),
+            _divider,
+            _FutureToggleItem(
+              text: Strings.faceId,
+              getValue: get<WalletService>().getUseBiometry,
+              setValue: (value) => get<WalletService>().setUseBiometry(
+                useBiometry: value,
               ),
-              _divider,
-              _LinkItem(
-                text: Strings.pinCode,
-                onTap: () {
-                  // TODO: open pin code screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.notifications,
-                onTap: () {
-                  // TODO: Open notifications screen.
-                },
-              ),
-              _CategoryLabel(Strings.general),
-              _LinkItem(
-                text: Strings.faq,
-                onTap: () {
-                  // TODO: open FAQ screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.sendFeedback,
-                onTap: () {
-                  // TODO: open send feedback screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.contactUs,
-                onTap: () {
-                  // TODO: open contact us screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.policiesAndTerms,
-                onTap: () {
-                  // TODO: open policies & terms screen.
-                },
-              ),
-            ],
-          ),
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.pinCode,
+              onTap: () {
+                // TODO: open pin code screen.
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.notifications,
+              onTap: () {
+                // TODO: Open notifications screen.
+              },
+            ),
+            _divider,
+            _CategoryLabel(Strings.general),
+            _divider,
+            _LinkItem(
+              text: Strings.faq,
+              onTap: () {
+                // TODO: open FAQ screen.
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.sendFeedback,
+              onTap: () {
+                // TODO: open send feedback screen.
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.contactUs,
+              onTap: () {
+                // TODO: open contact us screen.
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.policiesAndTerms,
+              onTap: () {
+                // TODO: open policies & terms screen.
+              },
+            ),
+            _divider,
+          ],
         ),
       ),
     );
@@ -116,16 +107,15 @@ class _CategoryLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.large,
+        horizontal: Spacing.xxLarge,
       ),
       padding: EdgeInsets.only(
-        top: Spacing.large,
-        bottom: Spacing.small,
+        top: Spacing.xxLarge,
+        bottom: Spacing.large,
       ),
       child: PwText(
         text,
-        color: PwColor.globalNeutral550,
-        style: PwTextStyle.mBold,
+        style: PwTextStyle.title,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -151,7 +141,7 @@ class _LinkItem extends StatelessWidget {
       child: Container(
         height: 64,
         margin: EdgeInsets.symmetric(
-          horizontal: Spacing.large,
+          horizontal: Spacing.xxLarge,
         ),
         child: Row(
           children: [
@@ -167,6 +157,8 @@ class _LinkItem extends StatelessWidget {
                 ),
                 child: PwIcon(
                   PwIcons.caret,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
+                  size: 10,
                 ),
               ),
             ),
@@ -294,13 +286,9 @@ class _ItemLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: Spacing.medium,
-      ),
       child: PwText(
         text,
-        color: PwColor.globalNeutral500,
-        style: PwTextStyle.sBold,
+        style: PwTextStyle.body,
         overflow: TextOverflow.ellipsis,
       ),
     );
