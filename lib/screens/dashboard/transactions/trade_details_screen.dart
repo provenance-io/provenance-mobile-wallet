@@ -50,38 +50,34 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             TradeDetailsItem(
               title: Strings.tradeDetailsTransaction,
-              endChild: Container(
-                child: Row(
-                  children: [
-                    PwText(
-                      transaction.id,
-                      style: PwTextStyle.m,
-                      color: PwColor.globalNeutral600Black,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        // FIXME: Navigate to explorer in the browser? Remove this ASAP.
-                        await showDialog(
-                          context: context,
-                          builder: (context) => ErrorDialog(
-                            error: "Coming Soon",
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        child: PwIcon(
-                          PwIcons.new_window,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .globalNeutral600Black,
-                          size: 24.0,
+              endChild: Row(
+                children: [
+                  PwText(
+                    transaction.id.abbreviateAddress(),
+                    style: PwTextStyle.body,
+                  ),
+                  HorizontalSpacer.large(),
+                  GestureDetector(
+                    onTap: () async {
+                      // FIXME: Navigate to explorer in the browser? Remove this ASAP.
+                      await showDialog(
+                        context: context,
+                        builder: (context) => ErrorDialog(
+                          error: "Coming Soon",
                         ),
+                      );
+                    },
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: PwIcon(
+                        PwIcons.new_window,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                        size: 20,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             PwListDivider(
@@ -90,37 +86,33 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsFromAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
-                  Container(
-                child: Row(
-                  children: [
-                    PwText(
-                      transaction.address.abbreviateAddress(),
-                      style: PwTextStyle.m,
-                      color: PwColor.globalNeutral600Black,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(
-                          ClipboardData(text: transaction.address),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: PwText(Strings.addressCopied)),
-                        );
-                      },
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        child: PwIcon(
-                          PwIcons.copy,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .globalNeutral600Black,
-                          size: 24,
-                        ),
+                  Row(
+                children: [
+                  PwText(
+                    transaction.address.abbreviateAddress(),
+                    style: PwTextStyle.body,
+                  ),
+                  HorizontalSpacer.large(),
+                  GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(
+                        ClipboardData(text: transaction.address),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: PwText(Strings.addressCopied)),
+                      );
+                    },
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: PwIcon(
+                        PwIcons.copy,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                        size: 20,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             PwListDivider(
@@ -129,45 +121,41 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
-                  Container(
-                child: StreamBuilder<String>(
-                  initialData: bloc.walletAddress.value,
-                  stream: bloc.walletAddress,
-                  builder: (context, snapshot) {
-                    final walletAddress = snapshot.data ?? "";
+                  StreamBuilder<String>(
+                initialData: bloc.walletAddress.value,
+                stream: bloc.walletAddress,
+                builder: (context, snapshot) {
+                  final walletAddress = snapshot.data ?? "";
 
-                    return Row(
-                      children: [
-                        PwText(
-                          walletAddress.abbreviateAddress(),
-                          style: PwTextStyle.m,
-                          color: PwColor.globalNeutral600Black,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Clipboard.setData(
-                              ClipboardData(text: walletAddress),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: PwText(Strings.addressCopied)),
-                            );
-                          },
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: PwIcon(
-                              PwIcons.copy,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .globalNeutral600Black,
-                              size: 24,
-                            ),
+                  return Row(
+                    children: [
+                      PwText(
+                        walletAddress.abbreviateAddress(),
+                        style: PwTextStyle.body,
+                      ),
+                      HorizontalSpacer.large(),
+                      GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(
+                            ClipboardData(text: walletAddress),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: PwText(Strings.addressCopied)),
+                          );
+                        },
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: PwIcon(
+                            PwIcons.copy,
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                            size: 20,
                           ),
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             PwListDivider(
