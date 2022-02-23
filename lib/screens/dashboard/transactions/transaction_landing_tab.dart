@@ -12,6 +12,8 @@ class TransactionLandingTab extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  final textDivider = " • ";
+
   @override
   Widget build(BuildContext context) {
     final bloc = get<DashboardBloc>();
@@ -94,7 +96,10 @@ class TransactionLandingTab extends StatelessWidget {
 
                 return Expanded(
                   child: ListView.separated(
-                    padding: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.xxLarge,
+                      vertical: 20,
+                    ),
                     itemBuilder: (context, index) {
                       final item = transactions[index];
 
@@ -112,16 +117,16 @@ class TransactionLandingTab extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
+                                SizedBox(
+                                  width: Spacing.largeX3,
+                                  height: Spacing.largeX3,
                                   // FIXME: Transactions have no 'display' property atm.
                                   child: PwIcon(
                                     PwIcons.hashLogo,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .globalNeutral550,
-                                    size: 32,
+                                        .neutralNeutral,
+                                    size: Spacing.largeX3,
                                   ),
                                 ),
                                 HorizontalSpacer.medium(),
@@ -131,43 +136,39 @@ class TransactionLandingTab extends StatelessWidget {
                                     PwText(
                                       // FIXME: Transactions have no 'display' property atm.
                                       Strings.dropDownHashAsset.toUpperCase(),
-                                      color: PwColor.globalNeutral500,
-                                      style: PwTextStyle.sBold,
+                                      style: PwTextStyle.bodyBold,
                                     ),
                                     VerticalSpacer.xSmall(),
-                                    PwText(
-                                      item.type,
-                                      color: PwColor.globalNeutral450,
-                                      style: PwTextStyle.s,
+                                    Row(
+                                      children: [
+                                        PwText(
+                                          item.type,
+                                          color: PwColor.neutral200,
+                                          style: PwTextStyle.footnote,
+                                        ),
+                                        PwText(
+                                          textDivider,
+                                          color: PwColor.neutral200,
+                                          style: PwTextStyle.footnote,
+                                        ),
+                                        PwText(
+                                          // FIXME: Format the date to be 'Mmm dd'.
+                                          item.time,
+                                          color: PwColor.neutral200,
+                                          style: PwTextStyle.footnote,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                                 Expanded(child: Container()),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    PwText(
-                                      // FIXME: Transactions currently only have 'feeAmount'.
-                                      '\$50.00',
-                                      color: PwColor.globalNeutral500,
-                                      style: PwTextStyle.sBold,
-                                    ),
-                                    VerticalSpacer.xSmall(),
-                                    PwText(
-                                      // FIXME: Format the date to be 'Mmm dd'.
-                                      item.time,
-                                      color: PwColor.globalNeutral450,
-                                      style: PwTextStyle.s,
-                                    ),
-                                  ],
-                                ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 16),
                                   child: PwIcon(
                                     PwIcons.caret,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .globalNeutral550,
+                                        .neutralNeutral,
                                     size: 12.0,
                                   ),
                                 ),
@@ -187,7 +188,6 @@ class TransactionLandingTab extends StatelessWidget {
                 );
               },
             ),
-            VerticalSpacer.large(),
           ],
         ),
       ),
