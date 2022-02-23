@@ -110,19 +110,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: Poppins
-      fonts:
-        - asset: fonts/Poppins/Poppins-Black.ttf
-          weight: 900
-        - asset: fonts/Poppins/Poppins-ExtraBold.ttf
-          weight: 800
-        - asset: fonts/Poppins/Poppins-Bold.ttf
-          weight: 700
-        - asset: fonts/Poppins/Poppins-Medium.ttf
-          weight: 500
-        - asset: fonts/Poppins/Poppins-Regular.ttf
-          weight: 400
-          style: normal
     - family: GothicA1
       fonts:
         - asset: fonts/GothicA1/GothicA1-Black.ttf
