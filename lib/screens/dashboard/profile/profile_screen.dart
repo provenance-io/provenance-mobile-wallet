@@ -125,6 +125,7 @@ class _LinkItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         height: 64,
         margin: EdgeInsets.symmetric(
