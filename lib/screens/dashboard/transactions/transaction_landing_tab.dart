@@ -7,16 +7,11 @@ import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_s
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class TransactionLandingTab extends StatefulWidget {
+class TransactionLandingTab extends StatelessWidget {
   const TransactionLandingTab({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => TransactionLandingTabState();
-}
-
-class TransactionLandingTabState extends State<TransactionLandingTab> {
   @override
   Widget build(BuildContext context) {
     final bloc = get<DashboardBloc>();
