@@ -29,7 +29,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
+        backgroundColor: Theme.of(context).colorScheme.neutral450,
         elevation: 0.0,
         leading: IconButton(
           icon: PwIcon(
@@ -40,7 +40,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
+      backgroundColor: Theme.of(context).colorScheme.neutral450,
       body: _buildBody(context),
     );
   }

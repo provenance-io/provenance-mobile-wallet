@@ -138,7 +138,7 @@ class WalletPortfolio extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
-                    ).colorScheme.globalNeutral450,
+                    ).colorScheme.neutral450,
                     borderRadius: BorderRadius.circular(
                       23,
                     ),

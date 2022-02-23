@@ -48,7 +48,7 @@ class _PwCheckBoxState extends State<PwCheckBox> {
             ? BorderSide(
                 color: _selected
                     ? theme.colorScheme.neutralNeutral
-                    : theme.colorScheme.provenanceNeutral550,
+                    : theme.colorScheme.neutral550,
                 width: 4,
               )
             : BorderSide(color: theme.colorScheme.primaryP550, width: 1);

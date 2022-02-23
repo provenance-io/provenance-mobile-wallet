@@ -33,7 +33,7 @@ class AccountName extends HookWidget {
       body: Form(
         key: _formKey,
         child: Container(
-          color: Theme.of(context).colorScheme.provenanceNeutral750,
+          color: Theme.of(context).colorScheme.neutral750,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,7 @@ class _TextFormField extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.provenanceNeutral550,
+                color: theme.colorScheme.neutral550,
                 spreadRadius: 6,
               ),
             ],
@@ -184,12 +184,12 @@ class _TextFormField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: label,
               hintStyle: theme.textTheme.body
-                  .copyWith(color: theme.colorScheme.provenanceNeutral250),
-              fillColor: theme.colorScheme.provenanceNeutral750,
+                  .copyWith(color: theme.colorScheme.neutral250),
+              fillColor: theme.colorScheme.neutral750,
               filled: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: theme.colorScheme.provenanceNeutral250,
+                  color: theme.colorScheme.neutral250,
                 ),
               ),
             ),

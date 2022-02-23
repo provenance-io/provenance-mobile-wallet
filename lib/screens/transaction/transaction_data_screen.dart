@@ -15,7 +15,7 @@ class TransactionDataScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
       appBar: PwAppBar(
         title: Strings.transactionDataTitle,
         leadingIcon: PwIcons.back,

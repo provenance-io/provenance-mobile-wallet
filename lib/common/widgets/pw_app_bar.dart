@@ -23,7 +23,7 @@ class _PwAppBarState extends State<PwAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
       elevation: 0.0,
       title: PwText(
         widget.title ?? "",

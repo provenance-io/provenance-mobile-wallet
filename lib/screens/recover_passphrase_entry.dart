@@ -83,7 +83,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
+            color: Theme.of(context).colorScheme.neutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -91,7 +91,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
           Strings.enterRecoveryPassphrase,
           style: PwTextStyle.h6,
           textAlign: TextAlign.left,
-          color: PwColor.globalNeutral550,
+          color: PwColor.neutral550,
         ),
       ),
       body: Form(
@@ -321,7 +321,7 @@ class _TextFormField extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .medium
-              .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
+              .copyWith(color: Theme.of(context).colorScheme.neutral550),
           decoration: InputDecoration(
             fillColor: Theme.of(context).colorScheme.neutralNeutral,
             filled: true,

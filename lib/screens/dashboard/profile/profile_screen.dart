@@ -19,9 +19,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
         leading: Container(),
         title: PwText(
@@ -243,11 +243,9 @@ class _ToggleItem extends StatelessWidget {
                 : FlutterSwitch(
                     value: value!,
                     onToggle: onChanged,
-                    inactiveColor:
-                        Theme.of(context).colorScheme.provenanceNeutral450,
+                    inactiveColor: Theme.of(context).colorScheme.neutral450,
                     activeColor: Theme.of(context).colorScheme.primaryP550,
-                    toggleColor:
-                        Theme.of(context).colorScheme.provenanceNeutral800,
+                    toggleColor: Theme.of(context).colorScheme.neutral800,
                     padding: 3,
                     height: 20,
                     width: 40,

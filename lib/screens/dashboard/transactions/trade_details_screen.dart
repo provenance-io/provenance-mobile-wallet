@@ -27,7 +27,7 @@ class TradeDetailsScreen extends StatelessWidget {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
           children: [
             TradeDetailsItem(

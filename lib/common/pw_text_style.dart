@@ -2,20 +2,14 @@ import 'package:provenance_wallet/common/pw_design.dart';
 
 /// Provenance Typopgraphy Text Styles
 enum PwTextStyle {
-  h0,
-  h1,
-  h2,
   h3,
   h4,
-  h5,
   h6,
   h7,
   m,
   m_p,
   mBold,
-  mSemiBold,
   s,
-  sSemiBold,
   sBold,
   xs,
   xsBold,
@@ -44,18 +38,10 @@ mixin PwTextStyleMixin on Widget {
     final theme = Theme.of(context);
 
     switch (altStyle ?? style) {
-      case PwTextStyle.h0:
-        return theme.textTheme.headline0;
-      case PwTextStyle.h1:
-        return theme.textTheme.headline1;
-      case PwTextStyle.h2:
-        return theme.textTheme.headline2;
       case PwTextStyle.h3:
         return theme.textTheme.headline3;
       case PwTextStyle.h4:
         return theme.textTheme.headline4;
-      case PwTextStyle.h5:
-        return theme.textTheme.headline5;
       case PwTextStyle.h6:
         return theme.textTheme.headline6;
       case PwTextStyle.h7:
@@ -66,12 +52,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.pWMedium;
       case PwTextStyle.mBold:
         return theme.textTheme.mediumBold;
-      case PwTextStyle.mSemiBold:
-        return theme.textTheme.mediumSemiBold;
       case PwTextStyle.s:
         return theme.textTheme.small;
-      case PwTextStyle.sSemiBold:
-        return theme.textTheme.smallSemiBold;
       case PwTextStyle.sBold:
         return theme.textTheme.smallBold;
       case PwTextStyle.xs:

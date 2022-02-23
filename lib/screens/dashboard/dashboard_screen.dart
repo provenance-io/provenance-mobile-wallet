@@ -80,7 +80,7 @@ class DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral800,
+        color: Theme.of(context).colorScheme.neutral800,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

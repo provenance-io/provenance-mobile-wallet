@@ -86,7 +86,7 @@ class WalletsState extends State<Wallets>
             },
             child: PwIcon(
               PwIcons.plus,
-              color: Theme.of(context).colorScheme.globalNeutral450,
+              color: Theme.of(context).colorScheme.neutral450,
               size: 24,
             ),
           ),
@@ -94,14 +94,14 @@ class WalletsState extends State<Wallets>
         ],
         title: PwText(
           Strings.wallets,
-          color: PwColor.globalNeutral550,
+          color: PwColor.neutral550,
           style: PwTextStyle.h6,
         ),
         leading: IconButton(
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
+            color: Theme.of(context).colorScheme.neutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -126,7 +126,7 @@ class WalletsState extends State<Wallets>
                 children: const [
                   PwText(
                     Strings.selectedWallet,
-                    color: PwColor.globalNeutral550,
+                    color: PwColor.neutral550,
                     style: PwTextStyle.sBold,
                   ),
                 ],
@@ -173,7 +173,7 @@ class WalletsState extends State<Wallets>
             children: [
               PwText(
                 Strings.allWallets,
-                color: PwColor.globalNeutral550,
+                color: PwColor.neutral550,
                 style: PwTextStyle.sBold,
               ),
             ],
@@ -238,7 +238,7 @@ class WalletItem extends StatelessWidget {
               children: [
                 PwText(
                   item.name,
-                  color: PwColor.globalNeutral550,
+                  color: PwColor.neutral550,
                   style: PwTextStyle.m,
                 ),
                 HorizontalSpacer.small(),
@@ -252,7 +252,7 @@ class WalletItem extends StatelessWidget {
                   child: Center(
                     child: PwText(
                       Strings.basic,
-                      color: PwColor.globalNeutral550,
+                      color: PwColor.neutral550,
                       style: PwTextStyle.xs,
                     ),
                   ),
@@ -279,14 +279,14 @@ class WalletItem extends StatelessWidget {
                             value: MenuOperation.select,
                             child: PwText(
                               Strings.select,
-                              color: PwColor.globalNeutral550,
+                              color: PwColor.neutral550,
                             ),
                           ),
                         PopupMenuItem<MenuOperation>(
                           value: MenuOperation.rename,
                           child: PwText(
                             Strings.rename,
-                            color: PwColor.globalNeutral550,
+                            color: PwColor.neutral550,
                           ),
                         ),
                         if (!_isSelected)
@@ -294,7 +294,7 @@ class WalletItem extends StatelessWidget {
                             value: MenuOperation.delete,
                             child: PwText(
                               Strings.remove,
-                              color: PwColor.globalNeutral550,
+                              color: PwColor.neutral550,
                             ),
                           ),
                       ],
@@ -342,7 +342,7 @@ class WalletItem extends StatelessWidget {
                     child: Center(
                       child: PwIcon(
                         PwIcons.menuIcon,
-                        color: Theme.of(context).colorScheme.globalNeutral550,
+                        color: Theme.of(context).colorScheme.neutral550,
                       ),
                     ),
                   ),
@@ -357,7 +357,7 @@ class WalletItem extends StatelessWidget {
               children: [
                 PwText(
                   item.address.abbreviateAddress(),
-                  color: PwColor.globalNeutral550,
+                  color: PwColor.neutral550,
                   style: PwTextStyle.m,
                 ),
                 HorizontalSpacer.medium(),
@@ -373,7 +373,7 @@ class WalletItem extends StatelessWidget {
                     height: 24,
                     child: PwIcon(
                       PwIcons.copy,
-                      color: Theme.of(context).colorScheme.globalNeutral550,
+                      color: Theme.of(context).colorScheme.neutral550,
                       size: 24,
                     ),
                   ),

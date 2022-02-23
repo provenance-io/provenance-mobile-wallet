@@ -251,9 +251,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 Expanded(child: Container()),
                                 PwIcon(
                                   PwIcons.caret,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .globalNeutral550,
+                                  color:
+                                      Theme.of(context).colorScheme.neutral550,
                                   size: 12.0,
                                 ),
                               ],

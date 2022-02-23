@@ -11,11 +11,11 @@ class NoTransactionsPlaceholder extends StatelessWidget {
           padding: EdgeInsets.only(left: 20, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               Expanded(
                 child: PwText(
                   Strings.noTransactionsText,
-                  color: PwColor.globalNeutral550,
+                  color: PwColor.neutral550,
                   style: PwTextStyle.h7,
                   textAlign: TextAlign.center,
                 ),

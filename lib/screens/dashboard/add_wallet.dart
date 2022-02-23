@@ -13,14 +13,14 @@ class AddWallet extends StatelessWidget {
         centerTitle: true,
         title: PwText(
           Strings.chooseWalletType,
-          color: PwColor.globalNeutral550,
+          color: PwColor.neutral550,
           style: PwTextStyle.h6,
         ),
         leading: IconButton(
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral550,
+            color: Theme.of(context).colorScheme.neutral550,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -53,17 +53,17 @@ class AddWallet extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           VerticalSpacer.xxLarge(),
                           PwText(
                             Strings.basicWallet,
-                            color: PwColor.globalNeutral550,
+                            color: PwColor.neutral550,
                             style: PwTextStyle.m,
                           ),
                           VerticalSpacer.medium(),
                           PwText(
                             Strings.standardSingleUserWallet,
-                            color: PwColor.globalNeutral450,
+                            color: PwColor.neutral450,
                             style: PwTextStyle.s,
                           ),
                           VerticalSpacer.xxLarge(),
@@ -94,17 +94,17 @@ class AddWallet extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           VerticalSpacer.xxLarge(),
                           PwText(
                             Strings.importRecoverWallet,
-                            color: PwColor.globalNeutral550,
+                            color: PwColor.neutral550,
                             style: PwTextStyle.m,
                           ),
                           VerticalSpacer.medium(),
                           PwText(
                             Strings.importExistingWallet,
-                            color: PwColor.globalNeutral450,
+                            color: PwColor.neutral450,
                             style: PwTextStyle.s,
                           ),
                           VerticalSpacer.xxLarge(),
