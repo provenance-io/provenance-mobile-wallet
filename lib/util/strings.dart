@@ -115,7 +115,9 @@ class Strings {
   static const pinCode = 'Pin Code';
   static const notifications = 'Notifications';
   static const general = 'General';
+  static const aboutProvenanceBlockchain = 'About Provenance Blockchain';
   static const faq = 'FAQ';
+  static const moreInformation = 'More Information';
   static const sendFeedback = 'Send Feedback';
   static const contactUs = 'Contact Us';
   static const policiesAndTerms = 'Policies & Terms';

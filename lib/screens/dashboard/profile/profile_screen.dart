@@ -4,6 +4,7 @@ import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -50,40 +51,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             _divider,
-            _LinkItem(
-              text: Strings.notifications,
-              onTap: () {
-                // TODO: Open notifications screen.
-              },
-            ),
-            _divider,
             _CategoryLabel(Strings.general),
             _divider,
             _LinkItem(
-              text: Strings.faq,
+              text: Strings.aboutProvenanceBlockchain,
               onTap: () {
-                // TODO: open FAQ screen.
+                launchUrl('https://provenance.io/');
               },
             ),
             _divider,
             _LinkItem(
-              text: Strings.sendFeedback,
+              text: Strings.moreInformation,
               onTap: () {
-                // TODO: open send feedback screen.
-              },
-            ),
-            _divider,
-            _LinkItem(
-              text: Strings.contactUs,
-              onTap: () {
-                // TODO: open contact us screen.
-              },
-            ),
-            _divider,
-            _LinkItem(
-              text: Strings.policiesAndTerms,
-              onTap: () {
-                // TODO: open policies & terms screen.
+                launchUrl('https://docs.provenance.io/');
               },
             ),
             _divider,
@@ -91,6 +71,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 
