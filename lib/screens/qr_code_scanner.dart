@@ -35,7 +35,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.white,
+            color: Theme.of(context).colorScheme.neutralNeutral,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),

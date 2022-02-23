@@ -49,7 +49,7 @@ class AddWallet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +90,7 @@ class AddWallet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,

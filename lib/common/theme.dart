@@ -405,7 +405,7 @@ extension CustomColorScheme on ColorScheme {
   //Color get primary5 => FigurePayThemeData._primary5;
   //Color get primary6 => FigurePayThemeData._primary6;
   Color get primary7 => FigurePayThemeData._primary7;
-  Color get white => FigurePayThemeData._white;
+  Color get neutralNeutral => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
   Color get lightGrey => FigurePayThemeData._lightGrey;
   Color get midGrey => FigurePayThemeData._midGrey;

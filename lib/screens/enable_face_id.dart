@@ -61,7 +61,7 @@ class EnableFaceId extends StatelessWidget {
                     children: [
                       PwIcon(
                         PwIcons.face_id,
-                        color: Theme.of(context).colorScheme.white,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
                       ),
                     ],
                   ),

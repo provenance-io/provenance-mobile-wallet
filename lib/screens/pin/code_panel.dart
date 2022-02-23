@@ -67,10 +67,10 @@ class CodePanel extends StatelessWidget {
               decoration: new BoxDecoration(
                 shape: BoxShape.rectangle,
                 border: new Border.all(
-                  color: Theme.of(context).colorScheme.white,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
                   width: 1.0,
                 ),
-                color: Theme.of(context).colorScheme.white,
+                color: Theme.of(context).colorScheme.neutralNeutral,
               ),
             ),
           ));

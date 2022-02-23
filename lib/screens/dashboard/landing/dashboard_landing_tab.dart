@@ -68,7 +68,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                   },
                   child: PwIcon(
                     PwIcons.qr,
-                    color: Theme.of(context).colorScheme.white,
+                    color: Theme.of(context).colorScheme.neutralNeutral,
                     size: 48.0,
                   ),
                 ),
@@ -120,7 +120,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
             ),
             child: PwIcon(
               PwIcons.ellipsis,
-              color: Theme.of(context).colorScheme.white,
+              color: Theme.of(context).colorScheme.neutralNeutral,
               size: 20,
             ),
           ),

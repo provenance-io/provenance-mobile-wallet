@@ -71,7 +71,7 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
         child: PwIcon(
           PwIcons.chevron,
           // TODO: Need some kind of neutral instead of white when dealing with colors.
-          color: Theme.of(context).colorScheme.white,
+          color: Theme.of(context).colorScheme.neutralNeutral,
         ),
       ),
       onChanged: _onChange,

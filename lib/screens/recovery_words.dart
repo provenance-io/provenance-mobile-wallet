@@ -170,7 +170,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         },
                         child: PwIcon(
                           PwIcons.copy,
-                          color: Theme.of(context).colorScheme.white,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
                         ),
                       ),
                       VerticalSpacer.xLarge(),

@@ -22,7 +22,7 @@ class TradeDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
         elevation: 0.0,
         centerTitle: true,
         title: Padding(
@@ -53,7 +53,7 @@ class TradeDetailsScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.neutralNeutral,
         child: ListView(
           children: [
             TradeDetailsItem(

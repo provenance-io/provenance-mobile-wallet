@@ -77,7 +77,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
         elevation: 0.0,
         leading: IconButton(
           icon: PwIcon(
@@ -98,7 +98,7 @@ class RecoverPassphraseEntryState extends State<RecoverPassphraseEntry> {
         key: _formKey,
         child: SingleChildScrollView(
           child: Container(
-            color: Theme.of(context).colorScheme.white,
+            color: Theme.of(context).colorScheme.neutralNeutral,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +323,7 @@ class _TextFormField extends StatelessWidget {
               .medium
               .copyWith(color: Theme.of(context).colorScheme.globalNeutral550),
           decoration: InputDecoration(
-            fillColor: Theme.of(context).colorScheme.white,
+            fillColor: Theme.of(context).colorScheme.neutralNeutral,
             filled: true,
             prefix: Container(
               width: 20,

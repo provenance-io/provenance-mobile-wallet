@@ -173,8 +173,8 @@ class _TextFormField extends StatelessWidget {
           ),
           child: TextFormField(
             autofocus: autofocus,
-            style:
-                theme.textTheme.body.copyWith(color: theme.colorScheme.white),
+            style: theme.textTheme.body
+                .copyWith(color: theme.colorScheme.neutralNeutral),
             keyboardType: keyboardType,
             autocorrect: false,
             controller: controller,

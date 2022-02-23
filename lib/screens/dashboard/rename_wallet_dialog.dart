@@ -106,7 +106,7 @@ class _TextFormField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           decoration: InputDecoration(
-            fillColor: Theme.of(context).colorScheme.white,
+            fillColor: Theme.of(context).colorScheme.neutralNeutral,
             filled: true,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: theme.colorScheme.midGrey),

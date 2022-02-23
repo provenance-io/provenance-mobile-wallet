@@ -55,7 +55,7 @@ class WalletPortfolio extends StatelessWidget {
                     PwIcon(
                       PwIcons.upArrow,
                       size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
@@ -82,7 +82,7 @@ class WalletPortfolio extends StatelessWidget {
                     PwIcon(
                       PwIcons.downArrow,
                       size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
@@ -149,7 +149,7 @@ class WalletPortfolio extends StatelessWidget {
                     child: PwIcon(
                       !connected ? PwIcons.walletConnect : PwIcons.close,
                       size: 15,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                   ),
                 ),

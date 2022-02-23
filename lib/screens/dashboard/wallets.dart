@@ -227,7 +227,7 @@ class WalletItem extends StatelessWidget {
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
     return Container(
-      color: Theme.of(context).colorScheme.white,
+      color: Theme.of(context).colorScheme.neutralNeutral,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -338,7 +338,7 @@ class WalletItem extends StatelessWidget {
                   child: Container(
                     width: 60,
                     height: 60,
-                    color: Theme.of(context).colorScheme.white,
+                    color: Theme.of(context).colorScheme.neutralNeutral,
                     child: Center(
                       child: PwIcon(
                         PwIcons.menuIcon,
