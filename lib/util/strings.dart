@@ -110,7 +110,6 @@ class Strings {
   static const profile = "Profile";
 
   // My Account Page
-  static const myAccount = 'My Account';
   static const linkedServices = 'Linked Services';
   static const security = 'Security';
   static const pinCode = 'Pin Code';
