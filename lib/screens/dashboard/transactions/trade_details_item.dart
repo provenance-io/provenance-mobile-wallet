@@ -1,14 +1,26 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class TradeDetailsItem extends StatelessWidget {
-  TradeDetailsItem({required this.title, required this.endChild});
-  TradeDetailsItem.fromStrings({required this.title, required String value}) {
+  TradeDetailsItem({
+    Key? key,
+    required this.title,
+    required this.endChild,
+  }) : super(key: key);
+
+  TradeDetailsItem.fromStrings({
+    Key? key,
+    required this.title,
+    required String value,
+  }) : super(key: key) {
     endChild = PwText(
       value,
       color: PwColor.globalNeutral500,
       style: PwTextStyle.m,
     );
   }
+
   final String title;
   late final Widget endChild;
 
