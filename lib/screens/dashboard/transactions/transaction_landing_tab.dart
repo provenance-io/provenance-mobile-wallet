@@ -101,7 +101,6 @@ class TransactionLandingTab extends StatelessWidget {
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
-                          // TODO: Finding a "tappable" area is difficult and janky. Fix me.
                           Navigator.of(context).push(TradeDetailsScreen(
                             transaction: item,
                           ).route());
