@@ -1,5 +1,6 @@
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_message_default.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_message_send.dart';
@@ -88,37 +89,20 @@ class TransactionConfirmScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MaterialButton(
+                  PwTextButton.primaryAction(
+                    context: context,
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
-                    color: Theme.of(context).colorScheme.primaryP500,
-                    height: 50,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: PwText(
-                        Strings.transactionApprove,
-                        color: PwColor.neutralNeutral,
-                        style: PwTextStyle.bodyBold,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    text: Strings.transactionApprove,
                   ),
                   VerticalSpacer.large(),
-                  MaterialButton(
+                  PwTextButton.secondaryAction(
+                    context: context,
+                    text: Strings.transactionDecline,
                     onPressed: () {
                       Navigator.of(context).pop(false);
                     },
-                    height: 50,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: PwText(
-                        Strings.transactionDecline,
-                        color: PwColor.neutralNeutral,
-                        style: PwTextStyle.bodyBold,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   ),
                 ],
               ),

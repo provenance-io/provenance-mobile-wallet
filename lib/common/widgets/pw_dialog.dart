@@ -3,11 +3,91 @@ import 'dart:io';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PwDialog {
   PwDialog._();
+
+  static Future<T?> showFull<T>({
+    required BuildContext context,
+    required String title,
+    String? message,
+    Widget? icon,
+    String dismissButtonText = 'Back to Wallet',
+    bool barrierDismissible = true,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return Material(
+          child: WillPopScope(
+            onWillPop: () async => barrierDismissible,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(AssetPaths.images.background),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: Spacing.xxLarge,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            PwText(
+                              title,
+                              style: PwTextStyle.headline2,
+                              color: PwColor.neutralNeutral,
+                            ),
+                            if (message != null) VerticalSpacer.large(),
+                            if (message != null)
+                              PwText(
+                                message,
+                                style: PwTextStyle.body,
+                                color: PwColor.neutralNeutral,
+                              ),
+                            if (icon != null) VerticalSpacer.xxLarge(),
+                            if (icon != null) icon,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: Spacing.large,
+                      ),
+                      child: PwTextButton.primaryAction(
+                        context: context,
+                        text: dismissButtonText,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    VerticalSpacer.large(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   /// Foundational design function for displaying dialogs. Only use when [showError],
   /// [showConfirmation], or [showMessage] can't be used

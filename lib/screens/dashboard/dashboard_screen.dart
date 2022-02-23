@@ -246,10 +246,13 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _onResponse(WalletConnectTxResponse response) {
     if (response.code == StatusCode.ok) {
-      PwDialog.showMessage(
-        context,
-        title: Strings.transactionSuccessTitle,
-        message: response.message ?? '',
+      PwDialog.showFull(
+        context: context,
+        title: Strings.transactionComplete,
+        icon: Image.asset(
+          AssetPaths.images.transactionComplete,
+          width: 80,
+        ),
       );
     } else {
       PwDialog.showError(

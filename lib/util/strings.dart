@@ -235,6 +235,7 @@ class Strings {
   static const transactionMessage = 'Your signature is needed';
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
+  static const transactionComplete = 'Transaction Complete';
   static const transactionDataTitle = 'Data';
   static const transactionDataButton = 'Data';
   static const transactionDenomHash = 'Hash';
