@@ -120,6 +120,7 @@ class ProvenanceThemeData {
     fontFamily: 'GothicA1',
     fontSize: 14,
     fontWeight: FontWeight.w700,
+    letterSpacing: 14 * 0.04,
   );
   static const TextStyle _subhead = TextStyle(
     fontFamily: 'GothicA1',
