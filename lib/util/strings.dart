@@ -229,19 +229,22 @@ class Strings {
   static const transactionSuccessTitle = 'Success';
 
   // Transaction Confirmation
-  static const transaction = 'Transaction';
+  static const transactionTitle = 'Signature';
+  static const transactionMessage = 'Your signature is needed';
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
-  static const transactionDataToggle = 'Data';
-  static const transactionListToggle = 'List';
-  static const transactionNanoHash = 'nhash';
+  static const transactionComplete = 'Transaction Complete';
+  static const transactionDataTitle = 'Data';
+  static const transactionDataButton = 'Data';
+  static const transactionDenomHash = 'Hash';
   static const transactionPlatformName = 'Figure Equity Solutions';
   static const transactionPlatformAddress = 'equity.figure.com';
   static const transactionFieldPlatform = 'Platform';
-  static const transactionFieldFee = 'Fee';
+  static const transactionFieldFee = 'Est. Gas Fee';
   static const transactionFieldAmount = 'Amount';
-  static const transactionFieldFromAddress = 'From Address';
-  static const transactionFieldToAddress = 'To Address';
+  static const transactionFieldDenom = 'Denom';
+  static const transactionFieldFromAddress = 'Address';
+  static const transactionFieldToAddress = 'To';
 
   // ValidatePin
   static const enterPin = "Enter Pin";

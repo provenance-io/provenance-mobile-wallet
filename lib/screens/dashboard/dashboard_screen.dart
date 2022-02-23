@@ -157,11 +157,18 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _onSendRequest(SendRequest sendRequest) async {
-    final screen = TransactionConfirmScreen(
-      request: sendRequest,
+    final approved = await showGeneralDialog<bool?>(
+      context: context,
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return TransactionConfirmScreen(
+          request: sendRequest,
+        );
+      },
     );
-
-    final approved = await Navigator.of(context).push(screen.route());
 
     await get<DashboardBloc>().sendMessageFinish(
       requestId: sendRequest.id,
@@ -197,10 +204,13 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _onResponse(WalletConnectTxResponse response) {
     if (response.code == StatusCode.ok) {
-      PwDialog.showMessage(
-        context,
-        title: Strings.transactionSuccessTitle,
-        message: response.message ?? '',
+      PwDialog.showFull(
+        context: context,
+        title: Strings.transactionComplete,
+        icon: Image.asset(
+          AssetPaths.images.transactionComplete,
+          width: 80,
+        ),
       );
     } else {
       PwDialog.showError(

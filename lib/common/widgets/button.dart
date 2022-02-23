@@ -285,6 +285,7 @@ class PwTextButton extends StatelessWidget {
       50,
     ),
     this.shrinkWrap = false,
+    this.backgroundColor,
   }) : super(key: key);
 
   const PwTextButton.shrinkWrap({
@@ -297,6 +298,40 @@ class PwTextButton extends StatelessWidget {
           onPressed: onPressed,
           shrinkWrap: true,
         );
+
+  factory PwTextButton.primaryAction({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required String text,
+    Key? key,
+  }) {
+    return PwTextButton(
+      child: PwText(
+        text,
+        style: PwTextStyle.bodyBold,
+        color: PwColor.neutralNeutral,
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primaryP550,
+      onPressed: onPressed,
+    );
+  }
+
+  factory PwTextButton.secondaryAction({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required String text,
+    Key? key,
+  }) {
+    return PwTextButton(
+      child: PwText(
+        text,
+        style: PwTextStyle.body,
+        color: PwColor.neutralNeutral,
+      ),
+      backgroundColor: Colors.transparent,
+      onPressed: onPressed,
+    );
+  }
 
   /// The child to display within the button. This is often just a Text widget.
   final Widget child;
@@ -311,10 +346,13 @@ class PwTextButton extends StatelessWidget {
   /// for action items
   final bool shrinkWrap;
 
+  final Color? backgroundColor;
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
+        backgroundColor: backgroundColor,
         minimumSize: shrinkWrap ? Size.zero : minimumSize,
         padding: shrinkWrap ? EdgeInsets.zero : null,
         tapTargetSize: shrinkWrap ? MaterialTapTargetSize.shrinkWrap : null,

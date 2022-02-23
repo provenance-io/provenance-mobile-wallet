@@ -27,7 +27,7 @@ abstract class WalletStorageService {
 
   Future<PrivateKey?> loadKey(String id);
 
-  Future removeWallet(String id);
+  Future<bool> removeWallet(String id);
 
   Future<bool> removeAllWallets();
 
