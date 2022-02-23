@@ -166,7 +166,7 @@ class ProvenanceThemeData {
     button: _bodyBold,
     caption: _footnote,
     // STYLES NOT DEFINED
-    overline: _body,
+    overline: _body.copyWith(color: _error),
   );
 
   static final themeData = ThemeData(
@@ -219,52 +219,8 @@ class ProvenanceThemeData {
 }
 
 class FigurePayThemeData {
-  /// ----- FIGMA COLORS -----
-  // Keep private. Expose only through colorScheme or ThemeData.
-  /// Greys
-  static const Color _light = Color(0xFFF9F9F9);
-  static const Color _otherBackground = Color(0xFFE5E5E5);
-  static const Color _lightGrey = Color(0xFFE4E5EB);
-  static const Color _midGrey = Color(0xFFCCCDD3);
-  static const Color _darkGrey = Color(0xFF4C5165);
-  static const Color _black = Color(0xFF05010C);
-
-  /// Functional
-  static const Color _positive = Color(0xFF4ABB0B);
-
   // ----- FIGMA TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
-
-  static const TextStyle _headline7 = TextStyle(
-    fontFamily: 'Poppins',
-    fontSize: 15,
-    fontWeight: FontWeight.w700,
-    height: 16.0 / 15.0,
-  );
-
-  static const TextStyle _extraLarge = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 25,
-    fontWeight: FontWeight.w400,
-    height: 15.55 / 15.0,
-    letterSpacing: 0.32,
-  );
-
-  static const TextStyle _medium = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 15.55 / 15.0,
-    letterSpacing: 0.32,
-  );
-
-  static const TextStyle _mediumBold = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 15,
-    fontWeight: FontWeight.w600,
-    height: 23.1 / 15.0,
-    letterSpacing: 0.32,
-  );
 
   static const TextStyle _small = TextStyle(
     fontFamily: 'GothicA1',
@@ -273,50 +229,16 @@ class FigurePayThemeData {
     height: 15.72 / 12.0,
     letterSpacing: 0.32,
   );
-
-  static const TextStyle _smallBold = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-    height: 17.72 / 12.0,
-    letterSpacing: 0.32,
-  );
-
-  static const TextStyle _extraSmall = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 10,
-    fontWeight: FontWeight.w400,
-    height: 15.6 / 10.0,
-    letterSpacing: 0.32,
-  );
-
-  static const TextStyle _extraSmallBold = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 10,
-    fontWeight: FontWeight.w700,
-    height: 15.6 / 10.0,
-    letterSpacing: 0.32,
-  );
-
-  // Fallback style should show red so we can see which widgets need fixed.
-  static const TextStyle _fallback = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 10,
-    fontWeight: FontWeight.w700,
-    height: 15.6 / 10.0,
-    letterSpacing: 0.32,
-    color: Colors.red,
-  );
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get light => FigurePayThemeData._light;
-  Color get lightGrey => FigurePayThemeData._lightGrey;
-  Color get midGrey => FigurePayThemeData._midGrey;
-  Color get black => FigurePayThemeData._black;
-  Color get positive => FigurePayThemeData._positive;
-  Color get darkGrey => FigurePayThemeData._darkGrey;
-  Color get otherBackground => FigurePayThemeData._otherBackground;
+  Color get light => ProvenanceThemeData._error;
+  Color get lightGrey => ProvenanceThemeData._error;
+  Color get midGrey => ProvenanceThemeData._error;
+  Color get black => ProvenanceThemeData._error;
+  Color get positive => ProvenanceThemeData._error;
+  Color get darkGrey => ProvenanceThemeData._error;
+  Color get otherBackground => ProvenanceThemeData._error;
 
 // Provenance themes
   Color get neutral800 => ProvenanceThemeData._neutral800;
@@ -346,14 +268,14 @@ extension CustomColorScheme on ColorScheme {
 }
 
 extension CustomTextTheme on TextTheme {
-  TextStyle get mediumBold => FigurePayThemeData._mediumBold;
-  TextStyle get medium => FigurePayThemeData._medium;
-  TextStyle get smallBold => FigurePayThemeData._smallBold;
+  TextStyle get mediumBold => FigurePayThemeData._small;
+  TextStyle get medium => FigurePayThemeData._small;
+  TextStyle get smallBold => FigurePayThemeData._small;
   TextStyle get small => FigurePayThemeData._small;
-  TextStyle get extraSmallBold => FigurePayThemeData._extraSmallBold;
-  TextStyle get extraSmall => FigurePayThemeData._extraSmall;
-  TextStyle get headline7 => FigurePayThemeData._headline7;
-  TextStyle get extraLarge => FigurePayThemeData._extraLarge;
+  TextStyle get extraSmallBold => FigurePayThemeData._small;
+  TextStyle get extraSmall => FigurePayThemeData._small;
+  TextStyle get headline7 => FigurePayThemeData._small;
+  TextStyle get extraLarge => FigurePayThemeData._small;
 
 // Provenance themes
   TextStyle get pWMedium => ProvenanceThemeData._medium;
