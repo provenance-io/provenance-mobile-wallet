@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
