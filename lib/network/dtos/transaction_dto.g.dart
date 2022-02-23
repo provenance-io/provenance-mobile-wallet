@@ -8,22 +8,20 @@ part of 'transaction_dto.dart';
 
 TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
     TransactionDto(
-      address: json['address'] as String?,
-      feeAmount: json['feeAmount'] as String?,
-      id: json['id'] as String?,
-      signer: json['signer'] as String?,
+      address: json['recipientAddress'] as String?,
+      feeAmount: json['txFee'] as int?,
+      id: json['hash'] as String?,
+      signer: json['senderAddress'] as String?,
       status: json['status'] as String?,
-      time: json['time'] as String?,
-      type: json['type'] as String?,
+      time: json['timestamp'] as String?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
     <String, dynamic>{
-      'address': instance.address,
-      'feeAmount': instance.feeAmount,
-      'id': instance.id,
-      'signer': instance.signer,
+      'recipientAddress': instance.address,
+      'txFee': instance.feeAmount,
+      'hash': instance.id,
+      'senderAddress': instance.signer,
       'status': instance.status,
-      'time': instance.time,
-      'type': instance.type,
+      'timestamp': instance.time,
     };

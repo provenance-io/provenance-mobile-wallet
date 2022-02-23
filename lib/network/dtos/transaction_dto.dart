@@ -11,16 +11,21 @@ class TransactionDto {
     this.signer,
     this.status,
     this.time,
-    this.type,
+    // this.type,
   });
 
+  @JsonKey(name: "recipientAddress")
   final String? address;
-  final String? feeAmount;
+  @JsonKey(name: "txFee")
+  final int? feeAmount;
+  @JsonKey(name: "hash")
   final String? id;
+  @JsonKey(name: "senderAddress")
   final String? signer;
   final String? status;
+  @JsonKey(name: "timestamp")
   final String? time;
-  final String? type;
+  final String? type = "SEND";
 
   // ignore: member-ordering
   factory TransactionDto.fromJson(Map<String, dynamic> json) =>
