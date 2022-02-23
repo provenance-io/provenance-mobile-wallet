@@ -2,6 +2,7 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
@@ -189,8 +190,17 @@ class DashboardScreenState extends State<DashboardScreen>
   Future<void> _onSessionRequest(
     RemoteClientDetails remoteClientDetails,
   ) async {
-    final allowed =
-        await PwDialog.showSessionConfirmation(context, remoteClientDetails);
+    final name = remoteClientDetails.name;
+    final allowed = await PwModalScreen.showConfirm(
+      context: context,
+      approveText: Strings.sessionApprove,
+      declineText: Strings.sessionReject,
+      title: Strings.dashboardConnectionRequestTitle,
+      message: Strings.dashboardConnectionRequestDetails(name),
+      icon: Image.asset(
+        AssetPaths.images.connectionRequest,
+      ),
+    );
 
     await get<DashboardBloc>().approveSession(
       requestId: remoteClientDetails.id,
@@ -246,13 +256,14 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _onResponse(WalletConnectTxResponse response) {
     if (response.code == StatusCode.ok) {
-      PwDialog.showFull(
+      PwModalScreen.showNotify(
         context: context,
         title: Strings.transactionComplete,
         icon: Image.asset(
           AssetPaths.images.transactionComplete,
           width: 80,
         ),
+        buttonText: Strings.transactionBackToDashboard,
       );
     } else {
       PwDialog.showError(
