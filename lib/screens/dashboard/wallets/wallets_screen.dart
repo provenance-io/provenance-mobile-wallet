@@ -180,6 +180,7 @@ class WalletItem extends StatelessWidget {
             child: Container(),
           ),
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTapDown: (details) {
               _storePosition(details);
             },
