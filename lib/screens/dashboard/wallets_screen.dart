@@ -1,12 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/rename_wallet_dialog.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -22,20 +22,13 @@ class WalletsScreen extends StatefulWidget {
 
 class WalletsScreenState extends State<WalletsScreen>
     with RouteAware, WidgetsBindingObserver {
-  List<WalletDetails> _wallets = [];
-  WalletDetails? _selectedWallet;
+  late DashboardBloc _bloc;
 
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
     super.dispose();
-  }
-
-  @override
-  void didPopNext() {
-    loadWallets();
-    super.didPopNext();
   }
 
   @override
@@ -47,161 +40,90 @@ class WalletsScreenState extends State<WalletsScreen>
 
   @override
   void initState() {
-    loadWallets();
+    _bloc = get<DashboardBloc>();
+    _bloc.loadAllWallets();
     WidgetsBinding.instance?.addObserver(this);
     super.initState();
-  }
-
-  void loadWallets() async {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      ModalLoadingRoute.showLoading(Strings.loadingWallets, context);
-      final walletService = await get<WalletService>();
-      final selectedWallet = await walletService.getSelectedWallet();
-      final wallets = await walletService.getWallets();
-      final filteredWallets = wallets
-          .where(
-            (e) => e.id != selectedWallet?.id,
-          )
-          .toList();
-
-      ModalLoadingRoute.dismiss(context);
-      setState(() {
-        _selectedWallet = selectedWallet;
-        _wallets = filteredWallets;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.otherBackground,
-        elevation: 0.0,
-        centerTitle: true,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(AddWallet().route());
-            },
-            child: PwIcon(
-              PwIcons.plus,
-              color: Theme.of(context).colorScheme.neutral450,
-              size: 24,
-            ),
-          ),
-          HorizontalSpacer.medium(),
-        ],
-        title: PwText(
-          Strings.wallets,
-          color: PwColor.neutral550,
-          style: PwTextStyle.h6,
-        ),
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.neutral550,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      appBar: PwAppBar(
+        title: Strings.wallets,
       ),
       body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
-    if (_selectedWallet != null) {
-      final selectedWallet = _selectedWallet!;
+    return StreamBuilder<WalletDetails?>(
+      initialData: _bloc.selectedWallet.value,
+      stream: _bloc.selectedWallet,
+      builder: (context, snapshot) {
+        final selectedWallet = snapshot.data;
 
-      return Container(
-        color: Theme.of(context).colorScheme.otherBackground,
-        child: Padding(
-          padding: EdgeInsets.only(top: 40),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  PwText(
-                    Strings.selectedWallet,
-                    color: PwColor.neutral550,
-                    style: PwTextStyle.sBold,
+        return selectedWallet == null
+            ? Container()
+            : Column(mainAxisSize: MainAxisSize.min, children: [
+                VerticalSpacer.small(),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: WalletItem(
+                    item: selectedWallet,
+                    isSelected: true,
+                    reload: () {
+                      _bloc.loadAllWallets();
+                    },
                   ),
-                ],
-              ),
-            ),
-            VerticalSpacer.small(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: WalletItem(
-                item: selectedWallet,
-                isSelected: true,
-                reload: () {
-                  loadWallets();
-                },
-              ),
-            ),
-            _showAllWallets(),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.otherBackground,
-              ),
-            ),
-          ]),
-        ),
-      );
-    }
-
-    return Container();
+                ),
+                _showAllWallets(),
+                Expanded(
+                  child: Container(),
+                ),
+              ]);
+      },
+    );
   }
 
   Widget _showAllWallets() {
-    if (_wallets.isEmpty) {
-      return Container();
-    }
+    return StreamBuilder<List<WalletDetails>>(
+      initialData: _bloc.walletList.value,
+      stream: _bloc.walletList,
+      builder: (context, snapshot) {
+        var wallets = snapshot.data ?? [];
+        if (wallets.isEmpty) {
+          return Container();
+        }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        VerticalSpacer.medium(),
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              PwText(
-                Strings.allWallets,
-                color: PwColor.neutral550,
-                style: PwTextStyle.sBold,
-              ),
-            ],
-          ),
-        ),
-        VerticalSpacer.medium(),
-        Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) {
-              return WalletItem(
-                item: _wallets[index],
-                isSelected: false,
-                reload: () {
-                  loadWallets();
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            VerticalSpacer.medium(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  return WalletItem(
+                    item: wallets[index],
+                    isSelected: false,
+                    reload: () {
+                      _bloc.loadAllWallets();
+                    },
+                  );
                 },
-              );
-            },
-            separatorBuilder: (context, index) {
-              return VerticalSpacer.medium();
-            },
-            itemCount: _wallets.length,
-          ),
-        ),
-      ],
+                separatorBuilder: (context, index) {
+                  return VerticalSpacer.medium();
+                },
+                itemCount: wallets.length,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -227,7 +149,7 @@ class WalletItem extends StatelessWidget {
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
     return Container(
-      color: Theme.of(context).colorScheme.neutralNeutral,
+      color: Theme.of(context).colorScheme.secondary650,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -238,25 +160,9 @@ class WalletItem extends StatelessWidget {
               children: [
                 PwText(
                   item.name,
-                  color: PwColor.neutral550,
-                  style: PwTextStyle.m,
+                  style: PwTextStyle.bodyBold,
                 ),
                 HorizontalSpacer.small(),
-                Container(
-                  height: 26,
-                  width: 46,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFEDEDED),
-                    borderRadius: BorderRadius.circular(13.0),
-                  ),
-                  child: Center(
-                    child: PwText(
-                      Strings.basic,
-                      color: PwColor.neutral550,
-                      style: PwTextStyle.xs,
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Container(),
                 ),
@@ -338,11 +244,10 @@ class WalletItem extends StatelessWidget {
                   child: Container(
                     width: 60,
                     height: 60,
-                    color: Theme.of(context).colorScheme.neutralNeutral,
                     child: Center(
                       child: PwIcon(
-                        PwIcons.menuIcon,
-                        color: Theme.of(context).colorScheme.neutral550,
+                        PwIcons.ellipsis,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
                       ),
                     ),
                   ),
