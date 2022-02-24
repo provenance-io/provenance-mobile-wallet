@@ -1,27 +1,32 @@
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/common/models/asset.dart';
+import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/base_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 
+import 'send_flow_test_constants.dart';
+import 'send_flow_test.mocks.dart';
 
 final get = GetIt.instance;
 
+@GenerateMocks([ AssetService, TransactionService, ])
 main() {
   SendFlowState? state;
   Future<void> _build(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: SendFlow(),
+          child: SendFlow(walletDetails),
         ),
       ),
     );
@@ -29,6 +34,33 @@ main() {
     await tester.pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
     state = tester.allStates.firstWhere((element) => element is SendFlowState) as SendFlowState;
   }
+
+  MockAssetService? mockAssetService;
+  MockTransactionService? mockTransactionService;
+
+  setUp(() {
+    mockTransactionService = MockTransactionService();
+    when(mockTransactionService!.getTransactions(any))
+      .thenAnswer((realInvocation) {
+        final response = BaseResponse<List<Transaction>>(null, null, null);
+        return Future.value(response);
+      });
+
+    mockAssetService = MockAssetService();
+    when(mockAssetService!.getAssets(any))
+      .thenAnswer((realInvocation) {
+        final response = BaseResponse<List<Asset>>(null, null, null);
+        return Future.value(response);
+      });
+
+    get.registerSingleton<TransactionService>(mockTransactionService!);
+    get.registerSingleton<AssetService>(mockAssetService!);
+  });
+
+  tearDown(() {
+    get.unregister<TransactionService>();
+    get.unregister<AssetService>();
+  });
 
   testWidgets("Contents", (tester) async {
     await _build(tester);

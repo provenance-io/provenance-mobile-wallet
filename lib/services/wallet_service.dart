@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_dart/src/wallet/encoding/encoding.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_connect_transaction_handler.dart';
@@ -7,6 +10,7 @@ import 'package:provenance_wallet/services/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_storage_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import '../extension/coin_helper.dart';
 
 class WalletService {
   WalletService({
@@ -109,4 +113,35 @@ class WalletService {
 
   Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);
+
+  Future<int> estimate(proto.TxBody body, WalletDetails walletDetails) async {
+    final pbClient = proto.PbClient(Uri.parse(walletDetails.coin.address), walletDetails.coin.chainId);
+    final baseAccount = await pbClient.getBaseAccount(walletDetails.address);
+    final baseReqSigner = proto.BaseReqSigner(
+      _EstimateSigner(walletDetails), 
+      baseAccount,
+    );
+    final baseReq = proto.BaseReq(body, [ baseReqSigner ], walletDetails.coin.chainId, );
+    final gasEstimate = await pbClient.estimateTx(baseReq);
+
+    return gasEstimate.fees;
+  }
+}
+
+
+class _EstimateSigner extends proto.Signer {
+  _EstimateSigner(this._details);
+
+  final WalletDetails _details;
+
+  @override
+  String get address => _details.address;
+
+  @override
+  PublicKey get pubKey => PublicKey.fromUncompressedPublicKeyHex(_details.publicKey, _details.coin);
+  @override
+  List<int> sign(List<int> data) {
+    return <int>[];
+  }
+
 }

@@ -180,7 +180,9 @@ main() {
 
         await tester.tap(find.text(recentAddress1.address));
 
-        verify(mockBloc!.showRecentSendDetails(recentAddress1));
+        final textFind = find.byType(TextField);
+        final addressFind = find.descendant(of: textFind, matching: find.text(recentAddress1.address));
+        expect(addressFind, findsOneWidget);
       });
 
       testWidgets("View All clicked", (tester) async {

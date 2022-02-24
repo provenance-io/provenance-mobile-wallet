@@ -1,6 +1,12 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:provenance_wallet/common/models/asset.dart';
+import 'package:provenance_wallet/common/models/transaction.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/base_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 
 abstract class SendBlocNavigator {
@@ -29,33 +35,42 @@ class SendBlocState {
 }
 
 class SendBloc extends Disposable {
-  SendBloc(this._navigator);
+  SendBloc(this._provenanceAddress, this._assetService, this._transactionService, this._navigator,);
 
-  final SendBlocNavigator _navigator;
+  final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
   final _stateStreamController = StreamController<SendBlocState>();
+  final String _provenanceAddress;
+  final SendBlocNavigator _navigator;
+  final AssetService _assetService;
+  final TransactionService _transactionService;
 
   Stream<SendBlocState> get stream => _stateStreamController.stream;
 
   Future<void> load() {
-    return Future.delayed(
-        Duration(milliseconds: 600),
-        () {
-          final assets = [
-            SendAsset("Hash", "302.02", "\$523.25", "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hash.png"),
-            SendAsset("USD", "51.15", "\$51.15", "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=021"),
-          ];
+    return Future.wait([
+      _assetService.getAssets(_provenanceAddress),
+      _transactionService.getTransactions(_provenanceAddress),
+    ])
+    .then((results) {
+      final assetResponse = results[0] as BaseResponse<List<Asset>>;
+      final transResponse = results[1] as BaseResponse<List<Transaction>>;
 
-          final sends = List.generate(15, (index) {
-            return RecentAddress(
-              "tp1n38hkvvq4zfkagmd37dt68llff0vksjy620j6u",
-              DateTime.now().subtract(Duration(days: index)),
-            );
-          })
-          .toList();
+      final assets = assetResponse.data?.map((asset) {
+        return SendAsset(asset.denom, asset.amount, "0", "",);
+      });
+      
+      final recentAddresses = transResponse.data?.map((trans) {
+        final timeStamp = _dateFormat.parse(trans.time);
 
-          _stateStreamController.add(SendBlocState(assets, sends));
-        },
-    );
+        return RecentAddress(trans.address, timeStamp);
+      });
+
+      final state = SendBlocState(
+        assets?.toList() ?? <SendAsset>[], 
+        recentAddresses?.toList() ?? <RecentAddress>[],
+      );
+      _stateStreamController.add(state);
+    });
   }
 
   @override

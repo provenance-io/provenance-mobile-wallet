@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class SendAmountBlocNavigator {
-  Future<void> showReviewSend(String amountToSend, String fee, String note);
+  Future<void> showReviewSend(String amountToSend, Decimal fee, String note,);
 }
 
 class SendAmountBlocState {
@@ -16,11 +21,12 @@ class SendAmountBlocState {
 }
 
 class SendAmountBloc extends Disposable {
-  SendAmountBloc(this.receivingAddress, this.asset, this._navigator);
+  SendAmountBloc(this.walletDetails, this.receivingAddress, this.asset, this._navigator,);
 
+  final WalletDetails walletDetails;
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
-  String? _fee;
+  Decimal? _fee;
 
   final SendAsset asset;
   final String receivingAddress;
@@ -28,14 +34,29 @@ class SendAmountBloc extends Disposable {
   Stream<SendAmountBlocState> get stream => _streamController.stream;
 
   void init() {
-    Future.delayed(
-        Duration(milliseconds: 600),
-        () {
-          _fee = "0.02 Hash";
-          final state = SendAmountBlocState(_fee);
-          _streamController.add(state);
-        },
+    final body = TxBody(
+      messages: [
+        MsgSend(
+          fromAddress: walletDetails.address,
+          toAddress: receivingAddress,
+          amount: [
+            Coin(
+              denom: asset.denom,
+              amount: "1",
+            ),
+          ],
+        ).toAny(),
+      ],
     );
+
+    get<WalletService>().estimate(body, walletDetails)
+      .then((nhasGas) {
+        _fee = Decimal.fromInt(nhasGas);
+        final rationalFee = (_fee! / Decimal.fromInt(1000000000)).toDecimal(scaleOnInfinitePrecision: 9);
+        final formattedFee = "${rationalFee.toString()} hash";
+        final state = SendAmountBlocState(formattedFee);
+        _streamController.add(state);
+      });
   }
 
   String? validateAmount(String? proposedAmount) {
@@ -76,7 +97,7 @@ class SendAmountBloc extends Disposable {
       return Future.error(Exception(amountError));
     }
 
-    return this._navigator.showReviewSend(amount, _fee!, note);
+    return this._navigator.showReviewSend(amount, _fee!, note,);
   }
 
 }

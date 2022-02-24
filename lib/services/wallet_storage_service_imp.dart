@@ -25,6 +25,7 @@ class WalletStorageServiceImp implements WalletStorageService {
       name: name,
       address: publicKey.address,
       coin: publicKey.coin,
+      publicKey: publicKey.compressedPublicKeyHex,
     );
 
     final privateKeyStr = privateKey.serialize(

@@ -1,9 +1,17 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
+import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
+
+final get = GetIt.instance;
 
 Matcher throwsExceptionWithText(String msg) {
   return throwsA(predicate((arg) {
@@ -12,17 +20,29 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-@GenerateMocks([ SendAmountBlocNavigator ])
+const feeAmount = 20000000;
+
+@GenerateMocks([ SendAmountBlocNavigator, WalletService, ])
 main() {
   final asset = SendAsset("Hash", "100", "200", "http://test.com");
   final receivingAddress = "ReceivingAdress";
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
+  MockWalletService? mockWalletService;
 
   setUp(() {
+    mockWalletService = MockWalletService();
+    when(mockWalletService!.estimate(any, any)).thenAnswer((_) => Future.value(feeAmount));
+
+    get.registerSingleton<WalletService>(mockWalletService!);
+
     mockNavigator = MockSendAmountBlocNavigator();
-    bloc = SendAmountBloc(receivingAddress, asset, mockNavigator!);
+    bloc = SendAmountBloc(walletDetails, receivingAddress, asset, mockNavigator!,);
+  });
+
+  tearDown(() {
+    get.unregister<WalletService>();
   });
 
   test("properties", () {
@@ -34,7 +54,7 @@ main() {
   test("init", () async {
     expectLater(bloc!.stream, emits(predicate((arg) {
       final state = arg as SendAmountBlocState;
-      expect(state.transactionFees, "0.02 Hash");
+      expect(state.transactionFees, "0.02 hash");
 
       return true;
     })));
@@ -68,6 +88,6 @@ main() {
     await bloc!.stream.first;
 
     bloc!.showNext("A Note", "75.01");
-    verify(mockNavigator!.showReviewSend("75.01", "0.02 Hash", "A Note"));
+    verify(mockNavigator!.showReviewSend("75.01", Decimal.fromInt(feeAmount), "A Note",));
   });
 }

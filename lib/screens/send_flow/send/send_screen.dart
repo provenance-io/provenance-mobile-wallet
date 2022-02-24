@@ -163,7 +163,7 @@ class SendPageState extends State<SendPage> {
   }
 
   void _onRecentAddressClicked(RecentAddress recentAddress) {
-    _bloc?.showRecentSendDetails(recentAddress);
+    _addressController.text = recentAddress.address;
   }
 
   Future<void> _next() async {

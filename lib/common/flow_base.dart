@@ -63,6 +63,8 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
 }
 
 abstract class FlowBase extends StatefulWidget {
+  FlowBase({ Key? key })
+    : super(key: key);
 }
 
 abstract class FlowBaseState<Z extends FlowBase>

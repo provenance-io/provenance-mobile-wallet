@@ -1,16 +1,24 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/network/services/asset_service.dart';
+import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendFlow extends FlowBase {
+  SendFlow(this.walletDetails, { Key? key })
+    : super(key: key);
+
+  final WalletDetails walletDetails;
   @override
   State<StatefulWidget> createState() => SendFlowState();
 }
@@ -25,7 +33,14 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   void initState() {
     super.initState();
-    get.registerLazySingleton<SendBloc>(() => SendBloc(this));
+    get.registerLazySingleton<SendBloc>(() {
+      return SendBloc(
+        widget.walletDetails.address,
+        get<AssetService>(),
+        get<TransactionService>(), 
+        this,
+        );
+    });
   }
 
   @override
@@ -77,6 +92,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
     _receivingAddress = address;
 
     final bloc = SendAmountBloc(
+      widget.walletDetails,
       _receivingAddress!,
       _asset!,
       this,
@@ -119,7 +135,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   Future<void> showReviewSend(
     String amountToSend,
-    String fee,
+    Decimal fee,
     String note,
   ) {
     // return Future.value();
