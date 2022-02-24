@@ -27,8 +27,8 @@ class DashboardBloc extends Disposable {
 
   final BehaviorSubject<List<Transaction>> _transactionList =
       BehaviorSubject.seeded([]);
-  final BehaviorSubject<List<WalletDetails>> _walletList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
+      BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
   final _sendRequest = PublishSubject<SendRequest>();
   final _signRequest = PublishSubject<SignRequest>();
@@ -56,7 +56,7 @@ class DashboardBloc extends Disposable {
       _connectionStatus.stream;
   ValueStream<String?> get address => _address.stream;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
-  ValueStream<List<WalletDetails>> get walletList => _walletList;
+  ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
   Stream<WalletConnectTxResponse> get response => _response;
 
@@ -157,11 +157,27 @@ class DashboardBloc extends Disposable {
   }
 
   Future<void> loadAllWallets() async {
-    _walletList.value = (await get<WalletService>().getWallets())
-        .where(
-          (e) => e.id != selectedWallet.value?.id,
-        )
-        .toList();
+    var list = (await get<WalletService>().getWallets());
+    list.sort((a, b) {
+      if (b.address == selectedWallet.value?.address) {
+        return 1;
+      } else if (a.address == selectedWallet.value?.address) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    Map<WalletDetails, int> map = {};
+
+    for (var wallet in list) {
+      var assets = wallet.address == selectedWallet.value?.address
+          ? assetList.value
+          : (await _assetService.getAssets(wallet.address)).data ?? [];
+      map[wallet] = assets.length;
+    }
+
+    _walletMap.value = map;
   }
 
   @override
