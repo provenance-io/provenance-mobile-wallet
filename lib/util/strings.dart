@@ -175,7 +175,7 @@ class Strings {
   // EnableFaceId
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
-      'Use your Face ID for faster, easier access to your account.';
+      'Use your Face ID for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
