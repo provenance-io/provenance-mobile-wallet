@@ -103,13 +103,10 @@ class RecoverPassphraseEntryScreenState
                       ),
                     ),
                     VerticalSpacer.small(),
-                    SizedBox(
-                      height: 42,
-                      child: _TextFormField(
-                        controller: textController,
-                        focusNode: focusNode,
-                        handlePaste: _handlePaste,
-                      ),
+                    _TextFormField(
+                      controller: textController,
+                      focusNode: focusNode,
+                      handlePaste: _handlePaste,
                     ),
                     index != textControllers.length - 1
                         ? Container()
@@ -120,7 +117,7 @@ class RecoverPassphraseEntryScreenState
                             child: PwButton(
                               child: PwText(
                                 Strings.continueName,
-                                //style: PwTextStyle.bodyBold,
+                                style: PwTextStyle.bodyBold,
                               ),
                               onPressed: () async {
                                 if (textControllers
