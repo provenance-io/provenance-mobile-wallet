@@ -154,12 +154,12 @@ class ProvenanceThemeData {
   );
 
   static final TextTheme _textTheme = TextTheme(
-    headline1: _display1,
-    headline2: _display2,
-    headline3: _headline1,
-    headline4: _headline2,
-    headline5: _headline3,
-    headline6: _headline4,
+    headline1: _headline1,
+    headline2: _headline2,
+    headline3: _headline3,
+    headline4: _headline4,
+    headline5: _display1,
+    headline6: _display2,
     subtitle1: _title,
     subtitle2: _displayBody,
     bodyText1: _body,
