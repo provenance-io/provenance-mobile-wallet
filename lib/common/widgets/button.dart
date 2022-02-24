@@ -263,7 +263,7 @@ class PwButton extends StatelessWidget {
             ? showAlternate
                 ? theme.colorScheme.primary550.withOpacity(0.5)
                 : theme.colorScheme.primary550.withOpacity(0.4)
-            : theme.colorScheme.primary500;
+            : theme.colorScheme.primary550;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(
