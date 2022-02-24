@@ -113,7 +113,7 @@ class ProvenanceThemeData {
   static const TextStyle _body = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
     height: 22.4 / 14,
   );
   static const TextStyle _bodyBold = TextStyle(
@@ -154,13 +154,13 @@ class ProvenanceThemeData {
   );
 
   static final TextTheme _textTheme = TextTheme(
-    headline1: _headline1,
-    headline2: _headline2,
-    headline3: _headline3,
-    headline4: _headline4,
-    headline5: _display1,
-    headline6: _display2,
-    subtitle1: _medium,
+    headline1: _display1,
+    headline2: _display2,
+    headline3: _headline1,
+    headline4: _headline2,
+    headline5: _headline3,
+    headline6: _headline4,
+    subtitle1: _title,
     subtitle2: _displayBody,
     bodyText1: _body,
     bodyText2: _bodyBold,
@@ -219,19 +219,6 @@ class ProvenanceThemeData {
   );
 }
 
-class FigurePayThemeData {
-  // ----- FIGMA TYPOGRAPHY -----
-  // Keep private. Expose only through ThemeData.
-
-  static const TextStyle _small = TextStyle(
-    fontFamily: 'GothicA1',
-    fontSize: 12,
-    fontWeight: FontWeight.w300,
-    height: 15.72 / 12.0,
-    letterSpacing: 0.32,
-  );
-}
-
 extension CustomColorScheme on ColorScheme {
   Color get light => ProvenanceThemeData._error;
   Color get lightGrey => ProvenanceThemeData._error;
@@ -269,14 +256,14 @@ extension CustomColorScheme on ColorScheme {
 }
 
 extension CustomTextTheme on TextTheme {
-  TextStyle get mediumBold => FigurePayThemeData._small;
-  TextStyle get medium => FigurePayThemeData._small;
-  TextStyle get smallBold => FigurePayThemeData._small;
-  TextStyle get small => FigurePayThemeData._small;
-  TextStyle get extraSmallBold => FigurePayThemeData._small;
-  TextStyle get extraSmall => FigurePayThemeData._small;
-  TextStyle get headline7 => FigurePayThemeData._small;
-  TextStyle get extraLarge => FigurePayThemeData._small;
+  TextStyle get mediumBold => ProvenanceThemeData._body;
+  TextStyle get medium => ProvenanceThemeData._body;
+  TextStyle get smallBold => ProvenanceThemeData._body;
+  TextStyle get small => ProvenanceThemeData._body;
+  TextStyle get extraSmallBold => ProvenanceThemeData._body;
+  TextStyle get extraSmall => ProvenanceThemeData._body;
+  TextStyle get headline7 => ProvenanceThemeData._body;
+  TextStyle get extraLarge => ProvenanceThemeData._body;
 
 // Provenance themes
   TextStyle get pWMedium => ProvenanceThemeData._medium;
