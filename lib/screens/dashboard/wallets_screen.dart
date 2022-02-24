@@ -11,16 +11,16 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class Wallets extends StatefulWidget {
-  const Wallets({Key? key}) : super(key: key);
+class WalletsScreen extends StatefulWidget {
+  const WalletsScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return WalletsState();
+    return WalletsScreenState();
   }
 }
 
-class WalletsState extends State<Wallets>
+class WalletsScreenState extends State<WalletsScreen>
     with RouteAware, WidgetsBindingObserver {
   List<WalletDetails> _wallets = [];
   WalletDetails? _selectedWallet;

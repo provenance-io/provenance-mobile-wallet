@@ -109,7 +109,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           behavior: HitTestBehavior.opaque,
           onTap: () {
             // TODO: This should be a modal.
-            Navigator.of(context).push(Wallets().route());
+            Navigator.of(context).push(WalletsScreen().route());
           },
           child: Padding(
             padding: EdgeInsets.only(
