@@ -10,12 +10,13 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoverPassphraseEntryScreen extends StatefulWidget {
-  RecoverPassphraseEntryScreen(
+  const RecoverPassphraseEntryScreen(
     this.flowType,
     this.accountName, {
+    Key? key,
     this.currentStep,
     this.numberOfSteps,
-  });
+  }) : super(key: key);
 
   final int? currentStep;
   final int? numberOfSteps;
@@ -24,30 +25,12 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RecoverPassphraseEntryScreenState(
-      flowType,
-      accountName,
-      currentStep: currentStep,
-      numberOfSteps: numberOfSteps,
-    );
+    return RecoverPassphraseEntryScreenState();
   }
 }
 
 class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
-  RecoverPassphraseEntryScreenState(
-    this.flowType,
-    this.accountName, {
-    this.currentStep,
-    this.numberOfSteps,
-  });
-
-  final _formKey = GlobalKey<FormState>();
-
-  final int? currentStep;
-  final int? numberOfSteps;
-  final String accountName;
-  final WalletAddImportType flowType;
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
   List<VoidCallback> callbacks = <VoidCallback>[];
@@ -86,8 +69,8 @@ class RecoverPassphraseEntryScreenState
         mainAxisSize: MainAxisSize.min,
         children: [
           ProgressStepper(
-            (currentStep ?? 0),
-            numberOfSteps ?? 1,
+            (widget.currentStep ?? 0),
+            widget.numberOfSteps ?? 1,
             padding: EdgeInsets.only(
               left: 20,
               right: 20,
@@ -137,21 +120,23 @@ class RecoverPassphraseEntryScreenState
                             child: PwButton(
                               child: PwText(
                                 Strings.continueName,
-                                style: PwTextStyle.bodyBold,
+                                //style: PwTextStyle.bodyBold,
                               ),
                               onPressed: () async {
-                                if (_formKey.currentState?.validate() == true) {
+                                if (textControllers
+                                    .every((e) => e.text.isNotEmpty)) {
                                   final words = textControllers
                                       .map((e) => e.text.trim())
                                       .toList();
 
-                                  if (flowType ==
+                                  if (widget.flowType ==
                                       WalletAddImportType.onBoardingRecover) {
                                     Navigator.of(context).push(CreatePin(
-                                      flowType,
-                                      accountName: accountName,
-                                      currentStep: (currentStep ?? 0) + 1,
-                                      numberOfSteps: numberOfSteps,
+                                      widget.flowType,
+                                      accountName: widget.accountName,
+                                      currentStep:
+                                          (widget.currentStep ?? 0) + 1,
+                                      numberOfSteps: widget.numberOfSteps,
                                       words: words,
                                     ).route());
                                   } else {
@@ -162,7 +147,7 @@ class RecoverPassphraseEntryScreenState
 
                                     await get<WalletService>().saveWallet(
                                       phrase: words,
-                                      name: accountName,
+                                      name: widget.accountName,
                                     );
 
                                     ModalLoadingRoute.dismiss(context);
@@ -239,7 +224,7 @@ class RecoverPassphraseEntryScreenState
 }
 
 class _TextFormField extends StatelessWidget {
-  _TextFormField({
+  const _TextFormField({
     Key? key,
     this.keyboardType,
     this.onChanged,
@@ -283,11 +268,5 @@ class _TextFormField extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  TextStyle _decorationStyleOf(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return theme.textTheme.medium.copyWith(color: theme.hintColor);
   }
 }
