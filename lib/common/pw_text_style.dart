@@ -20,6 +20,7 @@ enum PwTextStyle {
   subhead,
   body,
   bodyBold,
+  bodySmall,
   headline1,
   headline2,
   display1,
@@ -72,6 +73,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.subhead;
       case PwTextStyle.body:
         return theme.textTheme.body;
+      case PwTextStyle.bodySmall:
+        return theme.textTheme.bodySmall;
       case PwTextStyle.headline2:
         return theme.textTheme.provenanceHeadline2;
       case PwTextStyle.headline1:
