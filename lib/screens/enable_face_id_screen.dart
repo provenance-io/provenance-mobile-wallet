@@ -124,7 +124,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  VerticalSpacer.small(),
+                  VerticalSpacer.large(),
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwTextButton(
@@ -159,7 +159,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  VerticalSpacer.xxLarge(),
+                  VerticalSpacer.largeX4(),
                 ],
               ),
             ),
