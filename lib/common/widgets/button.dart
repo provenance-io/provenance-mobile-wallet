@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwPrimaryButton extends StatelessWidget {
@@ -250,20 +251,17 @@ class PwButton extends StatelessWidget {
 
     return ButtonStyle(
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        if (showAlternate) {
-          return states.contains(MaterialState.disabled)
-              ? theme.colorScheme.neutral450.withOpacity(0.5)
-              : theme.colorScheme.neutral450;
-        }
-
         return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return states.contains(MaterialState.disabled)
-            ? showAlternate
-                ? theme.colorScheme.primary550.withOpacity(0.5)
-                : theme.colorScheme.primary550.withOpacity(0.4)
+        return showAlternate
+            ? Colors.transparent
             : theme.colorScheme.primary550;
+      }),
+      side: MaterialStateProperty.resolveWith((states) {
+        return showAlternate
+            ? BorderSide(color: theme.colorScheme.primary500, width: 1)
+            : null;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(
@@ -389,7 +387,13 @@ class PwGreyButton extends StatelessWidget {
     return TextButton(
       style: _buttonStyle(context),
       onPressed: enabled ? onPressed : null,
-      child: PwText(text),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: Spacing.small),
+        child: PwText(
+          text,
+          style: PwTextStyle.bodyBold,
+        ),
+      ),
     );
   }
 
@@ -398,17 +402,18 @@ class PwGreyButton extends StatelessWidget {
 
     return ButtonStyle(
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        return theme.colorScheme.onPrimary;
+        return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return states.contains(MaterialState.disabled)
-            ? theme.colorScheme.lightGrey.withOpacity(0.4)
-            : theme.colorScheme.lightGrey;
+        return theme.colorScheme.neutral700;
       }),
       minimumSize: MaterialStateProperty.all(Size(
         minimumWidth,
         50,
       )),
+      padding: MaterialStateProperty.all(
+        EdgeInsets.symmetric(vertical: Spacing.large),
+      ),
     );
   }
 }
