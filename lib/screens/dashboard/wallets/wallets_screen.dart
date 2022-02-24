@@ -184,83 +184,118 @@ class WalletItem extends StatelessWidget {
               _storePosition(details);
             },
             onTap: () async {
-              showModalBottomSheet(
+              var result = await showModalBottomSheet<MenuOperation>(
+                backgroundColor: Colors.transparent,
                 context: context,
                 builder: (BuildContext context) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [],
+                    children: [
+                      PwGreyButton(
+                        text: "Copy Wallet Address",
+                        onPressed: () {
+                          Navigator.of(context).pop(MenuOperation.copy);
+                        },
+                      ),
+                      PwListDivider(),
+                      PwGreyButton(
+                        text: "Rename",
+                        onPressed: () {
+                          Navigator.of(context).pop(MenuOperation.rename);
+                        },
+                      ),
+                      PwListDivider(),
+                      PwGreyButton(
+                        text: "Remove",
+                        onPressed: () {
+                          Navigator.of(context).pop(MenuOperation.delete);
+                        },
+                      ),
+                      PwListDivider(),
+                      _isSelected
+                          ? PwGreyButton(
+                              text: "Reset Wallets",
+                              onPressed: () {
+                                Navigator.of(context).pop(MenuOperation.reset);
+                              },
+                            )
+                          : PwGreyButton(
+                              text: "Select",
+                              onPressed: () {
+                                Navigator.of(context).pop(MenuOperation.select);
+                              },
+                            ),
+                      PwListDivider(),
+                      PwGreyButton(
+                        enabled: false,
+                        text: "",
+                        // ignore: no-empty-block
+                        onPressed: () {},
+                      ),
+                    ],
                   );
                 },
-              );
-              final result = await showMenu(
-                context: context,
-                position: RelativeRect.fromRect(
-                  (_tapPosition ?? Offset(0, 0)) &
-                      Size(40, 40), // smaller rect, the touch area
-                  Offset.zero & overlay.size, // Bigger rect, the entire screen
-                ),
-                items: [
-                  if (!_isSelected)
-                    PopupMenuItem<MenuOperation>(
-                      value: MenuOperation.select,
-                      child: PwText(
-                        Strings.select,
-                        color: PwColor.neutral550,
-                      ),
-                    ),
-                  PopupMenuItem<MenuOperation>(
-                    value: MenuOperation.rename,
-                    child: PwText(
-                      Strings.rename,
-                      color: PwColor.neutral550,
-                    ),
-                  ),
-                  if (!_isSelected)
-                    PopupMenuItem<MenuOperation>(
-                      value: MenuOperation.delete,
-                      child: PwText(
-                        Strings.remove,
-                        color: PwColor.neutral550,
-                      ),
-                    ),
-                ],
               );
 
               final bloc = get<DashboardBloc>();
 
-              if (result == MenuOperation.rename) {
-                final text = await showDialog<String?>(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) => RenameWalletDialog(
-                    currentName: item.name,
-                  ),
-                );
-                if (text != null) {
-                  await bloc.renameWallet(
-                    id: item.id,
-                    name: text,
+              switch (result) {
+                case MenuOperation.rename:
+                  final text = await showDialog<String?>(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => RenameWalletDialog(
+                      currentName: item.name,
+                    ),
                   );
+                  if (text != null) {
+                    await bloc.renameWallet(
+                      id: item.id,
+                      name: text,
+                    );
+                    reload.call();
+                  }
+                  break;
+                case MenuOperation.copy:
+                  await Clipboard.setData(
+                    ClipboardData(
+                      text: item.address,
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        Strings.addressCopied,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.neutral700,
+                    ),
+                  );
+                  break;
+                case MenuOperation.delete:
+                  final dialogResult = await PwDialog.showConfirmation(
+                    context,
+                    message: Strings.removeThisWallet,
+                    confirmText: Strings.yes,
+                    cancelText: Strings.cancel,
+                  );
+                  if (dialogResult) {
+                    await bloc.removeWallet(id: item.id);
+                    reload.call();
+                  }
+                  break;
+                case MenuOperation.select:
+                  await bloc.selectWallet(id: item.id);
                   reload.call();
-                }
-              } else if (result == MenuOperation.delete) {
-                final dialogResult = await PwDialog.showConfirmation(
-                  context,
-                  message: Strings.removeThisWallet,
-                  confirmText: Strings.yes,
-                  cancelText: Strings.cancel,
-                );
-                if (dialogResult) {
-                  await bloc.removeWallet(id: item.id);
-                  reload.call();
-                }
-              } else if (result == MenuOperation.select) {
-                await bloc.selectWallet(id: item.id);
-                reload.call();
+                  break;
+                case MenuOperation.reset:
+                  await get<DashboardBloc>().resetWallets();
+                  FlutterSecureStorage storage = FlutterSecureStorage();
+                  await storage.deleteAll();
+
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  break;
+                default:
               }
-              var y = 0;
-              y++;
             },
             child: SizedBox(
               width: 60,
@@ -285,7 +320,9 @@ class WalletItem extends StatelessWidget {
 }
 
 enum MenuOperation {
+  copy,
   select,
   rename,
   delete,
+  reset,
 }
