@@ -11,18 +11,20 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WalletItem extends StatelessWidget {
-  WalletItem({
+  const WalletItem({
+    Key? key,
     required this.item,
     required bool isSelected,
     required this.reload,
     required this.numAssets,
-  }) : _isSelected = isSelected;
+  })  : _isSelected = isSelected,
+        super(key: key);
 
   final bool _isSelected;
 
   final WalletDetails item;
-  VoidCallback reload;
-  int numAssets;
+  final VoidCallback reload;
+  final int numAssets;
 
   @override
   Widget build(BuildContext context) {
