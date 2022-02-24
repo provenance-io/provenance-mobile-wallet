@@ -140,6 +140,8 @@ class Strings {
   static const wallets = 'Wallets';
   static const selectedWallet = 'Selected Wallet';
   static const allWallets = 'All Wallets';
+  static String numAssets(int numAssets) =>
+      "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
   // Wallet Item
   static const basic = 'Basic';
