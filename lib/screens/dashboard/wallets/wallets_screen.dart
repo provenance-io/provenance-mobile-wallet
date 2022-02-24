@@ -171,8 +171,6 @@ class WalletItem extends StatelessWidget {
                   Strings.numAssets(numAssets),
                   style: PwTextStyle.bodySmall,
                 ),
-
-                //HorizontalSpacer.small(),
               ],
             ),
           ),
