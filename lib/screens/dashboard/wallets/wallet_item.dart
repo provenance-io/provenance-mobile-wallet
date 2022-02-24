@@ -18,8 +18,6 @@ class WalletItem extends StatelessWidget {
     required this.numAssets,
   }) : _isSelected = isSelected;
 
-  Offset? _tapPosition;
-
   final bool _isSelected;
 
   final WalletDetails item;
@@ -29,8 +27,6 @@ class WalletItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final RenderBox overlay =
-        Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
     return Container(
       color: _isSelected ? colorScheme.secondary650 : colorScheme.neutral700,
@@ -62,9 +58,6 @@ class WalletItem extends StatelessWidget {
           ),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTapDown: (details) {
-              _storePosition(details);
-            },
             onTap: () async {
               var result = await showModalBottomSheet<MenuOperation>(
                 backgroundColor: Colors.transparent,
@@ -194,10 +187,6 @@ class WalletItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _storePosition(TapDownDetails details) {
-    _tapPosition = details.globalPosition;
   }
 }
 
