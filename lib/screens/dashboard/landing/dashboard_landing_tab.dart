@@ -7,6 +7,7 @@ import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -79,11 +80,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StreamBuilder<String>(
-              initialData: bloc.walletName.value,
-              stream: bloc.walletName,
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
               builder: (context, snapshot) {
-                final walletName = snapshot.data ?? "";
+                final walletName = snapshot.data?.name ?? "";
 
                 return PwText(
                   walletName,
@@ -91,11 +92,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 );
               },
             ),
-            StreamBuilder<String>(
-              initialData: bloc.walletAddress.value,
-              stream: bloc.walletAddress,
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
               builder: (context, snapshot) {
-                final walletAddress = snapshot.data ?? "";
+                final walletAddress = snapshot.data?.address ?? "";
 
                 return PwText(
                   " (${walletAddress.abbreviateAddress()})",
