@@ -1,0 +1,87 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto_bank.dart';
+import 'package:provenance_dart/proto_marker.dart';
+import 'package:provenance_wallet/util/messages/message_field.dart';
+import 'package:provenance_wallet/util/messages/message_field_converters.dart';
+import 'package:provenance_wallet/util/messages/message_field_group.dart';
+import 'package:provenance_wallet/util/messages/message_field_processor.dart';
+
+final msgSend = MsgSend(
+  fromAddress: 'abcdefghijklmnop',
+  toAddress: 'abcdefghijklmnop',
+  amount: [
+    Coin(
+      denom: 'nhash',
+      amount: '1000000000',
+    ),
+  ],
+);
+
+final msgAddMarker = MsgAddMarkerRequest(
+  amount: Coin(
+    denom: 'nhash',
+    amount: '100000000',
+  ),
+  manager: 'abcdefghijklmnop',
+  fromAddress: 'abcdefghijklmnop',
+  status: MarkerStatus.MARKER_STATUS_ACTIVE,
+  markerType: MarkerType.MARKER_TYPE_COIN,
+  accessList: [
+    AccessGrant(
+      address: 'abcdefghijklmnop',
+      permissions: [
+        Access.ACCESS_BURN,
+        Access.ACCESS_DELETE,
+      ],
+    ),
+  ],
+  supplyFixed: true,
+  allowGovernanceControl: true,
+);
+
+final messages = [
+  msgSend,
+  msgAddMarker,
+];
+
+const address = 'abcdefghijklmnop';
+
+void main() {
+  test('Finds address', () {
+    final send = MsgSend(
+      fromAddress: address,
+    );
+    final processor = MessageFieldProcessor();
+    final group = processor.findFields(send);
+    expect(group.fields[0] is MessageField, isTrue);
+
+    final field = group.fields[0] as MessageField;
+    expect(field.value, address);
+  });
+
+  test('Finds amount', () {
+    const amount = '1000000000';
+
+    final send = MsgSend(
+      amount: [
+        Coin(
+          amount: amount,
+          denom: nHashDenom,
+        ),
+      ],
+    );
+    final processor = MessageFieldProcessor();
+    final group = processor.findFields(send);
+    expect(group.fields[0] is MessageFieldGroup, isTrue);
+
+    final amountGroup = group.fields[0] as MessageFieldGroup;
+    expect(amountGroup.fields[0] is MessageField, isTrue);
+
+    final denomField = amountGroup.fields[0] as MessageField;
+    expect(denomField.value, nHashDenom);
+
+    final amountField = amountGroup.fields[1] as MessageField;
+    expect(amountField.value, amount);
+  });
+}

@@ -11,10 +11,10 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -78,7 +78,9 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   void initState() {
-    _bloc.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
+    _bloc.transactionRequest
+        .listen(_onTransactionRequest)
+        .addTo(_subscriptions);
     _bloc.signRequest.listen(_onSignRequest).addTo(_subscriptions);
     _bloc.sessionRequest.listen(_onSessionRequest).addTo(_subscriptions);
     _bloc.error.listen(_onError).addTo(_subscriptions);
@@ -203,12 +205,14 @@ class DashboardScreenState extends State<DashboardScreen>
     );
 
     await get<DashboardBloc>().approveSession(
-      requestId: remoteClientDetails.id,
+      details: remoteClientDetails,
       allowed: allowed,
     );
   }
 
-  Future<void> _onSendRequest(SendRequest sendRequest) async {
+  Future<void> _onTransactionRequest(
+    WalletConnectTransactionRequest transactionRequest,
+  ) async {
     final approved = await showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
@@ -217,13 +221,13 @@ class DashboardScreenState extends State<DashboardScreen>
         secondaryAnimation,
       ) {
         return TransactionConfirmScreen(
-          request: sendRequest,
+          request: transactionRequest,
         );
       },
     );
 
     await get<DashboardBloc>().sendMessageFinish(
-      requestId: sendRequest.id,
+      requestId: transactionRequest.details.id,
       allowed: approved ?? false,
     );
   }

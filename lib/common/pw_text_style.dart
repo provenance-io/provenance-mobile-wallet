@@ -30,6 +30,7 @@ enum PwTextStyle {
   headline2,
   display1,
   display2,
+  displayBody,
   footnote,
   title,
 }
@@ -100,6 +101,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.display1;
       case PwTextStyle.display2:
         return theme.textTheme.display2;
+      case PwTextStyle.displayBody:
+        return theme.textTheme.displayBody;
       case PwTextStyle.footnote:
         return theme.textTheme.footnote;
       case PwTextStyle.title:
