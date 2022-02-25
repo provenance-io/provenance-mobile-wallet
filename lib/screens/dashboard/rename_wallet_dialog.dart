@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RenameWalletDialog extends StatelessWidget {
@@ -15,6 +16,7 @@ class RenameWalletDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Theme.of(context).colorScheme.neutral700,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Form(
         key: _formKey,
@@ -23,14 +25,10 @@ class RenameWalletDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const VerticalSpacer.xxLarge(),
-              Text(
+              const VerticalSpacer.large(),
+              PwText(
                 Strings.walletRename,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4!
-                    .copyWith(color: Theme.of(context).colorScheme.black),
+                style: PwTextStyle.subhead,
               ),
               const VerticalSpacer.medium(),
               Padding(
@@ -39,26 +37,32 @@ class RenameWalletDialog extends StatelessWidget {
                   left: Spacing.medium,
                   right: Spacing.medium,
                 ),
-                child: _TextFormField(
+                child: PwTextFormField(
                   label: Strings.walletName,
                   controller: _nameController,
+                  autofocus: true,
                   validator: (value) {
                     return ((value?.isEmpty ?? true) ? Strings.required : null);
                   },
                 ),
               ),
               const VerticalSpacer.xxLarge(),
-              PwPrimaryButton.fromString(
-                text: Strings.confirm,
-                onPressed: () async {
-                  if (_formKey.currentState?.validate() == true) {
-                    if (_nameController.text.trim() == currentName) {
-                      Navigator.of(context).pop(null);
-                    } else {
-                      Navigator.of(context).pop(_nameController.text.trim());
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.large,
+                ),
+                child: PwPrimaryButton.fromString(
+                  text: Strings.confirm,
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() == true) {
+                      if (_nameController.text.trim() == currentName) {
+                        Navigator.of(context).pop(null);
+                      } else {
+                        Navigator.of(context).pop(_nameController.text.trim());
+                      }
                     }
-                  }
-                },
+                  },
+                ),
               ),
               const VerticalSpacer.small(),
               PwTextButton(
