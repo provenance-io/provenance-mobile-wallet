@@ -229,12 +229,6 @@ class ProvenanceThemeData {
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get light => ProvenanceThemeData._error;
-  Color get lightGrey => ProvenanceThemeData._error;
-  Color get midGrey => ProvenanceThemeData._error;
-  Color get black => ProvenanceThemeData._error;
-  Color get positive => ProvenanceThemeData._error;
-  Color get darkGrey => ProvenanceThemeData._error;
   Color get otherBackground => ProvenanceThemeData._error;
 
 // Provenance themes

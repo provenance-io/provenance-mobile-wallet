@@ -19,7 +19,7 @@ mixin TransactionMessageMixin on Widget {
               },
               border: TableBorder(
                 horizontalInside: BorderSide(
-                  color: Theme.of(context).colorScheme.darkGrey,
+                  color: Theme.of(context).colorScheme.neutral700,
                 ),
               ),
               children: rows,
