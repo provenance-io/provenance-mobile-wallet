@@ -131,6 +131,12 @@ class ProvenanceThemeData {
     letterSpacing: 12 * 0.04,
     height: 19.2 / 12,
   );
+  static const TextStyle _bodyXSmallBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 10.24,
+    fontWeight: FontWeight.w700,
+    height: 16 / 10.24,
+  );
   static const TextStyle _subhead = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
@@ -229,9 +235,6 @@ class ProvenanceThemeData {
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get otherBackground => ProvenanceThemeData._error;
-
-// Provenance themes
   Color get neutral800 => ProvenanceThemeData._neutral800;
   Color get neutral750 => ProvenanceThemeData._neutral750;
   Color get neutral700 => ProvenanceThemeData._neutral700;
@@ -261,16 +264,6 @@ extension CustomColorScheme on ColorScheme {
 }
 
 extension CustomTextTheme on TextTheme {
-  TextStyle get mediumBold => ProvenanceThemeData._body;
-  TextStyle get medium => ProvenanceThemeData._body;
-  TextStyle get smallBold => ProvenanceThemeData._body;
-  TextStyle get small => ProvenanceThemeData._body;
-  TextStyle get extraSmallBold => ProvenanceThemeData._body;
-  TextStyle get extraSmall => ProvenanceThemeData._body;
-  TextStyle get headline7 => ProvenanceThemeData._body;
-  TextStyle get extraLarge => ProvenanceThemeData._body;
-
-// Provenance themes
   TextStyle get pWMedium => ProvenanceThemeData._medium;
   TextStyle get large =>
       ProvenanceThemeData._logo.copyWith(fontWeight: FontWeight.w600);
@@ -285,4 +278,5 @@ extension CustomTextTheme on TextTheme {
   TextStyle get display2 => ProvenanceThemeData._display2;
   TextStyle get footnote => ProvenanceThemeData._footnote;
   TextStyle get title => ProvenanceThemeData._title;
+  TextStyle get extraSmallBold => ProvenanceThemeData._bodyXSmallBold;
 }

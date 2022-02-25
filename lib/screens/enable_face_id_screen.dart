@@ -93,7 +93,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                     child: PwButton(
                       child: PwText(
                         Strings.enable,
-                        style: PwTextStyle.mBold,
+                        style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {

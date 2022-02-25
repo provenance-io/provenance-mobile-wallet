@@ -152,7 +152,7 @@ class PwDialog {
                       child: PwButton(
                         child: PwText(
                           Strings.confirm,
-                          style: PwTextStyle.mBold,
+                          style: PwTextStyle.bodyBold,
                           color: PwColor.neutralNeutral,
                         ),
                         onPressed: () {

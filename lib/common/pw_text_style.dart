@@ -5,17 +5,10 @@ enum PwTextStyle {
   h3,
   h4,
   h6,
-  h7,
-  m,
   m_p,
-  mBold,
-  s,
-  sBold,
-  xs,
   xsBold,
   caption,
   large,
-  extraLarge,
   logo,
   subhead,
   body,
@@ -45,28 +38,13 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.headline4;
       case PwTextStyle.h6:
         return theme.textTheme.headline6;
-      case PwTextStyle.h7:
-        return theme.textTheme.headline7;
-      case PwTextStyle.m:
-        return theme.textTheme.medium;
       case PwTextStyle.m_p:
         return theme.textTheme.pWMedium;
-      case PwTextStyle.mBold:
-        return theme.textTheme.mediumBold;
-      case PwTextStyle.s:
-        return theme.textTheme.small;
-      case PwTextStyle.sBold:
-        return theme.textTheme.smallBold;
-      case PwTextStyle.xs:
-        return theme.textTheme.extraSmall;
       case PwTextStyle.xsBold:
         return theme.textTheme.extraSmallBold;
       case PwTextStyle.caption:
         return theme.textTheme.caption;
       case PwTextStyle.large:
-        return theme.textTheme.large;
-      case PwTextStyle.extraLarge:
-        return theme.textTheme.extraLarge;
       case PwTextStyle.logo:
         return theme.textTheme.logo;
       case PwTextStyle.subhead:
