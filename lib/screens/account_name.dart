@@ -30,6 +30,10 @@ class AccountName extends HookWidget {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
+        leadingIcon: flowType == WalletAddImportType.dashboardAdd ||
+                flowType == WalletAddImportType.dashboardRecover
+            ? PwIcons.back
+            : null,
       ),
       body: Form(
         key: _formKey,
