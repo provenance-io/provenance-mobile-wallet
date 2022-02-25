@@ -102,7 +102,6 @@ class Strings {
   static const myAssets = 'My Assets';
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
-  static const resetWallet = 'Reset Wallet';
   static const loadingTransactions = 'Loading Transactions';
   static const noTransactionsText =
       'When you have transactions they will appear here.';
@@ -144,14 +143,15 @@ class Strings {
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
   // Wallet Item
-  static const basic = 'Basic';
   static const select = 'Select';
   static const rename = 'Rename';
   static const remove = 'Remove';
   static const removeThisWallet =
       'Are you sure you want to remove this wallet?';
   static const yes = 'Yes';
+  static const copyWalletAddress = 'Copy Wallet Address';
   static const addressCopied = 'Address copied';
+  static const resetWallets = 'Reset Wallets';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';

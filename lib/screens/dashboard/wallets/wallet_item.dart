@@ -69,21 +69,21 @@ class WalletItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       PwGreyButton(
-                        text: "Copy Wallet Address",
+                        text: Strings.copyWalletAddress,
                         onPressed: () {
                           Navigator.of(context).pop(MenuOperation.copy);
                         },
                       ),
                       PwListDivider(),
                       PwGreyButton(
-                        text: "Rename",
+                        text: Strings.rename,
                         onPressed: () {
                           Navigator.of(context).pop(MenuOperation.rename);
                         },
                       ),
                       PwListDivider(),
                       PwGreyButton(
-                        text: "Remove",
+                        text: Strings.remove,
                         onPressed: () {
                           Navigator.of(context).pop(MenuOperation.delete);
                         },
@@ -91,13 +91,13 @@ class WalletItem extends StatelessWidget {
                       PwListDivider(),
                       _isSelected
                           ? PwGreyButton(
-                              text: "Reset Wallets",
+                              text: Strings.resetWallets,
                               onPressed: () {
                                 Navigator.of(context).pop(MenuOperation.reset);
                               },
                             )
                           : PwGreyButton(
-                              text: "Select",
+                              text: Strings.select,
                               onPressed: () {
                                 Navigator.of(context).pop(MenuOperation.select);
                               },
