@@ -16,12 +16,12 @@ import 'send_screen_test.mocks.dart';
 
 final get = GetIt.instance;
 
-@GenerateMocks([ SendBloc ])
+@GenerateMocks([SendBloc])
 main() {
   StreamController<SendBlocState>? _streamController;
 
   MockSendBloc? mockBloc;
-  
+
   setUp(() {
     _streamController = StreamController<SendBlocState>();
 
@@ -31,7 +31,7 @@ main() {
 
     get.registerSingleton<SendBloc>(mockBloc!);
   });
-  
+
   tearDown(() {
     get.unregister<SendBloc>();
     _streamController!.close();
@@ -47,21 +47,36 @@ main() {
         ),
       );
     }
-    
+
     testWidgets("Contents", (tester) async {
       await _build(tester);
-      
+
       expect(find.byType(SendPage), findsOneWidget);
-      expect(find.descendant(of: find.byType(AppBar), matching: find.text("Send")) , findsOneWidget);
+      expect(
+        find.descendant(of: find.byType(AppBar), matching: find.text("Send")),
+        findsOneWidget,
+      );
     });
   });
 
   group("SendPage", () {
-    final asset1 = SendAsset("Hash", "1", "1.30", "http://test.com",);
-    final asset2 = SendAsset("USD", "1", "1", "http://test1.com",);
+    final asset1 = SendAsset(
+      "Hash",
+      "1",
+      "1.30",
+      "http://test.com",
+    );
+    final asset2 = SendAsset(
+      "USD",
+      "1",
+      "1",
+      "http://test1.com",
+    );
 
-    final recentAddress1 = RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
-    final recentAddress2 = RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
+    final recentAddress1 =
+        RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
+    final recentAddress2 =
+        RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
 
     Future<void> _build(WidgetTester tester) {
       return tester.pumpWidget(
@@ -83,7 +98,13 @@ main() {
       expect(find.byType(RecentSendList), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
       expect(find.byIcon(Icons.qr_code), findsOneWidget);
-      expect(find.descendant(of: find.byType(PwButton), matching: find.text("Next")) , findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(PwButton),
+          matching: find.text("Next"),
+        ),
+        findsOneWidget,
+      );
     });
 
     group("Asset List", () {
@@ -94,16 +115,18 @@ main() {
         var sendList = tester.widget<SendAssetList>(sendListFind);
         expect(sendList.assets, <SendAsset>[]);
 
-        _streamController!.add(SendBlocState([ asset1, asset2 ], <RecentAddress>[]));
+        _streamController!
+            .add(SendBlocState([asset1, asset2], <RecentAddress>[]));
         await tester.pumpAndSettle();
 
         sendListFind = find.byType(SendAssetList);
         sendList = tester.widget<SendAssetList>(sendListFind);
-        expect(sendList.assets,[ asset1, asset2 ]);
+        expect(sendList.assets, [asset1, asset2]);
       });
 
       testWidgets("asset selected", (tester) async {
-        _streamController!.add(SendBlocState([ asset1, asset2 ], <RecentAddress>[]));
+        _streamController!
+            .add(SendBlocState([asset1, asset2], <RecentAddress>[]));
 
         await _build(tester);
         await tester.pumpAndSettle(); // wait for stream builder to settles
@@ -128,8 +151,9 @@ main() {
     group("Qr Code", () {
       testWidgets("Launch QR scanner", (tester) async {
         await _build(tester);
-        final returnedString = "ReturnedString";
-        when(mockBloc!.scanAddress()).thenAnswer((_) => Future.value(returnedString));
+        const returnedString = "ReturnedString";
+        when(mockBloc!.scanAddress())
+            .thenAnswer((_) => Future.value(returnedString));
 
         final iconFind = find.byIcon(Icons.qr_code);
         await tester.tap(iconFind);
@@ -148,11 +172,17 @@ main() {
 
         final iconFind = find.byIcon(Icons.qr_code);
         await tester.tap(iconFind);
-        await tester.pumpAndSettle();
+        await tester.pumpAndSettle(Duration(seconds: 3));
 
         final errorFind = find.byType(ErrorDialog);
         expect(errorFind, findsOneWidget);
-        expect(find.descendant(of: errorFind, matching: find.text("Exception: Test")), findsOneWidget);
+        expect(
+          find.descendant(
+            of: errorFind,
+            matching: find.text("Exception: Test"),
+          ),
+          findsOneWidget,
+        );
       });
     });
 
@@ -165,16 +195,20 @@ main() {
 
         expect(sendList.recentAddresses, <RecentAddress>[]);
 
-        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(
+          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+        );
         await tester.pumpAndSettle();
 
         sendListFind = find.byType(RecentSendList);
         sendList = tester.widget<RecentSendList>(sendListFind);
-        expect(sendList.recentAddresses,[ recentAddress1, recentAddress2 ]);
+        expect(sendList.recentAddresses, [recentAddress1, recentAddress2]);
       });
 
       testWidgets("recentSend clicked", (tester) async {
-        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(
+          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+        );
         await _build(tester);
         await tester.pumpAndSettle();
 
@@ -184,7 +218,9 @@ main() {
       });
 
       testWidgets("View All clicked", (tester) async {
-        _streamController!.add(SendBlocState(<SendAsset>[], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(
+          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+        );
         await _build(tester);
         await tester.pumpAndSettle();
 
@@ -202,7 +238,7 @@ main() {
         await tester.tap(find.text("Next"));
         verify(mockBloc!.next("", null));
       });
-      
+
       testWidgets("Error", (tester) async {
         final ex = Exception("Test");
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.error(ex));
@@ -214,11 +250,22 @@ main() {
 
         final dialogFind = find.byType(ErrorDialog);
         expect(dialogFind, findsOneWidget);
-        expect(find.descendant(of: dialogFind, matching: find.text("Exception: Test")), findsOneWidget);
+        expect(
+          find.descendant(
+            of: dialogFind,
+            matching: find.text("Exception: Test"),
+          ),
+          findsOneWidget,
+        );
       });
 
       testWidgets("Values", (tester) async {
-        _streamController!.add(SendBlocState([ asset1, asset2 ], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(
+          SendBlocState(
+            [asset1, asset2],
+            [recentAddress1, recentAddress2],
+          ),
+        );
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.value());
 
         await _build(tester);
