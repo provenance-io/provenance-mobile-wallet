@@ -1,7 +1,6 @@
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/util/get.dart';
