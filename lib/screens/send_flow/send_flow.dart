@@ -94,6 +94,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   Future<void> showAllRecentSends() {
     return showDialog(
+      useSafeArea: true,
       context: context,
       builder: (context) {
         return ErrorDialog(
@@ -105,6 +106,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   Future<void> showRecentSendDetails(RecentAddress recentAddress) {
     return showDialog(
+      useSafeArea: true,
       context: context,
       builder: (context) {
         return ErrorDialog(

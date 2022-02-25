@@ -214,6 +214,7 @@ class SendAmountPageState extends State<SendAmountPage> {
       await _bloc!.showNext(_noteController.text, _amountController.text);
     } catch (error) {
       showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) {
           return ErrorDialog(error: error.toString());
