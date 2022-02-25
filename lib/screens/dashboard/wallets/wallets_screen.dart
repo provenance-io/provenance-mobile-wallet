@@ -108,11 +108,8 @@ class WalletsScreenState extends State<WalletsScreen>
               padding: EdgeInsets.symmetric(
                 horizontal: Spacing.large,
               ),
-              child: PwButton(
-                showAlternate: true,
-                child: PwText(
-                  Strings.createWallet,
-                ),
+              child: PwOutlinedButton(
+                Strings.createWallet,
                 onPressed: () {
                   Navigator.of(context).push(AddWallet().route());
                 },
