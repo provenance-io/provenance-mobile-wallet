@@ -256,51 +256,6 @@ class PwDialog {
     );
   }
 
-  // Below are specific dialogs that are used more than once in various places.
-  // Could possible cleanup (move to specific views) as things change/ get cleaned.
-
-  static Future<void> showBiometricsDialog(
-    BuildContext context,
-    String authType,
-  ) {
-    return showMessage(
-      context,
-      title: 'Oops',
-      message:
-          'Sorry, you need to have $authType enabled on your device in order to use Provenance Wallet.',
-    );
-  }
-
-  static Future<void> showUpdateNeeded(
-    BuildContext context, {
-    required VoidCallback onTap,
-  }) {
-    return show(
-      context,
-      barrierDismissible: false,
-      title: 'Update Needed',
-      content: GestureDetector(
-        onTap: onTap,
-        child: const PwText(
-          'Please update to the latest version of Provenance Wallet in order to continue using the app. Thank you!',
-          style: PwTextStyle.m,
-          color: PwColor.black,
-          textAlign: TextAlign.center,
-        ),
-      ),
-      bottom: PwPrimaryButton.fromString(
-        text: 'Force Update',
-        onPressed: () {
-          final url = Platform.isIOS
-              // FIXME: Get the correct urls.
-              ? 'https://apps.apple.com/us/app/figure-pay/id1529369990'
-              : 'https://play.google.com/store/apps/details?id=com.figure.mobile.figurepay';
-          launch(url);
-        },
-      ),
-    );
-  }
-
   static Future<bool> showSessionConfirmation(
     BuildContext context,
     RemoteClientDetails remoteClientDetails,
