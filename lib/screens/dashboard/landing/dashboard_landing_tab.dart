@@ -107,9 +107,14 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         ),
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () {
-            // TODO: This should be a modal.
-            Navigator.of(context).push(WalletsScreen().route());
+          onTap: () async {
+            await showDialog(
+              barrierColor: Theme.of(context).colorScheme.neutral750,
+              useSafeArea: true,
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => WalletsScreen(),
+            );
           },
           child: Padding(
             padding: EdgeInsets.only(
