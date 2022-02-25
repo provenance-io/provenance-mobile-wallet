@@ -285,7 +285,6 @@ class PwOutlinedButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.largeButton = false,
-    this.showArrow = false,
     this.center = true,
     this.fpTextStyle,
     this.fpTextColor,
@@ -304,9 +303,6 @@ class PwOutlinedButton extends StatelessWidget {
   /// A [largeButton] will have Spacing.large padding around them and slightly more rounded corners
   /// else the button will be of a standard height of 50px
   final bool largeButton;
-
-  /// An arrow to appear on the right side of the button
-  final bool showArrow;
 
   /// To center the [_text] and [icon]. If [showArrow] is true, that will not be centered
   final bool center;
@@ -366,15 +362,6 @@ class PwOutlinedButton extends StatelessWidget {
                     ],
                   ),
                 ),
-                showArrow
-                    ? Align(
-                        alignment: Alignment.centerRight,
-                        child: PwIcon(
-                          PwIcons.back,
-                          color: Theme.of(context).colorScheme.darkGrey,
-                        ),
-                      )
-                    : Container(),
               ],
             ),
           ],
