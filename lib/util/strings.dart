@@ -312,4 +312,9 @@ class Strings {
   static const sendAmountErrorInvalidAmount = "is an invalid amount";
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
+
+  // Error Dialog
+  static const unknownErrorTitle = 'UNKNOWN ERROR';
+  static const somethingWentWrong = 'Something went wrong.';
+  static const okay = "Okay";
 }
