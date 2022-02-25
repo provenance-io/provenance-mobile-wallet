@@ -21,28 +21,16 @@ class PwPrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        foregroundColor:
-            MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
+        foregroundColor: MaterialStateProperty.all(
+          Theme.of(context).colorScheme.neutralNeutral,
+        ),
         backgroundColor:
             MaterialStateProperty.resolveWith((Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
-            return Theme.of(context).colorScheme.primary400.withOpacity(0.4);
+            return Theme.of(context).colorScheme.primary550.withOpacity(0.4);
           }
 
-          return showAlternate
-              ? Theme.of(context).colorScheme.primary400
-              : Theme.of(context).colorScheme.primary;
-        }),
-        // FIXME: Border should appear on the outside as per design
-        side: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.pressed)) {
-            return BorderSide(
-              color: Theme.of(context).colorScheme.primary400,
-              width: 8,
-            );
-          }
+          return Theme.of(context).colorScheme.primary550;
         }),
         minimumSize: MaterialStateProperty.all(
           Size(
@@ -321,7 +309,7 @@ class PwOutlinedButton extends StatelessWidget {
         primary: Theme.of(context).colorScheme.neutralNeutral,
         padding: EdgeInsets.zero,
         side: BorderSide(
-          color: borderColor ?? Theme.of(context).colorScheme.lightGrey,
+          color: borderColor ?? Theme.of(context).colorScheme.primary500,
           width: borderWidth,
         ),
         shape: RoundedRectangleBorder(
@@ -356,8 +344,7 @@ class PwOutlinedButton extends StatelessWidget {
                           : Container(),
                       PwText(
                         _text,
-                        style: fpTextStyle ?? PwTextStyle.m,
-                        color: fpTextColor ?? PwColor.darkGrey,
+                        style: fpTextStyle ?? PwTextStyle.body,
                       ),
                     ],
                   ),
