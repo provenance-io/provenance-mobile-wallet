@@ -5,12 +5,17 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:provenance_dart/proto.dart' as _i12;
+import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_wallet/common/models/asset.dart' as _i5;
 import 'package:provenance_wallet/common/models/transaction.dart' as _i7;
 import 'package:provenance_wallet/network/services/asset_service.dart' as _i3;
 import 'package:provenance_wallet/network/services/base_service.dart' as _i2;
 import 'package:provenance_wallet/network/services/transaction_service.dart'
     as _i6;
+import 'package:provenance_wallet/services/models/wallet_details.dart' as _i9;
+import 'package:provenance_wallet/services/wallet_connect_session.dart' as _i11;
+import 'package:provenance_wallet/services/wallet_service.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -72,4 +77,90 @@ class MockTransactionService extends _i1.Mock
               returnValue:
                   Future<List<_i7.Transaction>>.value(<_i7.Transaction>[]))
           as _i4.Future<List<_i7.Transaction>>);
+}
+
+/// A class which mocks [WalletService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWalletService extends _i1.Mock implements _i8.WalletService {
+  MockWalletService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i9.WalletDetails?> selectWallet({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#selectWallet, [], {#id: id}),
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i4.Future<_i9.WalletDetails?>);
+  @override
+  _i4.Future<_i9.WalletDetails?> getSelectedWallet() =>
+      (super.noSuchMethod(Invocation.method(#getSelectedWallet, []),
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i4.Future<_i9.WalletDetails?>);
+  @override
+  _i4.Future<List<_i9.WalletDetails>> getWallets() =>
+      (super.noSuchMethod(Invocation.method(#getWallets, []),
+              returnValue:
+                  Future<List<_i9.WalletDetails>>.value(<_i9.WalletDetails>[]))
+          as _i4.Future<List<_i9.WalletDetails>>);
+  @override
+  _i4.Future<bool> getUseBiometry() =>
+      (super.noSuchMethod(Invocation.method(#getUseBiometry, []),
+          returnValue: Future<bool>.value(false)) as _i4.Future<bool>);
+  @override
+  _i4.Future<dynamic> setUseBiometry({bool? useBiometry}) =>
+      (super.noSuchMethod(
+          Invocation.method(#setUseBiometry, [], {#useBiometry: useBiometry}),
+          returnValue: Future<dynamic>.value()) as _i4.Future<dynamic>);
+  @override
+  _i4.Future<dynamic> renameWallet({String? id, String? name}) =>
+      (super.noSuchMethod(
+          Invocation.method(#renameWallet, [], {#id: id, #name: name}),
+          returnValue: Future<dynamic>.value()) as _i4.Future<dynamic>);
+  @override
+  _i4.Future<bool> saveWallet(
+          {List<String>? phrase,
+          String? name,
+          bool? useBiometry,
+          _i10.Coin? coin = _i10.Coin.testNet}) =>
+      (super.noSuchMethod(
+          Invocation.method(#saveWallet, [], {
+            #phrase: phrase,
+            #name: name,
+            #useBiometry: useBiometry,
+            #coin: coin
+          }),
+          returnValue: Future<bool>.value(false)) as _i4.Future<bool>);
+  @override
+  _i4.Future<void> removeWallet({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#removeWallet, [], {#id: id}),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
+  @override
+  _i4.Future<void> resetWallets() =>
+      (super.noSuchMethod(Invocation.method(#resetWallets, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
+  @override
+  _i4.Future<_i11.WalletConnectSession?> connectWallet(String? addressData) =>
+      (super.noSuchMethod(Invocation.method(#connectWallet, [addressData]),
+              returnValue: Future<_i11.WalletConnectSession?>.value())
+          as _i4.Future<_i11.WalletConnectSession?>);
+  @override
+  _i4.Future<bool> isValidWalletConnectData(String? qrData) => (super
+      .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
+          returnValue: Future<bool>.value(false)) as _i4.Future<bool>);
+  @override
+  _i4.Future<int> estimate(
+          _i12.TxBody? body, _i9.WalletDetails? walletDetails) =>
+      (super.noSuchMethod(Invocation.method(#estimate, [body, walletDetails]),
+          returnValue: Future<int>.value(0)) as _i4.Future<int>);
+  @override
+  _i4.Future<void> submitTransaction(
+          _i12.TxBody? body, _i9.WalletDetails? walletDetails,
+          [int? gas = 0]) =>
+      (super.noSuchMethod(
+          Invocation.method(#submitTransaction, [body, walletDetails, gas]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
 }

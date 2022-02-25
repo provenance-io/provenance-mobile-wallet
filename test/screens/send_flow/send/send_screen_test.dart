@@ -12,6 +12,7 @@ import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import '../send_flow_test_constants.dart';
 import 'send_screen_test.mocks.dart';
 
 final get = GetIt.instance;
@@ -57,9 +58,6 @@ main() {
   });
 
   group("SendPage", () {
-    final asset1 = SendAsset("Hash", "1", "1.30", "http://test.com",);
-    final asset2 = SendAsset("USD", "1", "1", "http://test1.com",);
-
     final recentAddress1 = RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
     final recentAddress2 = RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
 
@@ -94,16 +92,16 @@ main() {
         var sendList = tester.widget<SendAssetList>(sendListFind);
         expect(sendList.assets, <SendAsset>[]);
 
-        _streamController!.add(SendBlocState([ asset1, asset2 ], <RecentAddress>[]));
+        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], <RecentAddress>[]));
         await tester.pumpAndSettle();
 
         sendListFind = find.byType(SendAssetList);
         sendList = tester.widget<SendAssetList>(sendListFind);
-        expect(sendList.assets,[ asset1, asset2 ]);
+        expect(sendList.assets,[ hashAsset, dollarAsset ]);
       });
 
       testWidgets("asset selected", (tester) async {
-        _streamController!.add(SendBlocState([ asset1, asset2 ], <RecentAddress>[]));
+        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], <RecentAddress>[]));
 
         await _build(tester);
         await tester.pumpAndSettle(); // wait for stream builder to settles
@@ -121,7 +119,7 @@ main() {
 
         sendListFind = find.byType(SendAssetList);
         sendList = tester.widget<SendAssetList>(sendListFind);
-        expect(sendList.selectedAsset, asset2);
+        expect(sendList.selectedAsset, dollarAsset);
       });
     });
 
@@ -220,7 +218,7 @@ main() {
       });
 
       testWidgets("Values", (tester) async {
-        _streamController!.add(SendBlocState([ asset1, asset2 ], [ recentAddress1, recentAddress2 ]));
+        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], [ recentAddress1, recentAddress2 ]));
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.value());
 
         await _build(tester);
@@ -231,12 +229,12 @@ main() {
 
         await tester.tap(find.byType(SendAssetList));
         await tester.pumpAndSettle();
-        await tester.tap(find.text(asset2.denom).last);
+        await tester.tap(find.text(dollarAsset.displayDenom).last);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text("Next"));
 
-        verify(mockBloc!.next("Addr", asset2));
+        verify(mockBloc!.next("Addr", dollarAsset));
       });
     });
   });

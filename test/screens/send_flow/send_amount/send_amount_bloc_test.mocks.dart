@@ -4,10 +4,11 @@
 
 import 'dart:async' as _i3;
 
-import 'package:decimal/decimal.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i9;
 import 'package:provenance_dart/wallet.dart' as _i7;
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
+    as _i4;
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i2;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i6;
@@ -35,7 +36,7 @@ class MockSendAmountBlocNavigator extends _i1.Mock
 
   @override
   _i3.Future<void> showReviewSend(
-          String? amountToSend, _i4.Decimal? fee, String? note) =>
+          _i4.SendAsset? amountToSend, _i4.SendAsset? fee, String? note) =>
       (super.noSuchMethod(
           Invocation.method(#showReviewSend, [amountToSend, fee, note]),
           returnValue: Future<void>.value(),
@@ -118,4 +119,11 @@ class MockWalletService extends _i1.Mock implements _i5.WalletService {
           _i9.TxBody? body, _i6.WalletDetails? walletDetails) =>
       (super.noSuchMethod(Invocation.method(#estimate, [body, walletDetails]),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
+  @override
+  _i3.Future<void> submitTransaction(
+          _i9.TxBody? body, _i6.WalletDetails? walletDetails, [int? gas = 0]) =>
+      (super.noSuchMethod(
+          Invocation.method(#submitTransaction, [body, walletDetails, gas]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
 }

@@ -11,13 +11,13 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class SendAmountBlocNavigator {
-  Future<void> showReviewSend(String amountToSend, Decimal fee, String note,);
+  Future<void> showReviewSend(SendAsset amountToSend, SendAsset fee, String note,);
 }
 
 class SendAmountBlocState {
   SendAmountBlocState(this.transactionFees);
 
-  final String? transactionFees;
+  final SendAsset? transactionFees;
 }
 
 class SendAmountBloc extends Disposable {
@@ -26,7 +26,7 @@ class SendAmountBloc extends Disposable {
   final WalletDetails walletDetails;
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
-  Decimal? _fee;
+  SendAsset? _fee;
 
   final SendAsset asset;
   final String receivingAddress;
@@ -51,10 +51,15 @@ class SendAmountBloc extends Disposable {
 
     get<WalletService>().estimate(body, walletDetails)
       .then((nhasGas) {
-        _fee = Decimal.fromInt(nhasGas);
-        final rationalFee = (_fee! / Decimal.fromInt(1000000000)).toDecimal(scaleOnInfinitePrecision: 9);
-        final formattedFee = "${rationalFee.toString()} hash";
-        final state = SendAmountBlocState(formattedFee);
+        _fee = SendAsset(
+          "hash", 9, 
+          "nhash", 
+          Decimal.fromInt(nhasGas), 
+          "", 
+          "",
+        );
+
+        final state = SendAmountBlocState(_fee);
         _streamController.add(state);
       });
   }
@@ -66,16 +71,10 @@ class SendAmountBloc extends Disposable {
       return "'$proposedAmount' ${Strings.sendAmountErrorInvalidAmount}";
     }
 
-    final decimalIndex = proposedAmount.indexOf('.');
-    if(decimalIndex >= 0) {
-      int decimalPlaces = proposedAmount.length - (decimalIndex + 1);
-      if(decimalPlaces > 9) {
-        return Strings.sendAmountErrorTooManyDecimalPlaces;
-      }
-    }
+    final scaledValue = (val * Decimal.fromInt(10).pow(asset.exponent));
 
-    if(Decimal.parse(asset.amount) < val) {
-      return "${Strings.sendAmountErrorInsufficient} ${asset.denom}";
+    if(asset.amount < scaledValue) {
+      return "${Strings.sendAmountErrorInsufficient} ${asset.displayDenom}";
     }
 
     return null;
@@ -87,17 +86,29 @@ class SendAmountBloc extends Disposable {
   }
 
   Future<void> showNext(String note, String amount) {
-    final amountError = validateAmount(amount);
-
     if(_fee == null) {
       return Future.error(Exception(Strings.sendAmountErrorGasEstimateNotReady));
     }
+
+    final amountError = validateAmount(amount);
 
     if(amountError?.isNotEmpty ?? false) {
       return Future.error(Exception(amountError));
     }
 
-    return this._navigator.showReviewSend(amount, _fee!, note,);
+    final val = Decimal.parse(amount);
+    final scaledValue = (val * Decimal.fromInt(10).pow(asset.exponent));
+
+    final sendingAsset = SendAsset(
+      asset.displayDenom, 
+      asset.exponent, 
+      asset.denom, 
+      scaledValue, 
+      "", 
+      asset.imageUrl,
+    );
+
+    return _navigator.showReviewSend(sendingAsset, _fee!, note,);
   }
 
 }

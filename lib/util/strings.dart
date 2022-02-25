@@ -309,4 +309,10 @@ class Strings {
   static const sendAmountErrorInvalidAmount = "is an invalid amount";
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
+
+  // SendReviewScreen
+  static const sendReviewTitle = "Send Review";
+  static const sendReviewConfirmYourInfo = "Confirm your information";
+  static const sendReviewSendButtonTitle = "Send";
+  static const sendReviewSendPleaseReview  = "Please review the details below to make sure everything is correct";
 }

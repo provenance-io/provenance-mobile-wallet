@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -10,26 +9,30 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendScreen extends StatelessWidget {
+  const SendScreen({ Key? key })
+    : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: PwText(Strings.sendTitle),
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: Spacing.medium,
-            horizontal: Spacing.medium,
-          ),
-          child: SendPage(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.medium,
+          horizontal: Spacing.medium,
         ),
+        child: SendPage(),
       ),
     );
   }
 }
 
 class SendPage extends StatefulWidget {
+  const SendPage({ Key? key })
+    : super(key: key);
+
   @override
   State<StatefulWidget> createState() => SendPageState();
 }

@@ -58,7 +58,7 @@ main() {
           home: RecentSendList(
             recentAddresses,
             OnAddressClicked,
-            OnViewAllClicked
+            OnViewAllClicked,
           ),
         ),
       );

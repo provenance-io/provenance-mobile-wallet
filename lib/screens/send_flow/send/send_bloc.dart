@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
@@ -8,6 +9,7 @@ import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:rational/rational.dart';
 
 abstract class SendBlocNavigator {
   Future<String?> scanAddress();
@@ -15,8 +17,6 @@ abstract class SendBlocNavigator {
   Future<void> showSelectAmount(String address, SendAsset asset);
 
   Future<void> showAllRecentSends();
-
-  Future<void> showRecentSendDetails(RecentAddress recentAddress);
 }
 
 class RecentAddress {
@@ -56,7 +56,7 @@ class SendBloc extends Disposable {
       final transResponse = results[1] as BaseResponse<List<Transaction>>;
 
       final assets = assetResponse.data?.map((asset) {
-        return SendAsset(asset.denom, asset.amount, "0", "",);
+        return SendAsset(asset.display, asset.exponent, asset.denom, Decimal.parse(asset.amount), "0", "",);
       });
       
       final recentAddresses = transResponse.data?.map((trans) {
@@ -80,10 +80,6 @@ class SendBloc extends Disposable {
 
   void showAllRecentSends() {
     _navigator.showAllRecentSends();
-  }
-
-  void showRecentSendDetails(RecentAddress recentAddress) {
-    _navigator.showRecentSendDetails(recentAddress);
   }
 
   Future<String?> scanAddress() async {

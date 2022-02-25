@@ -124,10 +124,54 @@ class WalletService {
     final baseReq = proto.BaseReq(body, [ baseReqSigner ], walletDetails.coin.chainId, );
     final gasEstimate = await pbClient.estimateTx(baseReq);
 
-    return gasEstimate.fees;
+    return gasEstimate.estimate;
+  }
+
+  Future<void> submitTransaction(proto.TxBody body, WalletDetails walletDetails, [ int gas = 0, ]) async {
+    final privateKey = await _storage.loadKey(walletDetails.id);
+    if(privateKey == null ) {
+      throw Exception("Unable to load the private key for ${walletDetails.address}");
+    }
+
+    final pbClient = proto.PbClient(Uri.parse(walletDetails.coin.address), walletDetails.coin.chainId);
+    final baseAccount = await pbClient.getBaseAccount(walletDetails.address);
+    final baseReqSigner = proto.BaseReqSigner(
+      _PrivateKeySigner(privateKey.defaultKey()), 
+      baseAccount,
+    );
+    final baseReq = proto.BaseReq(body, [ baseReqSigner ], walletDetails.coin.chainId, );
+
+    return pbClient.broadcastTx(
+      baseReq,
+      proto.GasEstimate(gas),
+      )
+      .then((response) {
+        if(response.txResponse.rawLog != "[]") {
+          throw Exception(response.txResponse.rawLog);
+        }
+
+        return null;
+      });
   }
 }
 
+class _PrivateKeySigner extends proto.Signer {
+  _PrivateKeySigner(this._privateKey);
+  
+  final PrivateKey _privateKey;
+
+  @override
+  String get address => pubKey.address;
+
+  @override
+  PublicKey get pubKey => _privateKey.publicKey;
+
+  @override
+  List<int> sign(List<int> data) {
+    final hash = Hash.sha256(data);
+    return _privateKey.signData(hash)..removeLast();
+  }
+}
 
 class _EstimateSigner extends proto.Signer {
   _EstimateSigner(this._details);

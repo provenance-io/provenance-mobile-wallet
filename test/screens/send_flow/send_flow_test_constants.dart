@@ -1,4 +1,6 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 
 final walletDetails = WalletDetails(
@@ -8,3 +10,6 @@ final walletDetails = WalletDetails(
   id: "1",
   name: "Wallet1",
 );
+
+final hashAsset = SendAsset("Hash", 2, "nHash", Decimal.fromInt(130), "111", "http://test.com",);
+final dollarAsset = SendAsset("USD", 2, "USD", Decimal.fromInt(1), "2", "http://test1.com",);

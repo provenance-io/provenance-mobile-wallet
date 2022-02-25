@@ -7,7 +7,7 @@ import 'package:provenance_wallet/util/strings.dart';
 final _dateFormatter = DateFormat("MM/dd/yy");
 
 class RecentSendCell extends StatelessWidget {
-  RecentSendCell(this.recentAddress, { Key? key })
+  const RecentSendCell(this.recentAddress, { Key? key })
     : super(key: key);
 
   final RecentAddress? recentAddress;
@@ -34,31 +34,31 @@ class RecentSendCell extends StatelessWidget {
 
   Widget _buildChild() {
     return (recentAddress == null)?
-        PwText(Strings.ViewAllLabel) :
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              PwText(
-                recentAddress!.address,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(
-                height: Spacing.medium,
-              ),
-              PwText(
-                _dateFormatter.format(recentAddress!.lastSend),
-                style: PwTextStyle.caption,
-              ),
-            ],
-          );
+      PwText(Strings.ViewAllLabel) :
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PwText(
+            recentAddress!.address,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(
+            height: Spacing.medium,
+          ),
+          PwText(
+            _dateFormatter.format(recentAddress!.lastSend),
+            style: PwTextStyle.caption,
+          ),
+        ],
+      );
   }
 }
 
 class RecentSendList extends StatelessWidget {
-  RecentSendList(
+  const RecentSendList(
       this.recentAddresses,
       this.onRecentSendClicked,
       this.onViewAllClicked,

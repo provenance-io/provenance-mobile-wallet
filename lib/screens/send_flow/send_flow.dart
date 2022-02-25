@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -10,7 +9,10 @@ import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
+import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -24,7 +26,7 @@ class SendFlow extends FlowBase {
 }
 
 class SendFlowState extends FlowBaseState<SendFlow>
-    implements SendBlocNavigator, SendAmountBlocNavigator {
+    implements SendBlocNavigator, SendAmountBlocNavigator, SendReviewNaviagor {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   String? _receivingAddress;
@@ -60,6 +62,9 @@ class SendFlowState extends FlowBaseState<SendFlow>
     );
 
     final copy = theme.copyWith(
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: Colors.transparent,
+      ),
       canvasColor: Colors.grey,
       iconTheme: theme.iconTheme.copyWith(
         color: borderColor,
@@ -83,10 +88,12 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   /* SendBlocNavigator */
 
+  @override
   Future<String?> scanAddress() {
     return showPage((context) => QRCodeScanner());
   }
 
+  @override
   Future<void> showSelectAmount(String address, SendAsset asset) {
     _asset = asset;
     _receivingAddress = address;
@@ -104,10 +111,12 @@ class SendFlowState extends FlowBaseState<SendFlow>
         .whenComplete(() => get.unregister<SendAmountBloc>());
   }
 
+  @override
   Widget createStartPage() {
     return SendScreen();
   }
 
+  @override
   Future<void> showAllRecentSends() {
     return showDialog(
       context: context,
@@ -119,33 +128,35 @@ class SendFlowState extends FlowBaseState<SendFlow>
     );
   }
 
-  Future<void> showRecentSendDetails(RecentAddress recentAddress) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: Strings.NotImplementedMessage,
-        );
-      },
-    );
-  }
-
   /* SendAmountBlocNavigator */
 
   @override
   Future<void> showReviewSend(
-    String amountToSend,
-    Decimal fee,
+    SendAsset amountToSend,
+    SendAsset fee,
     String note,
   ) {
-    // return Future.value();
-    completeFlow([
-      _asset,
-      _receivingAddress,
-      amountToSend,
+    
+    final bloc = SendReviewBloc(
+      widget.walletDetails, 
+      get<WalletService>(), 
+      _receivingAddress!, 
+      amountToSend, 
       fee,
-    ]);
+      note,
+      this,
+    );
 
-    return Future.value();
+    get.registerSingleton(bloc);
+
+    return showPage((context) => SendReviewScreen())
+        .whenComplete(() => get.unregister<SendReviewBloc>());
+  }
+
+  /* SendReviewNaviagor */
+
+  @override
+  void complete() {
+    completeFlow(null);
   }
 }
