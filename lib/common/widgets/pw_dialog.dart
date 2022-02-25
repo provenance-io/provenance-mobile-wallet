@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PwDialog {
   PwDialog._();
@@ -49,9 +46,10 @@ class PwDialog {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             PwText(
-                              title,
+                              title.toUpperCase(),
                               style: PwTextStyle.headline2,
                               color: PwColor.neutralNeutral,
+                              textAlign: TextAlign.center,
                             ),
                             if (message != null) VerticalSpacer.large(),
                             if (message != null)
@@ -95,7 +93,7 @@ class PwDialog {
   static Future<T?> show<T>(
     BuildContext context, {
     Widget? header,
-    String title = 'Provenance Wallet',
+    String title = Strings.appName,
     String? message,
     Widget? content,
     Widget? bottom,
@@ -104,58 +102,68 @@ class PwDialog {
     return showDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      barrierColor: Theme.of(context).colorScheme.black.withOpacity(0.8),
       useRootNavigator: false,
       builder: (context) => WillPopScope(
         onWillPop: () async => barrierDismissible,
-        child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Padding(
-            padding: EdgeInsets.only(
-              top: header == null ? Spacing.medium : Spacing.large,
-              left: Spacing.medium,
-              right: Spacing.medium,
-            ),
-            child: Column(
-              children: [
-                if (header != null) ...[
-                  header,
-                  const VerticalSpacer.xLarge(),
-                ],
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.neutral750,
+            elevation: 0.0,
+            title: header ??
                 PwText(
                   title,
-                  style: PwTextStyle.h4,
-                  color: PwColor.black,
-                  textAlign: TextAlign.center,
+                  style: PwTextStyle.subhead,
+                  textAlign: TextAlign.left,
                 ),
+            leading: Padding(
+              padding: EdgeInsets.only(left: 21),
+              child: IconButton(
+                icon: PwIcon(
+                  PwIcons.close,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(null);
+                },
+              ),
+            ),
+          ),
+          body: Container(
+            color: Theme.of(context).colorScheme.neutral750,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(
+                    Spacing.xxLarge,
+                  ),
+                  child: content ??
+                      PwText(
+                        message ?? "",
+                        style: PwTextStyle.body,
+                        textAlign: TextAlign.center,
+                        color: PwColor.neutralNeutral,
+                      ),
+                ),
+                Expanded(child: Container()),
+                bottom ??
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: PwButton(
+                        child: PwText(
+                          Strings.confirm,
+                          style: PwTextStyle.mBold,
+                          color: PwColor.neutralNeutral,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(null);
+                        },
+                      ),
+                    ),
+                VerticalSpacer.large(),
               ],
             ),
           ),
-          content: content ??
-              (message != null
-                  ? PwText(
-                      message,
-                      style: PwTextStyle.m,
-                      color: PwColor.black,
-                      textAlign: TextAlign.center,
-                    )
-                  : null),
-          insetPadding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
-          contentPadding: EdgeInsets.only(
-            top: Spacing.medium,
-            bottom: content == null ? Spacing.large : 0.0,
-            left: Spacing.medium,
-            right: Spacing.medium,
-          ),
-          actions: [
-            if (bottom != null) ...[
-              Padding(
-                padding: const EdgeInsets.all(Spacing.small),
-                child: bottom,
-              ),
-            ],
-          ],
         ),
       ),
     );
@@ -177,7 +185,7 @@ class PwDialog {
       bottom: Column(
         children: [
           PwPrimaryButton.fromString(
-            text: 'OK',
+            text: Strings.okay,
             onPressed: () {
               Navigator.of(context).pop();
               okAction?.call();
@@ -186,7 +194,7 @@ class PwDialog {
           if (showCancel) ...[
             const VerticalSpacer.small(),
             PwTextButton(
-              child: PwText('Cancel'),
+              child: PwText(Strings.cancel),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -204,14 +212,14 @@ class PwDialog {
     String? message,
     Widget? content,
     String? confirmText,
-    String cancelText = 'Cancel',
+    String cancelText = Strings.cancel,
     Widget? footer,
   }) async {
     final result = await show<bool>(
       context,
       barrierDismissible: false,
       header: header,
-      title: title ?? 'Figure Tech Wallet',
+      title: title ?? Strings.appName,
       message: message,
       content: content,
       bottom: Column(
@@ -244,7 +252,7 @@ class PwDialog {
     BuildContext context, {
     Widget? header,
     String? title,
-    String closeText = 'Close',
+    String closeText = Strings.continueName,
     required String message,
   }) {
     return showConfirmation(
