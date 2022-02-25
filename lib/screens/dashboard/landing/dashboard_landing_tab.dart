@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
@@ -271,9 +270,6 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 },
               ),
             ),
-            VerticalSpacer.medium(),
-            ResetButton(),
-            VerticalSpacer.large(),
           ],
         ),
       ),
