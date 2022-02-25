@@ -20,6 +20,7 @@ class WalletsScreen extends StatefulWidget {
 
 class WalletsScreenState extends State<WalletsScreen>
     with RouteAware, WidgetsBindingObserver {
+  final _screenBottom = 130;
   late DashboardBloc _bloc;
 
   @override
@@ -50,27 +51,77 @@ class WalletsScreenState extends State<WalletsScreen>
       appBar: PwAppBar(
         title: Strings.wallets,
       ),
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        _showAllWallets(),
-        Expanded(
-          child: Container(),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
-          ),
-          child: PwButton(
-            showAlternate: true,
-            child: PwText(
-              Strings.createWallet,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - _screenBottom,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            StreamBuilder<Map<WalletDetails, int>>(
+              initialData: _bloc.walletMap.value,
+              stream: _bloc.walletMap,
+              builder: (context, snapshot) {
+                var wallets = snapshot.data?.keys.toList() ?? [];
+                var numAssets = snapshot.data?.values.toList() ?? [];
+                var selectedWallet = _bloc.selectedWallet.value;
+                if (wallets.isEmpty || null == selectedWallet) {
+                  return Container();
+                }
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    VerticalSpacer.medium(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Spacing.xxLarge,
+                      ),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          var wallet = wallets[index];
+
+                          return WalletItem(
+                            item: wallet,
+                            isSelected:
+                                wallet.address == selectedWallet.address,
+                            reload: () {
+                              _bloc.loadAllWallets();
+                            },
+                            numAssets: numAssets[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return VerticalSpacer.custom(spacing: 1);
+                        },
+                        itemCount: wallets.length,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).push(AddWallet().route());
-            },
-          ),
+            Expanded(
+              child: Container(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.large,
+              ),
+              child: PwButton(
+                showAlternate: true,
+                child: PwText(
+                  Strings.createWallet,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(AddWallet().route());
+                },
+              ),
+            ),
+            VerticalSpacer.largeX4(),
+          ]),
         ),
-        VerticalSpacer.largeX4(),
-      ]),
+      ),
     );
   }
 
