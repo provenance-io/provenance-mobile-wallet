@@ -129,7 +129,9 @@ class Strings {
   static const importExistingWallet = 'Import existing wallet';
 
   // Rename Wallet Dialog
-  static const walletRename = 'Wallet Rename';
+  static const renameWallet = 'Rename Wallet';
+  static const renameWalletDescription =
+      'Please enter the new name you would like to call your wallet.';
   static const walletName = 'Wallet Name';
   static const required = '*required';
   static const confirm = 'Confirm';

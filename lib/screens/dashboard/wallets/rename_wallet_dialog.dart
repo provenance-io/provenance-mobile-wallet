@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -8,52 +9,67 @@ class RenameWalletDialog extends StatelessWidget {
     _nameController.text = currentName ?? '';
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  final TextEditingController _nameController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
 
   final String? currentName;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Theme.of(context).colorScheme.neutral700,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Form(
+    return Scaffold(
+      appBar: PwAppBar(
+        title: Strings.renameWallet,
+        leadingIcon: PwIcons.close,
+        leadingIconOnPress: () {
+          Navigator.of(context).pop(null);
+        },
+      ),
+      body: Form(
         key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.medium),
+        child: Container(
+          color: Theme.of(context).colorScheme.neutral750,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const VerticalSpacer.large(),
-              PwText(
-                Strings.walletRename,
-                style: PwTextStyle.subhead,
-              ),
-              const VerticalSpacer.medium(),
               Padding(
-                padding: const EdgeInsets.only(
-                  top: Spacing.medium,
-                  left: Spacing.medium,
-                  right: Spacing.medium,
+                padding: EdgeInsets.all(
+                  Spacing.xxLarge,
+                ),
+                child: PwText(
+                  Strings.renameWalletDescription,
+                  style: PwTextStyle.body,
+                  textAlign: TextAlign.center,
+                  color: PwColor.neutralNeutral,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: Spacing.xxLarge,
+                  right: Spacing.xxLarge,
+                  bottom: Spacing.small,
                 ),
                 child: PwTextFormField(
-                  label: Strings.walletName,
-                  controller: _nameController,
+                  label: Strings.accountName,
                   autofocus: true,
                   validator: (value) {
-                    return ((value?.isEmpty ?? true) ? Strings.required : null);
+                    return value == null || value.isEmpty
+                        ? Strings.required
+                        : null;
                   },
+                  controller: _nameController,
                 ),
               ),
-              const VerticalSpacer.xxLarge(),
+              Expanded(child: Container()),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.large,
-                ),
-                child: PwPrimaryButton.fromString(
-                  text: Strings.confirm,
-                  onPressed: () async {
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: PwButton(
+                  child: PwText(
+                    Strings.confirm,
+                    style: PwTextStyle.mBold,
+                    color: PwColor.neutralNeutral,
+                  ),
+                  onPressed: () {
                     if (_formKey.currentState?.validate() == true) {
                       if (_nameController.text.trim() == currentName) {
                         Navigator.of(context).pop(null);
@@ -64,11 +80,7 @@ class RenameWalletDialog extends StatelessWidget {
                   },
                 ),
               ),
-              const VerticalSpacer.small(),
-              PwTextButton(
-                child: PwText(Strings.cancel),
-                onPressed: () => Navigator.of(context).pop(null),
-              ),
+              VerticalSpacer.large(),
             ],
           ),
         ),
