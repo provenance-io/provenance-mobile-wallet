@@ -98,6 +98,7 @@ class _LandingScreenState extends State<LandingScreen>
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(

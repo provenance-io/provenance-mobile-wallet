@@ -32,6 +32,7 @@ class ErrorDialog extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(
