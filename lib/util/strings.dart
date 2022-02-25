@@ -46,7 +46,7 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
-  static const NotImplementedMessage = "Not Implemented";
+  static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
   static const biometric = 'Biometric';
