@@ -60,7 +60,7 @@ class ErrorDialog extends StatelessWidget {
                       horizontal: Spacing.xxLarge,
                     ),
                     child: PwText(
-                      Strings.somethingWentWrong,
+                      error ?? Strings.somethingWentWrong,
                       style: PwTextStyle.body,
                       textAlign: TextAlign.center,
                       color: PwColor.neutralNeutral,
