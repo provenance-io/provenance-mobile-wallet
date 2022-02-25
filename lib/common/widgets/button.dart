@@ -5,7 +5,6 @@ class PwPrimaryButton extends StatelessWidget {
     Key? key,
     required this.child,
     this.onPressed,
-    this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
   }) : super(key: key);
 
@@ -14,9 +13,6 @@ class PwPrimaryButton extends StatelessWidget {
 
   /// The callback to invoke when the button is pressed.
   final VoidCallback? onPressed;
-
-  /// Used to show an alternate version of the button, as per the figma design
-  final bool showAlternate;
 
   /// Useful when working with Flexible/Expandable widgets
   final double minimumWidth;
