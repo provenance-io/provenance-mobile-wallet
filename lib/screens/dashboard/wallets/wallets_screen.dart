@@ -32,8 +32,11 @@ class WalletsScreenState extends State<WalletsScreen>
 
   @override
   void didChangeDependencies() {
-    RouterObserver.instance.routeObserver
-        .subscribe(this, ModalRoute.of(context) as PageRoute);
+    var route = ModalRoute.of(context);
+    RouterObserver.instance.routeObserver.subscribe(
+      this,
+      route!,
+    );
     super.didChangeDependencies();
   }
 

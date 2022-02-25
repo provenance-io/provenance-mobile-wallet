@@ -6,7 +6,7 @@ class RouterObserver {
 
   static final RouterObserver _singleton = RouterObserver._internal();
 
-  final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+  final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
   static RouterObserver get instance => _singleton;
 }
