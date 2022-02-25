@@ -1,6 +1,8 @@
+import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/dashboard/add_wallet.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallet_item.dart';
@@ -114,11 +116,32 @@ class WalletsScreenState extends State<WalletsScreen>
               child: PwOutlinedButton(
                 Strings.createWallet,
                 onPressed: () {
-                  Navigator.of(context).push(AddWallet().route());
+                  Navigator.of(context).push(AccountName(
+                    WalletAddImportType.dashboardAdd,
+                    currentStep: 1,
+                    numberOfSteps: 2,
+                  ).route());
                 },
               ),
             ),
-            VerticalSpacer.largeX4(),
+            VerticalSpacer.large(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: PwTextButton(
+                child: PwText(
+                  Strings.recoverWallet,
+                  style: PwTextStyle.body,
+                  color: PwColor.neutralNeutral,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(AccountName(
+                    WalletAddImportType.dashboardRecover,
+                    currentStep: 1,
+                    numberOfSteps: 2,
+                  ).route());
+                },
+              ),
+            ),
           ]),
         ),
       ),
