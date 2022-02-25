@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwPrimaryButton extends StatelessWidget {
