@@ -1,6 +1,24 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwPrimaryButton extends StatelessWidget {
+  factory PwPrimaryButton.fromString({
+    Key? key,
+    required String text,
+    VoidCallback? onPressed,
+    double minimumWidth = double.maxFinite,
+  }) {
+    return PwPrimaryButton(
+      key: key,
+      minimumWidth: minimumWidth,
+      onPressed: onPressed,
+      child: PwText(
+        text,
+        style: PwTextStyle.bodyBold,
+        color: PwColor.neutralNeutral,
+      ),
+    );
+  }
+
   const PwPrimaryButton({
     Key? key,
     required this.child,

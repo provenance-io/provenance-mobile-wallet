@@ -48,8 +48,8 @@ class RenameWalletDialog extends StatelessWidget {
                 ),
               ),
               const VerticalSpacer.xxLarge(),
-              PwPrimaryButton(
-                child: PwText(Strings.confirm),
+              PwPrimaryButton.fromString(
+                text: Strings.confirm,
                 onPressed: () async {
                   if (_formKey.currentState?.validate() == true) {
                     if (_nameController.text.trim() == currentName) {

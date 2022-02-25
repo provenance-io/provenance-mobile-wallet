@@ -176,8 +176,8 @@ class PwDialog {
       message: message ?? 'Unknown Error',
       bottom: Column(
         children: [
-          PwPrimaryButton(
-            child: PwText('OK'),
+          PwPrimaryButton.fromString(
+            text: 'OK',
             onPressed: () {
               Navigator.of(context).pop();
               okAction?.call();
@@ -216,8 +216,8 @@ class PwDialog {
       content: content,
       bottom: Column(
         children: [
-          PwPrimaryButton(
-            child: PwText(confirmText ?? cancelText),
+          PwPrimaryButton.fromString(
+            text: confirmText ?? cancelText,
             onPressed: () => Navigator.of(context).pop(true),
           ),
           const VerticalSpacer.small(),
@@ -288,8 +288,8 @@ class PwDialog {
           textAlign: TextAlign.center,
         ),
       ),
-      bottom: PwPrimaryButton(
-        child: PwText('Force Update'),
+      bottom: PwPrimaryButton.fromString(
+        text: 'Force Update',
         onPressed: () {
           final url = Platform.isIOS
               // FIXME: Get the correct urls.
@@ -324,8 +324,8 @@ class PwDialog {
       ),
       bottom: Column(
         children: [
-          PwPrimaryButton(
-            child: PwText(Strings.sessionApprove),
+          PwPrimaryButton.fromString(
+            text: Strings.sessionApprove,
             onPressed: () => Navigator.of(context).pop(true),
           ),
           const VerticalSpacer.small(),
