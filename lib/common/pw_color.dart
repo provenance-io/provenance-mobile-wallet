@@ -2,15 +2,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 
 /// Figma Typopgraphy Text Styles
 enum PwColor {
-  light,
-  lightGrey,
-  midGrey,
   darkGrey,
   black,
-  positive,
   error,
-  primary4,
-  secondary1,
   secondary2,
   neutral550,
   neutral450,
@@ -31,24 +25,12 @@ mixin PwColorMixin on Widget {
     final theme = Theme.of(context);
 
     switch (altColor ?? color) {
-      case PwColor.light:
-        return theme.colorScheme.light;
-      case PwColor.lightGrey:
-        return theme.colorScheme.lightGrey;
-      case PwColor.midGrey:
-        return theme.colorScheme.midGrey;
       case PwColor.darkGrey:
         return theme.colorScheme.darkGrey;
       case PwColor.black:
         return theme.colorScheme.black;
-      case PwColor.positive:
-        return theme.colorScheme.positive;
       case PwColor.error:
         return theme.colorScheme.error;
-      case PwColor.primary4:
-        return theme.colorScheme.primary400;
-      case PwColor.secondary1:
-        return theme.colorScheme.secondary;
       case PwColor.secondary2:
         return theme.colorScheme.secondaryVariant;
       case PwColor.neutral450:
