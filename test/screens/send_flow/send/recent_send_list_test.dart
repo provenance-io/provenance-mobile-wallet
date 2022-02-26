@@ -40,8 +40,12 @@ main() {
       expect(find.text("View All"), findsNothing);
       expect(find.descendant(of: textFind, matching: find.text("Address")),
           findsOneWidget);
-      expect(find.descendant(of: textFind, matching: find.text("12/31/69")),
-          findsOneWidget);
+
+      final lastSendFinder = find.byKey(RecentSendCell.keyLastSendText);
+      expect(lastSendFinder, findsOneWidget);
+
+      final lastSendWidget = lastSendFinder.evaluate().first.widget as Text;
+      expect(lastSendWidget.data, '12/31/69');
     });
   });
 

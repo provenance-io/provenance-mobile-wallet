@@ -9,6 +9,8 @@ final _dateFormatter = DateFormat("MM/dd/yy");
 class RecentSendCell extends StatelessWidget {
   RecentSendCell(this.recentAddress, {Key? key}) : super(key: key);
 
+  static const keyLastSendText = ValueKey('recent_send_cell_last_send');
+
   final RecentAddress? recentAddress;
 
   @override
@@ -50,6 +52,7 @@ class RecentSendCell extends StatelessWidget {
               PwText(
                 _dateFormatter.format(recentAddress!.lastSend),
                 style: PwTextStyle.caption,
+                textKey: keyLastSendText,
               ),
             ],
           );
