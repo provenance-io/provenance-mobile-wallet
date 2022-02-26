@@ -29,8 +29,8 @@ main() {
     });
 
     testWidgets("Not Null Address", (tester) async {
-      final recentAddress =
-          RecentAddress("Address", DateTime.fromMicrosecondsSinceEpoch(0));
+      final lastSend = DateTime.fromMicrosecondsSinceEpoch(0);
+      final recentAddress = RecentAddress("Address", lastSend);
       await _build(tester, recentAddress);
 
       final textFind = find.byType(PwText);
@@ -45,7 +45,7 @@ main() {
       expect(lastSendFinder, findsOneWidget);
 
       final lastSendWidget = lastSendFinder.evaluate().first.widget as Text;
-      expect(lastSendWidget.data, '12/31/69');
+      expect(lastSendWidget.data, dateFormatter.format(lastSend));
     });
   });
 

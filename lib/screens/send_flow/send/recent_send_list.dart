@@ -4,7 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-final _dateFormatter = DateFormat("MM/dd/yy");
+@visibleForTesting
+final dateFormatter = DateFormat("MM/dd/yy");
 
 class RecentSendCell extends StatelessWidget {
   RecentSendCell(this.recentAddress, {Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class RecentSendCell extends StatelessWidget {
                 height: Spacing.medium,
               ),
               PwText(
-                _dateFormatter.format(recentAddress!.lastSend),
+                dateFormatter.format(recentAddress!.lastSend),
                 style: PwTextStyle.caption,
                 textKey: keyLastSendText,
               ),
