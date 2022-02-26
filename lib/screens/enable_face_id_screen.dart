@@ -61,7 +61,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       PwIcon(
-                        PwIcons.face_id,
+                        PwIcons.faceId,
                         color: Theme.of(context).colorScheme.neutralNeutral,
                       ),
                     ],

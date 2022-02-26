@@ -5,6 +5,10 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'fundamentals_bloc.dart';
 
 class OnboardingFundamentalsSlide extends StatefulWidget {
+  const OnboardingFundamentalsSlide({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _OnboardingFundamentalsSlideState();

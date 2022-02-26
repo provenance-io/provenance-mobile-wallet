@@ -73,7 +73,7 @@ class TradeDetailsScreen extends StatelessWidget {
                       width: 20,
                       height: 20,
                       child: PwIcon(
-                        PwIcons.new_window,
+                        PwIcons.newWindow,
                         color: Theme.of(context).colorScheme.neutralNeutral,
                         size: 20,
                       ),

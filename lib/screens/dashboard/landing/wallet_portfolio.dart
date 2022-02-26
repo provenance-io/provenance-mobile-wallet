@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-typedef Future<void> OnAddressCaptured(String address);
+typedef OnAddressCaptured = Future<void> Function(String address);
 
 class WalletPortfolio extends StatelessWidget {
   const WalletPortfolio({Key? key}) : super(key: key);
@@ -33,8 +33,6 @@ class WalletPortfolio extends StatelessWidget {
             initialData: assetStream.value,
             stream: assetStream,
             builder: (context, snapshot) {
-              final assets = snapshot.data ?? [];
-
               return PwText(
                 // FIXME: How do we get portfolio value?
                 '\$0',

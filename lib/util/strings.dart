@@ -40,8 +40,6 @@ extension StringExtension on String {
   }
 }
 
-// TODO: Localization
-
 class Strings {
   // App
   static const appName = 'Provenance Wallet';
@@ -292,7 +290,7 @@ class Strings {
   // SendScreen
   static const sendTitle = "Send";
   static const noRecentSends = "No recent sends";
-  static const ViewAllLabel = "View All";
+  static const viewAllLabel = "View All";
   static const nextButtonLabel = "Next";
   static const sendPageRecentAddress = "Recent addresses";
   static const sendPageSelectAmount = "Select Amount";

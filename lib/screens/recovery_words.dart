@@ -9,12 +9,13 @@ import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWords extends StatefulWidget {
-  RecoveryWords(
+  const RecoveryWords(
     this.flowType,
     this.accountName, {
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final int? currentStep;
   final int? numberOfSteps;
@@ -29,7 +30,7 @@ class RecoveryWords extends StatefulWidget {
 
 class RecoveryWordsState extends State<RecoveryWords> {
   bool _loading = true;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> words = [];
 

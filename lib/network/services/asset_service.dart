@@ -10,7 +10,7 @@ class AssetService {
   Future<BaseResponse<List<Asset>>> getAssets(
     String provenanceAddresses,
   ) async {
-    final data = await BaseService.instance.GET(
+    final data = await BaseService.instance.get(
       '$_assetServiceBasePathv1/$provenanceAddresses/assets',
       listConverter: (json) {
         if (json is String) {

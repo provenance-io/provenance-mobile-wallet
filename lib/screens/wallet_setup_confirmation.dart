@@ -7,6 +7,10 @@ import 'package:provenance_wallet/util/strings.dart';
 // TODO: On init, activate notifications.
 
 class WalletSetupConfirmation extends StatelessWidget {
+  const WalletSetupConfirmation({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

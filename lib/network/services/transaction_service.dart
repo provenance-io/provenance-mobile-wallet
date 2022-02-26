@@ -10,7 +10,7 @@ class TransactionService {
   Future<BaseResponse<List<Transaction>>> getTransactions(
     String provenanceAddress,
   ) async {
-    final data = await BaseService.instance.GET(
+    final data = await BaseService.instance.get(
       '$_transactionServiceBasePath/$provenanceAddress/transactions',
       listConverter: (json) {
         if (json is String) {

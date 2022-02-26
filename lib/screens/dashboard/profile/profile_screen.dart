@@ -271,12 +271,10 @@ class _ItemLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: PwText(
-        text,
-        style: PwTextStyle.body,
-        overflow: TextOverflow.ellipsis,
-      ),
+    return PwText(
+      text,
+      style: PwTextStyle.body,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

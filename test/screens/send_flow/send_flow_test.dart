@@ -1,17 +1,10 @@
-
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
-
 
 final get = GetIt.instance;
 
@@ -26,8 +19,10 @@ main() {
       ),
     );
 
-    await tester.pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
-    state = tester.allStates.firstWhere((element) => element is SendFlowState) as SendFlowState;
+    await tester
+        .pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
+    state = tester.allStates.firstWhere((element) => element is SendFlowState)
+        as SendFlowState;
   }
 
   testWidgets("Contents", (tester) async {
@@ -59,7 +54,13 @@ main() {
 
       final dialogFind = find.byType(ErrorDialog);
       expect(dialogFind, findsOneWidget);
-      expect(find.descendant(of: dialogFind, matching: find.text("Not Implemented")), findsOneWidget);
+      expect(
+        find.descendant(
+          of: dialogFind,
+          matching: find.text("Not Implemented"),
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets("showRecentSendDetails", (tester) async {
@@ -70,7 +71,13 @@ main() {
 
       final dialogFind = find.byType(ErrorDialog);
       expect(dialogFind, findsOneWidget);
-      expect(find.descendant(of: dialogFind, matching: find.text("Not Implemented")), findsOneWidget);
+      expect(
+        find.descendant(
+          of: dialogFind,
+          matching: find.text("Not Implemented"),
+        ),
+        findsOneWidget,
+      );
     });
     //
     // testWidgets("showSelectAmount", (tester) async {

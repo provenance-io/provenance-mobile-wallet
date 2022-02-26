@@ -5,14 +5,16 @@ import 'package:dio/dio.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
-const String ACCEPT = 'Accept';
-const String CONTENT_TYPE = 'content-type';
-const String JSON = 'application/json;application/json;charset=UTF-8';
-const String MULTI_PART = 'multipart/form-data';
-const String AUTH = 'Authorization';
-const String IMPERSONATE = 'x-impersonate';
+const String httpHeaderAccept = 'Accept';
+const String httpHeaderContentType = 'content-type';
+const String httpHeaderAuth = 'Authorization';
+const String httpHeaderImpersonate = 'x-impersonate';
 
-typedef void SessionTimeoutCallback(bool hasJwt);
+const String contentTypeJson =
+    'application/json;application/json;charset=UTF-8';
+const String contentTypeMultiPart = 'multipart/form-data';
+
+typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
 abstract class FigureSerializable {
   fromJson();
@@ -30,8 +32,8 @@ class BaseResponse<T> {
     res = res;
 
     try {
-      if (res?.headers != null && res?.headers[AUTH] != null) {
-        String auth = res!.headers.value(AUTH)!;
+      if (res?.headers != null && res?.headers[httpHeaderAuth] != null) {
+        String auth = res!.headers.value(httpHeaderAuth)!;
         BaseService.instance.setJwtTokenWithoutInit(auth);
       }
       data = converter == null
@@ -144,7 +146,7 @@ class BaseService {
 
   Map<String, String> get headers {
     if (_jwtToken.isNotEmpty) {
-      return {AUTH: _jwtToken};
+      return {httpHeaderAuth: _jwtToken};
     }
 
     return {};
@@ -232,7 +234,7 @@ class BaseService {
     }
   }
 
-  Future<BaseResponse<T>> GET<T>(
+  Future<BaseResponse<T>> get<T>(
     path, {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter,
@@ -309,7 +311,7 @@ class BaseService {
     }
   }
 
-  Future<BaseResponse<T>> DELETE<T>(
+  Future<BaseResponse<T>> delete<T>(
     path, {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter,
@@ -367,7 +369,7 @@ class BaseService {
     }
   }
 
-  Future<BaseResponse<T>> POST<T>(
+  Future<BaseResponse<T>> post<T>(
     dynamic path, {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter,
@@ -378,7 +380,7 @@ class BaseService {
     Encoding? encoding,
   }) async {
     if (additionalHeaders != null) {
-      _dio.options.headers.addAll({CONTENT_TYPE: JSON});
+      _dio.options.headers.addAll({httpHeaderContentType: contentTypeJson});
       _dio.options.headers.addAll(additionalHeaders);
     }
 
@@ -440,7 +442,7 @@ class BaseService {
     }
   }
 
-  Future<BaseResponse<T>> PATCH<T>(
+  Future<BaseResponse<T>> patch<T>(
     dynamic path, {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter,
@@ -450,7 +452,7 @@ class BaseService {
     Encoding? encoding,
   }) async {
     if (additionalHeaders != null) {
-      _dio.options.headers.addAll({CONTENT_TYPE: JSON});
+      _dio.options.headers.addAll({httpHeaderContentType: contentTypeJson});
       _dio.options.headers.addAll(additionalHeaders);
     }
 
@@ -502,7 +504,7 @@ class BaseService {
     }
   }
 
-  Future<BaseResponse<T>> PUT<T>(
+  Future<BaseResponse<T>> put<T>(
     dynamic path, {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter,
@@ -512,7 +514,7 @@ class BaseService {
     Encoding? encoding,
   }) async {
     if (additionalHeaders != null) {
-      _dio.options.headers.addAll({CONTENT_TYPE: JSON});
+      _dio.options.headers.addAll({httpHeaderContentType: contentTypeJson});
       _dio.options.headers.addAll(additionalHeaders);
     }
 
@@ -567,7 +569,8 @@ class BaseService {
     Encoding? encoding,
   }) async {
     Options additionalOptions = Options();
-    additionalOptions.headers?.addAll({CONTENT_TYPE: MULTI_PART});
+    additionalOptions.headers
+        ?.addAll({httpHeaderContentType: contentTypeMultiPart});
 
     if (additionalHeaders != null) {
       _dio.options.headers.addAll(additionalHeaders);
@@ -640,7 +643,8 @@ class BaseService {
   }) async {
     Options additionalOptions = Options();
     if (additionalHeaders != null) {
-      additionalOptions.headers?.addAll({CONTENT_TYPE: MULTI_PART});
+      additionalOptions.headers
+          ?.addAll({httpHeaderContentType: contentTypeMultiPart});
       _dio.options.headers.addAll(additionalHeaders);
     }
 
@@ -710,17 +714,17 @@ class BaseService {
     _dio.interceptors.add(InterceptorsWrapper(onRequest:
         (RequestOptions options, RequestInterceptorHandler handler) async {
       if (options.responseType != ResponseType.bytes) {
-        options.headers[ACCEPT] = JSON;
+        options.headers[httpHeaderAccept] = contentTypeJson;
       }
-      if (options.headers[CONTENT_TYPE] == null &&
-          options.headers[CONTENT_TYPE] != MULTI_PART) {
-        options.headers[CONTENT_TYPE] = JSON;
+      if (options.headers[httpHeaderContentType] == null &&
+          options.headers[httpHeaderContentType] != contentTypeMultiPart) {
+        options.headers[httpHeaderContentType] = contentTypeJson;
       }
       if (_jwtToken.isNotEmpty) {
-        options.headers[AUTH] = _jwtToken;
+        options.headers[httpHeaderAuth] = _jwtToken;
       }
       if (!isProd && _impersonateId.isNotEmpty) {
-        options.headers[IMPERSONATE] = _impersonateId;
+        options.headers[httpHeaderImpersonate] = _impersonateId;
       }
       if (_organizationUuid.isNotEmpty) {
         options.headers['x-org-uuid'] = _organizationUuid;

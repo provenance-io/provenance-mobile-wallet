@@ -30,9 +30,9 @@ class PwIcons {
   static const String plus = 'plus';
   static const String remove = 'remove';
   static const String chevron = 'chevron';
-  static const String new_window = "new_window";
+  static const String newWindow = "new_window";
   static const String provenance = "provenance";
-  static const String face_id = "face_id";
+  static const String faceId = "face_id";
   static const String dashboard = "dashboard";
   static const String ellipsis = "ellipsis";
   static const String qr = "qr";

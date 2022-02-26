@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -65,7 +64,7 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    const LabelPadding = EdgeInsets.fromLTRB(
+    const labelPadding = EdgeInsets.fromLTRB(
       0,
       Spacing.medium,
       0,
@@ -79,7 +78,7 @@ class SendPageState extends State<SendPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageSelectAmount),
         ),
         ValueListenableBuilder<List<SendAsset>>(
@@ -106,7 +105,7 @@ class SendPageState extends State<SendPage> {
           },
         ),
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageSendToAddressLabel),
         ),
         Row(
@@ -153,7 +152,7 @@ class SendPageState extends State<SendPage> {
           ],
         ),
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageRecentAddress),
         ),
         Expanded(

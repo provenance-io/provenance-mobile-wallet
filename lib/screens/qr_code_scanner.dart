@@ -18,7 +18,6 @@ class QRCodeScanner extends StatefulWidget {
 class QRCodeScannerState extends State<QRCodeScanner> {
   QRCodeScannerState();
 
-  bool _loading = true;
   bool _handled = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -118,7 +117,6 @@ class QRCodeScannerState extends State<QRCodeScanner> {
 
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();
-    Map<String, dynamic> info = {};
     final isValid = await widget.isValidCallback?.call(qrData) ?? true;
     if (isValid && !_handled) {
       _handled = true;

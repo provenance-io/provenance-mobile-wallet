@@ -27,8 +27,8 @@ main() {
   });
 
   group("encryptKey", () {
-    final id = "TestId";
-    final bip32Serialized =
+    const id = "TestId";
+    const bip32Serialized =
         "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
 
     testWidgets('success', (tester) async {
@@ -52,9 +52,9 @@ main() {
   });
 
   group("decryptKey", () {
-    final bip32Serialized =
+    const bip32Serialized =
         "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
-    final id = "TestId";
+    const id = "TestId";
 
     testWidgets('success', (tester) async {
       tester.binding.defaultBinaryMessenger

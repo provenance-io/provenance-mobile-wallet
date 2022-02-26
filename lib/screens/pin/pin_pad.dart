@@ -5,11 +5,12 @@ import 'package:provenance_wallet/screens/pin/code_panel.dart';
 import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 
 class PinPad extends StatefulWidget {
-  PinPad({
+  const PinPad({
     required this.onFinish,
     required this.isConfirming,
     required this.subTitle,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final Function onFinish;
   final bool isConfirming;
@@ -22,7 +23,7 @@ class PinPad extends StatefulWidget {
 }
 
 class PinPadState extends State<PinPad> {
-  var _numbers = [
+  final _numbers = [
     1,
     2,
     3,
@@ -34,8 +35,7 @@ class PinPadState extends State<PinPad> {
     9,
     0,
   ];
-  var _inputCodes = <int>[];
-  Color _circleColor = Colors.white;
+  final _inputCodes = <int>[];
 
   @override
   void initState() {
@@ -49,62 +49,60 @@ class PinPadState extends State<PinPad> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              height: 48,
-              child: Center(
-                child: PwText(
-                  widget.subTitle,
-                  style: PwTextStyle.body,
-                  textAlign: TextAlign.center,
-                ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: SizedBox(
+            height: 48,
+            child: Center(
+              child: PwText(
+                widget.subTitle,
+                style: PwTextStyle.body,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
-          VerticalSpacer.largeX6(),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: CodePanel(
-              codeLength: 6,
-              currentLength: _inputCodes.length,
-              status: 0,
-              deleteCode: _deleteCode,
-              borderColor: Theme.of(context).colorScheme.neutralNeutral,
-            ),
+        ),
+        VerticalSpacer.largeX6(),
+        Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: CodePanel(
+            codeLength: 6,
+            currentLength: _inputCodes.length,
+            status: 0,
+            deleteCode: _deleteCode,
+            borderColor: Theme.of(context).colorScheme.neutralNeutral,
           ),
-          VerticalSpacer.xxLarge(),
-          Expanded(
-            flex: Platform.isIOS ? 5 : 6,
-            child: Container(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 0,
-              ),
-              child: NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (overscroll) {
-                  overscroll.disallowIndicator();
+        ),
+        VerticalSpacer.xxLarge(),
+        Expanded(
+          flex: Platform.isIOS ? 5 : 6,
+          child: Container(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 0,
+            ),
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
 
-                  return true;
-                },
-                child: _buildGridView(context),
-              ),
+                return true;
+              },
+              child: _buildGridView(context),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   _deleteCode() {
     setState(() {
-      if (_inputCodes.length > 0) {
+      if (_inputCodes.isNotEmpty) {
         _inputCodes.removeLast();
       }
     });
@@ -117,7 +115,7 @@ class PinPadState extends State<PinPad> {
       });
 
       if (_inputCodes.length == 6) {
-        widget.onFinish(this._inputCodes);
+        widget.onFinish(_inputCodes);
       }
     }
   }

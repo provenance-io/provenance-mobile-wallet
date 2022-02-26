@@ -9,26 +9,32 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendAmountScreen extends StatelessWidget {
+  const SendAmountScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: PwText(Strings.sendAmountTitle),
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: Spacing.medium,
-            horizontal: Spacing.medium,
-          ),
-          child: SendAmountPage(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.medium,
+          horizontal: Spacing.medium,
         ),
+        child: SendAmountPage(),
       ),
     );
   }
 }
 
 class SendAmountPage extends StatefulWidget {
+  const SendAmountPage({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => SendAmountPageState();
 }
@@ -71,7 +77,7 @@ class SendAmountPageState extends State<SendAmountPage> {
   @override
   Widget build(BuildContext context) {
     final asset = _bloc!.asset;
-    final imageDimen = 128.0;
+    const imageDimen = 128.0;
     final padding = EdgeInsets.symmetric(vertical: Spacing.medium);
     final blankInputBorder = OutlineInputBorder(
       borderSide: BorderSide.none,
@@ -115,13 +121,13 @@ class SendAmountPageState extends State<SendAmountPage> {
             "${asset.amount} ${asset.denom} ${Strings.sendAmountAvailable}",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.m_p,
+            style: PwTextStyle.mP,
           ),
           PwText(
             asset.fiatValue,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.m_p,
+            style: PwTextStyle.mP,
           ),
           VerticalSpacer.medium(),
           Row(
@@ -149,7 +155,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                 ) {
                   return (!hasFocus && _noteController.text.isEmpty)
                       ? PwText(Strings.sendAmountNoteSuffix)
-                      : Container(
+                      : SizedBox(
                           width: 0,
                           height: 0,
                         );

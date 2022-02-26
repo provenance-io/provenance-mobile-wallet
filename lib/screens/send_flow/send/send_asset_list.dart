@@ -1,10 +1,12 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 
 class SendAssetCell extends StatelessWidget {
-  SendAssetCell(this.asset, {Key? key}) : super(key: key);
+  const SendAssetCell(
+    this.asset, {
+    Key? key,
+  }) : super(key: key);
 
   final SendAsset asset;
 
@@ -40,7 +42,7 @@ class SendAssetCell extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Expanded(child: PwText("${asset.fiatValue}")),
+            Expanded(child: PwText(asset.fiatValue)),
             Expanded(
               child: PwText(
                 "${asset.amount} ${asset.denom}",
@@ -55,7 +57,7 @@ class SendAssetCell extends StatelessWidget {
 }
 
 class SendAssetList extends StatelessWidget {
-  SendAssetList(
+  const SendAssetList(
     this.assets,
     this.selectedAsset,
     this.onAssetChanged, {
