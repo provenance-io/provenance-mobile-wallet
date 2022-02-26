@@ -52,8 +52,9 @@ void main() {
     final send = MsgSend(
       fromAddress: address,
     );
+    final json = send.toProto3Json() as Map<String, dynamic>;
     final processor = MessageFieldProcessor();
-    final group = processor.findFields(send);
+    final group = processor.findFields(json);
     expect(group.fields[0] is MessageField, isTrue);
 
     final field = group.fields[0] as MessageField;
@@ -71,8 +72,9 @@ void main() {
         ),
       ],
     );
+    final json = send.toProto3Json() as Map<String, dynamic>;
     final processor = MessageFieldProcessor();
-    final group = processor.findFields(send);
+    final group = processor.findFields(json);
     expect(group.fields[0] is MessageFieldGroup, isTrue);
 
     final amountGroup = group.fields[0] as MessageFieldGroup;

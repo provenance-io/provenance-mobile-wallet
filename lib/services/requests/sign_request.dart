@@ -3,11 +3,11 @@ class SignRequest {
     required this.id,
     required this.message,
     required this.description,
-    required this.cost,
+    required this.address,
   });
 
   final String id;
   final String message;
   final String description;
-  final String cost;
+  final String address;
 }

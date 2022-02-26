@@ -13,14 +13,13 @@ class MessageFieldProcessor {
 
   final Map<String, MessageFieldConverter?> _converters;
 
-  MessageFieldGroup findFields(GeneratedMessage msg) {
-    final name = msg.info_.qualifiedMessageName;
-    final key = MessageFieldKey(name, name);
+  MessageFieldGroup findFields(Map<String, dynamic> data) {
+    final key = MessageFieldKey('root', '');
     final parent = MessageFieldGroup(key);
     _recurseValues(
       parent,
       key,
-      msg.toProto3Json(),
+      data,
     );
 
     return parent;
