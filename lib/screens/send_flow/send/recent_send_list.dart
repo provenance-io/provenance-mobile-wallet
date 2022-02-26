@@ -7,8 +7,7 @@ import 'package:provenance_wallet/util/strings.dart';
 final _dateFormatter = DateFormat("MM/dd/yy");
 
 class RecentSendCell extends StatelessWidget {
-  RecentSendCell(this.recentAddress, { Key? key })
-    : super(key: key);
+  RecentSendCell(this.recentAddress, {Key? key}) : super(key: key);
 
   final RecentAddress? recentAddress;
 
@@ -23,7 +22,7 @@ class RecentSendCell extends StatelessWidget {
         children: [
           Expanded(
             child: _buildChild(),
-          ) ,
+          ),
           Center(
             child: Icon(Icons.arrow_forward_ios),
           ),
@@ -33,9 +32,9 @@ class RecentSendCell extends StatelessWidget {
   }
 
   Widget _buildChild() {
-    return (recentAddress == null)?
-        PwText(Strings.ViewAllLabel) :
-        Column(
+    return (recentAddress == null)
+        ? PwText(Strings.ViewAllLabel)
+        : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -59,22 +58,20 @@ class RecentSendCell extends StatelessWidget {
 
 class RecentSendList extends StatelessWidget {
   RecentSendList(
-      this.recentAddresses,
-      this.onRecentSendClicked,
-      this.onViewAllClicked,
-      {
-        Key? key,
-      })
-    : super(key: key);
+    this.recentAddresses,
+    this.onRecentSendClicked,
+    this.onViewAllClicked, {
+    Key? key,
+  }) : super(key: key);
 
   final List<RecentAddress> recentAddresses;
   final void Function(RecentAddress address) onRecentSendClicked;
-  final VoidCallback  onViewAllClicked;
+  final VoidCallback onViewAllClicked;
 
   @override
   Widget build(BuildContext context) {
-    if(recentAddresses.isEmpty) {
-      return Center (
+    if (recentAddresses.isEmpty) {
+      return Center(
         child: PwText(Strings.noRecentSends),
       );
     }
@@ -83,7 +80,8 @@ class RecentSendList extends StatelessWidget {
       itemCount: recentAddresses.length + 1,
       separatorBuilder: (context, index) => PwDivider(),
       itemBuilder: (context, index) {
-        final address = (index < recentAddresses.length)? recentAddresses[index] : null;
+        final address =
+            (index < recentAddresses.length) ? recentAddresses[index] : null;
         final cell = RecentSendCell(
           address,
         );
@@ -91,10 +89,9 @@ class RecentSendList extends StatelessWidget {
         return GestureDetector(
           child: cell,
           onTap: () {
-            if(address == null) {
+            if (address == null) {
               onViewAllClicked();
-            }
-            else {
+            } else {
               onRecentSendClicked(address);
             }
           },
