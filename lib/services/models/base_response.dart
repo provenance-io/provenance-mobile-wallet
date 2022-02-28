@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
@@ -10,14 +11,18 @@ class BaseResponse<T> {
     T Function(Map<String, dynamic> json)? converter,
     T Function(List<dynamic> json)? listConverter, {
     String? errorMessage,
+    Function? setJwt,
   }) {
     isSuccessful = false;
     isServiceDown = false;
     res = res;
 
     try {
-      if (res?.headers != null && res?.headers[httpHeaderAuth] != null) {
-        auth = res!.headers.value(httpHeaderAuth)!;
+      if (res?.headers != null &&
+          res?.headers[httpHeaderAuth] != null &&
+          setJwt != null) {
+        var auth = res!.headers.value(httpHeaderAuth)!;
+        setJwt(auth);
       }
       data = converter == null
           ? listConverter == null
@@ -73,9 +78,7 @@ class BaseResponse<T> {
               error.response?.statusCode == 403) &&
           onTimeout != null) {
         if (!ignore403) {
-          if (onTimeout != null) {
-            onTimeout!(hasJwt);
-          }
+          onTimeout(hasJwt);
         }
       }
     } else {
@@ -98,7 +101,6 @@ class BaseResponse<T> {
   late Response res;
   T? data;
   String? message;
-  String? auth;
   late bool isSuccessful;
   late bool isServiceDown;
   DioError? error;

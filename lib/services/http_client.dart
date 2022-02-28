@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
@@ -118,6 +120,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -179,6 +182,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       logError('error parsing');
@@ -243,6 +247,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       logError('error parsing');
@@ -306,6 +311,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       if (e.response?.statusCode == 400 &&
@@ -375,6 +381,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -437,6 +444,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -519,6 +527,7 @@ class HttpClient {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
