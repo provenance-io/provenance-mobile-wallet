@@ -11,14 +11,16 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendFlow extends FlowBase {
+  const SendFlow({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => SendFlowState();
 }
 
 class SendFlowState extends FlowBaseState<SendFlow>
     implements SendBlocNavigator, SendAmountBlocNavigator {
-  final _navigatorKey = GlobalKey<NavigatorState>();
-
   String? _receivingAddress;
   SendAsset? _asset;
 
@@ -37,7 +39,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColor = Colors.white;
+    const borderColor = Colors.white;
     final borderRadius = BorderRadius.circular(5);
     final borderSide = BorderSide(
       width: 1,
@@ -68,10 +70,12 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   /* SendBlocNavigator */
 
+  @override
   Future<String?> scanAddress() {
     return showPage((context) => QRCodeScanner());
   }
 
+  @override
   Future<void> showSelectAmount(String address, SendAsset asset) {
     _asset = asset;
     _receivingAddress = address;
@@ -88,10 +92,12 @@ class SendFlowState extends FlowBaseState<SendFlow>
         .whenComplete(() => get.unregister<SendAmountBloc>());
   }
 
+  @override
   Widget createStartPage() {
     return SendScreen();
   }
 
+  @override
   Future<void> showAllRecentSends() {
     return showDialog(
       useSafeArea: true,
@@ -104,6 +110,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
     );
   }
 
+  @override
   Future<void> showRecentSendDetails(RecentAddress recentAddress) {
     return showDialog(
       useSafeArea: true,

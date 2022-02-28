@@ -47,7 +47,7 @@ main() {
   group("SendAssetList", () {
     SendAsset? assetSelected;
 
-    void OnAssetSelected(SendAsset asset) => assetSelected = asset;
+    void onAssetSelected(SendAsset asset) => assetSelected = asset;
 
     Future<void> _build(
       WidgetTester tester,
@@ -60,7 +60,7 @@ main() {
             child: SendAssetList(
               assets,
               selectedAsset,
-              OnAssetSelected,
+              onAssetSelected,
             ),
           ),
         ),

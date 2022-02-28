@@ -7,7 +7,10 @@ import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ValidatePin extends StatefulHookWidget {
-  ValidatePin({this.code});
+  const ValidatePin({
+    this.code,
+    Key? key,
+  }) : super(key: key);
 
   final List<int>? code;
 

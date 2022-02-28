@@ -11,7 +11,8 @@ class CreatePassphraseScreen extends StatelessWidget {
     this.accountName, {
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final WalletAddImportType flowType;
   final String accountName;

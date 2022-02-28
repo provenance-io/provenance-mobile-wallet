@@ -26,10 +26,10 @@ main() {
 
   group("addWallet", () {
     PrivateKey? privateKey;
-    final id = "TestId";
+    const id = "TestId";
 
     setUp(() {
-      final bip32Serialized =
+      const bip32Serialized =
           "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
       privateKey = PrivateKey.fromBip32(bip32Serialized);
     });
@@ -173,9 +173,9 @@ main() {
   });
 
   group("loadKey", () {
-    final bip32Serialized =
+    const bip32Serialized =
         "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
-    final id = "TestId";
+    const id = "TestId";
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.decryptKey(
@@ -202,7 +202,7 @@ main() {
   });
 
   group("removeWallet", () {
-    final id = "TestId";
+    const id = "TestId";
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.removeKey(id: anyNamed("id")))

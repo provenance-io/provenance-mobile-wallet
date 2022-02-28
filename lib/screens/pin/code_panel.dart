@@ -1,28 +1,30 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
-typedef void DeleteCode();
-typedef Future<bool> PassCodeVerify(List<int> passcode);
+typedef DeleteCode = void Function();
+typedef PassCodeVerify = Future<bool> Function(List<int> passcode);
 
 class CodePanel extends StatelessWidget {
-  CodePanel({
-    this.codeLength,
-    this.currentLength,
-    this.borderColor,
+  const CodePanel({
+    required this.codeLength,
+    required this.currentLength,
+    required this.borderColor,
     this.foregroundColor,
     this.deleteCode,
     this.fingerVerify,
     this.status,
+    Key? key,
   })  : assert(codeLength > 0),
         assert(currentLength >= 0),
         assert(currentLength <= codeLength),
         assert(deleteCode != null),
-        assert(status == 0 || status == 1 || status == 2);
+        assert(status == 0 || status == 1 || status == 2),
+        super(key: key);
 
-  final codeLength;
-  final currentLength;
-  final borderColor;
+  final int codeLength;
+  final int currentLength;
+  final Color borderColor;
   final bool? fingerVerify;
-  final foregroundColor;
+  final Color? foregroundColor;
   static const height = 16.0;
   static const width = 16.0;
   final DeleteCode? deleteCode;
@@ -40,10 +42,10 @@ class CodePanel extends StatelessWidget {
           SizedBox(
             width: width,
             height: height,
-            child: new Container(
-              decoration: new BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: new Border.all(color: color, width: 1.0),
+                border: Border.all(color: color, width: 1.0),
                 color: Colors.green.shade500,
               ),
             ),
@@ -64,9 +66,9 @@ class CodePanel extends StatelessWidget {
             width: width,
             height: 3,
             child: Container(
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
-                border: new Border.all(
+                border: Border.all(
                   color: Theme.of(context).colorScheme.neutralNeutral,
                   width: 1.0,
                 ),
@@ -75,13 +77,13 @@ class CodePanel extends StatelessWidget {
             ),
           ));
         } else {
-          circles.add(new SizedBox(
+          circles.add(SizedBox(
             width: width,
             height: height,
-            child: new Container(
-              decoration: new BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: new Border.all(
+                border: Border.all(
                   color: Theme.of(context).colorScheme.primary500,
                   width: 1.0,
                 ),
@@ -93,14 +95,14 @@ class CodePanel extends StatelessWidget {
       }
     }
 
-    return new SizedBox.fromSize(
-      size: new Size(MediaQuery.of(context).size.width, 30.0),
-      child: new Row(
+    return SizedBox.fromSize(
+      size: Size(MediaQuery.of(context).size.width, 30.0),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox.fromSize(
-            size: new Size(30.0 * codeLength, height),
-            child: new Row(
+            size: Size(30.0 * codeLength, height),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: circles,
             ),

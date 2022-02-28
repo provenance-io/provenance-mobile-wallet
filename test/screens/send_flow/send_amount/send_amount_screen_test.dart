@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -95,7 +94,7 @@ main() {
         find.text("${asset.amount} ${asset.denom} available"),
         findsOneWidget,
       );
-      expect(find.text("${asset.fiatValue}"), findsOneWidget);
+      expect(find.text(asset.fiatValue), findsOneWidget);
 
       final buttonFind = find.byType(PwButton);
       expect(buttonFind, findsOneWidget);

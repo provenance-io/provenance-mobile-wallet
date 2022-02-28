@@ -10,13 +10,14 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
-  RecoveryWordsConfirmScreen(
+  const RecoveryWordsConfirmScreen(
     this.flowType, {
     required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final int? currentStep;

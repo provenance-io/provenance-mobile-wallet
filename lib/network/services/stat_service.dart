@@ -4,7 +4,7 @@ class StatService {
   // TODO: Do this, but for reals.
   Future<OnboardingStat> getStats() async {
     await Future.delayed(Duration(milliseconds: 500));
-    var random = new Random();
+    var random = Random();
 
     return OnboardingStat(
       '\$${random.nextInt(5) + 10}.${random.nextInt(9)}B',

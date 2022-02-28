@@ -4,8 +4,9 @@ class ProgressStepper extends StatelessWidget {
   ProgressStepper(
     this.currentStep,
     this.numberOfSteps, {
+    Key? key,
     this.padding = EdgeInsets.zero,
-  });
+  }) : super(key: key);
 
   final int numberOfSteps;
   final int currentStep;

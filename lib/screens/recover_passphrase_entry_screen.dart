@@ -175,11 +175,12 @@ class RecoverPassphraseEntryScreenState
   }
 
   void _addListener(TextEditingController controller) {
-    var func = () {
+    void listen() {
       _handleTextControllerTextChange(controller);
-    };
-    controller.addListener(func);
-    callbacks.add(func);
+    }
+
+    controller.addListener(listen);
+    callbacks.add(listen);
   }
 
   _handlePaste(TextEditingController controller) {

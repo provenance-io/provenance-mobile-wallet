@@ -1,11 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class WordButton extends StatelessWidget {
-  WordButton({
-    Key? key,
+  const WordButton({
     required this.word,
     required this.isSelected,
     required this.setSelected,
+    Key? key,
   }) : super(key: key);
 
   final String word;

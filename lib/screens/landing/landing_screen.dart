@@ -16,6 +16,10 @@ import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _LandingScreenState();
@@ -27,9 +31,8 @@ class _LandingScreenState extends State<LandingScreen>
   static const _inactivityTimeout = Duration(minutes: 2);
 
   bool _accountExists = false;
-  LocalAuthenticationService _localAuth = LocalAuthenticationService();
-  LocalAuthHelper _helper = LocalAuthHelper.instance;
-  PageController _pageController = PageController();
+  final _localAuth = LocalAuthenticationService();
+  final _pageController = PageController();
   double _currentPage = 0;
   Timer? _inactivityTimer;
 
@@ -108,7 +111,7 @@ class _LandingScreenState extends State<LandingScreen>
             Expanded(
               child: PageView(
                 controller: _pageController,
-                children: [
+                children: const [
                   OnboardingLandingSlide(),
                   OnboardingFundamentalsSlide(),
                   OnboardingCustomizationSlide(),

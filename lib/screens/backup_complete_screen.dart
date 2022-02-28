@@ -16,7 +16,8 @@ class BackupCompleteScreen extends StatelessWidget {
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final WalletAddImportType flowType;

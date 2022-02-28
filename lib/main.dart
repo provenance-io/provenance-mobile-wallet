@@ -32,6 +32,10 @@ void main() async {
 }
 
 class ProvenanceWalletApp extends StatefulWidget {
+  const ProvenanceWalletApp({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ProvenanceWalletAppState();
 }

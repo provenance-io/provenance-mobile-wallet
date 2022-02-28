@@ -3,6 +3,10 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingCustomizationSlide extends StatelessWidget {
+  const OnboardingCustomizationSlide({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

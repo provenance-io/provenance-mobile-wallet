@@ -1,9 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PageIndicator extends StatelessWidget {
-  PageIndicator({
+  const PageIndicator({
     required this.currentPageIndex,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final int currentPageIndex;
 

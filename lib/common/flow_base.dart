@@ -1,13 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
-import 'package:provenance_wallet/util/get.dart';
 
-/***
- * this class allows us to use the navigation bar's back button with in  a
- * nexted flow with out the appBar being aware.
- */
+///
+/// this class allows us to use the navigation bar's back button with in  a
+/// nexted flow with out the appBar being aware.
+///
 class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
   _FlowRootRoute({
     required WidgetBuilder builder,
@@ -15,19 +12,18 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
     RouteSettings? settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
-  })
-      : super(
-    builder: builder,
-    settings: settings,
-    maintainState: maintainState,
-    fullscreenDialog: fullscreenDialog,
-  );
+  }) : super(
+          builder: builder,
+          settings: settings,
+          maintainState: maintainState,
+          fullscreenDialog: fullscreenDialog,
+        );
 
   final BuildContext parentContext;
 
   @override
   bool get canPop {
-    if(super.canPop) {
+    if (super.canPop) {
       return true;
     }
 
@@ -38,12 +34,8 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
 
   @override
   Future<RoutePopDisposition> willPop() {
-    if(super.canPop) {
+    if (super.canPop) {
       return super.willPop();
-    }
-
-    if(parentContext == null) {
-      return Future.value(RoutePopDisposition.doNotPop);
     }
 
     return Future.value(RoutePopDisposition.pop);
@@ -51,7 +43,7 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
 
   @override
   bool didPop(dynamic result) {
-    if(super.canPop) {
+    if (super.canPop) {
       return super.didPop(result);
     }
 
@@ -63,13 +55,14 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
 }
 
 abstract class FlowBase extends StatefulWidget {
+  const FlowBase({
+    Key? key,
+  }) : super(key: key);
 }
 
-abstract class FlowBaseState<Z extends FlowBase>
-    extends State<Z>
-    implements SendBlocNavigator
-{
-  final  _navigatorKey = GlobalKey<NavigatorState>();
+abstract class FlowBaseState<Z extends FlowBase> extends State<Z>
+    implements SendBlocNavigator {
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +80,10 @@ abstract class FlowBaseState<Z extends FlowBase>
     );
   }
 
-  Future<X?> showPage<X>(WidgetBuilder builder, { RouteSettings? settings }) {
+  Future<X?> showPage<X>(WidgetBuilder builder, {RouteSettings? settings}) {
     final route = MaterialPageRoute<X>(
-        settings: settings,
-        builder: builder,
+      settings: settings,
+      builder: builder,
     );
 
     return _navigatorKey.currentState!.push<X>(route);
@@ -103,5 +96,5 @@ abstract class FlowBaseState<Z extends FlowBase>
     Navigator.pop(context, value);
   }
 
-  Widget createStartPage() ;
+  Widget createStartPage();
 }

@@ -189,7 +189,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     _onDidError.close();
     _onResponse.close();
 
-    _completerLookup.values.forEach((completer) => completer.complete(false));
+    for (var completer in _completerLookup.values) {
+      completer.complete(false);
+    }
+
     _completerLookup.clear();
   }
 

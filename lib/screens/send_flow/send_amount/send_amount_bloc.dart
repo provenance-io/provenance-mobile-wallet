@@ -86,10 +86,10 @@ class SendAmountBloc extends Disposable {
       return Future.error(Exception(amountError));
     }
 
-    return this._navigator.showReviewSend(
-          amount,
-          _fee!,
-          note,
-        );
+    return _navigator.showReviewSend(
+      amount,
+      _fee!,
+      note,
+    );
   }
 }

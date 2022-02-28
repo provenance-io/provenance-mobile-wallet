@@ -8,7 +8,10 @@ import 'package:provenance_wallet/util/strings.dart';
 final dateFormatter = DateFormat("MM/dd/yy");
 
 class RecentSendCell extends StatelessWidget {
-  RecentSendCell(this.recentAddress, {Key? key}) : super(key: key);
+  const RecentSendCell(
+    this.recentAddress, {
+    Key? key,
+  }) : super(key: key);
 
   static const keyLastSendText = ValueKey('recent_send_cell_last_send');
 
@@ -36,7 +39,7 @@ class RecentSendCell extends StatelessWidget {
 
   Widget _buildChild() {
     return (recentAddress == null)
-        ? PwText(Strings.ViewAllLabel)
+        ? PwText(Strings.viewAllLabel)
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +64,7 @@ class RecentSendCell extends StatelessWidget {
 }
 
 class RecentSendList extends StatelessWidget {
-  RecentSendList(
+  const RecentSendList(
     this.recentAddresses,
     this.onRecentSendClicked,
     this.onViewAllClicked, {

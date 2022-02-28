@@ -59,7 +59,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     final addressData = await Navigator.of(
                       context,
                     ).push(
-                      QRCodeScanner().route<String?>(),
+                      QRCodeScanner().route(),
                     );
                     if (addressData != null) {
                       bloc.connectWallet(addressData);

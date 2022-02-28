@@ -11,10 +11,11 @@ import 'package:provenance_wallet/util/strings.dart';
 class AccountName extends HookWidget {
   AccountName(
     this.flowType, {
+    Key? key,
     this.words,
     this.currentStep,
     this.numberOfSteps,
-  });
+  }) : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

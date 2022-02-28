@@ -36,9 +36,7 @@ class LocalAuthenticationService {
   bool get isBiometricEnabled => _isBiometricEnabled;
   bool get isAuthenticated => _isAuthenticated;
   Future<bool> get hasDeclinedSecureLogin async {
-    if (_hasDeclinedSecureLogin == null) {
-      _hasDeclinedSecureLogin = await _getDeclinedSecureAuth();
-    }
+    _hasDeclinedSecureLogin ??= await _getDeclinedSecureAuth();
 
     return _hasDeclinedSecureLogin!;
   }
