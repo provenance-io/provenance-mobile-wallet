@@ -264,7 +264,7 @@ extension CustomColorScheme on ColorScheme {
 }
 
 extension CustomTextTheme on TextTheme {
-  TextStyle get pWMedium => ProvenanceThemeData._medium;
+  TextStyle get medium => ProvenanceThemeData._medium;
   TextStyle get large =>
       ProvenanceThemeData._logo.copyWith(fontWeight: FontWeight.w600);
   TextStyle get logo => ProvenanceThemeData._logo;

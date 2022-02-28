@@ -121,13 +121,13 @@ class SendAmountPageState extends State<SendAmountPage> {
             "${asset.amount} ${asset.denom} ${Strings.sendAmountAvailable}",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.mP,
+            style: PwTextStyle.m,
           ),
           PwText(
             asset.fiatValue,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.mP,
+            style: PwTextStyle.m,
           ),
           VerticalSpacer.medium(),
           Row(
