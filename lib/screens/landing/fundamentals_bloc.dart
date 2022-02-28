@@ -20,6 +20,9 @@ class FundamentalsBloc extends Disposable {
 
   void load() async {
     final stats = await _service.getStats();
+    if (stats == null) {
+      return;
+    }
 
     _marketCap.value = stats.marketCap;
     _validatorsCount.value = stats.validators;

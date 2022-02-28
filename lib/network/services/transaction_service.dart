@@ -1,7 +1,9 @@
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/network/dtos/transaction_dto.dart';
-import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
+import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_wallet/services/models/base_response.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 class TransactionService {
   String get _transactionServiceBasePath =>
@@ -10,7 +12,7 @@ class TransactionService {
   Future<BaseResponse<List<Transaction>>> getTransactions(
     String provenanceAddress,
   ) async {
-    final data = await BaseService.instance.get(
+    final data = await get<HttpClient>().get(
       '$_transactionServiceBasePath/$provenanceAddress/transactions',
       listConverter: (json) {
         if (json is String) {
