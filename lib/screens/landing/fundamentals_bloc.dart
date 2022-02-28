@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:provenance_wallet/network/services/stat_service.dart';
+import 'package:provenance_wallet/network/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:get_it/get_it.dart';
