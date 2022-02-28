@@ -242,14 +242,11 @@ class Strings {
   static const transactionDataTitle = 'Data';
   static const transactionDataButton = 'Data';
   static const transactionDenomHash = 'Hash';
-  static const transactionPlatformName = 'Figure Equity Solutions';
-  static const transactionPlatformAddress = 'equity.figure.com';
   static const transactionFieldPlatform = 'Platform';
   static const transactionFieldFee = 'Est. Gas Fee';
-  static const transactionFieldAmount = 'Amount';
-  static const transactionFieldDenom = 'Denom';
-  static const transactionFieldFromAddress = 'Address';
-  static const transactionFieldToAddress = 'To';
+  static const transactionFieldMessageType = 'Msg. Type';
+  static const transactionFieldTrue = 'Yes';
+  static const transactionFieldFalse = 'No';
 
   // ValidatePin
   static const enterPin = "Enter Pin";

@@ -1,13 +1,30 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_field_title.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_field_value.dart';
+import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-mixin TransactionMessageMixin on Widget {
-  Widget createFieldGroupSliver(BuildContext context, List<TableRow> rows) {
+mixin TransactionMessageMixin<T extends StatefulWidget> on State<T> {
+  Widget createFieldGroupSliver(
+    BuildContext context,
+    List<TableRow> rows, [
+    String? name,
+  ]) {
     return SliverList(
       delegate: SliverChildListDelegate.fixed(
         [
+          if (name != null)
+            Container(
+              margin: EdgeInsets.only(
+                top: Spacing.largeX4,
+                left: Spacing.xxLarge,
+              ),
+              child: PwText(
+                name,
+                style: PwTextStyle.displayBody,
+                color: PwColor.neutralNeutral,
+              ),
+            ),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: Spacing.largeX3,
@@ -30,7 +47,7 @@ mixin TransactionMessageMixin on Widget {
     );
   }
 
-  TableRow createPlatformTabeRow() {
+  TableRow createPlatformTableRow(String name, String? address) {
     return TableRow(
       children: [
         Container(
@@ -48,18 +65,23 @@ mixin TransactionMessageMixin on Widget {
           child: Column(
             textDirection: TextDirection.ltr,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
+            children: [
               TransactionFieldValue(
-                text: Strings.transactionPlatformName,
+                text: name,
               ),
-              TransactionFieldValue(
-                text: Strings.transactionPlatformAddress,
-              ),
+              if (address != null)
+                TransactionFieldValue(
+                  text: address,
+                ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  TableRow createMessageFieldRow(MessageField field) {
+    return createFieldTableRow(field.key.name.capitalize(), field.value);
   }
 
   TableRow createFieldTableRow(String title, String value) {

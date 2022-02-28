@@ -1,55 +1,102 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_data.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
+import 'package:provenance_wallet/util/messages/message_field.dart';
+import 'package:provenance_wallet/util/messages/message_field_converters.dart';
+import 'package:provenance_wallet/util/messages/message_field_group.dart';
+import 'package:provenance_wallet/util/messages/message_field_processor.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class TransactionMessageDefault extends StatelessWidget
-    with TransactionMessageMixin {
+class TransactionMessageDefault extends StatefulWidget {
   const TransactionMessageDefault({
     required this.request,
     Key? key,
   }) : super(key: key);
 
-  final SendRequest request;
+  final WalletConnectTransactionRequest request;
 
   @override
-  Widget build(BuildContext context) {
-    final fee = request.gasEstimate.fees;
+  State<TransactionMessageDefault> createState() =>
+      _TransactionMessageDefaultState();
+}
 
-    final rows = [
-      createPlatformTabeRow(),
+class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
+    with TransactionMessageMixin {
+  final _processor = MessageFieldProcessor(
+    converters: {
+      'fromAddress': convertAddress,
+      'toAddress': convertAddress,
+      'address': convertAddress,
+      'manager': convertAddress,
+      'delegatorAddress': convertAddress,
+      'validatorAddress': convertAddress,
+      'amount': convertAmount,
+    },
+  );
+
+  var slivers = <Widget>[];
+
+  @override
+  void didUpdateWidget(covariant TransactionMessageDefault oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    slivers = <Widget>[];
+
+    final group = _processor.findFields(widget.request.details.message);
+
+    final mainRows = <TableRow>[];
+    final groupSlivers = <Widget>[];
+
+    final platformName = widget.request.clientDetails.name;
+    final platformHost = widget.request.clientDetails.url?.host;
+
+    mainRows.add(
+      createFieldTableRow(
+        Strings.transactionFieldPlatform,
+        '$platformName\n$platformHost',
+      ),
+    );
+
+    final msgType = widget.request.details.message.info_.qualifiedMessageName;
+    mainRows.add(
+      createFieldTableRow(
+        Strings.transactionFieldMessageType,
+        msgType,
+      ),
+    );
+
+    final fee = widget.request.details.gasEstimate.fees / nHashPerHash;
+    mainRows.add(
       createFieldTableRow(
         Strings.transactionFieldFee,
         '$fee ${Strings.transactionDenomHash}',
       ),
-    ];
+    );
 
+    for (final field in group.fields) {
+      if (field is MessageFieldGroup) {
+        final rows = field.fields
+            .whereType<MessageField>()
+            .map((e) => createMessageFieldRow(e))
+            .toList();
+        groupSlivers.add(createFieldGroupSliver(
+          context,
+          rows,
+          field.key.name.capitalize(),
+        ));
+      } else if (field is MessageField) {
+        mainRows.add(createMessageFieldRow(field));
+      }
+    }
+
+    slivers.add(createFieldGroupSliver(context, mainRows));
+    slivers.addAll(groupSlivers);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: [
-        createFieldGroupSliver(context, rows),
-        SliverList(
-          delegate: SliverChildListDelegate.fixed(
-            [
-              PwDivider(
-                color: PwColor.darkGrey,
-                indent: Spacing.largeX3,
-                endIndent: Spacing.largeX3,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.large,
-                ),
-                child: TransactionData(
-                  request: request,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      slivers: slivers,
     );
   }
 }

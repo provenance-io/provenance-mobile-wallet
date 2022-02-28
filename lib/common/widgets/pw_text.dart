@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
 export '../pw_text_style.dart';
 
-class PwText extends StatelessWidget with PwTextStyleMixin, PwColorMixin {
+class PwText extends StatelessWidget
+    with PwTextStyleMixin, PwColorMixin, Diagnosticable {
   const PwText(
     this.data, {
     Key? key,
@@ -13,6 +15,7 @@ class PwText extends StatelessWidget with PwTextStyleMixin, PwColorMixin {
     this.maxLines,
     this.lineThrough = false,
     this.underline = false,
+    this.textKey,
   }) : super(key: key);
 
   /// The text to display.
@@ -29,6 +32,7 @@ class PwText extends StatelessWidget with PwTextStyleMixin, PwColorMixin {
   final int? maxLines;
   final bool lineThrough;
   final bool underline;
+  final Key? textKey;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,16 @@ class PwText extends StatelessWidget with PwTextStyleMixin, PwColorMixin {
       style: _getStyle(context),
       overflow: overflow,
       maxLines: maxLines,
+      key: textKey,
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+
+    properties.add(
+      StringProperty('data', data),
     );
   }
 

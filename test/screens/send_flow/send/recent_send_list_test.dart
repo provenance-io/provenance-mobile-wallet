@@ -31,8 +31,8 @@ main() {
     });
 
     testWidgets("Not Null Address", (tester) async {
-      final recentAddress =
-          RecentAddress("Address", DateTime.fromMicrosecondsSinceEpoch(0));
+      final lastSend = DateTime.fromMicrosecondsSinceEpoch(0);
+      final recentAddress = RecentAddress("Address", lastSend);
       await _build(tester, recentAddress);
 
       final textFind = find.byType(PwText);
@@ -44,10 +44,12 @@ main() {
         find.descendant(of: textFind, matching: find.text("Address")),
         findsOneWidget,
       );
-      expect(
-        find.descendant(of: textFind, matching: find.text("12/31/69")),
-        findsOneWidget,
-      );
+
+      final lastSendFinder = find.byKey(RecentSendCell.keyLastSendText);
+      expect(lastSendFinder, findsOneWidget);
+
+      final lastSendWidget = lastSendFinder.evaluate().first.widget as Text;
+      expect(lastSendWidget.data, dateFormatter.format(lastSend));
     });
   });
 
