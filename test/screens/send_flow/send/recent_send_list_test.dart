@@ -57,9 +57,9 @@ main() {
     int viewAllClicked = 0;
     RecentAddress? recentlyClickedAddress;
 
-    void OnViewAllClicked() => viewAllClicked += 1;
+    void onViewAllClicked() => viewAllClicked += 1;
 
-    void OnAddressClicked(RecentAddress address) =>
+    void onAddressClicked(RecentAddress address) =>
         recentlyClickedAddress = address;
 
     final send1 =
@@ -75,8 +75,8 @@ main() {
         MaterialApp(
           home: RecentSendList(
             recentAddresses,
-            OnAddressClicked,
-            OnViewAllClicked,
+            onAddressClicked,
+            onViewAllClicked,
           ),
         ),
       );
