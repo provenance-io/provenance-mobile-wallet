@@ -3,15 +3,14 @@ import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/reset_button.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-
-import '../wallets.dart';
 
 class DashboardLandingTab extends StatefulWidget {
   const DashboardLandingTab({
@@ -80,11 +79,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StreamBuilder<String>(
-              initialData: bloc.walletName.value,
-              stream: bloc.walletName,
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
               builder: (context, snapshot) {
-                final walletName = snapshot.data ?? "";
+                final walletName = snapshot.data?.name ?? "";
 
                 return PwText(
                   walletName,
@@ -92,11 +91,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 );
               },
             ),
-            StreamBuilder<String>(
-              initialData: bloc.walletAddress.value,
-              stream: bloc.walletAddress,
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
               builder: (context, snapshot) {
-                final walletAddress = snapshot.data ?? "";
+                final walletAddress = snapshot.data?.address ?? "";
 
                 return PwText(
                   " (${walletAddress.abbreviateAddress()})",
@@ -108,9 +107,14 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         ),
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () {
-            // TODO: This should be a modal.
-            Navigator.of(context).push(Wallets().route());
+          onTap: () async {
+            await showDialog(
+              barrierColor: Theme.of(context).colorScheme.neutral750,
+              useSafeArea: true,
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => WalletsScreen(),
+            );
           },
           child: Padding(
             padding: EdgeInsets.only(
@@ -251,9 +255,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 Expanded(child: Container()),
                                 PwIcon(
                                   PwIcons.caret,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .globalNeutral550,
+                                  color:
+                                      Theme.of(context).colorScheme.neutral550,
                                   size: 12.0,
                                 ),
                               ],
@@ -272,9 +275,6 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 },
               ),
             ),
-            VerticalSpacer.medium(),
-            ResetButton(),
-            VerticalSpacer.large(),
           ],
         ),
       ),

@@ -11,11 +11,11 @@ class WalletSetupConfirmation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(

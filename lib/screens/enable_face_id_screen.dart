@@ -9,15 +9,16 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class EnableFaceId extends StatelessWidget {
-  EnableFaceId({
+class EnableFaceIdScreen extends StatelessWidget {
+  const EnableFaceIdScreen({
+    Key? key,
     required this.words,
     this.accountName,
     this.code,
     this.currentStep,
     this.numberOfSteps,
     this.flowType = WalletAddImportType.onBoardingAdd,
-  });
+  }) : super(key: key);
 
   final List<String> words;
   final String? accountName;
@@ -34,7 +35,7 @@ class EnableFaceId extends StatelessWidget {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
@@ -70,7 +71,7 @@ class EnableFaceId extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwText(
                       Strings.useFaceIdTitle,
-                      style: PwTextStyle.h4,
+                      style: PwTextStyle.title,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -92,7 +93,7 @@ class EnableFaceId extends StatelessWidget {
                     child: PwButton(
                       child: PwText(
                         Strings.enable,
-                        style: PwTextStyle.mBold,
+                        style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
@@ -123,7 +124,7 @@ class EnableFaceId extends StatelessWidget {
                       },
                     ),
                   ),
-                  VerticalSpacer.small(),
+                  VerticalSpacer.large(),
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwTextButton(
@@ -158,7 +159,7 @@ class EnableFaceId extends StatelessWidget {
                       },
                     ),
                   ),
-                  VerticalSpacer.xxLarge(),
+                  VerticalSpacer.largeX4(),
                 ],
               ),
             ),

@@ -1,106 +1,84 @@
-import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_divider.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class MyAccount extends StatefulWidget {
-  const MyAccount({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _MyAccountState createState() => _MyAccountState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _MyAccountState extends State<MyAccount> {
-  static const _divider = PwDivider(
-    indent: Spacing.large,
-    endIndent: Spacing.large,
-    height: 1,
-  );
+class _ProfileScreenState extends State<ProfileScreen> {
+  static const _divider = PwListDivider();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.close,
-            size: 24,
-            color: Theme.of(context).colorScheme.globalNeutral500,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: Container(),
         title: PwText(
-          Strings.myAccount,
-          color: PwColor.globalNeutral550,
-          style: PwTextStyle.h6,
+          Strings.profile,
+          style: PwTextStyle.subhead,
         ),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            textDirection: TextDirection.ltr,
-            children: [
-              _CategoryLabel(Strings.security),
-              _FutureToggleItem(
-                text: Strings.faceId,
-                getValue: get<WalletService>().getUseBiometry,
-                setValue: (value) => get<WalletService>().setUseBiometry(
-                  useBiometry: value,
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          textDirection: TextDirection.ltr,
+          children: [
+            _CategoryLabel(Strings.security),
+            _divider,
+            _FutureToggleItem(
+              text: Strings.faceId,
+              getValue: get<WalletService>().getUseBiometry,
+              setValue: (value) => get<WalletService>().setUseBiometry(
+                useBiometry: value,
               ),
-              _divider,
-              _LinkItem(
-                text: Strings.pinCode,
-                onTap: () {
-                  // TODO: open pin code screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.notifications,
-                onTap: () {
-                  // TODO: Open notifications screen.
-                },
-              ),
-              _CategoryLabel(Strings.general),
-              _LinkItem(
-                text: Strings.faq,
-                onTap: () {
-                  // TODO: open FAQ screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.sendFeedback,
-                onTap: () {
-                  // TODO: open send feedback screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.contactUs,
-                onTap: () {
-                  // TODO: open contact us screen.
-                },
-              ),
-              _divider,
-              _LinkItem(
-                text: Strings.policiesAndTerms,
-                onTap: () {
-                  // TODO: open policies & terms screen.
-                },
-              ),
-            ],
-          ),
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.pinCode,
+              onTap: () {
+                // TODO: open pin code screen.
+              },
+            ),
+            _divider,
+            _CategoryLabel(Strings.general),
+            _divider,
+            _LinkItem(
+              text: Strings.aboutProvenanceBlockchain,
+              onTap: () {
+                launchUrl('https://provenance.io/');
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.moreInformation,
+              onTap: () {
+                launchUrl('https://docs.provenance.io/');
+              },
+            ),
+            _divider,
+          ],
         ),
       ),
     );
+  }
+
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 
@@ -116,16 +94,15 @@ class _CategoryLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.large,
+        horizontal: Spacing.xxLarge,
       ),
       padding: EdgeInsets.only(
-        top: Spacing.large,
-        bottom: Spacing.small,
+        top: Spacing.xxLarge,
+        bottom: Spacing.large,
       ),
       child: PwText(
         text,
-        color: PwColor.globalNeutral550,
-        style: PwTextStyle.mBold,
+        style: PwTextStyle.title,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -148,10 +125,11 @@ class _LinkItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         height: 64,
         margin: EdgeInsets.symmetric(
-          horizontal: Spacing.large,
+          horizontal: Spacing.xxLarge,
         ),
         child: Row(
           children: [
@@ -167,6 +145,8 @@ class _LinkItem extends StatelessWidget {
                 ),
                 child: PwIcon(
                   PwIcons.caret,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
+                  size: 10,
                 ),
               ),
             ),
@@ -242,27 +222,36 @@ class _ToggleItem extends StatelessWidget {
     return Container(
       height: 64,
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.large,
+        horizontal: Spacing.xxLarge,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _ItemLabel(
             text: text,
           ),
           Expanded(
-            child: Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.only(
-                right: Spacing.medium,
-              ),
-              child: value == null
-                  ? Container()
-                  : CupertinoSwitch(
-                      value: value!,
-                      onChanged: onChanged,
-                      trackColor: Theme.of(context).colorScheme.midGrey,
-                    ),
+            child: Container(),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            margin: EdgeInsets.only(
+              right: Spacing.medium,
             ),
+            child: value == null
+                ? Container()
+                : FlutterSwitch(
+                    value: value!,
+                    onToggle: onChanged,
+                    inactiveColor: Theme.of(context).colorScheme.neutral450,
+                    activeColor: Theme.of(context).colorScheme.primary550,
+                    toggleColor: Theme.of(context).colorScheme.neutral800,
+                    padding: 3,
+                    height: 20,
+                    width: 40,
+                    borderRadius: Spacing.large,
+                    toggleSize: 14.0,
+                  ),
           ),
         ],
       ),
@@ -283,13 +272,9 @@ class _ItemLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: Spacing.medium,
-      ),
       child: PwText(
         text,
-        color: PwColor.globalNeutral500,
-        style: PwTextStyle.sBold,
+        style: PwTextStyle.body,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -309,7 +294,7 @@ class _ItemCount extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Theme.of(context).colorScheme.midGrey,
+        color: Theme.of(context).colorScheme.secondary250,
       ),
       padding: EdgeInsets.all(6),
       child: PwText(

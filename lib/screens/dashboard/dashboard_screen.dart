@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
-import 'package:provenance_wallet/screens/dashboard/my_account.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
@@ -83,7 +83,7 @@ class DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral800,
+        color: Theme.of(context).colorScheme.neutral800,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -119,6 +119,7 @@ class DashboardScreenState extends State<DashboardScreen>
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(
@@ -131,7 +132,7 @@ class DashboardScreenState extends State<DashboardScreen>
                 children: const [
                   DashboardLandingTab(),
                   TransactionLandingTab(),
-                  MyAccount(),
+                  ProfileScreen(),
                 ],
               ),
             ),

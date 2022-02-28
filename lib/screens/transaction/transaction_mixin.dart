@@ -36,7 +36,7 @@ mixin TransactionMessageMixin<T extends StatefulWidget> on State<T> {
               },
               border: TableBorder(
                 horizontalInside: BorderSide(
-                  color: Theme.of(context).colorScheme.darkGrey,
+                  color: Theme.of(context).colorScheme.neutral700,
                 ),
               ),
               children: rows,

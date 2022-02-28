@@ -70,6 +70,7 @@ class LocalAuthHelper {
     if (useBiometry && !hasBiometrics) {
       success = false;
       await showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) =>
             ErrorDialog(error: 'Failed to enroll, try again in settings'),

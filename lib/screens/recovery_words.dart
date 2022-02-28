@@ -58,7 +58,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
           leadingIcon: PwIcons.back,
         ),
         body: Container(
-          color: Theme.of(context).colorScheme.provenanceNeutral750,
+          color: Theme.of(context).colorScheme.neutral750,
           child: LayoutBuilder(
             builder:
                 (BuildContext context, BoxConstraints viewportConstraints) {
@@ -101,9 +101,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .provenanceNeutral700,
+                              color: Theme.of(context).colorScheme.neutral700,
                             ),
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -162,9 +160,8 @@ class RecoveryWordsState extends State<RecoveryWords> {
                               content: Text(
                                 Strings.passphraseCopied,
                               ),
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .provenanceNeutral700,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.neutral700,
                             ),
                           );
                         },

@@ -8,7 +8,7 @@ class PwText extends StatelessWidget
   const PwText(
     this.data, {
     Key? key,
-    this.style = PwTextStyle.m,
+    this.style = PwTextStyle.body,
     this.color,
     this.overflow,
     this.textAlign = TextAlign.start,

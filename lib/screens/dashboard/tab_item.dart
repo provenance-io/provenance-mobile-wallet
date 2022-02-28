@@ -27,7 +27,7 @@ class TabItem extends StatelessWidget {
                     size: 24,
                     color: isCurrent
                         ? Theme.of(context).colorScheme.neutralNeutral
-                        : Theme.of(context).colorScheme.provenanceNeutral550,
+                        : Theme.of(context).colorScheme.neutral550,
                   )
                 : const CircularProgressIndicator(),
           ),
