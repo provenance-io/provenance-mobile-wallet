@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:provenance_wallet/common/models/onboarding_stat.dart';
-import 'package:provenance_wallet/network/services/stat_service/stat_service.dart';
+import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 
 class MockStatService extends StatService {
   @override
