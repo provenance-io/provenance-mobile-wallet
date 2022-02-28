@@ -7,6 +7,7 @@ class Images {
 
   final String background = 'assets/images/background.png';
   final String coins = "assets/images/coins.png";
+  final String connectionRequest = 'assets/images/connection_request.png';
   final String transactionComplete = 'assets/images/transaction_complete.png';
   final String createPassphrase = 'assets/images/savePassphrase.png';
   final String recoverAccount = 'assets/images/recoverAccount.png';

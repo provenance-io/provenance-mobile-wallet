@@ -7,9 +7,9 @@ import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
@@ -30,7 +30,7 @@ class DashboardBloc extends Disposable {
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
-  final _sendRequest = PublishSubject<SendRequest>();
+  final _transactionRequest = PublishSubject<WalletConnectTransactionRequest>();
   final _signRequest = PublishSubject<SignRequest>();
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
   final _connectionStatus =
@@ -49,7 +49,8 @@ class DashboardBloc extends Disposable {
 
   ValueStream<List<Transaction>> get transactionList => _transactionList;
   ValueStream<List<Asset>> get assetList => _assetList;
-  Stream<SendRequest> get sendRequest => _sendRequest;
+  Stream<WalletConnectTransactionRequest> get transactionRequest =>
+      _transactionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
@@ -76,7 +77,9 @@ class DashboardBloc extends Disposable {
     final session = await get<WalletService>().connectWallet(addressData);
 
     if (session != null) {
-      session.sendRequest.listen(_sendRequest.add).addTo(_sessionSubscriptions);
+      session.transactionRequest
+          .listen(_transactionRequest.add)
+          .addTo(_sessionSubscriptions);
       session.signRequest.listen(_signRequest.add).addTo(_sessionSubscriptions);
       session.sessionRequest
           .listen(_sessionRequest.add)
@@ -96,11 +99,11 @@ class DashboardBloc extends Disposable {
   }
 
   Future<bool> approveSession({
-    required String requestId,
+    required RemoteClientDetails details,
     required bool allowed,
   }) async {
     return await _walletSession?.approveSession(
-          requestId: requestId,
+          details: details,
           allowed: allowed,
         ) ??
         false;
@@ -186,7 +189,7 @@ class DashboardBloc extends Disposable {
     _sessionSubscriptions.dispose();
     _assetList.close();
     _transactionList.close();
-    _sendRequest.close();
+    _transactionRequest.close();
     _signRequest.close();
     _sessionRequest.close();
     _connectionStatus.close();

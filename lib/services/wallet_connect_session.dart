@@ -4,6 +4,7 @@ import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -22,9 +23,14 @@ class WalletConnectSession {
 
   final _subscriptions = CompositeSubscription();
 
-  final _sendRequest = PublishSubject<SendRequest>(sync: true);
+  final _transactionRequest =
+      PublishSubject<WalletConnectTransactionRequest>(sync: true);
   final _signRequest = PublishSubject<SignRequest>(sync: true);
   final _sessionRequest = PublishSubject<RemoteClientDetails>(sync: true);
+  final _clientDetails = BehaviorSubject<RemoteClientDetails?>.seeded(
+    null,
+    sync: true,
+  );
   final _status = BehaviorSubject.seeded(
     WalletConnectionServiceStatus.disconnected,
     sync: true,
@@ -33,9 +39,11 @@ class WalletConnectSession {
   final _error = PublishSubject<String>(sync: true);
   final _response = PublishSubject<WalletConnectTxResponse>(sync: true);
 
-  Stream<SendRequest> get sendRequest => _sendRequest;
+  Stream<WalletConnectTransactionRequest> get transactionRequest =>
+      _transactionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
+  ValueStream<RemoteClientDetails?> get clientDetails => _clientDetails;
   ValueStream<WalletConnectionServiceStatus> get status => _status;
   ValueStream<String?> get address => _address;
   Stream<String> get error => _error;
@@ -46,7 +54,7 @@ class WalletConnectSession {
 
     try {
       _connection.addListener(_statusListener);
-      _delegate.sendRequest.listen(_sendRequest.add).addTo(_subscriptions);
+      _delegate.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
       _delegate.signRequest.listen(_signRequest.add).addTo(_subscriptions);
       _delegate.sessionRequest
           .listen(_sessionRequest.add)
@@ -73,6 +81,7 @@ class WalletConnectSession {
     _connection.removeListener(_statusListener);
     _status.add(WalletConnectionServiceStatus.disconnected);
     _address.value = null;
+    _clientDetails.value = null;
 
     if (_connection.value != WalletConnectState.disconnected) {
       await _connection.disconnect();
@@ -96,10 +105,29 @@ class WalletConnectSession {
   }
 
   Future<bool> approveSession({
-    required String requestId,
+    required RemoteClientDetails details,
     required bool allowed,
   }) async {
-    return _delegate.complete(requestId, allowed);
+    final success = _delegate.complete(details.id, allowed);
+    if (success) {
+      _clientDetails.value = details;
+    }
+
+    return success;
+  }
+
+  void _onSendRequest(SendRequest request) {
+    final clientDetails = _clientDetails.value;
+    if (clientDetails != null) {
+      _transactionRequest.add(
+        WalletConnectTransactionRequest(
+          details: request,
+          clientDetails: clientDetails,
+        ),
+      );
+    } else {
+      logDebug('Received a request but did not have client details.');
+    }
   }
 
   void _statusListener() {
@@ -111,6 +139,8 @@ class WalletConnectSession {
       _address.value = _connection.address.bridge.toString();
     } else if (status == WalletConnectState.disconnected) {
       _status.add(WalletConnectionServiceStatus.disconnected);
+      _address.value = null;
+      _clientDetails.value = null;
     } else if (status == WalletConnectState.connecting) {
       _status.add(WalletConnectionServiceStatus.connecting);
     }

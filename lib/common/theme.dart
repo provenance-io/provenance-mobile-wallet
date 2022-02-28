@@ -276,6 +276,7 @@ extension CustomTextTheme on TextTheme {
   TextStyle get provenanceHeadline1 => ProvenanceThemeData._headline1;
   TextStyle get display1 => ProvenanceThemeData._display1;
   TextStyle get display2 => ProvenanceThemeData._display2;
+  TextStyle get displayBody => ProvenanceThemeData._displayBody;
   TextStyle get footnote => ProvenanceThemeData._footnote;
   TextStyle get title => ProvenanceThemeData._title;
   TextStyle get extraSmallBold => ProvenanceThemeData._bodyXSmallBold;

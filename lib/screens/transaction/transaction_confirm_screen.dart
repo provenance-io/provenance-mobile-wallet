@@ -1,13 +1,13 @@
-import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_message_default.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_message_send.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-typedef MessageBuilder = Widget Function(SendRequest request);
+typedef MessageBuilder = Widget Function(
+  WalletConnectTransactionRequest request,
+);
 
 class TransactionConfirmScreen extends StatelessWidget {
   TransactionConfirmScreen({
@@ -15,10 +15,10 @@ class TransactionConfirmScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final _builders = <Type, MessageBuilder>{
-    MsgSend: (request) => TransactionMessageSend(request: request),
+    // Add a builder to override a specific message type.
   };
 
-  final SendRequest request;
+  final WalletConnectTransactionRequest request;
 
   @override
   Widget build(BuildContext context) {
@@ -37,28 +37,27 @@ class TransactionConfirmScreen extends StatelessWidget {
           ),
           automaticallyImplyLeading: false,
           actions: [
-            if (_builders.containsKey(request.message.runtimeType))
-              MaterialButton(
-                onPressed: () {
-                  showGeneralDialog(
-                    context: context,
-                    pageBuilder: (
-                      context,
-                      animation,
-                      secondaryAnimation,
-                    ) {
-                      return TransactionDataScreen(
-                        request: request,
-                      );
-                    },
-                  );
-                },
-                child: PwText(
-                  Strings.transactionDataButton,
-                  color: PwColor.primaryP500,
-                  style: PwTextStyle.body,
-                ),
+            MaterialButton(
+              onPressed: () {
+                showGeneralDialog(
+                  context: context,
+                  pageBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                  ) {
+                    return TransactionDataScreen(
+                      request: request.details,
+                    );
+                  },
+                );
+              },
+              child: PwText(
+                Strings.transactionDataButton,
+                color: PwColor.primaryP500,
+                style: PwTextStyle.body,
               ),
+            ),
           ],
         ),
         body: Column(
@@ -114,7 +113,7 @@ class TransactionConfirmScreen extends StatelessWidget {
   }
 
   Widget _buildMessage() {
-    final builder = _builders[request.message.runtimeType];
+    final builder = _builders[request.details.message.runtimeType];
 
     if (builder == null) {
       return TransactionMessageDefault(request: request);

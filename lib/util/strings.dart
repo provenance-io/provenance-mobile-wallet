@@ -91,6 +91,10 @@ class Strings {
       'A wallet provides an easy way to manage multiple blockchain accounts.';
 
   // Dashboard Page
+  static const dashboardConnectionRequestTitle = 'Connection Request';
+  static String dashboardConnectionRequestDetails(String name) =>
+      'Allow connection to $name';
+
   static const loadingAssets = 'Loading Assets';
   static const sign = 'Sign';
   static const decline = 'Decline';
@@ -239,17 +243,15 @@ class Strings {
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
   static const transactionComplete = 'Transaction Complete';
+  static const transactionBackToDashboard = 'Back to dashboard';
   static const transactionDataTitle = 'Data';
   static const transactionDataButton = 'Data';
   static const transactionDenomHash = 'Hash';
-  static const transactionPlatformName = 'Figure Equity Solutions';
-  static const transactionPlatformAddress = 'equity.figure.com';
   static const transactionFieldPlatform = 'Platform';
   static const transactionFieldFee = 'Est. Gas Fee';
-  static const transactionFieldAmount = 'Amount';
-  static const transactionFieldDenom = 'Denom';
-  static const transactionFieldFromAddress = 'Address';
-  static const transactionFieldToAddress = 'To';
+  static const transactionFieldMessageType = 'Msg. Type';
+  static const transactionFieldTrue = 'Yes';
+  static const transactionFieldFalse = 'No';
 
   // ValidatePin
   static const enterPin = "Enter Pin";
