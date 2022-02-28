@@ -48,7 +48,7 @@ class _TransactionDataState extends State<TransactionData> {
         Spacing.large,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.provenanceNeutral700,
+        color: Theme.of(context).colorScheme.neutral700,
         borderRadius: BorderRadius.circular(4),
       ),
       child: PwText(

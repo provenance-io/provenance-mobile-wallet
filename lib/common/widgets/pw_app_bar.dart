@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwAppBar extends StatefulWidget implements PreferredSizeWidget {
-  PwAppBar({
+  const PwAppBar({
     Key? key,
     this.title,
     this.leadingIcon,
@@ -23,7 +23,7 @@ class _PwAppBarState extends State<PwAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
       elevation: 0.0,
       title: PwText(
         widget.title ?? "",
@@ -31,7 +31,7 @@ class _PwAppBarState extends State<PwAppBar> {
         textAlign: TextAlign.left,
       ),
       leading: Padding(
-        padding: EdgeInsets.only(left: 15),
+        padding: EdgeInsets.only(left: 21),
         child: IconButton(
           icon: PwIcon(
             widget.leadingIcon ?? PwIcons.close,

@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/recover_passphrase_entry.dart';
+import 'package:provenance_wallet/screens/recover_passphrase_entry_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -23,7 +23,7 @@ class RecoverAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
         title: PwText(
           Strings.recoverAccount,
@@ -42,7 +42,7 @@ class RecoverAccountScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,13 +90,13 @@ class RecoverAccountScreen extends StatelessWidget {
               child: PwButton(
                 child: PwText(
                   Strings.continueName,
-                  style: PwTextStyle.mBold,
+                  style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
                   if (flowType == WalletAddImportType.onBoardingRecover ||
                       flowType == WalletAddImportType.dashboardRecover) {
-                    Navigator.of(context).push(RecoverPassphraseEntry(
+                    Navigator.of(context).push(RecoverPassphraseEntryScreen(
                       flowType,
                       accountName,
                       currentStep: currentStep,

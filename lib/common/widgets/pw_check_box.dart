@@ -48,10 +48,10 @@ class _PwCheckBoxState extends State<PwCheckBox> {
             ? BorderSide(
                 color: _selected
                     ? theme.colorScheme.neutralNeutral
-                    : theme.colorScheme.provenanceNeutral550,
+                    : theme.colorScheme.neutral550,
                 width: 4,
               )
-            : BorderSide(color: theme.colorScheme.primaryP550, width: 1);
+            : BorderSide(color: theme.colorScheme.primary550, width: 1);
       }),
       foregroundColor: MaterialStateProperty.resolveWith((states) {
         return _selected
@@ -59,7 +59,7 @@ class _PwCheckBoxState extends State<PwCheckBox> {
             : Colors.transparent;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return _selected ? theme.colorScheme.primaryP500 : Colors.transparent;
+        return _selected ? theme.colorScheme.primary500 : Colors.transparent;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(

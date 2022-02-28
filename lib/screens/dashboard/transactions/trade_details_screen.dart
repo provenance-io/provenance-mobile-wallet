@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,16 +28,16 @@ class TradeDetailsScreen extends StatelessWidget {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
           children: [
             TradeDetailsItem(
               title: Strings.tradeDetailsWallet,
-              endChild: StreamBuilder<String>(
-                initialData: bloc.walletName.value,
-                stream: bloc.walletName,
+              endChild: StreamBuilder<WalletDetails?>(
+                initialData: bloc.selectedWallet.value,
+                stream: bloc.selectedWallet,
                 builder: (context, snapshot) {
-                  final walletName = snapshot.data ?? "";
+                  final walletName = snapshot.data?.name ?? "";
 
                   return PwText(
                     walletName,
@@ -122,11 +123,11 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
-                  StreamBuilder<String>(
-                initialData: bloc.walletAddress.value,
-                stream: bloc.walletAddress,
+                  StreamBuilder<WalletDetails?>(
+                initialData: bloc.selectedWallet.value,
+                stream: bloc.selectedWallet,
                 builder: (context, snapshot) {
-                  final walletAddress = snapshot.data ?? "";
+                  final walletAddress = snapshot.data?.address ?? "";
 
                   return Row(
                     children: [

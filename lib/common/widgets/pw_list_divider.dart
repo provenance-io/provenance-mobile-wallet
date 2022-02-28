@@ -12,7 +12,7 @@ class PwListDivider extends StatelessWidget {
       thickness: 1,
       indent: indent,
       endIndent: indent,
-      color: Theme.of(context).colorScheme.provenanceNeutral600,
+      color: Theme.of(context).colorScheme.neutral600,
     );
   }
 }

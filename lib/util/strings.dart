@@ -46,7 +46,7 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
-  static const NotImplementedMessage = "Not Implemented";
+  static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
   static const biometric = 'Biometric';
@@ -102,7 +102,6 @@ class Strings {
   static const myAssets = 'My Assets';
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
-  static const resetWallet = 'Reset Wallet';
   static const loadingTransactions = 'Loading Transactions';
   static const noTransactionsText =
       'When you have transactions they will appear here.';
@@ -130,7 +129,9 @@ class Strings {
   static const importExistingWallet = 'Import existing wallet';
 
   // Rename Wallet Dialog
-  static const walletRename = 'Wallet Rename';
+  static const renameWallet = 'Rename Wallet';
+  static const renameWalletDescription =
+      'Please enter the new name you would like to call your wallet.';
   static const walletName = 'Wallet Name';
   static const required = '*required';
   static const confirm = 'Confirm';
@@ -140,16 +141,19 @@ class Strings {
   static const wallets = 'Wallets';
   static const selectedWallet = 'Selected Wallet';
   static const allWallets = 'All Wallets';
+  static String numAssets(int numAssets) =>
+      "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
   // Wallet Item
-  static const basic = 'Basic';
   static const select = 'Select';
   static const rename = 'Rename';
   static const remove = 'Remove';
   static const removeThisWallet =
       'Are you sure you want to remove this wallet?';
   static const yes = 'Yes';
+  static const copyWalletAddress = 'Copy Wallet Address';
   static const addressCopied = 'Address copied';
+  static const resetWallets = 'Reset Wallets';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';
@@ -175,7 +179,7 @@ class Strings {
   // EnableFaceId
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
-      'Use your Face ID for faster, easier access to your account.';
+      'Use your Face ID for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
@@ -308,4 +312,9 @@ class Strings {
   static const sendAmountErrorInvalidAmount = "is an invalid amount";
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
+
+  // Error Dialog
+  static const unknownErrorTitle = 'UNKNOWN ERROR';
+  static const somethingWentWrong = 'Something went wrong.';
+  static const okay = "Okay";
 }

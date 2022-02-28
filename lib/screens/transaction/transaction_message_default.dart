@@ -33,7 +33,7 @@ class TransactionMessageDefault extends StatelessWidget
           delegate: SliverChildListDelegate.fixed(
             [
               PwDivider(
-                color: PwColor.darkGrey,
+                color: PwColor.neutral700,
                 indent: Spacing.largeX3,
                 endIndent: Spacing.largeX3,
               ),

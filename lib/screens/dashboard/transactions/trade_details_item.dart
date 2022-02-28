@@ -16,8 +16,7 @@ class TradeDetailsItem extends StatelessWidget {
   }) : super(key: key) {
     endChild = PwText(
       value,
-      color: PwColor.globalNeutral500,
-      style: PwTextStyle.m,
+      style: PwTextStyle.body,
     );
   }
 

@@ -21,14 +21,13 @@ class WordButton extends StatelessWidget {
         child: Container(
           height: 42,
           decoration: BoxDecoration(
-            color: isSelected
-                ? colorScheme.secondary700
-                : colorScheme.provenanceNeutral700,
+            color:
+                isSelected ? colorScheme.secondary700 : colorScheme.neutral700,
             borderRadius: BorderRadius.all(Radius.circular(4.0)),
             border: Border.all(
               color: isSelected
                   ? colorScheme.secondary400
-                  : colorScheme.provenanceNeutral700,
+                  : colorScheme.neutral700,
             ),
           ),
           child: Center(

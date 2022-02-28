@@ -25,9 +25,9 @@ class TransactionConfirmScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+          backgroundColor: Theme.of(context).colorScheme.neutral750,
           elevation: 0.0,
           centerTitle: true,
           title: PwText(
@@ -85,7 +85,7 @@ class TransactionConfirmScreen extends StatelessWidget {
                 right: Spacing.large,
                 bottom: Spacing.largeX4,
               ),
-              color: Theme.of(context).colorScheme.provenanceNeutral750,
+              color: Theme.of(context).colorScheme.neutral750,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

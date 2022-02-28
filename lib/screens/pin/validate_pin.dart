@@ -26,7 +26,7 @@ class ValidatePinState extends State<ValidatePin> {
         title: Strings.enterPin,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,6 +48,7 @@ class ValidatePinState extends State<ValidatePin> {
     Function eq = const ListEquality().equals;
     if (!eq(inputCodes, widget.code)) {
       await showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
           error: Strings.yourPinDoesNotMatch,

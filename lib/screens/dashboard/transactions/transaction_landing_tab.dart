@@ -20,7 +20,7 @@ class TransactionLandingTab extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.provenanceNeutral750,
+        backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
         title: PwText(
           Strings.transactionDetails,
@@ -29,7 +29,7 @@ class TransactionLandingTab extends StatelessWidget {
         leading: Container(),
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -44,8 +44,7 @@ class TransactionLandingTab extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color:
-                            Theme.of(context).colorScheme.provenanceNeutral250,
+                        color: Theme.of(context).colorScheme.neutral250,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
@@ -67,8 +66,7 @@ class TransactionLandingTab extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color:
-                            Theme.of(context).colorScheme.provenanceNeutral250,
+                        color: Theme.of(context).colorScheme.neutral250,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),

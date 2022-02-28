@@ -60,8 +60,8 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
     return DropdownButton<X>(
       isExpanded: widget.isExpanded,
       itemHeight: widget.itemHeight,
-      dropdownColor: widget.dropdownColor ??
-          Theme.of(context).colorScheme.provenanceNeutral750,
+      dropdownColor:
+          widget.dropdownColor ?? Theme.of(context).colorScheme.neutral750,
       underline: Container(),
       value: dropdownValue,
       icon: Padding(

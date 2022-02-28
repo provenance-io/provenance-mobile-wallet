@@ -80,7 +80,7 @@ class DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral800,
+        color: Theme.of(context).colorScheme.neutral800,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -116,6 +116,7 @@ class DashboardScreenState extends State<DashboardScreen>
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(

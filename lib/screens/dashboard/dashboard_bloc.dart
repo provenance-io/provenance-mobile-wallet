@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
@@ -26,6 +27,8 @@ class DashboardBloc extends Disposable {
 
   final BehaviorSubject<List<Transaction>> _transactionList =
       BehaviorSubject.seeded([]);
+  final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
+      BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
   final _sendRequest = PublishSubject<SendRequest>();
   final _signRequest = PublishSubject<SignRequest>();
@@ -35,9 +38,8 @@ class DashboardBloc extends Disposable {
   final BehaviorSubject<String?> _address = BehaviorSubject.seeded(null);
   final _error = PublishSubject<String>();
   final _response = PublishSubject<WalletConnectTxResponse>();
-
-  final _walletName = BehaviorSubject.seeded("");
-  final _walletAddress = BehaviorSubject.seeded("");
+  final BehaviorSubject<WalletDetails?> _selectedWallet =
+      BehaviorSubject.seeded(null);
 
   final _subscriptions = CompositeSubscription();
   final _sessionSubscriptions = CompositeSubscription();
@@ -53,21 +55,21 @@ class DashboardBloc extends Disposable {
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
       _connectionStatus.stream;
   ValueStream<String?> get address => _address.stream;
-  ValueStream<String> get walletAddress => _walletAddress.stream;
-  ValueStream<String> get walletName => _walletName.stream;
+  ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
+  ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
   Stream<WalletConnectTxResponse> get response => _response;
 
   // TODO: Catch and display errors?
   void load() async {
     var details = await get<WalletService>().getSelectedWallet();
-    var address = details?.address ?? "";
-    var name = details?.name ?? "";
-    _walletAddress.value = address;
-    _walletName.value = name;
-    _assetList.value = (await _assetService.getAssets(address)).data ?? [];
+    _selectedWallet.value = details;
+    _assetList.value =
+        (await _assetService.getAssets(details?.address ?? "")).data ?? [];
     _transactionList.value =
-        (await _transactionService.getTransactions(address)).data ?? [];
+        (await _transactionService.getTransactions(details?.address ?? ""))
+                .data ??
+            [];
   }
 
   Future<void> connectWallet(String addressData) async {
@@ -152,6 +154,30 @@ class DashboardBloc extends Disposable {
   Future<void> resetWallets() async {
     await disconnectWallet();
     await get<WalletService>().resetWallets();
+  }
+
+  Future<void> loadAllWallets() async {
+    var list = (await get<WalletService>().getWallets());
+    list.sort((a, b) {
+      if (b.address == selectedWallet.value?.address) {
+        return 1;
+      } else if (a.address == selectedWallet.value?.address) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    Map<WalletDetails, int> map = {};
+
+    for (var wallet in list) {
+      var assets = wallet.address == selectedWallet.value?.address
+          ? assetList.value
+          : (await _assetService.getAssets(wallet.address)).data ?? [];
+      map[wallet] = assets.length;
+    }
+
+    _walletMap.value = map;
   }
 
   @override

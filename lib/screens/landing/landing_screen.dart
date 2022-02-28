@@ -98,6 +98,7 @@ class _LandingScreenState extends State<LandingScreen>
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(
@@ -118,12 +119,10 @@ class _LandingScreenState extends State<LandingScreen>
             VerticalSpacer.xxLarge(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwButton(
-                child: PwText(
-                  _accountExists ? Strings.continueName : Strings.createWallet,
-                  style: PwTextStyle.bodyBold,
-                  color: PwColor.neutralNeutral,
-                ),
+              child: PwPrimaryButton.fromString(
+                text: _accountExists
+                    ? Strings.continueName
+                    : Strings.createWallet,
                 onPressed: () {
                   if (_accountExists) {
                     doAuth();
