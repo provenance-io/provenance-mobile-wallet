@@ -316,4 +316,7 @@ class Strings {
   static const unknownErrorTitle = 'UNKNOWN ERROR';
   static const somethingWentWrong = 'Something went wrong.';
   static const okay = "Okay";
+  static const serviceErrorTitle = 'SERVICE ERROR';
+  static const theSystemIsDown =
+      'Unfortunately our services are down at the moment. Please try again later.';
 }
