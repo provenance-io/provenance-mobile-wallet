@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
-import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
@@ -66,8 +66,7 @@ class DashboardBloc extends Disposable {
   void load() async {
     var details = await get<WalletService>().getSelectedWallet();
     _selectedWallet.value = details;
-    _assetList.value =
-        (await _assetService.getAssets(details?.address ?? "")).data ?? [];
+    _assetList.value = (await _assetService.getAssets(details?.address ?? ""));
     _transactionList.value =
         (await _transactionService.getTransactions(details?.address ?? ""))
                 .data ??
@@ -178,7 +177,7 @@ class DashboardBloc extends Disposable {
     for (var wallet in list) {
       var assets = wallet.address == selectedWallet.value?.address
           ? assetList.value
-          : (await _assetService.getAssets(wallet.address)).data ?? [];
+          : (await _assetService.getAssets(wallet.address));
       map[wallet] = assets.length;
     }
 

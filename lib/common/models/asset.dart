@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/widgets/icon.dart';
-import 'package:provenance_wallet/network/dtos/asset_dto.dart';
+import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
 
 class Asset {
