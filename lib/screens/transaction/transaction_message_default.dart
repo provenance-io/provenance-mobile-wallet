@@ -5,6 +5,7 @@ import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
+import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/messages/message_field_processor.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -34,13 +35,13 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
   final _processor = MessageFieldProcessor(
     converters: {
-      'fromAddress': convertAddress,
-      'toAddress': convertAddress,
-      'address': convertAddress,
-      'manager': convertAddress,
-      'delegatorAddress': convertAddress,
-      'validatorAddress': convertAddress,
-      'amount': convertAmount,
+      MessageFieldName.fromAddress: convertAddress,
+      MessageFieldName.toAddress: convertAddress,
+      MessageFieldName.address: convertAddress,
+      MessageFieldName.manager: convertAddress,
+      MessageFieldName.delegatorAddress: convertAddress,
+      MessageFieldName.validatorAddress: convertAddress,
+      MessageFieldName.amount: convertAmount,
     },
   );
 
