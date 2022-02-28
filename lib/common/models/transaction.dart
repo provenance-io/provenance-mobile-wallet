@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/network/dtos/transaction_dto.dart';
+import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 
 class Transaction {
   Transaction({required TransactionDto dto})
