@@ -4,7 +4,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 typedef IsValidCallback = Future<bool> Function(String input);
 
 class QRCodeScanner extends StatefulWidget {
-  QRCodeScanner({
+  const QRCodeScanner({
     Key? key,
     this.isValidCallback,
   }) : super(key: key);
@@ -35,7 +35,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.white,
+            color: Theme.of(context).colorScheme.neutralNeutral,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),

@@ -2,7 +2,7 @@
 
 extension StringExtension on String {
   String capitalize() {
-    return '${this[0].toUpperCase()}${this.substring(1)}';
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 
   String displayPhone() {
@@ -14,19 +14,19 @@ extension StringExtension on String {
   }
 
   double coinAmount() {
-    return double.parse("${this.replaceAll(RegExp(r'[^\d\.]+'), '')}") * 100;
+    return double.parse(replaceAll(RegExp(r'[^\d\.]+'), '')) * 100;
   }
 
   double amount() {
-    return double.parse(this.removeNonDollarValue());
+    return double.parse(removeNonDollarValue());
   }
 
   String removeNonDollarValue() {
-    return this.replaceAll(RegExp(r'[^\d\.]+'), '');
+    return replaceAll(RegExp(r'[^\d\.]+'), '');
   }
 
   String sanitizePhoneNumber() {
-    return this.replaceAll(RegExp(r'[^\d]+'), '');
+    return replaceAll(RegExp(r'[^\d]+'), '');
   }
 
   String abbreviateAddress() {
@@ -34,11 +34,9 @@ extension StringExtension on String {
     const right = 8;
     const dots = '...';
 
-    if (length > left + dots.length + right) {
-      return '${substring(0, left)}$dots${substring(length - right)}';
-    }
-
-    return this;
+    return length > left + dots.length + right
+        ? '${substring(0, left)}$dots${substring(length - right)}'
+        : this;
   }
 }
 
@@ -193,7 +191,7 @@ class Strings {
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
@@ -209,12 +207,12 @@ class Strings {
   static const youMustAgreeToTheWalletSeedphraseTerms =
       "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
-      "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
+      "I agree that I am solely responsible for my wallet and cannot recover my account if the passphrase is lost.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery Passphrase';
   static const recordTheseWordsInTheCorrectOrder =
-      'Make sure to record these words in the correct order, using the corresponding numbers.';
+      'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
 
   // BackupComplete
@@ -285,7 +283,7 @@ class Strings {
 
   //WordSelector
   static const selectWord = 'select word';
-  static String selectWordIndex(String index) => 'select word #${index}';
+  static String selectWordIndex(String index) => 'select word #$index';
 
   // SendScreen
   static const sendTitle = "Send";

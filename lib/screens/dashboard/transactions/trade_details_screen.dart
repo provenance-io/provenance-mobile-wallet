@@ -3,27 +3,26 @@ import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class TradeDetailsScreen extends StatelessWidget {
-  TradeDetailsScreen({
+  const TradeDetailsScreen({
     Key? key,
     required this.transaction,
-    required this.walletName,
-    required this.walletAddress,
   }) : super(key: key);
 
   final Transaction transaction;
-  // FIXME: I want these two Strings to be part of a Bloc.
-  final String walletName;
-  final String walletAddress;
 
   @override
   Widget build(BuildContext context) {
+    final bloc = get<DashboardBloc>();
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
         elevation: 0.0,
         centerTitle: true,
         title: Padding(
@@ -54,15 +53,22 @@ class TradeDetailsScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.white,
+        color: Theme.of(context).colorScheme.neutralNeutral,
         child: ListView(
           children: [
             TradeDetailsItem(
               title: Strings.tradeDetailsWallet,
-              endChild: PwText(
-                walletName,
-                color: PwColor.globalNeutral500,
-                style: PwTextStyle.m,
+              endChild: StreamBuilder<String>(
+                initialData: bloc.walletName.value,
+                stream: bloc.walletName,
+                builder: (context, snapshot) {
+                  final walletName = snapshot.data ?? "";
+
+                  return PwText(
+                    walletName,
+                    style: PwTextStyle.body,
+                  );
+                },
               ),
             ),
             PwListDivider(),
@@ -110,7 +116,7 @@ class TradeDetailsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     PwText(
-                      '${transaction.address.substring(0, 3)}...${transaction.address.substring(36)}',
+                      transaction.address.abbreviateAddress(),
                       style: PwTextStyle.m,
                       color: PwColor.globalNeutral600Black,
                     ),
@@ -144,35 +150,43 @@ class TradeDetailsScreen extends StatelessWidget {
               title: Strings.tradeDetailsToAddress,
               endChild: // FIXME: Still don't know if transaction.address is to or from.
                   Container(
-                child: Row(
-                  children: [
-                    PwText(
-                      '${walletAddress.substring(0, 3)}...${walletAddress.substring(36)}',
-                      style: PwTextStyle.m,
-                      color: PwColor.globalNeutral600Black,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(
-                          ClipboardData(text: walletAddress),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: PwText(Strings.addressCopied)),
-                        );
-                      },
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        child: PwIcon(
-                          PwIcons.copy,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .globalNeutral600Black,
-                          size: 24,
+                child: StreamBuilder<String>(
+                  initialData: bloc.walletAddress.value,
+                  stream: bloc.walletAddress,
+                  builder: (context, snapshot) {
+                    final walletAddress = snapshot.data ?? "";
+
+                    return Row(
+                      children: [
+                        PwText(
+                          walletAddress.abbreviateAddress(),
+                          style: PwTextStyle.m,
+                          color: PwColor.globalNeutral600Black,
                         ),
-                      ),
-                    ),
-                  ],
+                        GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(
+                              ClipboardData(text: walletAddress),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: PwText(Strings.addressCopied)),
+                            );
+                          },
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: PwIcon(
+                              PwIcons.copy,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .globalNeutral600Black,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

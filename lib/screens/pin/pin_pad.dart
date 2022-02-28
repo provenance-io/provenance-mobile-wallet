@@ -75,7 +75,7 @@ class PinPadState extends State<PinPad> {
               currentLength: _inputCodes.length,
               status: 0,
               deleteCode: _deleteCode,
-              borderColor: Theme.of(context).colorScheme.white,
+              borderColor: Theme.of(context).colorScheme.neutralNeutral,
             ),
           ),
           VerticalSpacer.xxLarge(),
@@ -143,7 +143,7 @@ class PinPadState extends State<PinPad> {
           child: PwIcon(
             PwIcons.remove,
             size: 22,
-            color: Theme.of(context).colorScheme.white,
+            color: Theme.of(context).colorScheme.neutralNeutral,
           ),
           onClick: _deleteCode,
         ));

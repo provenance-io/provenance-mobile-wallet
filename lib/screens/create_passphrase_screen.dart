@@ -122,7 +122,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                         child: PwText(
                           Strings.continueName,
                           style: PwTextStyle.mBold,
-                          color: PwColor.white,
+                          color: PwColor.neutralNeutral,
                         ),
                         onPressed: () {
                           if (flowType == WalletAddImportType.onBoardingAdd ||

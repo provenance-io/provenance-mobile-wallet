@@ -24,8 +24,10 @@ main() {
 
       expect(textFind, findsOneWidget);
       expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
-      expect(find.descendant(of: textFind, matching: find.text("View All")),
-          findsOneWidget);
+      expect(
+        find.descendant(of: textFind, matching: find.text("View All")),
+        findsOneWidget,
+      );
     });
 
     testWidgets("Not Null Address", (tester) async {
@@ -38,8 +40,10 @@ main() {
       expect(textFind, findsNWidgets(2));
       expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
       expect(find.text("View All"), findsNothing);
-      expect(find.descendant(of: textFind, matching: find.text("Address")),
-          findsOneWidget);
+      expect(
+        find.descendant(of: textFind, matching: find.text("Address")),
+        findsOneWidget,
+      );
 
       final lastSendFinder = find.byKey(RecentSendCell.keyLastSendText);
       expect(lastSendFinder, findsOneWidget);
@@ -64,11 +68,16 @@ main() {
         RecentAddress("Address2", DateTime.fromMicrosecondsSinceEpoch(0));
 
     Future<void> _build(
-        WidgetTester tester, List<RecentAddress> recentAddresses) {
+      WidgetTester tester,
+      List<RecentAddress> recentAddresses,
+    ) {
       return tester.pumpWidget(
         MaterialApp(
           home: RecentSendList(
-              recentAddresses, OnAddressClicked, OnViewAllClicked),
+            recentAddresses,
+            OnAddressClicked,
+            OnViewAllClicked,
+          ),
         ),
       );
     }
@@ -93,9 +102,13 @@ main() {
 
       expect(cellFind, findsNWidgets(3));
       expect(
-          tester.widget<RecentSendCell>(cellFind.at(0)).recentAddress, send1);
+        tester.widget<RecentSendCell>(cellFind.at(0)).recentAddress,
+        send1,
+      );
       expect(
-          tester.widget<RecentSendCell>(cellFind.at(1)).recentAddress, send2);
+        tester.widget<RecentSendCell>(cellFind.at(1)).recentAddress,
+        send2,
+      );
       expect(tester.widget<RecentSendCell>(cellFind.at(2)).recentAddress, null);
     });
 

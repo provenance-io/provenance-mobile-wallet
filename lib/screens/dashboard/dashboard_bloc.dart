@@ -36,6 +36,9 @@ class DashboardBloc extends Disposable {
   final _error = PublishSubject<String>();
   final _response = PublishSubject<WalletConnectTxResponse>();
 
+  final _walletName = BehaviorSubject.seeded("");
+  final _walletAddress = BehaviorSubject.seeded("");
+
   final _subscriptions = CompositeSubscription();
   final _sessionSubscriptions = CompositeSubscription();
 
@@ -51,15 +54,21 @@ class DashboardBloc extends Disposable {
   ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
       _connectionStatus.stream;
   ValueStream<String?> get address => _address.stream;
+  ValueStream<String> get walletAddress => _walletAddress.stream;
+  ValueStream<String> get walletName => _walletName.stream;
   Stream<String> get error => _error;
   Stream<WalletConnectTxResponse> get response => _response;
 
   // TODO: Catch and display errors?
-  void load(String walletAddress) async {
-    _assetList.value =
-        (await _assetService.getAssets(walletAddress)).data ?? [];
+  void load() async {
+    var details = await get<WalletService>().getSelectedWallet();
+    var address = details?.address ?? "";
+    var name = details?.name ?? "";
+    _walletAddress.value = address;
+    _walletName.value = name;
+    _assetList.value = (await _assetService.getAssets(address)).data ?? [];
     _transactionList.value =
-        (await _transactionService.getTransactions(walletAddress)).data ?? [];
+        (await _transactionService.getTransactions(address)).data ?? [];
   }
 
   Future<void> connectWallet(String addressData) async {

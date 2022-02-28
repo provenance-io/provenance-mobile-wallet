@@ -8,7 +8,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
-import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/my_account.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
@@ -16,7 +16,6 @@ import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
@@ -31,8 +30,6 @@ class DashboardScreen extends StatefulWidget {
 class DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   late TabController _tabController;
-  String _walletAddress = '';
-  String _walletName = '';
   bool _initialLoad = false;
   int _currentTabIndex = 0;
 
@@ -56,24 +53,10 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   @override
-  void didPopNext() {
-    loadAddress();
-    super.didPopNext();
-  }
-
-  @override
   void didChangeDependencies() {
     RouterObserver.instance.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute);
     super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant DashboardScreen oldWidget) {
-    if (!_initialLoad) {
-      this.loadAssets();
-    }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -91,29 +74,9 @@ class DashboardScreenState extends State<DashboardScreen>
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
 
-    loadAddress();
+    _bloc.load();
 
     super.initState();
-  }
-
-  void loadAddress() async {
-    final wallet = await get<WalletService>().getSelectedWallet();
-    if (wallet == null) {
-      logError('Failed to load selected wallet');
-
-      return;
-    }
-    setState(() {
-      _walletAddress = wallet.address;
-      _walletName = wallet.name;
-    });
-    this.loadAssets();
-  }
-
-  void loadAssets() async {
-    ModalLoadingRoute.showLoading(Strings.loadingAssets, context);
-    _bloc.load(_walletAddress);
-    ModalLoadingRoute.dismiss(context);
   }
 
   @override
@@ -165,14 +128,9 @@ class DashboardScreenState extends State<DashboardScreen>
               child: TabBarView(
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
-                children: [
-                  DashboardLandingTab(
-                    walletName: _walletName,
-                  ),
-                  TransactionLanding(
-                    walletAddress: _walletAddress,
-                    walletName: _walletName,
-                  ),
+                children: const [
+                  DashboardLandingTab(),
+                  TransactionLandingTab(),
                   MyAccount(),
                 ],
               ),

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:decimal/decimal.dart';
-import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
@@ -89,7 +87,11 @@ class SendAmountPageState extends State<SendAmountPage> {
             asset.imageUrl,
             width: imageDimen,
             height: imageDimen,
-            errorBuilder: (context, error, stackTrace,) {
+            errorBuilder: (
+              context,
+              error,
+              stackTrace,
+            ) {
               return Container();
             },
           ),
@@ -116,7 +118,7 @@ class SendAmountPageState extends State<SendAmountPage> {
             style: PwTextStyle.m_p,
           ),
           PwText(
-              "${asset.fiatValue}",
+            asset.fiatValue,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: PwTextStyle.m_p,
@@ -140,49 +142,66 @@ class SendAmountPageState extends State<SendAmountPage> {
               ),
               ValueListenableBuilder<bool>(
                 valueListenable: _focusNotifier,
-                builder: (context, hasFocus, child) {
-                  return (!hasFocus && _noteController.text.isEmpty)? PwText(Strings.sendAmountNoteSuffix) : Container(width: 0, height: 0,);
+                builder: (
+                  context,
+                  hasFocus,
+                  child,
+                ) {
+                  return (!hasFocus && _noteController.text.isEmpty)
+                      ? PwText(Strings.sendAmountNoteSuffix)
+                      : Container(
+                          width: 0,
+                          height: 0,
+                        );
                 },
               ),
             ],
           ),
-          PwDivider(height: 1,),
+          PwDivider(
+            height: 1,
+          ),
           Container(
             key: ValueKey("FeeRow"),
             decoration: null,
             padding: padding,
             child: ValueListenableBuilder<String?>(
-                valueListenable: _feeNotifier,
-                builder: (context, value, child) {
-                  Widget widget;
-                  if(value == null) {
-                    widget = PwText(Strings.sendAmountLoadingFeeEstimate);
-                  }
-                  else {
-                    widget = PwText(value, textAlign: TextAlign.end,);
-                  }
+              valueListenable: _feeNotifier,
+              builder: (
+                context,
+                value,
+                child,
+              ) {
+                Widget widget;
+                widget = value == null
+                    ? PwText(Strings.sendAmountLoadingFeeEstimate)
+                    : PwText(value, textAlign: TextAlign.end);
 
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PwText(Strings.sendAmountTransactionLabel),
-                      Expanded(
-                          child: widget
-                      ),
-                    ],
-                  );
-                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PwText(Strings.sendAmountTransactionLabel),
+                    Expanded(
+                      child: widget,
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           VerticalSpacer.medium(),
           ValueListenableBuilder(
-              valueListenable: _feeNotifier,
-              builder: (context, value, child) => PwButton(
-                child: PwText(Strings.sendAmountNextButton),
-                enabled: value != null,
-                onPressed: _next ,
-              ),
+            valueListenable: _feeNotifier,
+            builder: (
+              context,
+              value,
+              child,
+            ) =>
+                PwButton(
+              child: PwText(Strings.sendAmountNextButton),
+              enabled: value != null,
+              onPressed: _next,
+            ),
           ),
           VerticalSpacer.large(),
         ],
@@ -193,8 +212,7 @@ class SendAmountPageState extends State<SendAmountPage> {
   Future<void> _next() async {
     try {
       await _bloc!.showNext(_noteController.text, _amountController.text);
-    }
-    catch (error) {
+    } catch (error) {
       showDialog(
         context: context,
         builder: (context) {

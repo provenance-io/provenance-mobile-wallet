@@ -7,22 +7,30 @@ import 'send_amount_bloc_test.mocks.dart';
 
 Matcher throwsExceptionWithText(String msg) {
   return throwsA(predicate((arg) {
-    return arg is Exception &&
-            arg.toString() == "Exception: $msg";
+    return arg is Exception && arg.toString() == "Exception: $msg";
   }));
 }
 
-@GenerateMocks([ SendAmountBlocNavigator ])
+@GenerateMocks([SendAmountBlocNavigator])
 main() {
-  final asset = SendAsset("Hash", "100", "200", "http://test.com");
-  final receivingAddress = "ReceivingAdress";
+  final asset = SendAsset(
+    "Hash",
+    "100",
+    "200",
+    "http://test.com",
+  );
+  const receivingAddress = "ReceivingAdress";
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
 
   setUp(() {
     mockNavigator = MockSendAmountBlocNavigator();
-    bloc = SendAmountBloc(receivingAddress, asset, mockNavigator!);
+    bloc = SendAmountBloc(
+      receivingAddress,
+      asset,
+      mockNavigator!,
+    );
   });
 
   test("properties", () {
@@ -52,15 +60,30 @@ main() {
   });
 
   test("showNext - validation errors", () async {
-    expect(() => bloc!.showNext("", ""),  throwsExceptionWithText("The estimated fee is not ready"));
+    expect(
+      () => bloc!.showNext("", ""),
+      throwsExceptionWithText("The estimated fee is not ready"),
+    );
 
     bloc!.init();
     await bloc!.stream.first; // wait for the fee to download
 
-    expect(() => bloc!.showNext("", ""),  throwsExceptionWithText("'' is an invalid amount"));
-    expect(() => bloc!.showNext("","abc"), throwsExceptionWithText("'abc' is an invalid amount"));
-    expect(() => bloc!.showNext("","1.1234567890"), throwsExceptionWithText("too many decimal places"));
-    expect(() => bloc!.showNext("","100.000000001"), throwsExceptionWithText("Insufficient Hash"));
+    expect(
+      () => bloc!.showNext("", ""),
+      throwsExceptionWithText("'' is an invalid amount"),
+    );
+    expect(
+      () => bloc!.showNext("", "abc"),
+      throwsExceptionWithText("'abc' is an invalid amount"),
+    );
+    expect(
+      () => bloc!.showNext("", "1.1234567890"),
+      throwsExceptionWithText("too many decimal places"),
+    );
+    expect(
+      () => bloc!.showNext("", "100.000000001"),
+      throwsExceptionWithText("Insufficient Hash"),
+    );
   });
 
   test("showNext - invoke navigator", () async {
@@ -68,6 +91,10 @@ main() {
     await bloc!.stream.first;
 
     bloc!.showNext("A Note", "75.01");
-    verify(mockNavigator!.showReviewSend("75.01", "0.02 Hash", "A Note"));
+    verify(mockNavigator!.showReviewSend(
+      "75.01",
+      "0.02 Hash",
+      "A Note",
+    ));
   });
 }

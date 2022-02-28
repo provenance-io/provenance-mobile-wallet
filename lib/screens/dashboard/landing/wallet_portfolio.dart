@@ -28,7 +28,7 @@ class WalletPortfolio extends StatelessWidget {
         children: [
           PwText(
             Strings.portfolioValue,
-            color: PwColor.white,
+            color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
           StreamBuilder<List<Asset>>(
@@ -40,7 +40,7 @@ class WalletPortfolio extends StatelessWidget {
               return PwText(
                 // FIXME: How do we get portfolio value?
                 '\$0',
-                color: PwColor.white,
+                color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
               );
             },
@@ -55,12 +55,12 @@ class WalletPortfolio extends StatelessWidget {
                     PwIcon(
                       PwIcons.upArrow,
                       size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.send,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
@@ -82,12 +82,12 @@ class WalletPortfolio extends StatelessWidget {
                     PwIcon(
                       PwIcons.downArrow,
                       size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.receive,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
@@ -149,14 +149,14 @@ class WalletPortfolio extends StatelessWidget {
                     child: PwIcon(
                       !connected ? PwIcons.walletConnect : PwIcons.close,
                       size: 15,
-                      color: Theme.of(context).colorScheme.white,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                   ),
                 ),
                 VerticalSpacer.xSmall(),
                 PwText(
                   !connected ? Strings.walletConnect : Strings.disconnect,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                   style: PwTextStyle.s,
                 ),
               ],

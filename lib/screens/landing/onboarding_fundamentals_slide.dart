@@ -48,7 +48,7 @@ class _OnboardingFundamentalsSlideState
                     Strings.strongFundamentals,
                     style: PwTextStyle.headline1,
                     textAlign: TextAlign.center,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -86,13 +86,13 @@ class _OnboardingFundamentalsSlideState
                                     child: PwText(
                                       marketCap.substring(0, 1),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                   PwText(
                                     marketCap.substring(1),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                 ],
                               );
@@ -101,7 +101,7 @@ class _OnboardingFundamentalsSlideState
                           PwText(
                             Strings.marketCap,
                             style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -118,14 +118,14 @@ class _OnboardingFundamentalsSlideState
                               return PwText(
                                 '$numValidators',
                                 style: PwTextStyle.h3,
-                                color: PwColor.white,
+                                color: PwColor.neutralNeutral,
                               );
                             },
                           ),
                           PwText(
                             Strings.validators,
                             style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -149,7 +149,7 @@ class _OnboardingFundamentalsSlideState
                                       transactions.length - 1,
                                     ),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 5),
@@ -157,7 +157,7 @@ class _OnboardingFundamentalsSlideState
                                       transactions
                                           .substring(transactions.length - 1),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                 ],
@@ -167,7 +167,7 @@ class _OnboardingFundamentalsSlideState
                           PwText(
                             Strings.transactions,
                             style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -191,14 +191,14 @@ class _OnboardingFundamentalsSlideState
                                       blockTime.length - 3,
                                     ),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 4),
                                     child: PwText(
                                       blockTime.substring(blockTime.length - 3),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                 ],
@@ -208,7 +208,7 @@ class _OnboardingFundamentalsSlideState
                           PwText(
                             Strings.avgBlockTime,
                             style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -223,7 +223,7 @@ class _OnboardingFundamentalsSlideState
                   child: PwText(
                     Strings.fundamentalsDescription,
                     style: PwTextStyle.m_p,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                     textAlign: TextAlign.center,
                   ),
                 ),

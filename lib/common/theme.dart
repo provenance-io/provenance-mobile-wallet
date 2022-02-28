@@ -123,7 +123,7 @@ class ProvenanceThemeData {
     fontFamily: 'GothicA1',
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    //height: 22.4 / 14,
+    height: 22.4 / 14,
     letterSpacing: 14 * 0.04,
   );
   static const TextStyle _footnote = TextStyle(
@@ -405,7 +405,7 @@ extension CustomColorScheme on ColorScheme {
   //Color get primary5 => FigurePayThemeData._primary5;
   //Color get primary6 => FigurePayThemeData._primary6;
   Color get primary7 => FigurePayThemeData._primary7;
-  Color get white => FigurePayThemeData._white;
+  Color get neutralNeutral => FigurePayThemeData._white;
   Color get light => FigurePayThemeData._light;
   Color get lightGrey => FigurePayThemeData._lightGrey;
   Color get midGrey => FigurePayThemeData._midGrey;

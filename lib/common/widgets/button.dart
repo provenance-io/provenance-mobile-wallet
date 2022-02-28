@@ -172,7 +172,7 @@ class PwActionButton extends StatelessWidget {
               ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(56.0)),
                   side: BorderSide(
-                    color: theme.colorScheme.white,
+                    color: theme.colorScheme.neutralNeutral,
                     width: 1.0,
                   ),
                 )
@@ -256,7 +256,7 @@ class PwButton extends StatelessWidget {
               : theme.colorScheme.globalNeutral450;
         }
 
-        return theme.colorScheme.white;
+        return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         return states.contains(MaterialState.disabled)
@@ -490,7 +490,7 @@ class PwOutlinedButton extends StatelessWidget {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         backgroundColor: backgroundColor ?? Colors.transparent,
-        primary: Theme.of(context).colorScheme.white,
+        primary: Theme.of(context).colorScheme.neutralNeutral,
         padding: EdgeInsets.zero,
         side: BorderSide(
           color: borderColor ?? Theme.of(context).colorScheme.lightGrey,

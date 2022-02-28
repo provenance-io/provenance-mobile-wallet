@@ -60,7 +60,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                         child: PwText(
                           Strings.continueName,
                           style: PwTextStyle.subhead,
-                          color: PwColor.white,
+                          color: PwColor.neutralNeutral,
                         ),
                         onPressed: () async {
                           Navigator.pushAndRemoveUntil(

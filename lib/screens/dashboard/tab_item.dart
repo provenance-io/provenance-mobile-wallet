@@ -26,7 +26,7 @@ class TabItem extends StatelessWidget {
                     tabAsset,
                     size: 24,
                     color: isCurrent
-                        ? Theme.of(context).colorScheme.white
+                        ? Theme.of(context).colorScheme.neutralNeutral
                         : Theme.of(context).colorScheme.provenanceNeutral550,
                   )
                 : const CircularProgressIndicator(),
@@ -36,7 +36,7 @@ class TabItem extends StatelessWidget {
             child: PwText(
               tabName,
               style: PwTextStyle.footnote,
-              color: PwColor.white,
+              color: PwColor.neutralNeutral,
             ),
           ),
         ],

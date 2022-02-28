@@ -85,7 +85,7 @@ class BackupCompleteScreen extends StatelessWidget {
                         child: PwText(
                           Strings.continueName,
                           style: PwTextStyle.mBold,
-                          color: PwColor.white,
+                          color: PwColor.neutralNeutral,
                         ),
                         onPressed: () async {
                           if (flowType == WalletAddImportType.onBoardingAdd) {

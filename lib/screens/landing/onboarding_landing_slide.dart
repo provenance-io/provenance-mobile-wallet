@@ -22,7 +22,7 @@ class OnboardingLandingSlide extends StatelessWidget {
           Strings.provenanceTitle,
           style: PwTextStyle.logo,
           textAlign: TextAlign.center,
-          color: PwColor.white,
+          color: PwColor.neutralNeutral,
         ),
         VerticalSpacer.largeX5(),
         Padding(
@@ -34,7 +34,7 @@ class OnboardingLandingSlide extends StatelessWidget {
             Strings.provenanceWalletDescription,
             style: PwTextStyle.m_p,
             textAlign: TextAlign.center,
-            color: PwColor.white,
+            color: PwColor.neutralNeutral,
           ),
         ),
         VerticalSpacer.largeX6(),

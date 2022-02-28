@@ -22,9 +22,9 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.white,
+      backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor: Theme.of(context).colorScheme.neutralNeutral,
         elevation: 0.0,
         leading: IconButton(
           icon: PwIcon(
@@ -46,13 +46,6 @@ class _MyAccountState extends State<MyAccount> {
             crossAxisAlignment: CrossAxisAlignment.start,
             textDirection: TextDirection.ltr,
             children: [
-              _LinkItem(
-                text: Strings.linkedServices,
-                // count: 1,
-                onTap: () {
-                  // TODO: open linked services screen.
-                },
-              ),
               _CategoryLabel(Strings.security),
               _FutureToggleItem(
                 text: Strings.faceId,
