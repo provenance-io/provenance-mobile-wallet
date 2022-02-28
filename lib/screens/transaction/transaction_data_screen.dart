@@ -19,18 +19,23 @@ class TransactionDataScreen extends StatelessWidget {
         title: Strings.transactionDataTitle,
         leadingIcon: PwIcons.back,
       ),
-      body: Column(
-        children: [
-          VerticalSpacer.xxLarge(),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: Spacing.xxLarge,
-            ),
-            child: TransactionData(
-              data: data,
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              VerticalSpacer.xxLarge(),
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: Spacing.xxLarge,
+                ),
+                child: TransactionData(
+                  data: data,
+                ),
+              ),
+              VerticalSpacer.xxLarge(),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
