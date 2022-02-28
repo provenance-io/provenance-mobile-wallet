@@ -11,18 +11,23 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
-import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
+import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => DashboardScreenState();
 }
@@ -30,7 +35,6 @@ class DashboardScreen extends StatefulWidget {
 class DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   late TabController _tabController;
-  bool _initialLoad = false;
   int _currentTabIndex = 0;
 
   final _subscriptions = CompositeSubscription();
@@ -61,9 +65,7 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   void initState() {
-    _bloc.transactionRequest
-        .listen(_onTransactionRequest)
-        .addTo(_subscriptions);
+    _bloc.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
     _bloc.signRequest.listen(_onSignRequest).addTo(_subscriptions);
     _bloc.sessionRequest.listen(_onSessionRequest).addTo(_subscriptions);
     _bloc.error.listen(_onError).addTo(_subscriptions);
@@ -88,28 +90,26 @@ class DashboardScreenState extends State<DashboardScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             VerticalSpacer.large(),
-            Container(
-              child: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                tabs: [
-                  TabItem(
-                    0 == _currentTabIndex,
-                    Strings.dashboard,
-                    PwIcons.dashboard,
-                  ),
-                  TabItem(
-                    1 == _currentTabIndex,
-                    Strings.transactions,
-                    PwIcons.staking,
-                  ),
-                  TabItem(
-                    2 == _currentTabIndex,
-                    Strings.profile,
-                    PwIcons.userAccount,
-                  ),
-                ],
-              ),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.transparent,
+              tabs: [
+                TabItem(
+                  0 == _currentTabIndex,
+                  Strings.dashboard,
+                  PwIcons.dashboard,
+                ),
+                TabItem(
+                  1 == _currentTabIndex,
+                  Strings.transactions,
+                  PwIcons.staking,
+                ),
+                TabItem(
+                  2 == _currentTabIndex,
+                  Strings.profile,
+                  PwIcons.userAccount,
+                ),
+              ],
             ),
           ],
         ),
@@ -169,9 +169,14 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Future<void> _onTransactionRequest(
-    WalletConnectTransactionRequest transactionRequest,
+  Future<void> _onSendRequest(
+    SendRequest sendRequest,
   ) async {
+    final clientDetails = _bloc.clientDetails.value;
+    if (clientDetails == null) {
+      return;
+    }
+
     final approved = await showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
@@ -179,31 +184,59 @@ class DashboardScreenState extends State<DashboardScreen>
         animation,
         secondaryAnimation,
       ) {
+        final message = sendRequest.message;
+        final data = <String, dynamic>{
+          MessageFieldName.type: message.info_.qualifiedMessageName,
+          ...message.toProto3Json() as Map<String, dynamic>,
+        };
+
         return TransactionConfirmScreen(
-          request: transactionRequest,
+          title: Strings.confirmTransactionTitle,
+          requestId: sendRequest.id,
+          clientDetails: clientDetails,
+          data: data,
+          gasEstimate: sendRequest.gasEstimate,
         );
       },
     );
 
     await get<DashboardBloc>().sendMessageFinish(
-      requestId: transactionRequest.details.id,
+      requestId: sendRequest.id,
       allowed: approved ?? false,
     );
   }
 
   Future<void> _onSignRequest(SignRequest signRequest) async {
-    final allowed = await PwDialog.showConfirmation(
-      context,
-      title: signRequest.description,
-      message: signRequest.message,
-      confirmText: Strings.sign,
-      cancelText: Strings.decline,
+    final clientDetails = _bloc.clientDetails.value;
+    if (clientDetails == null) {
+      return;
+    }
+
+    final approved = await showGeneralDialog<bool>(
+      context: context,
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return TransactionConfirmScreen(
+          title: Strings.confirmSignTitle,
+          requestId: signRequest.id,
+          subTitle: signRequest.description,
+          clientDetails: clientDetails,
+          message: signRequest.message,
+          data: {
+            MessageFieldName.address: signRequest.address,
+          },
+        );
+      },
     );
+
     ModalLoadingRoute.showLoading("", context);
 
     await get<DashboardBloc>().signTransactionFinish(
       requestId: signRequest.id,
-      allowed: allowed,
+      allowed: approved ?? false,
     );
 
     ModalLoadingRoute.dismiss(context);

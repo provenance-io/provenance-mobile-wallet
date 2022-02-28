@@ -1,16 +1,15 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionDataScreen extends StatelessWidget {
   const TransactionDataScreen({
-    required this.request,
+    required this.data,
     Key? key,
   }) : super(key: key);
 
-  final SendRequest request;
+  final Map<String, dynamic> data;
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +19,23 @@ class TransactionDataScreen extends StatelessWidget {
         title: Strings.transactionDataTitle,
         leadingIcon: PwIcons.back,
       ),
-      body: Column(
-        children: [
-          VerticalSpacer.xxLarge(),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: Spacing.xxLarge,
-            ),
-            child: TransactionData(
-              request: request,
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              VerticalSpacer.xxLarge(),
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: Spacing.xxLarge,
+                ),
+                child: TransactionData(
+                  data: data,
+                ),
+              ),
+              VerticalSpacer.xxLarge(),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

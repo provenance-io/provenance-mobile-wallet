@@ -4,7 +4,6 @@ import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -23,8 +22,7 @@ class WalletConnectSession {
 
   final _subscriptions = CompositeSubscription();
 
-  final _transactionRequest =
-      PublishSubject<WalletConnectTransactionRequest>(sync: true);
+  final _sendRequest = PublishSubject<SendRequest>(sync: true);
   final _signRequest = PublishSubject<SignRequest>(sync: true);
   final _sessionRequest = PublishSubject<RemoteClientDetails>(sync: true);
   final _clientDetails = BehaviorSubject<RemoteClientDetails?>.seeded(
@@ -39,8 +37,7 @@ class WalletConnectSession {
   final _error = PublishSubject<String>(sync: true);
   final _response = PublishSubject<WalletConnectTxResponse>(sync: true);
 
-  Stream<WalletConnectTransactionRequest> get transactionRequest =>
-      _transactionRequest;
+  Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
   ValueStream<RemoteClientDetails?> get clientDetails => _clientDetails;
@@ -54,7 +51,7 @@ class WalletConnectSession {
 
     try {
       _connection.addListener(_statusListener);
-      _delegate.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
+      _delegate.sendRequest.listen(_sendRequest.add).addTo(_subscriptions);
       _delegate.signRequest.listen(_signRequest.add).addTo(_subscriptions);
       _delegate.sessionRequest
           .listen(_sessionRequest.add)
@@ -114,20 +111,6 @@ class WalletConnectSession {
     }
 
     return success;
-  }
-
-  void _onSendRequest(SendRequest request) {
-    final clientDetails = _clientDetails.value;
-    if (clientDetails != null) {
-      _transactionRequest.add(
-        WalletConnectTransactionRequest(
-          details: request,
-          clientDetails: clientDetails,
-        ),
-      );
-    } else {
-      logDebug('Received a request but did not have client details.');
-    }
   }
 
   void _statusListener() {

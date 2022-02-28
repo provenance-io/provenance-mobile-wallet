@@ -96,8 +96,6 @@ class Strings {
       'Allow connection to $name';
 
   static const loadingAssets = 'Loading Assets';
-  static const sign = 'Sign';
-  static const decline = 'Decline';
   static const dashboard = 'Dashboard';
   static const portfolioValue = 'Portfolio Value';
   static const send = 'Send';
@@ -238,8 +236,8 @@ class Strings {
   static const transactionSuccessTitle = 'Success';
 
   // Transaction Confirmation
-  static const transactionTitle = 'Signature';
-  static const transactionMessage = 'Your signature is needed';
+  static const confirmSignTitle = 'Signature';
+  static const confirmTransactionTitle = 'Transaction';
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
   static const transactionComplete = 'Transaction Complete';
@@ -249,6 +247,7 @@ class Strings {
   static const transactionDenomHash = 'Hash';
   static const transactionFieldPlatform = 'Platform';
   static const transactionFieldFee = 'Est. Gas Fee';
+  static const transactionFieldMessage = 'Message';
   static const transactionFieldMessageType = 'Msg. Type';
   static const transactionFieldTrue = 'Yes';
   static const transactionFieldFalse = 'No';

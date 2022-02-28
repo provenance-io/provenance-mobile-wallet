@@ -1,6 +1,7 @@
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
-import 'package:provenance_wallet/services/wallet_connect_transaction_request.dart';
+import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
@@ -9,11 +10,20 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionMessageDefault extends StatefulWidget {
   const TransactionMessageDefault({
-    required this.request,
+    required this.requestId,
+    required this.clientDetails,
+    this.message,
+    this.data,
+    this.gasEstimate,
     Key? key,
   }) : super(key: key);
 
-  final WalletConnectTransactionRequest request;
+  final String requestId;
+  final RemoteClientDetails clientDetails;
+  final String? message;
+
+  final Map<String, dynamic>? data;
+  final GasEstimate? gasEstimate;
 
   @override
   State<TransactionMessageDefault> createState() =>
@@ -37,18 +47,37 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
   var slivers = <Widget>[];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _buildSlivers();
+  }
+
+  @override
   void didUpdateWidget(covariant TransactionMessageDefault oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    _buildSlivers();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: slivers,
+    );
+  }
+
+  void _buildSlivers() {
+    final gasEstimate = widget.gasEstimate;
+    final message = widget.message;
+    final data = widget.data;
+
     slivers = <Widget>[];
 
-    final group = _processor.findFields(widget.request.details.message);
-
     final mainRows = <TableRow>[];
-    final groupSlivers = <Widget>[];
 
-    final platformName = widget.request.clientDetails.name;
-    final platformHost = widget.request.clientDetails.url?.host;
+    final platformName = widget.clientDetails.name;
+    final platformHost = widget.clientDetails.url?.host;
 
     mainRows.add(
       createFieldTableRow(
@@ -57,46 +86,47 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
       ),
     );
 
-    final msgType = widget.request.details.message.info_.qualifiedMessageName;
-    mainRows.add(
-      createFieldTableRow(
-        Strings.transactionFieldMessageType,
-        msgType,
-      ),
-    );
+    if (message != null) {
+      mainRows.add(
+        createFieldTableRow(Strings.transactionFieldMessage, message),
+      );
+    }
 
-    final fee = widget.request.details.gasEstimate.fees / nHashPerHash;
-    mainRows.add(
-      createFieldTableRow(
-        Strings.transactionFieldFee,
-        '$fee ${Strings.transactionDenomHash}',
-      ),
-    );
+    if (gasEstimate != null) {
+      final fee = gasEstimate.fees / nHashPerHash;
+      mainRows.add(
+        createFieldTableRow(
+          Strings.transactionFieldFee,
+          '$fee ${Strings.transactionDenomHash}',
+        ),
+      );
+    }
 
-    for (final field in group.fields) {
-      if (field is MessageFieldGroup) {
-        final rows = field.fields
-            .whereType<MessageField>()
-            .map((e) => createMessageFieldRow(e))
-            .toList();
-        groupSlivers.add(createFieldGroupSliver(
-          context,
-          rows,
-          field.key.name.capitalize(),
-        ));
-      } else if (field is MessageField) {
-        mainRows.add(createMessageFieldRow(field));
+    final groupSlivers = <Widget>[];
+
+    if (data != null) {
+      final group = _processor.findFields(data);
+
+      for (final field in group.fields) {
+        if (field is MessageFieldGroup) {
+          final rows = field.fields
+              .whereType<MessageField>()
+              .map((e) => createMessageFieldRow(e))
+              .toList();
+          groupSlivers.add(
+            createFieldGroupSliver(
+              context,
+              rows,
+              field.key.name.capitalize(),
+            ),
+          );
+        } else if (field is MessageField) {
+          mainRows.add(createMessageFieldRow(field));
+        }
       }
     }
 
     slivers.add(createFieldGroupSliver(context, mainRows));
     slivers.addAll(groupSlivers);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: slivers,
-    );
   }
 }

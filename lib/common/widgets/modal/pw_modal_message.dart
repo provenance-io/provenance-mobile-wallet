@@ -41,6 +41,7 @@ class PwModalMessage extends StatelessWidget {
                       title,
                       style: PwTextStyle.headline2,
                       color: PwColor.neutralNeutral,
+                      textAlign: TextAlign.center,
                     ),
                     if (message != null) VerticalSpacer.large(),
                     if (message != null)
@@ -48,6 +49,7 @@ class PwModalMessage extends StatelessWidget {
                         message!,
                         style: PwTextStyle.body,
                         color: PwColor.neutralNeutral,
+                        textAlign: TextAlign.center,
                       ),
                     if (icon != null) VerticalSpacer.xxLarge(),
                     if (icon != null) icon!,

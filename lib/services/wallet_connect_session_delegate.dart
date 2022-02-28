@@ -105,7 +105,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       id: id,
       message: utf8.decode(msg),
       description: description,
-      cost: "",
+      address: address,
     );
 
     _signRequest.add(signRequest);
