@@ -28,6 +28,10 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 30
 
+    lintOptions { 
+        checkReleaseBuilds false
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -45,6 +49,21 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+        }
+    }
+
+    flavorDimensions "app"
+    
+    productFlavors {
+        prod {
+            dimension "app"
+            resValue "string", "app_name", "Provenance Wallet"
+        }
+
+        dev {
+            dimension "app"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "Prov Wallet Dev"
         }
     }
 }
