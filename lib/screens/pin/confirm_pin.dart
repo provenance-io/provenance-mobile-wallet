@@ -74,6 +74,7 @@ class ConfirmPinState extends State<ConfirmPin> {
     Function eq = const ListEquality().equals;
     if (!eq(inputCodes, widget.code)) {
       await showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
           error: Strings.yourPinDoesNotMatchPleaseTryAgain,

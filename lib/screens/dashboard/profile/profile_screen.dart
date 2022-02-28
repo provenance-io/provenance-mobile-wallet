@@ -294,7 +294,7 @@ class _ItemCount extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Theme.of(context).colorScheme.midGrey,
+        color: Theme.of(context).colorScheme.secondary250,
       ),
       padding: EdgeInsets.all(6),
       child: PwText(

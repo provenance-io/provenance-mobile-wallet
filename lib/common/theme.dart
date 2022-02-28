@@ -28,9 +28,10 @@ class ProvenanceThemeData {
   static const Color _primary400 = Color(0xFF70A9FF);
 
   /// Secondary
-  static const Color _secondary400 = Color(0xFF03B5B2);
-  static const Color _secondary650 = Color(0xFF01504F);
   static const Color _secondary700 = Color(0xFF013C3B);
+  static const Color _secondary650 = Color(0xFF01504F);
+  static const Color _secondary400 = Color(0xFF03B5B2);
+  static const Color _secondary250 = Color(0xFF22FCF8);
 
   static const Color _provenanceLogo = Color(0xFF3F80F3);
 
@@ -130,6 +131,12 @@ class ProvenanceThemeData {
     letterSpacing: 12 * 0.04,
     height: 19.2 / 12,
   );
+  static const TextStyle _bodyXSmallBold = TextStyle(
+    fontFamily: 'GothicA1',
+    fontSize: 10.24,
+    fontWeight: FontWeight.w700,
+    height: 16 / 10.24,
+  );
   static const TextStyle _subhead = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
@@ -228,15 +235,6 @@ class ProvenanceThemeData {
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get light => ProvenanceThemeData._error;
-  Color get lightGrey => ProvenanceThemeData._error;
-  Color get midGrey => ProvenanceThemeData._error;
-  Color get black => ProvenanceThemeData._error;
-  Color get positive => ProvenanceThemeData._error;
-  Color get darkGrey => ProvenanceThemeData._error;
-  Color get otherBackground => ProvenanceThemeData._error;
-
-// Provenance themes
   Color get neutral800 => ProvenanceThemeData._neutral800;
   Color get neutral750 => ProvenanceThemeData._neutral750;
   Color get neutral700 => ProvenanceThemeData._neutral700;
@@ -258,23 +256,14 @@ extension CustomColorScheme on ColorScheme {
 
   Color get indicatorActive => ProvenanceThemeData._indicatorActive;
   Color get indicatorInActive => ProvenanceThemeData._indicatorInActive;
-  Color get secondary400 => ProvenanceThemeData._secondary400;
-  Color get secondary650 => ProvenanceThemeData._secondary650;
   Color get secondary700 => ProvenanceThemeData._secondary700;
+  Color get secondary650 => ProvenanceThemeData._secondary650;
+  Color get secondary400 => ProvenanceThemeData._secondary400;
+  Color get secondary250 => ProvenanceThemeData._secondary250;
   Color get error => ProvenanceThemeData._error;
 }
 
 extension CustomTextTheme on TextTheme {
-  TextStyle get mediumBold => ProvenanceThemeData._body;
-  TextStyle get medium => ProvenanceThemeData._body;
-  TextStyle get smallBold => ProvenanceThemeData._body;
-  TextStyle get small => ProvenanceThemeData._body;
-  TextStyle get extraSmallBold => ProvenanceThemeData._body;
-  TextStyle get extraSmall => ProvenanceThemeData._body;
-  TextStyle get headline7 => ProvenanceThemeData._body;
-  TextStyle get extraLarge => ProvenanceThemeData._body;
-
-// Provenance themes
   TextStyle get pWMedium => ProvenanceThemeData._medium;
   TextStyle get large =>
       ProvenanceThemeData._logo.copyWith(fontWeight: FontWeight.w600);
@@ -289,4 +278,5 @@ extension CustomTextTheme on TextTheme {
   TextStyle get display2 => ProvenanceThemeData._display2;
   TextStyle get footnote => ProvenanceThemeData._footnote;
   TextStyle get title => ProvenanceThemeData._title;
+  TextStyle get extraSmallBold => ProvenanceThemeData._bodyXSmallBold;
 }
