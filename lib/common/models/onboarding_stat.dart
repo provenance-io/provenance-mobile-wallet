@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/network/dtos/stat_dto.dart';
+import 'package:provenance_wallet/services/stat_service/dtos/stat_dto.dart';
 
 class OnboardingStat {
   OnboardingStat({required StatDto dto})
