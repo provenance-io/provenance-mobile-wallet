@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/enable_face_id.dart';
+import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -74,13 +74,14 @@ class ConfirmPinState extends State<ConfirmPin> {
     Function eq = const ListEquality().equals;
     if (!eq(inputCodes, widget.code)) {
       await showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
           error: Strings.yourPinDoesNotMatchPleaseTryAgain,
         ),
       );
     } else {
-      Navigator.of(context).push(EnableFaceId(
+      Navigator.of(context).push(EnableFaceIdScreen(
         accountName: widget.accountName,
         code: widget.code,
         words: widget.words,

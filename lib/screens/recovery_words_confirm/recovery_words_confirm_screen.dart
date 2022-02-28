@@ -140,7 +140,7 @@ class RecoveryWordsConfirmScreenState
                       child: PwButton(
                         child: PwText(
                           Strings.continueName,
-                          style: PwTextStyle.mBold,
+                          style: PwTextStyle.bodyBold,
                           color: PwColor.neutralNeutral,
                         ),
                         onPressed: () {

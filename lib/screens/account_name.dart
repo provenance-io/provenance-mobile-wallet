@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -29,6 +30,10 @@ class AccountName extends HookWidget {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
+        leadingIcon: flowType == WalletAddImportType.dashboardAdd ||
+                flowType == WalletAddImportType.dashboardRecover
+            ? PwIcons.back
+            : null,
       ),
       body: Form(
         key: _formKey,
@@ -74,7 +79,7 @@ class AccountName extends HookWidget {
                   right: 20,
                   bottom: Spacing.small,
                 ),
-                child: _TextFormField(
+                child: PwTextFormField(
                   label: Strings.accountName,
                   autofocus: true,
                   validator: (value) {
@@ -91,7 +96,7 @@ class AccountName extends HookWidget {
                 child: PwButton(
                   child: PwText(
                     Strings.continueName,
-                    style: PwTextStyle.mBold,
+                    style: PwTextStyle.bodyBold,
                     color: PwColor.neutralNeutral,
                   ),
                   onPressed: () {
@@ -127,75 +132,6 @@ class AccountName extends HookWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _TextFormField extends StatelessWidget {
-  const _TextFormField({
-    Key? key,
-    required this.label,
-    this.keyboardType,
-    this.onChanged,
-    this.validator,
-    this.controller,
-    this.autofocus = false,
-  }) : super(key: key);
-
-  final String label;
-  final TextInputType? keyboardType;
-  final ValueChanged<String>? onChanged;
-  final FormFieldValidator<String>? validator;
-  final TextEditingController? controller;
-  final bool autofocus;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PwText(
-          label,
-          color: PwColor.neutralNeutral,
-        ),
-        VerticalSpacer.small(),
-        Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.neutral550,
-                spreadRadius: 6,
-              ),
-            ],
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: TextFormField(
-            autofocus: autofocus,
-            style: theme.textTheme.body
-                .copyWith(color: theme.colorScheme.neutralNeutral),
-            keyboardType: keyboardType,
-            autocorrect: false,
-            controller: controller,
-            onChanged: onChanged,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validator,
-            decoration: InputDecoration(
-              hintText: label,
-              hintStyle: theme.textTheme.body
-                  .copyWith(color: theme.colorScheme.neutral250),
-              fillColor: theme.colorScheme.neutral750,
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: theme.colorScheme.neutral250,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
