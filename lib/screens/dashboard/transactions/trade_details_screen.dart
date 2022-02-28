@@ -54,7 +54,7 @@ class TradeDetailsScreen extends StatelessWidget {
               endChild: Row(
                 children: [
                   PwText(
-                    transaction.id.abbreviateAddress(),
+                    transaction.hash.abbreviateAddress(),
                     style: PwTextStyle.body,
                   ),
                   HorizontalSpacer.large(),
@@ -62,7 +62,7 @@ class TradeDetailsScreen extends StatelessWidget {
                     onTap: () async {
                       // TODO: Change this url based on flavor.
                       final url =
-                          'https://explorer.provenance.io/tx/${transaction.id}';
+                          'https://explorer.provenance.io/tx/${transaction.hash}';
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
@@ -87,18 +87,17 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             TradeDetailsItem(
               title: Strings.tradeDetailsFromAddress,
-              endChild: // FIXME: Still don't know if transaction.address is to or from.
-                  Row(
+              endChild: Row(
                 children: [
                   PwText(
-                    transaction.address.abbreviateAddress(),
+                    transaction.senderAddress.abbreviateAddress(),
                     style: PwTextStyle.body,
                   ),
                   HorizontalSpacer.large(),
                   GestureDetector(
                     onTap: () {
                       Clipboard.setData(
-                        ClipboardData(text: transaction.address),
+                        ClipboardData(text: transaction.senderAddress),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: PwText(Strings.addressCopied)),
@@ -122,24 +121,21 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             TradeDetailsItem(
               title: Strings.tradeDetailsToAddress,
-              endChild: // FIXME: Still don't know if transaction.address is to or from.
-                  StreamBuilder<WalletDetails?>(
+              endChild: StreamBuilder<WalletDetails?>(
                 initialData: bloc.selectedWallet.value,
                 stream: bloc.selectedWallet,
                 builder: (context, snapshot) {
-                  final walletAddress = snapshot.data?.address ?? "";
-
                   return Row(
                     children: [
                       PwText(
-                        walletAddress.abbreviateAddress(),
+                        transaction.recipientAddress.abbreviateAddress(),
                         style: PwTextStyle.body,
                       ),
                       HorizontalSpacer.large(),
                       GestureDetector(
                         onTap: () {
                           Clipboard.setData(
-                            ClipboardData(text: walletAddress),
+                            ClipboardData(text: transaction.recipientAddress),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: PwText(Strings.addressCopied)),
@@ -166,7 +162,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsOrderType,
               endChild: PwText(
-                transaction.type,
+                transaction.denom,
                 style: PwTextStyle.body,
               ),
             ),
@@ -175,9 +171,8 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             TradeDetailsItem(
               title: Strings.tradeDetailsAmount,
-              endChild: // FIXME: Need amount.
-                  PwText(
-                "20.000000000 Hash",
+              endChild: PwText(
+                transaction.amount.toString(),
                 style: PwTextStyle.body,
               ),
             ),
@@ -209,7 +204,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: PwText(
-                transaction.feeAmount,
+                transaction.txFee.toString(),
                 style: PwTextStyle.body,
               ),
             ),
@@ -219,7 +214,7 @@ class TradeDetailsScreen extends StatelessWidget {
             TradeDetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
-                transaction.time,
+                transaction.timestamp.toIso8601String(),
                 style: PwTextStyle.body,
               ),
             ),
@@ -228,9 +223,8 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             TradeDetailsItem(
               title: Strings.tradeDetailsBlock,
-              endChild: // FIXME: Need 'Block'.
-                  PwText(
-                "4831429",
+              endChild: PwText(
+                transaction.block.toString(),
                 style: PwTextStyle.body,
               ),
             ),
