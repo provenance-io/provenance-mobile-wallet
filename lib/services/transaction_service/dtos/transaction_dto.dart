@@ -5,22 +5,26 @@ part 'transaction_dto.g.dart';
 @JsonSerializable()
 class TransactionDto {
   TransactionDto({
-    this.address,
-    this.feeAmount,
-    this.id,
-    this.signer,
+    this.amount,
+    this.block,
+    this.denom,
+    this.hash,
+    this.recipientAddress,
+    this.senderAddress,
     this.status,
-    this.time,
-    this.type,
+    this.timestamp,
+    this.txFee,
   });
 
-  final String? address;
-  final String? feeAmount;
-  final String? id;
-  final String? signer;
+  final int? amount;
+  final int? block;
+  final String? denom;
+  final String? hash;
+  final String? recipientAddress;
+  final String? senderAddress;
   final String? status;
-  final String? time;
-  final String? type;
+  final DateTime? timestamp;
+  final int? txFee;
 
   // ignore: member-ordering
   factory TransactionDto.fromJson(Map<String, dynamic> json) =>

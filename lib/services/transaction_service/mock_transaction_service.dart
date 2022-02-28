@@ -25,27 +25,23 @@ class MockTransactionService extends TransactionService {
 
   Transaction _getTransaction() {
     var faker = Faker();
-    var amount = faker.randomGenerator.decimal().toStringAsFixed(2);
 
     return Transaction.fake(
-      address: faker.randomGenerator
+      amount: faker.randomGenerator.integer(100000),
+      block: faker.randomGenerator.integer(100000),
+      denom: "USD",
+      hash: faker.randomGenerator
           .fromPatternToHex(['#########################################']),
-      feeAmount: '$amount USD',
-      id: faker.randomGenerator.integer(100000).toString(),
-      signer: faker.person.name(),
+      recipientAddress: faker.randomGenerator
+          .fromPatternToHex(['#########################################']),
+      senderAddress: faker.randomGenerator
+          .fromPatternToHex(['#########################################']),
       status: faker.randomGenerator.element([
         "Cancelled",
         "Completed",
       ]),
-      time: faker.date.time(),
-      type: faker.randomGenerator.element(
-        [
-          "Buy",
-          "Purchase",
-          "Deposit",
-          "Withdraw",
-        ],
-      ),
+      timestamp: DateTime.now(),
+      txFee: faker.randomGenerator.integer(100000),
     );
   }
 }
