@@ -1,7 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
+import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
@@ -16,32 +14,20 @@ const String contentTypeMultiPart = 'multipart/form-data';
 
 typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
-abstract class FigureSerializable {
-  fromJson();
-}
-
-
-
-class BaseService {
-  factory BaseService() => _singleton;
-
-  BaseService._internal() {
+class HttpClient {
+  HttpClient._internal() {
     _initDio();
   }
 
-  static final BaseService _singleton = BaseService._internal();
-
-  static String _impersonateId = '';
-  static String _organizationUuid = '';
-  static bool _isProd = false;
+  String _impersonateId = '';
+  String _organizationUuid = '';
+  bool _isProd = false;
   String _jwtToken = '';
-  static late Dio _dio;
+  late Dio _dio;
 
-  static SessionTimeoutCallback? onTimeout;
+  SessionTimeoutCallback? onTimeout;
 
-  static BaseService get instance => _singleton;
-
-  static bool get hasJwt => _singleton.jwtToken.isNotEmpty;
+  bool get hasJwt => jwtToken.isNotEmpty;
 
   String get jwtToken => _jwtToken;
 
