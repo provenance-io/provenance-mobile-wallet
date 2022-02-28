@@ -17,7 +17,7 @@ const String contentTypeMultiPart = 'multipart/form-data';
 typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
 class HttpClient {
-  HttpClient._internal() {
+  HttpClient() {
     _initDio();
   }
 
