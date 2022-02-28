@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
@@ -15,6 +17,7 @@ import 'package:provenance_wallet/services/wallet_connection_service_status.dart
 import 'package:provenance_wallet/services/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:get_it/get_it.dart';
 
@@ -62,13 +65,34 @@ class DashboardBloc extends Disposable {
   Stream<String> get error => _error;
   Stream<WalletConnectTxResponse> get response => _response;
 
-  // TODO: Catch and display errors?
-  void load() async {
+  void load(BuildContext context) async {
     var details = await get<WalletService>().getSelectedWallet();
     _selectedWallet.value = details;
-    _assetList.value = (await _assetService.getAssets(details?.address ?? ""));
-    _transactionList.value =
-        (await _transactionService.getTransactions(details?.address ?? ""));
+    var errorCount = 0;
+    try {
+      _assetList.value =
+          (await _assetService.getAssets(details?.address ?? ""));
+    } catch (e) {
+      errorCount++;
+    }
+
+    try {
+      _transactionList.value =
+          (await _transactionService.getTransactions(details?.address ?? ""));
+    } catch (e) {
+      errorCount++;
+      if (errorCount == 2) {
+        showDialog(
+          useSafeArea: true,
+          context: context,
+          builder: (context) => ErrorDialog(
+            title: Strings.serviceErrorTitle,
+            error: Strings.theSystemIsDown,
+            buttonText: Strings.continueName,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> connectWallet(String addressData) async {
