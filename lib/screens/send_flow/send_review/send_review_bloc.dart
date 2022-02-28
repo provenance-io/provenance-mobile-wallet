@@ -24,14 +24,16 @@ class SendReviewBlocState {
 
   String get total {
     final map = <String, SendAsset>{};
-    map[sendingAsset.denom] = sendingAsset;
+    map[sendingAsset.displayDenom] = sendingAsset;
 
     for (var fee in fee.fees) {
-      var current = map[fee.denom];
-      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+      var current = map[fee.displayDenom];
+      map[fee.displayDenom] = current?.copyWith(amount: fee.amount) ?? fee;
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.entries
+        .map((entry) => "${entry.value.displayAmount} ${entry.key}")
+        .join(" + ");
   }
 }
 

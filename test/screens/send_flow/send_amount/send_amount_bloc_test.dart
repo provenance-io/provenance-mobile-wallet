@@ -6,6 +6,8 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/services/models/price.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import './send_amount_bloc_test.mocks.dart';
@@ -21,15 +23,24 @@ Matcher throwsExceptionWithText(String msg) {
 
 const feeAmount = GasEstimate(20000000);
 
-@GenerateMocks([SendAmountBlocNavigator, WalletService])
+@GenerateMocks([
+  SendAmountBlocNavigator,
+  WalletService,
+  PriceService,
+])
 main() {
   const receivingAddress = "ReceivingAdress";
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockWalletService? mockWalletService;
+  MockPriceService? mockPriceService;
 
   setUp(() {
+    mockPriceService = MockPriceService();
+    when(mockPriceService!.getAssetPrices(any))
+        .thenAnswer((realInvocation) => Future.value(<Price>[]));
+
     mockWalletService = MockWalletService();
     when(mockWalletService!.estimate(any, any))
         .thenAnswer((_) => Future.value(feeAmount));
@@ -42,6 +53,7 @@ main() {
       walletDetails,
       receivingAddress,
       hashAsset,
+      mockPriceService!,
       mockNavigator!,
     );
   });
