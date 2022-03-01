@@ -58,6 +58,23 @@ class MessageFieldProcessor {
           ),
         );
       }
+    } else if (obj is int) {
+      var converted = _convert(key, obj);
+      if (converted is String) {
+        parent.fields.add(
+          MessageField(
+            key,
+            converted,
+          ),
+        );
+      } else {
+        parent.fields.add(
+          MessageField(
+            key,
+            obj.toString(),
+          ),
+        );
+      }
     } else if (obj is bool) {
       final converted = _convert(key, obj);
       if (converted is String) {

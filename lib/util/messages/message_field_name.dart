@@ -20,4 +20,7 @@ class FieldName {
   static const gasUsed = 'gasUsed';
   static const txID = 'txID';
   static const block = 'block';
+  static const code = 'code';
+  static const codespace = 'codespace';
+  static const rawLog = 'rawLog';
 }

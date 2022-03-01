@@ -158,6 +158,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
               ) {
                 return Container(
                   margin: EdgeInsets.only(
+                    top: Spacing.large,
                     bottom: Spacing.xxLarge,
                   ),
                   child: PwText(

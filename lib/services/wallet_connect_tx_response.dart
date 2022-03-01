@@ -11,6 +11,7 @@ class WalletConnectTxResponse {
     this.txHash,
     this.fees,
     this.tx,
+    this.codespace,
   });
 
   final int code;
@@ -22,4 +23,5 @@ class WalletConnectTxResponse {
   final String? txHash;
   final int? fees;
   final Tx? tx;
+  final String? codespace;
 }

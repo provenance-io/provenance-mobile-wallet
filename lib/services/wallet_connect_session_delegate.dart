@@ -177,13 +177,14 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         _onResponse.add(
           WalletConnectTxResponse(
             code: txResponse.code,
-            requestId: id,
+            requestId: sendRequest.id,
             message: txResponse.rawLog,
             gasWanted: txResponse.gasWanted.toInt(),
             gasUsed: txResponse.gasUsed.toInt(),
             height: txResponse.height.toInt(),
             txHash: txResponse.txhash,
             fees: gasEstimate!.fees,
+            codespace: txResponse.codespace,
           ),
         );
       }

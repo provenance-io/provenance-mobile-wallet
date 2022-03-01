@@ -232,6 +232,7 @@ class Strings {
   static String transactionErrorUnsupportedMessage(String messageName) =>
       'Unsupported message type: $messageName';
   static const transactionSuccessTitle = 'Success';
+  static const transactionErrorTitle = 'Error';
 
   // Transaction Confirmation
   static const confirmSignTitle = 'Signature';

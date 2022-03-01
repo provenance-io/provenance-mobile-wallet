@@ -1,4 +1,3 @@
-import 'package:grpc/grpc.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -263,46 +262,63 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _onResponse(WalletConnectTxResponse response) {
     final clientDetails = _bloc.clientDetails.value;
-    if (response.code == StatusCode.ok && clientDetails != null) {
-      final data = <String, dynamic>{};
-      if (response.tx?.body.messages.isNotEmpty ?? false) {
-        data[MessageFieldName.type] =
-            response.tx?.body.messages.first.info_.qualifiedMessageName;
-      }
+    if (clientDetails == null) {
+      return;
+    }
 
+    const statusCodeOk = 0;
+
+    final title = response.code == statusCodeOk
+        ? Strings.transactionSuccessTitle
+        : Strings.transactionErrorTitle;
+
+    final data = <String, dynamic>{};
+    if (response.tx?.body.messages.isNotEmpty ?? false) {
+      data[MessageFieldName.type] =
+          response.tx?.body.messages.first.info_.qualifiedMessageName;
+    }
+
+    data.addAll(
+      {
+        FieldName.gasWanted: response.gasWanted.toString(),
+        FieldName.gasUsed: response.gasUsed.toString(),
+        FieldName.txID: response.txHash,
+        FieldName.block: response.height?.toString(),
+      },
+    );
+
+    if (response.code != statusCodeOk) {
       data.addAll(
         {
           FieldName.gasWanted: response.gasWanted.toString(),
           FieldName.gasUsed: response.gasUsed.toString(),
           FieldName.txID: response.txHash,
           FieldName.block: response.height?.toString(),
+          FieldName.code: response.code,
+          FieldName.codespace: response.codespace,
+          FieldName.rawLog: response.message,
         },
-      );
-
-      showGeneralDialog(
-        context: (context),
-        pageBuilder: (
-          context,
-          animation,
-          secondaryAnimation,
-        ) {
-          return TransactionConfirmScreen(
-            kind: TransactionConfirmKind.notify,
-            title: Strings.transactionSuccessTitle,
-            requestId: response.requestId,
-            clientDetails: clientDetails,
-            data: [
-              data,
-            ],
-            fees: response.fees,
-          );
-        },
-      );
-    } else {
-      PwDialog.showError(
-        context,
-        message: response.message ?? '',
       );
     }
+
+    showGeneralDialog(
+      context: (context),
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return TransactionConfirmScreen(
+          kind: TransactionConfirmKind.notify,
+          title: title,
+          requestId: response.requestId,
+          clientDetails: clientDetails,
+          data: [
+            data,
+          ],
+          fees: response.fees,
+        );
+      },
+    );
   }
 }
