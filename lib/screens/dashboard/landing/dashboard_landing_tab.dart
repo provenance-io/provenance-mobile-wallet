@@ -66,7 +66,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     }
                   },
                   child: PwIcon(
-                    PwIcons.qr,
+                    connected ? PwIcons.linked : PwIcons.qr,
                     color: Theme.of(context).colorScheme.neutralNeutral,
                     size: 48.0,
                   ),
