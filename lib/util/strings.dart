@@ -319,4 +319,11 @@ class Strings {
   static const serviceErrorTitle = 'SERVICE ERROR';
   static const theSystemIsDown =
       'Unfortunately our services are down at the moment. Please try again later.';
+
+  // ConnectionDetails
+  static const connectionDetails = "Connection Details";
+  static const unknown = "Unknown";
+  static const platform = "Platform";
+  static const dlob = "dLOB";
+  static const url = "URL";
 }
