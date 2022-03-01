@@ -33,9 +33,18 @@ class WalletPortfolio extends StatelessWidget {
             initialData: assetStream.value,
             stream: assetStream,
             builder: (context, snapshot) {
+              double portfolioValue = 0;
+
+              if (snapshot.data != null || (snapshot.data ?? []).isNotEmpty) {
+                portfolioValue = snapshot.data
+                        ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
+                        .reduce((value, element) => value + element) ??
+                    0;
+              }
+
               return PwText(
                 // FIXME: How do we get portfolio value?
-                '\$0',
+                portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
               );
