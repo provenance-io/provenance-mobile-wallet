@@ -115,8 +115,7 @@ class ProvenanceThemeData {
   static const TextStyle _body = TextStyle(
     fontFamily: 'GothicA1',
     fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 22.4 / 14,
+    fontWeight: FontWeight.w400,
   );
   static const TextStyle _bodyBold = TextStyle(
     fontFamily: 'GothicA1',
