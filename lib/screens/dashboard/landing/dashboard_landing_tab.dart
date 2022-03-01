@@ -76,7 +76,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
         ],
         centerTitle: false,
-        title: Row(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StreamBuilder<WalletDetails?>(
@@ -88,6 +88,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 return PwText(
                   walletName,
                   style: PwTextStyle.subhead,
+                  overflow: TextOverflow.fade,
                 );
               },
             ),
@@ -98,7 +99,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 final walletAddress = snapshot.data?.address ?? "";
 
                 return PwText(
-                  " (${walletAddress.abbreviateAddress()})",
+                  "(${walletAddress.abbreviateAddress()})",
                   style: PwTextStyle.body,
                 );
               },

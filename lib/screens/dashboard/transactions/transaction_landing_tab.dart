@@ -118,7 +118,6 @@ class TransactionLandingTab extends StatelessWidget {
                                 SizedBox(
                                   width: Spacing.largeX3,
                                   height: Spacing.largeX3,
-                                  // FIXME: Transactions have no 'display' property atm.
                                   child: PwIcon(
                                     PwIcons.hashLogo,
                                     color: Theme.of(context)
@@ -132,7 +131,6 @@ class TransactionLandingTab extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     PwText(
-                                      // FIXME: Transactions have no 'display' property atm.
                                       Strings.dropDownHashAsset.toUpperCase(),
                                       style: PwTextStyle.bodyBold,
                                     ),
@@ -140,7 +138,7 @@ class TransactionLandingTab extends StatelessWidget {
                                     Row(
                                       children: [
                                         PwText(
-                                          item.type,
+                                          item.denom,
                                           color: PwColor.neutral200,
                                           style: PwTextStyle.footnote,
                                         ),
@@ -151,7 +149,7 @@ class TransactionLandingTab extends StatelessWidget {
                                         ),
                                         PwText(
                                           // FIXME: Format the date to be 'Mmm dd'.
-                                          item.time,
+                                          item.timestamp.toIso8601String(),
                                           color: PwColor.neutral200,
                                           style: PwTextStyle.footnote,
                                         ),

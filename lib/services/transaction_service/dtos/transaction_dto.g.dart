@@ -8,22 +8,28 @@ part of 'transaction_dto.dart';
 
 TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
     TransactionDto(
-      address: json['address'] as String?,
-      feeAmount: json['feeAmount'] as String?,
-      id: json['id'] as String?,
-      signer: json['signer'] as String?,
+      amount: json['amount'] as int?,
+      block: json['block'] as int?,
+      denom: json['denom'] as String?,
+      hash: json['hash'] as String?,
+      recipientAddress: json['recipientAddress'] as String?,
+      senderAddress: json['senderAddress'] as String?,
       status: json['status'] as String?,
-      time: json['time'] as String?,
-      type: json['type'] as String?,
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+      txFee: json['txFee'] as int?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
     <String, dynamic>{
-      'address': instance.address,
-      'feeAmount': instance.feeAmount,
-      'id': instance.id,
-      'signer': instance.signer,
+      'amount': instance.amount,
+      'block': instance.block,
+      'denom': instance.denom,
+      'hash': instance.hash,
+      'recipientAddress': instance.recipientAddress,
+      'senderAddress': instance.senderAddress,
       'status': instance.status,
-      'time': instance.time,
-      'type': instance.type,
+      'timestamp': instance.timestamp?.toIso8601String(),
+      'txFee': instance.txFee,
     };
