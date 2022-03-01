@@ -71,6 +71,7 @@ class PwButton extends StatelessWidget {
     required this.onPressed,
     this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
+    this.minimumHeight = 50,
   }) : super(key: key);
 
   const PwButton.alternate({
@@ -85,6 +86,7 @@ class PwButton extends StatelessWidget {
           enabled: enabled,
           onPressed: onPressed,
           minimumWidth: minimumWidth,
+          minimumHeight: 50,
           showAlternate: true,
         );
 
@@ -102,6 +104,9 @@ class PwButton extends StatelessWidget {
 
   /// Useful when working with Flexible/Expandable widgets
   final double minimumWidth;
+
+  /// Useful when working with Flexible/Expandable widgets
+  final double minimumHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +137,7 @@ class PwButton extends StatelessWidget {
       minimumSize: MaterialStateProperty.all(
         Size(
           minimumWidth,
-          50,
+          minimumHeight,
         ),
       ),
     );

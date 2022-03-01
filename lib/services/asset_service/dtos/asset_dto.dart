@@ -11,6 +11,7 @@ class AssetDto {
     required this.description,
     required this.exponent,
     required this.displayAmount,
+    required this.usdPrice,
   });
 
   final String? denom;
@@ -19,6 +20,7 @@ class AssetDto {
   final String? description;
   final int? exponent;
   final String? displayAmount;
+  final double? usdPrice;
 
   // ignore: member-ordering
   factory AssetDto.fromJson(Map<String, dynamic> json) =>

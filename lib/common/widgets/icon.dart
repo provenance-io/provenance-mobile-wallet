@@ -14,20 +14,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PwIcons {
   static const String back = 'back';
   static const String close = 'close';
-  static const String scanCode = '2d_code';
   static const String staking = 'staking';
-  static const String wallet = 'wallet';
-  static const String faceScan = 'face_scan';
   static const String hashLogo = 'hash_logo';
   static const String copy = 'copy';
-  static const String walletConnect = 'wallet_connect';
   static const String userAccount = 'user_account';
   static const String downArrow = 'down_arrow';
   static const String upArrow = 'up_arrow';
   static const String caret = 'caret';
-  static const String dollarIcon = 'dollar_icon';
-  static const String menuIcon = 'menu_icon';
-  static const String plus = 'plus';
   static const String remove = 'remove';
   static const String chevron = 'chevron';
   static const String newWindow = "new_window";
@@ -44,21 +37,32 @@ class PwIcon extends StatelessWidget {
     this.icon, {
     Key? key,
     this.color,
-    this.size,
+    double? size,
+  })  : width = size,
+        height = size,
+        super(key: key);
+
+  const PwIcon.only(
+    this.icon, {
+    Key? key,
+    this.color,
+    this.width,
+    this.height,
   }) : super(key: key);
 
   final String icon;
 
   final Color? color;
 
-  final double? size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/$icon.svg',
-      width: size,
-      height: size,
+      width: width,
+      height: height,
       color: color ?? IconTheme.of(context).color,
     );
   }

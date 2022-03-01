@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/widgets/icon.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/extensions.dart';
 
 class Asset {
   Asset({required AssetDto dto})
@@ -15,7 +16,8 @@ class Asset {
         display = dto.display!.toUpperCase(),
         displayAmount = dto.displayAmount!,
         description = dto.description!,
-        exponent = dto.exponent!;
+        exponent = dto.exponent!,
+        usdPrice = dto.usdPrice!;
 
   Asset.fake({
     required this.denom,
@@ -24,6 +26,7 @@ class Asset {
     required this.description,
     required this.exponent,
     required this.displayAmount,
+    required this.usdPrice,
   });
 
   final String denom;
@@ -32,6 +35,7 @@ class Asset {
   final String description;
   final int exponent;
   final String displayAmount;
+  final double usdPrice;
 
   String get image {
     switch (display) {
@@ -44,5 +48,9 @@ class Asset {
       default:
         return 'assets/${PwIcons.hashLogo}.svg';
     }
+  }
+
+  String get formattedAmount {
+    return (usdPrice * double.parse(displayAmount)).toCurrency();
   }
 }

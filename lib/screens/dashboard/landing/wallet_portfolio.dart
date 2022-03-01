@@ -33,9 +33,17 @@ class WalletPortfolio extends StatelessWidget {
             initialData: assetStream.value,
             stream: assetStream,
             builder: (context, snapshot) {
+              double portfolioValue = 0;
+
+              if (snapshot.data != null || (snapshot.data ?? []).isNotEmpty) {
+                portfolioValue = snapshot.data
+                        ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
+                        .reduce((value, element) => value + element) ??
+                    0;
+              }
+
               return PwText(
-                // FIXME: How do we get portfolio value?
-                '\$0',
+                portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
               );
@@ -46,11 +54,13 @@ class WalletPortfolio extends StatelessWidget {
             children: [
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.upArrow,
-                      size: 24,
+                      width: 14,
+                      height: 16,
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
@@ -73,11 +83,13 @@ class WalletPortfolio extends StatelessWidget {
               HorizontalSpacer.small(),
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.downArrow,
-                      size: 24,
+                      width: 14,
+                      height: 16,
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
