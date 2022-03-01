@@ -145,7 +145,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           mainAxisSize: MainAxisSize.min,
           children: [
             WalletPortfolio(),
-            VerticalSpacer.medium(),
+            VerticalSpacer.xxLarge(),
             StreamBuilder<List<Asset>>(
               initialData: bloc.assetList.value,
               stream: bloc.assetList,
@@ -212,58 +212,65 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     itemBuilder: (context, index) {
                       final item = assets[index];
 
-                      return GestureDetector(
-                        onTap: () {
-                          // TODO: Load Asset
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.zero,
-                          child: Container(
-                            padding: EdgeInsets.only(
-                              right: 16,
-                              left: 16,
-                              top: 20,
-                              bottom: 20,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: SvgPicture.asset(
-                                    item.image,
-                                    width: 40,
-                                    height: 40,
-                                  ),
+                      return Column(
+                        children: [
+                          if (index == 0) PwListDivider(),
+                          GestureDetector(
+                            onTap: () {
+                              // TODO: Load Asset
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  right: 16,
+                                  left: 16,
+                                  top: Spacing.xLarge,
+                                  bottom: Spacing.xLarge,
                                 ),
-                                HorizontalSpacer.medium(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    PwText(
-                                      item.display,
-                                      style: PwTextStyle.bodyBold,
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: SvgPicture.asset(
+                                        item.image,
+                                        width: 40,
+                                        height: 40,
+                                      ),
                                     ),
-                                    VerticalSpacer.xSmall(),
-                                    PwText(
-                                      item.displayAmount,
-                                      color: PwColor.neutral200,
-                                      style: PwTextStyle.footnote,
+                                    HorizontalSpacer.medium(),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        PwText(
+                                          item.display,
+                                          style: PwTextStyle.bodyBold,
+                                        ),
+                                        VerticalSpacer.xSmall(),
+                                        PwText(
+                                          item.displayAmount,
+                                          color: PwColor.neutral200,
+                                          style: PwTextStyle.footnote,
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(child: Container()),
+                                    PwIcon(
+                                      PwIcons.caret,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .neutralNeutral,
+                                      size: 12.0,
                                     ),
                                   ],
                                 ),
-                                Expanded(child: Container()),
-                                PwIcon(
-                                  PwIcons.caret,
-                                  color:
-                                      Theme.of(context).colorScheme.neutral550,
-                                  size: 12.0,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       );
                     },
                     separatorBuilder: (context, index) {
