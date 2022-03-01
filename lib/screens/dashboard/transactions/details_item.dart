@@ -2,14 +2,14 @@
 
 import 'package:provenance_wallet/common/pw_design.dart';
 
-class TradeDetailsItem extends StatelessWidget {
-  TradeDetailsItem({
+class DetailsItem extends StatelessWidget {
+  DetailsItem({
     Key? key,
     required this.title,
     required this.endChild,
   }) : super(key: key);
 
-  TradeDetailsItem.fromStrings({
+  DetailsItem.fromStrings({
     Key? key,
     required this.title,
     required String value,
