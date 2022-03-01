@@ -55,11 +55,13 @@ class WalletPortfolio extends StatelessWidget {
             children: [
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.upArrow,
-                      size: 24,
+                      width: 14,
+                      height: 16,
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
@@ -82,11 +84,13 @@ class WalletPortfolio extends StatelessWidget {
               HorizontalSpacer.small(),
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.downArrow,
-                      size: 24,
+                      width: 14,
+                      height: 16,
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
