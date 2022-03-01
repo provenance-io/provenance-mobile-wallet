@@ -37,21 +37,32 @@ class PwIcon extends StatelessWidget {
     this.icon, {
     Key? key,
     this.color,
-    this.size,
+    double? size,
+  })  : width = size,
+        height = size,
+        super(key: key);
+
+  const PwIcon.only(
+    this.icon, {
+    Key? key,
+    this.color,
+    this.width,
+    this.height,
   }) : super(key: key);
 
   final String icon;
 
   final Color? color;
 
-  final double? size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/$icon.svg',
-      width: size,
-      height: size,
+      width: width,
+      height: height,
       color: color ?? IconTheme.of(context).color,
     );
   }
