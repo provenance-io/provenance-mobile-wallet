@@ -49,7 +49,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
                   ),
                   child: PwText(
                     Strings.customizationDescription,
-                    style: PwTextStyle.mP,
+                    style: PwTextStyle.m,
                     textAlign: TextAlign.center,
                     color: PwColor.neutralNeutral,
                   ),

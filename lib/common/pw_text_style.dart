@@ -5,7 +5,7 @@ enum PwTextStyle {
   h3,
   h4,
   h6,
-  mP,
+  m,
   xsBold,
   caption,
   large,
@@ -39,8 +39,8 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.headline4;
       case PwTextStyle.h6:
         return theme.textTheme.headline6;
-      case PwTextStyle.mP:
-        return theme.textTheme.pWMedium;
+      case PwTextStyle.m:
+        return theme.textTheme.medium;
       case PwTextStyle.xsBold:
         return theme.textTheme.extraSmallBold;
       case PwTextStyle.caption:

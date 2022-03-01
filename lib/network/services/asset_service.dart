@@ -1,7 +1,9 @@
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/network/dtos/asset_dto.dart';
-import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:faker/faker.dart';
+import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_wallet/services/models/base_response.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 class AssetService {
   String get _assetServiceBasePathv1 =>
@@ -10,7 +12,7 @@ class AssetService {
   Future<BaseResponse<List<Asset>>> getAssets(
     String provenanceAddresses,
   ) async {
-    final data = await BaseService.instance.get(
+    final data = await get<HttpClient>().get(
       '$_assetServiceBasePathv1/$provenanceAddresses/assets',
       listConverter: (json) {
         if (json is String) {

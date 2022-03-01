@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
@@ -16,128 +16,20 @@ const String contentTypeMultiPart = 'multipart/form-data';
 
 typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
-abstract class FigureSerializable {
-  fromJson();
-}
-
-class BaseResponse<T> {
-  BaseResponse(
-    Response? res,
-    T Function(Map<String, dynamic> json)? converter,
-    T Function(List<dynamic> json)? listConverter, {
-    String? errorMessage,
-  }) {
-    isSuccessful = false;
-    isServiceDown = false;
-    res = res;
-
-    try {
-      if (res?.headers != null && res?.headers[httpHeaderAuth] != null) {
-        String auth = res!.headers.value(httpHeaderAuth)!;
-        BaseService.instance.setJwtTokenWithoutInit(auth);
-      }
-      data = converter == null
-          ? listConverter == null
-              ? res?.data
-              : listConverter(res?.data)
-          : converter(res?.data);
-
-      isSuccessful = true;
-      isServiceDown = false;
-    } catch (e) {
-      logError('error parsing: $e');
-
-      isSuccessful = false;
-      isServiceDown = res?.statusCode == 500;
-    }
-    message = (errorMessage == null) ? res?.statusMessage : errorMessage;
-  }
-
-  factory BaseResponse.error(
-    DioError error, {
-    bool ignore403 = false,
-    String? errorMessage,
-  }) {
-    BaseResponse<T> res;
-
-    if (error.error is SocketException) {
-      res = BaseResponse<T>(
-        null,
-        null,
-        null,
-        errorMessage:
-            'Looks like there might be an issue with your internet connection. Please try again',
-      );
-    } else if (errorMessage != null) {
-      res = BaseResponse<T>(
-        null,
-        null,
-        null,
-        errorMessage: errorMessage,
-      );
-    } else if (error.response != null) {
-      // "normal" errors
-      res = BaseResponse<T>(
-        error.response,
-        null,
-        null,
-      );
-
-      if ((error.requestOptions.uri.host.contains('figure.tech')) &&
-          (error.response?.statusCode == 401 ||
-              error.response?.statusCode == 403) &&
-          BaseService.onTimeout != null) {
-        if (!ignore403) {
-          if (BaseService.onTimeout != null) {
-            BaseService.onTimeout!(BaseService.hasJwt);
-          }
-        }
-      }
-    } else {
-      // Something happened in setting up or sending the request that triggered an Error
-      res = BaseResponse<T>(
-        null,
-        null,
-        null,
-        errorMessage: error.message,
-      );
-    }
-
-    res.error = error;
-    res.isSuccessful = false;
-    res.isServiceDown = error.response?.statusCode == 500;
-
-    return res;
-  }
-
-  late Response res;
-  T? data;
-  String? message;
-  late bool isSuccessful;
-  late bool isServiceDown;
-  DioError? error;
-}
-
-class BaseService {
-  factory BaseService() => _singleton;
-
-  BaseService._internal() {
+class HttpClient {
+  HttpClient() {
     _initDio();
   }
 
-  static final BaseService _singleton = BaseService._internal();
-
-  static String _impersonateId = '';
-  static String _organizationUuid = '';
-  static bool _isProd = false;
+  String _impersonateId = '';
+  String _organizationUuid = '';
+  bool _isProd = false;
   String _jwtToken = '';
-  static late Dio _dio;
+  late Dio _dio;
 
-  static SessionTimeoutCallback? onTimeout;
+  SessionTimeoutCallback? onTimeout;
 
-  static BaseService get instance => _singleton;
-
-  static bool get hasJwt => _singleton.jwtToken.isNotEmpty;
+  bool get hasJwt => jwtToken.isNotEmpty;
 
   String get jwtToken => _jwtToken;
 
@@ -228,6 +120,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -289,6 +182,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       logError('error parsing');
@@ -353,6 +247,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       logError('error parsing');
@@ -416,6 +311,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       if (e.response?.statusCode == 400 &&
@@ -485,6 +381,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -547,6 +444,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);
@@ -629,6 +527,7 @@ class BaseService {
         res,
         converter == null ? null : (json) => converter(json),
         listConverter == null ? null : (json) => listConverter(json),
+        setJwt: setJwt,
       );
     } on DioError catch (e) {
       return BaseResponse<T>.error(e);

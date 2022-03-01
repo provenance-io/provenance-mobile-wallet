@@ -104,7 +104,7 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.marketCap,
-                            style: PwTextStyle.mP,
+                            style: PwTextStyle.m,
                             color: PwColor.neutralNeutral,
                           ),
                         ],
@@ -128,7 +128,7 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.validators,
-                            style: PwTextStyle.mP,
+                            style: PwTextStyle.m,
                             color: PwColor.neutralNeutral,
                           ),
                         ],
@@ -170,7 +170,7 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.transactions,
-                            style: PwTextStyle.mP,
+                            style: PwTextStyle.m,
                             color: PwColor.neutralNeutral,
                           ),
                         ],
@@ -211,7 +211,7 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.avgBlockTime,
-                            style: PwTextStyle.mP,
+                            style: PwTextStyle.m,
                             color: PwColor.neutralNeutral,
                           ),
                         ],
@@ -226,7 +226,7 @@ class _OnboardingFundamentalsSlideState
                   ),
                   child: PwText(
                     Strings.fundamentalsDescription,
-                    style: PwTextStyle.mP,
+                    style: PwTextStyle.m,
                     color: PwColor.neutralNeutral,
                     textAlign: TextAlign.center,
                   ),

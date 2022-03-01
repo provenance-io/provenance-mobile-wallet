@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:provenance_wallet/network/services/stat_service.dart';
+import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +20,9 @@ class FundamentalsBloc extends Disposable {
 
   void load() async {
     final stats = await _service.getStats();
+    if (stats == null) {
+      return;
+    }
 
     _marketCap.value = stats.marketCap;
     _validatorsCount.value = stats.validators;
