@@ -1,3 +1,6 @@
+///
+/// Fields on a GeneratedMessage.
+///
 class MessageFieldName {
   static const type = '@type';
   static const address = 'address';
@@ -7,4 +10,14 @@ class MessageFieldName {
   static const delegatorAddress = 'delegatorAddress';
   static const validatorAddress = 'validatorAddress';
   static const amount = 'amount';
+}
+
+///
+/// Fields not on a GeneratedMessage.
+///
+class FieldName {
+  static const gasWanted = 'gasWanted';
+  static const gasUsed = 'gasUsed';
+  static const txID = 'txID';
+  static const block = 'block';
 }

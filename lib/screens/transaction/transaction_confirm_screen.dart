@@ -1,4 +1,3 @@
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
@@ -12,28 +11,35 @@ typedef MessageBuilder = Widget Function(
   RemoteClientDetails clientDetails,
   String? message,
   Map<String, dynamic>? data,
-  GasEstimate? gasEstimate,
+  int? fees,
 );
 
+enum TransactionConfirmKind {
+  approve,
+  notify,
+}
+
 class TransactionConfirmScreen extends StatefulWidget {
-  TransactionConfirmScreen({
+  const TransactionConfirmScreen({
+    required this.kind,
     required this.title,
     required this.requestId,
     required this.clientDetails,
     this.subTitle,
     this.message,
     this.data,
-    this.gasEstimate,
+    this.fees,
     Key? key,
   }) : super(key: key);
 
+  final TransactionConfirmKind kind;
   final String title;
   final String requestId;
   final RemoteClientDetails clientDetails;
   final String? subTitle;
   final String? message;
   final List<Map<String, dynamic>>? data;
-  final GasEstimate? gasEstimate;
+  final int? fees;
 
   @override
   State<StatefulWidget> createState() => TransactionConfirmScreenState();
@@ -79,35 +85,39 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
           automaticallyImplyLeading: false,
           actions: [
             ValueListenableBuilder<int>(
-              valueListenable: _pageIndexNotifier, 
-              builder: (context, page, child,) {
+              valueListenable: _pageIndexNotifier,
+              builder: (
+                context,
+                page,
+                child,
+              ) {
                 final data = widget.data?[page];
 
-                if(!(data?.keys.contains(MessageFieldName.type) ?? false)) {
+                if (!(data?.keys.contains(MessageFieldName.type) ?? false)) {
                   return Container();
                 }
-                
+
                 return MaterialButton(
-                    onPressed: () {
-                      showGeneralDialog(
-                        context: context,
-                        pageBuilder: (
-                          context,
-                          animation,
-                          secondaryAnimation,
-                        ) {
-                          return TransactionDataScreen(
-                            data: data!,
-                          );
-                        },
-                      );
-                    },
-                    child: PwText(
-                      Strings.transactionDataButton,
-                      color: PwColor.primaryP500,
-                      style: PwTextStyle.body,
-                    ),
-                  );
+                  onPressed: () {
+                    showGeneralDialog(
+                      context: context,
+                      pageBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                      ) {
+                        return TransactionDataScreen(
+                          data: data!,
+                        );
+                      },
+                    );
+                  },
+                  child: PwText(
+                    Strings.transactionDataButton,
+                    color: PwColor.primaryP500,
+                    style: PwTextStyle.body,
+                  ),
+                );
               },
             ),
           ],
@@ -132,7 +142,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: widget.data?.length ?? 0,
-                itemBuilder: (context, index) { 
+                itemBuilder: (context, index) {
                   final dataItem = widget.data![index];
 
                   return _buildMessage(dataItem);
@@ -140,9 +150,20 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
               ),
             ),
             ValueListenableBuilder<int>(
-              valueListenable: _pageIndexNotifier, 
-              builder:(context, value, child,) {
-                return PwText("${value + 1} / ${widget.data?.length ?? 0}",);
+              valueListenable: _pageIndexNotifier,
+              builder: (
+                context,
+                value,
+                child,
+              ) {
+                return Container(
+                  margin: EdgeInsets.only(
+                    bottom: Spacing.xxLarge,
+                  ),
+                  child: PwText(
+                    "${value + 1} / ${widget.data?.length ?? 0}",
+                  ),
+                );
               },
             ),
             Container(
@@ -152,26 +173,9 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
                 bottom: Spacing.largeX4,
               ),
               color: Theme.of(context).colorScheme.neutral750,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  PwTextButton.primaryAction(
-                    context: context,
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                    text: Strings.transactionApprove,
-                  ),
-                  VerticalSpacer.large(),
-                  PwTextButton.secondaryAction(
-                    context: context,
-                    text: Strings.transactionDecline,
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                ],
-              ),
+              child: widget.kind == TransactionConfirmKind.approve
+                  ? _ApproveActions()
+                  : _NotifyActions(),
             ),
           ],
         ),
@@ -179,7 +183,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
     );
   }
 
-  Widget _buildMessage(Map<String,dynamic> data) {
+  Widget _buildMessage(Map<String, dynamic> data) {
     final builder = _builders[data.runtimeType];
 
     if (builder == null) {
@@ -188,7 +192,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
         clientDetails: widget.clientDetails,
         message: widget.message,
         data: data,
-        gasEstimate: widget.gasEstimate,
+        fees: widget.fees,
       );
     }
 
@@ -197,7 +201,50 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
       widget.clientDetails,
       widget.message,
       data,
-      widget.gasEstimate,
+      widget.fees,
+    );
+  }
+}
+
+class _NotifyActions extends StatelessWidget {
+  const _NotifyActions({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PwTextButton.primaryAction(
+      context: context,
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      text: Strings.transactionBackToDashboard,
+    );
+  }
+}
+
+class _ApproveActions extends StatelessWidget {
+  const _ApproveActions({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        PwTextButton.primaryAction(
+          context: context,
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+          text: Strings.transactionApprove,
+        ),
+        VerticalSpacer.large(),
+        PwTextButton.secondaryAction(
+          context: context,
+          text: Strings.transactionDecline,
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+      ],
     );
   }
 }

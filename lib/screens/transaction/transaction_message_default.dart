@@ -1,4 +1,3 @@
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
@@ -15,7 +14,7 @@ class TransactionMessageDefault extends StatefulWidget {
     required this.clientDetails,
     this.message,
     this.data,
-    this.gasEstimate,
+    this.fees,
     Key? key,
   }) : super(key: key);
 
@@ -24,7 +23,7 @@ class TransactionMessageDefault extends StatefulWidget {
   final String? message;
 
   final Map<String, dynamic>? data;
-  final GasEstimate? gasEstimate;
+  final int? fees;
 
   @override
   State<TransactionMessageDefault> createState() =>
@@ -69,7 +68,7 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
   }
 
   void _buildSlivers() {
-    final gasEstimate = widget.gasEstimate;
+    final fees = widget.fees;
     final message = widget.message;
     final data = widget.data;
 
@@ -93,12 +92,12 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
       );
     }
 
-    if (gasEstimate != null) {
-      final fee = gasEstimate.fees / nHashPerHash;
+    if (fees != null) {
+      final hashFees = fees / nHashPerHash;
       mainRows.add(
         createFieldTableRow(
           Strings.transactionFieldFee,
-          '$fee ${Strings.transactionDenomHash}',
+          '$hashFees ${Strings.transactionDenomHash}',
         ),
       );
     }
