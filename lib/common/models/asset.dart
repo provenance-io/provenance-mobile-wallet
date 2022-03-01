@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/widgets/icon.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/extensions.dart';
 
 class Asset {
   Asset({required AssetDto dto})
@@ -47,5 +48,9 @@ class Asset {
       default:
         return 'assets/${PwIcons.hashLogo}.svg';
     }
+  }
+
+  String get formattedAmount {
+    return (usdPrice * double.parse(displayAmount)).toCurrency();
   }
 }

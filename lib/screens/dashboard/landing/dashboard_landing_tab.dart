@@ -251,7 +251,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                         ),
                                         VerticalSpacer.xSmall(),
                                         PwText(
-                                          item.displayAmount,
+                                          item.formattedAmount,
                                           color: PwColor.neutral200,
                                           style: PwTextStyle.footnote,
                                         ),
