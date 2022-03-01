@@ -79,20 +79,18 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: StreamBuilder<WalletDetails?>(
-                initialData: bloc.selectedWallet.value,
-                stream: bloc.selectedWallet,
-                builder: (context, snapshot) {
-                  final walletName = snapshot.data?.name ?? "";
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
+              builder: (context, snapshot) {
+                final walletName = snapshot.data?.name ?? "";
 
-                  return PwText(
-                    walletName,
-                    style: PwTextStyle.subhead,
-                    overflow: TextOverflow.fade,
-                  );
-                },
-              ),
+                return PwText(
+                  walletName,
+                  style: PwTextStyle.subhead,
+                  overflow: TextOverflow.fade,
+                );
+              },
             ),
             StreamBuilder<WalletDetails?>(
               initialData: bloc.selectedWallet.value,
@@ -101,7 +99,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 final walletAddress = snapshot.data?.address ?? "";
 
                 return PwText(
-                  " (${walletAddress.abbreviateAddress()})",
+                  "(${walletAddress.abbreviateAddress()})",
                   style: PwTextStyle.body,
                 );
               },
