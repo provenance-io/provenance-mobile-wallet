@@ -37,6 +37,7 @@ class MockAssetService {
       description: "FAKE DATA",
       exponent: faker.randomGenerator.integer(10),
       displayAmount: amount,
+      usdPrice: faker.randomGenerator.decimal(min: 5000),
     );
   }
 }

@@ -15,7 +15,8 @@ class Asset {
         display = dto.display!.toUpperCase(),
         displayAmount = dto.displayAmount!,
         description = dto.description!,
-        exponent = dto.exponent!;
+        exponent = dto.exponent!,
+        usdPrice = dto.usdPrice!;
 
   Asset.fake({
     required this.denom,
@@ -24,6 +25,7 @@ class Asset {
     required this.description,
     required this.exponent,
     required this.displayAmount,
+    required this.usdPrice,
   });
 
   final String denom;
@@ -32,6 +34,7 @@ class Asset {
   final String description;
   final int exponent;
   final String displayAmount;
+  final double usdPrice;
 
   String get image {
     switch (display) {
