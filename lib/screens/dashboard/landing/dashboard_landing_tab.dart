@@ -76,7 +76,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
         ],
         centerTitle: false,
-        title: Row(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
