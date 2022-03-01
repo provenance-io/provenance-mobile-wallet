@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/landing/connection_details_modal.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
@@ -54,15 +55,21 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 child: GestureDetector(
                   onTap: () async {
                     if (connected) {
-                      bloc.disconnectWallet();
-                    }
-                    final addressData = await Navigator.of(
-                      context,
-                    ).push(
-                      QRCodeScanner().route(),
-                    );
-                    if (addressData != null) {
-                      bloc.connectWallet(addressData);
+                      showDialog(
+                        useSafeArea: true,
+                        barrierColor: Theme.of(context).colorScheme.neutral750,
+                        context: context,
+                        builder: (context) => ConnectionDetailsModal(),
+                      );
+                    } else {
+                      final addressData = await Navigator.of(
+                        context,
+                      ).push(
+                        QRCodeScanner().route(),
+                      );
+                      if (addressData != null) {
+                        bloc.connectWallet(addressData);
+                      }
                     }
                   },
                   child: PwIcon(
@@ -169,31 +176,6 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           ],
                         ),
                       );
-              },
-            ),
-            StreamBuilder<String?>(
-              initialData: get<DashboardBloc>().address.value,
-              stream: get<DashboardBloc>().address,
-              builder: (context, data) {
-                if (data.data == null || data.data!.isEmpty) {
-                  return Container();
-                }
-
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: Spacing.xxLarge,
-                    right: Spacing.xxLarge,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      PwText(
-                        Strings.walletConnected(data.data),
-                        style: PwTextStyle.caption,
-                      ),
-                    ],
-                  ),
-                );
               },
             ),
             VerticalSpacer.medium(),
