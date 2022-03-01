@@ -43,7 +43,6 @@ class WalletPortfolio extends StatelessWidget {
               }
 
               return PwText(
-                // FIXME: How do we get portfolio value?
                 portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
