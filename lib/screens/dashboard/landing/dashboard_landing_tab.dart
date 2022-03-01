@@ -76,36 +76,37 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
         ],
         centerTitle: false,
-        title: StreamBuilder<WalletDetails?>(
-          initialData: bloc.selectedWallet.value,
-          stream: bloc.selectedWallet,
-          builder: (context, snapshot) {
-            final walletName = snapshot.data?.name ?? "";
-            final walletAddress = snapshot.data?.address ?? "";
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: StreamBuilder<WalletDetails?>(
+                initialData: bloc.selectedWallet.value,
+                stream: bloc.selectedWallet,
+                builder: (context, snapshot) {
+                  final walletName = snapshot.data?.name ?? "";
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 76),
-                  child: PwText(
+                  return PwText(
                     walletName,
                     style: PwTextStyle.subhead,
                     overflow: TextOverflow.fade,
-                    maxLines: 1,
-                  ),
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 124),
-                  child: PwText(
-                    " (${walletAddress.abbreviateAddress()})",
-                    style: PwTextStyle.body,
-                    maxLines: 1,
-                  ),
-                ),
-              ],
-            );
-          },
+                  );
+                },
+              ),
+            ),
+            StreamBuilder<WalletDetails?>(
+              initialData: bloc.selectedWallet.value,
+              stream: bloc.selectedWallet,
+              builder: (context, snapshot) {
+                final walletAddress = snapshot.data?.address ?? "";
+
+                return PwText(
+                  " (${walletAddress.abbreviateAddress()})",
+                  style: PwTextStyle.body,
+                );
+              },
+            ),
+          ],
         ),
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
