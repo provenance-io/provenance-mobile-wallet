@@ -76,34 +76,36 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           ),
         ],
         centerTitle: false,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            StreamBuilder<WalletDetails?>(
-              initialData: bloc.selectedWallet.value,
-              stream: bloc.selectedWallet,
-              builder: (context, snapshot) {
-                final walletName = snapshot.data?.name ?? "";
+        title: StreamBuilder<WalletDetails?>(
+          initialData: bloc.selectedWallet.value,
+          stream: bloc.selectedWallet,
+          builder: (context, snapshot) {
+            final walletName = snapshot.data?.name ?? "";
+            final walletAddress = snapshot.data?.address ?? "";
 
-                return PwText(
-                  walletName,
-                  style: PwTextStyle.subhead,
-                );
-              },
-            ),
-            StreamBuilder<WalletDetails?>(
-              initialData: bloc.selectedWallet.value,
-              stream: bloc.selectedWallet,
-              builder: (context, snapshot) {
-                final walletAddress = snapshot.data?.address ?? "";
-
-                return PwText(
-                  " (${walletAddress.abbreviateAddress()})",
-                  style: PwTextStyle.body,
-                );
-              },
-            ),
-          ],
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 76),
+                  child: PwText(
+                    walletName,
+                    style: PwTextStyle.subhead,
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 124),
+                  child: PwText(
+                    " (${walletAddress.abbreviateAddress()})",
+                    style: PwTextStyle.body,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
