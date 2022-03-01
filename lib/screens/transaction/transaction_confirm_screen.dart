@@ -15,7 +15,7 @@ typedef MessageBuilder = Widget Function(
   GasEstimate? gasEstimate,
 );
 
-class TransactionConfirmScreen extends StatelessWidget {
+class TransactionConfirmScreen extends StatefulWidget {
   TransactionConfirmScreen({
     required this.title,
     required this.requestId,
@@ -26,17 +26,40 @@ class TransactionConfirmScreen extends StatelessWidget {
     this.gasEstimate,
     Key? key,
   }) : super(key: key);
-  final _builders = <Type, MessageBuilder>{
-    // Add a builder to override a specific message type.
-  };
 
   final String title;
   final String requestId;
   final RemoteClientDetails clientDetails;
   final String? subTitle;
   final String? message;
-  final Map<String, dynamic>? data;
+  final List<Map<String, dynamic>>? data;
   final GasEstimate? gasEstimate;
+
+  @override
+  State<StatefulWidget> createState() => TransactionConfirmScreenState();
+}
+
+class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
+  final _builders = <Type, MessageBuilder>{
+    // Add a builder to override a specific message type.
+  };
+
+  final PageController _pageController = PageController();
+  final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,40 +72,50 @@ class TransactionConfirmScreen extends StatelessWidget {
           elevation: 0.0,
           centerTitle: true,
           title: PwText(
-            title,
+            widget.title,
             color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
           automaticallyImplyLeading: false,
           actions: [
-            if (data?.keys.contains(MessageFieldName.type) ?? false)
-              MaterialButton(
-                onPressed: () {
-                  showGeneralDialog(
-                    context: context,
-                    pageBuilder: (
-                      context,
-                      animation,
-                      secondaryAnimation,
-                    ) {
-                      return TransactionDataScreen(
-                        data: data!,
+            ValueListenableBuilder<int>(
+              valueListenable: _pageIndexNotifier, 
+              builder: (context, page, child,) {
+                final data = widget.data?[page];
+
+                if(!(data?.keys.contains(MessageFieldName.type) ?? false)) {
+                  return Container();
+                }
+                
+                return MaterialButton(
+                    onPressed: () {
+                      showGeneralDialog(
+                        context: context,
+                        pageBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                        ) {
+                          return TransactionDataScreen(
+                            data: data!,
+                          );
+                        },
                       );
                     },
+                    child: PwText(
+                      Strings.transactionDataButton,
+                      color: PwColor.primaryP500,
+                      style: PwTextStyle.body,
+                    ),
                   );
-                },
-                child: PwText(
-                  Strings.transactionDataButton,
-                  color: PwColor.primaryP500,
-                  style: PwTextStyle.body,
-                ),
-              ),
+              },
+            ),
           ],
         ),
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (subTitle != null)
+            if (widget.subTitle != null)
               Container(
                 margin: EdgeInsets.only(
                   left: Spacing.xxLarge,
@@ -90,13 +123,27 @@ class TransactionConfirmScreen extends StatelessWidget {
                 ),
                 alignment: Alignment.centerLeft,
                 child: PwText(
-                  subTitle!,
+                  widget.subTitle!,
                   style: PwTextStyle.bodyBold,
                 ),
               ),
             VerticalSpacer.xxLarge(),
             Expanded(
-              child: _buildMessage(),
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.data?.length ?? 0,
+                itemBuilder: (context, index) { 
+                  final dataItem = widget.data![index];
+
+                  return _buildMessage(dataItem);
+                },
+              ),
+            ),
+            ValueListenableBuilder<int>(
+              valueListenable: _pageIndexNotifier, 
+              builder:(context, value, child,) {
+                return PwText("${value + 1} / ${widget.data?.length ?? 0}",);
+              },
             ),
             Container(
               padding: EdgeInsets.only(
@@ -132,25 +179,25 @@ class TransactionConfirmScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMessage() {
+  Widget _buildMessage(Map<String,dynamic> data) {
     final builder = _builders[data.runtimeType];
 
     if (builder == null) {
       return TransactionMessageDefault(
-        requestId: requestId,
-        clientDetails: clientDetails,
-        message: message,
+        requestId: widget.requestId,
+        clientDetails: widget.clientDetails,
+        message: widget.message,
         data: data,
-        gasEstimate: gasEstimate,
+        gasEstimate: widget.gasEstimate,
       );
     }
 
     return builder.call(
-      requestId,
-      clientDetails,
-      message,
+      widget.requestId,
+      widget.clientDetails,
+      widget.message,
       data,
-      gasEstimate,
+      widget.gasEstimate,
     );
   }
 }

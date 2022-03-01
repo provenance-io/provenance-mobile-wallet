@@ -184,11 +184,19 @@ class DashboardScreenState extends State<DashboardScreen>
         animation,
         secondaryAnimation,
       ) {
-        final message = sendRequest.message;
-        final data = <String, dynamic>{
-          MessageFieldName.type: message.info_.qualifiedMessageName,
-          ...message.toProto3Json() as Map<String, dynamic>,
-        };
+        final messages = sendRequest.messages;
+        final data = messages.map((message) {
+          return <String, dynamic>{
+            MessageFieldName.type: message.info_.qualifiedMessageName,
+            ...message.toProto3Json() as Map<String, dynamic>,
+          };
+        })
+        .toList();
+        
+        // final data = <String, dynamic>{
+        //   MessageFieldName.type: message.info_.qualifiedMessageName,
+        //   ...message.toProto3Json() as Map<String, dynamic>,
+        // };
 
         return TransactionConfirmScreen(
           title: Strings.confirmTransactionTitle,
@@ -225,9 +233,9 @@ class DashboardScreenState extends State<DashboardScreen>
           subTitle: signRequest.description,
           clientDetails: clientDetails,
           message: signRequest.message,
-          data: {
+          data: [{
             MessageFieldName.address: signRequest.address,
-          },
+          }],
         );
       },
     );
