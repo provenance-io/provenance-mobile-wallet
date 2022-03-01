@@ -684,11 +684,9 @@ packages:
   provenance_dart:
     dependency: "direct main"
     description:
-      path: "."
-      ref: walletConnect
-      resolved-ref: "2b5bfd8d91a37f60d4fb9b74493c8657d2295391"
-      url: "git@github.com:provenance-io/provenance-dart.git"
-    source: git
+      path: "../provenance-dart"
+      relative: true
+    source: path
     version: "0.0.1"
   pub_semver:
     dependency: transitive
