@@ -9,16 +9,17 @@ class ModalLoading extends StatefulWidget {
   final String? loadingMessage;
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return ModalLoadingState(loadingMessage: loadingMessage);
-  }
+  State<StatefulWidget> createState() => ModalLoadingState();
 }
 
 class ModalLoadingState extends State<ModalLoading> {
-  ModalLoadingState({this.loadingMessage});
-
   String? loadingMessage;
+
+  @override
+  void initState() {
+    loadingMessage = widget.loadingMessage;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

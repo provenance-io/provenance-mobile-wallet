@@ -76,7 +76,7 @@ class DashboardScreenState extends State<DashboardScreen>
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
 
-    _bloc.load();
+    _bloc.load(context);
 
     super.initState();
   }
