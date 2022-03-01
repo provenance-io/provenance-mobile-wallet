@@ -66,10 +66,6 @@ workflows:
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
-    - ios-auto-provision-appstoreconnect@2.2:
-        inputs:
-        - verbose_log: 'yes'
-        - distribution_type: app-store
     - set-xcode-build-number@1:
         inputs:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/Runner/Info.plist"
@@ -86,6 +82,9 @@ workflows:
         - configuration: ''
         - cache_level: none
         - distribution_method: app-store
+        - scheme: "$BITRISE_DEV_SCHEME"
+        - xcodebuild_options: ''
+        - automatic_code_signing: api-key
         - export_method: app-store
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
@@ -94,8 +93,9 @@ workflows:
         - itunescon_user: "$APPLE_ID_EMAIL"
     - google-play-deploy@3.7:
         inputs:
-        - package_name: io.provenance.wallet
+        - package_name: io.provenance.wallet.dev
         - track: internal
+        - status: ''
         - service_account_json_key_path: "$BITRISEIO_BITRISEIO_ANDROID_SVC_ACCT_JSON_URL_URL"
     - script@1:
         inputs:
@@ -257,7 +257,10 @@ app:
     BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
   - opts:
       is_expand: false
-    BITRISE_SCHEME: Runner
+    BITRISE_DEV_SCHEME: dev
+  - opts:
+      is_expand: false
+    BITRISE_PROD_SCHEME: prod
   - opts:
       is_expand: false
     BITRISE_EXPORT_METHOD: app-store
@@ -276,6 +279,3 @@ app:
   - opts:
       is_expand: false
     COLOR_SUCCESS: "#52BF8C"
-  - opts:
-      is_expand: false
-    COLOR_FAILURE: "#EE4959"
