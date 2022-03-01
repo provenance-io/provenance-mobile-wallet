@@ -15,9 +15,9 @@ import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:uuid/uuid.dart';
 
 typedef CompleterDelegate = Future<void> Function(bool accept);
@@ -65,17 +65,20 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   }
 
   @override
-  void onApproveSession(ClientMeta clientMeta, AcceptCallback<SessionApprovalData?> callback) async {
+  void onApproveSession(
+    ClientMeta clientMeta,
+    AcceptCallback<SessionApprovalData?> callback,
+  ) async {
     final id = Uuid().v1().toString();
 
     _completerLookup[id] = (bool approve) {
       SessionApprovalData? sessionApproval;
-      if(approve) {
+      if (approve) {
         sessionApproval = SessionApprovalData(
           _privateKey,
           _privateKey.publicKey.coin.chainId,
         );
-      }        
+      }
 
       return callback(sessionApproval);
     };
@@ -95,15 +98,16 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   void onApproveSign(
     String description,
     String address,
-    List<int> msg, 
+    List<int> msg,
     AcceptCallback<List<int>?> callback,
   ) async {
     final id = Uuid().v1().toString();
 
     _completerLookup[id] = (bool accept) {
       List<int>? signedData;
-      if(accept) {
-       signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))..removeLast();
+      if (accept) {
+        signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))
+          ..removeLast();
       }
 
       return callback(signedData);
@@ -123,7 +127,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   void onApproveTransaction(
     String description,
     String address,
-    List<GeneratedMessage> proposedMessages, 
+    List<GeneratedMessage> proposedMessages,
     AcceptCallback<RawTxResponsePair?> callback,
   ) async {
     final proposedMessage = proposedMessages.first;
@@ -142,25 +146,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     final id = Uuid().v1().toString();
-    _completerLookup[id] = (bool approve) async {
-      RawTxResponsePair? response;
-
-      if(approve) {
-        response =
-            await _transactionHandler.executeTransaction(txBody, _privateKey);
-
-        final txResponse = response.txResponse;
-
-        _onResponse.add(
-          WalletConnectTxResponse(
-            code: txResponse.code,
-            message: txResponse.rawLog,
-          ),
-        );
-      }
-
-      callback(response);
-    };
 
     GasEstimate? gasEstimate;
     try {
@@ -179,6 +164,33 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       messages: proposedMessages,
       gasEstimate: gasEstimate,
     );
+
+    _completerLookup[id] = (bool approve) async {
+      RawTxResponsePair? response;
+
+      if (approve) {
+        response =
+            await _transactionHandler.executeTransaction(txBody, _privateKey);
+
+        final txResponse = response.txResponse;
+
+        _onResponse.add(
+          WalletConnectTxResponse(
+            code: txResponse.code,
+            requestId: sendRequest.id,
+            message: txResponse.rawLog,
+            gasWanted: txResponse.gasWanted.toInt(),
+            gasUsed: txResponse.gasUsed.toInt(),
+            height: txResponse.height.toInt(),
+            txHash: txResponse.txhash,
+            fees: gasEstimate!.fees,
+            codespace: txResponse.codespace,
+          ),
+        );
+      }
+
+      callback(response);
+    };
 
     _sendRequest.add(sendRequest);
   }

@@ -40,7 +40,11 @@ class WalletConnectTransactionHandler implements TransactionHandler {
 
     final baseReqSigner = BaseReqSigner(signer, account);
 
-    return pbClient.estimateAndBroadcastTx(txBody, [baseReqSigner]);
+    return pbClient.estimateAndBroadcastTx(
+      txBody,
+      [baseReqSigner],
+      mode: BroadcastMode.BROADCAST_MODE_BLOCK,
+    );
   }
 }
 
