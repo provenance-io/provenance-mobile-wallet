@@ -11,6 +11,8 @@ class Transaction {
         assert(dto.timestamp != null),
         assert(dto.status != null),
         assert(dto.txFee != null),
+        assert(dto.pricePerUnit != null),
+        assert(dto.totalPrice != null),
         amount = dto.amount!,
         block = dto.block!,
         denom = dto.denom!,
@@ -19,7 +21,9 @@ class Transaction {
         senderAddress = dto.senderAddress!,
         status = dto.status!,
         timestamp = dto.timestamp!,
-        txFee = dto.txFee!;
+        txFee = dto.txFee!,
+        pricePerUnit = dto.pricePerUnit!,
+        totalPrice = dto.totalPrice!;
 
   Transaction.fake({
     required this.amount,
@@ -31,6 +35,8 @@ class Transaction {
     required this.status,
     required this.timestamp,
     required this.txFee,
+    required this.pricePerUnit,
+    required this.totalPrice,
   });
 
   final int amount;
@@ -42,4 +48,6 @@ class Transaction {
   final String status;
   final DateTime timestamp;
   final int txFee;
+  final double pricePerUnit;
+  final double totalPrice;
 }

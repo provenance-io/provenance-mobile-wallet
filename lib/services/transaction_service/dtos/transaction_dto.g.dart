@@ -19,6 +19,8 @@ TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['timestamp'] as String),
       txFee: json['txFee'] as int?,
+      pricePerUnit: (json['pricePerUnit'] as num?)?.toDouble(),
+      totalPrice: (json['totalPrice'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
@@ -32,4 +34,6 @@ Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
       'status': instance.status,
       'timestamp': instance.timestamp?.toIso8601String(),
       'txFee': instance.txFee,
+      'pricePerUnit': instance.pricePerUnit,
+      'totalPrice': instance.totalPrice,
     };

@@ -14,6 +14,8 @@ class TransactionDto {
     this.status,
     this.timestamp,
     this.txFee,
+    this.pricePerUnit,
+    this.totalPrice,
   });
 
   final int? amount;
@@ -25,6 +27,8 @@ class TransactionDto {
   final String? status;
   final DateTime? timestamp;
   final int? txFee;
+  final double? pricePerUnit;
+  final double? totalPrice;
 
   // ignore: member-ordering
   factory TransactionDto.fromJson(Map<String, dynamic> json) =>
