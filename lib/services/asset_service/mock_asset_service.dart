@@ -1,11 +1,13 @@
 import 'package:faker/faker.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 
-class MockAssetService {
+class MockAssetService extends AssetService {
+  final faker = Faker();
+  @override
   Future<List<Asset>> getAssets(
     String provenanceAddresses,
   ) async {
-    final faker = Faker();
     final List<Asset> assets = [];
 
     for (var i = 0; i < faker.randomGenerator.integer(10, min: 5); i++) {
@@ -22,7 +24,6 @@ class MockAssetService {
   }
 
   Asset _getAsset() {
-    var faker = Faker();
     var amount = faker.randomGenerator.decimal(min: 50).toStringAsFixed(2);
 
     return Asset.fake(
