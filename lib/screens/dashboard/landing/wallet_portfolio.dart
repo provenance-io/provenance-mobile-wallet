@@ -35,7 +35,7 @@ class WalletPortfolio extends StatelessWidget {
             builder: (context, snapshot) {
               double portfolioValue = 0;
 
-              if (snapshot.data != null || (snapshot.data ?? []).isNotEmpty) {
+              if (snapshot.data != null && (snapshot.data ?? []).isNotEmpty) {
                 portfolioValue = snapshot.data
                         ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
                         .reduce((value, element) => value + element) ??
