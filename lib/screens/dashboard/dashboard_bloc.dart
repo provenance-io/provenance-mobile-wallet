@@ -7,14 +7,11 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/remote_client_details.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connection_service_status.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -33,37 +30,21 @@ class DashboardBloc extends Disposable {
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
-  final _sendRequest = PublishSubject<SendRequest>();
-  final _signRequest = PublishSubject<SignRequest>();
-  final _sessionRequest = PublishSubject<RemoteClientDetails>();
-  final _clientDetails = BehaviorSubject<RemoteClientDetails?>.seeded(null);
-  final _connectionStatus =
-      BehaviorSubject.seeded(WalletConnectionServiceStatus.disconnected);
-  final BehaviorSubject<String?> _address = BehaviorSubject.seeded(null);
-  final _error = PublishSubject<String>();
-  final _response = PublishSubject<WalletConnectTxResponse>();
   final BehaviorSubject<WalletDetails?> _selectedWallet =
       BehaviorSubject.seeded(null);
 
   final _subscriptions = CompositeSubscription();
-  final _sessionSubscriptions = CompositeSubscription();
 
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
+  final delegateEvents = WalletConnectSessionDelegateEvents();
+  final sessionEvents = WalletConnectSessionEvents();
+
   ValueStream<List<Transaction>?> get transactionList => _transactionList;
   ValueStream<List<Asset>?> get assetList => _assetList;
-  Stream<SendRequest> get sendRequest => _sendRequest;
-  Stream<SignRequest> get signRequest => _signRequest;
-  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
-  ValueStream<RemoteClientDetails?> get clientDetails => _clientDetails;
-  ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
-      _connectionStatus.stream;
-  ValueStream<String?> get address => _address.stream;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
-  Stream<String> get error => _error;
-  Stream<WalletConnectTxResponse> get response => _response;
 
   void load(BuildContext context) async {
     var details = await get<WalletService>().getSelectedWallet();
@@ -98,21 +79,15 @@ class DashboardBloc extends Disposable {
   }
 
   Future<void> connectWallet(String addressData) async {
-    final session = await get<WalletService>().connectWallet(addressData);
+    final oldSession = _walletSession;
+    if (oldSession != null) {
+      await oldSession.dispose();
+    }
 
+    final session = await get<WalletService>().connectWallet(addressData);
     if (session != null) {
-      session.sendRequest.listen(_sendRequest.add).addTo(_sessionSubscriptions);
-      session.signRequest.listen(_signRequest.add).addTo(_sessionSubscriptions);
-      session.sessionRequest
-          .listen(_sessionRequest.add)
-          .addTo(_sessionSubscriptions);
-      session.clientDetails
-          .listen(_clientDetails.add)
-          .addTo(_sessionSubscriptions);
-      session.status.listen(_onSessionStatus).addTo(_sessionSubscriptions);
-      session.address.listen(_onAddress).addTo(_sessionSubscriptions);
-      session.error.listen(_error.add).addTo(_sessionSubscriptions);
-      session.response.listen(_response.add).addTo(_sessionSubscriptions);
+      delegateEvents.listen(session.delegateEvents);
+      sessionEvents.listen(session.sessionEvents);
       _walletSession = session;
     }
   }
@@ -219,17 +194,12 @@ class DashboardBloc extends Disposable {
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
-    _sessionSubscriptions.dispose();
+    delegateEvents.dispose();
+    sessionEvents.dispose();
+
     _assetList.close();
     _transactionList.close();
-    _sendRequest.close();
-    _signRequest.close();
-    _sessionRequest.close();
-    _clientDetails.close();
-    _connectionStatus.close();
-    _error.close();
-    _response.close();
-    _walletSession?.disconnect();
+    _walletSession?.dispose();
   }
 
   Future _initDeepLinks() async {
@@ -258,35 +228,14 @@ class DashboardBloc extends Disposable {
 
   Future<void> _handleWalletConnectLink(String? data) async {
     if (data != null) {
-      final decodedData = Uri.decodeComponent(data);
+      final addressData = Uri.decodeComponent(data);
       final walletService = get<WalletService>();
-      final isValid = await walletService.isValidWalletConnectData(decodedData);
+      final isValid = await walletService.isValidWalletConnectData(addressData);
       if (isValid) {
-        final walletSession = await walletService.connectWallet(decodedData);
-        _walletSession = walletSession;
-
-        if (walletSession == null) {
-          logDebug('Wallet connection failed');
-        }
+        connectWallet(addressData);
       } else {
         logError('Invalid wallet connect data');
       }
-    }
-  }
-
-  void _onAddress(String? address) {
-    _address.value = address;
-
-    if (WalletConnectionServiceStatus.disconnected == _connectionStatus.value) {
-      _sessionSubscriptions.clear();
-    }
-  }
-
-  void _onSessionStatus(WalletConnectionServiceStatus status) {
-    _connectionStatus.value = status;
-
-    if (status == WalletConnectionServiceStatus.disconnected) {
-      _sessionSubscriptions.clear();
     }
   }
 }

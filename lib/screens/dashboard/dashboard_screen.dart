@@ -64,11 +64,17 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   void initState() {
-    _bloc.sendRequest.listen(_onSendRequest).addTo(_subscriptions);
-    _bloc.signRequest.listen(_onSignRequest).addTo(_subscriptions);
-    _bloc.sessionRequest.listen(_onSessionRequest).addTo(_subscriptions);
-    _bloc.error.listen(_onError).addTo(_subscriptions);
-    _bloc.response.listen(_onResponse).addTo(_subscriptions);
+    _bloc.delegateEvents.sendRequest
+        .listen(_onSendRequest)
+        .addTo(_subscriptions);
+    _bloc.delegateEvents.signRequest
+        .listen(_onSignRequest)
+        .addTo(_subscriptions);
+    _bloc.delegateEvents.sessionRequest
+        .listen(_onSessionRequest)
+        .addTo(_subscriptions);
+    _bloc.sessionEvents.error.listen(_onError).addTo(_subscriptions);
+    _bloc.sessionEvents.response.listen(_onResponse).addTo(_subscriptions);
 
     get.registerSingleton<DashboardBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
@@ -171,8 +177,10 @@ class DashboardScreenState extends State<DashboardScreen>
   Future<void> _onSendRequest(
     SendRequest sendRequest,
   ) async {
-    final clientDetails = _bloc.clientDetails.value;
+    final clientDetails = _bloc.sessionEvents.state.value.details;
     if (clientDetails == null) {
+      _onError(Strings.errorDisconnected);
+
       return;
     }
 
@@ -190,11 +198,6 @@ class DashboardScreenState extends State<DashboardScreen>
             ...message.toProto3Json() as Map<String, dynamic>,
           };
         }).toList();
-
-        // final data = <String, dynamic>{
-        //   MessageFieldName.type: message.info_.qualifiedMessageName,
-        //   ...message.toProto3Json() as Map<String, dynamic>,
-        // };
 
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
@@ -214,8 +217,10 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _onSignRequest(SignRequest signRequest) async {
-    final clientDetails = _bloc.clientDetails.value;
+    final clientDetails = _bloc.sessionEvents.state.value.details;
     if (clientDetails == null) {
+      _onError(Strings.errorDisconnected);
+
       return;
     }
 
@@ -261,8 +266,10 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   void _onResponse(WalletConnectTxResponse response) {
-    final clientDetails = _bloc.clientDetails.value;
+    final clientDetails = _bloc.sessionEvents.state.value.details;
     if (clientDetails == null) {
+      _onError(Strings.errorDisconnected);
+
       return;
     }
 
