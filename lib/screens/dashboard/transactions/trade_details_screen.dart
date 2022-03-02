@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:provenance_wallet/common/models/transaction.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';

@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/models/onboarding_stat.dart';
+import 'package:provenance_wallet/services/models/onboarding_stat.dart';
 import 'package:provenance_wallet/services/stat_service/dtos/stat_dto.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';

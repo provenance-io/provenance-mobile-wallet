@@ -1,5 +1,5 @@
 import 'package:faker/faker.dart';
-import 'package:provenance_wallet/common/models/asset.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 
 class MockAssetService {
   Future<List<Asset>> getAssets(
