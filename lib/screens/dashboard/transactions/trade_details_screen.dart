@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_item.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -31,7 +31,7 @@ class TradeDetailsScreen extends StatelessWidget {
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
           children: [
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsWallet,
               endChild: StreamBuilder<WalletDetails?>(
                 initialData: bloc.selectedWallet.value,
@@ -49,7 +49,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsTransaction,
               endChild: Row(
                 children: [
@@ -85,7 +85,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsFromAddress,
               endChild: Row(
                 children: [
@@ -119,7 +119,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: StreamBuilder<WalletDetails?>(
                 initialData: bloc.selectedWallet.value,
@@ -159,7 +159,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsOrderType,
               endChild: PwText(
                 transaction.denom,
@@ -169,7 +169,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: PwText(
                 transaction.amount.toString(),
@@ -179,7 +179,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsPricePerUnit,
               endChild: // FIXME: Need 'Price Per Unit'.
                   PwText(
@@ -190,7 +190,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsTotalPurchase,
               endChild: // FIXME: Need 'Total Purchase Price'.
                   PwText(
@@ -201,7 +201,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: PwText(
                 transaction.txFee.toString(),
@@ -211,7 +211,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
                 transaction.timestamp.toIso8601String(),
@@ -221,7 +221,7 @@ class TradeDetailsScreen extends StatelessWidget {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            TradeDetailsItem(
+            DetailsItem(
               title: Strings.tradeDetailsBlock,
               endChild: PwText(
                 transaction.block.toString(),

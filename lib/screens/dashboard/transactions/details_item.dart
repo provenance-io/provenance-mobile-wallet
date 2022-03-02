@@ -2,15 +2,17 @@
 
 import 'package:provenance_wallet/common/pw_design.dart';
 
-class TradeDetailsItem extends StatelessWidget {
-  TradeDetailsItem({
+class DetailsItem extends StatelessWidget {
+  DetailsItem({
     Key? key,
+    this.padding,
     required this.title,
     required this.endChild,
   }) : super(key: key);
 
-  TradeDetailsItem.fromStrings({
+  DetailsItem.fromStrings({
     Key? key,
+    this.padding,
     required this.title,
     required String value,
   }) : super(key: key) {
@@ -22,16 +24,19 @@ class TradeDetailsItem extends StatelessWidget {
 
   final String title;
   late final Widget endChild;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: Spacing.largeX3,
-        vertical: Spacing.xLarge,
-      ),
+      padding: padding ??
+          EdgeInsets.symmetric(
+            horizontal: Spacing.largeX3,
+            vertical: Spacing.xLarge,
+          ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           PwText(
             title,
