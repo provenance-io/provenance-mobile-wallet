@@ -7,11 +7,16 @@ import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class TransactionLandingTab extends StatelessWidget {
+class TransactionLandingTab extends StatefulWidget {
   const TransactionLandingTab({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => TransactionLandingTabState();
+}
+
+class TransactionLandingTabState extends State<TransactionLandingTab> {
   final textDivider = " • ";
 
   @override
