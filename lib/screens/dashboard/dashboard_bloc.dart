@@ -159,6 +159,7 @@ class DashboardBloc extends Disposable {
   Future<void> selectWallet({required String id}) async {
     await _walletSession?.disconnect();
     await get<WalletService>().selectWallet(id: id);
+    await loadAllWallets();
   }
 
   Future<void> renameWallet({
@@ -169,6 +170,7 @@ class DashboardBloc extends Disposable {
       id: id,
       name: name,
     );
+    await loadAllWallets();
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
@@ -177,19 +179,24 @@ class DashboardBloc extends Disposable {
 
   Future<void> removeWallet({required String id}) async {
     await get<WalletService>().removeWallet(id: id);
+    await loadAllWallets();
   }
 
   Future<void> resetWallets() async {
     await disconnectWallet();
     await get<WalletService>().resetWallets();
+    await loadAllWallets();
   }
 
   Future<void> loadAllWallets() async {
-    var list = (await get<WalletService>().getWallets());
+    final walletService = get<WalletService>();
+    final currentWallet = await walletService.getSelectedWallet();
+
+    var list = (await walletService.getWallets());
     list.sort((a, b) {
-      if (b.address == selectedWallet.value?.address) {
+      if (b.address == currentWallet?.address) {
         return 1;
-      } else if (a.address == selectedWallet.value?.address) {
+      } else if (a.address == currentWallet?.address) {
         return -1;
       } else {
         return 0;
@@ -206,6 +213,7 @@ class DashboardBloc extends Disposable {
     }
 
     _walletMap.value = map;
+    _selectedWallet.value = currentWallet;
   }
 
   @override

@@ -15,7 +15,6 @@ class WalletItem extends StatelessWidget {
     Key? key,
     required this.item,
     required bool isSelected,
-    required this.reload,
     required this.numAssets,
   })  : _isSelected = isSelected,
         super(key: key);
@@ -23,7 +22,6 @@ class WalletItem extends StatelessWidget {
   final bool _isSelected;
 
   final WalletDetails item;
-  final VoidCallback reload;
   final int numAssets;
 
   @override
@@ -132,7 +130,6 @@ class WalletItem extends StatelessWidget {
                       id: item.id,
                       name: text,
                     );
-                    reload.call();
                   }
                   break;
                 case MenuOperation.copy:
@@ -159,12 +156,11 @@ class WalletItem extends StatelessWidget {
                   );
                   if (dialogResult) {
                     await bloc.removeWallet(id: item.id);
-                    reload.call();
                   }
                   break;
                 case MenuOperation.select:
                   await bloc.selectWallet(id: item.id);
-                  reload.call();
+
                   break;
                 case MenuOperation.reset:
                   await get<DashboardBloc>().resetWallets();
