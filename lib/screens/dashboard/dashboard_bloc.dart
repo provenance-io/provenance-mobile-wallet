@@ -25,8 +25,8 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>?> _transactionList =
-      BehaviorSubject.seeded(null);
+  final BehaviorSubject<List<Transaction>> _transactionList =
+      BehaviorSubject.seeded([]);
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
@@ -41,7 +41,7 @@ class DashboardBloc extends Disposable {
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
 
-  ValueStream<List<Transaction>?> get transactionList => _transactionList;
+  ValueStream<List<Transaction>> get transactionList => _transactionList;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
