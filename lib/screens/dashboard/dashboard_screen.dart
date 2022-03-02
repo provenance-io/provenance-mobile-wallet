@@ -13,7 +13,7 @@ import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
