@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 
 class Transaction {
@@ -50,4 +51,8 @@ class Transaction {
   final int txFee;
   final double pricePerUnit;
   final double totalPrice;
+
+  String get formattedTimestamp {
+    return DateFormat('MMM d').format(timestamp);
+  }
 }
