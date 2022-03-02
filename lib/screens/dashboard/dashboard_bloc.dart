@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
+import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
@@ -19,7 +20,6 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:get_it/get_it.dart';
 
 class DashboardBloc extends Disposable {
   DashboardBloc() {
@@ -157,6 +157,7 @@ class DashboardBloc extends Disposable {
   Future<void> selectWallet({required String id}) async {
     await _walletSession?.disconnect();
     await get<WalletService>().selectWallet(id: id);
+    await loadAllWallets();
   }
 
   Future<void> renameWallet({
@@ -167,6 +168,7 @@ class DashboardBloc extends Disposable {
       id: id,
       name: name,
     );
+    await loadAllWallets();
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
@@ -175,19 +177,24 @@ class DashboardBloc extends Disposable {
 
   Future<void> removeWallet({required String id}) async {
     await get<WalletService>().removeWallet(id: id);
+    await loadAllWallets();
   }
 
   Future<void> resetWallets() async {
     await disconnectWallet();
     await get<WalletService>().resetWallets();
+    await loadAllWallets();
   }
 
   Future<void> loadAllWallets() async {
-    var list = (await get<WalletService>().getWallets());
+    final walletService = get<WalletService>();
+    final currentWallet = await walletService.getSelectedWallet();
+
+    var list = (await walletService.getWallets());
     list.sort((a, b) {
-      if (b.address == selectedWallet.value?.address) {
+      if (b.address == currentWallet?.address) {
         return 1;
-      } else if (a.address == selectedWallet.value?.address) {
+      } else if (a.address == currentWallet?.address) {
         return -1;
       } else {
         return 0;
@@ -204,6 +211,7 @@ class DashboardBloc extends Disposable {
     }
 
     _walletMap.value = map;
+    _selectedWallet.value = currentWallet;
   }
 
   @override
