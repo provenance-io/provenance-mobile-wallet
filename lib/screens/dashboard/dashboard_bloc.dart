@@ -25,8 +25,13 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>> _transactionList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<TransactionHolder> _transactionHolder =
+      BehaviorSubject.seeded(
+    TransactionHolder(
+      filteredTransactions: [],
+      transactions: [],
+    ),
+  );
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
@@ -41,7 +46,7 @@ class DashboardBloc extends Disposable {
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
 
-  ValueStream<List<Transaction>> get transactionList => _transactionList;
+  ValueStream<TransactionHolder> get transactionHolder => _transactionHolder;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
@@ -59,11 +64,16 @@ class DashboardBloc extends Disposable {
     }
 
     try {
-      _transactionList.value =
+      var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
+      _transactionHolder.value = TransactionHolder(
+        filteredTransactions: transactions,
+        transactions: transactions.toList(),
+      );
     } catch (e) {
       errorCount++;
-      _transactionList.value = [];
+      transactionHolder.value.transactions =
+          transactionHolder.value.filteredTransactions = [];
       if (errorCount == 2) {
         showDialog(
           useSafeArea: true,
@@ -76,6 +86,28 @@ class DashboardBloc extends Disposable {
         );
       }
     }
+  }
+
+  void filterTransactions(String denom, String status) {
+    var transactions = _transactionHolder.value.transactions;
+    List<Transaction> filtered = [];
+    if (denom == Strings.dropDownAllAssets &&
+        status == Strings.dropDownAllTransactions) {
+      filtered = transactions.toList();
+    } else if (denom == Strings.dropDownAllAssets) {
+      filtered =
+          transactions.where((t) => t.status == status.toUpperCase()).toList();
+    } else if (status == Strings.dropDownAllTransactions) {
+      filtered = transactions.where((t) => t.denom == denom).toList();
+    } else {
+      filtered = transactions
+          .where((t) => t.denom == denom && t.status == status.toUpperCase())
+          .toList();
+    }
+    _transactionHolder.value = TransactionHolder(
+      transactions: transactions,
+      filteredTransactions: filtered,
+    );
   }
 
   Future<void> connectWallet(String addressData) async {
@@ -198,7 +230,7 @@ class DashboardBloc extends Disposable {
     sessionEvents.dispose();
 
     _assetList.close();
-    _transactionList.close();
+    _transactionHolder.close();
     _walletSession?.dispose();
   }
 
@@ -238,4 +270,13 @@ class DashboardBloc extends Disposable {
       }
     }
   }
+}
+
+class TransactionHolder {
+  TransactionHolder({
+    required this.filteredTransactions,
+    required this.transactions,
+  });
+  List<Transaction> filteredTransactions;
+  List<Transaction> transactions;
 }

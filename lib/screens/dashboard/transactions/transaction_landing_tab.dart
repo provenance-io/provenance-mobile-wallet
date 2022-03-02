@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
-import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -17,6 +16,9 @@ class TransactionLandingTab extends StatefulWidget {
 }
 
 class TransactionLandingTabState extends State<TransactionLandingTab> {
+  String _assetType = Strings.dropDownAllAssets;
+  String _assetStatus = Strings.dropDownAllTransactions;
+
   final textDivider = " • ";
 
   @override
@@ -35,11 +37,13 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: StreamBuilder<List<Transaction>>(
-          initialData: bloc.transactionList.value,
-          stream: bloc.transactionList,
+        child: StreamBuilder<TransactionHolder>(
+          initialData: bloc.transactionHolder.value,
+          stream: bloc.transactionHolder,
           builder: (context, snapshot) {
-            final transactions = snapshot.data ?? [];
+            final filteredTransactions =
+                snapshot.data?.filteredTransactions ?? [];
+            final transactions = snapshot.data?.transactions ?? [];
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -69,6 +73,10 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                                 .toSet()
                                 .toList(),
                           ],
+                          onValueChanged: (item) {
+                            _assetType = item;
+                            bloc.filterTransactions(_assetType, _assetStatus);
+                          },
                         ),
                       ),
                       VerticalSpacer.medium(),
@@ -93,6 +101,10 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                                 .toSet()
                                 .toList(),
                           ],
+                          onValueChanged: (item) {
+                            _assetStatus = item;
+                            bloc.filterTransactions(_assetType, _assetStatus);
+                          },
                         ),
                       ),
                     ],
@@ -106,7 +118,7 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                       vertical: 20,
                     ),
                     itemBuilder: (context, index) {
-                      final item = transactions[index];
+                      final item = filteredTransactions[index];
 
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
@@ -187,7 +199,7 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                     separatorBuilder: (context, index) {
                       return PwListDivider();
                     },
-                    itemCount: transactions.length,
+                    itemCount: filteredTransactions.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
                   ),
