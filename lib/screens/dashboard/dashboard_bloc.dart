@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -20,7 +20,10 @@ import 'package:rxdart/rxdart.dart';
 
 class DashboardBloc extends Disposable {
   DashboardBloc() {
-    _initDeepLinks();
+    get<DeepLinkService>()
+        .link
+        .listen(_handleDynamicLink)
+        .addTo(_subscriptions);
   }
 
   WalletConnectSession? _walletSession;
@@ -241,22 +244,11 @@ class DashboardBloc extends Disposable {
     _walletSession?.dispose();
   }
 
-  Future _initDeepLinks() async {
-    final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-    if (initialLink != null) {
-      await _handleDynamicLink(initialLink);
-    }
-
-    FirebaseDynamicLinks.instance.onLink
-        .listen(_handleDynamicLink)
-        .addTo(_subscriptions);
-  }
-
-  Future<void> _handleDynamicLink(PendingDynamicLinkData linkData) async {
-    final path = linkData.link.path;
+  Future<void> _handleDynamicLink(Uri link) async {
+    final path = link.path;
     switch (path) {
       case '/wallet-connect':
-        final data = linkData.link.queryParameters['data'];
+        final data = link.queryParameters['data'];
         _handleWalletConnectLink(data);
         break;
       default:

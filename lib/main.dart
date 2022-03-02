@@ -7,6 +7,8 @@ import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
+import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
@@ -79,6 +81,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         storage: walletStorage,
       ),
     );
+
+    final deepLinkService = FirebaseDeepLinkService()..init();
+    get.registerSingleton<DeepLinkService>(deepLinkService);
   }
 
   @override
