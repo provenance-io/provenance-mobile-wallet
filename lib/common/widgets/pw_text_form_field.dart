@@ -1,6 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
-// TODO: Figure out how to apply colors on focus to match the design.
 class PwTextFormField extends StatelessWidget {
   const PwTextFormField({
     Key? key,
@@ -33,12 +32,14 @@ class PwTextFormField extends StatelessWidget {
         VerticalSpacer.small(),
         Container(
           decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.neutral550,
-                spreadRadius: 6,
-              ),
-            ],
+            boxShadow: autofocus
+                ? [
+                    BoxShadow(
+                      color: theme.colorScheme.neutral550,
+                      spreadRadius: 6,
+                    ),
+                  ]
+                : [],
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: TextFormField(
@@ -57,6 +58,12 @@ class PwTextFormField extends StatelessWidget {
                   .copyWith(color: theme.colorScheme.neutral250),
               fillColor: theme.colorScheme.neutral750,
               filled: true,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary500,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: theme.colorScheme.neutral250,
