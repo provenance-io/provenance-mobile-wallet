@@ -1,9 +1,9 @@
-import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -86,7 +86,7 @@ class TransactionLandingTab extends StatelessWidget {
               ),
             ),
             VerticalSpacer.medium(),
-            StreamBuilder<List<Transaction>>(
+            StreamBuilder<List<Transaction>?>(
               initialData: bloc.transactionList.value,
               stream: bloc.transactionList,
               builder: (context, snapshot) {

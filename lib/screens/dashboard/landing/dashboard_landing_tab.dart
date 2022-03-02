@@ -153,7 +153,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
           children: [
             WalletPortfolio(),
             VerticalSpacer.xxLarge(),
-            StreamBuilder<List<Asset>>(
+            StreamBuilder<List<Asset>?>(
               initialData: bloc.assetList.value,
               stream: bloc.assetList,
               builder: (context, snapshot) {
@@ -180,7 +180,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
             ),
             VerticalSpacer.medium(),
             Expanded(
-              child: StreamBuilder<List<Asset>>(
+              child: StreamBuilder<List<Asset>?>(
                 initialData: bloc.assetList.value,
                 stream: bloc.assetList,
                 builder: (context, snapshot) {

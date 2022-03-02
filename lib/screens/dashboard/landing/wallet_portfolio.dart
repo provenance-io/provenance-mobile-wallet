@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -13,7 +13,7 @@ class WalletPortfolio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assetStream = get<DashboardBloc>().assetList;
+    final bloc = get<DashboardBloc>();
 
     return Padding(
       padding: EdgeInsets.only(
@@ -29,13 +29,20 @@ class WalletPortfolio extends StatelessWidget {
             color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
-          StreamBuilder<List<Asset>>(
-            initialData: assetStream.value,
-            stream: assetStream,
+          StreamBuilder<List<Asset>?>(
+            initialData: bloc.assetList.value,
+            stream: bloc.assetList,
             builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return PwText(
+                  "\$-.--",
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.display2,
+                );
+              }
               double portfolioValue = 0;
 
-              if (snapshot.data != null || (snapshot.data ?? []).isNotEmpty) {
+              if (snapshot.data!.isNotEmpty) {
                 portfolioValue = snapshot.data
                         ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
                         .reduce((value, element) => value + element) ??

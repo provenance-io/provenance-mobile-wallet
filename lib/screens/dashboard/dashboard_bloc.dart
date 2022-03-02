@@ -28,11 +28,11 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>> _transactionList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<Transaction>?> _transactionList =
+      BehaviorSubject.seeded(null);
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
-  final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
   final _sendRequest = PublishSubject<SendRequest>();
   final _signRequest = PublishSubject<SignRequest>();
   final _sessionRequest = PublishSubject<RemoteClientDetails>();
@@ -51,8 +51,8 @@ class DashboardBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
-  ValueStream<List<Transaction>> get transactionList => _transactionList;
-  ValueStream<List<Asset>> get assetList => _assetList;
+  ValueStream<List<Transaction>?> get transactionList => _transactionList;
+  ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
@@ -74,6 +74,7 @@ class DashboardBloc extends Disposable {
           (await _assetService.getAssets(details?.address ?? ""));
     } catch (e) {
       errorCount++;
+      _assetList.value = [];
     }
 
     try {
@@ -81,6 +82,7 @@ class DashboardBloc extends Disposable {
           (await _transactionService.getTransactions(details?.address ?? ""));
     } catch (e) {
       errorCount++;
+      _transactionList.value = [];
       if (errorCount == 2) {
         showDialog(
           useSafeArea: true,
@@ -200,7 +202,7 @@ class DashboardBloc extends Disposable {
       var assets = wallet.address == selectedWallet.value?.address
           ? assetList.value
           : (await _assetService.getAssets(wallet.address));
-      map[wallet] = assets.length;
+      map[wallet] = assets?.length ?? 1;
     }
 
     _walletMap.value = map;
