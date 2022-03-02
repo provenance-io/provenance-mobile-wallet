@@ -4,9 +4,9 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 

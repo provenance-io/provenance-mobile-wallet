@@ -1,5 +1,4 @@
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
@@ -7,8 +6,9 @@ import 'package:provenance_wallet/screens/dashboard/landing/connection_details_m
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connection_service_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';

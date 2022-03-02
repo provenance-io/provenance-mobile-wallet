@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_connect_transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_storage_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
 class WalletService {

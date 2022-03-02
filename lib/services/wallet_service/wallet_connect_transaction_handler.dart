@@ -1,7 +1,7 @@
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/transaction_handler.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 
 class WalletConnectTransactionHandler implements TransactionHandler {
   @override
