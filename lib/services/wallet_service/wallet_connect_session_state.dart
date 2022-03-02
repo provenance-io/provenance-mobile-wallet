@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/wallet_connect_session_status.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 
 class WalletConnectSessionState {
   WalletConnectSessionState.disconnected()

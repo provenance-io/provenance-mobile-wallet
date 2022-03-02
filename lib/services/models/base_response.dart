@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 

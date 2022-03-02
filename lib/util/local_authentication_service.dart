@@ -1,13 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:local_auth/local_auth.dart';
 
 class LocalAuthenticationService {
   final LocalAuthentication _auth = LocalAuthentication();
@@ -89,51 +86,51 @@ class LocalAuthenticationService {
   }
 
   /// trigger biometric hardware
-  Future<bool> authenticate({String? message, bool fromLogin = false}) async {
-    try {
-      // await FlutterNativeCommands.readyToShowAuthScreen(false);
-      _isAuthenticated = await _auth.authenticate(
-        localizedReason: message ?? Strings.signInWithBiometric(authType),
-        useErrorDialogs: true,
-        stickyAuth: false,
-        biometricOnly: false,
-        iOSAuthStrings: iosStrings,
-        androidAuthStrings: androidStrings,
-      );
-      // logDebug('Attempting Authentication: isAuthenticated :$_isAuthenticated');
+  // Future<bool> authenticate({String? message, bool fromLogin = false}) async {
+  //   try {
+  //     // await FlutterNativeCommands.readyToShowAuthScreen(false);
+  //     _isAuthenticated = await _auth.authenticate(
+  //       localizedReason: message ?? Strings.signInWithBiometric(authType),
+  //       useErrorDialogs: true,
+  //       stickyAuth: false,
+  //       biometricOnly: false,
+  //       iOSAuthStrings: iosStrings,
+  //       androidAuthStrings: androidStrings,
+  //     );
+  //     // logDebug('Attempting Authentication: isAuthenticated :$_isAuthenticated');
 
-      _saveDeclinedSecureAuth(false);
-    } on PlatformException catch (e) {
-      if (e.code == auth_error.notEnrolled) {
-        // logError('auth_error.notEnrolled: isAuthenticated :$_isAuthenticated');
-        _saveDeclinedSecureAuth(true);
-      }
+  //     _saveDeclinedSecureAuth(false);
+  //   } on PlatformException catch (e) {
+  //     if (e.code == auth_error.notEnrolled) {
+  //       // logError('auth_error.notEnrolled: isAuthenticated :$_isAuthenticated');
+  //       _saveDeclinedSecureAuth(true);
+  //     }
 
-      if (e.code == auth_error.notAvailable) {
-        // logError(
-        //     'auth_error.notAvailable: {isAuthenticated :$_isAuthenticated');
+  //     if (e.code == auth_error.notAvailable) {
+  //       // logError(
+  //       //     'auth_error.notAvailable: {isAuthenticated :$_isAuthenticated');
 
-        _saveDeclinedSecureAuth(true);
-      }
-      if (e.code == auth_error.lockedOut) {
-        // logError('auth_error.lockedOut: {isAuthenticated :$_isAuthenticated');
-      }
-      if (e.code == auth_error.permanentlyLockedOut) {
-        // logError(
-        //     'auth_error.permanentlyLockedOut: {isAuthenticated :$_isAuthenticated');
-      }
-      log('AUTH ' + e.toString());
-      log('AUTH ' + e.message.toString());
-    }
+  //       _saveDeclinedSecureAuth(true);
+  //     }
+  //     if (e.code == auth_error.lockedOut) {
+  //       // logError('auth_error.lockedOut: {isAuthenticated :$_isAuthenticated');
+  //     }
+  //     if (e.code == auth_error.permanentlyLockedOut) {
+  //       // logError(
+  //       //     'auth_error.permanentlyLockedOut: {isAuthenticated :$_isAuthenticated');
+  //     }
+  //     log('AUTH ' + e.toString());
+  //     log('AUTH ' + e.message.toString());
+  //   }
 
-    if (_isAuthenticated) {
-      // await FlutterNativeCommands.readyToShowAuthScreen(true);
-    } else if (!fromLogin) {
-      // await FlutterNativeCommands.readyToShowAuthScreen(true);
-    }
+  //   if (_isAuthenticated) {
+  //     // await FlutterNativeCommands.readyToShowAuthScreen(true);
+  //   } else if (!fromLogin) {
+  //     // await FlutterNativeCommands.readyToShowAuthScreen(true);
+  //   }
 
-    return _isAuthenticated;
-  }
+  //   return _isAuthenticated;
+  // }
 
   // only ask if they want biometric once
   _saveDeclinedSecureAuth(bool decline) async {

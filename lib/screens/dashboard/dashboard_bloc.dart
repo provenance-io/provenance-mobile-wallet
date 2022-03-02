@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/common/models/asset.dart';
-import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -25,11 +25,11 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>> _transactionList =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<Transaction>?> _transactionList =
+      BehaviorSubject.seeded(null);
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
-  final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
   final BehaviorSubject<WalletDetails?> _selectedWallet =
       BehaviorSubject.seeded(null);
 
@@ -41,8 +41,8 @@ class DashboardBloc extends Disposable {
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
 
-  ValueStream<List<Transaction>> get transactionList => _transactionList;
-  ValueStream<List<Asset>> get assetList => _assetList;
+  ValueStream<List<Transaction>?> get transactionList => _transactionList;
+  ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
 
@@ -55,6 +55,7 @@ class DashboardBloc extends Disposable {
           (await _assetService.getAssets(details?.address ?? ""));
     } catch (e) {
       errorCount++;
+      _assetList.value = [];
     }
 
     try {
@@ -62,6 +63,7 @@ class DashboardBloc extends Disposable {
           (await _transactionService.getTransactions(details?.address ?? ""));
     } catch (e) {
       errorCount++;
+      _transactionList.value = [];
       if (errorCount == 2) {
         showDialog(
           useSafeArea: true,
@@ -182,7 +184,7 @@ class DashboardBloc extends Disposable {
       var assets = wallet.address == selectedWallet.value?.address
           ? assetList.value
           : (await _assetService.getAssets(wallet.address));
-      map[wallet] = assets.length;
+      map[wallet] = assets?.length ?? 1;
     }
 
     _walletMap.value = map;

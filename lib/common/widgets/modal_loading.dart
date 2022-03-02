@@ -93,7 +93,9 @@ class ModalLoadingRoute extends PopupRoute {
       if (instance != null) {
         Navigator.of(context).removeRoute(instance!);
       }
-    } catch (e) {}
+    } catch (e) {
+      // Nothing to do here.
+    }
 
     instance = null;
   }

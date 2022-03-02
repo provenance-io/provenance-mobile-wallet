@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/models/transaction.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';

@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/models/transaction.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class TransactionService {

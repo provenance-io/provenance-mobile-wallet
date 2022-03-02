@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';

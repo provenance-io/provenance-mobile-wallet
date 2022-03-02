@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/details_item.dart';
-import 'package:provenance_wallet/services/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 

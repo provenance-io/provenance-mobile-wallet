@@ -1,5 +1,3 @@
-import 'package:provenance_wallet/common/models/asset.dart';
-import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -10,10 +8,12 @@ import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart'
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
-import 'package:provenance_wallet/services/requests/sign_request.dart';
-import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/requests/send_request.dart';
+import 'package:provenance_wallet/services/models/requests/sign_request.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
