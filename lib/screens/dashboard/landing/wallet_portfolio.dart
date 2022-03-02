@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -101,7 +102,14 @@ class WalletPortfolio extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                  // TODO: 'Receive' logic here.
+                  final walletDetails =
+                      get<DashboardBloc>().selectedWallet.value;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReceiveFlow(walletDetails!),
+                    ),
+                  );
                 },
               ),
             ],

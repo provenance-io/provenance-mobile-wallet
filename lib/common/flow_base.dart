@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 
 ///
 /// this class allows us to use the navigation bar's back button with in  a
@@ -60,8 +59,7 @@ abstract class FlowBase extends StatefulWidget {
   }) : super(key: key);
 }
 
-abstract class FlowBaseState<Z extends FlowBase> extends State<Z>
-    implements SendBlocNavigator {
+abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
