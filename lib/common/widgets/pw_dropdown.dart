@@ -27,12 +27,14 @@ class PwDropDown<X> extends StatefulWidget {
     Key? key,
     required String initialValue,
     required List<String> items,
+    void Function(String item)? onValueChanged,
   }) {
     return PwDropDown<String>(
       initialValue: initialValue,
       items: items,
       key: key,
       isExpanded: true,
+      onValueChanged: onValueChanged,
       builder: (item) => Row(
         children: [
           PwText(
