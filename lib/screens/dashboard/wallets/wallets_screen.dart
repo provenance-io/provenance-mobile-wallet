@@ -87,11 +87,7 @@ class WalletsScreenState extends State<WalletsScreen>
 
                           return WalletItem(
                             item: wallet,
-                            isSelected:
-                                wallet.address == selectedWallet.address,
-                            reload: () {
-                              _bloc.loadAllWallets();
-                            },
+                            isSelected: wallet.id == selectedWallet.id,
                             numAssets: numAssets[index],
                           );
                         },
