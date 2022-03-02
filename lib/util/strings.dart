@@ -262,13 +262,9 @@ class Strings {
 
   // TransactionsList
   static const dropDownAllAssets = "All Assets";
-  static const dropDownHashAsset = "Hash";
-  static const dropDownUsdAsset = "USD";
-  static const dropDownUsdfAsset = "USDF";
-
   static const dropDownAllTransactions = "All Transactions";
-  static const dropDownPurchaseTransaction = "Purchase";
-  static const dropDownDepositTransaction = "Deposit";
+  static const buy = "Buy";
+  static const sell = "Sell";
 
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
