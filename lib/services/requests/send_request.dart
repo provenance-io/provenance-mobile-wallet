@@ -5,12 +5,12 @@ class SendRequest {
   SendRequest({
     required this.id,
     required this.description,
-    required this.message,
+    required this.messages,
     required this.gasEstimate,
   });
 
   final String id;
   final String description;
-  final GeneratedMessage message;
+  final List<GeneratedMessage> messages;
   final GasEstimate gasEstimate;
 }

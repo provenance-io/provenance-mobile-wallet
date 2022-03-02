@@ -10,15 +10,17 @@ import 'package:provenance_dart/proto_staking.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
 import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:uuid/uuid.dart';
+
+typedef CompleterDelegate = Future<void> Function(bool accept);
 
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
@@ -30,7 +32,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final PrivateKey _privateKey;
   final TransactionHandler _transactionHandler;
 
-  final _completerLookup = <String, Completer<bool>>{};
+  final _completerLookup = <String, CompleterDelegate>{};
   static const _supportedMessges = {
     MsgActivateRequest,
     MsgAddMarkerRequest,
@@ -57,16 +59,29 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return false;
     }
 
-    completer.complete(allowed);
+    completer(allowed);
 
     return true;
   }
 
   @override
-  Future<SessionApprovalData?> onApproveSession(ClientMeta clientMeta) async {
+  void onApproveSession(
+    ClientMeta clientMeta,
+    AcceptCallback<SessionApprovalData?> callback,
+  ) async {
     final id = Uuid().v1().toString();
-    final completer = Completer<bool>();
-    _completerLookup[id] = completer;
+
+    _completerLookup[id] = (bool approve) {
+      SessionApprovalData? sessionApproval;
+      if (approve) {
+        sessionApproval = SessionApprovalData(
+          _privateKey,
+          _privateKey.publicKey.coin.chainId,
+        );
+      }
+
+      return callback(sessionApproval);
+    };
 
     final remoteClientData = RemoteClientDetails(
       id,
@@ -77,29 +92,26 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     _sessionRequest.add(remoteClientData);
-
-    final approved = await completer.future;
-    if (!approved) {
-      return null;
-    }
-
-    final sessionApproval = SessionApprovalData(
-      _privateKey,
-      _privateKey.publicKey.coin.chainId,
-    );
-
-    return sessionApproval;
   }
 
   @override
-  Future<List<int>?> onApproveSign(
+  void onApproveSign(
     String description,
     String address,
     List<int> msg,
+    AcceptCallback<List<int>?> callback,
   ) async {
     final id = Uuid().v1().toString();
-    final completer = Completer<bool>();
-    _completerLookup[id] = completer;
+
+    _completerLookup[id] = (bool accept) {
+      List<int>? signedData;
+      if (accept) {
+        signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))
+          ..removeLast();
+      }
+
+      return callback(signedData);
+    };
 
     final signRequest = SignRequest(
       id: id,
@@ -109,38 +121,31 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     _signRequest.add(signRequest);
-
-    final approved = await completer.future;
-    if (!approved) {
-      return null;
-    }
-
-    return _privateKey.defaultKey().signData(Hash.sha256(msg))..removeLast();
   }
 
   @override
-  Future<RawTxResponsePair?> onApproveTransaction(
+  void onApproveTransaction(
     String description,
     String address,
-    GeneratedMessage proposedMessage,
+    List<GeneratedMessage> proposedMessages,
+    AcceptCallback<RawTxResponsePair?> callback,
   ) async {
+    final proposedMessage = proposedMessages.first;
+
     final messageType = proposedMessage.runtimeType;
     final messageName = proposedMessage.info_.qualifiedMessageName;
+
     if (!_supportedMessges.contains(messageType)) {
       _onDidError.add(Strings.transactionErrorUnsupportedMessage(messageName));
 
-      return null;
+      return callback(null);
     }
 
-    final id = Uuid().v1().toString();
-    final completer = Completer<bool>();
-    _completerLookup[id] = completer;
-
     final txBody = TxBody(
-      messages: [
-        proposedMessage.toAny(),
-      ],
+      messages: proposedMessages.map((msg) => msg.toAny()).toList(),
     );
+
+    final id = Uuid().v1().toString();
 
     GasEstimate? gasEstimate;
     try {
@@ -156,29 +161,38 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final sendRequest = SendRequest(
       id: id,
       description: description,
-      message: proposedMessage,
+      messages: proposedMessages,
       gasEstimate: gasEstimate,
     );
 
+    _completerLookup[id] = (bool approve) async {
+      RawTxResponsePair? response;
+
+      if (approve) {
+        response =
+            await _transactionHandler.executeTransaction(txBody, _privateKey);
+
+        final txResponse = response.txResponse;
+
+        _onResponse.add(
+          WalletConnectTxResponse(
+            code: txResponse.code,
+            requestId: sendRequest.id,
+            message: txResponse.rawLog,
+            gasWanted: txResponse.gasWanted.toInt(),
+            gasUsed: txResponse.gasUsed.toInt(),
+            height: txResponse.height.toInt(),
+            txHash: txResponse.txhash,
+            fees: gasEstimate!.fees,
+            codespace: txResponse.codespace,
+          ),
+        );
+      }
+
+      callback(response);
+    };
+
     _sendRequest.add(sendRequest);
-
-    final approved = await completer.future;
-    if (!approved) {
-      return null;
-    }
-
-    final response =
-        await _transactionHandler.executeTransaction(txBody, _privateKey);
-
-    final txResponse = response.txResponse;
-    _onResponse.add(
-      WalletConnectTxResponse(
-        code: txResponse.code,
-        message: txResponse.rawLog,
-      ),
-    );
-
-    return response;
   }
 
   @override
@@ -190,7 +204,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     _onResponse.close();
 
     for (var completer in _completerLookup.values) {
-      completer.complete(false);
+      completer(false);
     }
 
     _completerLookup.clear();

@@ -1,26 +1,25 @@
-import 'package:grpc/grpc.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
-import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/requests/send_request.dart';
+import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/requests/sign_request.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/messages/message_field_name.dart';
-import 'package:provenance_wallet/util/strings.dart';
-import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/messages/message_field_name.dart';
+import 'package:provenance_wallet/util/router_observer.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -184,18 +183,26 @@ class DashboardScreenState extends State<DashboardScreen>
         animation,
         secondaryAnimation,
       ) {
-        final message = sendRequest.message;
-        final data = <String, dynamic>{
-          MessageFieldName.type: message.info_.qualifiedMessageName,
-          ...message.toProto3Json() as Map<String, dynamic>,
-        };
+        final messages = sendRequest.messages;
+        final data = messages.map((message) {
+          return <String, dynamic>{
+            MessageFieldName.type: message.info_.qualifiedMessageName,
+            ...message.toProto3Json() as Map<String, dynamic>,
+          };
+        }).toList();
+
+        // final data = <String, dynamic>{
+        //   MessageFieldName.type: message.info_.qualifiedMessageName,
+        //   ...message.toProto3Json() as Map<String, dynamic>,
+        // };
 
         return TransactionConfirmScreen(
+          kind: TransactionConfirmKind.approve,
           title: Strings.confirmTransactionTitle,
           requestId: sendRequest.id,
           clientDetails: clientDetails,
           data: data,
-          gasEstimate: sendRequest.gasEstimate,
+          fees: sendRequest.gasEstimate.fees,
         );
       },
     );
@@ -220,14 +227,17 @@ class DashboardScreenState extends State<DashboardScreen>
         secondaryAnimation,
       ) {
         return TransactionConfirmScreen(
+          kind: TransactionConfirmKind.approve,
           title: Strings.confirmSignTitle,
           requestId: signRequest.id,
           subTitle: signRequest.description,
           clientDetails: clientDetails,
           message: signRequest.message,
-          data: {
-            MessageFieldName.address: signRequest.address,
-          },
+          data: [
+            {
+              MessageFieldName.address: signRequest.address,
+            },
+          ],
         );
       },
     );
@@ -251,21 +261,64 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   void _onResponse(WalletConnectTxResponse response) {
-    if (response.code == StatusCode.ok) {
-      PwModalScreen.showNotify(
-        context: context,
-        title: Strings.transactionComplete,
-        icon: Image.asset(
-          AssetPaths.images.transactionComplete,
-          width: 80,
-        ),
-        buttonText: Strings.transactionBackToDashboard,
-      );
-    } else {
-      PwDialog.showError(
-        context,
-        message: response.message ?? '',
+    final clientDetails = _bloc.clientDetails.value;
+    if (clientDetails == null) {
+      return;
+    }
+
+    const statusCodeOk = 0;
+
+    final title = response.code == statusCodeOk
+        ? Strings.transactionSuccessTitle
+        : Strings.transactionErrorTitle;
+
+    final data = <String, dynamic>{};
+    if (response.tx?.body.messages.isNotEmpty ?? false) {
+      data[MessageFieldName.type] =
+          response.tx?.body.messages.first.info_.qualifiedMessageName;
+    }
+
+    data.addAll(
+      {
+        FieldName.gasWanted: response.gasWanted.toString(),
+        FieldName.gasUsed: response.gasUsed.toString(),
+        FieldName.txID: response.txHash,
+        FieldName.block: response.height?.toString(),
+      },
+    );
+
+    if (response.code != statusCodeOk) {
+      data.addAll(
+        {
+          FieldName.gasWanted: response.gasWanted.toString(),
+          FieldName.gasUsed: response.gasUsed.toString(),
+          FieldName.txID: response.txHash,
+          FieldName.block: response.height?.toString(),
+          FieldName.code: response.code,
+          FieldName.codespace: response.codespace,
+          FieldName.rawLog: response.message,
+        },
       );
     }
+
+    showGeneralDialog(
+      context: (context),
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
+        return TransactionConfirmScreen(
+          kind: TransactionConfirmKind.notify,
+          title: title,
+          requestId: response.requestId,
+          clientDetails: clientDetails,
+          data: [
+            data,
+          ],
+          fees: response.fees,
+        );
+      },
+    );
   }
 }
