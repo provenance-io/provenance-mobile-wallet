@@ -107,6 +107,7 @@ class Strings {
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
   static const profile = "Profile";
+  static const errorDisconnected = 'Disconnected';
 
   // My Account Page
   static const linkedServices = 'Linked Services';

@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/details_item.dart';
+import 'package:provenance_wallet/services/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -48,11 +49,12 @@ class ConnectionDetailsModal extends StatelessWidget {
                 horizontal: Spacing.xxLarge,
                 vertical: Spacing.xLarge,
               ),
-              endChild: StreamBuilder<String?>(
-                initialData: bloc.address.value,
-                stream: bloc.address,
+              endChild: StreamBuilder<WalletConnectSessionState>(
+                initialData: bloc.sessionEvents.state.value,
+                stream: bloc.sessionEvents.state,
                 builder: (context, snapshot) {
-                  final address = snapshot.data ?? Strings.unknown;
+                  final address =
+                      snapshot.data?.details?.url.toString() ?? Strings.unknown;
 
                   return Flexible(
                     child: PwText(

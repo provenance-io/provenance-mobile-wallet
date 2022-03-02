@@ -22,6 +22,46 @@ import 'package:uuid/uuid.dart';
 
 typedef CompleterDelegate = Future<void> Function(bool accept);
 
+class WalletConnectSessionDelegateEvents {
+  WalletConnectSessionDelegateEvents();
+
+  final _subscriptions = CompositeSubscription();
+
+  final _sessionRequest = PublishSubject<RemoteClientDetails>(sync: true);
+  final _signRequest = PublishSubject<SignRequest>(sync: true);
+  final _sendRequest = PublishSubject<SendRequest>(sync: true);
+  final _onDidError = PublishSubject<String>(sync: true);
+  final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
+
+  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
+  Stream<SignRequest> get signRequest => _signRequest;
+  Stream<SendRequest> get sendRequest => _sendRequest;
+  Stream<String> get onDidError => _onDidError;
+  Stream<WalletConnectTxResponse> get onResponse => _onResponse;
+
+  void listen(WalletConnectSessionDelegateEvents other) {
+    other.sessionRequest.listen(_sessionRequest.add).addTo(_subscriptions);
+    other.signRequest.listen(_signRequest.add).addTo(_subscriptions);
+    other.sendRequest.listen(_sendRequest.add).addTo(_subscriptions);
+    other.onDidError.listen(_onDidError.add).addTo(_subscriptions);
+    other.onResponse.listen(_onResponse.add).addTo(_subscriptions);
+  }
+
+  void clear() {
+    _subscriptions.clear();
+  }
+
+  void dispose() {
+    _subscriptions.dispose();
+
+    _sessionRequest.close();
+    _signRequest.close();
+    _sendRequest.close();
+    _onDidError.close();
+    _onResponse.close();
+  }
+}
+
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
     required PrivateKey privateKey,
@@ -41,17 +81,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     MsgSend,
   };
 
-  final _sessionRequest = PublishSubject<RemoteClientDetails>(sync: true);
-  final _signRequest = PublishSubject<SignRequest>(sync: true);
-  final _sendRequest = PublishSubject<SendRequest>(sync: true);
-  final _onDidError = PublishSubject<String>(sync: true);
-  final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
-
-  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
-  Stream<SignRequest> get signRequest => _signRequest;
-  Stream<SendRequest> get sendRequest => _sendRequest;
-  Stream<String> get onDidError => _onDidError;
-  Stream<WalletConnectTxResponse> get onResponse => _onResponse;
+  final events = WalletConnectSessionDelegateEvents();
 
   bool complete(String requestId, bool allowed) {
     final completer = _completerLookup.remove(requestId);
@@ -91,7 +121,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       clientMeta.icons.toList(),
     );
 
-    _sessionRequest.add(remoteClientData);
+    events._sessionRequest.add(remoteClientData);
   }
 
   @override
@@ -120,7 +150,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       address: address,
     );
 
-    _signRequest.add(signRequest);
+    events._signRequest.add(signRequest);
   }
 
   @override
@@ -136,7 +166,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final messageName = proposedMessage.info_.qualifiedMessageName;
 
     if (!_supportedMessges.contains(messageType)) {
-      _onDidError.add(Strings.transactionErrorUnsupportedMessage(messageName));
+      events._onDidError
+          .add(Strings.transactionErrorUnsupportedMessage(messageName));
 
       return callback(null);
     }
@@ -151,7 +182,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     try {
       gasEstimate = await _transactionHandler.estimateGas(txBody, _privateKey);
     } on GrpcError catch (e) {
-      _onDidError.add(e.message ?? e.codeName);
+      events._onDidError.add(e.message ?? e.codeName);
     }
 
     if (gasEstimate == null) {
@@ -174,7 +205,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
         final txResponse = response.txResponse;
 
-        _onResponse.add(
+        events._onResponse.add(
           WalletConnectTxResponse(
             code: txResponse.code,
             requestId: sendRequest.id,
@@ -192,16 +223,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       callback(response);
     };
 
-    _sendRequest.add(sendRequest);
+    events._sendRequest.add(sendRequest);
   }
 
   @override
   void onClose() {
-    _sessionRequest.close();
-    _signRequest.close();
-    _sendRequest.close();
-    _onDidError.close();
-    _onResponse.close();
+    events.dispose();
 
     for (var completer in _completerLookup.values) {
       completer(false);
@@ -213,6 +240,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   @override
   void onError(Exception exception) {
     logError(exception);
-    _onDidError.add(exception.toString());
+    events._onDidError.add(exception.toString());
   }
 }

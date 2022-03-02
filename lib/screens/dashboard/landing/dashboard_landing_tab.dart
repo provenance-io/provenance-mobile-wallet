@@ -8,7 +8,8 @@ import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dar
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
+import 'package:provenance_wallet/services/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/services/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -41,12 +42,12 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
-          StreamBuilder<WalletConnectionServiceStatus>(
-            initialData: bloc.connectionStatus.value,
-            stream: bloc.connectionStatus,
+          StreamBuilder<WalletConnectSessionState>(
+            initialData: bloc.sessionEvents.state.value,
+            stream: bloc.sessionEvents.state,
             builder: (context, snapshot) {
               final connected =
-                  snapshot.data == WalletConnectionServiceStatus.connected;
+                  snapshot.data?.status == WalletConnectSessionStatus.connected;
 
               return Padding(
                 padding: EdgeInsets.only(
