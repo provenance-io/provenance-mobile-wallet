@@ -30,69 +30,71 @@ class TransactionLandingTab extends StatelessWidget {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
-              ),
-              child: Column(
-                children: [
-                  // FIXME: get the right items for these.
+        child: StreamBuilder<List<Transaction>>(
+          initialData: bloc.transactionList.value,
+          stream: bloc.transactionList,
+          builder: (context, snapshot) {
+            final transactions = snapshot.data ?? [];
 
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.neutral250,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.medium,
-                    ),
-                    child: PwDropDown.fromStrings(
-                      initialValue: Strings.dropDownAllAssets,
-                      items: [
-                        Strings.dropDownAllAssets,
-                        Strings.dropDownHashAsset,
-                        Strings.dropDownUsdAsset,
-                        Strings.dropDownUsdfAsset,
-                      ],
-                    ),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.xxLarge,
                   ),
-                  VerticalSpacer.medium(),
-                  // FIXME: get the right items for these.
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.neutral250,
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.neutral250,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Spacing.medium,
+                        ),
+                        child: PwDropDown.fromStrings(
+                          initialValue: Strings.dropDownAllAssets,
+                          items: [
+                            Strings.dropDownAllAssets,
+                            ...transactions
+                                .map((e) => e.denom)
+                                .toSet()
+                                .toList(),
+                          ],
+                        ),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.medium,
-                    ),
-                    child: PwDropDown.fromStrings(
-                      initialValue: Strings.dropDownAllTransactions,
-                      items: [
-                        Strings.dropDownAllTransactions,
-                        Strings.dropDownPurchaseTransaction,
-                        Strings.dropDownDepositTransaction,
-                      ],
-                    ),
+                      VerticalSpacer.medium(),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.neutral250,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Spacing.medium,
+                        ),
+                        child: PwDropDown.fromStrings(
+                          initialValue: Strings.dropDownAllTransactions,
+                          items: [
+                            Strings.dropDownAllTransactions,
+                            ...transactions
+                                .map(
+                                  (e) => e.status.toLowerCase().capitalize(),
+                                )
+                                .toSet()
+                                .toList(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            VerticalSpacer.medium(),
-            StreamBuilder<List<Transaction>?>(
-              initialData: bloc.transactionList.value,
-              stream: bloc.transactionList,
-              builder: (context, snapshot) {
-                final transactions = snapshot.data ?? [];
-
-                return Expanded(
+                ),
+                VerticalSpacer.medium(),
+                Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(
                       horizontal: Spacing.xxLarge,
@@ -131,14 +133,18 @@ class TransactionLandingTab extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     PwText(
-                                      Strings.dropDownHashAsset.toUpperCase(),
+                                      item.denom.toUpperCase(),
                                       style: PwTextStyle.bodyBold,
                                     ),
                                     VerticalSpacer.xSmall(),
                                     Row(
                                       children: [
                                         PwText(
-                                          item.denom,
+                                          item.recipientAddress ==
+                                                  bloc.selectedWallet.value
+                                                      ?.address
+                                              ? Strings.buy
+                                              : Strings.sell,
                                           color: PwColor.neutral200,
                                           style: PwTextStyle.footnote,
                                         ),
@@ -148,8 +154,7 @@ class TransactionLandingTab extends StatelessWidget {
                                           style: PwTextStyle.footnote,
                                         ),
                                         PwText(
-                                          // FIXME: Format the date to be 'Mmm dd'.
-                                          item.timestamp.toIso8601String(),
+                                          item.formattedTimestamp,
                                           color: PwColor.neutral200,
                                           style: PwTextStyle.footnote,
                                         ),
@@ -181,10 +186,10 @@ class TransactionLandingTab extends StatelessWidget {
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
