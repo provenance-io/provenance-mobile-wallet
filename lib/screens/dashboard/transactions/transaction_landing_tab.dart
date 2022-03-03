@@ -16,9 +16,6 @@ class TransactionLandingTab extends StatefulWidget {
 }
 
 class TransactionLandingTabState extends State<TransactionLandingTab> {
-  String _assetType = Strings.dropDownAllAssets;
-  String _assetStatus = Strings.dropDownAllTransactions;
-
   final textDivider = " • ";
 
   @override
@@ -41,9 +38,10 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
           initialData: bloc.transactionDetails.value,
           stream: bloc.transactionDetails,
           builder: (context, snapshot) {
-            final filteredTransactions =
-                snapshot.data?.filteredTransactions ?? [];
-            final transactions = snapshot.data?.transactions ?? [];
+            final transactionDetails = snapshot.data;
+            if (transactionDetails == null) {
+              return Container();
+            }
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -65,17 +63,13 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                           horizontal: Spacing.medium,
                         ),
                         child: PwDropDown.fromStrings(
-                          initialValue: Strings.dropDownAllAssets,
-                          items: [
-                            Strings.dropDownAllAssets,
-                            ...transactions
-                                .map((e) => e.denom)
-                                .toSet()
-                                .toList(),
-                          ],
+                          initialValue: transactionDetails.selectedType,
+                          items: transactionDetails.types,
                           onValueChanged: (item) {
-                            _assetType = item;
-                            bloc.filterTransactions(_assetType, _assetStatus);
+                            bloc.filterTransactions(
+                              item,
+                              transactionDetails.selectedStatus,
+                            );
                           },
                         ),
                       ),
@@ -92,18 +86,12 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                         ),
                         child: PwDropDown.fromStrings(
                           initialValue: Strings.dropDownAllTransactions,
-                          items: [
-                            Strings.dropDownAllTransactions,
-                            ...transactions
-                                .map(
-                                  (e) => e.status.toLowerCase().capitalize(),
-                                )
-                                .toSet()
-                                .toList(),
-                          ],
+                          items: transactionDetails.statuses,
                           onValueChanged: (item) {
-                            _assetStatus = item;
-                            bloc.filterTransactions(_assetType, _assetStatus);
+                            bloc.filterTransactions(
+                              transactionDetails.selectedType,
+                              item,
+                            );
                           },
                         ),
                       ),
@@ -118,7 +106,8 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                       vertical: 20,
                     ),
                     itemBuilder: (context, index) {
-                      final item = filteredTransactions[index];
+                      final item =
+                          transactionDetails.filteredTransactions[index];
 
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
@@ -199,7 +188,7 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
                     separatorBuilder: (context, index) {
                       return PwListDivider();
                     },
-                    itemCount: filteredTransactions.length,
+                    itemCount: transactionDetails.filteredTransactions.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
                   ),

@@ -108,6 +108,9 @@ class DashboardBloc extends Disposable {
     _transactionDetails.value = TransactionDetails(
       transactions: transactions,
       filteredTransactions: filtered,
+      selectedStatus: status,
+      selectedType: denom,
+    );
     stopwatch.stop();
     logDebug(
       "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
@@ -280,7 +283,42 @@ class TransactionDetails {
   TransactionDetails({
     required this.filteredTransactions,
     required this.transactions,
+    this.selectedType = Strings.dropDownAllAssets,
+    this.selectedStatus = Strings.dropDownAllTransactions,
   });
+  List<String> _types = [];
+  List<String> _statuses = [];
+
   List<Transaction> filteredTransactions;
   List<Transaction> transactions;
+  String selectedType;
+  String selectedStatus;
+  List<String> get types {
+    if (_types.isNotEmpty) {
+      return _types;
+    }
+    _types = [
+      Strings.dropDownAllAssets,
+      ...transactions.map((e) => e.denom).toSet().toList(),
+    ];
+
+    return _types;
+  }
+
+  List<String> get statuses {
+    if (_statuses.isNotEmpty) {
+      return _statuses;
+    }
+    _statuses = [
+      Strings.dropDownAllTransactions,
+      ...transactions
+          .map(
+            (e) => e.status.toLowerCase().capitalize(),
+          )
+          .toSet()
+          .toList(),
+    ];
+
+    return _statuses;
+  }
 }
