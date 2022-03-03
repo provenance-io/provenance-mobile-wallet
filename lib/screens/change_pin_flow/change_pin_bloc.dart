@@ -25,7 +25,7 @@ class ChangePinBloc extends Disposable {
   final BehaviorSubject<String> _accountName;
   final BehaviorSubject<List<int>> _inputCode = BehaviorSubject.seeded([]);
 
-  final authHelper = get<LocalAuthHelper>();
+  final _authHelper = get<LocalAuthHelper>();
 
   ValueStream<String> get accountName => _accountName.stream;
   ValueStream<List<int>> get inputCode => _inputCode.stream;
@@ -62,7 +62,7 @@ class ChangePinBloc extends Disposable {
     BuildContext context,
     bool enroll,
   ) async {
-    authHelper.enroll(
+    _authHelper.enroll(
       _inputCode.value.join(" "),
       _accountName.value,
       enroll,
