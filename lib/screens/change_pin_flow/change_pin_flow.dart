@@ -31,6 +31,12 @@ class ChangePinFlowState extends FlowBaseState<ChangePinFlow>
   }
 
   @override
+  void dispose() {
+    get.unregister<ChangePinBloc>();
+    super.dispose();
+  }
+
+  @override
   Widget createStartPage() => CreateNewPinScreen();
 
   @override
