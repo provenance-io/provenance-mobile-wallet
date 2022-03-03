@@ -76,4 +76,12 @@ class ChangePinBloc extends Disposable {
   Future<void> returnToProfile() async {
     _navigator.endFlow();
   }
+
+  void doAuth(BuildContext context) {
+    _authHelper.auth(context, (isAuthorized) {
+      if (!isAuthorized) {
+        returnToProfile();
+      }
+    });
+  }
 }

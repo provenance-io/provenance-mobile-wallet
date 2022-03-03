@@ -20,6 +20,8 @@ class CreateNewPinState extends State<CreateNewPinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bloc.doAuth(context);
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.setPinCode,
