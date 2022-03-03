@@ -25,9 +25,9 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<TransactionHolder> _transactionHolder =
+  final BehaviorSubject<TransactionDetails> _transactionDetails =
       BehaviorSubject.seeded(
-    TransactionHolder(
+    TransactionDetails(
       filteredTransactions: [],
       transactions: [],
     ),
@@ -46,7 +46,7 @@ class DashboardBloc extends Disposable {
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
 
-  ValueStream<TransactionHolder> get transactionHolder => _transactionHolder;
+  ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
@@ -66,14 +66,14 @@ class DashboardBloc extends Disposable {
     try {
       var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
-      _transactionHolder.value = TransactionHolder(
+      _transactionDetails.value = TransactionDetails(
         filteredTransactions: transactions,
         transactions: transactions.toList(),
       );
     } catch (e) {
       errorCount++;
-      transactionHolder.value.transactions =
-          transactionHolder.value.filteredTransactions = [];
+      transactionDetails.value.transactions =
+          transactionDetails.value.filteredTransactions = [];
       if (errorCount == 2) {
         showDialog(
           useSafeArea: true,
@@ -89,7 +89,7 @@ class DashboardBloc extends Disposable {
   }
 
   void filterTransactions(String denom, String status) {
-    var transactions = _transactionHolder.value.transactions;
+    var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
     if (denom == Strings.dropDownAllAssets &&
         status == Strings.dropDownAllTransactions) {
@@ -104,7 +104,7 @@ class DashboardBloc extends Disposable {
           .where((t) => t.denom == denom && t.status == status.toUpperCase())
           .toList();
     }
-    _transactionHolder.value = TransactionHolder(
+    _transactionDetails.value = TransactionDetails(
       transactions: transactions,
       filteredTransactions: filtered,
     );
@@ -230,7 +230,7 @@ class DashboardBloc extends Disposable {
     sessionEvents.dispose();
 
     _assetList.close();
-    _transactionHolder.close();
+    _transactionDetails.close();
     _walletSession?.dispose();
   }
 
@@ -272,8 +272,8 @@ class DashboardBloc extends Disposable {
   }
 }
 
-class TransactionHolder {
-  TransactionHolder({
+class TransactionDetails {
+  TransactionDetails({
     required this.filteredTransactions,
     required this.transactions,
   });

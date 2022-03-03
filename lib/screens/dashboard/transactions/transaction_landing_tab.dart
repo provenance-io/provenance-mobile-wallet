@@ -37,9 +37,9 @@ class TransactionLandingTabState extends State<TransactionLandingTab> {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: StreamBuilder<TransactionHolder>(
-          initialData: bloc.transactionHolder.value,
-          stream: bloc.transactionHolder,
+        child: StreamBuilder<TransactionDetails>(
+          initialData: bloc.transactionDetails.value,
+          stream: bloc.transactionDetails,
           builder: (context, snapshot) {
             final filteredTransactions =
                 snapshot.data?.filteredTransactions ?? [];
