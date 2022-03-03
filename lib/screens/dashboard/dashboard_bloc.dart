@@ -25,8 +25,13 @@ class DashboardBloc extends Disposable {
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>?> _transactionList =
-      BehaviorSubject.seeded(null);
+  final BehaviorSubject<TransactionDetails> _transactionDetails =
+      BehaviorSubject.seeded(
+    TransactionDetails(
+      filteredTransactions: [],
+      transactions: [],
+    ),
+  );
   final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
       BehaviorSubject.seeded({});
   final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
@@ -41,7 +46,7 @@ class DashboardBloc extends Disposable {
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
 
-  ValueStream<List<Transaction>?> get transactionList => _transactionList;
+  ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
@@ -59,11 +64,16 @@ class DashboardBloc extends Disposable {
     }
 
     try {
-      _transactionList.value =
+      var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
+      _transactionDetails.value = TransactionDetails(
+        filteredTransactions: transactions,
+        transactions: transactions.toList(),
+      );
     } catch (e) {
       errorCount++;
-      _transactionList.value = [];
+      transactionDetails.value.transactions =
+          transactionDetails.value.filteredTransactions = [];
       if (errorCount == 2) {
         showDialog(
           useSafeArea: true,
@@ -76,6 +86,35 @@ class DashboardBloc extends Disposable {
         );
       }
     }
+  }
+
+  void filterTransactions(String denom, String status) {
+    final stopwatch = Stopwatch()..start();
+    var transactions = _transactionDetails.value.transactions;
+    List<Transaction> filtered = [];
+    if (denom == Strings.dropDownAllAssets &&
+        status == Strings.dropDownAllTransactions) {
+      filtered = transactions.toList();
+    } else if (denom == Strings.dropDownAllAssets) {
+      filtered =
+          transactions.where((t) => t.status == status.toUpperCase()).toList();
+    } else if (status == Strings.dropDownAllTransactions) {
+      filtered = transactions.where((t) => t.denom == denom).toList();
+    } else {
+      filtered = transactions
+          .where((t) => t.denom == denom && t.status == status.toUpperCase())
+          .toList();
+    }
+    _transactionDetails.value = TransactionDetails(
+      transactions: transactions,
+      filteredTransactions: filtered,
+      selectedStatus: status,
+      selectedType: denom,
+    );
+    stopwatch.stop();
+    logDebug(
+      "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
+    );
   }
 
   Future<void> connectWallet(String addressData) async {
@@ -198,7 +237,7 @@ class DashboardBloc extends Disposable {
     sessionEvents.dispose();
 
     _assetList.close();
-    _transactionList.close();
+    _transactionDetails.close();
     _walletSession?.dispose();
   }
 
@@ -237,5 +276,49 @@ class DashboardBloc extends Disposable {
         logError('Invalid wallet connect data');
       }
     }
+  }
+}
+
+class TransactionDetails {
+  TransactionDetails({
+    required this.filteredTransactions,
+    required this.transactions,
+    this.selectedType = Strings.dropDownAllAssets,
+    this.selectedStatus = Strings.dropDownAllTransactions,
+  });
+  List<String> _types = [];
+  List<String> _statuses = [];
+
+  List<Transaction> filteredTransactions;
+  List<Transaction> transactions;
+  String selectedType;
+  String selectedStatus;
+  List<String> get types {
+    if (_types.isNotEmpty) {
+      return _types;
+    }
+    _types = [
+      Strings.dropDownAllAssets,
+      ...transactions.map((e) => e.denom).toSet().toList(),
+    ];
+
+    return _types;
+  }
+
+  List<String> get statuses {
+    if (_statuses.isNotEmpty) {
+      return _statuses;
+    }
+    _statuses = [
+      Strings.dropDownAllTransactions,
+      ...transactions
+          .map(
+            (e) => e.status.toLowerCase().capitalize(),
+          )
+          .toSet()
+          .toList(),
+    ];
+
+    return _statuses;
   }
 }

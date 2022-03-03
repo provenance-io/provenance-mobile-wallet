@@ -181,9 +181,8 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             DetailsItem(
               title: Strings.tradeDetailsPricePerUnit,
-              endChild: // FIXME: Need 'Price Per Unit'.
-                  PwText(
-                "0.020 USD",
+              endChild: PwText(
+                transaction.pricePerUnit.toCurrency(),
                 style: PwTextStyle.body,
               ),
             ),
@@ -192,9 +191,8 @@ class TradeDetailsScreen extends StatelessWidget {
             ),
             DetailsItem(
               title: Strings.tradeDetailsTotalPurchase,
-              endChild: // FIXME: Need 'Total Purchase Price'.
-                  PwText(
-                "50.00 USD",
+              endChild: PwText(
+                transaction.totalPrice.toCurrency(),
                 style: PwTextStyle.body,
               ),
             ),
