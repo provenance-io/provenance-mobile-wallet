@@ -89,6 +89,7 @@ class DashboardBloc extends Disposable {
   }
 
   void filterTransactions(String denom, String status) {
+    final stopwatch = Stopwatch()..start();
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
     if (denom == Strings.dropDownAllAssets &&
@@ -107,6 +108,9 @@ class DashboardBloc extends Disposable {
     _transactionDetails.value = TransactionDetails(
       transactions: transactions,
       filteredTransactions: filtered,
+    stopwatch.stop();
+    logDebug(
+      "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
     );
   }
 
