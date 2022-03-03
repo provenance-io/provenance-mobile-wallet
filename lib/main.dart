@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -15,6 +16,7 @@ import 'package:provenance_wallet/services/transaction_service/default_transacti
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -52,7 +54,12 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<HttpClient>(
       () => HttpClient(),
     );
-
+    get.registerLazySingleton<SecureStorageService>(
+      () => SecureStorageService(),
+    );
+    get.registerLazySingleton<LocalAuthHelper>(
+      () => LocalAuthHelper()..initialize(),
+    );
     get.registerLazySingleton<StatService>(
       () => DefaultStatService(),
     );
