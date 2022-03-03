@@ -124,6 +124,8 @@ class Strings {
   static const resetWallets = 'Reset Wallets';
   static const resetWalletsAreYouSure =
       'Are you sure you wish to reset all wallets?';
+  static const pinCodeUpdated = 'Pin Code Updated Successfully';
+  static const successName = 'Success';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
