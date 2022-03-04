@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -24,22 +23,28 @@ class DashboardBloc extends Disposable {
         .link
         .listen(_handleDynamicLink)
         .addTo(_subscriptions);
+    walletEvents.listen(get<WalletService>().events);
+    walletEvents.selected
+        .distinct((a, b) => a?.id == b?.id)
+        .listen(_onSelected)
+        .addTo(_subscriptions);
+    walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
+    walletEvents.added.listen(_onAdded).addTo(_subscriptions);
+    walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
   }
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<TransactionDetails> _transactionDetails =
-      BehaviorSubject.seeded(
+  final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
       filteredTransactions: [],
       transactions: [],
     ),
   );
-  final BehaviorSubject<Map<WalletDetails, int>> _walletMap =
-      BehaviorSubject.seeded({});
-  final BehaviorSubject<List<Asset>?> _assetList = BehaviorSubject.seeded(null);
-  final BehaviorSubject<WalletDetails?> _selectedWallet =
-      BehaviorSubject.seeded(null);
+  final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
+  final _assetList = BehaviorSubject.seeded(<Asset>[]);
+  final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
+  final _error = PublishSubject<String>();
 
   final _subscriptions = CompositeSubscription();
 
@@ -48,19 +53,24 @@ class DashboardBloc extends Disposable {
 
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
+  final walletEvents = WalletServiceEvents();
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
+  Stream<String> get error => _error;
 
-  void load(BuildContext context) async {
-    var details = await get<WalletService>().getSelectedWallet();
-    _selectedWallet.value = details;
+  Future<void> load() async {
+    final walletService = get<WalletService>();
+    var details = await walletService.getSelectedWallet();
+    details ??= await walletService.selectWallet();
+
+    _selectedWallet.tryAdd(details);
     var errorCount = 0;
     try {
-      _assetList.value =
-          (await _assetService.getAssets(details?.address ?? ""));
+      final assetList = await _assetService.getAssets(details?.address ?? "");
+      _assetList.tryAdd(assetList);
     } catch (e) {
       errorCount++;
       _assetList.value = [];
@@ -69,24 +79,16 @@ class DashboardBloc extends Disposable {
     try {
       var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
-      _transactionDetails.value = TransactionDetails(
+      _transactionDetails.tryAdd(TransactionDetails(
         filteredTransactions: transactions,
         transactions: transactions.toList(),
-      );
+      ));
     } catch (e) {
       errorCount++;
       transactionDetails.value.transactions =
           transactionDetails.value.filteredTransactions = [];
       if (errorCount == 2) {
-        showDialog(
-          useSafeArea: true,
-          context: context,
-          builder: (context) => ErrorDialog(
-            title: Strings.serviceErrorTitle,
-            error: Strings.theSystemIsDown,
-            buttonText: Strings.continueName,
-          ),
-        );
+        _error.tryAdd(Strings.theSystemIsDown);
       }
     }
   }
@@ -126,11 +128,19 @@ class DashboardBloc extends Disposable {
       await oldSession.dispose();
     }
 
-    final session = await get<WalletService>().connectWallet(addressData);
+    final session = await get<WalletService>().createSession(addressData);
     if (session != null) {
+      _walletSession = session;
+
       delegateEvents.listen(session.delegateEvents);
       sessionEvents.listen(session.sessionEvents);
-      _walletSession = session;
+
+      final success = await session.connect();
+      if (success) {
+        logDebug('Session connect succeeded');
+      } else {
+        logDebug('Session connect failed');
+      }
     }
   }
 
@@ -176,7 +186,6 @@ class DashboardBloc extends Disposable {
   Future<void> selectWallet({required String id}) async {
     await _walletSession?.disconnect();
     await get<WalletService>().selectWallet(id: id);
-    await loadAllWallets();
   }
 
   Future<void> renameWallet({
@@ -187,16 +196,10 @@ class DashboardBloc extends Disposable {
       id: id,
       name: name,
     );
-    await loadAllWallets();
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
     return get<WalletService>().isValidWalletConnectData(address);
-  }
-
-  Future<void> removeWallet({required String id}) async {
-    await get<WalletService>().removeWallet(id: id);
-    await loadAllWallets();
   }
 
   Future<void> resetWallets() async {
@@ -238,10 +241,42 @@ class DashboardBloc extends Disposable {
     _subscriptions.dispose();
     delegateEvents.dispose();
     sessionEvents.dispose();
+    walletEvents.dispose();
 
     _assetList.close();
+
     _transactionDetails.close();
+    _error.close();
+
     _walletSession?.dispose();
+  }
+
+  void _onSelected(WalletDetails? details) {
+    _selectedWallet.value = details;
+    load();
+    loadAllWallets();
+  }
+
+  void _onRemoved(List<WalletDetails> removed) {
+    if (removed.any((e) => e.id == _selectedWallet.value?.id)) {
+      get<WalletService>().selectWallet();
+    }
+
+    loadAllWallets();
+  }
+
+  void _onAdded(WalletDetails details) {
+    _selectedWallet.value ??= details;
+
+    loadAllWallets();
+  }
+
+  void _onUpdated(WalletDetails details) {
+    if (_selectedWallet.value?.id == details.id) {
+      _selectedWallet.value = details;
+    }
+
+    loadAllWallets();
   }
 
   Future<void> _handleDynamicLink(Uri link) async {

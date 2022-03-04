@@ -103,14 +103,14 @@ class EnableFaceIdScreen extends StatelessWidget {
                           context,
                         );
 
-                        final success = await get<WalletService>().saveWallet(
+                        final details = await get<WalletService>().addWallet(
                           phrase: words,
                           name: accountName ?? '',
                           useBiometry: true,
                         );
                         ModalLoadingRoute.dismiss(context);
 
-                        if (success) {
+                        if (details != null) {
                           authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',
@@ -139,13 +139,14 @@ class EnableFaceIdScreen extends StatelessWidget {
                           Strings.pleaseWait,
                           context,
                         );
-                        final success = await get<WalletService>().saveWallet(
+                        final details = await get<WalletService>().addWallet(
                           phrase: words,
                           name: accountName ?? '',
-                          useBiometry: true,
+                          useBiometry: false,
                         );
                         ModalLoadingRoute.dismiss(context);
-                        if (success) {
+
+                        if (details != null) {
                           authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',

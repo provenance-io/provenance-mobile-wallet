@@ -87,10 +87,10 @@ class WalletConnectSession {
   }
 
   Future<void> dispose() async {
+    await disconnect();
+
     delegateEvents.dispose();
     sessionEvents.dispose();
-
-    await disconnect();
   }
 
   Future<bool> signTransactionFinish({

@@ -142,7 +142,7 @@ class RecoverPassphraseEntryScreenState
                                       context,
                                     );
 
-                                    await get<WalletService>().saveWallet(
+                                    await get<WalletService>().addWallet(
                                       phrase: words,
                                       name: widget.accountName,
                                     );

@@ -58,20 +58,21 @@ class MockSqliteWalletStorageService extends _i1.Mock
               returnValue: Future<_i4.WalletDetails?>.value())
           as _i3.Future<_i4.WalletDetails?>);
   @override
-  _i3.Future<String> addWallet(
+  _i3.Future<_i4.WalletDetails?> addWallet(
           {String? name, String? address, _i5.Coin? coin}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #addWallet, [], {#name: name, #address: address, #coin: coin}),
-          returnValue: Future<String>.value('')) as _i3.Future<String>);
+              Invocation.method(#addWallet, [],
+                  {#name: name, #address: address, #coin: coin}),
+              returnValue: Future<_i4.WalletDetails?>.value())
+          as _i3.Future<_i4.WalletDetails?>);
   @override
-  _i3.Future<dynamic> removeWallet({String? id}) =>
+  _i3.Future<int> removeWallet({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeWallet, [], {#id: id}),
-          returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
-  _i3.Future<dynamic> removeAllWallets() =>
+  _i3.Future<int> removeAllWallets() =>
       (super.noSuchMethod(Invocation.method(#removeAllWallets, []),
-          returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
 }
 
 /// A class which mocks [CipherService].
