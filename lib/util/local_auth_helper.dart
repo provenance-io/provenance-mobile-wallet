@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/pin/validate_pin.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 enum AuthResult {
   noAccount,
@@ -15,29 +17,20 @@ enum AuthResult {
 }
 
 class LocalAuthHelper {
-  LocalAuthHelper._internal() {
-    initialize();
-  }
-
-  factory LocalAuthHelper() => _singleton;
-
-  static final LocalAuthHelper _singleton = LocalAuthHelper._internal();
-
   LocalAuthentication localAuth = LocalAuthentication();
-  final storage = SecureStorageService();
+  final storage = get<SecureStorageService>();
   bool hasBiometrics = false;
   BiometricType? type;
   bool isEnabled = false;
   String get authType {
-    // ignore: prefer-conditional-expressions
-    if (Platform.isIOS) {
-      return type == BiometricType.face ? 'Face ID' : 'Touch ID';
-    } else {
-      return type == BiometricType.face ? 'Face' : 'Fingerprint';
-    }
+    return Platform.isIOS
+        ? type == BiometricType.face
+            ? Strings.faceId
+            : Strings.touchId
+        : type == BiometricType.face
+            ? Strings.face
+            : Strings.fingerPrint;
   }
-
-  static LocalAuthHelper get instance => _singleton;
 
   Future<void> initialize() async {
     hasBiometrics = await localAuth.canCheckBiometrics;
@@ -51,12 +44,11 @@ class LocalAuthHelper {
     }
 
     String? bioEnabled = await storage.read(StorageKey.biometricEnabled);
-    // ignore: prefer-conditional-expressions
-    if (bioEnabled != null) {
-      isEnabled = bioEnabled == 'true' ? true : false;
-    } else {
-      isEnabled = false;
-    }
+    isEnabled = bioEnabled != null
+        ? bioEnabled == true.toString()
+            ? true
+            : false
+        : false;
   }
 
   Future<bool> enroll(

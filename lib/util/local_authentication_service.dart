@@ -4,11 +4,12 @@ import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/shared_prefs_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class LocalAuthenticationService {
   final LocalAuthentication _auth = LocalAuthentication();
-  final _storage = SecureStorageService();
+  final _storage = get<SecureStorageService>();
 
   bool _isBiometricEnabled = false;
   bool? _hasDeclinedSecureLogin;
