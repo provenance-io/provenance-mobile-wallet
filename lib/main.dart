@@ -35,9 +35,8 @@ void main() async {
   );
 
   var sharedPrefs = SharedPrefsService();
-  var isFirstRun =
-      !(await sharedPrefs.getBool(PrefKey.isSubsequentRun) ?? false);
-  if (isFirstRun) {
+  var hasKey = await sharedPrefs.containsKey(PrefKey.isSubsequentRun);
+  if (!hasKey) {
     await SecureStorageService().deleteAll();
     sharedPrefs.setBool(PrefKey.isSubsequentRun, true);
   }
