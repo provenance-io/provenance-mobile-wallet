@@ -111,7 +111,7 @@ class WalletConnectSession {
     required RemoteClientDetails details,
     required bool allowed,
   }) async {
-    final success = _delegate.complete(details.id, allowed);
+    final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value = WalletConnectSessionState.connected(details);
     }

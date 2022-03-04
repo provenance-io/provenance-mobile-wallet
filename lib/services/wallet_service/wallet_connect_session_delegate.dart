@@ -72,15 +72,13 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
   final events = WalletConnectSessionDelegateEvents();
 
-  bool complete(String requestId, bool allowed) {
+  Future<bool> complete(String requestId, bool allowed) {
     final completer = _completerLookup.remove(requestId);
     if (completer == null) {
-      return false;
+      return Future.value(false);
     }
 
-    completer(allowed);
-
-    return true;
+    return completer(allowed).then((_) => true);
   }
 
   @override
@@ -149,7 +147,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     List<GeneratedMessage> proposedMessages,
     AcceptCallback<RawTxResponsePair?> callback,
   ) async {
-
     final txBody = TxBody(
       messages: proposedMessages.map((msg) => msg.toAny()).toList(),
     );
@@ -198,7 +195,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      callback(response);
+      return callback(response);
     };
 
     events._sendRequest.add(sendRequest);

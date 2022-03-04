@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -210,10 +212,14 @@ class DashboardScreenState extends State<DashboardScreen>
       },
     );
 
-    await get<DashboardBloc>().sendMessageFinish(
-      requestId: sendRequest.id,
-      allowed: approved ?? false,
-    );
+    ModalLoadingRoute.showLoading("", context);
+
+    await get<DashboardBloc>()
+        .sendMessageFinish(
+          requestId: sendRequest.id,
+          allowed: approved ?? false,
+        )
+        .whenComplete(() => ModalLoadingRoute.dismiss(context));
   }
 
   Future<void> _onSignRequest(SignRequest signRequest) async {
@@ -249,12 +255,12 @@ class DashboardScreenState extends State<DashboardScreen>
 
     ModalLoadingRoute.showLoading("", context);
 
-    await get<DashboardBloc>().signTransactionFinish(
-      requestId: signRequest.id,
-      allowed: approved ?? false,
-    );
-
-    ModalLoadingRoute.dismiss(context);
+    await get<DashboardBloc>()
+        .signTransactionFinish(
+          requestId: signRequest.id,
+          allowed: approved ?? false,
+        )
+        .whenComplete(() => ModalLoadingRoute.dismiss(context));
   }
 
   void _onError(String message) {
