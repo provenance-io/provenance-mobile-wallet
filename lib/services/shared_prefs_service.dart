@@ -46,6 +46,7 @@ enum PrefKey {
   firstBankAccountComplete,
   showSaleDialog,
   showReturnDialog,
+  isSubsequentRun,
 }
 
 extension on PrefKey {
