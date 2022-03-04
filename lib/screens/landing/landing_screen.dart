@@ -4,14 +4,13 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/page_indicator.dart';
-import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -30,7 +29,6 @@ class _LandingScreenState extends State<LandingScreen>
     with WidgetsBindingObserver {
   static const _inactivityTimeout = Duration(minutes: 2);
 
-  bool _accountExists = false;
   final _localAuth = LocalAuthenticationService();
   final _pageController = PageController();
   double _currentPage = 0;
@@ -40,6 +38,8 @@ class _LandingScreenState extends State<LandingScreen>
   void initState() {
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
+    get.registerSingleton<LandingBloc>(LandingBloc());
+    get<LandingBloc>().load();
     checkAccount();
 
     WidgetsBinding.instance!.addObserver(this);
@@ -51,7 +51,7 @@ class _LandingScreenState extends State<LandingScreen>
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
     _pageController.dispose();
-
+    get.unregister<LandingBloc>();
     WidgetsBinding.instance!.removeObserver(this);
 
     super.dispose();
@@ -75,26 +75,17 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void checkAccount() async {
-    final storage = await SecureStorageService().read(StorageKey.accountName);
-    if (storage != null && storage.isNotEmpty) {
-      setState(() {
-        _accountExists = true;
-      });
+    final bloc = get<LandingBloc>();
 
-      doAuth();
+    if (bloc.hasStorage.value) {
+      bloc.doAuth(context);
     }
-  }
-
-  void doAuth() {
-    LocalAuthHelper.instance.auth(context, (result) {
-      if (result) {
-        Navigator.of(context).push(DashboardScreen().route());
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    var bloc = get<LandingBloc>();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -122,20 +113,28 @@ class _LandingScreenState extends State<LandingScreen>
             VerticalSpacer.xxLarge(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwPrimaryButton.fromString(
-                text: _accountExists
-                    ? Strings.continueName
-                    : Strings.createWallet,
-                onPressed: () {
-                  if (_accountExists) {
-                    doAuth();
-                  } else {
-                    Navigator.of(context).push(AccountName(
-                      WalletAddImportType.onBoardingAdd,
-                      currentStep: 1,
-                      numberOfSteps: 4,
-                    ).route());
-                  }
+              child: StreamBuilder<bool>(
+                initialData: bloc.hasStorage.value,
+                stream: bloc.hasStorage,
+                builder: (context, snapshot) {
+                  var hasStorage = snapshot.data ?? false;
+
+                  return PwPrimaryButton.fromString(
+                    text: hasStorage
+                        ? Strings.continueName
+                        : Strings.createWallet,
+                    onPressed: () {
+                      if (hasStorage) {
+                        bloc.doAuth(context);
+                      } else {
+                        Navigator.of(context).push(AccountName(
+                          WalletAddImportType.onBoardingAdd,
+                          currentStep: 1,
+                          numberOfSteps: 4,
+                        ).route());
+                      }
+                    },
+                  );
                 },
               ),
             ),

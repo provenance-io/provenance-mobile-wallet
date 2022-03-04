@@ -10,7 +10,7 @@ import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class EnableFaceIdScreen extends StatelessWidget {
-  const EnableFaceIdScreen({
+  EnableFaceIdScreen({
     Key? key,
     required this.words,
     this.accountName,
@@ -26,6 +26,7 @@ class EnableFaceIdScreen extends StatelessWidget {
   final int? currentStep;
   final int? numberOfSteps;
   final WalletAddImportType flowType;
+  final authHelper = get<LocalAuthHelper>();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +111,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                         ModalLoadingRoute.dismiss(context);
 
                         if (success) {
-                          LocalAuthHelper.instance.enroll(
+                          authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',
                             true,
@@ -145,7 +146,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                         );
                         ModalLoadingRoute.dismiss(context);
                         if (success) {
-                          LocalAuthHelper.instance.enroll(
+                          authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',
                             false,

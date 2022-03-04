@@ -1,8 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-
-import 'fundamentals_bloc.dart';
 
 class OnboardingFundamentalsSlide extends StatefulWidget {
   const OnboardingFundamentalsSlide({
@@ -18,23 +17,8 @@ class OnboardingFundamentalsSlide extends StatefulWidget {
 class _OnboardingFundamentalsSlideState
     extends State<OnboardingFundamentalsSlide> {
   @override
-  void initState() {
-    super.initState();
-
-    get.registerSingleton<FundamentalsBloc>(FundamentalsBloc());
-    get<FundamentalsBloc>().load();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<FundamentalsBloc>();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bloc = get<FundamentalsBloc>();
+    final bloc = get<LandingBloc>();
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {

@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -87,19 +86,13 @@ class WalletItem extends StatelessWidget {
                         },
                       ),
                       PwListDivider(),
-                      _isSelected
-                          ? PwGreyButton(
-                              text: Strings.resetWallets,
-                              onPressed: () {
-                                Navigator.of(context).pop(MenuOperation.reset);
-                              },
-                            )
-                          : PwGreyButton(
-                              text: Strings.select,
-                              onPressed: () {
-                                Navigator.of(context).pop(MenuOperation.select);
-                              },
-                            ),
+                      if (!_isSelected)
+                        PwGreyButton(
+                          text: Strings.select,
+                          onPressed: () {
+                            Navigator.of(context).pop(MenuOperation.select);
+                          },
+                        ),
                       PwListDivider(),
                       PwGreyButton(
                         enabled: false,
@@ -162,13 +155,6 @@ class WalletItem extends StatelessWidget {
                   await bloc.selectWallet(id: item.id);
 
                   break;
-                case MenuOperation.reset:
-                  await get<DashboardBloc>().resetWallets();
-                  FlutterSecureStorage storage = FlutterSecureStorage();
-                  await storage.deleteAll();
-
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  break;
                 default:
               }
             },
@@ -195,5 +181,4 @@ enum MenuOperation {
   select,
   rename,
   delete,
-  reset,
 }
