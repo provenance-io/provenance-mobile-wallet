@@ -109,7 +109,7 @@ class Strings {
   static const profile = "Profile";
   static const errorDisconnected = 'Disconnected';
 
-  // My Account Page
+  // Profile Page
   static const linkedServices = 'Linked Services';
   static const security = 'Security';
   static const pinCode = 'Pin Code';
@@ -121,6 +121,9 @@ class Strings {
   static const sendFeedback = 'Send Feedback';
   static const contactUs = 'Contact Us';
   static const policiesAndTerms = 'Policies & Terms';
+  static const resetWallets = 'Reset Wallets';
+  static const resetWalletsAreYouSure =
+      'Are you sure you wish to reset all wallets?';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
@@ -154,7 +157,6 @@ class Strings {
   static const yes = 'Yes';
   static const copyWalletAddress = 'Copy Wallet Address';
   static const addressCopied = 'Address copied';
-  static const resetWallets = 'Reset Wallets';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';

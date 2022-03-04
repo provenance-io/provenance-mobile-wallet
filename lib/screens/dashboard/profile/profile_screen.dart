@@ -1,6 +1,10 @@
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -48,6 +52,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               text: Strings.pinCode,
               onTap: () {
                 // TODO: open pin code screen.
+              },
+            ),
+            _divider,
+            _LinkItem(
+              text: Strings.resetWallets,
+              onTap: () async {
+                bool shouldReset = await PwDialog.showConfirmation(
+                  context,
+                  title: Strings.resetWallets,
+                  message: Strings.resetWalletsAreYouSure,
+                  cancelText: Strings.cancel,
+                  confirmText: Strings.resetWallets,
+                );
+                if (shouldReset) {
+                  await get<DashboardBloc>().resetWallets();
+                  await get<SecureStorageService>().deleteAll();
+                  get<LandingBloc>().checkStorage();
+
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }
               },
             ),
             _divider,

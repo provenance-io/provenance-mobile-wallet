@@ -98,10 +98,12 @@ class PwDialog {
     Widget? content,
     Widget? bottom,
     bool barrierDismissible = true,
+    Color? barrierColor,
   }) {
     return showDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor ?? Theme.of(context).colorScheme.neutral750,
       useRootNavigator: false,
       builder: (context) => WillPopScope(
         onWillPop: () async => barrierDismissible,
@@ -115,23 +117,13 @@ class PwDialog {
                   style: PwTextStyle.subhead,
                   textAlign: TextAlign.left,
                 ),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 21),
-              child: IconButton(
-                icon: PwIcon(
-                  PwIcons.close,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(null);
-                },
-              ),
-            ),
+            leading: Container(),
           ),
           body: Container(
             color: Theme.of(context).colorScheme.neutral750,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: EdgeInsets.all(
@@ -141,7 +133,6 @@ class PwDialog {
                       PwText(
                         message ?? "",
                         style: PwTextStyle.body,
-                        textAlign: TextAlign.center,
                         color: PwColor.neutralNeutral,
                       ),
                 ),
@@ -222,24 +213,27 @@ class PwDialog {
       title: title ?? Strings.appName,
       message: message,
       content: content,
-      bottom: Column(
-        children: [
-          PwPrimaryButton.fromString(
-            text: confirmText ?? cancelText,
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-          const VerticalSpacer.small(),
-          if (confirmText != null) ...[
-            PwTextButton(
-              child: PwText(cancelText),
-              onPressed: () => Navigator.of(context).pop(false),
+      bottom: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Spacing.xLarge),
+        child: Column(
+          children: [
+            PwPrimaryButton.fromString(
+              text: confirmText ?? cancelText,
+              onPressed: () => Navigator.of(context).pop(true),
             ),
-            if (footer != null) ...[
-              const VerticalSpacer.small(),
-              footer,
+            const VerticalSpacer.small(),
+            if (confirmText != null) ...[
+              PwTextButton(
+                child: PwText(cancelText),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              if (footer != null) ...[
+                const VerticalSpacer.small(),
+                footer,
+              ],
             ],
           ],
-        ],
+        ),
       ),
     );
 
