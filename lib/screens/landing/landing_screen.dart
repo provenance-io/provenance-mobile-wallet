@@ -76,7 +76,7 @@ class _LandingScreenState extends State<LandingScreen>
 
   void checkAccount() async {
     final bloc = get<LandingBloc>();
-
+    await bloc.checkStorage();
     if (bloc.hasStorage.value) {
       bloc.doAuth(context);
     }

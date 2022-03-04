@@ -34,10 +34,9 @@ class LandingBloc extends Disposable {
     _validatorsCount.value = stats.validators;
     _transactions.value = stats.transactions;
     _blockTime.value = stats.blockTime;
-    checkStorage();
   }
 
-  void checkStorage() async {
+  Future<void> checkStorage() async {
     final storage =
         await get<SecureStorageService>().read(StorageKey.accountName);
     var hasStorage = storage != null && storage.isNotEmpty;
