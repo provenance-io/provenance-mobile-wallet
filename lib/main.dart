@@ -8,6 +8,8 @@ import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -30,6 +32,15 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+
+  var sharedPrefs = SharedPrefsService();
+  var isFirstRun =
+      !(await sharedPrefs.getBool(PrefKey.isSubsequentRun) ?? false);
+  if (isFirstRun) {
+    await SecureStorageService().deleteAll();
+    sharedPrefs.setBool(PrefKey.isSubsequentRun, true);
+  }
+
   runApp(
     ProvenanceWalletApp(),
   );
