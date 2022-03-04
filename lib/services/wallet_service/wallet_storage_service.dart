@@ -19,7 +19,7 @@ abstract class WalletStorageService {
     required String name,
   });
 
-  Future<bool> addWallet({
+  Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
     required bool useBiometry,

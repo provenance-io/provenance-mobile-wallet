@@ -104,7 +104,7 @@ class BackupCompleteScreen extends StatelessWidget {
                               context,
                             );
 
-                            await get<WalletService>().saveWallet(
+                            await get<WalletService>().addWallet(
                               phrase: words,
                               name: accountName ?? '',
                             );

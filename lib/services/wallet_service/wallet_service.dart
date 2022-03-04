@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
@@ -8,16 +9,67 @@ import 'package:provenance_wallet/services/wallet_service/wallet_connect_session
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
-class WalletService {
+typedef WalletConnectionProvider = WalletConnection Function(
+  WalletConnectAddress address,
+);
+
+class WalletServiceEvents {
+  final _subscriptions = CompositeSubscription();
+
+  final _added = PublishSubject<WalletDetails>();
+  final _removed = PublishSubject<List<WalletDetails>>();
+  final _updated = PublishSubject<WalletDetails>();
+  final _selected = PublishSubject<WalletDetails?>();
+
+  Stream<WalletDetails> get added => _added;
+  Stream<List<WalletDetails>> get removed => _removed;
+  Stream<WalletDetails> get updated => _updated;
+  Stream<WalletDetails?> get selected => _selected;
+
+  void clear() {
+    _subscriptions.clear();
+  }
+
+  void dispose() {
+    _subscriptions.dispose();
+
+    _added.close();
+    _removed.close();
+    _updated.close();
+    _selected.close();
+  }
+
+  void listen(WalletServiceEvents other) {
+    other.added.listen(_added.add).addTo(_subscriptions);
+    other.removed.listen(_removed.add).addTo(_subscriptions);
+    other.updated.listen(_updated.add).addTo(_subscriptions);
+    other.selected.listen(_selected.add).addTo(_subscriptions);
+  }
+}
+
+class WalletService implements Disposable {
   WalletService({
     required WalletStorageService storage,
-  }) : _storage = storage;
+    required WalletConnectionProvider connectionProvider,
+  })  : _storage = storage,
+        _connectionProvider = connectionProvider;
 
   final WalletStorageService _storage;
+  final WalletConnectionProvider _connectionProvider;
 
-  Future<WalletDetails?> selectWallet({required String id}) async {
-    return await _storage.selectWallet(id: id);
+  final events = WalletServiceEvents();
+
+  @override
+  FutureOr onDispose() {
+    events.dispose();
+  }
+
+  Future<WalletDetails?> selectWallet({String? id}) async {
+    final details = await _storage.selectWallet(id: id);
+
+    events._selected.add(details);
   }
 
   Future<WalletDetails?> getSelectedWallet() => _storage.getSelectedWallet();
@@ -31,16 +83,23 @@ class WalletService {
   }) =>
       _storage.setUseBiometry(useBiometry);
 
-  Future renameWallet({
+  Future<WalletDetails?> renameWallet({
     required String id,
     required String name,
-  }) =>
-      _storage.renameWallet(
-        id: id,
-        name: name,
-      );
+  }) async {
+    final details = await _storage.renameWallet(
+      id: id,
+      name: name,
+    );
 
-  Future<bool> saveWallet({
+    if (details != null) {
+      events._updated.add(details);
+    }
+
+    return details;
+  }
+
+  Future<WalletDetails?> addWallet({
     required List<String> phrase,
     required String name,
     bool? useBiometry,
@@ -49,20 +108,47 @@ class WalletService {
     final seed = Mnemonic.createSeed(phrase);
     final privateKey = PrivateKey.fromSeed(seed, coin);
 
-    return _storage.addWallet(
+    final details = await _storage.addWallet(
       name: name,
       privateKey: privateKey,
       useBiometry: useBiometry ?? false,
     );
+
+    if (details != null) {
+      events._added.add(details);
+    }
+
+    return details;
   }
 
-  Future<void> removeWallet({required String id}) => _storage.removeWallet(id);
+  Future<WalletDetails?> removeWallet({required String id}) async {
+    var details = await _storage.getWallet(id);
+    if (details != null) {
+      final success = await _storage.removeWallet(id);
+      if (success) {
+        events._removed.add([details]);
+      } else {
+        details = null;
+      }
+    }
 
-  Future<void> resetWallets() async {
-    await _storage.removeAllWallets();
+    return details;
   }
 
-  Future<WalletConnectSession?> connectWallet(String addressData) async {
+  Future<List<WalletDetails>> resetWallets() async {
+    final wallets = await _storage.getWallets();
+
+    final success = await _storage.removeAllWallets();
+    if (success) {
+      events._removed.add(wallets);
+    } else {
+      wallets.clear();
+    }
+
+    return wallets;
+  }
+
+  Future<WalletConnectSession?> createSession(String addressData) async {
     WalletConnectSession? session;
 
     try {
@@ -83,7 +169,7 @@ class WalletService {
         return null;
       }
 
-      final connection = WalletConnection(address);
+      final connection = _connectionProvider(address);
 
       final transactionHandler = WalletConnectTransactionHandler();
 
@@ -92,15 +178,10 @@ class WalletService {
         transactionHandler: transactionHandler,
       );
 
-      final newSession = WalletConnectSession(
+      session = WalletConnectSession(
         connection: connection,
         delegate: delegate,
       );
-
-      final success = await newSession.connect();
-      if (success) {
-        session = newSession;
-      }
     } on Exception catch (e) {
       logError('Failed to connect session: $e');
     }
