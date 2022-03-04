@@ -4,9 +4,6 @@ import 'dart:convert';
 import 'package:grpc/grpc.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/proto_bank.dart';
-import 'package:provenance_dart/proto_marker.dart';
-import 'package:provenance_dart/proto_staking.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
@@ -16,7 +13,6 @@ import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -73,13 +69,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final TransactionHandler _transactionHandler;
 
   final _completerLookup = <String, CompleterDelegate>{};
-  static const _supportedMessges = {
-    MsgActivateRequest,
-    MsgAddMarkerRequest,
-    MsgCancelRequest,
-    MsgDelegate,
-    MsgSend,
-  };
 
   final events = WalletConnectSessionDelegateEvents();
 
@@ -160,17 +149,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     List<GeneratedMessage> proposedMessages,
     AcceptCallback<RawTxResponsePair?> callback,
   ) async {
-    final proposedMessage = proposedMessages.first;
-
-    final messageType = proposedMessage.runtimeType;
-    final messageName = proposedMessage.info_.qualifiedMessageName;
-
-    if (!_supportedMessges.contains(messageType)) {
-      events._onDidError
-          .add(Strings.transactionErrorUnsupportedMessage(messageName));
-
-      return callback(null);
-    }
 
     final txBody = TxBody(
       messages: proposedMessages.map((msg) => msg.toAny()).toList(),
