@@ -76,7 +76,7 @@ class DashboardScreenState extends State<DashboardScreen>
         .addTo(_subscriptions);
     _bloc.sessionEvents.error.listen(_onError).addTo(_subscriptions);
     _bloc.error.listen(_onError).addTo(_subscriptions);
-    _bloc.sessionEvents.response.listen(_onResponse).addTo(_subscriptions);
+    _bloc.delegateEvents.onResponse.listen(_onResponse).addTo(_subscriptions);
 
     get.registerSingleton<DashboardBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
