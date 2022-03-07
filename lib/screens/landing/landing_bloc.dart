@@ -34,7 +34,6 @@ class LandingBloc extends Disposable {
     _validatorsCount.value = stats.validators;
     _transactions.value = stats.transactions;
     _blockTime.value = stats.blockTime;
-    checkStorage();
   }
 
   Future<void> checkStorage() async {

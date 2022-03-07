@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
+import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -35,6 +36,14 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+
+  var sharedPrefs = SharedPrefsService();
+  var hasKey = await sharedPrefs.containsKey(PrefKey.isSubsequentRun);
+  if (!hasKey) {
+    await SecureStorageService().deleteAll();
+    sharedPrefs.setBool(PrefKey.isSubsequentRun, true);
+  }
+
   runApp(
     ProvenanceWalletApp(),
   );
