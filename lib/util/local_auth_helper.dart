@@ -92,7 +92,7 @@ class LocalAuthHelper {
           cancelButton: 'Cancel',
           goToSettingsButton: 'Setting',
           goToSettingsDescription: 'Setting Description',
-          lockOut: 'Try again later, your are locked out',
+          lockOut: 'Try again later, you are locked out',
         ),
       );
       if (result) {

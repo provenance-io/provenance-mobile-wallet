@@ -33,17 +33,17 @@ class _LandingScreenState extends State<LandingScreen>
   final _pageController = PageController();
   double _currentPage = 0;
   Timer? _inactivityTimer;
+  LandingBloc? _bloc;
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
     get.registerSingleton<LandingBloc>(LandingBloc());
-    get<LandingBloc>().load();
-    checkAccount();
+    _bloc = get<LandingBloc>()..load();
 
     WidgetsBinding.instance!.addObserver(this);
-
+    checkAccount();
     super.initState();
   }
 
@@ -75,17 +75,14 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void checkAccount() async {
-    final bloc = get<LandingBloc>();
-
-    if (bloc.hasStorage.value) {
-      bloc.doAuth(context);
+    await _bloc?.checkStorage();
+    if (_bloc?.hasStorage.value ?? false) {
+      _bloc?.doAuth(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var bloc = get<LandingBloc>();
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -114,8 +111,8 @@ class _LandingScreenState extends State<LandingScreen>
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: StreamBuilder<bool>(
-                initialData: bloc.hasStorage.value,
-                stream: bloc.hasStorage,
+                initialData: _bloc?.hasStorage.value,
+                stream: _bloc?.hasStorage,
                 builder: (context, snapshot) {
                   var hasStorage = snapshot.data ?? false;
 
@@ -125,7 +122,7 @@ class _LandingScreenState extends State<LandingScreen>
                         : Strings.createWallet,
                     onPressed: () {
                       if (hasStorage) {
-                        bloc.doAuth(context);
+                        _bloc?.doAuth(context);
                       } else {
                         Navigator.of(context).push(AccountName(
                           WalletAddImportType.onBoardingAdd,

@@ -37,7 +37,7 @@ class LandingBloc extends Disposable {
     checkStorage();
   }
 
-  void checkStorage() async {
+  Future<void> checkStorage() async {
     final storage =
         await get<SecureStorageService>().read(StorageKey.accountName);
     var hasStorage = storage != null && storage.isNotEmpty;

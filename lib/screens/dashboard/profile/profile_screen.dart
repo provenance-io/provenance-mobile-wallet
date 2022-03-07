@@ -2,8 +2,10 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -48,10 +50,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             _divider,
-            _LinkItem(
-              text: Strings.pinCode,
-              onTap: () {
-                // TODO: open pin code screen.
+            StreamBuilder<WalletDetails?>(
+              stream: get<DashboardBloc>().selectedWallet,
+              initialData: null,
+              builder: (context, snapshot) {
+                var accountName = snapshot.data?.name ?? "";
+
+                return _LinkItem(
+                  text: Strings.pinCode,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangePinFlow(accountName),
+                      ),
+                    );
+                  },
+                );
               },
             ),
             _divider,
