@@ -1,6 +1,6 @@
-import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_statistics_dto.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/asset_graph_item.dart';
+import 'package:provenance_wallet/services/models/asset_statistic.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AssetService {
@@ -10,13 +10,13 @@ class AssetService {
     throw Strings.notImplementedMessage;
   }
 
-  Future<AssetStatisticsDto> getAssetStatistics(
+  Future<AssetStatistics> getAssetStatistics(
     String assetType,
   ) {
     throw Strings.notImplementedMessage;
   }
 
-  Future<List<AssetGraphItemDto>> getAssetGraphingData(
+  Future<List<AssetGraphItem>> getAssetGraphingData(
     String assetType,
     GraphingDataValue value,
   ) {
