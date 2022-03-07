@@ -1,6 +1,8 @@
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
 import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/util/denom.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
@@ -23,7 +25,7 @@ class TransactionMessageDefault extends StatefulWidget {
   final String? message;
 
   final Map<String, dynamic>? data;
-  final int? fees;
+  final List<proto.Coin>? fees;
 
   @override
   State<TransactionMessageDefault> createState() =>
@@ -93,13 +95,28 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     }
 
     if (fees != null) {
-      final hashFees = fees / nHashPerHash;
-      mainRows.add(
-        createFieldTableRow(
-          Strings.transactionFieldFee,
-          '$hashFees ${Strings.transactionDenomHash}',
-        ),
-      );
+      for (final coin in fees) {
+        if (coin.denom == nHashDenom) {
+          final nHash = int.tryParse(coin.amount);
+          final fee = nHash == null
+              ? '${coin.amount} ${coin.denom}'
+              : '${nHash / nHashPerHash} ${Strings.transactionDenomHash}';
+
+          mainRows.add(
+            createFieldTableRow(
+              Strings.transactionFieldFee,
+              fee,
+            ),
+          );
+        } else {
+          mainRows.add(
+            createFieldTableRow(
+              Strings.transactionFieldFee,
+              '${coin.amount} ${coin.denom}',
+            ),
+          );
+        }
+      }
     }
 
     final groupSlivers = <Widget>[];

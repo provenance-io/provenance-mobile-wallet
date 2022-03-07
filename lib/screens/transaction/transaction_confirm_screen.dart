@@ -1,3 +1,4 @@
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
@@ -11,7 +12,7 @@ typedef MessageBuilder = Widget Function(
   RemoteClientDetails clientDetails,
   String? message,
   Map<String, dynamic>? data,
-  int? fees,
+  List<proto.Coin>? fees,
 );
 
 enum TransactionConfirmKind {
@@ -39,7 +40,7 @@ class TransactionConfirmScreen extends StatefulWidget {
   final String? subTitle;
   final String? message;
   final List<Map<String, dynamic>>? data;
-  final int? fees;
+  final List<proto.Coin>? fees;
 
   @override
   State<StatefulWidget> createState() => TransactionConfirmScreenState();

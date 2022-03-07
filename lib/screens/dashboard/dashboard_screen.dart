@@ -209,7 +209,7 @@ class DashboardScreenState extends State<DashboardScreen>
           requestId: sendRequest.id,
           clientDetails: clientDetails,
           data: data,
-          fees: sendRequest.gasEstimate.fees,
+          fees: sendRequest.gasEstimate.feeCalculated,
         );
       },
     );
