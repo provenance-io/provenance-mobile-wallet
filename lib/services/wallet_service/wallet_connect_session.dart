@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/remote_client_details.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -16,16 +15,13 @@ class WalletConnectSessionEvents {
     sync: true,
   );
   final _error = PublishSubject<String>(sync: true);
-  final _response = PublishSubject<WalletConnectTxResponse>(sync: true);
 
   ValueStream<WalletConnectSessionState> get state => _state;
   Stream<String> get error => _error;
-  Stream<WalletConnectTxResponse> get response => _response;
 
   void listen(WalletConnectSessionEvents other) {
     other.state.listen(_state.add).addTo(_subscriptions);
     other.error.listen(_error.add).addTo(_subscriptions);
-    other.response.listen(_response.add).addTo(_subscriptions);
   }
 
   void clear() {
@@ -36,7 +32,6 @@ class WalletConnectSessionEvents {
     _subscriptions.dispose();
     _state.close();
     _error.close();
-    _response.close();
   }
 }
 
@@ -87,10 +82,10 @@ class WalletConnectSession {
   }
 
   Future<void> dispose() async {
+    await disconnect();
+
     delegateEvents.dispose();
     sessionEvents.dispose();
-
-    await disconnect();
   }
 
   Future<bool> signTransactionFinish({
@@ -111,7 +106,7 @@ class WalletConnectSession {
     required RemoteClientDetails details,
     required bool allowed,
   }) async {
-    final success = _delegate.complete(details.id, allowed);
+    final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value = WalletConnectSessionState.connected(details);
     }
