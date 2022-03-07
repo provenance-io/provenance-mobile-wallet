@@ -24,89 +24,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.neutral750,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutral750,
-        elevation: 0.0,
-        leading: Container(),
-        title: PwText(
-          Strings.profile,
-          style: PwTextStyle.subhead,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          textDirection: TextDirection.ltr,
-          children: [
-            _CategoryLabel(Strings.security),
-            _divider,
-            _FutureToggleItem(
-              text: Strings.faceId,
-              getValue: get<WalletService>().getUseBiometry,
-              setValue: (value) => get<WalletService>().setUseBiometry(
-                useBiometry: value,
+    return Container(
+      color: Theme.of(context).colorScheme.neutral750,
+      child: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            textDirection: TextDirection.ltr,
+            children: [
+              AppBar(
+                primary: false,
+                backgroundColor: Theme.of(context).colorScheme.neutral750,
+                elevation: 0.0,
+                leading: Container(),
+                title: PwText(
+                  Strings.profile,
+                  style: PwTextStyle.subhead,
+                ),
               ),
-            ),
-            _divider,
-            StreamBuilder<WalletDetails?>(
-              stream: get<DashboardBloc>().selectedWallet,
-              initialData: null,
-              builder: (context, snapshot) {
-                var accountName = snapshot.data?.name ?? "";
+              _CategoryLabel(Strings.security),
+              _divider,
+              _FutureToggleItem(
+                text: Strings.faceId,
+                getValue: get<WalletService>().getUseBiometry,
+                setValue: (value) => get<WalletService>().setUseBiometry(
+                  useBiometry: value,
+                ),
+              ),
+              _divider,
+              StreamBuilder<WalletDetails?>(
+                stream: get<DashboardBloc>().selectedWallet,
+                initialData: null,
+                builder: (context, snapshot) {
+                  var accountName = snapshot.data?.name ?? "";
 
-                return _LinkItem(
-                  text: Strings.pinCode,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangePinFlow(accountName),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            _divider,
-            _LinkItem(
-              text: Strings.resetWallets,
-              onTap: () async {
-                bool shouldReset = await PwDialog.showConfirmation(
-                  context,
-                  title: Strings.resetWallets,
-                  message: Strings.resetWalletsAreYouSure,
-                  cancelText: Strings.cancel,
-                  confirmText: Strings.resetWallets,
-                );
-                if (shouldReset) {
-                  await get<DashboardBloc>().resetWallets();
-                  await get<SecureStorageService>().deleteAll();
-                  get<LandingBloc>().checkStorage();
+                  return _LinkItem(
+                    text: Strings.pinCode,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePinFlow(accountName),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              _divider,
+              _LinkItem(
+                text: Strings.resetWallets,
+                onTap: () async {
+                  bool shouldReset = await PwDialog.showConfirmation(
+                    context,
+                    title: Strings.resetWallets,
+                    message: Strings.resetWalletsAreYouSure,
+                    cancelText: Strings.cancel,
+                    confirmText: Strings.resetWallets,
+                  );
+                  if (shouldReset) {
+                    await get<DashboardBloc>().resetWallets();
+                    await get<SecureStorageService>().deleteAll();
+                    get<LandingBloc>().checkStorage();
 
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                }
-              },
-            ),
-            _divider,
-            _CategoryLabel(Strings.general),
-            _divider,
-            _LinkItem(
-              text: Strings.aboutProvenanceBlockchain,
-              onTap: () {
-                launchUrl('https://provenance.io/');
-              },
-            ),
-            _divider,
-            _LinkItem(
-              text: Strings.moreInformation,
-              onTap: () {
-                launchUrl('https://docs.provenance.io/');
-              },
-            ),
-            _divider,
-          ],
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }
+                },
+              ),
+              _divider,
+              _CategoryLabel(Strings.general),
+              _divider,
+              _LinkItem(
+                text: Strings.aboutProvenanceBlockchain,
+                onTap: () {
+                  launchUrl('https://provenance.io/');
+                },
+              ),
+              _divider,
+              _LinkItem(
+                text: Strings.moreInformation,
+                onTap: () {
+                  launchUrl('https://docs.provenance.io/');
+                },
+              ),
+              _divider,
+            ],
+          ),
         ),
       ),
     );

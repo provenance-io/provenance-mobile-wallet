@@ -11,6 +11,8 @@ import 'package:provenance_wallet/services/asset_service/default_asset_service.d
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
+import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
@@ -80,6 +82,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
     get.registerLazySingleton<TransactionService>(
       () => DefaultTransactionService(),
+    );
+    get.registerLazySingleton<NotificationService>(
+      () => BasicNotificationService(),
     );
 
     final cipherService = CipherService();

@@ -2,9 +2,11 @@ import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
+import 'package:provenance_wallet/services/notification/notification_client_id.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class DefaultAssetService extends AssetService {
+class DefaultAssetService extends AssetService with ClientNotificationMixin {
   String get _assetServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
 
@@ -28,6 +30,8 @@ class DefaultAssetService extends AssetService {
         return assets;
       },
     );
+
+    notifyOnError(data, serviceMobileWalletClientId);
 
     return data.data ?? [];
   }

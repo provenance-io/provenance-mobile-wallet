@@ -65,6 +65,11 @@ class Strings {
   static String authenticateCreditAppWithBiometric(String authType) =>
       'Authenticate the credit application using $authType.';
 
+  // Notifications
+  static const String notifyServiceErrorTitle = 'Service Error';
+  static const notifyServiceErrorMessage =
+      'Unfortunately our services are down at the moment';
+
   // Landing Page
   static const createWallet = 'Create Wallet';
   static const recoverWallet = 'Recover Wallet';
