@@ -77,6 +77,7 @@ class DashboardScreenState extends State<DashboardScreen>
         .listen(_onSessionRequest)
         .addTo(_subscriptions);
     _bloc.sessionEvents.error.listen(_onError).addTo(_subscriptions);
+    _bloc.delegateEvents.onDidError.listen(_onError).addTo(_subscriptions);
     _bloc.error.listen(_onError).addTo(_subscriptions);
     _bloc.delegateEvents.onResponse.listen(_onResponse).addTo(_subscriptions);
 
