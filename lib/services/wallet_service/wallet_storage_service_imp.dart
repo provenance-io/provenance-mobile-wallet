@@ -14,14 +14,14 @@ class WalletStorageServiceImp implements WalletStorageService {
   final CipherService _cipherService;
 
   @override
-  Future<bool> addWallet({
+  Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
     required bool useBiometry,
   }) async {
     final publicKey = privateKey.defaultKey().publicKey;
 
-    final id = await _sqliteWalletStorageService.addWallet(
+    final details = await _sqliteWalletStorageService.addWallet(
       name: name,
       address: publicKey.address,
       coin: publicKey.coin,
@@ -31,17 +31,19 @@ class WalletStorageServiceImp implements WalletStorageService {
       publicKeyOnly: false,
     );
 
-    final success = await _cipherService.encryptKey(
-      id: id,
-      privateKey: privateKeyStr,
-      useBiometry: useBiometry,
-    );
+    if (details != null) {
+      final success = await _cipherService.encryptKey(
+        id: details.id,
+        privateKey: privateKeyStr,
+        useBiometry: useBiometry,
+      );
 
-    if (!success) {
-      await _sqliteWalletStorageService.removeWallet(id: id);
+      if (!success) {
+        await _sqliteWalletStorageService.removeWallet(id: details.id);
+      }
     }
 
-    return success;
+    return details;
   }
 
   @override
@@ -69,21 +71,24 @@ class WalletStorageServiceImp implements WalletStorageService {
   @override
   Future<bool> removeAllWallets() async {
     final success = await _cipherService.reset();
+    var count = 0;
+
     if (success) {
-      await _sqliteWalletStorageService.removeAllWallets();
+      count = await _sqliteWalletStorageService.removeAllWallets();
     }
 
-    return success;
+    return count != 0;
   }
 
   @override
   Future<bool> removeWallet(String id) async {
+    var count = 0;
     final success = await _cipherService.removeKey(id: id);
     if (success) {
-      await _sqliteWalletStorageService.removeWallet(id: id);
+      count = await _sqliteWalletStorageService.removeWallet(id: id);
     }
 
-    return success;
+    return count != 0;
   }
 
   @override

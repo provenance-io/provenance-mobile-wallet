@@ -111,7 +111,7 @@ class SqliteWalletStorageService {
     return await getWallet(id: id);
   }
 
-  Future<String> addWallet({
+  Future<WalletDetails?> addWallet({
     required String name,
     required String address,
     required Coin coin,
@@ -126,26 +126,23 @@ class SqliteWalletStorageService {
       },
     );
 
-    final selectedWallet = await getSelectedWallet();
-    if (selectedWallet == null) {
-      await selectWallet(
-        id: id.toString(),
-      );
-    }
+    final details = await getWallet(id: id.toString());
 
-    return id.toString();
+    return details;
   }
 
-  Future removeWallet({required String id}) async {
+  Future<int> removeWallet({required String id}) async {
     final db = await _getDb();
-    await db.execute(_sqlDeleteWallet, [id]);
-    await selectWallet();
+    final count = await db.rawDelete(_sqlDeleteWallet, [id]);
+
+    return count;
   }
 
-  Future removeAllWallets() async {
+  Future<int> removeAllWallets() async {
     final db = await _getDb();
-    await db.execute(_sqlDeleteAllWallets);
-    await selectWallet();
+    final count = await db.rawDelete(_sqlDeleteAllWallets);
+
+    return count;
   }
 
   Future<Database> _getDb() {

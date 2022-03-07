@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
@@ -39,6 +39,7 @@ class DashboardScreenState extends State<DashboardScreen>
   int _currentTabIndex = 0;
 
   final _subscriptions = CompositeSubscription();
+
   final _bloc = DashboardBloc();
 
   List<Asset> assets = [];
@@ -76,14 +77,15 @@ class DashboardScreenState extends State<DashboardScreen>
         .listen(_onSessionRequest)
         .addTo(_subscriptions);
     _bloc.sessionEvents.error.listen(_onError).addTo(_subscriptions);
-    _bloc.sessionEvents.response.listen(_onResponse).addTo(_subscriptions);
+    _bloc.error.listen(_onError).addTo(_subscriptions);
+    _bloc.delegateEvents.onResponse.listen(_onResponse).addTo(_subscriptions);
 
     get.registerSingleton<DashboardBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance?.addObserver(this);
 
-    _bloc.load(context);
+    _bloc.load();
 
     super.initState();
   }
@@ -265,9 +267,14 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _onError(String message) {
     logError(message);
-    PwDialog.showError(
-      context,
-      message: message,
+    showDialog(
+      useSafeArea: true,
+      context: context,
+      builder: (context) => ErrorDialog(
+        title: Strings.serviceErrorTitle,
+        error: message,
+        buttonText: Strings.continueName,
+      ),
     );
   }
 

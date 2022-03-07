@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/rename_wallet_dialog.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -148,7 +149,7 @@ class WalletItem extends StatelessWidget {
                     cancelText: Strings.cancel,
                   );
                   if (dialogResult) {
-                    await bloc.removeWallet(id: item.id);
+                    await get<WalletService>().removeWallet(id: item.id);
                   }
                   break;
                 case MenuOperation.select:

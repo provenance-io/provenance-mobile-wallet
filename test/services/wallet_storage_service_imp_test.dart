@@ -27,6 +27,11 @@ main() {
   group("addWallet", () {
     PrivateKey? privateKey;
     const id = "TestId";
+    final wallet = WalletDetails(
+      id: id,
+      address: 'address',
+      name: 'Test Wallet',
+    );
 
     setUp(() {
       const bip32Serialized =
@@ -39,7 +44,7 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
-      )).thenAnswer((_) => Future.value(id));
+      )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -48,15 +53,15 @@ main() {
       )).thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.addWallet(
-        name: "Name",
+        name: wallet.name,
         privateKey: privateKey!,
         useBiometry: true,
       );
 
-      expect(result, true);
+      expect(result, wallet);
 
       verify(_mockSqliteService!.addWallet(
-        name: "Name",
+        name: wallet.name,
         address: privateKey!.defaultKey().publicKey.address,
         coin: Coin.testNet,
       ));
@@ -91,12 +96,12 @@ main() {
 
     testWidgets('error while encrypting key', (tester) async {
       when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(0));
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
-      )).thenAnswer((_) => Future.value(id));
+      )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -112,7 +117,7 @@ main() {
 
       verify(_mockSqliteService!.removeWallet(id: id));
 
-      expect(result, false);
+      expect(result, isNotNull);
     });
   });
 
@@ -193,7 +198,7 @@ main() {
     testWidgets('success', (tester) async {
       when(_mockCipherService!.reset()).thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeAllWallets())
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(1));
       await _storageService!.removeAllWallets();
 
       verify(_mockCipherService!.reset());
@@ -208,7 +213,7 @@ main() {
       when(_mockCipherService!.removeKey(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(1));
       await _storageService!.removeWallet(id);
 
       verify(_mockCipherService!.removeKey(id: id));
