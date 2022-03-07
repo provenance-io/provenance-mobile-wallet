@@ -327,4 +327,11 @@ class Strings {
   static const platform = "Platform";
   static const dlob = "dLOB";
   static const url = "URL";
+
+  static const receiveTitle = "Receive";
+  static const receiveMessage =
+      "Show this QR code or share wallet address to receive asset";
+  static const receiveWalletAddressTitle = "Wallet Address";
+  static const receiveWalletAddressCopiedMessage =
+      "Your address was copied to the clipboard";
 }
