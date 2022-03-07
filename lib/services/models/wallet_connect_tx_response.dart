@@ -1,4 +1,4 @@
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 
 class WalletConnectTxResponse {
   WalletConnectTxResponse({
@@ -21,7 +21,7 @@ class WalletConnectTxResponse {
   final int? gasUsed;
   final int? height;
   final String? txHash;
-  final int? fees;
-  final Tx? tx;
+  final List<proto.Coin>? fees;
+  final proto.Tx? tx;
   final String? codespace;
 }
