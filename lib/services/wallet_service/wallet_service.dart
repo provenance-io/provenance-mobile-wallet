@@ -114,6 +114,9 @@ class WalletService implements Disposable {
       useBiometry: useBiometry ?? false,
     );
 
+    if ((await _storage.getSelectedWallet()) == null) {
+      await _storage.selectWallet(id: details!.id);
+    }
     if (details != null) {
       events._added.add(details);
     }
