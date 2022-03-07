@@ -161,6 +161,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     }
 
     if (gasEstimate == null) {
+      callback(null);
+
       return null;
     }
 
