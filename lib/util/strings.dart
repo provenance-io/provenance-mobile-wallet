@@ -124,6 +124,8 @@ class Strings {
   static const resetWallets = 'Reset Wallets';
   static const resetWalletsAreYouSure =
       'Are you sure you wish to reset all wallets?';
+  static const pinCodeUpdated = 'Pin Code Updated Successfully';
+  static const successName = 'Success';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
@@ -325,4 +327,11 @@ class Strings {
   static const platform = "Platform";
   static const dlob = "dLOB";
   static const url = "URL";
+
+  static const receiveTitle = "Receive";
+  static const receiveMessage =
+      "Show this QR code or share wallet address to receive asset";
+  static const receiveWalletAddressTitle = "Wallet Address";
+  static const receiveWalletAddressCopiedMessage =
+      "Your address was copied to the clipboard";
 }
