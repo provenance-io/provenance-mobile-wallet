@@ -3,17 +3,18 @@ import 'package:provenance_wallet/common/pw_design.dart';
 enum CapType { round, square }
 
 class _PwCornerCustomPainter extends CustomPainter {
-  _PwCornerCustomPainter(CapType capType, double width, Color color) {
+  _PwCornerCustomPainter(
+    CapType capType,
+    double width,
+    Color color,
+  ) {
     _paint = Paint();
     _paint.strokeWidth = width;
     _paint.color = color;
     _paint.style = PaintingStyle.stroke;
 
-    if (capType == CapType.round) {
-      _paint.strokeCap = StrokeCap.round;
-    } else {
-      _paint.strokeCap = StrokeCap.square;
-    }
+    _paint.strokeCap =
+        capType == CapType.round ? StrokeCap.round : StrokeCap.square;
   }
 
   late Paint _paint;

@@ -17,7 +17,7 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    required bool useBiometry,
+    bool? useBiometry,
   }) async {
     final publicKey = privateKey.defaultKey().publicKey;
 

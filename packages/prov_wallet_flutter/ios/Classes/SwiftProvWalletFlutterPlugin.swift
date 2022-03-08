@@ -21,14 +21,12 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			do {
 				let argsFormatted = call.arguments as? Dictionary<String, Any>
 				guard let id = argsFormatted?["id"] as? String else {
-					throw PluginError.invalidArgument("id is required")
+					throw PluginError(kind: .invalidArgument, message: "id is required")
 				}
 				guard let privateKey = argsFormatted?["private_key"] as? String else {
-					throw PluginError.invalidArgument("privateKey is required")
+					throw PluginError(kind: .invalidArgument, message: "privateKey is required")
 				}
-				guard let useBiometry = argsFormatted?["use_biometry"] as? Bool else {
-					throw PluginError.invalidArgument("useBiometry is required")
-				}
+				let useBiometry = argsFormatted?["use_biometry"] as? Bool
 			
 				try CipherService.encryptKey(id: id, plainText: privateKey, useBiometry: useBiometry)
 				
@@ -44,7 +42,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			do {
 				let argsFormatted = call.arguments as? Dictionary<String, Any>
 				guard let id = argsFormatted?["id"] as? String else {
-					throw PluginError.invalidArgument("id is required")
+					throw PluginError(kind: .invalidArgument, message: "id is required")
 				}
 				
 				key = try CipherService.decryptKey(id: id)
@@ -59,7 +57,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			do {
 				let argsFormatted = call.arguments as? Dictionary<String, Any>
 				guard let id = argsFormatted?["id"] as? String else {
-					throw PluginError.invalidArgument("id is required")
+					throw PluginError(kind: .invalidArgument, message: "id is required")
 				}
 				
 				success = try CipherService.removeKey(id: id)
@@ -94,11 +92,23 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 	}
 	
 	private func showError(title: String, error: Error) {
-		let message = error is ProvenanceWalletError ? (error as! ProvenanceWalletError).message : error.localizedDescription
+		var message: String
+		if (error is ProvenanceWalletError) {
+			message = (error as! ProvenanceWalletError).message
+		} else if (error is PluginError) {
+			message = (error as! PluginError).message
+		} else {
+			message = error.localizedDescription
+		}
+		
 		ErrorHandler.show(title: title, message: message, completionHandler: nil)
 	}
 }
 
-enum PluginError: Error {
-	case invalidArgument(String)
+struct PluginError: Error {
+	enum ErrorKind {
+		case invalidArgument
+	}
+	let kind: ErrorKind
+	let message: String
 }

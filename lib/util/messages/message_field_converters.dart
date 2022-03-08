@@ -1,7 +1,5 @@
+import 'package:provenance_wallet/util/denom.dart';
 import 'package:provenance_wallet/util/strings.dart';
-
-const nHashPerHash = 1000000000;
-const nHashDenom = 'nhash';
 
 Object? convertAmount(Object? obj) {
   String? amount;

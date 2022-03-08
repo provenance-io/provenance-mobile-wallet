@@ -22,7 +22,7 @@ abstract class WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    required bool useBiometry,
+    bool? useBiometry,
   });
 
   Future<PrivateKey?> loadKey(String id);

@@ -97,7 +97,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      return callback(sessionApproval);
+      return callback(sessionApproval, null);
     };
 
     final remoteClientData = RemoteClientDetails(
@@ -127,7 +127,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
           ..removeLast();
       }
 
-      return callback(signedData);
+      return callback(signedData, null);
     };
 
     final signRequest = SignRequest(
@@ -158,6 +158,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       gasEstimate = await _transactionHandler.estimateGas(txBody, _privateKey);
     } on GrpcError catch (e) {
       events._onDidError.add(e.message ?? e.codeName);
+      callback(null, e.message);
     }
 
     if (gasEstimate == null) {
@@ -189,13 +190,13 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
             gasUsed: txResponse.gasUsed.toInt(),
             height: txResponse.height.toInt(),
             txHash: txResponse.txhash,
-            fees: gasEstimate!.fees,
+            fees: gasEstimate!.feeCalculated,
             codespace: txResponse.codespace,
           ),
         );
       }
 
-      return callback(response);
+      return callback(response, null);
     };
 
     events._sendRequest.add(sendRequest);
