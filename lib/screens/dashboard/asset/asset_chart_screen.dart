@@ -45,87 +45,100 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AssetPaths.images.background),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          flexibleSpace: Container(
-            color: Colors.transparent,
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          centerTitle: true,
-          title: Column(
-            children: [
-              SvgPicture.asset(
-                widget.asset.image,
-                width: 30,
-                height: 30,
-              ),
-              VerticalSpacer.small(),
-              PwText(
-                widget.asset.display.toUpperCase(),
-                style: PwTextStyle.subhead,
-              ),
-            ],
-          ),
-          leading: Padding(
-            padding: EdgeInsets.only(left: 21),
-            child: IconButton(
-              icon: PwIcon(
-                PwIcons.back,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
             ),
-          ),
-        ),
-        body: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.xLarge,
-          ),
-          color: Colors.transparent,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 7),
-                    child: PwText(
-                      '\$',
-                      style: PwTextStyle.h2,
-                      color: PwColor.neutralNeutral,
+            child: IntrinsicHeight(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(AssetPaths.images.background),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Scaffold(
+                  backgroundColor: Colors.transparent,
+                  appBar: AppBar(
+                    flexibleSpace: Container(
+                      color: Colors.transparent,
+                    ),
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                    centerTitle: true,
+                    title: Column(
+                      children: [
+                        SvgPicture.asset(
+                          widget.asset.image,
+                          width: 30,
+                          height: 30,
+                        ),
+                        VerticalSpacer.small(),
+                        PwText(
+                          widget.asset.display.toUpperCase(),
+                          style: PwTextStyle.subhead,
+                        ),
+                      ],
+                    ),
+                    leading: Padding(
+                      padding: EdgeInsets.only(left: 21),
+                      child: IconButton(
+                        icon: PwIcon(
+                          PwIcons.back,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
                   ),
-                  PwText(
-                    widget.asset.usdPrice.toStringAsFixed(3),
-                    style: PwTextStyle.h1,
-                    color: PwColor.neutralNeutral,
+                  body: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.xLarge,
+                    ),
+                    color: Colors.transparent,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 7),
+                              child: PwText(
+                                '\$',
+                                style: PwTextStyle.h2,
+                                color: PwColor.neutralNeutral,
+                              ),
+                            ),
+                            PwText(
+                              widget.asset.usdPrice.toStringAsFixed(3),
+                              style: PwTextStyle.h1,
+                              color: PwColor.neutralNeutral,
+                            ),
+                          ],
+                        ),
+                        // TODO: This is demo text, to be replaced by a service.
+                        PwText("↑ \$0.008 (0.10%)"),
+                        AssetBarChart(),
+                        VerticalSpacer.medium(),
+                        AssetBarChartButtons(),
+                        VerticalSpacer.xxLarge(),
+                        AssetChartStatistics(),
+                        VerticalSpacer.medium(),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-              // TODO: This is demo text, to be replaced by a service.
-              PwText("↑ \$0.008 (0.10%)"),
-              AssetBarChart(),
-              VerticalSpacer.medium(),
-              AssetBarChartButtons(),
-              VerticalSpacer.xxLarge(),
-              AssetChartStatistics(),
-              VerticalSpacer.medium(),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
