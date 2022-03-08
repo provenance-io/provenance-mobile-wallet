@@ -7,6 +7,7 @@ import 'package:provenance_wallet/screens/dashboard/landing/connection_details_m
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
@@ -201,8 +202,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           if (index == 0) PwListDivider(),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context)
-                                  .push(AssetChartScreen(asset: item).route());
+                              // FIXME: Store the GraphingDataValue.
+                              Navigator.of(context).push(AssetChartScreen(
+                                asset: item,
+                                dataValue: GraphingDataValue.hourly,
+                              ).route());
                             },
                             child: Padding(
                               padding: EdgeInsets.zero,
