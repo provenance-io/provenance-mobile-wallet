@@ -27,7 +27,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    required bool useBiometry,
+    bool? useBiometry,
   }) async {
     final id = Uuid().v1().toString();
     final publicKey = privateKey.defaultKey().publicKey;

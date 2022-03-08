@@ -11,17 +11,19 @@ class CipherService: NSObject {
 	static let secKeyTagBiometry = "io.provenance.wallet.biometry".data(using: .utf8)!
 	static let secKeyTagPasscode = "io.provenance.wallet.passcode".data(using: .utf8)!
 	
-	static func encryptKey(id: String, plainText: String, useBiometry: Bool = getUseBiometry()) throws {
+	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
+		let doUseBiometry = useBiometry ?? getUseBiometry()
+		
 		let cipher = getCipher()
 		let serializedKeys = try decrypt(cipherText: cipher)
 		var keyDict = deserializePrivateKeys(str: serializedKeys)
 		
 		keyDict[id] = plainText
 		let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
-		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: useBiometry)
+		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: doUseBiometry)
 		
 		saveCipher(cipher: newCipherText)
-		saveUseBiometry(useBiometry: useBiometry)
+		saveUseBiometry(useBiometry: doUseBiometry)
 	}
 	
 	static func decryptKey(id: String) throws -> String {

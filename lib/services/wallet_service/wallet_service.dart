@@ -111,7 +111,7 @@ class WalletService implements Disposable {
     final details = await _storage.addWallet(
       name: name,
       privateKey: privateKey,
-      useBiometry: useBiometry ?? false,
+      useBiometry: useBiometry,
     );
 
     if (details != null) {
