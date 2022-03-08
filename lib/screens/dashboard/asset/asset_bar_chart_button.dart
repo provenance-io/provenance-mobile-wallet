@@ -44,3 +44,26 @@ class AssetBarChartButton extends StatelessWidget {
     );
   }
 }
+
+class AssetBarChartButtons extends StatelessWidget {
+  const AssetBarChartButtons({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          AssetBarChartButton(dataValue: GraphingDataValue.hourly),
+          AssetBarChartButton(dataValue: GraphingDataValue.daily),
+          AssetBarChartButton(dataValue: GraphingDataValue.weekly),
+          AssetBarChartButton(dataValue: GraphingDataValue.monthly),
+          AssetBarChartButton(dataValue: GraphingDataValue.yearly),
+          AssetBarChartButton(dataValue: GraphingDataValue.allTime),
+        ],
+      ),
+    );
+  }
+}

@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -117,37 +118,9 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
               PwText("↑ \$0.008 (0.10%)"),
               AssetBarChart(),
               VerticalSpacer.medium(),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    AssetBarChartButton(dataValue: GraphingDataValue.hourly),
-                    AssetBarChartButton(dataValue: GraphingDataValue.daily),
-                    AssetBarChartButton(dataValue: GraphingDataValue.weekly),
-                    AssetBarChartButton(dataValue: GraphingDataValue.monthly),
-                    AssetBarChartButton(dataValue: GraphingDataValue.yearly),
-                    AssetBarChartButton(dataValue: GraphingDataValue.allTime),
-                  ],
-                ),
-              ),
+              AssetBarChartButtons(),
               VerticalSpacer.xxLarge(),
-              Row(
-                children: const [
-                  PwText(
-                    "Statistics",
-                    style: PwTextStyle.headline4,
-                  ),
-                ],
-              ),
-              StreamBuilder<AssetChartDetails?>(
-                initialData: _bloc.chartDetails.value,
-                stream: _bloc.chartDetails,
-                builder: (context, snapshot) {
-                  final stats = snapshot.data?.assetStatistics;
-
-                  return Container();
-                },
-              ),
+              AssetChartStatistics(),
               VerticalSpacer.medium(),
             ],
           ),
