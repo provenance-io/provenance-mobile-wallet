@@ -44,6 +44,8 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
+  static const comingSoon = 'Coming Soon...';
+
   static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
