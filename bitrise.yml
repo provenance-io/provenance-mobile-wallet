@@ -106,9 +106,10 @@ workflows:
             # debug log
             set -x
 
-            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/ios/iphoneos/Runner.app/Info.plist`
-            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" build/ios/iphoneos/Runner.app/Info.plist`
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $IOS_BUILD_APP_INFO_PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $IOS_BUILD_APP_INFO_PLIST`
             envman add --key GIT_TAG --value "v$VERSION+$BUILD"
+        title: Add Git tag env var
     - git-tag@1:
         inputs:
         - tag: "$GIT_TAG"
@@ -179,9 +180,10 @@ workflows:
             # debug log
             set -x
 
-            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/ios/iphoneos/Runner.app/Info.plist`
-            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" build/ios/iphoneos/Runner.app/Info.plist`
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $IOS_BUILD_APP_INFO_PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $IOS_BUILD_APP_INFO_PLIST`
             envman add --key GIT_TAG --value "v$VERSION+$BUILD"
+        title: Add Git tag env var
     - git-tag@1:
         inputs:
         - tag: "$GIT_TAG"
@@ -279,3 +281,6 @@ app:
   - opts:
       is_expand: false
     COLOR_SUCCESS: "#52BF8C"
+  - opts:
+      is_expand: false
+    COLOR_FAILURE: "#EE4959"
