@@ -61,7 +61,7 @@ class MockWalletConnection extends ValueListenable<WalletConnectState>
       name: 'Test Name',
     );
 
-    delegate.onApproveSession(client, (accept) async {
+    delegate.onApproveSession(client, (accept, message) async {
       if (accept != null) {
         _updateState(WalletConnectState.connected);
       }
