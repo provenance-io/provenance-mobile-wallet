@@ -3,6 +3,10 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingCustomizationSlide extends StatelessWidget {
+  const OnboardingCustomizationSlide({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -24,7 +28,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
                     Strings.powerfulCustomization,
                     style: PwTextStyle.headline1,
                     textAlign: TextAlign.center,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -45,9 +49,9 @@ class OnboardingCustomizationSlide extends StatelessWidget {
                   ),
                   child: PwText(
                     Strings.customizationDescription,
-                    style: PwTextStyle.m_p,
+                    style: PwTextStyle.m,
                     textAlign: TextAlign.center,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                   ),
                 ),
                 VerticalSpacer.xxLarge(),

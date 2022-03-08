@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:get_it/get_it.dart';
 
 class RecoveryWordsBloc extends Disposable {
-  final _random = new Random();
+  final _random = Random();
   final BehaviorSubject<List<String?>> _selectedWords = BehaviorSubject.seeded([
     null,
     null,

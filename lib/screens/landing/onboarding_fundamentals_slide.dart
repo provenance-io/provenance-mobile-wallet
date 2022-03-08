@@ -1,10 +1,13 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-import 'fundamentals_bloc.dart';
-
 class OnboardingFundamentalsSlide extends StatefulWidget {
+  const OnboardingFundamentalsSlide({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _OnboardingFundamentalsSlideState();
@@ -14,23 +17,8 @@ class OnboardingFundamentalsSlide extends StatefulWidget {
 class _OnboardingFundamentalsSlideState
     extends State<OnboardingFundamentalsSlide> {
   @override
-  void initState() {
-    super.initState();
-
-    get.registerSingleton<FundamentalsBloc>(FundamentalsBloc());
-    get<FundamentalsBloc>().load();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<FundamentalsBloc>();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bloc = get<FundamentalsBloc>();
+    final bloc = get<LandingBloc>();
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
@@ -48,7 +36,7 @@ class _OnboardingFundamentalsSlideState
                     Strings.strongFundamentals,
                     style: PwTextStyle.headline1,
                     textAlign: TextAlign.center,
-                    color: PwColor.white,
+                    color: PwColor.neutralNeutral,
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -86,13 +74,13 @@ class _OnboardingFundamentalsSlideState
                                     child: PwText(
                                       marketCap.substring(0, 1),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                   PwText(
                                     marketCap.substring(1),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                 ],
                               );
@@ -100,8 +88,8 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.marketCap,
-                            style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            style: PwTextStyle.m,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -118,14 +106,14 @@ class _OnboardingFundamentalsSlideState
                               return PwText(
                                 '$numValidators',
                                 style: PwTextStyle.h3,
-                                color: PwColor.white,
+                                color: PwColor.neutralNeutral,
                               );
                             },
                           ),
                           PwText(
                             Strings.validators,
-                            style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            style: PwTextStyle.m,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -149,7 +137,7 @@ class _OnboardingFundamentalsSlideState
                                       transactions.length - 1,
                                     ),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 5),
@@ -157,7 +145,7 @@ class _OnboardingFundamentalsSlideState
                                       transactions
                                           .substring(transactions.length - 1),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                 ],
@@ -166,8 +154,8 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.transactions,
-                            style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            style: PwTextStyle.m,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -191,14 +179,14 @@ class _OnboardingFundamentalsSlideState
                                       blockTime.length - 3,
                                     ),
                                     style: PwTextStyle.h3,
-                                    color: PwColor.white,
+                                    color: PwColor.neutralNeutral,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 4),
                                     child: PwText(
                                       blockTime.substring(blockTime.length - 3),
                                       style: PwTextStyle.h4,
-                                      color: PwColor.white,
+                                      color: PwColor.neutralNeutral,
                                     ),
                                   ),
                                 ],
@@ -207,8 +195,8 @@ class _OnboardingFundamentalsSlideState
                           ),
                           PwText(
                             Strings.avgBlockTime,
-                            style: PwTextStyle.m_p,
-                            color: PwColor.white,
+                            style: PwTextStyle.m,
+                            color: PwColor.neutralNeutral,
                           ),
                         ],
                       ),
@@ -222,8 +210,8 @@ class _OnboardingFundamentalsSlideState
                   ),
                   child: PwText(
                     Strings.fundamentalsDescription,
-                    style: PwTextStyle.m_p,
-                    color: PwColor.white,
+                    style: PwTextStyle.m,
+                    color: PwColor.neutralNeutral,
                     textAlign: TextAlign.center,
                   ),
                 ),

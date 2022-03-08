@@ -4,18 +4,21 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/page_indicator.dart';
-import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_authentication_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _LandingScreenState();
@@ -26,21 +29,21 @@ class _LandingScreenState extends State<LandingScreen>
     with WidgetsBindingObserver {
   static const _inactivityTimeout = Duration(minutes: 2);
 
-  bool _accountExists = false;
-  LocalAuthenticationService _localAuth = LocalAuthenticationService();
-  LocalAuthHelper _helper = LocalAuthHelper.instance;
-  PageController _pageController = PageController();
+  final _localAuth = LocalAuthenticationService();
+  final _pageController = PageController();
   double _currentPage = 0;
   Timer? _inactivityTimer;
+  LandingBloc? _bloc;
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
-    checkAccount();
+    get.registerSingleton<LandingBloc>(LandingBloc());
+    _bloc = get<LandingBloc>()..load();
 
     WidgetsBinding.instance!.addObserver(this);
-
+    checkAccount();
     super.initState();
   }
 
@@ -48,7 +51,7 @@ class _LandingScreenState extends State<LandingScreen>
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
     _pageController.dispose();
-
+    get.unregister<LandingBloc>();
     WidgetsBinding.instance!.removeObserver(this);
 
     super.dispose();
@@ -72,22 +75,10 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void checkAccount() async {
-    final storage = await SecureStorageService().read(StorageKey.accountName);
-    if (storage != null && storage.isNotEmpty) {
-      setState(() {
-        _accountExists = true;
-      });
-
-      doAuth();
+    await _bloc?.checkStorage();
+    if (_bloc?.hasStorage.value ?? false) {
+      _bloc?.doAuth(context);
     }
-  }
-
-  void doAuth() {
-    LocalAuthHelper.instance.auth(context, (result) {
-      if (result) {
-        Navigator.of(context).push(DashboardScreen().route());
-      }
-    });
   }
 
   @override
@@ -98,6 +89,7 @@ class _LandingScreenState extends State<LandingScreen>
           image: DecorationImage(
             image: AssetImage(AssetPaths.images.background),
             fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
         child: Column(
@@ -107,7 +99,7 @@ class _LandingScreenState extends State<LandingScreen>
             Expanded(
               child: PageView(
                 controller: _pageController,
-                children: [
+                children: const [
                   OnboardingLandingSlide(),
                   OnboardingFundamentalsSlide(),
                   OnboardingCustomizationSlide(),
@@ -118,22 +110,28 @@ class _LandingScreenState extends State<LandingScreen>
             VerticalSpacer.xxLarge(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwButton(
-                child: PwText(
-                  _accountExists ? Strings.continueName : Strings.createWallet,
-                  style: PwTextStyle.bodyBold,
-                  color: PwColor.white,
-                ),
-                onPressed: () {
-                  if (_accountExists) {
-                    doAuth();
-                  } else {
-                    Navigator.of(context).push(AccountName(
-                      WalletAddImportType.onBoardingAdd,
-                      currentStep: 1,
-                      numberOfSteps: 4,
-                    ).route());
-                  }
+              child: StreamBuilder<bool>(
+                initialData: _bloc?.hasStorage.value,
+                stream: _bloc?.hasStorage,
+                builder: (context, snapshot) {
+                  var hasStorage = snapshot.data ?? false;
+
+                  return PwPrimaryButton.fromString(
+                    text: hasStorage
+                        ? Strings.continueName
+                        : Strings.createWallet,
+                    onPressed: () {
+                      if (hasStorage) {
+                        _bloc?.doAuth(context);
+                      } else {
+                        Navigator.of(context).push(AccountName(
+                          WalletAddImportType.onBoardingAdd,
+                          currentStep: 1,
+                          numberOfSteps: 4,
+                        ).route());
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -144,7 +142,7 @@ class _LandingScreenState extends State<LandingScreen>
                 child: PwText(
                   Strings.recoverWallet,
                   style: PwTextStyle.body,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(AccountName(

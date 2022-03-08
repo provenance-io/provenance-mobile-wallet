@@ -4,7 +4,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 typedef IsValidCallback = Future<bool> Function(String input);
 
 class QRCodeScanner extends StatefulWidget {
-  QRCodeScanner({
+  const QRCodeScanner({
     Key? key,
     this.isValidCallback,
   }) : super(key: key);
@@ -18,7 +18,6 @@ class QRCodeScanner extends StatefulWidget {
 class QRCodeScannerState extends State<QRCodeScanner> {
   QRCodeScannerState();
 
-  bool _loading = true;
   bool _handled = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -29,18 +28,18 @@ class QRCodeScannerState extends State<QRCodeScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
+        backgroundColor: Theme.of(context).colorScheme.neutral450,
         elevation: 0.0,
         leading: IconButton(
           icon: PwIcon(
             PwIcons.back,
             size: 24,
-            color: Theme.of(context).colorScheme.white,
+            color: Theme.of(context).colorScheme.neutralNeutral,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.globalNeutral450,
+      backgroundColor: Theme.of(context).colorScheme.neutral450,
       body: _buildBody(context),
     );
   }
@@ -118,7 +117,6 @@ class QRCodeScannerState extends State<QRCodeScanner> {
 
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();
-    Map<String, dynamic> info = {};
     final isValid = await widget.isValidCallback?.call(qrData) ?? true;
     if (isValid && !_handled) {
       _handled = true;

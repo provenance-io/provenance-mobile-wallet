@@ -7,13 +7,14 @@ import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePin extends StatefulHookWidget {
-  CreatePin(
+  const CreatePin(
     this.flowType, {
     required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final String? accountName;
@@ -36,7 +37,7 @@ class CreatePinState extends State<CreatePin> {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

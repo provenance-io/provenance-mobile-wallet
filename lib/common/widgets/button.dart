@@ -1,11 +1,28 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwPrimaryButton extends StatelessWidget {
+  factory PwPrimaryButton.fromString({
+    Key? key,
+    required String text,
+    VoidCallback? onPressed,
+    double minimumWidth = double.maxFinite,
+  }) {
+    return PwPrimaryButton(
+      key: key,
+      minimumWidth: minimumWidth,
+      onPressed: onPressed,
+      child: PwText(
+        text,
+        style: PwTextStyle.bodyBold,
+        color: PwColor.neutralNeutral,
+      ),
+    );
+  }
+
   const PwPrimaryButton({
     Key? key,
     required this.child,
     this.onPressed,
-    this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
   }) : super(key: key);
 
@@ -15,9 +32,6 @@ class PwPrimaryButton extends StatelessWidget {
   /// The callback to invoke when the button is pressed.
   final VoidCallback? onPressed;
 
-  /// Used to show an alternate version of the button, as per the figma design
-  final bool showAlternate;
-
   /// Useful when working with Flexible/Expandable widgets
   final double minimumWidth;
 
@@ -25,28 +39,16 @@ class PwPrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        foregroundColor:
-            MaterialStateProperty.all(Theme.of(context).colorScheme.onPrimary),
+        foregroundColor: MaterialStateProperty.all(
+          Theme.of(context).colorScheme.neutralNeutral,
+        ),
         backgroundColor:
             MaterialStateProperty.resolveWith((Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
-            return Theme.of(context).colorScheme.primary4.withOpacity(0.4);
+            return Theme.of(context).colorScheme.primary550.withOpacity(0.4);
           }
 
-          return showAlternate
-              ? Theme.of(context).colorScheme.primary4
-              : Theme.of(context).colorScheme.primary;
-        }),
-        // FIXME: Border should appear on the outside as per design
-        side: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.pressed)) {
-            return BorderSide(
-              color: Theme.of(context).colorScheme.primary4,
-              width: 8,
-            );
-          }
+          return Theme.of(context).colorScheme.primary550;
         }),
         minimumSize: MaterialStateProperty.all(
           Size(
@@ -61,141 +63,6 @@ class PwPrimaryButton extends StatelessWidget {
   }
 }
 
-class PwSecondaryButton extends StatelessWidget {
-  const PwSecondaryButton({
-    Key? key,
-    required this.child,
-    this.onPressed,
-    this.showAlternate = false,
-  }) : super(key: key);
-
-  /// The child to display within the button. This is often just a Text widget.
-  final Widget child;
-
-  /// The callback to invoke when the button is pressed.
-  final VoidCallback? onPressed;
-
-  /// Used to show an alternate version of the button, as per the figma design
-  final bool showAlternate;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: ButtonStyle(
-        foregroundColor:
-            MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (!showAlternate && !states.contains(MaterialState.disabled)) {
-            return Theme.of(context).colorScheme.onBackground;
-          }
-
-          return Theme.of(context).colorScheme.onPrimary;
-        }),
-        backgroundColor:
-            MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
-            return Theme.of(context).colorScheme.black.withOpacity(0.3);
-          }
-
-          return showAlternate
-              ? Theme.of(context).colorScheme.black
-              : Theme.of(context).colorScheme.onPrimary;
-        }),
-        side: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.pressed)) {
-            return BorderSide(
-              color: Theme.of(context).colorScheme.primary4,
-              width: 8,
-            );
-          }
-          if (!states.contains(MaterialState.disabled)) {
-            return BorderSide(
-              color: Theme.of(context).colorScheme.black,
-              width: 2,
-            );
-          }
-        }),
-        minimumSize: MaterialStateProperty.all(const Size(
-          double.infinity,
-          50,
-        )),
-      ),
-      onPressed: onPressed,
-      child: child,
-    );
-  }
-}
-
-class PwActionButton extends StatelessWidget {
-  const PwActionButton({
-    Key? key,
-    this.child,
-    required this.onPressed,
-    this.outlined = false,
-  })  : label = null,
-        super(key: key);
-
-  /// Helper constructor for creating a button with a label.
-  const PwActionButton.withLabel({
-    Key? key,
-    this.child,
-    required this.onPressed,
-    required this.label,
-    this.outlined = false,
-  }) : super(key: key);
-
-  /// A widget to show in the button. This is typically an [Icon] widget.
-  final Widget? child;
-
-  /// The callback to invoke when the button is Pressed.
-  final VoidCallback? onPressed;
-
-  /// A label to show underneath the button.
-  final Widget? label;
-
-  /// Show the outlined version of the button.
-  final bool outlined;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    return Column(
-      children: [
-        FloatingActionButton(
-          elevation: 0.0,
-          backgroundColor: outlined
-              ? theme.colorScheme.onBackground
-              : theme.colorScheme.primary4,
-          shape: outlined
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(56.0)),
-                  side: BorderSide(
-                    color: theme.colorScheme.white,
-                    width: 1.0,
-                  ),
-                )
-              : null,
-          onPressed: onPressed,
-          child: child,
-        ),
-        if (label != null)
-          DefaultTextStyle(
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: label!,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 class PwButton extends StatelessWidget {
   const PwButton({
     Key? key,
@@ -204,6 +71,7 @@ class PwButton extends StatelessWidget {
     required this.onPressed,
     this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
+    this.minimumHeight = 50,
   }) : super(key: key);
 
   const PwButton.alternate({
@@ -218,6 +86,7 @@ class PwButton extends StatelessWidget {
           enabled: enabled,
           onPressed: onPressed,
           minimumWidth: minimumWidth,
+          minimumHeight: 50,
           showAlternate: true,
         );
 
@@ -236,6 +105,9 @@ class PwButton extends StatelessWidget {
   /// Useful when working with Flexible/Expandable widgets
   final double minimumWidth;
 
+  /// Useful when working with Flexible/Expandable widgets
+  final double minimumHeight;
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -250,25 +122,22 @@ class PwButton extends StatelessWidget {
 
     return ButtonStyle(
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        if (showAlternate) {
-          return states.contains(MaterialState.disabled)
-              ? theme.colorScheme.globalNeutral450.withOpacity(0.5)
-              : theme.colorScheme.globalNeutral450;
-        }
-
-        return theme.colorScheme.white;
+        return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return states.contains(MaterialState.disabled)
-            ? showAlternate
-                ? theme.colorScheme.primaryP550.withOpacity(0.5)
-                : theme.colorScheme.primaryP550.withOpacity(0.4)
-            : theme.colorScheme.primaryP500;
+        return showAlternate
+            ? Colors.transparent
+            : theme.colorScheme.primary550;
+      }),
+      side: MaterialStateProperty.resolveWith((states) {
+        return showAlternate
+            ? BorderSide(color: theme.colorScheme.primary500, width: 1)
+            : null;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(
           minimumWidth,
-          50,
+          minimumHeight,
         ),
       ),
     );
@@ -311,7 +180,7 @@ class PwTextButton extends StatelessWidget {
         style: PwTextStyle.bodyBold,
         color: PwColor.neutralNeutral,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primaryP550,
+      backgroundColor: Theme.of(context).colorScheme.primary550,
       onPressed: onPressed,
     );
   }
@@ -389,7 +258,13 @@ class PwGreyButton extends StatelessWidget {
     return TextButton(
       style: _buttonStyle(context),
       onPressed: enabled ? onPressed : null,
-      child: PwText(text),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: Spacing.small),
+        child: PwText(
+          text,
+          style: PwTextStyle.bodyBold,
+        ),
+      ),
     );
   }
 
@@ -398,51 +273,19 @@ class PwGreyButton extends StatelessWidget {
 
     return ButtonStyle(
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        return theme.colorScheme.onPrimary;
+        return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return states.contains(MaterialState.disabled)
-            ? theme.colorScheme.lightGrey.withOpacity(0.4)
-            : theme.colorScheme.lightGrey;
+        return theme.colorScheme.neutral700;
       }),
       minimumSize: MaterialStateProperty.all(Size(
         minimumWidth,
         50,
       )),
+      padding: MaterialStateProperty.all(
+        EdgeInsets.symmetric(vertical: Spacing.large),
+      ),
     );
-  }
-}
-
-class PwPrimaryAndTextButton extends StatelessWidget {
-  const PwPrimaryAndTextButton({
-    Key? key,
-    required this.primaryButtonText,
-    required this.primaryButtonOnPressed,
-    required this.textButtonText,
-    required this.textButtonOnPressed,
-  }) : super(key: key);
-
-  final String primaryButtonText;
-  final Function()? primaryButtonOnPressed;
-  final String textButtonText;
-  final Function()? textButtonOnPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      PwPrimaryButton(
-        child: PwText(primaryButtonText),
-        onPressed: primaryButtonOnPressed,
-      ),
-      const VerticalSpacer.small(),
-      TextButton(
-        onPressed: textButtonOnPressed,
-        child: PwText(
-          textButtonText,
-          color: PwColor.primary4,
-        ),
-      ),
-    ]);
   }
 }
 
@@ -453,7 +296,6 @@ class PwOutlinedButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.largeButton = false,
-    this.showArrow = false,
     this.center = true,
     this.fpTextStyle,
     this.fpTextColor,
@@ -473,9 +315,6 @@ class PwOutlinedButton extends StatelessWidget {
   /// else the button will be of a standard height of 50px
   final bool largeButton;
 
-  /// An arrow to appear on the right side of the button
-  final bool showArrow;
-
   /// To center the [_text] and [icon]. If [showArrow] is true, that will not be centered
   final bool center;
 
@@ -490,10 +329,10 @@ class PwOutlinedButton extends StatelessWidget {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         backgroundColor: backgroundColor ?? Colors.transparent,
-        primary: Theme.of(context).colorScheme.white,
+        primary: Theme.of(context).colorScheme.neutralNeutral,
         padding: EdgeInsets.zero,
         side: BorderSide(
-          color: borderColor ?? Theme.of(context).colorScheme.lightGrey,
+          color: borderColor ?? Theme.of(context).colorScheme.primary500,
           width: borderWidth,
         ),
         shape: RoundedRectangleBorder(
@@ -528,21 +367,11 @@ class PwOutlinedButton extends StatelessWidget {
                           : Container(),
                       PwText(
                         _text,
-                        style: fpTextStyle ?? PwTextStyle.m,
-                        color: fpTextColor ?? PwColor.darkGrey,
+                        style: fpTextStyle ?? PwTextStyle.body,
                       ),
                     ],
                   ),
                 ),
-                showArrow
-                    ? Align(
-                        alignment: Alignment.centerRight,
-                        child: PwIcon(
-                          PwIcons.back,
-                          color: Theme.of(context).colorScheme.darkGrey,
-                        ),
-                      )
-                    : Container(),
               ],
             ),
           ],

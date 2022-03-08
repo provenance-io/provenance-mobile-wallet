@@ -1,12 +1,13 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class TabItem extends StatelessWidget {
-  TabItem(
-    bool this.isCurrent,
-    String this.tabName,
-    String this.tabAsset, {
-    bool this.isLoading = false,
-  });
+  const TabItem(
+    this.isCurrent,
+    this.tabName,
+    this.tabAsset, {
+    Key? key,
+    this.isLoading = false,
+  }) : super(key: key);
   final bool isCurrent;
   final bool isLoading;
   final String tabAsset;
@@ -26,8 +27,8 @@ class TabItem extends StatelessWidget {
                     tabAsset,
                     size: 24,
                     color: isCurrent
-                        ? Theme.of(context).colorScheme.white
-                        : Theme.of(context).colorScheme.provenanceNeutral550,
+                        ? Theme.of(context).colorScheme.neutralNeutral
+                        : Theme.of(context).colorScheme.neutral550,
                   )
                 : const CircularProgressIndicator(),
           ),
@@ -36,7 +37,7 @@ class TabItem extends StatelessWidget {
             child: PwText(
               tabName,
               style: PwTextStyle.footnote,
-              color: PwColor.white,
+              color: PwColor.neutralNeutral,
             ),
           ),
         ],

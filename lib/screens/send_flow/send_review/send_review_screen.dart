@@ -8,8 +8,11 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendReviewCell extends StatelessWidget {
-  const SendReviewCell(this.label, this.value, { Key? key, })
-    : super(key: key);
+  const SendReviewCell(
+    this.label,
+    this.value, {
+    Key? key,
+  }) : super(key: key);
 
   final String label;
   final String value;
@@ -23,7 +26,7 @@ class SendReviewCell extends StatelessWidget {
           PwText(label),
           Expanded(
             child: PwText(
-              value, 
+              value,
               textAlign: TextAlign.end,
               style: PwTextStyle.caption,
             ),
@@ -35,8 +38,7 @@ class SendReviewCell extends StatelessWidget {
 }
 
 class SendReviewScreen extends StatelessWidget {
-  const SendReviewScreen({ Key? key })
-    : super(key: key);
+  const SendReviewScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +58,7 @@ class SendReviewScreen extends StatelessWidget {
 }
 
 class SendReviewPage extends StatefulWidget {
-  const SendReviewPage({ Key? key })
-    : super(key: key);
+  const SendReviewPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SendReviewPageState();
@@ -72,13 +73,13 @@ class SendReviewPageState extends State<SendReviewPage> {
 
     _bloc = get<SendReviewBloc>();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<SendReviewBlocState>(
       stream: _bloc!.stream,
       builder: (context, snapshot) {
-        if(!snapshot.hasData) {
+        if (!snapshot.hasData) {
           return Container();
         }
 
@@ -94,8 +95,8 @@ class SendReviewPageState extends State<SendReviewPage> {
                 children: [
                   VerticalSpacer.large(),
                   const PwText(
-                    Strings.sendReviewConfirmYourInfo, 
-                    style: PwTextStyle.h5,
+                    Strings.sendReviewConfirmYourInfo,
+                    style: PwTextStyle.h4,
                   ),
                   VerticalSpacer.large(),
                   const PwText(
@@ -105,15 +106,19 @@ class SendReviewPageState extends State<SendReviewPage> {
                   VerticalSpacer.large(),
                   SendReviewCell("To", state.receivingAddress),
                   PwDivider(),
-                  SendReviewCell("Sending", "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}"),
+                  SendReviewCell("Sending",
+                      "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}"),
                   PwDivider(),
-                  SendReviewCell("Transaction Fee", "${state.fee.displayAmount} ${state.fee.displayDenom}"),
+                  SendReviewCell("Transaction Fee",
+                      "${state.fee.displayAmount} ${state.fee.displayDenom}"),
                   PwDivider(),
                   SendReviewCell("Total", state.total),
-                  Expanded(child: Container(),),
+                  Expanded(
+                    child: Container(),
+                  ),
                   PwButton(
-                      child: PwText(Strings.sendReviewSendButtonTitle),
-                      onPressed: _sendClicked,
+                    child: PwText(Strings.sendReviewSendButtonTitle),
+                    onPressed: _sendClicked,
                   ),
                   VerticalSpacer.large(),
                 ],
@@ -121,63 +126,26 @@ class SendReviewPageState extends State<SendReviewPage> {
             ),
           ],
         );
-
-        // return SingleChildScrollView(
-        //   child: IntrinsicHeight(
-        //     child: Column(
-        //       mainAxisSize: MainAxisSize.min,
-        //       children: [
-        //         const PwText(
-        //           Strings.sendReviewConfirmYourInfo, 
-        //           style: PwTextStyle.h5,
-        //         ),
-        //         const PwText(
-        //           Strings.sendReviewSendPleaseReview,
-        //           style: PwTextStyle.h6,
-        //         ),
-        //         ListView(
-        //           shrinkWrap: true,
-        //           children: [
-        //             SendReviewCell("To", state.receivingAddress),
-        //             PwDivider(),
-        //             SendReviewCell("Sending", "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}"),
-        //             PwDivider(),
-        //             SendReviewCell("Transaction Fee", "${state.fee.displayAmount} ${state.fee.displayDenom}"),
-        //             PwDivider(),
-        //             SendReviewCell("Total", state.total),
-        //           ],
-        //         ),
-        //         Expanded(child: Container(),),
-        //         PwButton(
-        //             child: PwText(Strings.sendReviewSendButtonTitle),
-        //             onPressed: _sendClicked,
-        //         ),
-        //         VerticalSpacer.large(),
-        //       ],
-        //     ),
-        //   ),
-        // );
       },
     );
   }
 
   void _sendClicked() {
-    _bloc!.doSend()
-      .then((_) {
-        PwDialog.showMessage(
-          context, 
-          message: "Success",
-          closeText: "Ok",
-        )
-        .then((value) => _bloc!.complete());
-      })
-      .catchError((err) {
-        showDialog(
-          context: context, 
-          builder: (context) {
-            return ErrorDialog(error: err.toString(),);
-          },
-        );
-      });
+    _bloc!.doSend().then((_) {
+      PwDialog.showMessage(
+        context,
+        message: "Success",
+        closeText: "Ok",
+      ).then((value) => _bloc!.complete());
+    }).catchError((err) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: err.toString(),
+          );
+        },
+      );
+    });
   }
-} 
+}

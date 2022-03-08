@@ -1,25 +1,25 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class ModalLoading extends StatefulWidget {
-  ModalLoading({
-    this.key,
+  const ModalLoading({
+    Key? key,
     this.loadingMessage,
   }) : super(key: key);
 
   final String? loadingMessage;
-  final Key? key;
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return ModalLoadingState(loadingMessage: this.loadingMessage);
-  }
+  State<StatefulWidget> createState() => ModalLoadingState();
 }
 
 class ModalLoadingState extends State<ModalLoading> {
-  ModalLoadingState({this.loadingMessage});
-
   String? loadingMessage;
+
+  @override
+  void initState() {
+    loadingMessage = widget.loadingMessage;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +93,10 @@ class ModalLoadingRoute extends PopupRoute {
       if (instance != null) {
         Navigator.of(context).removeRoute(instance!);
       }
-    } catch (e) {}
-    ;
+    } catch (e) {
+      // Nothing to do here.
+    }
+
     instance = null;
   }
 

@@ -9,8 +9,9 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendAmountScreen extends StatelessWidget {
-  const SendAmountScreen({ Key? key })
-    : super(key: key);
+  const SendAmountScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +31,9 @@ class SendAmountScreen extends StatelessWidget {
 }
 
 class SendAmountPage extends StatefulWidget {
-  const SendAmountPage({ Key? key })
-    : super(key: key);
+  const SendAmountPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SendAmountPageState();
@@ -58,12 +60,12 @@ class SendAmountPageState extends State<SendAmountPage> {
 
     _bloc = get<SendAmountBloc>();
     _streamSubscription = _bloc!.stream.listen((blocState) {
-
-      if(blocState.transactionFees == null) {
-      _feeNotifier.value = null;
+      if (blocState.transactionFees == null) {
+        _feeNotifier.value = null;
       }
 
-      _feeNotifier.value = "${blocState.transactionFees?.displayAmount} ${blocState.transactionFees?.displayDenom}";
+      _feeNotifier.value =
+          "${blocState.transactionFees?.displayAmount} ${blocState.transactionFees?.displayDenom}";
     });
   }
 
@@ -80,7 +82,7 @@ class SendAmountPageState extends State<SendAmountPage> {
   @override
   Widget build(BuildContext context) {
     final asset = _bloc!.asset;
-    final imageDimen = 128.0;
+    const imageDimen = 128.0;
     final padding = EdgeInsets.symmetric(vertical: Spacing.medium);
     final blankInputBorder = OutlineInputBorder(
       borderSide: BorderSide.none,
@@ -98,7 +100,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                 asset.imageUrl,
                 width: imageDimen,
                 height: imageDimen,
-                errorBuilder: (context, error, stackTrace,) {
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
                   return Container();
                 },
               ),
@@ -122,13 +128,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                 "${asset.displayAmount} ${asset.displayDenom} ${Strings.sendAmountAvailable}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: PwTextStyle.m_p,
+                style: PwTextStyle.m,
               ),
               PwText(
                 asset.fiatValue,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: PwTextStyle.m_p,
+                style: PwTextStyle.m,
               ),
               VerticalSpacer.medium(),
               Row(
@@ -149,53 +155,72 @@ class SendAmountPageState extends State<SendAmountPage> {
                   ),
                   ValueListenableBuilder<bool>(
                     valueListenable: _focusNotifier,
-                    builder: (context, hasFocus, child,) {
-                      return (!hasFocus && _noteController.text.isEmpty)? PwText(Strings.sendAmountNoteSuffix) : Container(width: 0, height: 0,);
+                    builder: (
+                      context,
+                      hasFocus,
+                      child,
+                    ) {
+                      return (!hasFocus && _noteController.text.isEmpty)
+                          ? PwText(Strings.sendAmountNoteSuffix)
+                          : Container(
+                              width: 0,
+                              height: 0,
+                            );
                     },
                   ),
                 ],
               ),
-              PwDivider(height: 1,),
+              PwDivider(
+                height: 1,
+              ),
               Container(
                 key: ValueKey("FeeRow"),
                 decoration: null,
                 padding: padding,
                 child: ValueListenableBuilder<String?>(
-                    valueListenable: _feeNotifier,
-                    builder: (context, fee, child,) {
-                      Widget widget;
-                      if(fee == null) {
-                        widget = PwText(Strings.sendAmountLoadingFeeEstimate);
-                      }
-                      else {
-                        widget = PwText(
-                          fee, 
-                          textAlign: TextAlign.end,
-                          style: PwTextStyle.caption,
-                        );
-                      }
-
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PwText(Strings.sendAmountTransactionLabel),
-                          Expanded(
-                              child: widget,
-                          ),
-                        ],
+                  valueListenable: _feeNotifier,
+                  builder: (
+                    context,
+                    fee,
+                    child,
+                  ) {
+                    Widget widget;
+                    if (fee == null) {
+                      widget = PwText(Strings.sendAmountLoadingFeeEstimate);
+                    } else {
+                      widget = PwText(
+                        fee,
+                        textAlign: TextAlign.end,
+                        style: PwTextStyle.caption,
                       );
-                    },
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PwText(Strings.sendAmountTransactionLabel),
+                        Expanded(
+                          child: widget,
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               Expanded(child: Container()),
               ValueListenableBuilder(
-                  valueListenable: _feeNotifier,
-                  builder: (context, value, child,) => PwButton(
-                    child: PwText(Strings.sendAmountNextButton),
-                    enabled: value != null,
-                    onPressed: _next ,
-                  ),
+                valueListenable: _feeNotifier,
+                builder: (
+                  context,
+                  value,
+                  child,
+                ) =>
+                    PwButton(
+                  child: PwText(Strings.sendAmountNextButton),
+                  enabled: value != null,
+                  onPressed: _next,
+                ),
               ),
               VerticalSpacer.large(),
             ],
@@ -208,9 +233,9 @@ class SendAmountPageState extends State<SendAmountPage> {
   Future<void> _next() async {
     try {
       await _bloc!.showNext(_noteController.text, _amountController.text);
-    }
-    catch (error) {
+    } catch (error) {
       showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) {
           return ErrorDialog(error: error.toString());

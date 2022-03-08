@@ -48,7 +48,7 @@ dependencies:
   provenance_dart:
     git:
       url: git@github.com:provenance-io/provenance-dart.git
-      ref: walletConnect
+      ref: walletConnectError
   qr_code_scanner: ^0.5.1
   qr_flutter: ^4.0.0
   rxdart: ^0.27.3
@@ -57,6 +57,7 @@ dependencies:
   uni_links: ^0.5.1
   url_launcher: ^6.0.10
   uuid: ^3.0.4
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   build_runner: ^2.0.6
@@ -109,19 +110,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: Poppins
-      fonts:
-        - asset: fonts/Poppins/Poppins-Black.ttf
-          weight: 900
-        - asset: fonts/Poppins/Poppins-ExtraBold.ttf
-          weight: 800
-        - asset: fonts/Poppins/Poppins-Bold.ttf
-          weight: 700
-        - asset: fonts/Poppins/Poppins-Medium.ttf
-          weight: 500
-        - asset: fonts/Poppins/Poppins-Regular.ttf
-          weight: 400
-          style: normal
     - family: GothicA1
       fonts:
         - asset: fonts/GothicA1/GothicA1-Black.ttf

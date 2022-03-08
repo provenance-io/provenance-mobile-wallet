@@ -9,8 +9,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendScreen extends StatelessWidget {
-  const SendScreen({ Key? key })
-    : super(key: key);
+  const SendScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,7 @@ class SendScreen extends StatelessWidget {
 }
 
 class SendPage extends StatefulWidget {
-  const SendPage({ Key? key })
-    : super(key: key);
+  const SendPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SendPageState();
@@ -66,7 +64,12 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    const LabelPadding = EdgeInsets.fromLTRB(0, Spacing.medium, 0, Spacing.small,);
+    const labelPadding = EdgeInsets.fromLTRB(
+      0,
+      Spacing.medium,
+      0,
+      Spacing.small,
+    );
     final theme = Theme.of(context);
 
     return Column(
@@ -75,15 +78,23 @@ class SendPageState extends State<SendPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageSelectAmount),
         ),
         ValueListenableBuilder<List<SendAsset>>(
           valueListenable: _assets,
-          builder: (context, assets, child,) {
+          builder: (
+            context,
+            assets,
+            child,
+          ) {
             return ValueListenableBuilder<SendAsset?>(
               valueListenable: _denomNotifier,
-              builder: (context, selectedAsset, child,) {
+              builder: (
+                context,
+                selectedAsset,
+                child,
+              ) {
                 return SendAssetList(
                   assets,
                   selectedAsset,
@@ -94,42 +105,45 @@ class SendPageState extends State<SendPage> {
           },
         ),
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageSendToAddressLabel),
         ),
         Row(
           children: [
             Expanded(
-                child: TextField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    hintText: Strings.sendPageScanQrCode,
-                  ),
+              child: TextField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                  hintText: Strings.sendPageScanQrCode,
                 ),
+              ),
             ),
             HorizontalSpacer.medium(),
             Container(
               decoration: ShapeDecoration(
                 shape: CircleBorder(
-                  side: theme.inputDecorationTheme.border?.borderSide ?? BorderSide(),
+                  side: theme.inputDecorationTheme.border?.borderSide ??
+                      BorderSide(),
                 ),
               ),
               child: IconButton(
                 padding: EdgeInsets.zero,
                 icon: Icon(
-                    Icons.qr_code,
+                  Icons.qr_code,
                 ),
                 onPressed: () async {
                   try {
                     final newAddress = await _bloc!.scanAddress();
-                    if(newAddress?.isNotEmpty ?? false) {
+                    if (newAddress?.isNotEmpty ?? false) {
                       _addressController.text = newAddress!;
                     }
-                  }
-                  catch (e) {
+                  } catch (e) {
                     showDialog(
+                      useSafeArea: true,
                       context: context,
-                      builder: (context) => ErrorDialog(error: e.toString(),),
+                      builder: (context) => ErrorDialog(
+                        error: e.toString(),
+                      ),
                     );
                   }
                 },
@@ -138,13 +152,18 @@ class SendPageState extends State<SendPage> {
           ],
         ),
         Padding(
-          padding: LabelPadding,
+          padding: labelPadding,
           child: PwText(Strings.sendPageRecentAddress),
         ),
         Expanded(
           child: ValueListenableBuilder<List<RecentAddress>>(
             valueListenable: _recentSends,
-            builder: (context, value, child,) => RecentSendList(
+            builder: (
+              context,
+              value,
+              child,
+            ) =>
+                RecentSendList(
               value,
               _onRecentAddressClicked,
               _onViewAllClicked,
@@ -153,8 +172,8 @@ class SendPageState extends State<SendPage> {
           ),
         ),
         PwButton(
-            child: PwText(Strings.nextButtonLabel),
-            onPressed: _next,
+          child: PwText(Strings.nextButtonLabel),
+          onPressed: _next,
         ),
         VerticalSpacer.large(),
       ],
@@ -172,11 +191,13 @@ class SendPageState extends State<SendPage> {
   Future<void> _next() async {
     try {
       await _bloc!.next(_addressController.text, _denomNotifier.value);
-    }
-    catch(e) {
+    } catch (e) {
       showDialog(
-          context: context,
-          builder: (context) => ErrorDialog(error: e.toString(),),
+        useSafeArea: true,
+        context: context,
+        builder: (context) => ErrorDialog(
+          error: e.toString(),
+        ),
       );
     }
   }

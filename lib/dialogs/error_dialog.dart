@@ -1,13 +1,17 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ErrorDialog extends StatelessWidget {
   const ErrorDialog({
     Key? key,
+    this.title,
     this.error,
+    this.buttonText,
   }) : super(key: key);
 
-  factory ErrorDialog.fromException(dynamic exception, { Key? key }) {
+  factory ErrorDialog.fromException(dynamic exception, {Key? key}) {
     final msg = exception.toString().replaceFirst(RegExp('^[^:]+: '), "");
 
     return ErrorDialog(
@@ -16,43 +20,76 @@ class ErrorDialog extends StatelessWidget {
     );
   }
 
+  final String? title;
   final String? error;
+  final String? buttonText;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AssetPaths.images.background),
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+          ),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 40),
-            Text(
-              error ?? 'Invalid',
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4!
-                  .copyWith(color: Theme.of(context).colorScheme.black),
-            ),
-            SizedBox(height: 40),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.xxLarge,
+                    ),
+                    child: PwText(
+                      title ?? Strings.unknownErrorTitle,
+                      style: PwTextStyle.headline2,
+                      textAlign: TextAlign.center,
+                      color: PwColor.neutralNeutral,
+                    ),
+                  ),
+                  VerticalSpacer.large(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.xxLarge,
+                    ),
+                    child: PwText(
+                      error ?? Strings.somethingWentWrong,
+                      style: PwTextStyle.body,
+                      textAlign: TextAlign.center,
+                      color: PwColor.neutralNeutral,
+                    ),
+                  ),
+                  VerticalSpacer.xxLarge(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        AssetPaths.images.warning,
+                        height: 80,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              child: PwButton(
-                child: PwText(
-                  'OK',
-                  style: PwTextStyle.mBold,
-                  color: PwColor.white,
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: PwPrimaryButton.fromString(
+                text: buttonText ?? Strings.okay,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
             ),
+            VerticalSpacer.largeX4(),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -10,10 +11,11 @@ import 'package:provenance_wallet/util/strings.dart';
 class AccountName extends HookWidget {
   AccountName(
     this.flowType, {
+    Key? key,
     this.words,
     this.currentStep,
     this.numberOfSteps,
-  });
+  }) : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -29,11 +31,15 @@ class AccountName extends HookWidget {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
+        leadingIcon: flowType == WalletAddImportType.dashboardAdd ||
+                flowType == WalletAddImportType.dashboardRecover
+            ? PwIcons.back
+            : null,
       ),
       body: Form(
         key: _formKey,
         child: Container(
-          color: Theme.of(context).colorScheme.provenanceNeutral750,
+          color: Theme.of(context).colorScheme.neutral750,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +60,7 @@ class AccountName extends HookWidget {
                   Strings.nameYourAccountText,
                   style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
               ),
               VerticalSpacer.small(),
@@ -64,7 +70,7 @@ class AccountName extends HookWidget {
                   Strings.infoIsStoredLocallyText,
                   style: PwTextStyle.body,
                   textAlign: TextAlign.center,
-                  color: PwColor.white,
+                  color: PwColor.neutralNeutral,
                 ),
               ),
               VerticalSpacer.xxLarge(),
@@ -74,7 +80,7 @@ class AccountName extends HookWidget {
                   right: 20,
                   bottom: Spacing.small,
                 ),
-                child: _TextFormField(
+                child: PwTextFormField(
                   label: Strings.accountName,
                   autofocus: true,
                   validator: (value) {
@@ -91,8 +97,8 @@ class AccountName extends HookWidget {
                 child: PwButton(
                   child: PwText(
                     Strings.continueName,
-                    style: PwTextStyle.mBold,
-                    color: PwColor.white,
+                    style: PwTextStyle.bodyBold,
+                    color: PwColor.neutralNeutral,
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() == true) {
@@ -127,75 +133,6 @@ class AccountName extends HookWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _TextFormField extends StatelessWidget {
-  const _TextFormField({
-    Key? key,
-    required this.label,
-    this.keyboardType,
-    this.onChanged,
-    this.validator,
-    this.controller,
-    this.autofocus = false,
-  }) : super(key: key);
-
-  final String label;
-  final TextInputType? keyboardType;
-  final ValueChanged<String>? onChanged;
-  final FormFieldValidator<String>? validator;
-  final TextEditingController? controller;
-  final bool autofocus;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PwText(
-          label,
-          color: PwColor.white,
-        ),
-        VerticalSpacer.small(),
-        Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.provenanceNeutral550,
-                spreadRadius: 6,
-              ),
-            ],
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: TextFormField(
-            autofocus: autofocus,
-            style:
-                theme.textTheme.body.copyWith(color: theme.colorScheme.white),
-            keyboardType: keyboardType,
-            autocorrect: false,
-            controller: controller,
-            onChanged: onChanged,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validator,
-            decoration: InputDecoration(
-              hintText: label,
-              hintStyle: theme.textTheme.body
-                  .copyWith(color: theme.colorScheme.provenanceNeutral250),
-              fillColor: theme.colorScheme.provenanceNeutral750,
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: theme.colorScheme.provenanceNeutral250,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

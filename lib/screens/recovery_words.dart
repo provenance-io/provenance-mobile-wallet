@@ -9,12 +9,13 @@ import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWords extends StatefulWidget {
-  RecoveryWords(
+  const RecoveryWords(
     this.flowType,
     this.accountName, {
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final int? currentStep;
   final int? numberOfSteps;
@@ -29,7 +30,7 @@ class RecoveryWords extends StatefulWidget {
 
 class RecoveryWordsState extends State<RecoveryWords> {
   bool _loading = true;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> words = [];
 
@@ -58,7 +59,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
           leadingIcon: PwIcons.back,
         ),
         body: Container(
-          color: Theme.of(context).colorScheme.provenanceNeutral750,
+          color: Theme.of(context).colorScheme.neutral750,
           child: LayoutBuilder(
             builder:
                 (BuildContext context, BoxConstraints viewportConstraints) {
@@ -101,9 +102,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .provenanceNeutral700,
+                              color: Theme.of(context).colorScheme.neutral700,
                             ),
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -162,15 +161,14 @@ class RecoveryWordsState extends State<RecoveryWords> {
                               content: Text(
                                 Strings.passphraseCopied,
                               ),
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .provenanceNeutral700,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.neutral700,
                             ),
                           );
                         },
                         child: PwIcon(
                           PwIcons.copy,
-                          color: Theme.of(context).colorScheme.white,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
                         ),
                       ),
                       VerticalSpacer.xLarge(),
@@ -180,7 +178,7 @@ class RecoveryWordsState extends State<RecoveryWords> {
                           child: PwText(
                             Strings.continueName,
                             style: PwTextStyle.bodyBold,
-                            color: PwColor.white,
+                            color: PwColor.neutralNeutral,
                           ),
                           onPressed: () {
                             Navigator.of(context)

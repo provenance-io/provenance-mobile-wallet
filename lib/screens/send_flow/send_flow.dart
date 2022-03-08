@@ -1,8 +1,6 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/network/services/asset_service.dart';
-import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
@@ -11,14 +9,15 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendFlow extends FlowBase {
-  SendFlow(this.walletDetails, { Key? key })
-    : super(key: key);
+  const SendFlow(this.walletDetails, {Key? key}) : super(key: key);
 
   final WalletDetails walletDetails;
   @override
@@ -27,8 +26,6 @@ class SendFlow extends FlowBase {
 
 class SendFlowState extends FlowBaseState<SendFlow>
     implements SendBlocNavigator, SendAmountBlocNavigator, SendReviewNaviagor {
-  final _navigatorKey = GlobalKey<NavigatorState>();
-
   String? _receivingAddress;
   SendAsset? _asset;
 
@@ -39,9 +36,9 @@ class SendFlowState extends FlowBaseState<SendFlow>
       return SendBloc(
         widget.walletDetails.address,
         get<AssetService>(),
-        get<TransactionService>(), 
+        get<TransactionService>(),
         this,
-        );
+      );
     });
   }
 
@@ -54,7 +51,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColor = Colors.white;
+    const borderColor = Colors.white;
     final borderRadius = BorderRadius.circular(5);
     final borderSide = BorderSide(
       width: 1,
@@ -119,10 +116,11 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   Future<void> showAllRecentSends() {
     return showDialog(
+      useSafeArea: true,
       context: context,
       builder: (context) {
         return ErrorDialog(
-          error: "Not Implemented",
+          error: Strings.notImplementedMessage,
         );
       },
     );
@@ -136,12 +134,11 @@ class SendFlowState extends FlowBaseState<SendFlow>
     SendAsset fee,
     String note,
   ) {
-    
     final bloc = SendReviewBloc(
-      widget.walletDetails, 
-      get<WalletService>(), 
-      _receivingAddress!, 
-      amountToSend, 
+      widget.walletDetails,
+      get<WalletService>(),
+      _receivingAddress!,
+      amountToSend,
       fee,
       note,
       this,

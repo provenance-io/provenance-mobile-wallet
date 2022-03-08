@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -16,7 +16,8 @@ class BackupCompleteScreen extends StatelessWidget {
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final WalletAddImportType flowType;
@@ -32,7 +33,7 @@ class BackupCompleteScreen extends StatelessWidget {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(
@@ -84,8 +85,8 @@ class BackupCompleteScreen extends StatelessWidget {
                       child: PwButton(
                         child: PwText(
                           Strings.continueName,
-                          style: PwTextStyle.mBold,
-                          color: PwColor.white,
+                          style: PwTextStyle.bodyBold,
+                          color: PwColor.neutralNeutral,
                         ),
                         onPressed: () async {
                           if (flowType == WalletAddImportType.onBoardingAdd) {
@@ -103,7 +104,7 @@ class BackupCompleteScreen extends StatelessWidget {
                               context,
                             );
 
-                            await get<WalletService>().saveWallet(
+                            await get<WalletService>().addWallet(
                               phrase: words,
                               name: accountName ?? '',
                             );

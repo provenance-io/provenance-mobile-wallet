@@ -2,6 +2,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatelessWidget {
+  const OnboardingLandingSlide({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,7 +26,7 @@ class OnboardingLandingSlide extends StatelessWidget {
           Strings.provenanceTitle,
           style: PwTextStyle.logo,
           textAlign: TextAlign.center,
-          color: PwColor.white,
+          color: PwColor.neutralNeutral,
         ),
         VerticalSpacer.largeX5(),
         Padding(
@@ -32,9 +36,9 @@ class OnboardingLandingSlide extends StatelessWidget {
           ),
           child: PwText(
             Strings.provenanceWalletDescription,
-            style: PwTextStyle.m_p,
+            style: PwTextStyle.m,
             textAlign: TextAlign.center,
-            color: PwColor.white,
+            color: PwColor.neutralNeutral,
           ),
         ),
         VerticalSpacer.largeX6(),

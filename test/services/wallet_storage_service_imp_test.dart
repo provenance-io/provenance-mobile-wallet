@@ -5,7 +5,7 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
-import 'package:provenance_wallet/services/wallet_storage_service_imp.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 
 import 'wallet_storage_service_imp_test.mocks.dart';
 
@@ -26,10 +26,15 @@ main() {
 
   group("addWallet", () {
     PrivateKey? privateKey;
-    final id = "TestId";
+    const id = "TestId";
+    final wallet = WalletDetails(
+      id: id,
+      address: 'address',
+      name: 'Test Wallet',
+    );
 
     setUp(() {
-      final bip32Serialized =
+      const bip32Serialized =
           "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
       privateKey = PrivateKey.fromBip32(bip32Serialized);
     });
@@ -39,8 +44,12 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
+<<<<<<< HEAD
         publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(id));
+=======
+      )).thenAnswer((_) => Future.value(wallet));
+>>>>>>> develop
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -49,15 +58,15 @@ main() {
       )).thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.addWallet(
-        name: "Name",
+        name: wallet.name,
         privateKey: privateKey!,
         useBiometry: true,
       );
 
-      expect(result, true);
+      expect(result, wallet);
 
       verify(_mockSqliteService!.addWallet(
-        name: "Name",
+        name: wallet.name,
         address: privateKey!.defaultKey().publicKey.address,
         coin: Coin.testNet,
         publicKey: privateKey!.defaultKey().publicKey.compressedPublicKeyHex,
@@ -94,13 +103,17 @@ main() {
 
     testWidgets('error while encrypting key', (tester) async {
       when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(0));
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
+<<<<<<< HEAD
         publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(id));
+=======
+      )).thenAnswer((_) => Future.value(wallet));
+>>>>>>> develop
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -116,7 +129,7 @@ main() {
 
       verify(_mockSqliteService!.removeWallet(id: id));
 
-      expect(result, false);
+      expect(result, isNotNull);
     });
   });
 
@@ -185,9 +198,9 @@ main() {
   });
 
   group("loadKey", () {
-    final bip32Serialized =
+    const bip32Serialized =
         "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
-    final id = "TestId";
+    const id = "TestId";
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.decryptKey(
@@ -205,7 +218,7 @@ main() {
     testWidgets('success', (tester) async {
       when(_mockCipherService!.reset()).thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeAllWallets())
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(1));
       await _storageService!.removeAllWallets();
 
       verify(_mockCipherService!.reset());
@@ -214,13 +227,13 @@ main() {
   });
 
   group("removeWallet", () {
-    final id = "TestId";
+    const id = "TestId";
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.removeKey(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeWallet(id: anyNamed("id")))
-          .thenAnswer((_) => Future.value());
+          .thenAnswer((_) => Future.value(1));
       await _storageService!.removeWallet(id);
 
       verify(_mockCipherService!.removeKey(id: id));

@@ -2,7 +2,7 @@
 
 extension StringExtension on String {
   String capitalize() {
-    return '${this[0].toUpperCase()}${this.substring(1)}';
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 
   String displayPhone() {
@@ -14,19 +14,19 @@ extension StringExtension on String {
   }
 
   double coinAmount() {
-    return double.parse("${this.replaceAll(RegExp(r'[^\d\.]+'), '')}") * 100;
+    return double.parse(replaceAll(RegExp(r'[^\d\.]+'), '')) * 100;
   }
 
   double amount() {
-    return double.parse(this.removeNonDollarValue());
+    return double.parse(removeNonDollarValue());
   }
 
   String removeNonDollarValue() {
-    return this.replaceAll(RegExp(r'[^\d\.]+'), '');
+    return replaceAll(RegExp(r'[^\d\.]+'), '');
   }
 
   String sanitizePhoneNumber() {
-    return this.replaceAll(RegExp(r'[^\d]+'), '');
+    return replaceAll(RegExp(r'[^\d]+'), '');
   }
 
   String abbreviateAddress() {
@@ -34,21 +34,17 @@ extension StringExtension on String {
     const right = 8;
     const dots = '...';
 
-    if (length > left + dots.length + right) {
-      return '${substring(0, left)}$dots${substring(length - right)}';
-    }
-
-    return this;
+    return length > left + dots.length + right
+        ? '${substring(0, left)}$dots${substring(length - right)}'
+        : this;
   }
 }
-
-// TODO: Localization
 
 class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
-  static const NotImplementedMessage = "Not Implemented";
+  static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
   static const biometric = 'Biometric';
@@ -93,9 +89,11 @@ class Strings {
       'A wallet provides an easy way to manage multiple blockchain accounts.';
 
   // Dashboard Page
+  static const dashboardConnectionRequestTitle = 'Connection Request';
+  static String dashboardConnectionRequestDetails(String name) =>
+      'Allow connection to $name';
+
   static const loadingAssets = 'Loading Assets';
-  static const sign = 'Sign';
-  static const decline = 'Decline';
   static const dashboard = 'Dashboard';
   static const portfolioValue = 'Portfolio Value';
   static const send = 'Send';
@@ -104,24 +102,30 @@ class Strings {
   static const myAssets = 'My Assets';
   static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
-  static const resetWallet = 'Reset Wallet';
   static const loadingTransactions = 'Loading Transactions';
   static const noTransactionsText =
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
   static const profile = "Profile";
+  static const errorDisconnected = 'Disconnected';
 
-  // My Account Page
-  static const myAccount = 'My Account';
+  // Profile Page
   static const linkedServices = 'Linked Services';
   static const security = 'Security';
   static const pinCode = 'Pin Code';
   static const notifications = 'Notifications';
   static const general = 'General';
+  static const aboutProvenanceBlockchain = 'About Provenance Blockchain';
   static const faq = 'FAQ';
+  static const moreInformation = 'More Information';
   static const sendFeedback = 'Send Feedback';
   static const contactUs = 'Contact Us';
   static const policiesAndTerms = 'Policies & Terms';
+  static const resetWallets = 'Reset Wallets';
+  static const resetWalletsAreYouSure =
+      'Are you sure you wish to reset all wallets?';
+  static const pinCodeUpdated = 'Pin Code Updated Successfully';
+  static const successName = 'Success';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
@@ -131,7 +135,9 @@ class Strings {
   static const importExistingWallet = 'Import existing wallet';
 
   // Rename Wallet Dialog
-  static const walletRename = 'Wallet Rename';
+  static const renameWallet = 'Rename Wallet';
+  static const renameWalletDescription =
+      'Please enter the new name you would like to call your wallet.';
   static const walletName = 'Wallet Name';
   static const required = '*required';
   static const confirm = 'Confirm';
@@ -141,15 +147,17 @@ class Strings {
   static const wallets = 'Wallets';
   static const selectedWallet = 'Selected Wallet';
   static const allWallets = 'All Wallets';
+  static String numAssets(int numAssets) =>
+      "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
   // Wallet Item
-  static const basic = 'Basic';
   static const select = 'Select';
   static const rename = 'Rename';
   static const remove = 'Remove';
   static const removeThisWallet =
       'Are you sure you want to remove this wallet?';
   static const yes = 'Yes';
+  static const copyWalletAddress = 'Copy Wallet Address';
   static const addressCopied = 'Address copied';
 
   // Account Name
@@ -176,7 +184,7 @@ class Strings {
   // EnableFaceId
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
-      'Use your Face ID for faster, easier access to your account.';
+      'Use your Face ID for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
@@ -189,7 +197,7 @@ class Strings {
   static const theOnlyWayToRecoverYourAccount =
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
-      'Do not share this passphrase with anyone, as it grants full access to your account.';
+      'Do not share this passphrase with anyone as it grants full access to your account.';
   static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
@@ -205,12 +213,12 @@ class Strings {
   static const youMustAgreeToTheWalletSeedphraseTerms =
       "Before continuing you must agree to the passphrase terms.";
   static const iAmResponsibleForMyWalletText =
-      "I agree that I'm solely responsible for my wallet, and cannot recover my account the seedphrase is lost.";
+      "I agree that I am solely responsible for my wallet and cannot recover my account if the passphrase is lost.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery Passphrase';
   static const recordTheseWordsInTheCorrectOrder =
-      'Make sure to record these words in the correct order, using the corresponding numbers.';
+      'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
 
   // BackupComplete
@@ -229,24 +237,23 @@ class Strings {
   static String transactionErrorUnsupportedMessage(String messageName) =>
       'Unsupported message type: $messageName';
   static const transactionSuccessTitle = 'Success';
+  static const transactionErrorTitle = 'Error';
 
   // Transaction Confirmation
-  static const transactionTitle = 'Signature';
-  static const transactionMessage = 'Your signature is needed';
+  static const confirmSignTitle = 'Signature';
+  static const confirmTransactionTitle = 'Transaction';
   static const transactionApprove = 'Approve';
   static const transactionDecline = 'Decline';
-  static const transactionComplete = 'Transaction Complete';
+  static const transactionBackToDashboard = 'Back to dashboard';
   static const transactionDataTitle = 'Data';
   static const transactionDataButton = 'Data';
   static const transactionDenomHash = 'Hash';
-  static const transactionPlatformName = 'Figure Equity Solutions';
-  static const transactionPlatformAddress = 'equity.figure.com';
   static const transactionFieldPlatform = 'Platform';
-  static const transactionFieldFee = 'Est. Gas Fee';
-  static const transactionFieldAmount = 'Amount';
-  static const transactionFieldDenom = 'Denom';
-  static const transactionFieldFromAddress = 'Address';
-  static const transactionFieldToAddress = 'To';
+  static const transactionFieldFee = 'Gas Fee';
+  static const transactionFieldMessage = 'Message';
+  static const transactionFieldMessageType = 'Msg. Type';
+  static const transactionFieldTrue = 'Yes';
+  static const transactionFieldFalse = 'No';
 
   // ValidatePin
   static const enterPin = "Enter Pin";
@@ -259,13 +266,9 @@ class Strings {
 
   // TransactionsList
   static const dropDownAllAssets = "All Assets";
-  static const dropDownHashAsset = "Hash";
-  static const dropDownUsdAsset = "USD";
-  static const dropDownUsdfAsset = "USDF";
-
   static const dropDownAllTransactions = "All Transactions";
-  static const dropDownPurchaseTransaction = "Purchase";
-  static const dropDownDepositTransaction = "Deposit";
+  static const buy = "Buy";
+  static const sell = "Sell";
 
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
@@ -283,12 +286,12 @@ class Strings {
 
   //WordSelector
   static const selectWord = 'select word';
-  static String selectWordIndex(String index) => 'select word #${index}';
+  static String selectWordIndex(String index) => 'select word #$index';
 
   // SendScreen
   static const sendTitle = "Send";
   static const noRecentSends = "No recent sends";
-  static const ViewAllLabel = "View All";
+  static const viewAllLabel = "View All";
   static const nextButtonLabel = "Next";
   static const sendPageRecentAddress = "Recent addresses";
   static const sendPageSelectAmount = "Select Amount";
@@ -314,5 +317,27 @@ class Strings {
   static const sendReviewTitle = "Send Review";
   static const sendReviewConfirmYourInfo = "Confirm your information";
   static const sendReviewSendButtonTitle = "Send";
-  static const sendReviewSendPleaseReview  = "Please review the details below to make sure everything is correct";
+  static const sendReviewSendPleaseReview =
+      "Please review the details below to make sure everything is correct";
+  // Error Dialog
+  static const unknownErrorTitle = 'UNKNOWN ERROR';
+  static const somethingWentWrong = 'Something went wrong.';
+  static const okay = "Okay";
+  static const serviceErrorTitle = 'SERVICE ERROR';
+  static const theSystemIsDown =
+      'Unfortunately our services are down at the moment. Please try again later.';
+
+  // ConnectionDetails
+  static const connectionDetails = "Connection Details";
+  static const unknown = "Unknown";
+  static const platform = "Platform";
+  static const dlob = "dLOB";
+  static const url = "URL";
+
+  static const receiveTitle = "Receive";
+  static const receiveMessage =
+      "Show this QR code or share wallet address to receive asset";
+  static const receiveWalletAddressTitle = "Wallet Address";
+  static const receiveWalletAddressCopiedMessage =
+      "Your address was copied to the clipboard";
 }

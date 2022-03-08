@@ -16,10 +16,19 @@ import 'send_amount_screen_test.mocks.dart';
 
 final get = GetIt.instance;
 
-@GenerateMocks([ SendAmountBloc ])
+@GenerateMocks([SendAmountBloc])
 main() {
+<<<<<<< HEAD
   final stateAsset = SendAsset("hash", 9, "nhash", Decimal.fromInt(77), "", "",);
 
+=======
+  final asset = SendAsset(
+    "Hash",
+    "100",
+    "200",
+    "http://test.com",
+  );
+>>>>>>> develop
   StreamController<SendAmountBlocState>? _streamController;
 
   MockSendAmountBloc? mockBloc;
@@ -56,7 +65,13 @@ main() {
       await _build(tester);
 
       expect(find.byType(SendAmountPage), findsOneWidget);
-      expect(find.descendant(of: find.byType(AppBar), matching: find.text("Send Amount")) , findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text("Send Amount"),
+        ),
+        findsOneWidget,
+      );
     });
   });
 
@@ -82,8 +97,16 @@ main() {
       final textAmount = tester.widget<TextFormField>(textAmountFind);
       expect(textAmount.autovalidateMode, AutovalidateMode.always);
 
+<<<<<<< HEAD
       expect(find.text("${hashAsset.displayAmount} ${hashAsset.displayDenom} available"), findsOneWidget);
       expect(find.text(hashAsset.fiatValue), findsOneWidget);
+=======
+      expect(
+        find.text("${asset.amount} ${asset.denom} available"),
+        findsOneWidget,
+      );
+      expect(find.text(asset.fiatValue), findsOneWidget);
+>>>>>>> develop
 
       final buttonFind = find.byType(PwButton);
       expect(buttonFind, findsOneWidget);
@@ -93,15 +116,35 @@ main() {
       await _build(tester);
 
       var feeRowFind = find.byKey(ValueKey("FeeRow"));
-      expect(find.descendant(of: feeRowFind, matching: find.text("Transaction")), findsOneWidget);
-      expect(find.descendant(of: feeRowFind, matching: find.text("Acquiring Estimate")), findsOneWidget);
+      expect(
+        find.descendant(of: feeRowFind, matching: find.text("Transaction")),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: feeRowFind,
+          matching: find.text("Acquiring Estimate"),
+        ),
+        findsOneWidget,
+      );
 
       _streamController!.add(SendAmountBlocState(stateAsset));
       await tester.pumpAndSettle();
 
       feeRowFind = find.byKey(ValueKey("FeeRow"));
+<<<<<<< HEAD
       expect(find.descendant(of: feeRowFind, matching: find.text("Transaction")), findsOneWidget);
       expect(find.descendant(of: feeRowFind, matching: find.text("${stateAsset.displayAmount} ${stateAsset.displayDenom}")), findsOneWidget);
+=======
+      expect(
+        find.descendant(of: feeRowFind, matching: find.text("Transaction")),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: feeRowFind, matching: find.text("1.00")),
+        findsOneWidget,
+      );
+>>>>>>> develop
     });
 
     testWidgets("disable next button until fee loads", (tester) async {
@@ -154,5 +197,4 @@ main() {
       expect(dialog.error, "Exception: Next Error");
     });
   });
-
 }

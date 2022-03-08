@@ -4,11 +4,16 @@ import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-final _dateFormatter = DateFormat("MM/dd/yy");
+@visibleForTesting
+final dateFormatter = DateFormat("MM/dd/yy");
 
 class RecentSendCell extends StatelessWidget {
-  const RecentSendCell(this.recentAddress, { Key? key })
-    : super(key: key);
+  const RecentSendCell(
+    this.recentAddress, {
+    Key? key,
+  }) : super(key: key);
+
+  static const keyLastSendText = ValueKey('recent_send_cell_last_send');
 
   final RecentAddress? recentAddress;
 
@@ -23,7 +28,7 @@ class RecentSendCell extends StatelessWidget {
         children: [
           Expanded(
             child: _buildChild(),
-          ) ,
+          ),
           Center(
             child: Icon(Icons.arrow_forward_ios),
           ),
@@ -33,48 +38,47 @@ class RecentSendCell extends StatelessWidget {
   }
 
   Widget _buildChild() {
-    return (recentAddress == null)?
-      PwText(Strings.ViewAllLabel) :
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PwText(
-            recentAddress!.address,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(
-            height: Spacing.medium,
-          ),
-          PwText(
-            _dateFormatter.format(recentAddress!.lastSend),
-            style: PwTextStyle.caption,
-          ),
-        ],
-      );
+    return (recentAddress == null)
+        ? PwText(Strings.viewAllLabel)
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PwText(
+                recentAddress!.address,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: Spacing.medium,
+              ),
+              PwText(
+                dateFormatter.format(recentAddress!.lastSend),
+                style: PwTextStyle.caption,
+                textKey: keyLastSendText,
+              ),
+            ],
+          );
   }
 }
 
 class RecentSendList extends StatelessWidget {
   const RecentSendList(
-      this.recentAddresses,
-      this.onRecentSendClicked,
-      this.onViewAllClicked,
-      {
-        Key? key,
-      })
-    : super(key: key);
+    this.recentAddresses,
+    this.onRecentSendClicked,
+    this.onViewAllClicked, {
+    Key? key,
+  }) : super(key: key);
 
   final List<RecentAddress> recentAddresses;
   final void Function(RecentAddress address) onRecentSendClicked;
-  final VoidCallback  onViewAllClicked;
+  final VoidCallback onViewAllClicked;
 
   @override
   Widget build(BuildContext context) {
-    if(recentAddresses.isEmpty) {
-      return Center (
+    if (recentAddresses.isEmpty) {
+      return Center(
         child: PwText(Strings.noRecentSends),
       );
     }
@@ -83,7 +87,8 @@ class RecentSendList extends StatelessWidget {
       itemCount: recentAddresses.length + 1,
       separatorBuilder: (context, index) => PwDivider(),
       itemBuilder: (context, index) {
-        final address = (index < recentAddresses.length)? recentAddresses[index] : null;
+        final address =
+            (index < recentAddresses.length) ? recentAddresses[index] : null;
         final cell = RecentSendCell(
           address,
         );
@@ -91,10 +96,9 @@ class RecentSendList extends StatelessWidget {
         return GestureDetector(
           child: cell,
           onTap: () {
-            if(address == null) {
+            if (address == null) {
               onViewAllClicked();
-            }
-            else {
+            } else {
               onRecentSendClicked(address);
             }
           },

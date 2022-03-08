@@ -4,19 +4,20 @@ import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/enable_face_id.dart';
+import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
-  ConfirmPin(
+  const ConfirmPin(
     this.flowType, {
     required this.words,
     this.accountName,
     this.code,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final String? accountName;
@@ -40,7 +41,7 @@ class ConfirmPinState extends State<ConfirmPin> {
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,13 +75,14 @@ class ConfirmPinState extends State<ConfirmPin> {
     Function eq = const ListEquality().equals;
     if (!eq(inputCodes, widget.code)) {
       await showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
           error: Strings.yourPinDoesNotMatchPleaseTryAgain,
         ),
       );
     } else {
-      Navigator.of(context).push(EnableFaceId(
+      Navigator.of(context).push(EnableFaceIdScreen(
         accountName: widget.accountName,
         code: widget.code,
         words: widget.words,

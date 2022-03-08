@@ -46,10 +46,7 @@ enum PrefKey {
   firstBankAccountComplete,
   showSaleDialog,
   showReturnDialog,
-
-  /// TODO: remove these
-  hasShownReturnsDialog,
-  hasShownStartTransactionDialog,
+  isSubsequentRun,
 }
 
 extension on PrefKey {

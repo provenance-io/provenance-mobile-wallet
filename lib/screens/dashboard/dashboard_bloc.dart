@@ -1,80 +1,146 @@
 import 'dart:async';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:provenance_wallet/common/models/asset.dart';
-import 'package:provenance_wallet/common/models/transaction.dart';
-import 'package:provenance_wallet/network/services/asset_service.dart';
-import 'package:provenance_wallet/network/services/transaction_service.dart';
-import 'package:provenance_wallet/services/remote_client_details.dart';
-import 'package:provenance_wallet/services/requests/send_request.dart';
-import 'package:provenance_wallet/services/requests/sign_request.dart';
-import 'package:provenance_wallet/services/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_connect_tx_response.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:get_it/get_it.dart';
 
 class DashboardBloc extends Disposable {
   DashboardBloc() {
-    _initDeepLinks();
+    get<DeepLinkService>()
+        .link
+        .listen(_handleDynamicLink)
+        .addTo(_subscriptions);
+    walletEvents.listen(get<WalletService>().events);
+    walletEvents.selected
+        .distinct((a, b) => a?.id == b?.id)
+        .listen(_onSelected)
+        .addTo(_subscriptions);
+    walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
+    walletEvents.added.listen(_onAdded).addTo(_subscriptions);
+    walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
   }
 
   WalletConnectSession? _walletSession;
 
-  final BehaviorSubject<List<Transaction>> _transactionList =
-      BehaviorSubject.seeded([]);
-  final BehaviorSubject<List<Asset>> _assetList = BehaviorSubject.seeded([]);
-  final _sendRequest = PublishSubject<SendRequest>();
-  final _signRequest = PublishSubject<SignRequest>();
-  final _sessionRequest = PublishSubject<RemoteClientDetails>();
-  final _connectionStatus =
-      BehaviorSubject.seeded(WalletConnectionServiceStatus.disconnected);
-  final BehaviorSubject<String?> _address = BehaviorSubject.seeded(null);
+  final _transactionDetails = BehaviorSubject.seeded(
+    TransactionDetails(
+      filteredTransactions: [],
+      transactions: [],
+    ),
+  );
+  final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
+  final _assetList = BehaviorSubject.seeded(<Asset>[]);
+  final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
-  final _response = PublishSubject<WalletConnectTxResponse>();
 
   final _subscriptions = CompositeSubscription();
-  final _sessionSubscriptions = CompositeSubscription();
 
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
-  ValueStream<List<Transaction>> get transactionList => _transactionList;
-  ValueStream<List<Asset>> get assetList => _assetList;
-  Stream<SendRequest> get sendRequest => _sendRequest;
-  Stream<SignRequest> get signRequest => _signRequest;
-  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
-  ValueStream<WalletConnectionServiceStatus> get connectionStatus =>
-      _connectionStatus.stream;
-  ValueStream<String?> get address => _address.stream;
-  Stream<String> get error => _error;
-  Stream<WalletConnectTxResponse> get response => _response;
+  final delegateEvents = WalletConnectSessionDelegateEvents();
+  final sessionEvents = WalletConnectSessionEvents();
+  final walletEvents = WalletServiceEvents();
 
-  // TODO: Catch and display errors?
-  void load(String walletAddress) async {
-    _assetList.value =
-        (await _assetService.getAssets(walletAddress)).data ?? [];
-    _transactionList.value =
-        (await _transactionService.getTransactions(walletAddress)).data ?? [];
+  ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
+  ValueStream<List<Asset>?> get assetList => _assetList;
+  ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
+  ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
+  Stream<String> get error => _error;
+
+  Future<void> load() async {
+    final walletService = get<WalletService>();
+    var details = await walletService.getSelectedWallet();
+    details ??= await walletService.selectWallet();
+
+    _selectedWallet.tryAdd(details);
+    var errorCount = 0;
+    try {
+      final assetList = await _assetService.getAssets(details?.address ?? "");
+      _assetList.tryAdd(assetList);
+    } catch (e) {
+      errorCount++;
+      _assetList.value = [];
+    }
+
+    try {
+      var transactions =
+          (await _transactionService.getTransactions(details?.address ?? ""));
+      _transactionDetails.tryAdd(TransactionDetails(
+        filteredTransactions: transactions,
+        transactions: transactions.toList(),
+      ));
+    } catch (e) {
+      errorCount++;
+      transactionDetails.value.transactions =
+          transactionDetails.value.filteredTransactions = [];
+      if (errorCount == 2) {
+        _error.tryAdd(Strings.theSystemIsDown);
+      }
+    }
+  }
+
+  void filterTransactions(String denom, String status) {
+    final stopwatch = Stopwatch()..start();
+    var transactions = _transactionDetails.value.transactions;
+    List<Transaction> filtered = [];
+    if (denom == Strings.dropDownAllAssets &&
+        status == Strings.dropDownAllTransactions) {
+      filtered = transactions.toList();
+    } else if (denom == Strings.dropDownAllAssets) {
+      filtered =
+          transactions.where((t) => t.status == status.toUpperCase()).toList();
+    } else if (status == Strings.dropDownAllTransactions) {
+      filtered = transactions.where((t) => t.denom == denom).toList();
+    } else {
+      filtered = transactions
+          .where((t) => t.denom == denom && t.status == status.toUpperCase())
+          .toList();
+    }
+    _transactionDetails.value = TransactionDetails(
+      transactions: transactions,
+      filteredTransactions: filtered,
+      selectedStatus: status,
+      selectedType: denom,
+    );
+    stopwatch.stop();
+    logDebug(
+      "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
+    );
   }
 
   Future<void> connectWallet(String addressData) async {
-    final session = await get<WalletService>().connectWallet(addressData);
+    final oldSession = _walletSession;
+    if (oldSession != null) {
+      await oldSession.dispose();
+    }
 
+    final session = await get<WalletService>().createSession(addressData);
     if (session != null) {
-      session.sendRequest.listen(_sendRequest.add).addTo(_sessionSubscriptions);
-      session.signRequest.listen(_signRequest.add).addTo(_sessionSubscriptions);
-      session.sessionRequest
-          .listen(_sessionRequest.add)
-          .addTo(_sessionSubscriptions);
-      session.status.listen(_onSessionStatus).addTo(_sessionSubscriptions);
-      session.address.listen(_onAddress).addTo(_sessionSubscriptions);
-      session.error.listen(_error.add).addTo(_sessionSubscriptions);
-      session.response.listen(_response.add).addTo(_sessionSubscriptions);
       _walletSession = session;
+
+      delegateEvents.listen(session.delegateEvents);
+      sessionEvents.listen(session.sessionEvents);
+
+      final success = await session.connect();
+      if (success) {
+        logDebug('Session connect succeeded');
+      } else {
+        logDebug('Session connect failed');
+      }
     }
   }
 
@@ -85,11 +151,11 @@ class DashboardBloc extends Disposable {
   }
 
   Future<bool> approveSession({
-    required String requestId,
+    required RemoteClientDetails details,
     required bool allowed,
   }) async {
     return await _walletSession?.approveSession(
-          requestId: requestId,
+          details: details,
           allowed: allowed,
         ) ??
         false;
@@ -136,46 +202,88 @@ class DashboardBloc extends Disposable {
     return get<WalletService>().isValidWalletConnectData(address);
   }
 
-  Future<void> removeWallet({required String id}) async {
-    await get<WalletService>().removeWallet(id: id);
-  }
-
   Future<void> resetWallets() async {
     await disconnectWallet();
     await get<WalletService>().resetWallets();
+    await loadAllWallets();
+  }
+
+  Future<void> loadAllWallets() async {
+    final walletService = get<WalletService>();
+    final currentWallet = await walletService.getSelectedWallet();
+
+    var list = (await walletService.getWallets());
+    list.sort((a, b) {
+      if (b.address == currentWallet?.address) {
+        return 1;
+      } else if (a.address == currentWallet?.address) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    Map<WalletDetails, int> map = {};
+
+    for (var wallet in list) {
+      var assets = wallet.address == selectedWallet.value?.address
+          ? assetList.value
+          : (await _assetService.getAssets(wallet.address));
+      map[wallet] = assets?.length ?? 1;
+    }
+
+    _walletMap.value = map;
+    _selectedWallet.value = currentWallet;
   }
 
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
-    _sessionSubscriptions.dispose();
+    delegateEvents.dispose();
+    sessionEvents.dispose();
+    walletEvents.dispose();
+
     _assetList.close();
-    _transactionList.close();
-    _sendRequest.close();
-    _signRequest.close();
-    _sessionRequest.close();
-    _connectionStatus.close();
+
+    _transactionDetails.close();
     _error.close();
-    _response.close();
-    _walletSession?.disconnect();
+
+    _walletSession?.dispose();
   }
 
-  Future _initDeepLinks() async {
-    final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-    if (initialLink != null) {
-      await _handleDynamicLink(initialLink);
+  void _onSelected(WalletDetails? details) {
+    _selectedWallet.value = details;
+    load();
+    loadAllWallets();
+  }
+
+  void _onRemoved(List<WalletDetails> removed) {
+    if (removed.any((e) => e.id == _selectedWallet.value?.id)) {
+      get<WalletService>().selectWallet();
     }
 
-    FirebaseDynamicLinks.instance.onLink
-        .listen(_handleDynamicLink)
-        .addTo(_subscriptions);
+    loadAllWallets();
   }
 
-  Future<void> _handleDynamicLink(PendingDynamicLinkData linkData) async {
-    final path = linkData.link.path;
+  void _onAdded(WalletDetails details) {
+    _selectedWallet.value ??= details;
+
+    loadAllWallets();
+  }
+
+  void _onUpdated(WalletDetails details) {
+    if (_selectedWallet.value?.id == details.id) {
+      _selectedWallet.value = details;
+    }
+
+    loadAllWallets();
+  }
+
+  Future<void> _handleDynamicLink(Uri link) async {
+    final path = link.path;
     switch (path) {
       case '/wallet-connect':
-        final data = linkData.link.queryParameters['data'];
+        final data = link.queryParameters['data'];
         _handleWalletConnectLink(data);
         break;
       default:
@@ -186,35 +294,58 @@ class DashboardBloc extends Disposable {
 
   Future<void> _handleWalletConnectLink(String? data) async {
     if (data != null) {
-      final decodedData = Uri.decodeComponent(data);
+      final addressData = Uri.decodeComponent(data);
       final walletService = get<WalletService>();
-      final isValid = await walletService.isValidWalletConnectData(decodedData);
+      final isValid = await walletService.isValidWalletConnectData(addressData);
       if (isValid) {
-        final walletSession = await walletService.connectWallet(decodedData);
-        _walletSession = walletSession;
-
-        if (walletSession == null) {
-          logDebug('Wallet connection failed');
-        }
+        connectWallet(addressData);
       } else {
         logError('Invalid wallet connect data');
       }
     }
   }
+}
 
-  void _onAddress(String? address) {
-    _address.value = address;
+class TransactionDetails {
+  TransactionDetails({
+    required this.filteredTransactions,
+    required this.transactions,
+    this.selectedType = Strings.dropDownAllAssets,
+    this.selectedStatus = Strings.dropDownAllTransactions,
+  });
+  List<String> _types = [];
+  List<String> _statuses = [];
 
-    if (WalletConnectionServiceStatus.disconnected == _connectionStatus.value) {
-      _sessionSubscriptions.clear();
+  List<Transaction> filteredTransactions;
+  List<Transaction> transactions;
+  String selectedType;
+  String selectedStatus;
+  List<String> get types {
+    if (_types.isNotEmpty) {
+      return _types;
     }
+    _types = [
+      Strings.dropDownAllAssets,
+      ...transactions.map((e) => e.denom).toSet().toList(),
+    ];
+
+    return _types;
   }
 
-  void _onSessionStatus(WalletConnectionServiceStatus status) {
-    _connectionStatus.value = status;
-
-    if (status == WalletConnectionServiceStatus.disconnected) {
-      _sessionSubscriptions.clear();
+  List<String> get statuses {
+    if (_statuses.isNotEmpty) {
+      return _statuses;
     }
+    _statuses = [
+      Strings.dropDownAllTransactions,
+      ...transactions
+          .map(
+            (e) => e.status.toLowerCase().capitalize(),
+          )
+          .toSet()
+          .toList(),
+    ];
+
+    return _statuses;
   }
 }

@@ -25,7 +25,7 @@ class _PwCheckBoxState extends State<PwCheckBox> {
           PwIcons.check,
           //size: 8,
           color: _selected
-              ? Theme.of(context).colorScheme.white
+              ? Theme.of(context).colorScheme.neutralNeutral
               : Colors.transparent,
         ),
       ),
@@ -47,17 +47,19 @@ class _PwCheckBoxState extends State<PwCheckBox> {
         return states.contains(MaterialState.focused)
             ? BorderSide(
                 color: _selected
-                    ? theme.colorScheme.white
-                    : theme.colorScheme.provenanceNeutral550,
+                    ? theme.colorScheme.neutralNeutral
+                    : theme.colorScheme.neutral550,
                 width: 4,
               )
-            : BorderSide(color: theme.colorScheme.primaryP550, width: 1);
+            : BorderSide(color: theme.colorScheme.primary550, width: 1);
       }),
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        return _selected ? theme.colorScheme.white : Colors.transparent;
+        return _selected
+            ? theme.colorScheme.neutralNeutral
+            : Colors.transparent;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return _selected ? theme.colorScheme.primaryP500 : Colors.transparent;
+        return _selected ? theme.colorScheme.primary500 : Colors.transparent;
       }),
       minimumSize: MaterialStateProperty.all(
         Size(

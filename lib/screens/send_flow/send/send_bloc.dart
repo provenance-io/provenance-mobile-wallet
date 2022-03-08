@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/common/models/asset.dart';
-import 'package:provenance_wallet/common/models/transaction.dart';
-import 'package:provenance_wallet/network/services/asset_service.dart';
-import 'package:provenance_wallet/network/services/base_service.dart';
-import 'package:provenance_wallet/network/services/transaction_service.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:rational/rational.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 
 abstract class SendBlocNavigator {
   Future<String?> scanAddress();
@@ -35,7 +33,12 @@ class SendBlocState {
 }
 
 class SendBloc extends Disposable {
-  SendBloc(this._provenanceAddress, this._assetService, this._transactionService, this._navigator,);
+  SendBloc(
+    this._provenanceAddress,
+    this._assetService,
+    this._transactionService,
+    this._navigator,
+  );
 
   final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
   final _stateStreamController = StreamController<SendBlocState>();
@@ -50,24 +53,30 @@ class SendBloc extends Disposable {
     return Future.wait([
       _assetService.getAssets(_provenanceAddress),
       _transactionService.getTransactions(_provenanceAddress),
-    ])
-    .then((results) {
-      final assetResponse = results[0] as BaseResponse<List<Asset>>;
-      final transResponse = results[1] as BaseResponse<List<Transaction>>;
+    ]).then((results) {
+      final assetResponse = results[0] as List<Asset>;
+      final transResponse = results[1] as List<Transaction>;
 
-      final assets = assetResponse.data?.map((asset) {
-        return SendAsset(asset.display, asset.exponent, asset.denom, Decimal.parse(asset.amount), "0", "",);
+      final assets = assetResponse.map((asset) {
+        return SendAsset(
+          asset.display,
+          asset.exponent,
+          asset.denom,
+          Decimal.parse(asset.amount),
+          "0",
+          "",
+        );
       });
-      
-      final recentAddresses = transResponse.data?.map((trans) {
-        final timeStamp = _dateFormat.parse(trans.time);
 
-        return RecentAddress(trans.address, timeStamp);
+      final recentAddresses = transResponse.map((trans) {
+        final timeStamp = trans.timestamp;
+
+        return RecentAddress(trans.recipientAddress, timeStamp);
       });
 
       final state = SendBlocState(
-        assets?.toList() ?? <SendAsset>[], 
-        recentAddresses?.toList() ?? <RecentAddress>[],
+        assets.toList(),
+        recentAddresses.toList(),
       );
       _stateStreamController.add(state);
     });
@@ -87,10 +96,10 @@ class SendBloc extends Disposable {
   }
 
   Future<void> next(String address, SendAsset? asset) {
-    if(address.isEmpty) {
+    if (address.isEmpty) {
       throw Exception("You must supply a receiving address");
     }
-    if(asset == null) {
+    if (asset == null) {
       throw Exception("You must supply an asset");
     }
 

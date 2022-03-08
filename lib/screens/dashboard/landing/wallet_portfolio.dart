@@ -1,22 +1,21 @@
-import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
-import 'package:provenance_wallet/services/wallet_connection_service_status.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-typedef Future<void> OnAddressCaptured(String address);
+typedef OnAddressCaptured = Future<void> Function(String address);
 
 class WalletPortfolio extends StatelessWidget {
   const WalletPortfolio({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final assetStream = get<DashboardBloc>().assetList;
+    final bloc = get<DashboardBloc>();
 
     return Padding(
       padding: EdgeInsets.only(
@@ -29,19 +28,32 @@ class WalletPortfolio extends StatelessWidget {
         children: [
           PwText(
             Strings.portfolioValue,
-            color: PwColor.white,
+            color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
-          StreamBuilder<List<Asset>>(
-            initialData: assetStream.value,
-            stream: assetStream,
+          StreamBuilder<List<Asset>?>(
+            initialData: bloc.assetList.value,
+            stream: bloc.assetList,
             builder: (context, snapshot) {
-              final assets = snapshot.data ?? [];
+              if (snapshot.data == null) {
+                return PwText(
+                  "\$-.--",
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.display2,
+                );
+              }
+              double portfolioValue = 0;
+
+              if (snapshot.data!.isNotEmpty) {
+                portfolioValue = snapshot.data
+                        ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
+                        .reduce((value, element) => value + element) ??
+                    0;
+              }
 
               return PwText(
-                // FIXME: How do we get portfolio value?
-                '\$0',
-                color: PwColor.white,
+                portfolioValue.toCurrency(),
+                color: PwColor.neutralNeutral,
                 style: PwTextStyle.display2,
               );
             },
@@ -51,23 +63,26 @@ class WalletPortfolio extends StatelessWidget {
             children: [
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.upArrow,
-                      size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      width: 14,
+                      height: 16,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.send,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
                 ),
                 onPressed: () async {
-                  final walletDetails = await get<WalletService>().getSelectedWallet();
+                  final walletDetails =
+                      await get<WalletService>().getSelectedWallet();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -79,93 +94,38 @@ class WalletPortfolio extends StatelessWidget {
               HorizontalSpacer.small(),
               PwButton(
                 minimumWidth: 150,
+                minimumHeight: 66,
                 child: Column(
                   children: [
-                    PwIcon(
+                    PwIcon.only(
                       PwIcons.downArrow,
-                      size: 24,
-                      color: Theme.of(context).colorScheme.white,
+                      width: 14,
+                      height: 16,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
                       Strings.receive,
-                      color: PwColor.white,
+                      color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
                   ],
                 ),
                 onPressed: () {
-                  // TODO: 'Receive' logic here.
+                  final walletDetails =
+                      get<DashboardBloc>().selectedWallet.value;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReceiveFlow(walletDetails!),
+                    ),
+                  );
                 },
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildWalletConnectButton() {
-    final bloc = get<DashboardBloc>();
-
-    return StreamBuilder<WalletConnectionServiceStatus>(
-      initialData: bloc.connectionStatus.value,
-      stream: bloc.connectionStatus,
-      builder: (context, snapshot) {
-        final connected =
-            snapshot.data == WalletConnectionServiceStatus.connected;
-
-        return Container(
-          width: 100,
-          child: GestureDetector(
-            onTap: () async {
-              if (!connected) {
-                final addressData = await Navigator.of(
-                  context,
-                ).push(
-                  QRCodeScanner(
-                    isValidCallback: bloc.isValidWalletConnectAddress,
-                  ).route(),
-                );
-                if (addressData != null) {
-                  bloc.connectWallet(addressData);
-                }
-              } else {
-                bloc.disconnectWallet();
-              }
-            },
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.globalNeutral450,
-                    borderRadius: BorderRadius.circular(
-                      23,
-                    ),
-                  ),
-                  height: 46,
-                  width: 46,
-                  child: Center(
-                    child: PwIcon(
-                      !connected ? PwIcons.walletConnect : PwIcons.close,
-                      size: 15,
-                      color: Theme.of(context).colorScheme.white,
-                    ),
-                  ),
-                ),
-                VerticalSpacer.xSmall(),
-                PwText(
-                  !connected ? Strings.walletConnect : Strings.disconnect,
-                  color: PwColor.white,
-                  style: PwTextStyle.s,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

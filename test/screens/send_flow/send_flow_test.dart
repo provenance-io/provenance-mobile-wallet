@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/common/models/asset.dart';
 import 'package:provenance_wallet/common/models/transaction.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+<<<<<<< HEAD
 import 'package:provenance_wallet/network/services/asset_service.dart';
 import 'package:provenance_wallet/network/services/base_service.dart';
 import 'package:provenance_wallet/network/services/transaction_service.dart';
@@ -13,14 +14,21 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+=======
+import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+>>>>>>> develop
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/wallet_service.dart';
 
+<<<<<<< HEAD
 import 'send_flow_test_constants.dart';
 import 'send_flow_test.mocks.dart';
 
+=======
+>>>>>>> develop
 final get = GetIt.instance;
 
 @GenerateMocks([ AssetService, TransactionService, WalletService, ])
@@ -35,8 +43,10 @@ main() {
       ),
     );
 
-    await tester.pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
-    state = tester.allStates.firstWhere((element) => element is SendFlowState) as SendFlowState;
+    await tester
+        .pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
+    state = tester.allStates.firstWhere((element) => element is SendFlowState)
+        as SendFlowState;
   }
 
   MockAssetService? mockAssetService;
@@ -106,7 +116,13 @@ main() {
 
       final dialogFind = find.byType(ErrorDialog);
       expect(dialogFind, findsOneWidget);
-      expect(find.descendant(of: dialogFind, matching: find.text("Not Implemented")), findsOneWidget);
+      expect(
+        find.descendant(
+          of: dialogFind,
+          matching: find.text("Not Implemented"),
+        ),
+        findsOneWidget,
+      );
     });
     
     testWidgets("showSelectAmount", (tester) async {
@@ -114,13 +130,27 @@ main() {
     
       state!.showSelectAmount("Address", hashAsset);
       await tester.pumpAndSettle();
+<<<<<<< HEAD
     
       expect(find.byType(SendAmountScreen), findsOneWidget);
       final amountBloc = get<SendAmountBloc>();
       expect(amountBloc.asset, hashAsset);
       expect(amountBloc.receivingAddress, "Address");
+=======
+
+      final dialogFind = find.byType(ErrorDialog);
+      expect(dialogFind, findsOneWidget);
+      expect(
+        find.descendant(
+          of: dialogFind,
+          matching: find.text("Not Implemented"),
+        ),
+        findsOneWidget,
+      );
+>>>>>>> develop
     });
   });
+<<<<<<< HEAD
 
   // group("SendAmountBlocNavigator", () {
     // failing due to NetworkImage not loading
@@ -141,3 +171,6 @@ main() {
   //   });
   // });
 }
+=======
+}
+>>>>>>> develop

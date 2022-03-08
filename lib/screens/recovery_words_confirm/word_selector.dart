@@ -5,9 +5,10 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WordSelector extends StatefulWidget {
-  WordSelector({
+  const WordSelector({
     required this.index,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final int index;
 

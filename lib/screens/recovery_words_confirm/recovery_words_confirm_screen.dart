@@ -10,13 +10,14 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
-  RecoveryWordsConfirmScreen(
+  const RecoveryWordsConfirmScreen(
     this.flowType, {
     required this.words,
     this.accountName,
     this.currentStep,
     this.numberOfSteps,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final List<String> words;
   final int? currentStep;
@@ -62,7 +63,7 @@ class RecoveryWordsConfirmScreenState
         leadingIcon: PwIcons.back,
       ),
       body: Container(
-        color: Theme.of(context).colorScheme.provenanceNeutral750,
+        color: Theme.of(context).colorScheme.neutral750,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(
@@ -140,8 +141,8 @@ class RecoveryWordsConfirmScreenState
                       child: PwButton(
                         child: PwText(
                           Strings.continueName,
-                          style: PwTextStyle.mBold,
-                          color: PwColor.white,
+                          style: PwTextStyle.bodyBold,
+                          color: PwColor.neutralNeutral,
                         ),
                         onPressed: () {
                           _validation();

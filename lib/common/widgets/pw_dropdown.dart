@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class PwDropDown<X> extends StatefulWidget {
-  PwDropDown({
+  const PwDropDown({
     Key? key,
     required this.initialValue,
     required this.items,
@@ -27,16 +27,22 @@ class PwDropDown<X> extends StatefulWidget {
     Key? key,
     required String initialValue,
     required List<String> items,
-  })
-  {
+    void Function(String item)? onValueChanged,
+  }) {
     return PwDropDown<String>(
       initialValue: initialValue,
       items: items,
       key: key,
-      builder: (item) => PwText(
-        item,
-        color: PwColor.globalNeutral550,
-        style: PwTextStyle.s,
+      isExpanded: true,
+      onValueChanged: onValueChanged,
+      builder: (item) => Row(
+        children: [
+          PwText(
+            item,
+            color: PwColor.neutralNeutral,
+            style: PwTextStyle.body,
+          ),
+        ],
       ),
     );
   }
@@ -56,12 +62,16 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
     return DropdownButton<X>(
       isExpanded: widget.isExpanded,
       itemHeight: widget.itemHeight,
-      dropdownColor: widget.dropdownColor ?? Theme.of(context).colorScheme.globalNeutral150,
+      dropdownColor:
+          widget.dropdownColor ?? Theme.of(context).colorScheme.neutral750,
       underline: Container(),
       value: dropdownValue,
       icon: Padding(
         padding: EdgeInsets.only(left: 16),
-        child: PwIcon(PwIcons.chevron),
+        child: PwIcon(
+          PwIcons.chevron,
+          color: Theme.of(context).colorScheme.neutralNeutral,
+        ),
       ),
       onChanged: _onChange,
       items: widget.items.map<DropdownMenuItem<X>>((X value) {
@@ -78,7 +88,7 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
       dropdownValue = newValue!;
     });
 
-    if(widget.onValueChanged != null) {
+    if (widget.onValueChanged != null) {
       widget.onValueChanged!.call(newValue!);
     }
   }
