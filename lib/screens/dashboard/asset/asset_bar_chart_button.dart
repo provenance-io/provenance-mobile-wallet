@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -19,28 +18,21 @@ class AssetBarChartButton extends StatelessWidget {
       builder: (context, snapshot) {
         final isSelected = snapshot.data?.value == dataValue;
 
-        return PwButton(
-          child: Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.secondary650
-                      : Colors.transparent,
-                  spreadRadius: 20,
-                ),
-              ],
+        return RawMaterialButton(
+          constraints: BoxConstraints.tight(Size(30, 30)),
+          shape: CircleBorder(
+            side: BorderSide(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.secondary650
+                  : Colors.transparent,
             ),
-            child: Center(
-              child: PwText(
-                dataValue.name.toUpperCase()[0],
-                color:
-                    isSelected ? PwColor.secondary250 : PwColor.neutralNeutral,
-              ),
-            ),
+          ),
+          fillColor: isSelected
+              ? Theme.of(context).colorScheme.secondary650
+              : Colors.transparent,
+          child: PwText(
+            dataValue.name.toUpperCase()[0],
+            color: isSelected ? PwColor.secondary250 : PwColor.neutralNeutral,
           ),
           onPressed: () {
             if (!isSelected) {
