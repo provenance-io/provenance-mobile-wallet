@@ -336,4 +336,11 @@ class Strings {
   static const receiveWalletAddressTitle = "Wallet Address";
   static const receiveWalletAddressCopiedMessage =
       "Your address was copied to the clipboard";
+
+  // AssetChartScreen
+  static const statistics = "Statistics";
+  static const dayVolume = "Day Volume";
+  static const changeAmount = "Change Amount";
+  static const dayHigh = "Day High";
+  static const dayLow = "Day Low";
 }
