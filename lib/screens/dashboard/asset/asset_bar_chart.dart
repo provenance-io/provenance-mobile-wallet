@@ -28,7 +28,9 @@ class AssetBarChartState extends State<AssetBarChart> {
           stream: bloc.chartDetails,
           builder: (context, snapshot) {
             final details = snapshot.data;
-            if (details == null) {
+            if (details == null ||
+                (details.assetStatistics == null &&
+                    details.graphItemList.isEmpty)) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [

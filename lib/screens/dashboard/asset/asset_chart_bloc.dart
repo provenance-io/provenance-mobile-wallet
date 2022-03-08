@@ -18,6 +18,13 @@ class AssetChartBloc extends Disposable {
   ValueStream<AssetChartDetails?> get chartDetails => _chartDetails.stream;
 
   Future<void> load(GraphingDataValue value) async {
+    _chartDetails.value = AssetChartDetails(
+      value,
+      _asset,
+      [],
+      null,
+      false,
+    );
     try {
       // This is gonna fail until these endpoints are built (or unless we are in mock)
       final graphItemList =
