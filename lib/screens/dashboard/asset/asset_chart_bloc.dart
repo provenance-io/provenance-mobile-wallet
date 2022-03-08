@@ -22,7 +22,7 @@ class AssetChartBloc extends Disposable {
       value,
       _asset,
       [],
-      null,
+      _chartDetails.value?.assetStatistics,
       false,
     );
     try {

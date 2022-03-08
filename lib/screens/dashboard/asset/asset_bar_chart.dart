@@ -29,8 +29,7 @@ class AssetBarChartState extends State<AssetBarChart> {
           builder: (context, snapshot) {
             final details = snapshot.data;
             if (details == null ||
-                (details.assetStatistics == null &&
-                    details.graphItemList.isEmpty)) {
+                (details.graphItemList.isEmpty && !details.isComingSoon)) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
