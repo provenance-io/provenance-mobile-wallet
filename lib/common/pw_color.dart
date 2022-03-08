@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 enum PwColor {
   error,
   secondary2,
+  secondary250,
   neutral700,
   neutral550,
   neutral450,
@@ -28,6 +29,8 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.error;
       case PwColor.secondary2:
         return theme.colorScheme.secondaryVariant;
+      case PwColor.secondary250:
+        return theme.colorScheme.secondary250;
       case PwColor.neutral700:
         return theme.colorScheme.neutral700;
       case PwColor.neutral450:
