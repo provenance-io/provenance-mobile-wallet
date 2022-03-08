@@ -106,11 +106,15 @@ class SendReviewPageState extends State<SendReviewPage> {
                   VerticalSpacer.large(),
                   SendReviewCell("To", state.receivingAddress),
                   PwDivider(),
-                  SendReviewCell("Sending",
-                      "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}"),
+                  SendReviewCell(
+                    "Sending",
+                    "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}",
+                  ),
                   PwDivider(),
-                  SendReviewCell("Transaction Fee",
-                      "${state.fee.displayAmount} ${state.fee.displayDenom}"),
+                  SendReviewCell(
+                    "Transaction Fee",
+                    state.fee.displayAmount,
+                  ),
                   PwDivider(),
                   SendReviewCell("Total", state.total),
                   Expanded(

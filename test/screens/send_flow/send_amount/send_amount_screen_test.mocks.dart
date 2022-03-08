@@ -2,13 +2,14 @@
 // in provenance_wallet/test/screens/send_flow/send_amount/send_amount_screen_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
+import 'package:flutter/src/foundation/diagnostics.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
-    as _i3;
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i4;
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
+    as _i5;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -21,14 +22,18 @@ import 'package:provenance_wallet/services/models/wallet_details.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeWalletDetails_0 extends _i1.Fake implements _i2.WalletDetails {}
+class _FakeWalletDetails_0 extends _i1.Fake implements _i2.WalletDetails {
+  @override
+  String toString({_i3.DiagnosticLevel? minLevel = _i3.DiagnosticLevel.info}) =>
+      super.toString();
+}
 
-class _FakeSendAsset_1 extends _i1.Fake implements _i3.SendAsset {}
+class _FakeSendAsset_1 extends _i1.Fake implements _i4.SendAsset {}
 
 /// A class which mocks [SendAmountBloc].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSendAmountBloc extends _i1.Mock implements _i4.SendAmountBloc {
+class MockSendAmountBloc extends _i1.Mock implements _i5.SendAmountBloc {
   MockSendAmountBloc() {
     _i1.throwOnMissingStub(this);
   }
@@ -38,23 +43,23 @@ class MockSendAmountBloc extends _i1.Mock implements _i4.SendAmountBloc {
       (super.noSuchMethod(Invocation.getter(#walletDetails),
           returnValue: _FakeWalletDetails_0()) as _i2.WalletDetails);
   @override
-  _i3.SendAsset get asset => (super.noSuchMethod(Invocation.getter(#asset),
-      returnValue: _FakeSendAsset_1()) as _i3.SendAsset);
+  _i4.SendAsset get asset => (super.noSuchMethod(Invocation.getter(#asset),
+      returnValue: _FakeSendAsset_1()) as _i4.SendAsset);
   @override
   String get receivingAddress =>
       (super.noSuchMethod(Invocation.getter(#receivingAddress), returnValue: '')
           as String);
   @override
-  _i5.Stream<_i4.SendAmountBlocState> get stream =>
+  _i6.Stream<_i5.SendAmountBlocState> get stream =>
       (super.noSuchMethod(Invocation.getter(#stream),
-              returnValue: Stream<_i4.SendAmountBlocState>.empty())
-          as _i5.Stream<_i4.SendAmountBlocState>);
+              returnValue: Stream<_i5.SendAmountBlocState>.empty())
+          as _i6.Stream<_i5.SendAmountBlocState>);
   @override
   void init() => super.noSuchMethod(Invocation.method(#init, []),
       returnValueForMissingStub: null);
   @override
-  _i5.Future<void> showNext(String? note, String? amount) =>
+  _i6.Future<void> showNext(String? note, String? amount) =>
       (super.noSuchMethod(Invocation.method(#showNext, [note, amount]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
 }

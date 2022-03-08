@@ -197,9 +197,7 @@ class WalletService implements Disposable {
       Future.value(WalletConnectAddress.create(qrData) != null);
 
   Future<proto.GasEstimate> estimate(
-    proto.TxBody body,
-    WalletDetails walletDetails,
-  ) async {
+      proto.TxBody body, WalletDetails walletDetails) async {
     final pbClient = proto.PbClient(
       Uri.parse(walletDetails.coin.address),
       walletDetails.coin.chainId,
@@ -221,7 +219,7 @@ class WalletService implements Disposable {
   Future<void> submitTransaction(
     proto.TxBody body,
     WalletDetails walletDetails, [
-    int gas = 0,
+    proto.GasEstimate? gasEstimate,
   ]) async {
     final privateKey = await _storage.loadKey(walletDetails.id);
     if (privateKey == null) {
@@ -245,10 +243,14 @@ class WalletService implements Disposable {
       walletDetails.coin.chainId,
     );
 
+    if (gasEstimate == null) {
+      gasEstimate = await pbClient.estimateTx(baseReq);
+    }
+
     return pbClient
         .broadcastTx(
       baseReq,
-      proto.GasEstimate(gas),
+      gasEstimate,
     )
         .then((response) {
       if (response.txResponse.rawLog != "[]") {

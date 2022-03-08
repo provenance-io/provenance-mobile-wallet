@@ -131,7 +131,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   @override
   Future<void> showReviewSend(
     SendAsset amountToSend,
-    SendAsset fee,
+    MultiSendAsset fee,
     String note,
   ) {
     final bloc = SendReviewBloc(

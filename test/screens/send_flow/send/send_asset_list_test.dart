@@ -1,17 +1,11 @@
-<<<<<<< HEAD
 import 'package:decimal/decimal.dart';
-=======
->>>>>>> develop
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
-<<<<<<< HEAD
 
 import '../send_flow_test_constants.dart';
-=======
->>>>>>> develop
 
 main() {
   group("SendAssetCell", () {
@@ -27,25 +21,18 @@ main() {
     }
 
     testWidgets("Contents", (tester) async {
-<<<<<<< HEAD
-      final asset = SendAsset("Hash", 0, "nHash", Decimal.fromInt(123), "52", "http://test.com",);
-=======
       final asset = SendAsset(
         "Hash",
-        "123",
+        0,
+        "nHash",
+        Decimal.fromInt(123),
         "52",
         "http://test.com",
       );
->>>>>>> develop
       await _build(tester, asset);
 
       final textFind = find.byType(PwText);
       expect(textFind, findsNWidgets(3));
-<<<<<<< HEAD
-      expect(find.descendant(of: textFind, matching: find.text("Hash")), findsOneWidget);
-      expect(find.descendant(of: textFind, matching: find.text("52")), findsOneWidget);
-      expect(find.descendant(of: textFind, matching: find.text("123")), findsOneWidget);
-=======
       expect(
         find.descendant(of: textFind, matching: find.text("Hash")),
         findsOneWidget,
@@ -55,10 +42,9 @@ main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: textFind, matching: find.text("123 Hash")),
+        find.descendant(of: textFind, matching: find.text("123")),
         findsOneWidget,
       );
->>>>>>> develop
       expect(find.byType(Image), findsOneWidget);
     });
   });
@@ -77,37 +63,14 @@ main() {
         MaterialApp(
           home: Material(
             child: SendAssetList(
-<<<<<<< HEAD
-                assets,
-                selectedAsset,
-                OnAssetSelected,
-=======
               assets,
               selectedAsset,
               onAssetSelected,
->>>>>>> develop
             ),
           ),
         ),
       );
     }
-
-<<<<<<< HEAD
-    testWidgets("Contents empty assets", (tester)  async {
-      await _build(tester, <SendAsset>[], null,);
-=======
-    final asset1 = SendAsset(
-      "Hash",
-      "1",
-      "1.30",
-      "http://test.com",
-    );
-    final asset2 = SendAsset(
-      "USD",
-      "1",
-      "1",
-      "http://test1.com",
-    );
 
     testWidgets("Contents empty assets", (tester) async {
       await _build(
@@ -115,22 +78,16 @@ main() {
         <SendAsset>[],
         null,
       );
->>>>>>> develop
       expect(find.text("Loading assets"), findsOneWidget);
       expect(find.byType(PwDropDown), findsNothing);
     });
 
-<<<<<<< HEAD
-    testWidgets("Contents non-empty list", (tester)  async {
-      await _build(tester, [ hashAsset, dollarAsset ], null,);
-=======
     testWidgets("Contents non-empty list", (tester) async {
       await _build(
         tester,
-        [asset1, asset2],
+        [hashAsset, dollarAsset],
         null,
       );
->>>>>>> develop
       expect(find.text("Loading assets"), findsNothing);
 
       final dropDownFind =
@@ -144,17 +101,12 @@ main() {
       expect(cellFind, findsNWidgets(2));
     });
 
-<<<<<<< HEAD
-    testWidgets("non-empty assets, nothing selected", (tester)  async {
-      await _build(tester, [ hashAsset, dollarAsset ], null,);
-=======
     testWidgets("non-empty assets, nothing selected", (tester) async {
       await _build(
         tester,
-        [asset1, asset2],
+        [hashAsset, dollarAsset],
         null,
       );
->>>>>>> develop
       expect(find.text("Loading assets"), findsNothing);
 
       final dropDownFind =
@@ -163,17 +115,12 @@ main() {
       expect(dropDown.initialValue, hashAsset);
     });
 
-<<<<<<< HEAD
-    testWidgets("non-empty assets, asset selected", (tester)  async {
-      await _build(tester, [ hashAsset, dollarAsset ], dollarAsset,);
-=======
     testWidgets("non-empty assets, asset selected", (tester) async {
       await _build(
         tester,
-        [asset1, asset2],
-        asset2,
+        [hashAsset, dollarAsset],
+        dollarAsset,
       );
->>>>>>> develop
       expect(find.text("Loading assets"), findsNothing);
 
       final dropDownFind =
@@ -182,17 +129,12 @@ main() {
       expect(dropDown.initialValue, dollarAsset);
     });
 
-<<<<<<< HEAD
-    testWidgets("Value Changed", (tester)  async {
-      await _build(tester, [ hashAsset, dollarAsset ], dollarAsset,);
-=======
     testWidgets("Value Changed", (tester) async {
       await _build(
         tester,
-        [asset1, asset2],
-        asset2,
+        [hashAsset, dollarAsset],
+        dollarAsset,
       );
->>>>>>> develop
       expect(find.text("Loading assets"), findsNothing);
 
       final dropDownFind =

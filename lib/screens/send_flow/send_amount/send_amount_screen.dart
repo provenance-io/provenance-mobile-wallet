@@ -64,8 +64,7 @@ class SendAmountPageState extends State<SendAmountPage> {
         _feeNotifier.value = null;
       }
 
-      _feeNotifier.value =
-          "${blocState.transactionFees?.displayAmount} ${blocState.transactionFees?.displayDenom}";
+      _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
   }
 

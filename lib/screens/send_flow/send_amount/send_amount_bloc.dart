@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/strings.dart';
 abstract class SendAmountBlocNavigator {
   Future<void> showReviewSend(
     SendAsset amountToSend,
-    SendAsset fee,
+    MultiSendAsset fee,
     String note,
   );
 }
@@ -21,7 +21,7 @@ abstract class SendAmountBlocNavigator {
 class SendAmountBlocState {
   SendAmountBlocState(this.transactionFees);
 
-  final SendAsset? transactionFees;
+  final MultiSendAsset? transactionFees;
 }
 
 class SendAmountBloc extends Disposable {
@@ -35,7 +35,7 @@ class SendAmountBloc extends Disposable {
   final WalletDetails walletDetails;
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
-  SendAsset? _fee;
+  MultiSendAsset? _fee;
 
   final SendAsset asset;
   final String receivingAddress;
@@ -58,14 +58,32 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    get<WalletService>().estimate(body, walletDetails).then((nhasGas) {
-      _fee = SendAsset(
-        "hash",
-        9,
-        "nhash",
-        Decimal.fromInt(nhasGas),
-        "",
-        "",
+    get<WalletService>().estimate(body, walletDetails).then((estimate) async {
+      List<SendAsset> individualFees = <SendAsset>[];
+      if (estimate.feeCalculated?.isNotEmpty ?? false) {
+        estimate.feeCalculated!.forEach((fee) {
+          final sendAsset = SendAsset(
+            fee.denom,
+            1,
+            fee.denom,
+            Decimal.parse(fee.amount),
+            "",
+            "",
+          );
+          individualFees.add(sendAsset);
+        });
+      }
+
+      _fee = MultiSendAsset(
+        SendAsset(
+          "hash",
+          9,
+          "nhash",
+          Decimal.fromInt(estimate.limit),
+          "",
+          "",
+        ),
+        individualFees,
       );
 
       final state = SendAmountBlocState(_fee);

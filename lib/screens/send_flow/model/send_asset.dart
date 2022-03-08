@@ -36,3 +36,22 @@ class SendAsset {
     );
   }
 }
+
+class MultiSendAsset {
+  MultiSendAsset(this.limit, this.fees);
+
+  final SendAsset limit;
+  final List<SendAsset> fees;
+
+  String get displayAmount {
+    final map = <String, SendAsset>{};
+    map[limit.denom] = limit;
+
+    for (var fee in fees) {
+      var current = map[fee.denom];
+      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+    }
+
+    return map.values.map((e) => e.displayAmount).join(" + ");
+  }
+}

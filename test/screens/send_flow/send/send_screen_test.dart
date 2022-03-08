@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -9,9 +11,8 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+
 import '../send_flow_test_constants.dart';
 import 'send_screen_test.mocks.dart';
 
@@ -61,28 +62,10 @@ main() {
   });
 
   group("SendPage", () {
-<<<<<<< HEAD
-    final recentAddress1 = RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
-    final recentAddress2 = RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
-=======
-    final asset1 = SendAsset(
-      "Hash",
-      "1",
-      "1.30",
-      "http://test.com",
-    );
-    final asset2 = SendAsset(
-      "USD",
-      "1",
-      "1",
-      "http://test1.com",
-    );
-
     final recentAddress1 =
         RecentAddress("Address1", DateTime.fromMillisecondsSinceEpoch(0));
     final recentAddress2 =
         RecentAddress("Address2", DateTime.fromMillisecondsSinceEpoch(100));
->>>>>>> develop
 
     Future<void> _build(WidgetTester tester) {
       return tester.pumpWidget(
@@ -121,30 +104,18 @@ main() {
         var sendList = tester.widget<SendAssetList>(sendListFind);
         expect(sendList.assets, <SendAsset>[]);
 
-<<<<<<< HEAD
-        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], <RecentAddress>[]));
-=======
         _streamController!
-            .add(SendBlocState([asset1, asset2], <RecentAddress>[]));
->>>>>>> develop
+            .add(SendBlocState([hashAsset, dollarAsset], <RecentAddress>[]));
         await tester.pumpAndSettle();
 
         sendListFind = find.byType(SendAssetList);
         sendList = tester.widget<SendAssetList>(sendListFind);
-<<<<<<< HEAD
-        expect(sendList.assets,[ hashAsset, dollarAsset ]);
-      });
-
-      testWidgets("asset selected", (tester) async {
-        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], <RecentAddress>[]));
-=======
-        expect(sendList.assets, [asset1, asset2]);
+        expect(sendList.assets, [hashAsset, dollarAsset]);
       });
 
       testWidgets("asset selected", (tester) async {
         _streamController!
-            .add(SendBlocState([asset1, asset2], <RecentAddress>[]));
->>>>>>> develop
+            .add(SendBlocState([hashAsset, dollarAsset], <RecentAddress>[]));
 
         await _build(tester);
         await tester.pumpAndSettle(); // wait for stream builder to settles
@@ -233,7 +204,8 @@ main() {
         await tester.tap(find.text(recentAddress1.address));
 
         final textFind = find.byType(TextField);
-        final addressFind = find.descendant(of: textFind, matching: find.text(recentAddress1.address));
+        final addressFind = find.descendant(
+            of: textFind, matching: find.text(recentAddress1.address));
         expect(addressFind, findsOneWidget);
       });
 
@@ -280,16 +252,8 @@ main() {
       });
 
       testWidgets("Values", (tester) async {
-<<<<<<< HEAD
-        _streamController!.add(SendBlocState([ hashAsset, dollarAsset ], [ recentAddress1, recentAddress2 ]));
-=======
-        _streamController!.add(
-          SendBlocState(
-            [asset1, asset2],
-            [recentAddress1, recentAddress2],
-          ),
-        );
->>>>>>> develop
+        _streamController!.add(SendBlocState(
+            [hashAsset, dollarAsset], [recentAddress1, recentAddress2]));
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.value());
 
         await _build(tester);

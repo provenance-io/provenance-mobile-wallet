@@ -20,17 +20,18 @@ class SendReviewBlocState {
 
   final String receivingAddress;
   final SendAsset sendingAsset;
-  final SendAsset fee;
+  final MultiSendAsset fee;
 
   String get total {
-    if (sendingAsset.denom == fee.denom) {
-      final amount = sendingAsset.amount + fee.amount;
-      final tempAsset = sendingAsset.copyWith(amount: amount);
+    final map = <String, SendAsset>{};
+    map[sendingAsset.denom] = sendingAsset;
 
-      return "${tempAsset.displayAmount} ${tempAsset.displayDenom}";
-    } else {
-      return "${sendingAsset.displayAmount} ${sendingAsset.displayDenom} + ${fee.displayAmount} ${fee.displayDenom}";
+    for (var fee in fee.fees) {
+      var current = map[fee.denom];
+      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
     }
+
+    return map.values.map((e) => e.displayAmount).join(" + ");
   }
 }
 
@@ -60,7 +61,7 @@ class SendReviewBloc implements Disposable {
   final String receivingAddress;
   final String? note;
   final SendAsset sendingAsset;
-  final SendAsset fee;
+  final MultiSendAsset fee;
 
   Stream<SendReviewBlocState> get stream => _stateStreamController.stream;
 
@@ -88,10 +89,21 @@ class SendReviewBloc implements Disposable {
       ],
     );
 
+    GasEstimate estimate = GasEstimate(
+      fee.limit.amount.toBigInt().toInt(),
+      null,
+      fee.fees
+          .map((e) => Coin(
+                denom: e.denom,
+                amount: e.amount.toString(),
+              ))
+          .toList(),
+    );
+
     return _walletService.submitTransaction(
       body,
       _walletDetails,
-      fee.amount.toBigInt().toInt(),
+      estimate,
     );
   }
 

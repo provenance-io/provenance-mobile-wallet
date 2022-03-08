@@ -75,13 +75,8 @@ main() {
         MaterialApp(
           home: RecentSendList(
             recentAddresses,
-<<<<<<< HEAD
-            OnAddressClicked,
-            OnViewAllClicked,
-=======
             onAddressClicked,
             onViewAllClicked,
->>>>>>> develop
           ),
         ),
       );

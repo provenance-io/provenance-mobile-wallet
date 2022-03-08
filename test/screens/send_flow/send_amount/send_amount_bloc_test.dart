@@ -3,11 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
-import 'package:provenance_wallet/services/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+
+import './send_amount_bloc_test.mocks.dart';
 import '../send_flow_test_constants.dart';
-import 'send_amount_bloc_test.mocks.dart';
 
 final get = GetIt.instance;
 
@@ -17,21 +19,10 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-<<<<<<< HEAD
-const feeAmount = 20000000;
+const feeAmount = GasEstimate(20000000);
 
-@GenerateMocks([ SendAmountBlocNavigator, WalletService, ])
+@GenerateMocks([SendAmountBlocNavigator, WalletService])
 main() {
-=======
-@GenerateMocks([SendAmountBlocNavigator])
-main() {
-  final asset = SendAsset(
-    "Hash",
-    "100",
-    "200",
-    "http://test.com",
-  );
->>>>>>> develop
   const receivingAddress = "ReceivingAdress";
 
   SendAmountBloc? bloc;
@@ -40,24 +31,23 @@ main() {
 
   setUp(() {
     mockWalletService = MockWalletService();
-    when(mockWalletService!.estimate(any, any)).thenAnswer((_) => Future.value(feeAmount));
+    when(mockWalletService!.estimate(any, any))
+        .thenAnswer((_) => Future.value(feeAmount));
 
+    when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
     get.registerSingleton<WalletService>(mockWalletService!);
 
     mockNavigator = MockSendAmountBlocNavigator();
-<<<<<<< HEAD
-    bloc = SendAmountBloc(walletDetails, receivingAddress, hashAsset, mockNavigator!,);
+    bloc = SendAmountBloc(
+      walletDetails,
+      receivingAddress,
+      hashAsset,
+      mockNavigator!,
+    );
   });
 
   tearDown(() {
     get.unregister<WalletService>();
-=======
-    bloc = SendAmountBloc(
-      receivingAddress,
-      asset,
-      mockNavigator!,
-    );
->>>>>>> develop
   });
 
   test("properties", () {
@@ -70,9 +60,10 @@ main() {
     expectLater(bloc!.stream, emits(predicate((arg) {
       final state = arg as SendAmountBlocState;
       expect(state.transactionFees, predicate((arg) {
-        final feeAsset = arg as SendAsset;
-        expect(feeAsset.amount, Decimal.fromInt(feeAmount));
-        expect(feeAsset.denom, "nhash");
+        final feeAsset = arg as MultiSendAsset;
+        expect(feeAsset.limit.amount, Decimal.fromInt(feeAmount.estimate));
+        expect(feeAsset.limit.denom, "nhash");
+        expect(feeAsset.fees.length, 0);
 
         return true;
       }));
@@ -101,54 +92,45 @@ main() {
     bloc!.init();
     await bloc!.stream.first; // wait for the fee to download
 
-<<<<<<< HEAD
-    expect(() => bloc!.showNext("", ""),  throwsExceptionWithText("'' is an invalid amount"));
-    expect(() => bloc!.showNext("","abc"), throwsExceptionWithText("'abc' is an invalid amount"));
-    // expect(() => bloc!.showNext("","1.1234567890"), throwsExceptionWithText("too many decimal places"));
-    expect(() => bloc!.showNext("","100.000000001"), throwsExceptionWithText("Insufficient Hash"));
-=======
     expect(
       () => bloc!.showNext("", ""),
-      throwsExceptionWithText("'' is an invalid amount"),
+      throwsExceptionWithText(
+        "'' is an invalid amount",
+      ),
     );
     expect(
       () => bloc!.showNext("", "abc"),
-      throwsExceptionWithText("'abc' is an invalid amount"),
+      throwsExceptionWithText(
+        "'abc' is an invalid amount",
+      ),
     );
-    expect(
-      () => bloc!.showNext("", "1.1234567890"),
-      throwsExceptionWithText("too many decimal places"),
-    );
+    // expect(() => bloc!.showNext("","1.1234567890"), throwsExceptionWithText("too many decimal places"));
     expect(
       () => bloc!.showNext("", "100.000000001"),
-      throwsExceptionWithText("Insufficient Hash"),
+      throwsExceptionWithText(
+        "Insufficient Hash",
+      ),
     );
->>>>>>> develop
   });
 
   test("showNext - invoke navigator", () async {
     bloc!.init();
     await bloc!.stream.first;
 
-<<<<<<< HEAD
     bloc!.showNext("A Note", "1.1");
-    
-    final captures = verify(mockNavigator!.showReviewSend(captureAny, captureAny, "A Note",)).captured;
+
+    final captures = verify(mockNavigator!.showReviewSend(
+      captureAny,
+      captureAny,
+      "A Note",
+    )).captured;
 
     final amountAsset = captures[0] as SendAsset;
-    final feeAsset = captures[1] as SendAsset;
+    final feeAsset = captures[1] as MultiSendAsset;
 
     expect(amountAsset.amount, Decimal.parse("110"));
     expect(amountAsset.denom, hashAsset.denom);
-    expect(feeAsset.amount, Decimal.fromInt(feeAmount));
-    expect(feeAsset.denom, "nhash");
-=======
-    bloc!.showNext("A Note", "75.01");
-    verify(mockNavigator!.showReviewSend(
-      "75.01",
-      "0.02 Hash",
-      "A Note",
-    ));
->>>>>>> develop
+    expect(feeAsset.limit.amount, Decimal.fromInt(feeAmount.estimate));
+    expect(feeAsset.limit.denom, "nhash");
   });
 }

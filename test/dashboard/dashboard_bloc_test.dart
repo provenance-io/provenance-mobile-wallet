@@ -275,6 +275,8 @@ class TestState {
             id: id,
             address: id,
             name: id,
+            publicKey: "",
+            coin: Coin.testNet,
           ),
           PrivateKey.fromSeed(
             Mnemonic.createSeed([id]),

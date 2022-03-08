@@ -31,6 +31,8 @@ main() {
       id: id,
       address: 'address',
       name: 'Test Wallet',
+      publicKey: "",
+      coin: Coin.testNet,
     );
 
     setUp(() {
@@ -44,12 +46,8 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
-<<<<<<< HEAD
         publicKey: anyNamed("publicKey"),
-      )).thenAnswer((_) => Future.value(id));
-=======
       )).thenAnswer((_) => Future.value(wallet));
->>>>>>> develop
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -108,12 +106,8 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
-<<<<<<< HEAD
         publicKey: anyNamed("publicKey"),
-      )).thenAnswer((_) => Future.value(id));
-=======
       )).thenAnswer((_) => Future.value(wallet));
->>>>>>> develop
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
