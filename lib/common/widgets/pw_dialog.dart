@@ -164,15 +164,21 @@ class PwDialog {
     BuildContext context, {
     String title = 'Oops!',
     String? message,
+    Exception? exception,
     dynamic error,
     VoidCallback? okAction,
     bool showCancel = false,
   }) {
+    final msg = message ??= exception?.toString().replaceFirst(
+          RegExp("^.*: "),
+          "",
+        );
+
     return show<T>(
       context,
       barrierDismissible: false,
       title: title,
-      message: message ?? 'Unknown Error',
+      message: msg ?? 'Unknown Error',
       bottom: Column(
         children: [
           PwPrimaryButton.fromString(

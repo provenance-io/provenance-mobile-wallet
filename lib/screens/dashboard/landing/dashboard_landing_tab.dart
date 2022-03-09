@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/connection_details_modal.dart';
@@ -69,7 +70,12 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         QRCodeScanner().route(),
                       );
                       if (addressData != null) {
-                        bloc.connectWallet(addressData);
+                        bloc.connectWallet(addressData).catchError((err) {
+                          PwDialog.showError(
+                            context,
+                            exception: err,
+                          );
+                        });
                       }
                     }
                   },

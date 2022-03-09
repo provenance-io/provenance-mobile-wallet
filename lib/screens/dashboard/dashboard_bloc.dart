@@ -141,6 +141,10 @@ class DashboardBloc extends Disposable {
       } else {
         logDebug('Session connect failed');
       }
+    } else {
+      throw Exception(
+        "'$addressData' does not appear to be a valid WalletConnect address",
+      );
     }
   }
 

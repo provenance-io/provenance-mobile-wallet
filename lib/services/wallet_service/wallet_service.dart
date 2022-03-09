@@ -152,12 +152,6 @@ class WalletService implements Disposable {
     WalletConnectSession? session;
 
     try {
-      final currentWallet = await getSelectedWallet();
-      final privateKey = await _storage.loadKey(currentWallet!.id);
-      if (privateKey == null) {
-        throw Exception("Failed to location the private key");
-      }
-
       final address = WalletConnectAddress.create(addressData);
       if (address == null) {
         logStatic(
@@ -167,6 +161,12 @@ class WalletService implements Disposable {
         );
 
         return null;
+      }
+
+      final currentWallet = await getSelectedWallet();
+      final privateKey = await _storage.loadKey(currentWallet!.id);
+      if (privateKey == null) {
+        throw Exception("Failed to locate the private key");
       }
 
       final connection = _connectionProvider(address);
