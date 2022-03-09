@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
@@ -34,6 +35,7 @@ class DashboardBloc extends Disposable {
   }
 
   WalletConnectSession? _walletSession;
+  TabController? _tabController;
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
@@ -62,7 +64,8 @@ class DashboardBloc extends Disposable {
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
 
-  Future<void> load() async {
+  Future<void> load({TabController? tabController}) async {
+    _tabController = tabController;
     final walletService = get<WalletService>();
     var details = await walletService.getSelectedWallet();
     details ??= await walletService.selectWallet();
@@ -239,6 +242,13 @@ class DashboardBloc extends Disposable {
     _selectedWallet.value = currentWallet;
   }
 
+  Future<void> openAsset(Asset asset) async {
+    _tabController?.animateTo(1);
+  }
+
+  Future<void> closeAssetToDashboard() async {
+    _tabController?.animateTo(0);
+  }
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
