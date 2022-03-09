@@ -81,6 +81,15 @@ class _LandingScreenState extends State<LandingScreen>
     }
   }
 
+  void registerBloc() {
+    if(null == _bloc) {
+      if(!get.isRegistered<LandingBloc>()) {
+        get.registerSingleton<LandingBloc>(LandingBloc());
+      }
+      _bloc = get<LandingBloc>();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
