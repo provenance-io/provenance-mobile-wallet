@@ -88,8 +88,17 @@ class DashboardBloc extends Disposable {
 
     _selectedWallet.tryAdd(details);
 
-    if (details != null && isFirstLoad) {
-      tryRestoreSession(details.id);
+    final walletId = details?.id;
+    if (walletId != null && isFirstLoad) {
+      // TODO: Remove temporary hack. (Roy)
+      // Stops system from cancelling a rapid second auth for key decryption
+      // attempt after auth from opening the app. Might need to store auth
+      // data in plugin and share an LAContext.
+      Future.delayed(
+        Duration(
+          milliseconds: 1100,
+        ),
+      ).then((e) => tryRestoreSession(walletId));
     }
 
     var errorCount = 0;
