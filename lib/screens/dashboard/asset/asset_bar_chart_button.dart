@@ -36,7 +36,7 @@ class AssetBarChartButton extends StatelessWidget {
           ),
           onPressed: () {
             if (!isSelected) {
-              bloc.load(dataValue);
+              bloc.load(value: dataValue);
             }
           },
         );

@@ -17,7 +17,9 @@ class AssetChartBloc extends Disposable {
 
   ValueStream<AssetChartDetails?> get chartDetails => _chartDetails.stream;
 
-  Future<void> load(GraphingDataValue value) async {
+  Future<void> load({
+    GraphingDataValue value = GraphingDataValue.hourly,
+  }) async {
     _chartDetails.value = AssetChartDetails(
       value,
       _asset,
