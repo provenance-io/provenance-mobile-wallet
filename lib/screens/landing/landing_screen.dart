@@ -64,10 +64,14 @@ class _LandingScreenState extends State<LandingScreen>
       case AppLifecycleState.paused:
         _inactivityTimer ??= Timer(_inactivityTimeout, () {
           _inactivityTimer = null;
+          registerBloc();
+          _bloc?.checkStorage();
           Navigator.of(context).popUntil((route) => route.isFirst);
         });
         break;
       case AppLifecycleState.resumed:
+        registerBloc();
+        _bloc?.checkStorage();
         _inactivityTimer?.cancel();
         _inactivityTimer = null;
         break;
