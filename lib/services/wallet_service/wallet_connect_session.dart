@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -37,6 +38,7 @@ class WalletConnectSessionEvents {
 
 class WalletConnectSession {
   WalletConnectSession({
+    required this.walletId,
     required WalletConnection connection,
     required WalletConnectSessionDelegate delegate,
   })  : _connection = connection,
@@ -48,18 +50,24 @@ class WalletConnectSession {
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
 
+  final String walletId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
 
-  Future<bool> connect() async {
+  Future<bool> connect([WalletConnectSessionRestoreData? restoreData]) async {
     var success = false;
 
     try {
       _connection.addListener(_statusListener);
 
-      await _connection.connect(_delegate);
+      await _connection.connect(_delegate, restoreData?.data);
 
       success = true;
+
+      if (restoreData != null) {
+        sessionEvents._state.value =
+            WalletConnectSessionState.connected(restoreData.clientMeta);
+      }
     } on Exception catch (e) {
       logStatic(
         WalletConnectSession,
@@ -103,12 +111,13 @@ class WalletConnectSession {
   }
 
   Future<bool> approveSession({
-    required RemoteClientDetails details,
+    required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
     final success = await _delegate.complete(details.id, allowed);
     if (success) {
-      sessionEvents._state.value = WalletConnectSessionState.connected(details);
+      sessionEvents._state.value =
+          WalletConnectSessionState.connected(details.data.clientMeta);
     }
 
     return success;

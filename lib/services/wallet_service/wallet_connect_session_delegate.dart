@@ -7,9 +7,9 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -23,13 +23,14 @@ class WalletConnectSessionDelegateEvents {
 
   final _subscriptions = CompositeSubscription();
 
-  final _sessionRequest = PublishSubject<RemoteClientDetails>(sync: true);
+  final _sessionRequest =
+      PublishSubject<WalletConnectSessionRequestData>(sync: true);
   final _signRequest = PublishSubject<SignRequest>(sync: true);
   final _sendRequest = PublishSubject<SendRequest>(sync: true);
   final _onDidError = PublishSubject<String>(sync: true);
   final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
 
-  Stream<RemoteClientDetails> get sessionRequest => _sessionRequest;
+  Stream<WalletConnectSessionRequestData> get sessionRequest => _sessionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<String> get onDidError => _onDidError;
@@ -83,7 +84,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
   @override
   void onApproveSession(
-    ClientMeta clientMeta,
+    SessionRequestData data,
     AcceptCallback<SessionApprovalData?> callback,
   ) async {
     final id = Uuid().v1().toString();
@@ -100,15 +101,9 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return callback(sessionApproval, null);
     };
 
-    final remoteClientData = RemoteClientDetails(
-      id,
-      clientMeta.description,
-      clientMeta.url,
-      clientMeta.name,
-      clientMeta.icons.toList(),
-    );
+    final details = WalletConnectSessionRequestData(id, data);
 
-    events._sessionRequest.add(remoteClientData);
+    events._sessionRequest.add(details);
   }
 
   @override

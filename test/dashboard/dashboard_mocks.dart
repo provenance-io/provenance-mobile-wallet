@@ -68,21 +68,39 @@ class MockWalletConnection extends ValueListenable<WalletConnectState>
   WalletConnectState get value => _state;
 
   @override
-  Future<void> connect(WalletConnectionDelegate delegate) async {
+  Future<void> connect(
+    WalletConnectionDelegate delegate, [
+    SessionRestoreData? restoreData,
+  ]) async {
     _updateState(WalletConnectState.connecting);
     _updateState(WalletConnectState.connected);
 
-    final client = ClientMeta(
-      description: 'Test Description',
-      url: address.bridge,
-      name: 'Test Name',
-    );
+    if (restoreData == null) {
+      final client = ClientMeta(
+        description: 'Test Description',
+        url: address.bridge,
+        name: 'Test Name',
+      );
 
-    delegate.onApproveSession(client, (accept, message) async {
-      if (accept != null) {
-        _updateState(WalletConnectState.connected);
-      }
-    });
+      const peerId = 'PeerId';
+      const remotePeerId = 'RemotePeerId';
+
+      final data = SessionRequestData(
+        peerId,
+        remotePeerId,
+        client,
+        address,
+      );
+
+      delegate.onApproveSession(
+        data,
+        (accept, message) async {
+          if (accept != null) {
+            _updateState(WalletConnectState.connected);
+          }
+        },
+      );
+    }
   }
 
   @override

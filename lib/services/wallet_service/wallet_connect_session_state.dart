@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 
 class WalletConnectSessionState {
@@ -10,10 +10,10 @@ class WalletConnectSessionState {
       : status = WalletConnectSessionStatus.connecting,
         details = null;
 
-  WalletConnectSessionState.connected(RemoteClientDetails clientDetails)
+  WalletConnectSessionState.connected(ClientMeta clientDetails)
       : status = WalletConnectSessionStatus.connected,
         details = clientDetails;
 
   final WalletConnectSessionStatus status;
-  final RemoteClientDetails? details;
+  final ClientMeta? details;
 }

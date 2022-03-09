@@ -6,11 +6,7 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../extension/coin_helper.dart';
@@ -56,12 +52,9 @@ class WalletServiceEvents {
 class WalletService implements Disposable {
   WalletService({
     required WalletStorageService storage,
-    required WalletConnectionProvider connectionProvider,
-  })  : _storage = storage,
-        _connectionProvider = connectionProvider;
+  }) : _storage = storage;
 
   final WalletStorageService _storage;
-  final WalletConnectionProvider _connectionProvider;
 
   final events = WalletServiceEvents();
 
@@ -152,46 +145,7 @@ class WalletService implements Disposable {
     return wallets;
   }
 
-  Future<WalletConnectSession?> createSession(String addressData) async {
-    WalletConnectSession? session;
-
-    try {
-      final address = WalletConnectAddress.create(addressData);
-      if (address == null) {
-        logStatic(
-          WalletConnectSession,
-          Level.error,
-          'Invalid wallet connect address: $addressData',
-        );
-
-        return null;
-      }
-
-      final currentWallet = await getSelectedWallet();
-      final privateKey = await _storage.loadKey(currentWallet!.id);
-      if (privateKey == null) {
-        throw Exception("Failed to locate the private key");
-      }
-
-      final connection = _connectionProvider(address);
-
-      final transactionHandler = WalletConnectTransactionHandler();
-
-      final delegate = WalletConnectSessionDelegate(
-        privateKey: privateKey,
-        transactionHandler: transactionHandler,
-      );
-
-      session = WalletConnectSession(
-        connection: connection,
-        delegate: delegate,
-      );
-    } on Exception catch (e) {
-      logError('Failed to connect session: $e');
-    }
-
-    return session;
-  }
+  Future<PrivateKey?> loadKey(String walletId) => _storage.loadKey(walletId);
 
   Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);

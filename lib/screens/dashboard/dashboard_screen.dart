@@ -12,10 +12,10 @@ import 'package:provenance_wallet/screens/dashboard/tab_item.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_landing_tab.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -164,9 +164,9 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   Future<void> _onSessionRequest(
-    RemoteClientDetails remoteClientDetails,
+    WalletConnectSessionRequestData details,
   ) async {
-    final name = remoteClientDetails.name;
+    final name = details.data.clientMeta.name;
     final allowed = await PwModalScreen.showConfirm(
       context: context,
       approveText: Strings.sessionApprove,
@@ -179,7 +179,7 @@ class DashboardScreenState extends State<DashboardScreen>
     );
 
     await get<DashboardBloc>().approveSession(
-      details: remoteClientDetails,
+      details: details,
       allowed: allowed,
     );
   }
@@ -213,7 +213,7 @@ class DashboardScreenState extends State<DashboardScreen>
           kind: TransactionConfirmKind.approve,
           title: Strings.confirmTransactionTitle,
           requestId: sendRequest.id,
-          clientDetails: clientDetails,
+          clientMeta: clientDetails,
           data: data,
           fees: sendRequest.gasEstimate.feeCalculated,
         );
@@ -250,7 +250,7 @@ class DashboardScreenState extends State<DashboardScreen>
           title: Strings.confirmSignTitle,
           requestId: signRequest.id,
           subTitle: signRequest.description,
-          clientDetails: clientDetails,
+          clientMeta: clientDetails,
           message: signRequest.message,
           data: [
             {
@@ -338,7 +338,7 @@ class DashboardScreenState extends State<DashboardScreen>
           kind: TransactionConfirmKind.notify,
           title: title,
           requestId: response.requestId,
-          clientDetails: clientDetails,
+          clientMeta: clientDetails,
           data: [
             data,
           ],

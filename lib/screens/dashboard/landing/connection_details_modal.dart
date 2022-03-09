@@ -77,7 +77,7 @@ class ConnectionDetailsModal extends StatelessWidget {
                   color: PwColor.neutralNeutral,
                 ),
                 onPressed: () async {
-                  bloc.disconnectWallet();
+                  bloc.disconnectSession();
                   Navigator.of(context).pop(null);
                 },
               ),

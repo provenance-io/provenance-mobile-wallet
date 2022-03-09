@@ -70,18 +70,28 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                               builder: (context) => ConnectionDetailsModal(),
                             );
                           } else {
-                            final addressData = await Navigator.of(
-                              context,
-                            ).push(
-                              QRCodeScanner().route(),
-                            );
-                            if (addressData != null) {
-                              bloc.connectWallet(addressData).catchError((err) {
-                                PwDialog.showError(
+                            final walletId = bloc.selectedWallet.value?.id;
+                            if (walletId != null) {
+                              final success =
+                                  await bloc.tryRestoreSession(walletId);
+                              if (!success) {
+                                final addressData = await Navigator.of(
                                   context,
-                                  exception: err,
+                                ).push(
+                                  QRCodeScanner().route(),
                                 );
-                              });
+
+                                if (addressData != null) {
+                                  bloc
+                                      .connectSession(walletId, addressData)
+                                      .catchError((err) {
+                                    PwDialog.showError(
+                                      context,
+                                      exception: err,
+                                    );
+                                  });
+                                }
+                              }
                             }
                           }
                         },

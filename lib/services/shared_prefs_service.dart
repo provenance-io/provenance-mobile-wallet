@@ -18,6 +18,10 @@ class SharedPrefsService {
     return (await _pref).containsKey(key.name);
   }
 
+  Future<bool> remove(PrefKey key) async {
+    return (await _pref).remove(key.name);
+  }
+
   Future<bool> setBool(PrefKey key, bool value) async {
     return (await _pref).setBool(key.name, value);
   }
@@ -29,6 +33,10 @@ class SharedPrefsService {
       // logError(e);
       return false;
     }
+  }
+
+  Future<String?> getString(PrefKey key) async {
+    return (await _pref).getString(key.name);
   }
 
   Future<bool> setString(PrefKey key, String value) async {
@@ -47,6 +55,7 @@ enum PrefKey {
   showSaleDialog,
   showReturnDialog,
   isSubsequentRun,
+  sessionData,
 }
 
 extension on PrefKey {

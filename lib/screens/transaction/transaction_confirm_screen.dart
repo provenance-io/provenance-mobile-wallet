@@ -1,15 +1,15 @@
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_message_default.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 typedef MessageBuilder = Widget Function(
   String requestId,
-  RemoteClientDetails clientDetails,
+  ClientMeta clientMeta,
   String? message,
   Map<String, dynamic>? data,
   List<proto.Coin>? fees,
@@ -25,7 +25,7 @@ class TransactionConfirmScreen extends StatefulWidget {
     required this.kind,
     required this.title,
     required this.requestId,
-    required this.clientDetails,
+    required this.clientMeta,
     this.subTitle,
     this.message,
     this.data,
@@ -36,7 +36,7 @@ class TransactionConfirmScreen extends StatefulWidget {
   final TransactionConfirmKind kind;
   final String title;
   final String requestId;
-  final RemoteClientDetails clientDetails;
+  final ClientMeta clientMeta;
   final String? subTitle;
   final String? message;
   final List<Map<String, dynamic>>? data;
@@ -191,7 +191,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
     if (builder == null) {
       return TransactionMessageDefault(
         requestId: widget.requestId,
-        clientDetails: widget.clientDetails,
+        clientMeta: widget.clientMeta,
         message: widget.message,
         data: data,
         fees: widget.fees,
@@ -200,7 +200,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
 
     return builder.call(
       widget.requestId,
-      widget.clientDetails,
+      widget.clientMeta,
       widget.message,
       data,
       widget.fees,

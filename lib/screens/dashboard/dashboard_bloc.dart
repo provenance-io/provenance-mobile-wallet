@@ -1,18 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
+import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -56,6 +63,8 @@ class DashboardBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
+  var _isFirstLoad = true;
+
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
   final walletEvents = WalletServiceEvents();
@@ -68,12 +77,30 @@ class DashboardBloc extends Disposable {
   Stream<String> get error => _error;
 
   Future<void> load({TabController? tabController}) async {
+    final isFirstLoad = _isFirstLoad;
+    _isFirstLoad = false;
+
     _tabController = tabController;
+
     final walletService = get<WalletService>();
     var details = await walletService.getSelectedWallet();
     details ??= await walletService.selectWallet();
 
     _selectedWallet.tryAdd(details);
+
+    final walletId = details?.id;
+    if (walletId != null && isFirstLoad) {
+      // TODO: Remove temporary hack. (Roy)
+      // Stops system from cancelling a rapid second auth for key decryption
+      // attempt after auth from opening the app. Might need to store auth
+      // data in plugin and share an LAContext.
+      Future.delayed(
+        Duration(
+          milliseconds: 1100,
+        ),
+      ).then((e) => tryRestoreSession(walletId));
+    }
+
     var errorCount = 0;
     try {
       final assetList = await _assetService.getAssets(details?.address ?? "");
@@ -131,47 +158,133 @@ class DashboardBloc extends Disposable {
     );
   }
 
-  Future<void> connectWallet(String addressData) async {
+  Future<bool> connectSession(
+    String walletId,
+    String addressData, {
+    SessionData? sessionData,
+  }) async {
+    var success = false;
+
     final oldSession = _walletSession;
     if (oldSession != null) {
       await oldSession.dispose();
     }
 
-    final session = await get<WalletService>().createSession(addressData);
-    if (session != null) {
-      _walletSession = session;
+    final walletService = get<WalletService>();
+    final privateKey = await walletService.loadKey(walletId);
+    if (privateKey == null) {
+      logError('Failed to locate the private key');
 
-      delegateEvents.listen(session.delegateEvents);
-      sessionEvents.listen(session.sessionEvents);
+      return false;
+    }
 
-      final success = await session.connect();
-      if (success) {
-        logDebug('Session connect succeeded');
-      } else {
-        logDebug('Session connect failed');
-      }
-    } else {
-      throw Exception(
-        "'$addressData' does not appear to be a valid WalletConnect address",
+    final address = WalletConnectAddress.create(addressData);
+    if (address == null) {
+      logError('Invalid wallet connect address: $addressData');
+
+      return false;
+    }
+
+    final connection = WalletConnection(address);
+    final delegate = WalletConnectSessionDelegate(
+      privateKey: privateKey,
+      transactionHandler: WalletConnectTransactionHandler(),
+    );
+    final session = WalletConnectSession(
+      walletId: walletId,
+      connection: connection,
+      delegate: delegate,
+    );
+
+    delegateEvents.listen(session.delegateEvents);
+    sessionEvents.listen(session.sessionEvents);
+
+    _walletSession = session;
+
+    WalletConnectSessionRestoreData? restoreData;
+    if (sessionData != null) {
+      final peerId = sessionData.peerId;
+      final remotePeerId = sessionData.remotePeerId;
+
+      restoreData = WalletConnectSessionRestoreData(
+        sessionData.clientMeta,
+        SessionRestoreData(
+          privateKey,
+          privateKey.publicKey.coin.chainId,
+          peerId,
+          remotePeerId,
+        ),
       );
     }
+
+    success = await session.connect(restoreData);
+
+    return success;
   }
 
-  Future<bool> disconnectWallet() async {
+  Future<bool> disconnectSession() async {
     final success = await _walletSession?.disconnect() ?? false;
+
+    await SharedPrefsService().remove(PrefKey.sessionData);
+
+    return success;
+  }
+
+  Future<bool> tryRestoreSession(String walletId) async {
+    var success = false;
+    final json = await SharedPrefsService().getString(PrefKey.sessionData);
+    SessionData? data;
+    if (json != null) {
+      try {
+        data = SessionData.fromJson(jsonDecode(json));
+      } on Exception {
+        logError('Failed to decode session data');
+      }
+
+      if (data != null && data.walletId == walletId) {
+        success = await connectSession(
+          walletId,
+          data.address,
+          sessionData: data,
+        );
+      }
+    }
 
     return success;
   }
 
   Future<bool> approveSession({
-    required RemoteClientDetails details,
+    required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
-    return await _walletSession?.approveSession(
-          details: details,
-          allowed: allowed,
-        ) ??
-        false;
+    final session = _walletSession;
+    if (session == null) {
+      return false;
+    }
+
+    final approved = await session.approveSession(
+      details: details,
+      allowed: allowed,
+    );
+
+    if (approved) {
+      final remotePeerId = details.data.remotePeerId;
+      final peerId = details.data.peerId;
+      final address = details.data.address.raw;
+
+      final data = SessionData(
+        session.walletId,
+        peerId,
+        remotePeerId,
+        address,
+        details.data.clientMeta,
+      );
+
+      SharedPrefsService()
+          .setString(PrefKey.sessionData, jsonEncode(data.toJson()));
+    }
+
+    return approved;
   }
 
   Future<bool> sendMessageFinish({
@@ -216,7 +329,7 @@ class DashboardBloc extends Disposable {
   }
 
   Future<void> resetWallets() async {
-    await disconnectWallet();
+    await disconnectSession();
     await get<WalletService>().resetWallets();
     await loadAllWallets();
   }
@@ -328,8 +441,9 @@ class DashboardBloc extends Disposable {
       final addressData = Uri.decodeComponent(data);
       final walletService = get<WalletService>();
       final isValid = await walletService.isValidWalletConnectData(addressData);
-      if (isValid) {
-        connectWallet(addressData);
+      final walletId = _selectedWallet.value?.id;
+      if (isValid && walletId != null) {
+        connectSession(walletId, addressData);
       } else {
         logError('Invalid wallet connect data');
       }
