@@ -166,7 +166,7 @@ class WalletService implements Disposable {
       final currentWallet = await getSelectedWallet();
       final privateKey = await _storage.loadKey(currentWallet!.id);
       if (privateKey == null) {
-        throw Exception("Failed to location the private key");
+        throw Exception("Failed to locate the private key");
       }
 
       final connection = _connectionProvider(address);
