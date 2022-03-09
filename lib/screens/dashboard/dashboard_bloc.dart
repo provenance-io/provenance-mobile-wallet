@@ -37,6 +37,7 @@ class DashboardBloc extends Disposable {
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
+      walletAddress: "",
       filteredTransactions: [],
       transactions: [],
     ),
@@ -80,6 +81,7 @@ class DashboardBloc extends Disposable {
       var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
       _transactionDetails.tryAdd(TransactionDetails(
+        walletAddress: _selectedWallet.value?.address ?? "",
         filteredTransactions: transactions,
         transactions: transactions.toList(),
       ));
@@ -111,6 +113,7 @@ class DashboardBloc extends Disposable {
           .toList();
     }
     _transactionDetails.value = TransactionDetails(
+      walletAddress: _selectedWallet.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
@@ -312,6 +315,7 @@ class TransactionDetails {
     required this.transactions,
     this.selectedType = Strings.dropDownAllAssets,
     this.selectedStatus = Strings.dropDownAllTransactions,
+    required this.walletAddress,
   });
   List<String> _types = [];
   List<String> _statuses = [];
@@ -320,6 +324,7 @@ class TransactionDetails {
   List<Transaction> transactions;
   String selectedType;
   String selectedStatus;
+  String walletAddress;
   List<String> get types {
     if (_types.isNotEmpty) {
       return _types;
