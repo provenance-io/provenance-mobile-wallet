@@ -59,10 +59,14 @@ class MockSqliteWalletStorageService extends _i1.Mock
           as _i3.Future<_i4.WalletDetails?>);
   @override
   _i3.Future<_i4.WalletDetails?> addWallet(
-          {String? name, String? address, _i5.Coin? coin}) =>
+          {String? name, String? address, String? publicKey, _i5.Coin? coin}) =>
       (super.noSuchMethod(
-              Invocation.method(#addWallet, [],
-                  {#name: name, #address: address, #coin: coin}),
+              Invocation.method(#addWallet, [], {
+                #name: name,
+                #address: address,
+                #publicKey: publicKey,
+                #coin: coin
+              }),
               returnValue: Future<_i4.WalletDetails?>.value())
           as _i3.Future<_i4.WalletDetails?>);
   @override

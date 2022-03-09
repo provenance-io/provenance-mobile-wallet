@@ -40,7 +40,8 @@ class _LandingScreenState extends State<LandingScreen>
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
     get.registerSingleton<LandingBloc>(LandingBloc());
-    _bloc = get<LandingBloc>()..load();
+    registerBloc();
+    _bloc?.load();
 
     WidgetsBinding.instance!.addObserver(this);
     checkAccount();
@@ -63,10 +64,14 @@ class _LandingScreenState extends State<LandingScreen>
       case AppLifecycleState.paused:
         _inactivityTimer ??= Timer(_inactivityTimeout, () {
           _inactivityTimer = null;
+          registerBloc();
+          _bloc?.checkStorage();
           Navigator.of(context).popUntil((route) => route.isFirst);
         });
         break;
       case AppLifecycleState.resumed:
+        registerBloc();
+        _bloc?.checkStorage();
         _inactivityTimer?.cancel();
         _inactivityTimer = null;
         break;
@@ -78,6 +83,15 @@ class _LandingScreenState extends State<LandingScreen>
     await _bloc?.checkStorage();
     if (_bloc?.hasStorage.value ?? false) {
       _bloc?.doAuth(context);
+    }
+  }
+
+  void registerBloc() {
+    if(null == _bloc) {
+      if(!get.isRegistered<LandingBloc>()) {
+        get.registerSingleton<LandingBloc>(LandingBloc());
+      }
+      _bloc = get<LandingBloc>();
     }
   }
 

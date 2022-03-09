@@ -4,6 +4,7 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -79,11 +80,13 @@ class WalletPortfolio extends StatelessWidget {
                     ),
                   ],
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  final walletDetails =
+                      await get<WalletService>().getSelectedWallet();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SendFlow(),
+                      builder: (context) => SendFlow(walletDetails!),
                     ),
                   );
                 },

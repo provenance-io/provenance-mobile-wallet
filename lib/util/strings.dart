@@ -67,6 +67,11 @@ class Strings {
   static String authenticateCreditAppWithBiometric(String authType) =>
       'Authenticate the credit application using $authType.';
 
+  // Notifications
+  static const String notifyServiceErrorTitle = 'Service Error';
+  static const notifyServiceErrorMessage =
+      'Unfortunately our services are down at the moment';
+
   // Landing Page
   static const createWallet = 'Create Wallet';
   static const recoverWallet = 'Recover Wallet';
@@ -315,6 +320,12 @@ class Strings {
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
 
+  // SendReviewScreen
+  static const sendReviewTitle = "Send Review";
+  static const sendReviewConfirmYourInfo = "Confirm your information";
+  static const sendReviewSendButtonTitle = "Send";
+  static const sendReviewSendPleaseReview =
+      "Please review the details below to make sure everything is correct";
   // Error Dialog
   static const unknownErrorTitle = 'UNKNOWN ERROR';
   static const somethingWentWrong = 'Something went wrong.';

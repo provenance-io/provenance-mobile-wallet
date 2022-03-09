@@ -60,7 +60,11 @@ class SendAmountPageState extends State<SendAmountPage> {
 
     _bloc = get<SendAmountBloc>();
     _streamSubscription = _bloc!.stream.listen((blocState) {
-      _feeNotifier.value = blocState.transactionFees;
+      if (blocState.transactionFees == null) {
+        _feeNotifier.value = null;
+      }
+
+      _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
   }
 
@@ -83,135 +87,145 @@ class SendAmountPageState extends State<SendAmountPage> {
       borderSide: BorderSide.none,
     );
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.network(
-            asset.imageUrl,
-            width: imageDimen,
-            height: imageDimen,
-            errorBuilder: (
-              context,
-              error,
-              stackTrace,
-            ) {
-              return Container();
-            },
-          ),
-          VerticalSpacer.medium(),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.always,
-            textAlign: TextAlign.center,
-            controller: _amountController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            validator: (newValue) => _bloc?.validateAmount(newValue),
-            style: Theme.of(context).textTheme.headline4,
-            decoration: InputDecoration(
-              hintText: Strings.sendAmountHint,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          VerticalSpacer.medium(),
-          PwText(
-            "${asset.amount} ${asset.denom} ${Strings.sendAmountAvailable}",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.m,
-          ),
-          PwText(
-            asset.fiatValue,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: PwTextStyle.m,
-          ),
-          VerticalSpacer.medium(),
-          Row(
-            key: ValueKey("NoteRow"),
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _noteController,
-                  focusNode: _noteFocusNode,
-                  decoration: InputDecoration(
-                    contentPadding: padding,
-                    border: blankInputBorder,
-                    enabledBorder: blankInputBorder,
-                    focusedBorder: blankInputBorder,
-                    hintText: Strings.sendAmountNoteHint,
+              Image.network(
+                asset.imageUrl,
+                width: imageDimen,
+                height: imageDimen,
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
+                  return Container();
+                },
+              ),
+              VerticalSpacer.medium(),
+              TextFormField(
+                autovalidateMode: AutovalidateMode.always,
+                textAlign: TextAlign.center,
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                validator: (newValue) => _bloc?.validateAmount(newValue),
+                style: Theme.of(context).textTheme.headline4,
+                decoration: InputDecoration(
+                  hintText: Strings.sendAmountHint,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              ValueListenableBuilder<bool>(
-                valueListenable: _focusNotifier,
+              VerticalSpacer.medium(),
+              PwText(
+                "${asset.displayAmount} ${asset.displayDenom} ${Strings.sendAmountAvailable}",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PwTextStyle.m,
+              ),
+              PwText(
+                asset.fiatValue,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PwTextStyle.m,
+              ),
+              VerticalSpacer.medium(),
+              Row(
+                key: ValueKey("NoteRow"),
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _noteController,
+                      focusNode: _noteFocusNode,
+                      decoration: InputDecoration(
+                        contentPadding: padding,
+                        border: blankInputBorder,
+                        enabledBorder: blankInputBorder,
+                        focusedBorder: blankInputBorder,
+                        hintText: Strings.sendAmountNoteHint,
+                      ),
+                    ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _focusNotifier,
+                    builder: (
+                      context,
+                      hasFocus,
+                      child,
+                    ) {
+                      return (!hasFocus && _noteController.text.isEmpty)
+                          ? PwText(Strings.sendAmountNoteSuffix)
+                          : Container(
+                              width: 0,
+                              height: 0,
+                            );
+                    },
+                  ),
+                ],
+              ),
+              PwDivider(
+                height: 1,
+              ),
+              Container(
+                key: ValueKey("FeeRow"),
+                decoration: null,
+                padding: padding,
+                child: ValueListenableBuilder<String?>(
+                  valueListenable: _feeNotifier,
+                  builder: (
+                    context,
+                    fee,
+                    child,
+                  ) {
+                    Widget widget;
+                    if (fee == null) {
+                      widget = PwText(Strings.sendAmountLoadingFeeEstimate);
+                    } else {
+                      widget = PwText(
+                        fee,
+                        textAlign: TextAlign.end,
+                        style: PwTextStyle.caption,
+                      );
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PwText(Strings.sendAmountTransactionLabel),
+                        Expanded(
+                          child: widget,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Expanded(child: Container()),
+              ValueListenableBuilder(
+                valueListenable: _feeNotifier,
                 builder: (
                   context,
-                  hasFocus,
+                  value,
                   child,
-                ) {
-                  return (!hasFocus && _noteController.text.isEmpty)
-                      ? PwText(Strings.sendAmountNoteSuffix)
-                      : SizedBox(
-                          width: 0,
-                          height: 0,
-                        );
-                },
+                ) =>
+                    PwButton(
+                  child: PwText(Strings.sendAmountNextButton),
+                  enabled: value != null,
+                  onPressed: _next,
+                ),
               ),
+              VerticalSpacer.large(),
             ],
           ),
-          PwDivider(
-            height: 1,
-          ),
-          Container(
-            key: ValueKey("FeeRow"),
-            decoration: null,
-            padding: padding,
-            child: ValueListenableBuilder<String?>(
-              valueListenable: _feeNotifier,
-              builder: (
-                context,
-                value,
-                child,
-              ) {
-                Widget widget;
-                widget = value == null
-                    ? PwText(Strings.sendAmountLoadingFeeEstimate)
-                    : PwText(value, textAlign: TextAlign.end);
-
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PwText(Strings.sendAmountTransactionLabel),
-                    Expanded(
-                      child: widget,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          VerticalSpacer.medium(),
-          ValueListenableBuilder(
-            valueListenable: _feeNotifier,
-            builder: (
-              context,
-              value,
-              child,
-            ) =>
-                PwButton(
-              child: PwText(Strings.sendAmountNextButton),
-              enabled: value != null,
-              onPressed: _next,
-            ),
-          ),
-          VerticalSpacer.large(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

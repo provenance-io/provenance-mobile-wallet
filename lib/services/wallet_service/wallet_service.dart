@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
@@ -10,6 +12,8 @@ import 'package:provenance_wallet/services/wallet_service/wallet_connect_transac
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../extension/coin_helper.dart';
 
 typedef WalletConnectionProvider = WalletConnection Function(
   WalletConnectAddress address,
@@ -152,12 +156,6 @@ class WalletService implements Disposable {
     WalletConnectSession? session;
 
     try {
-      final currentWallet = await getSelectedWallet();
-      final privateKey = await _storage.loadKey(currentWallet!.id);
-      if (privateKey == null) {
-        throw Exception("Failed to location the private key");
-      }
-
       final address = WalletConnectAddress.create(addressData);
       if (address == null) {
         logStatic(
@@ -167,6 +165,12 @@ class WalletService implements Disposable {
         );
 
         return null;
+      }
+
+      final currentWallet = await getSelectedWallet();
+      final privateKey = await _storage.loadKey(currentWallet!.id);
+      if (privateKey == null) {
+        throw Exception("Failed to locate the private key");
       }
 
       final connection = _connectionProvider(address);
@@ -191,4 +195,106 @@ class WalletService implements Disposable {
 
   Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);
+
+  Future<proto.GasEstimate> estimate(
+      proto.TxBody body, WalletDetails walletDetails) async {
+    final pbClient = proto.PbClient(
+      Uri.parse(walletDetails.coin.address),
+      walletDetails.coin.chainId,
+    );
+    final baseAccount = await pbClient.getBaseAccount(walletDetails.address);
+    final baseReqSigner = proto.BaseReqSigner(
+      _EstimateSigner(walletDetails),
+      baseAccount,
+    );
+    final baseReq = proto.BaseReq(
+      body,
+      [baseReqSigner],
+      walletDetails.coin.chainId,
+    );
+
+    return pbClient.estimateTx(baseReq);
+  }
+
+  Future<void> submitTransaction(
+    proto.TxBody body,
+    WalletDetails walletDetails, [
+    proto.GasEstimate? gasEstimate,
+  ]) async {
+    final privateKey = await _storage.loadKey(walletDetails.id);
+    if (privateKey == null) {
+      throw Exception(
+        "Unable to load the private key for ${walletDetails.address}",
+      );
+    }
+
+    final pbClient = proto.PbClient(
+      Uri.parse(walletDetails.coin.address),
+      walletDetails.coin.chainId,
+    );
+    final baseAccount = await pbClient.getBaseAccount(walletDetails.address);
+    final baseReqSigner = proto.BaseReqSigner(
+      _PrivateKeySigner(privateKey.defaultKey()),
+      baseAccount,
+    );
+    final baseReq = proto.BaseReq(
+      body,
+      [baseReqSigner],
+      walletDetails.coin.chainId,
+    );
+
+    if (gasEstimate == null) {
+      gasEstimate = await pbClient.estimateTx(baseReq);
+    }
+
+    return pbClient
+        .broadcastTx(
+      baseReq,
+      gasEstimate,
+    )
+        .then((response) {
+      if (response.txResponse.rawLog != "[]") {
+        throw Exception(response.txResponse.rawLog);
+      }
+
+      return null;
+    });
+  }
+}
+
+class _PrivateKeySigner extends proto.Signer {
+  _PrivateKeySigner(this._privateKey);
+
+  final PrivateKey _privateKey;
+
+  @override
+  String get address => pubKey.address;
+
+  @override
+  PublicKey get pubKey => _privateKey.publicKey;
+
+  @override
+  List<int> sign(List<int> data) {
+    final hash = Hash.sha256(data);
+    return _privateKey.signData(hash)..removeLast();
+  }
+}
+
+class _EstimateSigner extends proto.Signer {
+  _EstimateSigner(this._details);
+
+  final WalletDetails _details;
+
+  @override
+  String get address => _details.address;
+
+  @override
+  PublicKey get pubKey => PublicKey.fromCompressPublicHex(
+        convert.hex.decoder.convert(_details.publicKey),
+        _details.coin,
+      );
+  @override
+  List<int> sign(List<int> data) {
+    return <int>[];
+  }
 }

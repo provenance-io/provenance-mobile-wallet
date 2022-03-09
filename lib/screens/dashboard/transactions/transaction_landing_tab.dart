@@ -17,18 +17,10 @@ class TransactionLandingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = get<DashboardBloc>();
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutral750,
-        elevation: 0.0,
-        title: PwText(
-          Strings.transactionDetails,
-          style: PwTextStyle.subhead,
-        ),
-        leading: Container(),
-      ),
-      body: Container(
-        color: Theme.of(context).colorScheme.neutral750,
+    return Container(
+      color: Theme.of(context).colorScheme.neutral750,
+      child: SafeArea(
+        bottom: false,
         child: StreamBuilder<TransactionDetails>(
           initialData: bloc.transactionDetails.value,
           stream: bloc.transactionDetails,
@@ -41,6 +33,16 @@ class TransactionLandingTab extends StatelessWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                AppBar(
+                  primary: false,
+                  backgroundColor: Theme.of(context).colorScheme.neutral750,
+                  elevation: 0.0,
+                  title: PwText(
+                    Strings.transactionDetails,
+                    style: PwTextStyle.subhead,
+                  ),
+                  leading: Container(),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: Spacing.xxLarge,

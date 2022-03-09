@@ -33,7 +33,7 @@ class SendAssetCell extends StatelessWidget {
         HorizontalSpacer.small(),
         Expanded(
           child: PwText(
-            asset.denom,
+            asset.displayDenom,
             maxLines: 1,
           ),
         ),
@@ -45,7 +45,7 @@ class SendAssetCell extends StatelessWidget {
             Expanded(child: PwText(asset.fiatValue)),
             Expanded(
               child: PwText(
-                "${asset.amount} ${asset.denom}",
+                asset.displayAmount,
                 style: PwTextStyle.caption,
               ),
             ),
@@ -79,9 +79,9 @@ class SendAssetList extends StatelessWidget {
         child: PwText("Loading assets"),
       );
     } else {
-      final selectedDenom = this.selectedAsset?.denom ?? "";
+      final selectedDenom = this.selectedAsset?.displayDenom ?? "";
       final selectedAsset = assets.firstWhere(
-        (asset) => asset.denom == selectedDenom,
+        (asset) => asset.displayDenom == selectedDenom,
         orElse: () => assets.first,
       );
 

@@ -41,10 +41,6 @@ class MockSendBloc extends _i1.Mock implements _i2.SendBloc {
       super.noSuchMethod(Invocation.method(#showAllRecentSends, []),
           returnValueForMissingStub: null);
   @override
-  void showRecentSendDetails(_i2.RecentAddress? recentAddress) => super
-      .noSuchMethod(Invocation.method(#showRecentSendDetails, [recentAddress]),
-          returnValueForMissingStub: null);
-  @override
   _i3.Future<String?> scanAddress() =>
       (super.noSuchMethod(Invocation.method(#scanAddress, []),
           returnValue: Future<String?>.value()) as _i3.Future<String?>);
