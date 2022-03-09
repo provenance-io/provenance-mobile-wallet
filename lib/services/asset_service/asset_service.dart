@@ -1,4 +1,6 @@
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/asset_graph_item.dart';
+import 'package:provenance_wallet/services/models/asset_statistic.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AssetService {
@@ -7,4 +9,26 @@ class AssetService {
   ) {
     throw Strings.notImplementedMessage;
   }
+
+  Future<AssetStatistics> getAssetStatistics(
+    String assetType,
+  ) {
+    throw Strings.notImplementedMessage;
+  }
+
+  Future<List<AssetGraphItem>> getAssetGraphingData(
+    String assetType,
+    GraphingDataValue value,
+  ) {
+    throw Strings.notImplementedMessage;
+  }
+}
+
+enum GraphingDataValue {
+  hourly,
+  daily,
+  weekly,
+  monthly,
+  yearly,
+  allTime,
 }

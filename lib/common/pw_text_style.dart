@@ -2,6 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 
 /// Provenance Typopgraphy Text Styles
 enum PwTextStyle {
+  h1,
+  h2,
   h3,
   h4,
   h6,
@@ -16,6 +18,7 @@ enum PwTextStyle {
   bodySmall,
   headline1,
   headline2,
+  headline4,
   display1,
   display2,
   displayBody,
@@ -33,6 +36,12 @@ mixin PwTextStyleMixin on Widget {
     final theme = Theme.of(context);
 
     switch (altStyle ?? style) {
+      case PwTextStyle.h1:
+        return theme.textTheme.headline3
+            ?.copyWith(fontSize: 64, height: 78.02 / 64);
+      case PwTextStyle.h2:
+        return theme.textTheme.headline3
+            ?.copyWith(fontSize: 34, height: 41.45 / 34);
       case PwTextStyle.h3:
         return theme.textTheme.headline3;
       case PwTextStyle.h4:
@@ -54,6 +63,9 @@ mixin PwTextStyleMixin on Widget {
         return theme.textTheme.body;
       case PwTextStyle.bodySmall:
         return theme.textTheme.bodySmall;
+      case PwTextStyle.headline4:
+        return theme.textTheme.body
+            .copyWith(fontWeight: FontWeight.w700, fontSize: 19);
       case PwTextStyle.headline2:
         return theme.textTheme.provenanceHeadline2;
       case PwTextStyle.headline1:

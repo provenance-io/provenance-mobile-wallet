@@ -200,33 +200,34 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                       itemBuilder: (context, index) {
                         final item = assets[index];
 
-                        return Column(
-                          children: [
-                            if (index == 0) PwListDivider(),
-                            GestureDetector(
-                              onTap: () {
-                                // TODO: Load Asset
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.zero,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    right: 16,
-                                    left: 16,
-                                    top: Spacing.xLarge,
-                                    bottom: Spacing.xLarge,
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
+                      return Column(
+                        children: [
+                          if (index == 0) PwListDivider(),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              bloc.openAsset(item);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  right: 16,
+                                  left: 16,
+                                  top: Spacing.xLarge,
+                                  bottom: Spacing.xLarge,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: SvgPicture.asset(
+                                        item.image,
                                         width: 40,
                                         height: 40,
-                                        child: SvgPicture.asset(
-                                          item.image,
-                                          width: 40,
-                                          height: 40,
+                                        
                                         ),
                                       ),
                                       HorizontalSpacer.medium(),

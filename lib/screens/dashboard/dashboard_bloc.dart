@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -34,15 +36,18 @@ class DashboardBloc extends Disposable {
   }
 
   WalletConnectSession? _walletSession;
+  TabController? _tabController;
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
+      walletAddress: "",
       filteredTransactions: [],
       transactions: [],
     ),
   );
   final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
   final _assetList = BehaviorSubject.seeded(<Asset>[]);
+  final _selectedAsset = BehaviorSubject<Asset?>.seeded(null);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
@@ -57,11 +62,13 @@ class DashboardBloc extends Disposable {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
+  ValueStream<Asset?> get selectedAsset => _selectedAsset;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
 
-  Future<void> load() async {
+  Future<void> load({TabController? tabController}) async {
+    _tabController = tabController;
     final walletService = get<WalletService>();
     var details = await walletService.getSelectedWallet();
     details ??= await walletService.selectWallet();
@@ -80,6 +87,7 @@ class DashboardBloc extends Disposable {
       var transactions =
           (await _transactionService.getTransactions(details?.address ?? ""));
       _transactionDetails.tryAdd(TransactionDetails(
+        walletAddress: _selectedWallet.value?.address ?? "",
         filteredTransactions: transactions,
         transactions: transactions.toList(),
       ));
@@ -111,6 +119,7 @@ class DashboardBloc extends Disposable {
           .toList();
     }
     _transactionDetails.value = TransactionDetails(
+      walletAddress: _selectedWallet.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
@@ -240,6 +249,24 @@ class DashboardBloc extends Disposable {
     _selectedWallet.value = currentWallet;
   }
 
+  Future<void> openAsset(Asset asset) async {
+    get.registerSingleton<AssetChartBloc>(AssetChartBloc(asset));
+    _selectedAsset.value = asset;
+    _tabController?.animateTo(1);
+  }
+
+  Future<void> closeAssetToDashboard() async {
+    _tabController?.animateTo(0);
+    await closeAsset();
+  }
+
+  Future<void> closeAsset() async {
+    _selectedAsset.value = null;
+    if (get.isRegistered<AssetChartBloc>()) {
+      get.unregister<AssetChartBloc>();
+    }
+  }
+
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
@@ -316,6 +343,7 @@ class TransactionDetails {
     required this.transactions,
     this.selectedType = Strings.dropDownAllAssets,
     this.selectedStatus = Strings.dropDownAllTransactions,
+    required this.walletAddress,
   });
   List<String> _types = [];
   List<String> _statuses = [];
@@ -324,6 +352,7 @@ class TransactionDetails {
   List<Transaction> transactions;
   String selectedType;
   String selectedStatus;
+  String walletAddress;
   List<String> get types {
     if (_types.isNotEmpty) {
       return _types;
