@@ -24,7 +24,7 @@ class LandingBloc extends Disposable {
   ValueStream<String> get blockTime => _blockTime.stream;
   ValueStream<bool> get hasStorage => _hasStorage.stream;
 
-  void load() async {
+  Future<void> load() async {
     final stats = await _service.getStats();
     if (stats == null) {
       return;
