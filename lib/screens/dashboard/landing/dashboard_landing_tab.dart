@@ -199,6 +199,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         children: [
                           if (index == 0) PwListDivider(),
                           GestureDetector(
+                            behavior: HitTestBehavior.opaque,
                             onTap: () {
                               bloc.openAsset(item);
                             },
