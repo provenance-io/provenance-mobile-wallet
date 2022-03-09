@@ -6,6 +6,8 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AssetChartRecentTransactions extends StatelessWidget {
+  const AssetChartRecentTransactions({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final bloc = get<DashboardBloc>();
