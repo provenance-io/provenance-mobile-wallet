@@ -343,4 +343,5 @@ class Strings {
   static const changeAmount = "Change Amount";
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
+  static const recentTransactions = "Recent Transactions";
 }
