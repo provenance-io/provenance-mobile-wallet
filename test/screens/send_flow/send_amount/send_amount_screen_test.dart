@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -10,18 +11,23 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
+
+import '../send_flow_test_constants.dart';
 import 'send_amount_screen_test.mocks.dart';
 
 final get = GetIt.instance;
 
 @GenerateMocks([SendAmountBloc])
 main() {
-  final asset = SendAsset(
-    "Hash",
-    "100",
-    "200",
-    "http://test.com",
+  final stateAsset = SendAsset(
+    "hash",
+    9,
+    "nhash",
+    Decimal.fromInt(77),
+    "",
+    "",
   );
+
   StreamController<SendAmountBlocState>? _streamController;
 
   MockSendAmountBloc? mockBloc;
@@ -31,7 +37,7 @@ main() {
 
     mockBloc = MockSendAmountBloc();
     when(mockBloc!.validateAmount(any)).thenReturn(null);
-    when(mockBloc!.asset).thenReturn(asset);
+    when(mockBloc!.asset).thenReturn(hashAsset);
     when(mockBloc!.stream).thenAnswer((_) => _streamController!.stream);
     when(mockBloc!.onDispose()).thenAnswer((_) => Future.value());
 
@@ -91,10 +97,10 @@ main() {
       expect(textAmount.autovalidateMode, AutovalidateMode.always);
 
       expect(
-        find.text("${asset.amount} ${asset.denom} available"),
-        findsOneWidget,
-      );
-      expect(find.text(asset.fiatValue), findsOneWidget);
+          find.text(
+              "${hashAsset.displayAmount} ${hashAsset.displayDenom} available"),
+          findsOneWidget);
+      expect(find.text(hashAsset.fiatValue), findsOneWidget);
 
       final buttonFind = find.byType(PwButton);
       expect(buttonFind, findsOneWidget);
@@ -116,16 +122,19 @@ main() {
         findsOneWidget,
       );
 
-      _streamController!.add(SendAmountBlocState("1.00"));
-
+      _streamController!.add(SendAmountBlocState(feeAsset));
       await tester.pumpAndSettle();
+
       feeRowFind = find.byKey(ValueKey("FeeRow"));
       expect(
         find.descendant(of: feeRowFind, matching: find.text("Transaction")),
         findsOneWidget,
       );
       expect(
-        find.descendant(of: feeRowFind, matching: find.text("1.00")),
+        find.descendant(
+          of: feeRowFind,
+          matching: find.text(feeAsset.displayAmount),
+        ),
         findsOneWidget,
       );
     });
@@ -137,7 +146,7 @@ main() {
       var button = tester.widget<PwButton>(buttonFind);
       expect(button.enabled, false);
 
-      _streamController!.add(SendAmountBlocState("1.00"));
+      _streamController!.add(SendAmountBlocState(feeAsset));
 
       await tester.pumpAndSettle();
       buttonFind = find.byType(PwButton);
@@ -147,7 +156,7 @@ main() {
 
     testWidgets("next button invokes bloc", (tester) async {
       when(mockBloc!.showNext(any, any)).thenAnswer((_) => Future.value());
-      _streamController!.add(SendAmountBlocState("1.00"));
+      _streamController!.add(SendAmountBlocState(feeAsset));
       await _build(tester);
       await tester.pumpAndSettle();
 
@@ -162,7 +171,7 @@ main() {
     testWidgets("next button - error", (tester) async {
       final ex = Exception("Next Error");
       when(mockBloc!.showNext(any, any)).thenAnswer((_) => Future.error(ex));
-      _streamController!.add(SendAmountBlocState("1.00"));
+      _streamController!.add(SendAmountBlocState(feeAsset));
       await _build(tester);
       await tester.pumpAndSettle();
 

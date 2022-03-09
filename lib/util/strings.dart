@@ -313,6 +313,12 @@ class Strings {
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
 
+  // SendReviewScreen
+  static const sendReviewTitle = "Send Review";
+  static const sendReviewConfirmYourInfo = "Confirm your information";
+  static const sendReviewSendButtonTitle = "Send";
+  static const sendReviewSendPleaseReview =
+      "Please review the details below to make sure everything is correct";
   // Error Dialog
   static const unknownErrorTitle = 'UNKNOWN ERROR';
   static const somethingWentWrong = 'Something went wrong.';

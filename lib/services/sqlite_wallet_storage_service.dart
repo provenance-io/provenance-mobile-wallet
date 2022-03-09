@@ -23,6 +23,7 @@ class SqliteWalletStorageService {
       "Id"	INTEGER NOT NULL,
       "Name"	TEXT,
       "Address"	TEXT,
+      "PublicKey"	TEXT,
       "IsMainNet"	INTEGER,
       PRIMARY KEY("Id" AUTOINCREMENT)
     );
@@ -114,6 +115,7 @@ class SqliteWalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required String address,
+    required String publicKey,
     required Coin coin,
   }) async {
     final db = await _getDb();
@@ -122,6 +124,7 @@ class SqliteWalletStorageService {
       {
         'Name': name,
         'Address': address,
+        'PublicKey': publicKey,
         'IsMainNet': coin == Coin.mainNet ? 1 : 0,
       },
     );
@@ -174,11 +177,15 @@ class SqliteWalletStorageService {
     final id = result['Id'] as int;
     final name = result['Name'] as String;
     final address = result['Address'] as String;
+    final publicKey = result['PublicKey'] as String;
+    final isMainNet = result['IsMainNet'] as int == 1;
 
     return WalletDetails(
       id: id.toString(),
       address: address,
       name: name,
+      publicKey: publicKey,
+      coin: (isMainNet)? Coin.mainNet : Coin.testNet,
     );
   }
 }

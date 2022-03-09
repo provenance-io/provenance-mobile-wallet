@@ -31,6 +31,8 @@ main() {
       id: id,
       address: 'address',
       name: 'Test Wallet',
+      publicKey: "",
+      coin: Coin.testNet,
     );
 
     setUp(() {
@@ -44,6 +46,7 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -64,6 +67,7 @@ main() {
         name: wallet.name,
         address: privateKey!.defaultKey().publicKey.address,
         coin: Coin.testNet,
+        publicKey: privateKey!.defaultKey().publicKey.compressedPublicKeyHex,
       ));
 
       verify(_mockCipherService!.encryptKey(
@@ -80,6 +84,7 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -101,6 +106,7 @@ main() {
         name: anyNamed("name"),
         address: anyNamed("address"),
         coin: anyNamed("coin"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -127,6 +133,8 @@ main() {
         id: "id1",
         address: "Address1",
         name: "Name1",
+        publicKey: "PubKey",
+        coin: Coin.testNet,
       );
 
       when(_mockSqliteService!.getSelectedWallet())
@@ -143,6 +151,8 @@ main() {
         id: "id1",
         address: "Address1",
         name: "Name1",
+        publicKey: "PubKey",
+        coin: Coin.testNet,
       );
 
       when(_mockSqliteService!.getWallet(id: anyNamed("id")))
@@ -161,11 +171,15 @@ main() {
           id: "id1",
           address: "Address1",
           name: "Name1",
+          publicKey: "PubKey",
+          coin: Coin.testNet,
         ),
         WalletDetails(
           id: "id2",
           address: "Address2",
           name: "Name2",
+          publicKey: "PubKey",
+          coin: Coin.testNet,
         ),
       ];
 
@@ -242,6 +256,8 @@ main() {
         id: "Id",
         address: "Address",
         name: "Name",
+        publicKey: "PubKey",
+        coin: Coin.testNet,
       );
       when(
         _mockSqliteService!.selectWallet(

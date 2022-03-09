@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+
+import 'send_flow_test.mocks.dart';
+import 'send_flow_test_constants.dart';
 
 final get = GetIt.instance;
 
+@GenerateMocks([
+  AssetService,
+  TransactionService,
+  WalletService,
+])
 main() {
   SendFlowState? state;
   Future<void> _build(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: SendFlow(),
+          child: SendFlow(walletDetails),
         ),
       ),
     );
@@ -24,6 +42,45 @@ main() {
     state = tester.allStates.firstWhere((element) => element is SendFlowState)
         as SendFlowState;
   }
+
+  MockAssetService? mockAssetService;
+  MockTransactionService? mockTransactionService;
+  MockWalletService? mockWalletService;
+
+  setUp(() {
+    mockTransactionService = MockTransactionService();
+    when(mockTransactionService!.getTransactions(any))
+        .thenAnswer((realInvocation) {
+      final response = <Transaction>[];
+
+      return Future.value(response);
+    });
+
+    mockAssetService = MockAssetService();
+    when(mockAssetService!.getAssets(any)).thenAnswer((realInvocation) {
+      final response = <Asset>[];
+
+      return Future.value(response);
+    });
+
+    mockWalletService = MockWalletService();
+    when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
+    when(mockWalletService!.estimate(any, any)).thenAnswer((realInvocation) {
+      final gasEstimate = GasEstimate(100);
+
+      return Future.value(gasEstimate);
+    });
+
+    get.registerSingleton<TransactionService>(mockTransactionService!);
+    get.registerSingleton<AssetService>(mockAssetService!);
+    get.registerSingleton<WalletService>(mockWalletService!);
+  });
+
+  tearDown(() {
+    get.unregister<WalletService>();
+    get.unregister<TransactionService>();
+    get.unregister<AssetService>();
+  });
 
   testWidgets("Contents", (tester) async {
     await _build(tester);
@@ -39,13 +96,13 @@ main() {
 
   group("SendBlocNavigator", () {
     // fails due to not being able to load images
-    // testWidgets("ScanAddress", (tester) async {
-    //   await _build(tester);
-    //   state!.scanAddress();
-    //   await tester.pumpAndSettle();
-    //
-    //   expect(find.byType(QRCodeScanner), findsOneWidget);
-    // });
+    testWidgets("ScanAddress", (tester) async {
+      await _build(tester);
+      state!.scanAddress();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(QRCodeScanner), findsOneWidget);
+    });
 
     testWidgets("showAllRecentSends", (tester) async {
       await _build(tester);
@@ -63,34 +120,35 @@ main() {
       );
     });
 
-    testWidgets("showRecentSendDetails", (tester) async {
-      final recentAddress = RecentAddress("A", DateTime.now());
+    testWidgets("showSelectAmount", (tester) async {
       await _build(tester);
-      state!.showRecentSendDetails(recentAddress);
+
+      state!.showSelectAmount("Address", hashAsset);
       await tester.pumpAndSettle();
 
-      final dialogFind = find.byType(ErrorDialog);
-      expect(dialogFind, findsOneWidget);
-      expect(
-        find.descendant(
-          of: dialogFind,
-          matching: find.text("Not Implemented"),
-        ),
-        findsOneWidget,
-      );
+      expect(find.byType(SendAmountScreen), findsOneWidget);
+      final amountBloc = get<SendAmountBloc>();
+      expect(amountBloc.asset, hashAsset);
+      expect(amountBloc.receivingAddress, "Address");
     });
-    //
-    // testWidgets("showSelectAmount", (tester) async {
-    //   final asset = SendAsset("Hash", "100", "200", "http://test");
-    //   await _build(tester);
-    //
-    //   state!.showSelectAmount("Address", asset);
-    //   await tester.pumpAndSettle();
-    //
-    //   expect(find.byType(SendAmountScreen), findsOneWidget);
-    //   final amountBloc = get<SendAmountBloc>();
-    //   expect(amountBloc.asset, asset);
-    //   expect(amountBloc.receivingAddress, "Address");
-    // });
   });
+
+  // group("SendAmountBlocNavigator", () {
+  // failing due to NetworkImage not loading
+  //   testWidgets("showReviewSend", (tester) async {
+  //     await _build(tester);
+
+  //     state!.showSelectAmount("Address1", hashAsset); // needed to set the receiving address
+  //     await tester.pumpAndSettle();
+
+  //     state!.showReviewSend(dollarAsset, hashAsset, "Note",);
+  //     await tester.pumpAndSettle();
+
+  //     expect(find.byType(SendReviewScreen), findsOneWidget);
+  //     final bloc = get<SendReviewBloc>();
+  //     expect(bloc.sendingAsset, dollarAsset);
+  //     expect(bloc.fee, hashAsset);
+  //     expect(bloc.receivingAddress, "Address1");
+  //   });
+  // });
 }

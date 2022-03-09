@@ -36,6 +36,8 @@ class InMemoryWalletStorageService implements WalletStorageService {
       id: id,
       address: publicKey.address,
       name: name,
+      publicKey: "",
+      coin: Coin.testNet,
     );
 
     _datas.add(InMemoryStorageData(details, privateKey));
@@ -119,6 +121,8 @@ class InMemoryWalletStorageService implements WalletStorageService {
         id: old.details.id,
         address: old.details.address,
         name: name,
+        publicKey: "",
+        coin: Coin.testNet,
       );
       _datas[index] = InMemoryStorageData(renamed, old.key);
       result = renamed;
