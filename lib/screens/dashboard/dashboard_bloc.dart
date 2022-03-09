@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -46,6 +47,7 @@ class DashboardBloc extends Disposable {
   );
   final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
   final _assetList = BehaviorSubject.seeded(<Asset>[]);
+  final _selectedAsset = BehaviorSubject<Asset?>.seeded(null);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
@@ -60,6 +62,7 @@ class DashboardBloc extends Disposable {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
+  ValueStream<Asset?> get selectedAsset => _selectedAsset;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
@@ -243,12 +246,23 @@ class DashboardBloc extends Disposable {
   }
 
   Future<void> openAsset(Asset asset) async {
+    get.registerSingleton<AssetChartBloc>(AssetChartBloc(asset));
+    _selectedAsset.value = asset;
     _tabController?.animateTo(1);
   }
 
   Future<void> closeAssetToDashboard() async {
     _tabController?.animateTo(0);
+    await closeAsset();
   }
+
+  Future<void> closeAsset() async {
+    _selectedAsset.value = null;
+    if (get.isRegistered<AssetChartBloc>()) {
+      get.unregister<AssetChartBloc>();
+    }
+  }
+
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();

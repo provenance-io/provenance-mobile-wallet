@@ -1,13 +1,11 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/connection_details_modal.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
@@ -202,11 +200,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           if (index == 0) PwListDivider(),
                           GestureDetector(
                             onTap: () {
-                              // FIXME: Store the GraphingDataValue.
-                              Navigator.of(context).push(AssetChartScreen(
-                                asset: item,
-                                dataValue: GraphingDataValue.hourly,
-                              ).route());
+                              bloc.openAsset(item);
                             },
                             child: Padding(
                               padding: EdgeInsets.zero,

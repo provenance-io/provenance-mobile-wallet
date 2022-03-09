@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
@@ -139,9 +140,19 @@ class DashboardScreenState extends State<DashboardScreen>
               child: TabBarView(
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
-                children: const [
+                children: [
                   DashboardLandingTab(),
-                  TransactionLandingTab(),
+                  StreamBuilder<Asset?>(
+                    initialData: _bloc.selectedAsset.value,
+                    stream: _bloc.selectedAsset,
+                    builder: (context, snapshot) {
+                      final asset = snapshot.data;
+
+                      return null == asset
+                          ? TransactionLandingTab()
+                          : AssetChartScreen();
+                    },
+                  ),
                   ProfileScreen(),
                 ],
               ),
@@ -154,6 +165,9 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _setCurrentTab() {
     setState(() {
+      if (_currentTabIndex == 1 && _tabController.index != 1) {
+        _bloc.closeAsset();
+      }
       _currentTabIndex = _tabController.index;
     });
   }
