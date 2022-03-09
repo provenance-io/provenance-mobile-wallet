@@ -7,8 +7,8 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
@@ -140,12 +140,12 @@ void main() {
 
     final bloc = state.bloc;
 
-    RemoteClientDetails? details;
+    WalletConnectSessionRequestData? details;
     bloc.delegateEvents.sessionRequest.listen((e) async {
       details = e;
     });
 
-    await bloc.connectWallet(walletConnectAddress);
+    await bloc.connectSession('0', walletConnectAddress);
 
     await pumpEventQueue();
 
@@ -177,7 +177,7 @@ void main() {
 
     final bloc = state.bloc;
 
-    await bloc.disconnectWallet();
+    await bloc.disconnectSession();
 
     await pumpEventQueue();
 
@@ -220,7 +220,9 @@ class TestState {
       connectedCompleter.complete();
     });
 
-    await bloc.connectWallet(walletConnectAddress);
+    final walletId = bloc.selectedWallet.value!.id;
+
+    await bloc.connectSession(walletId, walletConnectAddress);
 
     await pumpEventQueue();
 
@@ -293,7 +295,6 @@ class TestState {
       storage: InMemoryWalletStorageService(
         datas: storageDatas,
       ),
-      connectionProvider: (address) => MockWalletConnection(address),
     );
 
     get.registerSingleton<AssetService>(assetService);

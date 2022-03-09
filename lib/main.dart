@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
@@ -94,7 +93,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<WalletService>(
       () => WalletService(
         storage: walletStorage,
-        connectionProvider: (address) => WalletConnection(address),
       ),
     );
 

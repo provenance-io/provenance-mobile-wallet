@@ -1,7 +1,7 @@
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/util/denom.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/strings.dart';
 class TransactionMessageDefault extends StatefulWidget {
   const TransactionMessageDefault({
     required this.requestId,
-    required this.clientDetails,
+    required this.clientMeta,
     this.message,
     this.data,
     this.fees,
@@ -21,7 +21,7 @@ class TransactionMessageDefault extends StatefulWidget {
   }) : super(key: key);
 
   final String requestId;
-  final RemoteClientDetails clientDetails;
+  final ClientMeta clientMeta;
   final String? message;
 
   final Map<String, dynamic>? data;
@@ -78,8 +78,8 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
     final mainRows = <TableRow>[];
 
-    final platformName = widget.clientDetails.name;
-    final platformHost = widget.clientDetails.url?.host;
+    final platformName = widget.clientMeta.name;
+    final platformHost = widget.clientMeta.url?.host;
 
     mainRows.add(
       createFieldTableRow(

@@ -1,6 +1,6 @@
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/services/models/remote_client_details.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -266,21 +266,21 @@ class PwDialog {
 
   static Future<bool> showSessionConfirmation(
     BuildContext context,
-    RemoteClientDetails remoteClientDetails,
+    SessionRequestData data,
   ) async {
     final result = await show<bool>(
       context,
       barrierDismissible: false,
-      title: remoteClientDetails.name,
+      title: data.clientMeta.name,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (remoteClientDetails.icons.isNotEmpty)
+          if (data.clientMeta.icons.isNotEmpty)
             Image.network(
-              remoteClientDetails.icons.first,
+              data.clientMeta.icons.first,
             ),
           PwText(
-            remoteClientDetails.description,
+            data.clientMeta.description,
             textAlign: TextAlign.center,
           ),
         ],
