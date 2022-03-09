@@ -40,7 +40,8 @@ class _LandingScreenState extends State<LandingScreen>
     _pageController.addListener(_setCurrentPage);
     _localAuth.initialize();
     get.registerSingleton<LandingBloc>(LandingBloc());
-    _bloc = get<LandingBloc>()..load();
+    registerBloc();
+    _bloc?.load();
 
     WidgetsBinding.instance!.addObserver(this);
     checkAccount();
