@@ -31,6 +31,7 @@ class PwIcons {
   static const String qr = "qr";
   static const String check = "check";
   static const String linked = "linked";
+  static const String warn = 'warn';
 }
 
 class PwIcon extends StatelessWidget {

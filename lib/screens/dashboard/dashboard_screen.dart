@@ -124,30 +124,21 @@ class DashboardScreenState extends State<DashboardScreen>
           ],
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AssetPaths.images.background),
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: const [
-                  DashboardLandingTab(),
-                  TransactionLandingTab(),
-                  ProfileScreen(),
-                ],
-              ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: const [
+                DashboardLandingTab(),
+                TransactionLandingTab(),
+                ProfileScreen(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
