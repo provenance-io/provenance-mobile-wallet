@@ -5,7 +5,7 @@ import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -73,7 +73,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     PwIcons.back,
                   ),
                   onPressed: () {
-                    get<DashboardBloc>().closeAsset();
+                    get<DashboardAssetBloc>().closeAsset();
                   },
                 ),
               ),

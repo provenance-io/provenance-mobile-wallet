@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -43,7 +44,7 @@ class ViewAllTransactionsScreen extends StatelessWidget {
                   PwIcons.back,
                 ),
                 onPressed: () {
-                  get<DashboardBloc>().closeViewAllTransactions();
+                  get<DashboardAssetBloc>().closeViewAllTransactions();
                 },
               ),
             ),

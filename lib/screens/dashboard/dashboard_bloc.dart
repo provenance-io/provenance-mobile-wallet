@@ -6,8 +6,6 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_details.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
@@ -59,7 +57,6 @@ class DashboardBloc extends Disposable {
   );
   final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
   final _assetList = BehaviorSubject.seeded(<Asset>[]);
-  final _assetDetails = BehaviorSubject<AssetDetails?>.seeded(null);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
@@ -76,7 +73,6 @@ class DashboardBloc extends Disposable {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
-  ValueStream<AssetDetails?> get assetDetails => _assetDetails;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
@@ -365,34 +361,6 @@ class DashboardBloc extends Disposable {
 
     _walletMap.value = map;
     _selectedWallet.value = currentWallet;
-  }
-
-  Future<void> openAsset(Asset asset) async {
-    get.registerSingleton<AssetChartBloc>(AssetChartBloc(asset));
-    _assetDetails.value = AssetDetails(asset, false);
-  }
-
-  Future<void> openViewAllTransactions() async {
-    final details = _assetDetails.value;
-    if (null == details) {
-      return;
-    }
-    _assetDetails.value = AssetDetails(details.asset, true);
-  }
-
-  Future<void> closeViewAllTransactions() async {
-    final details = _assetDetails.value;
-    if (null == details) {
-      return;
-    }
-    _assetDetails.value = AssetDetails(details.asset, false);
-  }
-
-  Future<void> closeAsset() async {
-    _assetDetails.value = null;
-    if (get.isRegistered<AssetChartBloc>()) {
-      get.unregister<AssetChartBloc>();
-    }
   }
 
   @override
