@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
@@ -14,6 +16,7 @@ import 'package:provenance_wallet/services/transaction_service/transaction_servi
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
+import '../services/memory_key_value_service.dart';
 import 'dashboard_mocks.dart';
 import 'in_memory_wallet_storage_service.dart';
 
@@ -296,11 +299,17 @@ class TestState {
         datas: storageDatas,
       ),
     );
+    final keyValueService = MemoryKeyValueService();
+    walletConnectionFactory(WalletConnectAddress address) {
+      return MockWalletConnection(address);
+    }
 
     get.registerSingleton<AssetService>(assetService);
     get.registerSingleton<TransactionService>(transactionService);
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<WalletService>(walletService);
+    get.registerSingleton<KeyValueService>(keyValueService);
+    get.registerSingleton<WalletConnectionFactory>(walletConnectionFactory);
 
     final bloc = DashboardBloc();
 

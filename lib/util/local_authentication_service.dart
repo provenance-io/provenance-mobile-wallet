@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/secure_storage_service.dart';
-import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -135,11 +135,11 @@ class LocalAuthenticationService {
 
   // only ask if they want biometric once
   _saveDeclinedSecureAuth(bool decline) async {
-    await SharedPrefsService().setBool(PrefKey.declinedSecureAuth, decline);
+    await get<KeyValueService>().setBool(PrefKey.declinedSecureAuth, decline);
   }
 
   Future<bool> _getDeclinedSecureAuth() async {
-    return await SharedPrefsService().getBool(PrefKey.declinedSecureAuth) ??
+    return await get<KeyValueService>().getBool(PrefKey.declinedSecureAuth) ??
         false;
   }
 

@@ -9,13 +9,13 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/shared_prefs_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
@@ -25,6 +25,10 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
+
+typedef WalletConnectionFactory = WalletConnection Function(
+  WalletConnectAddress address,
+);
 
 class DashboardBloc extends Disposable {
   DashboardBloc() {
@@ -185,7 +189,7 @@ class DashboardBloc extends Disposable {
       return false;
     }
 
-    final connection = WalletConnection(address);
+    final connection = get<WalletConnectionFactory>().call(address);
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
       transactionHandler: WalletConnectTransactionHandler(),
@@ -225,14 +229,14 @@ class DashboardBloc extends Disposable {
   Future<bool> disconnectSession() async {
     final success = await _walletSession?.disconnect() ?? false;
 
-    await SharedPrefsService().remove(PrefKey.sessionData);
+    await get<KeyValueService>().remove(PrefKey.sessionData);
 
     return success;
   }
 
   Future<bool> tryRestoreSession(String walletId) async {
     var success = false;
-    final json = await SharedPrefsService().getString(PrefKey.sessionData);
+    final json = await get<KeyValueService>().getString(PrefKey.sessionData);
     SessionData? data;
     if (json != null) {
       try {
@@ -280,7 +284,7 @@ class DashboardBloc extends Disposable {
         details.data.clientMeta,
       );
 
-      SharedPrefsService()
+      get<KeyValueService>()
           .setString(PrefKey.sessionData, jsonEncode(data.toJson()));
     }
 
