@@ -30,12 +30,6 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
   }
 
   @override
-  void dispose() {
-    get<DashboardBloc>().closeAsset();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<AssetChartDetails?>(
       initialData: _bloc.chartDetails.value,
@@ -79,7 +73,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     PwIcons.back,
                   ),
                   onPressed: () {
-                    get<DashboardBloc>().closeAssetToDashboard();
+                    get<DashboardBloc>().closeAsset();
                   },
                 ),
               ),

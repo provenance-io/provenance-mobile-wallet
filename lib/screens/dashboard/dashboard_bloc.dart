@@ -369,12 +369,6 @@ class DashboardBloc extends Disposable {
   Future<void> openAsset(Asset asset) async {
     get.registerSingleton<AssetChartBloc>(AssetChartBloc(asset));
     _selectedAsset.value = asset;
-    _tabController?.animateTo(1);
-  }
-
-  Future<void> closeAssetToDashboard() async {
-    _tabController?.animateTo(0);
-    await closeAsset();
   }
 
   Future<void> closeAsset() async {

@@ -133,19 +133,19 @@ class DashboardScreenState extends State<DashboardScreen>
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                DashboardLandingTab(),
-                  StreamBuilder<Asset?>(
-                    initialData: _bloc.selectedAsset.value,
-                    stream: _bloc.selectedAsset,
-                    builder: (context, snapshot) {
-                      final asset = snapshot.data;
+                StreamBuilder<Asset?>(
+                  initialData: _bloc.selectedAsset.value,
+                  stream: _bloc.selectedAsset,
+                  builder: (context, snapshot) {
+                    final asset = snapshot.data;
 
-                      return null == asset
-                          ? TransactionLandingTab()
-                          : AssetChartScreen();
-                    },
-                  ),
-                  ProfileScreen(),
+                    return null == asset
+                        ? DashboardLandingTab()
+                        : AssetChartScreen();
+                  },
+                ),
+                TransactionLandingTab(),
+                ProfileScreen(),
               ],
             ),
           ),
@@ -156,9 +156,6 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void _setCurrentTab() {
     setState(() {
-      if (_currentTabIndex == 1 && _tabController.index != 1) {
-        _bloc.closeAsset();
-      }
       _currentTabIndex = _tabController.index;
     });
   }
