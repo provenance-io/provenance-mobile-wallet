@@ -172,7 +172,7 @@ class TradeDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: PwText(
-                transaction.amount.toString(),
+                transaction.displayAmount,
                 style: PwTextStyle.body,
               ),
             ),
