@@ -34,11 +34,11 @@
             ]
         },
         {
-            "name": "Release - dev",
+            "name": "Release - prod",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
-            "flutterMode": "release", 
+            "flutterMode": "release",
             "args": [
                 "--flavor",
                 "prod"
