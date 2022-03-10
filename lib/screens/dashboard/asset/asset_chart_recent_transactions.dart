@@ -53,7 +53,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    // TODO: View all view
+                    get<DashboardBloc>().openViewAllTransactions();
                   },
                   child: Padding(
                     padding: EdgeInsets.zero,

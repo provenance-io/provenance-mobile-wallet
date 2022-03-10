@@ -5,6 +5,8 @@ import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_screen.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_details.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/view_all_transactions_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/profile_screen.dart';
@@ -133,14 +135,17 @@ class DashboardScreenState extends State<DashboardScreen>
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                StreamBuilder<Asset?>(
-                  initialData: _bloc.selectedAsset.value,
-                  stream: _bloc.selectedAsset,
+                StreamBuilder<AssetDetails?>(
+                  initialData: _bloc.assetDetails.value,
+                  stream: _bloc.assetDetails,
                   builder: (context, snapshot) {
-                    final asset = snapshot.data;
+                    final details = snapshot.data;
+                    if (null == details) {
+                      return DashboardLandingTab();
+                    }
 
-                    return null == asset
-                        ? DashboardLandingTab()
+                    return details.showAllTransactions
+                        ? ViewAllTransactionsScreen()
                         : AssetChartScreen();
                   },
                 ),
