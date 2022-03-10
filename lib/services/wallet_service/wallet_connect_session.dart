@@ -90,8 +90,9 @@ class WalletConnectSession {
   }
 
   Future<void> dispose() async {
-    await disconnect();
-
+    // Keep socket open on the web by not disconnecting.
+    // Allows restoration of connection when app is restarted.
+    _connection.removeListener(_statusListener);
     delegateEvents.dispose();
     sessionEvents.dispose();
   }

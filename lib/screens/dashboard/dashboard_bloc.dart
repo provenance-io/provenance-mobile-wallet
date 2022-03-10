@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
@@ -23,6 +24,7 @@ import 'package:provenance_wallet/services/wallet_service/wallet_connect_session
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -86,10 +88,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       final walletId = _selectedWallet.value?.id;
-      final status = _walletSession?.sessionEvents.state.value.status ??
+      final sessionStatus = _walletSession?.sessionEvents.state.value.status ??
           WalletConnectSessionStatus.disconnected;
+      final authStatus = get<LocalAuthHelper>().status.value;
       if (walletId != null &&
-          status == WalletConnectSessionStatus.disconnected) {
+          sessionStatus == WalletConnectSessionStatus.disconnected &&
+          authStatus == AuthStatus.authenticated) {
         tryRestoreSession(walletId);
       }
     }
@@ -109,15 +113,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     final walletId = details?.id;
     if (walletId != null && isFirstLoad) {
-      // TODO: Remove temporary hack. (Roy)
-      // Stops system from cancelling a rapid second auth for key decryption
-      // attempt after auth from opening the app. Might need to store auth
-      // data in plugin and share an LAContext.
-      Future.delayed(
-        Duration(
-          milliseconds: 1100,
-        ),
-      ).then((e) => tryRestoreSession(walletId));
+      tryRestoreSession(walletId);
     }
 
     var errorCount = 0;
@@ -350,7 +346,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   Future<void> resetWallets() async {
     await disconnectSession();
     await get<WalletService>().resetWallets();
-    await loadAllWallets();
+    await get<CipherService>().deletePin();
+    get<LocalAuthHelper>().reset();
   }
 
   Future<void> loadAllWallets() async {

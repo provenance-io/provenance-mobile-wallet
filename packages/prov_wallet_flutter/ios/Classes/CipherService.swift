@@ -3,13 +3,26 @@
 //
 
 import Foundation
+import LocalAuthentication
 
 class CipherService: NSObject {
 	static let keyCipher = "cipher"
 	static let keyUseBiometry = "useBiometry"
+	static let keyPin = "pin"
 	
 	static let secKeyTagBiometry = "io.provenance.wallet.biometry".data(using: .utf8)!
 	static let secKeyTagPasscode = "io.provenance.wallet.passcode".data(using: .utf8)!
+	
+	static var authContext = LAContext()
+	
+	static func biometryAuth(_ result: @escaping (Bool) -> Void) {
+		authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Authentication", reply: { (success, error) in result(success) })
+	}
+	
+	static func resetAuth() {
+		authContext.invalidate()
+		authContext = LAContext()
+	}
 	
 	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
 		let doUseBiometry = useBiometry ?? getUseBiometry()
@@ -67,13 +80,126 @@ class CipherService: NSObject {
 		}
 	}
 	
-	static func reset() {
-		UserDefaults.standard.removeObject(forKey: keyUseBiometry)
+	static func setPin(pin: String) throws -> Bool {
+		return try setPassword(key: keyPin, value: pin)
+	}
+	
+	static func getPin() throws -> String? {
+		return try getPassword(key: keyPin)
+	}
+	
+	static func deletePin() -> Bool {
+		return deletePassword(key: keyPin)
+	}
+	
+	static func resetKeys() {
 		UserDefaults.standard.removeObject(forKey: keyCipher)
 	}
 	
 	static func getUseBiometry() -> Bool {
 		return UserDefaults.standard.bool(forKey: keyUseBiometry)
+	}
+	
+	private static func setPassword(key: String, value: String) throws -> Bool {
+		var error: Unmanaged<CFError>?
+		let flags: SecAccessControlCreateFlags = []
+		guard let access = SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, flags, &error) else {
+			throw ProvenanceWalletError(kind: .accessError, message: "Failed to create access control")
+		}
+		
+		let exists = containsPassword(key: key)
+		if (exists) {
+			let query: [String: Any] = [
+				kSecClass as String: kSecClassGenericPassword,
+				kSecAttrAccessControl as String: access,
+				kSecAttrAccount as String: key,
+				kSecValueData as String: value.data(using: .utf8)!,
+				kSecUseAuthenticationContext as String: authContext,
+			]
+			
+			let attributes: [String: Any] = [
+				kSecValueData as String: value.data(using: .utf8)!
+			]
+			
+			let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+			
+			guard status == errSecSuccess else {
+				throw ProvenanceWalletError(kind: .addSecItem, message: "Could not add item to keychain")
+			}
+		} else {
+			let query: [String: Any] = [
+				kSecClass as String: kSecClassGenericPassword,
+				kSecAttrAccessControl as String: access,
+				kSecAttrAccount as String: key,
+				kSecValueData as String: value.data(using: .utf8)!,
+			]
+			
+			let status = SecItemAdd(query as CFDictionary, nil)
+			
+			guard status == errSecSuccess else {
+				throw ProvenanceWalletError(kind: .addSecItem, message: "Could not add item to keychain")
+			}
+		}
+		
+		return true
+	}
+	
+	private static func getPassword(key: String) throws -> String? {
+		let query: [String: Any] = [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecAttrAccount as String: key,
+			kSecReturnData as String: true,
+			kSecUseAuthenticationContext as String: authContext,
+		]
+		
+		var item: CFTypeRef?
+		let status = SecItemCopyMatching(query as CFDictionary, &item)
+		
+		if status == errSecSuccess {
+			guard let data = item as? Data else {
+				return nil
+			}
+		
+			return String(data: data, encoding: .utf8)
+		} else {
+			return nil
+		}
+	}
+	
+	private static func containsPassword(key: String) -> Bool {
+		let query: [String: Any] = [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecAttrAccount as String: key,
+			kSecUseAuthenticationUI as String: kSecUseAuthenticationUIFail
+		]
+		
+		var result: AnyObject?
+		let status = SecItemCopyMatching(query as CFDictionary, &result)
+		
+		return status == errSecInteractionNotAllowed
+	}
+	
+	private static func deletePassword(key: String) -> Bool {
+		let query: [String: Any] = [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecAttrAccount as String: key,
+			kSecUseAuthenticationContext as String: authContext,
+		]
+		
+		let status = SecItemDelete(query as CFDictionary)
+		
+		return status == errSecSuccess
+	}
+	
+	private static func deleteAllPasswords() -> Bool {
+		let query: [String: Any] = [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecUseAuthenticationContext as String: authContext,
+		]
+		
+		let status = SecItemDelete(query as CFDictionary)
+		
+		return status == errSecSuccess
 	}
 	
 	private static func getCipher() -> Data {
@@ -186,7 +312,8 @@ class CipherService: NSObject {
 			kSecClass as String: kSecClassKey,
 			kSecAttrApplicationTag as String: tag,
 			kSecAttrKeyType as String: kSecAttrKeyTypeEC,
-			kSecReturnRef as String: true
+			kSecReturnRef as String: true,
+			kSecUseAuthenticationContext as String: authContext,
 		]
 
 		var item: CFTypeRef?

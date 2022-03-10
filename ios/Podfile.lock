@@ -42,8 +42,6 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
   - Flutter (1.0.0)
-  - flutter_secure_storage (3.3.1):
-    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -57,8 +55,6 @@ PODS:
     - GoogleUtilities/Environment
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - local_auth (0.0.1):
-    - Flutter
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -88,8 +84,6 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - Flutter (from `Flutter`)
-  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
-  - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - prov_wallet_flutter (from `.symlinks/plugins/prov_wallet_flutter/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -122,10 +116,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   Flutter:
     :path: Flutter
-  flutter_secure_storage:
-    :path: ".symlinks/plugins/flutter_secure_storage/ios"
-  local_auth:
-    :path: ".symlinks/plugins/local_auth/ios"
   prov_wallet_flutter:
     :path: ".symlinks/plugins/prov_wallet_flutter/ios"
   qr_code_scanner:
@@ -150,11 +140,9 @@ SPEC CHECKSUMS:
   FirebaseDynamicLinks: f506c83eb7eba0f9861f84cd6b65c38b3bd5ff6f
   FirebaseInstallations: 044eede8a049bce71c4541ee68d6e4364fcbe774
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  local_auth: 1740f55d7af0a2e2a8684ce225fe79d8931e808c
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58

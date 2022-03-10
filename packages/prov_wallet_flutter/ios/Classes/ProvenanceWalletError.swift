@@ -3,6 +3,7 @@ import Foundation
 struct ProvenanceWalletError: Error {
 	enum ErrorKind {
 		case accessError
+		case addSecItem
 		case dataPersistence
 		case unsupportedAlgorithm
 		case walletKeyNotFound
