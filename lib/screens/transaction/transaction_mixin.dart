@@ -14,33 +14,22 @@ mixin TransactionMessageMixin<T extends StatefulWidget> on State<T> {
       delegate: SliverChildListDelegate.fixed(
         [
           if (name != null)
-            Container(
-              margin: EdgeInsets.only(
-                top: Spacing.largeX4,
-                left: Spacing.xxLarge,
-              ),
-              child: PwText(
-                name,
-                style: PwTextStyle.displayBody,
-                color: PwColor.neutralNeutral,
+            PwText(
+              name,
+              style: PwTextStyle.displayBody,
+              color: PwColor.neutralNeutral,
+            ),
+          Table(
+            columnWidths: const {
+              0: IntrinsicColumnWidth(),
+              1: FlexColumnWidth(),
+            },
+            border: TableBorder(
+              horizontalInside: BorderSide(
+                color: Theme.of(context).colorScheme.neutral700,
               ),
             ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.largeX3,
-            ),
-            child: Table(
-              columnWidths: const {
-                0: IntrinsicColumnWidth(),
-                1: FlexColumnWidth(),
-              },
-              border: TableBorder(
-                horizontalInside: BorderSide(
-                  color: Theme.of(context).colorScheme.neutral700,
-                ),
-              ),
-              children: rows,
-            ),
+            children: rows,
           ),
         ],
       ),

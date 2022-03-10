@@ -17,6 +17,7 @@ class TransactionMessageDefault extends StatefulWidget {
     this.message,
     this.data,
     this.fees,
+    this.pageController,
     Key? key,
   }) : super(key: key);
 
@@ -24,16 +25,24 @@ class TransactionMessageDefault extends StatefulWidget {
   final ClientMeta clientMeta;
   final String? message;
 
-  final Map<String, dynamic>? data;
+  final List<Map<String, dynamic>>? data;
   final List<proto.Coin>? fees;
+  final PageController? pageController;
 
   @override
   State<TransactionMessageDefault> createState() =>
-      _TransactionMessageDefaultState();
+      _TransactionMessageDefaultState(pageController);
 }
 
 class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
+  _TransactionMessageDefaultState(PageController? pageController)
+      : _pageController = pageController ?? PageController() {
+    _pageController.addListener(() {
+      _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
+    });
+  }
+
   final _processor = MessageFieldProcessor(
     converters: {
       MessageFieldName.fromAddress: convertAddress,
@@ -46,42 +55,89 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     },
   );
 
+  final PageController _pageController;
+  final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
+
   var slivers = <Widget>[];
+
+  @override
+  void dispose() {
+    if (widget.pageController == null) {
+      _pageController.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _buildSlivers();
+    // _buildSlivers();
   }
 
   @override
   void didUpdateWidget(covariant TransactionMessageDefault oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _buildSlivers();
+    // _buildSlivers();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: slivers,
+      slivers: [
+        _buildHeaders(),
+        SliverFillRemaining(
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.data?.length ?? 0,
+            itemBuilder: (context, index) {
+              final map = widget.data![index];
+              final group = _processor.findFields(map);
+              final contents = <Widget>[];
+
+              final ungrouped = group.fields
+                  .whereType<MessageField>()
+                  .map((field) => createMessageFieldRow(field))
+                  .toList();
+
+              contents.add(createFieldGroupSliver(
+                context,
+                ungrouped,
+              ));
+
+              contents.addAll(
+                group.fields.whereType<MessageFieldGroup>().map((group) {
+                  final rows = group.fields
+                      .whereType<MessageField>()
+                      .map((field) => createMessageFieldRow(field))
+                      .toList();
+
+                  return createFieldGroupSliver(
+                    context,
+                    rows,
+                    group.key.name.capitalize(),
+                  );
+                }).toList(),
+              );
+
+              return CustomScrollView(slivers: contents);
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  void _buildSlivers() {
+  Widget _buildHeaders() {
+    final List<TableRow> headers = <TableRow>[];
     final fees = widget.fees;
     final message = widget.message;
-    final data = widget.data;
-
-    slivers = <Widget>[];
-
-    final mainRows = <TableRow>[];
 
     final platformName = widget.clientMeta.name;
     final platformHost = widget.clientMeta.url?.host;
 
-    mainRows.add(
+    headers.add(
       createFieldTableRow(
         Strings.transactionFieldPlatform,
         '$platformName\n$platformHost',
@@ -89,7 +145,7 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     );
 
     if (message != null) {
-      mainRows.add(
+      headers.add(
         createFieldTableRow(Strings.transactionFieldMessage, message),
       );
     }
@@ -102,14 +158,14 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
               ? '${coin.amount} ${coin.denom}'
               : '${nHash / nHashPerHash} ${Strings.transactionDenomHash}';
 
-          mainRows.add(
+          headers.add(
             createFieldTableRow(
               Strings.transactionFieldFee,
               fee,
             ),
           );
         } else {
-          mainRows.add(
+          headers.add(
             createFieldTableRow(
               Strings.transactionFieldFee,
               '${coin.amount} ${coin.denom}',
@@ -119,31 +175,9 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
       }
     }
 
-    final groupSlivers = <Widget>[];
-
-    if (data != null) {
-      final group = _processor.findFields(data);
-
-      for (final field in group.fields) {
-        if (field is MessageFieldGroup) {
-          final rows = field.fields
-              .whereType<MessageField>()
-              .map((e) => createMessageFieldRow(e))
-              .toList();
-          groupSlivers.add(
-            createFieldGroupSliver(
-              context,
-              rows,
-              field.key.name.capitalize(),
-            ),
-          );
-        } else if (field is MessageField) {
-          mainRows.add(createMessageFieldRow(field));
-        }
-      }
-    }
-
-    slivers.add(createFieldGroupSliver(context, mainRows));
-    slivers.addAll(groupSlivers);
+    return createFieldGroupSliver(
+      context,
+      headers,
+    );
   }
 }
