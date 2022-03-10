@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:convert/convert.dart' as convert;
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
+import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -32,11 +34,11 @@ class SendAmountBloc extends Disposable {
     this._navigator,
   );
 
-  final WalletDetails walletDetails;
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
   MultiSendAsset? _fee;
 
+  final WalletDetails walletDetails;
   final SendAsset asset;
   final String receivingAddress;
 
@@ -58,10 +60,17 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    get<WalletService>().estimate(body, walletDetails).then((estimate) async {
+    final publicKey = wallet.PublicKey.fromCompressPublicHex(
+      convert.hex.decoder.convert(walletDetails.publicKey),
+      walletDetails.coin,
+    );
+
+    get<WalletConnectTransactionHandler>()
+        .estimateGas(body, publicKey)
+        .then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
-        estimate.feeCalculated!.forEach((fee) {
+        for (var fee in estimate.feeCalculated!) {
           final sendAsset = SendAsset(
             fee.denom,
             1,
@@ -71,7 +80,7 @@ class SendAmountBloc extends Disposable {
             "",
           );
           individualFees.add(sendAsset);
-        });
+        }
       }
 
       _fee = MultiSendAsset(
@@ -115,7 +124,8 @@ class SendAmountBloc extends Disposable {
   Future<void> showNext(String note, String amount) {
     if (_fee == null) {
       return Future.error(
-          Exception(Strings.sendAmountErrorGasEstimateNotReady));
+        Exception(Strings.sendAmountErrorGasEstimateNotReady),
+      );
     }
 
     final amountError = validateAmount(amount);

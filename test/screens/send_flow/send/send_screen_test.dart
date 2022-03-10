@@ -205,7 +205,9 @@ main() {
 
         final textFind = find.byType(TextField);
         final addressFind = find.descendant(
-            of: textFind, matching: find.text(recentAddress1.address));
+          of: textFind,
+          matching: find.text(recentAddress1.address),
+        );
         expect(addressFind, findsOneWidget);
       });
 
@@ -253,7 +255,9 @@ main() {
 
       testWidgets("Values", (tester) async {
         _streamController!.add(SendBlocState(
-            [hashAsset, dollarAsset], [recentAddress1, recentAddress2]));
+          [hashAsset, dollarAsset],
+          [recentAddress1, recentAddress2],
+        ));
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.value());
 
         await _build(tester);

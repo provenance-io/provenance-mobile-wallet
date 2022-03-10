@@ -14,6 +14,7 @@ import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import 'send_flow_test.mocks.dart';
@@ -25,6 +26,7 @@ final get = GetIt.instance;
   AssetService,
   TransactionService,
   WalletService,
+  WalletConnectTransactionHandler,
 ])
 main() {
   SendFlowState? state;
@@ -46,8 +48,21 @@ main() {
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
   MockWalletService? mockWalletService;
+  MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
 
   setUp(() {
+    mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
+    when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
+        .thenAnswer((realInvocation) {
+      final gasEstimate = GasEstimate(100);
+
+      return Future.value(gasEstimate);
+    });
+
+    get.registerSingleton<WalletConnectTransactionHandler>(
+      mockWalletConnectTransactionHandler!,
+    );
+
     mockTransactionService = MockTransactionService();
     when(mockTransactionService!.getTransactions(any))
         .thenAnswer((realInvocation) {
@@ -65,11 +80,6 @@ main() {
 
     mockWalletService = MockWalletService();
     when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
-    when(mockWalletService!.estimate(any, any)).thenAnswer((realInvocation) {
-      final gasEstimate = GasEstimate(100);
-
-      return Future.value(gasEstimate);
-    });
 
     get.registerSingleton<TransactionService>(mockTransactionService!);
     get.registerSingleton<AssetService>(mockAssetService!);
@@ -80,6 +90,7 @@ main() {
     get.unregister<WalletService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
+    get.unregister<WalletConnectTransactionHandler>();
   });
 
   testWidgets("Contents", (tester) async {

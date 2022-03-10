@@ -1,54 +1,89 @@
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
+import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 class WalletConnectTransactionHandler implements TransactionHandler {
   @override
-  Future<GasEstimate> estimateGas(
-    TxBody txBody,
-    PrivateKey privateKey,
+  Future<proto.GasEstimate> estimateGas(
+    proto.TxBody txBody,
+    PublicKey publicKey,
   ) async {
-    final publicKey = privateKey.defaultKey().publicKey;
     final coin = publicKey.coin;
-    final pbClient = PbClient(Uri.parse(coin.address), coin.chainId);
+    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
 
     final account = await pbClient.getBaseAccount(publicKey.address);
-    final signer = _SignerImp(privateKey);
-    final baseReqSigner = BaseReqSigner(signer, account);
+    final signer = _EstimateSigner(account.address, publicKey);
+    final baseReqSigner = proto.BaseReqSigner(signer, account);
 
-    final baseReq = BaseReq(
+    final baseReq = proto.BaseReq(
       txBody,
       [baseReqSigner],
       coin.chainId,
     );
 
-    return pbClient.estimateTx(baseReq);
+    final gasService = get<GasFeeService>();
+
+    final estimate = await pbClient.estimateTx(baseReq);
+    final customFee = await gasService.getGasFee();
+
+    if (customFee != null) {
+      final calculatedAmount = customFee.amount * estimate.estimate;
+      final calculatedCoin = proto.Coin(
+        denom: customFee.denom,
+        amount: calculatedAmount.toString(),
+      );
+
+      final index = estimate.feeCalculated!
+          .indexWhere((coin) => coin.denom == customFee.denom);
+
+      if (index >= 0) {
+        if (calculatedAmount >
+            int.parse(estimate.feeCalculated![index].amount)) {
+          estimate.feeCalculated![index] = calculatedCoin;
+        }
+      } else {
+        estimate.feeCalculated!.add(calculatedCoin);
+      }
+    }
+
+    return estimate;
   }
 
   @override
-  Future<RawTxResponsePair> executeTransaction(
-    TxBody txBody,
-    PrivateKey privateKey,
-  ) async {
+  Future<proto.RawTxResponsePair> executeTransaction(
+    proto.TxBody txBody,
+    PrivateKey privateKey, [
+    proto.GasEstimate? gasEstimate,
+  ]) async {
     final publicKey = privateKey.defaultKey().publicKey;
     final coin = publicKey.coin;
 
-    final pbClient = PbClient(Uri.parse(coin.address), coin.chainId);
+    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
     final account = await pbClient.getBaseAccount(publicKey.address);
     final signer = _SignerImp(privateKey);
 
-    final baseReqSigner = BaseReqSigner(signer, account);
+    final baseReqSigner = proto.BaseReqSigner(signer, account);
 
-    return pbClient.estimateAndBroadcastTx(
+    gasEstimate ??= await estimateGas(txBody, publicKey);
+
+    final baseReq = proto.BaseReq(
       txBody,
       [baseReqSigner],
-      mode: BroadcastMode.BROADCAST_MODE_BLOCK,
+      coin.chainId,
+    );
+
+    return pbClient.broadcastTx(
+      baseReq,
+      gasEstimate,
+      proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
   }
 }
 
-class _SignerImp implements Signer {
+class _SignerImp implements proto.Signer {
   _SignerImp(this._privateKey);
 
   final PrivateKey _privateKey;
@@ -62,5 +97,22 @@ class _SignerImp implements Signer {
   @override
   List<int> sign(List<int> data) {
     return _privateKey.defaultKey().signData(Hash.sha256(data))..removeLast();
+  }
+}
+
+class _EstimateSigner extends proto.Signer {
+  _EstimateSigner(this._address, this._publicKey);
+
+  final String _address;
+  final PublicKey _publicKey;
+
+  @override
+  String get address => _address;
+
+  @override
+  PublicKey get pubKey => _publicKey;
+  @override
+  List<int> sign(List<int> data) {
+    return <int>[];
   }
 }

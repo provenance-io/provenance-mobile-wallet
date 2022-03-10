@@ -10,7 +10,7 @@ import 'package:provenance_dart/wallet.dart' as _i7;
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart'
     as _i4;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i6;
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart'
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart'
     as _i8;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
@@ -29,6 +29,9 @@ class _FakeWalletServiceEvents_0 extends _i1.Fake
     implements _i2.WalletServiceEvents {}
 
 class _FakeGasEstimate_1 extends _i1.Fake implements _i3.GasEstimate {}
+
+class _FakeRawTxResponsePair_2 extends _i1.Fake
+    implements _i3.RawTxResponsePair {}
 
 /// A class which mocks [SendReviewNaviagor].
 ///
@@ -114,27 +117,39 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
                   Future<List<_i6.WalletDetails>>.value(<_i6.WalletDetails>[]))
           as _i5.Future<List<_i6.WalletDetails>>);
   @override
-  _i5.Future<_i8.WalletConnectSession?> createSession(String? addressData) =>
-      (super.noSuchMethod(Invocation.method(#createSession, [addressData]),
-              returnValue: Future<_i8.WalletConnectSession?>.value())
-          as _i5.Future<_i8.WalletConnectSession?>);
+  _i5.Future<_i7.PrivateKey?> loadKey(String? walletId) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [walletId]),
+              returnValue: Future<_i7.PrivateKey?>.value())
+          as _i5.Future<_i7.PrivateKey?>);
   @override
   _i5.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
           returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+}
+
+/// A class which mocks [WalletConnectTransactionHandler].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWalletConnectTransactionHandler extends _i1.Mock
+    implements _i8.WalletConnectTransactionHandler {
+  MockWalletConnectTransactionHandler() {
+    _i1.throwOnMissingStub(this);
+  }
+
   @override
-  _i5.Future<_i3.GasEstimate> estimate(
-          _i3.TxBody? body, _i6.WalletDetails? walletDetails) =>
-      (super.noSuchMethod(Invocation.method(#estimate, [body, walletDetails]),
+  _i5.Future<_i3.GasEstimate> estimateGas(
+          _i3.TxBody? txBody, _i7.PublicKey? publicKey) =>
+      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, publicKey]),
               returnValue: Future<_i3.GasEstimate>.value(_FakeGasEstimate_1()))
           as _i5.Future<_i3.GasEstimate>);
   @override
-  _i5.Future<void> submitTransaction(
-          _i3.TxBody? body, _i6.WalletDetails? walletDetails,
+  _i5.Future<_i3.RawTxResponsePair> executeTransaction(
+          _i3.TxBody? txBody, _i7.PrivateKey? privateKey,
           [_i3.GasEstimate? gasEstimate]) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #submitTransaction, [body, walletDetails, gasEstimate]),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+              Invocation.method(
+                  #executeTransaction, [txBody, privateKey, gasEstimate]),
+              returnValue: Future<_i3.RawTxResponsePair>.value(
+                  _FakeRawTxResponsePair_2()))
+          as _i5.Future<_i3.RawTxResponsePair>);
 }

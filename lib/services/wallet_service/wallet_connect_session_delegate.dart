@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:grpc/grpc.dart';
-import 'package:protobuf/protobuf.dart';
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
@@ -139,40 +138,69 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   void onApproveTransaction(
     String description,
     String address,
-    List<GeneratedMessage> proposedMessages,
-    AcceptCallback<RawTxResponsePair?> callback,
+    SignTransactionData signTransactionData,
+    AcceptCallback<proto.RawTxResponsePair?> callback,
   ) async {
-    final txBody = TxBody(
-      messages: proposedMessages.map((msg) => msg.toAny()).toList(),
+    final txBody = proto.TxBody(
+      messages: signTransactionData.proposedMessages
+          .map((msg) => msg.toAny())
+          .toList(),
     );
 
     final id = Uuid().v1().toString();
 
-    GasEstimate? gasEstimate;
+    proto.GasEstimate gasEstimate;
     try {
-      gasEstimate = await _transactionHandler.estimateGas(txBody, _privateKey);
+      gasEstimate = await _transactionHandler.estimateGas(
+        txBody,
+        _privateKey.defaultKey().publicKey,
+      );
+
+      if (signTransactionData.gasEstimate != null) {
+        final index = gasEstimate.feeCalculated?.indexWhere(
+          (coin) => coin.denom == signTransactionData.gasEstimate!.denom,
+        );
+
+        final scaledAmount = gasEstimate.estimate *
+            int.parse(signTransactionData.gasEstimate!.amount);
+
+        final scaledCoin = proto.Coin(
+          amount: scaledAmount.toString(),
+          denom: signTransactionData.gasEstimate!.denom,
+        );
+
+        if (index != null) {
+          if (scaledAmount >
+              int.parse(gasEstimate.feeCalculated![index].amount)) {
+            gasEstimate.feeCalculated![index] = scaledCoin;
+          }
+        } else {
+          gasEstimate.feeCalculated!.add(scaledCoin);
+        }
+      }
     } on GrpcError catch (e) {
       events._onDidError.add(e.message ?? e.codeName);
       callback(null, e.message);
-    }
 
-    if (gasEstimate == null) {
       return null;
     }
 
     final sendRequest = SendRequest(
       id: id,
       description: description,
-      messages: proposedMessages,
+      messages: signTransactionData.proposedMessages,
       gasEstimate: gasEstimate,
     );
 
     _completerLookup[id] = (bool approve) async {
-      RawTxResponsePair? response;
+      proto.RawTxResponsePair? response;
 
       if (approve) {
-        response =
-            await _transactionHandler.executeTransaction(txBody, _privateKey);
+        response = await _transactionHandler.executeTransaction(
+          txBody,
+          _privateKey,
+          gasEstimate,
+        );
 
         final txResponse = response.txResponse;
 
@@ -185,7 +213,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
             gasUsed: txResponse.gasUsed.toInt(),
             height: txResponse.height.toInt(),
             txHash: txResponse.txhash,
-            fees: gasEstimate!.feeCalculated,
+            fees: gasEstimate.feeCalculated,
             codespace: txResponse.codespace,
           ),
         );

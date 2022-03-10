@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import './send_amount_bloc_test.mocks.dart';
@@ -21,18 +22,32 @@ Matcher throwsExceptionWithText(String msg) {
 
 const feeAmount = GasEstimate(20000000);
 
-@GenerateMocks([SendAmountBlocNavigator, WalletService])
+@GenerateMocks([
+  SendAmountBlocNavigator,
+  WalletService,
+  WalletConnectTransactionHandler,
+])
 main() {
   const receivingAddress = "ReceivingAdress";
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockWalletService? mockWalletService;
+  MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
 
   setUp(() {
-    mockWalletService = MockWalletService();
-    when(mockWalletService!.estimate(any, any))
+    mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
+    when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
         .thenAnswer((_) => Future.value(feeAmount));
+
+    get.registerSingleton<WalletConnectTransactionHandler>(
+      mockWalletConnectTransactionHandler!,
+    );
+
+    mockWalletService = MockWalletService();
+    get.registerSingleton<MockWalletService>(
+      mockWalletService!,
+    );
 
     when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
     get.registerSingleton<WalletService>(mockWalletService!);
@@ -48,6 +63,8 @@ main() {
 
   tearDown(() {
     get.unregister<WalletService>();
+    get.unregister<WalletConnectTransactionHandler>();
+    get.unregister<MockWalletService>();
   });
 
   test("properties", () {

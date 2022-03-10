@@ -97,9 +97,11 @@ main() {
       expect(textAmount.autovalidateMode, AutovalidateMode.always);
 
       expect(
-          find.text(
-              "${hashAsset.displayAmount} ${hashAsset.displayDenom} available"),
-          findsOneWidget);
+        find.text(
+          "${hashAsset.displayAmount} ${hashAsset.displayDenom} available",
+        ),
+        findsOneWidget,
+      );
       expect(find.text(hashAsset.fiatValue), findsOneWidget);
 
       final buttonFind = find.byType(PwButton);

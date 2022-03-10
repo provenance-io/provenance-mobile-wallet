@@ -5,7 +5,9 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendReviewNaviagor {
   void complete();
@@ -28,7 +30,11 @@ class SendReviewBlocState {
 
     for (var fee in fee.fees) {
       var current = map[fee.denom];
-      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+      if (current == null) {
+        map[fee.denom] = fee;
+      } else {
+        map[fee.denom] = current.copyWith(amount: fee.amount + current.amount);
+      }
     }
 
     return map.values.map((e) => e.displayAmount).join(" + ");
@@ -56,7 +62,7 @@ class SendReviewBloc implements Disposable {
 
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
-  final WalletService _walletService;
+  final WalletConnectTransactionHandler _walletService;
   final WalletDetails _walletDetails;
   final String receivingAddress;
   final String? note;
@@ -70,7 +76,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.close();
   }
 
-  Future<void> doSend() {
+  Future<void> doSend() async {
     final amountToSend = sendingAsset.amount;
 
     final body = TxBody(
@@ -89,6 +95,8 @@ class SendReviewBloc implements Disposable {
       ],
     );
 
+    final privateKey = await get<WalletService>().loadKey(_walletDetails.id);
+
     GasEstimate estimate = GasEstimate(
       fee.limit.amount.toBigInt().toInt(),
       null,
@@ -100,11 +108,13 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    return _walletService.submitTransaction(
-      body,
-      _walletDetails,
-      estimate,
-    );
+    return _walletService
+        .executeTransaction(
+          body,
+          privateKey!,
+          estimate,
+        )
+        .then((_) => null);
   }
 
   Future<void> complete() async {

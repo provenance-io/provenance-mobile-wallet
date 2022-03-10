@@ -12,7 +12,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_scre
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -136,7 +136,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   ) {
     final bloc = SendReviewBloc(
       widget.walletDetails,
-      get<WalletService>(),
+      get<WalletConnectTransactionHandler>(),
       _receivingAddress!,
       amountToSend,
       fee,
