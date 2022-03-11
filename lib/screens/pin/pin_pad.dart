@@ -130,7 +130,7 @@ class PinPadState extends State<PinPad> {
         children.add(ContainerCircleButton(
           child: PwText(
             _numbers[i].toString(),
-            style: PwTextStyle.display2,
+            style: PwTextStyle.display1,
           ),
           onClick: () {
             _onCodeClick(_numbers[i]);
@@ -149,7 +149,7 @@ class PinPadState extends State<PinPad> {
         children.add(ContainerCircleButton(
           child: PwText(
             _numbers[i].toString(),
-            style: PwTextStyle.display2,
+            style: PwTextStyle.display1,
           ),
           onClick: () {
             _onCodeClick(_numbers[i]);
