@@ -227,6 +227,7 @@ class Strings {
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
+  static const copyPassphrase = 'Copy Passphrase';
 
   // BackupComplete
   static const backupComplete = "Backup Complete";
