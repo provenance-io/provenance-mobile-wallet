@@ -45,7 +45,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
     walletEvents.added.listen(_onAdded).addTo(_subscriptions);
     walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   WalletConnectSession? _walletSession;
@@ -412,7 +412,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     _error.close();
 
     _walletSession?.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   void _onSelected(WalletDetails? details) {
