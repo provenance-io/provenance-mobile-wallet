@@ -9,8 +9,8 @@ import 'package:provenance_wallet/screens/recovery_words/words_table.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class RecoveryWords extends StatefulWidget {
-  const RecoveryWords(
+class RecoveryWordsScreen extends StatefulWidget {
+  const RecoveryWordsScreen(
     this.flowType,
     this.accountName, {
     this.currentStep,
@@ -25,11 +25,11 @@ class RecoveryWords extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RecoveryWordsState();
+    return RecoveryWordsScreenState();
   }
 }
 
-class RecoveryWordsState extends State<RecoveryWords> {
+class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
   bool _loading = true;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 

@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/recovery_words/recovery_words.dart';
+import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -128,7 +128,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                         onPressed: () {
                           if (flowType == WalletAddImportType.onBoardingAdd ||
                               flowType == WalletAddImportType.dashboardAdd) {
-                            Navigator.of(context).push(RecoveryWords(
+                            Navigator.of(context).push(RecoveryWordsScreen(
                               flowType,
                               accountName,
                               currentStep: currentStep,
