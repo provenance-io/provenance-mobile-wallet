@@ -109,12 +109,14 @@ class WordRow extends TableRow {
             index: index1,
             word: word1,
           ),
+          VerticalSpacer.small(),
         ]),
         Column(children: [
           WordCell(
             index: index2,
             word: word2,
           ),
+          VerticalSpacer.small(),
         ]),
       ];
 }
