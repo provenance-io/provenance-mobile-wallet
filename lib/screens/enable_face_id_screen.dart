@@ -111,16 +111,15 @@ class EnableFaceIdScreen extends StatelessWidget {
                         ModalLoadingRoute.dismiss(context);
 
                         if (details != null) {
-                          authHelper.enroll(
+                          await authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',
                             true,
                             context,
-                            () async {
-                              Navigator.of(context)
-                                  .push(WalletSetupConfirmation().route());
-                            },
                           );
+
+                          await Navigator.of(context)
+                              .push(WalletSetupConfirmation().route());
                         }
                       },
                     ),
@@ -147,16 +146,15 @@ class EnableFaceIdScreen extends StatelessWidget {
                         ModalLoadingRoute.dismiss(context);
 
                         if (details != null) {
-                          authHelper.enroll(
+                          await authHelper.enroll(
                             code?.join() ?? '',
                             accountName ?? '',
                             false,
                             context,
-                            () {
-                              Navigator.of(context)
-                                  .push(WalletSetupConfirmation().route());
-                            },
                           );
+
+                          await Navigator.of(context)
+                              .push(WalletSetupConfirmation().route());
                         }
                       },
                     ),
