@@ -10,7 +10,6 @@ class WordsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Table(
-      border: TableBorder.all(),
       children: [
         WordRow(
           index1: 0,
