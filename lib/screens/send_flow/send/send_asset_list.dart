@@ -104,8 +104,9 @@ class SendAssetList extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: theme.colorScheme.primary,
+          color: theme.colorScheme.neutral250,
         ),
+        color: theme.colorScheme.neutral700,
       ),
       child: child,
     );
