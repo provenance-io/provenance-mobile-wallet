@@ -26,7 +26,7 @@ class SendAssetCell extends StatelessWidget {
               error,
               stackTrace,
             ) {
-              return Container();
+              return PwIcon(PwIcons.hashLogo);
             },
           ),
         ),
