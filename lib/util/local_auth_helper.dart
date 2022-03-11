@@ -16,7 +16,7 @@ enum AuthStatus {
 
 class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   LocalAuthHelper() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   static const _inactivityTimeout = Duration(minutes: 2);
@@ -78,7 +78,7 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   @override
   FutureOr onDispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   @override
