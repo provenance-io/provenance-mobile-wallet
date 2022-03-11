@@ -140,14 +140,16 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
               ),
             VerticalSpacer.xxLarge(),
             Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: widget.data?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final dataItem = widget.data![index];
-
-                  return _buildMessage(dataItem);
-                },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: Spacing.largeX3),
+                child: TransactionMessageDefault(
+                  requestId: widget.requestId,
+                  clientMeta: widget.clientMeta,
+                  message: widget.message,
+                  data: widget.data,
+                  fees: widget.fees,
+                  pageController: _pageController,
+                ),
               ),
             ),
             ValueListenableBuilder<int>(
@@ -182,28 +184,6 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildMessage(Map<String, dynamic> data) {
-    final builder = _builders[data.runtimeType];
-
-    if (builder == null) {
-      return TransactionMessageDefault(
-        requestId: widget.requestId,
-        clientMeta: widget.clientMeta,
-        message: widget.message,
-        data: data,
-        fees: widget.fees,
-      );
-    }
-
-    return builder.call(
-      widget.requestId,
-      widget.clientMeta,
-      widget.message,
-      data,
-      widget.fees,
     );
   }
 }

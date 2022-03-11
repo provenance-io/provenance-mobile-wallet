@@ -18,6 +18,7 @@ import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -29,7 +30,7 @@ typedef WalletConnectionFactory = WalletConnection Function(
   WalletConnectAddress address,
 );
 
-class DashboardBloc extends Disposable {
+class DashboardBloc extends Disposable with WidgetsBindingObserver {
   DashboardBloc() {
     get<DeepLinkService>()
         .link
@@ -43,6 +44,7 @@ class DashboardBloc extends Disposable {
     walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
     walletEvents.added.listen(_onAdded).addTo(_subscriptions);
     walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   WalletConnectSession? _walletSession;
@@ -76,6 +78,19 @@ class DashboardBloc extends Disposable {
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final walletId = _selectedWallet.value?.id;
+      final status = _walletSession?.sessionEvents.state.value.status ??
+          WalletConnectSessionStatus.disconnected;
+      if (walletId != null &&
+          status == WalletConnectSessionStatus.disconnected) {
+        tryRestoreSession(walletId);
+      }
+    }
+  }
 
   Future<void> load({TabController? tabController}) async {
     final isFirstLoad = _isFirstLoad;
@@ -376,6 +391,7 @@ class DashboardBloc extends Disposable {
     _error.close();
 
     _walletSession?.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   void _onSelected(WalletDetails? details) {
