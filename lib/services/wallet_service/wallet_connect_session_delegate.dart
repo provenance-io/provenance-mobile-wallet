@@ -99,6 +99,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         sessionApproval = SessionApprovalData(
           _privateKey,
           _privateKey.publicKey.coin.chainId,
+
         );
       }
 
