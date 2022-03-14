@@ -133,6 +133,8 @@ class Strings {
       'Are you sure you wish to reset all wallets?';
   static const pinCodeUpdated = 'Pin Code Updated Successfully';
   static const successName = 'Success';
+  static const profileDeveloperCategoryTitle = 'Developer';
+  static const profileDeveloperHttpClients500 = 'HTTP clients return 500';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';

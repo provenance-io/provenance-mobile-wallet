@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart'
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DeveloperMenu extends StatelessWidget {
   const DeveloperMenu({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class DeveloperMenu extends StatelessWidget {
       textDirection: TextDirection.ltr,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CategoryLabel('Developer'),
+        CategoryLabel(Strings.profileDeveloperCategoryTitle),
         PwListDivider(),
         StreamBuilder<bool?>(
           initialData: diagnostics500Stream.value,
@@ -28,7 +29,7 @@ class DeveloperMenu extends StatelessWidget {
             final data = snapshot.data ?? false;
 
             return ToggleItem(
-              text: 'HTTP clients return 500',
+              text: Strings.profileDeveloperHttpClients500,
               value: data,
               onChanged: (value) async {
                 await keyValueService.setBool(
