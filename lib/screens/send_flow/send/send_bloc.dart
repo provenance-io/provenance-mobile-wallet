@@ -64,7 +64,7 @@ class SendBloc extends Disposable {
           asset.denom,
           Decimal.parse(asset.amount),
           "0",
-          "",
+          asset.image,
         );
       });
 

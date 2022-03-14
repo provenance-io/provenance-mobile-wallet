@@ -227,6 +227,7 @@ class Strings {
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
+  static const copyPassphrase = 'Copy Passphrase';
 
   // BackupComplete
   static const backupComplete = "Backup Complete";
@@ -301,7 +302,7 @@ class Strings {
   static const viewAllLabel = "View All";
   static const nextButtonLabel = "Next";
   static const sendPageRecentAddress = "Recent addresses";
-  static const sendPageSelectAmount = "Select Amount";
+  static const sendPageSelectAsset = "Select Asset";
   static const sendPageScanQrCode = "paste or scan QR code";
   static const sendPageSendToAddressLabel = "Send to Address";
 

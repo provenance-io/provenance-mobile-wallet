@@ -1,15 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/recovery_words/words_table.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class RecoveryWords extends StatefulWidget {
-  const RecoveryWords(
+class RecoveryWordsScreen extends StatefulWidget {
+  const RecoveryWordsScreen(
     this.flowType,
     this.accountName, {
     this.currentStep,
@@ -24,11 +25,11 @@ class RecoveryWords extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RecoveryWordsState();
+    return RecoveryWordsScreenState();
   }
 }
 
-class RecoveryWordsState extends State<RecoveryWords> {
+class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
   bool _loading = true;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -92,85 +93,71 @@ class RecoveryWordsState extends State<RecoveryWords> {
                         ),
                       ),
                       VerticalSpacer.xLarge(),
-                      Expanded(
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: Spacing.xxLarge,
+                          right: Spacing.xxLarge,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          color: Theme.of(context).colorScheme.neutral700,
+                        ),
                         child: Padding(
                           padding: EdgeInsets.only(
                             left: Spacing.xxLarge,
                             right: Spacing.xxLarge,
+                            top: Spacing.large,
+                            bottom: Spacing.large,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              color: Theme.of(context).colorScheme.neutral700,
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: Spacing.xxLarge,
-                                right: Spacing.xxLarge,
-                                top: Spacing.large,
-                                bottom: Spacing.large,
+                          child: Column(
+                            children: [
+                              WordsTable(
+                                words: words,
                               ),
-                              child: Wrap(
-                                direction: Axis.vertical,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                //runSpacing: Spacing.small,
-                                spacing: Spacing.medium,
-                                children: [
-                                  ...words
-                                      .mapIndexed(
-                                        (index, e) => SizedBox(
-                                          width: 122,
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: Spacing.small,
-                                                ),
-                                                child: PwText(
-                                                  '${index + 1}',
-                                                  style: PwTextStyle.body,
-                                                  color: PwColor.neutral250,
-                                                ),
-                                              ),
-                                              PwText(
-                                                e,
-                                                style: PwTextStyle.body,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ],
+                              VerticalSpacer.xLarge(),
+                              PwListDivider(),
+                              VerticalSpacer.xLarge(),
+                              GestureDetector(
+                                onTap: () async {
+                                  await Clipboard.setData(
+                                    ClipboardData(
+                                      text: words.join(' '),
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        Strings.passphraseCopied,
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .neutral700,
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        right: Spacing.medium,
+                                      ),
+                                      child: PwIcon(
+                                        PwIcons.copy,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .neutralNeutral,
+                                      ),
+                                    ),
+                                    PwText(Strings.copyPassphrase),
+                                  ],
+                                ),
                               ),
-                            ),
+                              VerticalSpacer.xLarge(),
+                            ],
                           ),
                         ),
                       ),
-                      VerticalSpacer.xLarge(),
-                      GestureDetector(
-                        onTap: () async {
-                          await Clipboard.setData(
-                            ClipboardData(
-                              text: words.join(' '),
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                Strings.passphraseCopied,
-                              ),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.neutral700,
-                            ),
-                          );
-                        },
-                        child: PwIcon(
-                          PwIcons.copy,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                        ),
-                      ),
+                      Expanded(child: Container()),
                       VerticalSpacer.xLarge(),
                       Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),

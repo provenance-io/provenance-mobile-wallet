@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final cipherService = CipherService();
+  final cipherService = PlatformCipherService();
   String _platformVersion = 'Unknown';
 
   @override

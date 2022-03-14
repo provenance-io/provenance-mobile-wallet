@@ -1,4 +1,5 @@
 import Flutter
+import Foundation
 
 public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
     var flutterChannel: FlutterMethodChannel?
@@ -15,6 +16,10 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if (call.method == "getPlatformVersion") {
 			result("iOS " + UIDevice.current.systemVersion)
+		} else if (call.method == "biometryAuth") {
+			CipherService.biometryAuth({ (success) in result(success) })
+		} else if (call.method == "resetAuth") {
+			CipherService.resetAuth()
 		} else if (call.method == "encryptKey") {
 			var success = false
 			
@@ -66,6 +71,10 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			}
 			
 			result(success)
+		} else if (call.method == "resetKeys") {
+			CipherService.resetKeys()
+			
+			result(true)
 		} else if (call.method == "getUseBiometry") {
 			let useBiometry = CipherService.getUseBiometry()
 			
@@ -84,10 +93,36 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 			}
 			
 			result(success)
-		} else if (call.method == "reset") {
-			CipherService.reset()
+		} else if (call.method == "getPin") {
+			var value: String?
 			
-			result(true)
+			do {
+				value = try CipherService.getPin()
+			} catch {
+				showError(title: "Get pin", error: error)
+			}
+			
+			result(value)
+		} else if (call.method == "setPin") {
+			var success = false
+			
+			do {
+				let argsFormatted = call.arguments as? Dictionary<String, Any>
+				guard let pin = argsFormatted?["pin"] as? String else {
+					throw PluginError(kind: .invalidArgument, message: "pin is required")
+				}
+			
+				success = try CipherService.setPin(pin: pin)
+				
+			} catch {
+				showError(title: "Set pin", error: error)
+			}
+			
+			result(success)
+		} else if (call.method == "deletePin") {
+			let success = CipherService.deletePin()
+		
+			result(success)
 		}
 	}
 	

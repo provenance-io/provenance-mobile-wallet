@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
@@ -129,4 +130,47 @@ class MockWalletConnection extends ValueListenable<WalletConnectState>
       listener();
     }
   }
+}
+
+class MockCipherService implements CipherService {
+  @override
+  Future<String?> get platformVersion async => null;
+
+  @override
+  Future<bool> biometryAuth() async => true;
+
+  @override
+  Future<String> decryptKey({required String id}) async => '';
+
+  @override
+  Future<bool> deletePin() async => true;
+
+  @override
+  Future<bool> encryptKey({
+    required String id,
+    required String privateKey,
+    bool? useBiometry,
+  }) async =>
+      true;
+
+  @override
+  Future<String?> getPin() async => null;
+
+  @override
+  Future<bool> getUseBiometry() async => true;
+
+  @override
+  Future<bool> removeKey({required String id}) async => true;
+
+  @override
+  Future<bool> reset() async => true;
+
+  @override
+  Future<void> resetAuth() async => Future.value();
+
+  @override
+  Future<bool> setPin(String pin) async => true;
+
+  @override
+  Future<bool> setUseBiometry({required bool useBiometry}) async => true;
 }

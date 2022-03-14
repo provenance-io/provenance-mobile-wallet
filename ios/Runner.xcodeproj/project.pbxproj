@@ -19,6 +19,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1278D48427DBF0AA00E47113 /* Release-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-prod.xcconfig"; path = "Flutter/Release-prod.xcconfig"; sourceTree = "<group>"; };
+		1278D48527DBF1B000E47113 /* Debug-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Debug-prod.xcconfig"; path = "Flutter/Debug-prod.xcconfig"; sourceTree = "<group>"; };
+		12D14BFB27DBF2E0007C0D7F /* Xcode-Debug-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Xcode-Debug-dev.xcconfig"; sourceTree = "<group>"; };
+		12D14BFC27DBF312007C0D7F /* Xcode-Debug-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Xcode-Debug-prod.xcconfig"; sourceTree = "<group>"; };
+		12D14BFD27DBF5CB007C0D7F /* Profile-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Profile-prod.xcconfig"; path = "Flutter/Profile-prod.xcconfig"; sourceTree = "<group>"; };
+		12D14BFE27DBF5E6007C0D7F /* Profile-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Profile-dev.xcconfig"; path = "Flutter/Profile-dev.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2384DF3EA5DC7870FDE8BC8A /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
@@ -26,10 +32,10 @@
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7AFA3C8E1D35360C0083082E /* Release-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-dev.xcconfig"; path = "Flutter/Release-dev.xcconfig"; sourceTree = "<group>"; };
 		7D866D0B76E57F1CEDC8A7C3 /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		8CF38A192493143286D2B213 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
+		9740EEB21CF90195004384FC /* Debug-dev.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Debug-dev.xcconfig"; path = "Flutter/Debug-dev.xcconfig"; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* ProvenanceWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProvenanceWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -73,9 +79,13 @@
 			isa = PBXGroup;
 			children = (
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
-				9740EEB21CF90195004384FC /* Debug.xcconfig */,
-				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
+				9740EEB21CF90195004384FC /* Debug-dev.xcconfig */,
+				7AFA3C8E1D35360C0083082E /* Release-dev.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
+				1278D48427DBF0AA00E47113 /* Release-prod.xcconfig */,
+				1278D48527DBF1B000E47113 /* Debug-prod.xcconfig */,
+				12D14BFD27DBF5CB007C0D7F /* Profile-prod.xcconfig */,
+				12D14BFE27DBF5E6007C0D7F /* Profile-dev.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -112,6 +122,8 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				12D14BFB27DBF2E0007C0D7F /* Xcode-Debug-dev.xcconfig */,
+				12D14BFC27DBF312007C0D7F /* Xcode-Debug-prod.xcconfig */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -358,7 +370,7 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 12D14BFD27DBF5CB007C0D7F /* Profile-prod.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Provenance Wallet";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -441,7 +453,7 @@
 		};
 		55F5618527C04D0E00716ADE /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug-dev.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Prov Wallet Dev";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -522,7 +534,7 @@
 		};
 		55F5618827C04D1900716ADE /* Release-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release-dev.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Prov Wallet Dev";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -600,7 +612,7 @@
 		};
 		55F5618B27C04D2000716ADE /* Profile-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 12D14BFE27DBF5E6007C0D7F /* Profile-dev.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Prov Wallet Dev";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -735,7 +747,7 @@
 		};
 		97C147061CF9000F007C117D /* Debug-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			baseConfigurationReference = 1278D48527DBF1B000E47113 /* Debug-prod.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Provenance Wallet";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -764,7 +776,7 @@
 		};
 		97C147071CF9000F007C117D /* Release-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 1278D48427DBF0AA00E47113 /* Release-prod.xcconfig */;
 			buildSettings = {
 				APP_NAME = "Provenance Wallet";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
