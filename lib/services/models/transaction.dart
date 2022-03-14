@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 
@@ -14,6 +15,8 @@ class Transaction {
         assert(dto.txFee != null),
         assert(dto.pricePerUnit != null),
         assert(dto.totalPrice != null),
+        // FIXME: Uncomment this when dto has this property fr
+        //assert(dto.exponent != null),
         amount = dto.amount!,
         block = dto.block!,
         denom = dto.denom!,
@@ -24,7 +27,9 @@ class Transaction {
         timestamp = dto.timestamp!,
         txFee = dto.txFee!,
         pricePerUnit = dto.pricePerUnit!,
-        totalPrice = dto.totalPrice!;
+        totalPrice = dto.totalPrice!,
+        // FIXME: Force unwrap this when dto has this property fr
+        exponent = dto.exponent ?? 1;
 
   Transaction.fake({
     required this.amount,
@@ -38,6 +43,7 @@ class Transaction {
     required this.txFee,
     required this.pricePerUnit,
     required this.totalPrice,
+    required this.exponent,
   });
 
   final int amount;
@@ -51,6 +57,13 @@ class Transaction {
   final int txFee;
   final double pricePerUnit;
   final double totalPrice;
+  final int exponent;
+
+  String get displayAmount {
+    return (Decimal.fromInt(amount) / Decimal.fromInt(10).pow(exponent))
+        .toDecimal(scaleOnInfinitePrecision: exponent)
+        .toString();
+  }
 
   String get formattedTimestamp {
     return DateFormat('MMM d').format(timestamp);

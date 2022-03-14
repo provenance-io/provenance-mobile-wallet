@@ -45,6 +45,7 @@ class MockTransactionService extends TransactionService {
       txFee: faker.randomGenerator.integer(999999999),
       pricePerUnit: pricePerUnit,
       totalPrice: pricePerUnit * amount,
+      exponent: 1,
     );
   }
 }

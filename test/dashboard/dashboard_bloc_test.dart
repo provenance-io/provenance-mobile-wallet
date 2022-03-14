@@ -271,6 +271,7 @@ class TestState {
         txFee: i,
         pricePerUnit: i.toDouble(),
         totalPrice: i.toDouble(),
+        exponent: 1,
       );
 
       assets[id] = [asset];

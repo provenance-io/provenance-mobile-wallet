@@ -356,4 +356,5 @@ class Strings {
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
+  static const allTransactions = "All Transactions";
 }
