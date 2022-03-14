@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await CipherService().platformVersion, '42');
+    expect(await PlatformCipherService().platformVersion, '42');
   });
 }

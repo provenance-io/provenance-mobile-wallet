@@ -23,7 +23,7 @@ main() {
 
     _channel = const MethodChannel('prov_wallet_flutter');
 
-    _cipherService = CipherService();
+    _cipherService = PlatformCipherService();
   });
 
   group("encryptKey", () {

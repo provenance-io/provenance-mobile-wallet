@@ -1,54 +1,40 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:get_it/get_it.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/pin/validate_pin.dart';
-import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
-enum AuthResult {
+enum AuthStatus {
   noAccount,
-  success,
-  failure,
+  authenticated,
+  timedOut,
+  unauthenticated,
 }
 
-class LocalAuthHelper {
-  LocalAuthentication localAuth = LocalAuthentication();
-  final storage = get<SecureStorageService>();
-  bool hasBiometrics = false;
-  BiometricType? type;
-  bool isEnabled = false;
-  String get authType {
-    return Platform.isIOS
-        ? type == BiometricType.face
-            ? Strings.faceId
-            : Strings.touchId
-        : type == BiometricType.face
-            ? Strings.face
-            : Strings.fingerPrint;
+class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
+  LocalAuthHelper() {
+    WidgetsBinding.instance?.addObserver(this);
   }
 
-  Future<void> initialize() async {
-    hasBiometrics = await localAuth.canCheckBiometrics;
-    if (hasBiometrics) {
-      final biometricTypes = await localAuth.getAvailableBiometrics();
-      if (biometricTypes.contains(BiometricType.face)) {
-        type = BiometricType.face;
-      } else if (biometricTypes.contains(BiometricType.fingerprint)) {
-        type = BiometricType.fingerprint;
-      }
-    }
+  static const _inactivityTimeout = Duration(minutes: 2);
+  final _cipherService = get<CipherService>();
+  final _status = BehaviorSubject<AuthStatus>();
+  Timer? _inactivityTimer;
 
-    String? bioEnabled = await storage.read(StorageKey.biometricEnabled);
-    isEnabled = bioEnabled != null
-        ? bioEnabled == true.toString()
-            ? true
-            : false
-        : false;
+  ValueStream<AuthStatus> get status => _status;
+
+  Future<void> init() async {
+    final code = await _cipherService.getPin();
+    _status.value = code == null || code.isEmpty
+        ? AuthStatus.noAccount
+        : AuthStatus.unauthenticated;
+  }
+
+  void reset() {
+    _status.value = AuthStatus.noAccount;
   }
 
   Future<bool> enroll(
@@ -56,76 +42,87 @@ class LocalAuthHelper {
     String accountName,
     bool useBiometry,
     BuildContext context,
-    VoidCallback callback,
   ) async {
-    bool success = true;
-    if (useBiometry && !hasBiometrics) {
-      success = false;
-      await showDialog(
-        useSafeArea: true,
-        context: context,
-        builder: (context) =>
-            ErrorDialog(error: 'Failed to enroll, try again in settings'),
-      );
-    } else {
-      await storage.write(StorageKey.biometricEnabled, useBiometry.toString());
-      await storage.write(StorageKey.code, code);
-      await storage.write(StorageKey.accountName, accountName);
-      callback();
+    var success = await _cipherService.setUseBiometry(useBiometry: useBiometry);
+    if (success) {
+      success = await _cipherService.setPin(code);
+      _status.value = AuthStatus.authenticated;
     }
 
     return success;
   }
 
-  Future<AuthResult> auth(BuildContext context, Function(bool) callback) async {
-    final accountExists = await storage.read(StorageKey.accountName);
-    if (accountExists == null || accountExists.isEmpty) {
-      return AuthResult.noAccount;
+  Future<AuthStatus> auth(BuildContext context) async {
+    final pin = await _cipherService.getPin();
+    if (pin == null || pin.isEmpty) {
+      const result = AuthStatus.noAccount;
+      _status.value = result;
+
+      return result;
     }
 
-    final biometricEnabled = await storage.read(StorageKey.biometricEnabled);
-    if (biometricEnabled == "true") {
-      var result = await localAuth.authenticate(
-        localizedReason: 'Authenticate',
-        biometricOnly: false,
-        iOSAuthStrings: IOSAuthMessages(
-          cancelButton: 'Cancel',
-          goToSettingsButton: 'Setting',
-          goToSettingsDescription: 'Setting Description',
-          lockOut: 'Try again later, you are locked out',
-        ),
-      );
-      if (result) {
-        callback(result);
+    var result = AuthStatus.unauthenticated;
 
-        return AuthResult.success;
-      } else {
-        final code = await storage.read(StorageKey.code);
-        final wasSuccessful = await Navigator.of(context).push(
-          ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
-              .route(),
-        );
-        if (wasSuccessful == true) {
-          callback(true);
-
-          return AuthResult.success;
-        }
-
-        return AuthResult.failure;
-      }
+    final useBiometry = await _cipherService.getUseBiometry();
+    if (useBiometry) {
+      final success = await _cipherService.biometryAuth();
+      result = success ? AuthStatus.authenticated : await _validatePin(context);
     } else {
-      final code = await storage.read(StorageKey.code);
-      final wasSuccessful = await Navigator.of(context).push(
-        ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
-            .route(),
-      );
-      if (wasSuccessful == true) {
-        callback(true);
-
-        return AuthResult.success;
-      }
+      result = await _validatePin(context);
     }
 
-    return AuthResult.failure;
+    _status.value = result;
+
+    return result;
+  }
+
+  @override
+  FutureOr onDispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _cancelInactivityTimer();
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        _startInactivityTimer();
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  Future<AuthStatus> _validatePin(BuildContext context) async {
+    final code = await _cipherService.getPin();
+    final success = await Navigator.of(context).push(
+      ValidatePin(code: code?.split("").map((e) => int.parse(e)).toList())
+          .route(),
+    );
+
+    var result = AuthStatus.unauthenticated;
+
+    if (success == true) {
+      result = AuthStatus.authenticated;
+    }
+
+    return result;
+  }
+
+  void _startInactivityTimer() {
+    _inactivityTimer ??= Timer(_inactivityTimeout, () {
+      _inactivityTimer = null;
+      _cipherService.resetAuth();
+      _status.value = AuthStatus.timedOut;
+    });
+  }
+
+  void _cancelInactivityTimer() {
+    _inactivityTimer?.cancel();
+    _inactivityTimer = null;
   }
 }

@@ -16,7 +16,6 @@ import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/platform_key_value_service.dart';
-import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -27,6 +26,7 @@ import 'package:provenance_wallet/services/wallet_service/wallet_storage_service
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'util/get.dart';
 
@@ -41,14 +41,22 @@ void main() async {
     [DeviceOrientation.portraitUp],
   );
 
+  final cipherService = PlatformCipherService();
+  get.registerSingleton<CipherService>(cipherService);
+
   var keyValueService = PlatformKeyValueService();
   var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
   if (!hasKey) {
-    await SecureStorageService().deleteAll();
+    await cipherService.deletePin();
     keyValueService.setBool(PrefKey.isSubsequentRun, true);
   }
 
   get.registerSingleton<KeyValueService>(keyValueService);
+
+  final authHelper = LocalAuthHelper();
+  await authHelper.init();
+
+  get.registerSingleton<LocalAuthHelper>(authHelper);
 
   runApp(
     ProvenanceWalletApp(),
@@ -65,18 +73,43 @@ class ProvenanceWalletApp extends StatefulWidget {
 }
 
 class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
+  final _subscriptions = CompositeSubscription();
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  var _authStatus = AuthStatus.noAccount;
+
+  @override
+  void dispose() {
+    _subscriptions.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
 
+    final authHelper = get<LocalAuthHelper>();
+    _authStatus = authHelper.status.value;
+
+    authHelper.status.listen((e) {
+      final previousStatus = _authStatus;
+      _authStatus = e;
+
+      switch (e) {
+        case AuthStatus.unauthenticated:
+          break;
+        case AuthStatus.authenticated:
+          break;
+        case AuthStatus.noAccount:
+        case AuthStatus.timedOut:
+          if (previousStatus == AuthStatus.authenticated) {
+            _navigatorKey.currentState?.popUntil((route) => route.isFirst);
+          }
+          break;
+      }
+    }).addTo(_subscriptions);
+
     get.registerLazySingleton<HttpClient>(
       () => HttpClient(),
-    );
-    get.registerLazySingleton<SecureStorageService>(
-      () => SecureStorageService(),
-    );
-    get.registerLazySingleton<LocalAuthHelper>(
-      () => LocalAuthHelper()..initialize(),
     );
     get.registerLazySingleton<StatService>(
       () => DefaultStatService(),
@@ -94,7 +127,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => (address) => WalletConnection(address),
     );
 
-    final cipherService = CipherService();
+    final cipherService = get<CipherService>();
     final sqliteStorage = SqliteWalletStorageService();
     final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
 
@@ -118,6 +151,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         RouterObserver.instance.routeObserver,
       ],
       home: LandingScreen(),
+      navigatorKey: _navigatorKey,
     );
   }
 }

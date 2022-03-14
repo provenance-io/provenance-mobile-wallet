@@ -62,26 +62,24 @@ class ChangePinBloc extends Disposable {
     BuildContext context,
     bool enroll,
   ) async {
-    _authHelper.enroll(
+    await _authHelper.enroll(
       _inputCode.value.join(" "),
       _accountName.value,
       enroll,
       context,
-      () async {
-        _navigator.pinUpdatedSuccessfully();
-      },
     );
+
+    await _navigator.pinUpdatedSuccessfully();
   }
 
   Future<void> returnToProfile() async {
     _navigator.endFlow();
   }
 
-  void doAuth(BuildContext context) {
-    _authHelper.auth(context, (isAuthorized) {
-      if (!isAuthorized) {
-        returnToProfile();
-      }
-    });
+  Future<void> doAuth(BuildContext context) async {
+    final status = await _authHelper.auth(context);
+    if (status == AuthStatus.unauthenticated) {
+      returnToProfile();
+    }
   }
 }

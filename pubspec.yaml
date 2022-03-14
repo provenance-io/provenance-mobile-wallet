@@ -34,12 +34,10 @@ dependencies:
     sdk: flutter
   flutter_hooks: ^0.17.0
   flutter_lints: ^1.0.4
-  flutter_secure_storage: ^4.2.0
   flutter_svg: ^0.22.0
   get_it: ^7.2.0
   intl: ^0.17.0
   json_annotation: 4.4.0
-  local_auth: ^1.1.6
   logger: ^1.0.0
   path:
   pretty_json: ^2.0.0

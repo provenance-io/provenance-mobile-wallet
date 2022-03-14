@@ -4,9 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/secure_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -85,10 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                   if (shouldReset) {
                     await get<DashboardBloc>().resetWallets();
-                    await get<SecureStorageService>().deleteAll();
-                    get<LandingBloc>().checkStorage();
-
-                    Navigator.of(context).popUntil((route) => route.isFirst);
                   }
                 },
               ),
