@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
@@ -12,6 +13,7 @@ import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_screen_test.mocks.dart';
@@ -80,13 +82,13 @@ main() {
     testWidgets("Contents", (tester) async {
       await _build(tester);
 
-      expect(find.text("Select Amount"), findsOneWidget);
-      expect(find.text("paste or scan QR code"), findsOneWidget);
-      expect(find.text("Send to Address"), findsOneWidget);
+      expect(find.text(Strings.sendPageSelectAsset), findsOneWidget);
+      expect(find.text(Strings.sendPageScanQrCode), findsOneWidget);
+      expect(find.text(Strings.sendPageSendToAddressLabel), findsOneWidget);
       expect(find.byType(SendAssetList), findsOneWidget);
       expect(find.byType(RecentSendList), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.byIcon(Icons.qr_code), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
       expect(
         find.descendant(
           of: find.byType(PwButton),
@@ -144,7 +146,7 @@ main() {
         when(mockBloc!.scanAddress())
             .thenAnswer((_) => Future.value(returnedString));
 
-        final iconFind = find.byIcon(Icons.qr_code);
+        final iconFind = find.byType(PwIcon);
         await tester.tap(iconFind);
 
         verify(mockBloc!.scanAddress());
@@ -159,7 +161,7 @@ main() {
         final error = Exception("Test");
         when(mockBloc!.scanAddress()).thenAnswer((_) => Future.error(error));
 
-        final iconFind = find.byIcon(Icons.qr_code);
+        final iconFind = find.byType(PwIcon);
         await tester.tap(iconFind);
         await tester.pumpAndSettle(Duration(seconds: 3));
 
