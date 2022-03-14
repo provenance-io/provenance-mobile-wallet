@@ -51,6 +51,6 @@ class Asset {
   }
 
   String get formattedAmount {
-    return (usdPrice * double.parse(displayAmount)).toCurrency();
+    return (usdPrice * double.parse(amount)).toCurrency();
   }
 }
