@@ -160,16 +160,6 @@ class TradeDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsOrderType,
-              endChild: PwText(
-                transaction.denom,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: PwText(
                 transaction.amount.toString(),
