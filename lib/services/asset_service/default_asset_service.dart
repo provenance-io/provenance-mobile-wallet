@@ -3,7 +3,6 @@ import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/notification/notification_client_id.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class DefaultAssetService extends AssetService with ClientNotificationMixin {
@@ -31,7 +30,7 @@ class DefaultAssetService extends AssetService with ClientNotificationMixin {
       },
     );
 
-    notifyOnError(data, serviceMobileWalletClientId);
+    notifyOnError(data);
 
     return data.data ?? [];
   }

@@ -6,10 +6,12 @@ class NotificationInfo {
     required this.title,
     required this.kind,
     this.message,
+    this.count,
   });
 
   final String id;
   final String title;
   final NotificationKind kind;
   final String? message;
+  final int? count;
 }

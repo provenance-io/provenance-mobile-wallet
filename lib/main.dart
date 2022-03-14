@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,6 +89,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   void initState() {
     super.initState();
 
+    final keyValueService = get<KeyValueService>();
+
     final authHelper = get<LocalAuthHelper>();
     _authStatus = authHelper.status.value;
 
@@ -111,6 +115,14 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<HttpClient>(
       () => HttpClient(),
     );
+
+    keyValueService.streamBool(PrefKey.httpClientDiagnostics500).listen((e) {
+      final doError = e ?? false;
+      final client = get<HttpClient>();
+      final statusCode = doError ? HttpStatus.internalServerError : null;
+      client.setDiagnosticsError(statusCode);
+    }).addTo(_subscriptions);
+
     get.registerLazySingleton<StatService>(
       () => DefaultStatService(),
     );
