@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:provenance_wallet/services/http_client_diagnostic_interceptor.dart';
 import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -25,6 +26,7 @@ class HttpClient {
   String _organizationUuid = '';
   bool _isProd = false;
   String _jwtToken = '';
+  Interceptor? _diagosticsInterceptor;
   late Dio _dio;
 
   SessionTimeoutCallback? onTimeout;
@@ -72,6 +74,16 @@ class HttpClient {
   setProd(bool isProd) {
     _isProd = isProd;
     _initDio();
+  }
+
+  setDiagnosticsError(int? statusCode) {
+    if (statusCode != null) {
+      final interceptor = HttpClientDiagnosticInterceptor(statusCode);
+      _diagosticsInterceptor = interceptor;
+      _dio.interceptors.add(interceptor);
+    } else {
+      _dio.interceptors.remove(_diagosticsInterceptor);
+    }
   }
 
   signOut() {

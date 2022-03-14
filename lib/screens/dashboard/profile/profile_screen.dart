@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -19,6 +22,25 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   static const _divider = PwListDivider();
+  static const _devTapsRequired = 10;
+  var _devTapCount = 0;
+  var _showDevMenu = false;
+  final _keyValueService = get<KeyValueService>();
+  Timer? _devTimer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initDevMenu();
+  }
+
+  @override
+  void dispose() {
+    _stopDevTimer();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +53,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             textDirection: TextDirection.ltr,
             children: [
-              AppBar(
-                primary: false,
-                backgroundColor: Theme.of(context).colorScheme.neutral750,
-                elevation: 0.0,
-                leading: Container(),
-                title: PwText(
-                  Strings.profile,
-                  style: PwTextStyle.subhead,
+              GestureDetector(
+                onTap: _onDevTap,
+                child: AppBar(
+                  primary: false,
+                  backgroundColor: Theme.of(context).colorScheme.neutral750,
+                  elevation: 0.0,
+                  leading: Container(),
+                  title: PwText(
+                    Strings.profile,
+                    style: PwTextStyle.subhead,
+                  ),
                 ),
               ),
               _CategoryLabel(Strings.security),
@@ -102,6 +127,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   launchUrl('https://docs.provenance.io/');
                 },
               ),
+              if (_showDevMenu) _divider,
+              if (_showDevMenu) _DeveloperMenu(),
               _divider,
             ],
           ),
@@ -115,6 +142,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await launch(url);
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _initDevMenu() async {
+    final showDevMenu = await _keyValueService.getBool(PrefKey.showDevMenu);
+
+    if (showDevMenu ?? false) {
+      setState(() {
+        _showDevMenu = true;
+      });
+    }
+  }
+
+  void _startDevTimer() {
+    _devTimer = Timer(Duration(seconds: 5), () {
+      _devTapCount = 0;
+      _devTimer = null;
+    });
+  }
+
+  void _stopDevTimer() {
+    _devTimer?.cancel();
+    _devTimer = null;
+    _devTapCount = 0;
+  }
+
+  void _onDevTap() {
+    if (_devTimer == null) {
+      _startDevTimer();
+    }
+
+    _devTapCount++;
+
+    if (_devTapCount == _devTapsRequired) {
+      final showDevMenu = !_showDevMenu;
+      _stopDevTimer();
+      setState(() {
+        _showDevMenu = showDevMenu;
+      });
+      _keyValueService.setBool(PrefKey.showDevMenu, showDevMenu);
     }
   }
 }
@@ -336,6 +403,45 @@ class _ItemCount extends StatelessWidget {
         count.toString(),
         style: PwTextStyle.xsBold,
       ),
+    );
+  }
+}
+
+class _DeveloperMenu extends StatelessWidget {
+  const _DeveloperMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final keyValueService = get<KeyValueService>();
+    final diagnostics500Stream =
+        keyValueService.streamBool(PrefKey.httpClientDiagnostics500);
+
+    return Column(
+      textDirection: TextDirection.ltr,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _CategoryLabel('Developer'),
+        PwListDivider(),
+        StreamBuilder<bool?>(
+          initialData: diagnostics500Stream.value,
+          stream: diagnostics500Stream,
+          builder: (context, snapshot) {
+            final data = snapshot.data ?? false;
+
+            return _ToggleItem(
+              text: 'Http clients return 500',
+              value: data,
+              onChanged: (value) async {
+                await keyValueService.setBool(
+                  PrefKey.httpClientDiagnostics500,
+                  !data,
+                );
+                get<DashboardBloc>().load();
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
