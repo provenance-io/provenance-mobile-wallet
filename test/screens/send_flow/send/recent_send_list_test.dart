@@ -23,7 +23,7 @@ main() {
       final textFind = find.byType(PwText);
 
       expect(textFind, findsOneWidget);
-      expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
+      expect(find.byType(PwIcon), findsOneWidget);
       expect(
         find.descendant(of: textFind, matching: find.text("View All")),
         findsOneWidget,
@@ -38,7 +38,7 @@ main() {
       final textFind = find.byType(PwText);
 
       expect(textFind, findsNWidgets(2));
-      expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
+      expect(find.byType(PwIcon), findsOneWidget);
       expect(find.text("View All"), findsNothing);
       expect(
         find.descendant(of: textFind, matching: find.text("Address")),
