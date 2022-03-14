@@ -1,5 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
@@ -14,8 +16,8 @@ class SendScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: PwText(Strings.sendTitle),
+      appBar: PwAppBar(
+        title: Strings.sendTitle,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -64,72 +66,58 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    const labelPadding = EdgeInsets.fromLTRB(
-      0,
-      Spacing.medium,
-      0,
-      Spacing.small,
-    );
     final theme = Theme.of(context);
 
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: labelPadding,
-          child: PwText(Strings.sendPageSelectAmount),
-        ),
-        ValueListenableBuilder<List<SendAsset>>(
-          valueListenable: _assets,
-          builder: (
-            context,
-            assets,
-            child,
-          ) {
-            return ValueListenableBuilder<SendAsset?>(
-              valueListenable: _denomNotifier,
-              builder: (
-                context,
-                selectedAsset,
-                child,
-              ) {
-                return SendAssetList(
-                  assets,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          PwText(Strings.sendPageSelectAsset),
+          VerticalSpacer.small(),
+          ValueListenableBuilder<List<SendAsset>>(
+            valueListenable: _assets,
+            builder: (
+              context,
+              assets,
+              child,
+            ) {
+              return ValueListenableBuilder<SendAsset?>(
+                valueListenable: _denomNotifier,
+                builder: (
+                  context,
                   selectedAsset,
-                  (newAsset) => _denomNotifier.value = newAsset,
-                );
-              },
-            );
-          },
-        ),
-        Padding(
-          padding: labelPadding,
-          child: PwText(Strings.sendPageSendToAddressLabel),
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _addressController,
-                decoration: InputDecoration(
-                  hintText: Strings.sendPageScanQrCode,
+                  child,
+                ) {
+                  return SendAssetList(
+                    assets,
+                    selectedAsset,
+                    (newAsset) => _denomNotifier.value = newAsset,
+                  );
+                },
+              );
+            },
+          ),
+          VerticalSpacer.xxLarge(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: PwTextFormField(
+                  label: Strings.sendPageSendToAddressLabel,
+                  controller: _addressController,
+                  hint: Strings.sendPageScanQrCode,
                 ),
               ),
-            ),
-            HorizontalSpacer.medium(),
-            Container(
-              decoration: ShapeDecoration(
-                shape: CircleBorder(
-                  side: theme.inputDecorationTheme.border?.borderSide ??
-                      BorderSide(),
-                ),
-              ),
-              child: IconButton(
+              HorizontalSpacer.medium(),
+              IconButton(
                 padding: EdgeInsets.zero,
-                icon: Icon(
-                  Icons.qr_code,
+                icon: PwIcon(
+                  PwIcons.qr,
+                  color: theme.colorScheme.neutralNeutral,
+                  size: 48.0,
                 ),
                 onPressed: () async {
                   try {
@@ -148,35 +136,35 @@ class SendPageState extends State<SendPage> {
                   }
                 },
               ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: labelPadding,
-          child: PwText(Strings.sendPageRecentAddress),
-        ),
-        Expanded(
-          child: ValueListenableBuilder<List<RecentAddress>>(
-            valueListenable: _recentSends,
-            builder: (
-              context,
-              value,
-              child,
-            ) =>
-                RecentSendList(
-              value,
-              _onRecentAddressClicked,
-              _onViewAllClicked,
-              key: ValueKey("RecentAddresses"),
+            ],
+          ),
+          VerticalSpacer.xxLarge(),
+          PwText(Strings.sendPageRecentAddress),
+          VerticalSpacer.small(),
+          Expanded(
+            child: ValueListenableBuilder<List<RecentAddress>>(
+              valueListenable: _recentSends,
+              builder: (
+                context,
+                value,
+                child,
+              ) =>
+                  RecentSendList(
+                value,
+                _onRecentAddressClicked,
+                _onViewAllClicked,
+                key: ValueKey("RecentAddresses"),
+              ),
             ),
           ),
-        ),
-        PwButton(
-          child: PwText(Strings.nextButtonLabel),
-          onPressed: _next,
-        ),
-        VerticalSpacer.large(),
-      ],
+          VerticalSpacer.xxLarge(),
+          PwButton(
+            child: PwText(Strings.nextButtonLabel),
+            onPressed: _next,
+          ),
+          VerticalSpacer.large(),
+        ],
+      ),
     );
   }
 

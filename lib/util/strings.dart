@@ -301,7 +301,7 @@ class Strings {
   static const viewAllLabel = "View All";
   static const nextButtonLabel = "Next";
   static const sendPageRecentAddress = "Recent addresses";
-  static const sendPageSelectAmount = "Select Amount";
+  static const sendPageSelectAsset = "Select Asset";
   static const sendPageScanQrCode = "paste or scan QR code";
   static const sendPageSendToAddressLabel = "Send to Address";
 
