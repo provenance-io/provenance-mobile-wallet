@@ -11,7 +11,10 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
     as _i6;
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i4;
+import 'package:provenance_wallet/services/models/price.dart' as _i10;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i7;
+import 'package:provenance_wallet/services/price_service/price_service.dart'
+    as _i9;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
 
@@ -141,4 +144,19 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
               #submitTransaction, [body, walletDetails, gasEstimate]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+}
+
+/// A class which mocks [PriceService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPriceService extends _i1.Mock implements _i9.PriceService {
+  MockPriceService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<List<_i10.Price>> getAssetPrices(List<String>? denominations) =>
+      (super.noSuchMethod(Invocation.method(#getAssetPrices, [denominations]),
+              returnValue: Future<List<_i10.Price>>.value(<_i10.Price>[]))
+          as _i5.Future<List<_i10.Price>>);
 }

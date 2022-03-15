@@ -8,12 +8,13 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i4;
 import 'package:provenance_dart/wallet.dart' as _i12;
 import 'package:provenance_wallet/services/asset_service/asset_service.dart'
-    as _i5;
-import 'package:provenance_wallet/services/models/asset.dart' as _i7;
-import 'package:provenance_wallet/services/models/asset_graph_item.dart' as _i8;
-import 'package:provenance_wallet/services/models/asset_statistic.dart' as _i2;
-import 'package:provenance_wallet/services/models/transaction.dart' as _i10;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i11;
+    as _i4;
+import 'package:provenance_wallet/services/models/asset.dart' as _i6;
+import 'package:provenance_wallet/services/models/price.dart' as _i13;
+import 'package:provenance_wallet/services/models/transaction.dart' as _i8;
+import 'package:provenance_wallet/services/models/wallet_details.dart' as _i9;
+import 'package:provenance_wallet/services/price_service/price_service.dart'
+    as _i12;
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
     as _i9;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
@@ -176,4 +177,19 @@ class MockWalletService extends _i1.Mock implements _i3.WalletService {
               #submitTransaction, [body, walletDetails, gasEstimate]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+}
+
+/// A class which mocks [PriceService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPriceService extends _i1.Mock implements _i12.PriceService {
+  MockPriceService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<List<_i13.Price>> getAssetPrices(List<String>? denominations) =>
+      (super.noSuchMethod(Invocation.method(#getAssetPrices, [denominations]),
+              returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
+          as _i5.Future<List<_i13.Price>>);
 }

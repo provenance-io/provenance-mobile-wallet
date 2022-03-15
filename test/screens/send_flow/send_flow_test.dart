@@ -12,7 +12,9 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_scre
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
@@ -25,6 +27,7 @@ final get = GetIt.instance;
   AssetService,
   TransactionService,
   WalletService,
+  PriceService,
 ])
 main() {
   SendFlowState? state;
@@ -46,6 +49,7 @@ main() {
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
   MockWalletService? mockWalletService;
+  MockPriceService? mockPriceService;
 
   setUp(() {
     mockTransactionService = MockTransactionService();
@@ -71,15 +75,21 @@ main() {
       return Future.value(gasEstimate);
     });
 
+    mockPriceService = MockPriceService();
+    when(mockPriceService!.getAssetPrices(any))
+        .thenAnswer((realInvocation) => Future.value(<Price>[]));
+
     get.registerSingleton<TransactionService>(mockTransactionService!);
     get.registerSingleton<AssetService>(mockAssetService!);
     get.registerSingleton<WalletService>(mockWalletService!);
+    get.registerSingleton<PriceService>(mockPriceService!);
   });
 
   tearDown(() {
     get.unregister<WalletService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
+    get.unregister<PriceService>();
   });
 
   testWidgets("Contents", (tester) async {
