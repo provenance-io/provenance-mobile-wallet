@@ -12,8 +12,6 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i4;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i7;
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart'
-    as _i9;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
 
@@ -120,10 +118,10 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
                   Future<List<_i7.WalletDetails>>.value(<_i7.WalletDetails>[]))
           as _i5.Future<List<_i7.WalletDetails>>);
   @override
-  _i5.Future<_i9.WalletConnectSession?> createSession(String? addressData) =>
-      (super.noSuchMethod(Invocation.method(#createSession, [addressData]),
-              returnValue: Future<_i9.WalletConnectSession?>.value())
-          as _i5.Future<_i9.WalletConnectSession?>);
+  _i5.Future<_i8.PrivateKey?> loadKey(String? walletId) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [walletId]),
+              returnValue: Future<_i8.PrivateKey?>.value())
+          as _i5.Future<_i8.PrivateKey?>);
   @override
   _i5.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
