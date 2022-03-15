@@ -123,7 +123,7 @@ main() {
 
       verify(_mockSqliteService!.removeWallet(id: id));
 
-      expect(result, isNotNull);
+      expect(result, isNull);
     });
   });
 
@@ -280,30 +280,6 @@ main() {
 
       final result = await _storageService!.selectWallet(id: "Id");
       expect(result, null);
-    });
-  });
-
-  group("getUseBiometry", () {
-    testWidgets('success', (tester) async {
-      when(_mockCipherService!.getUseBiometry())
-          .thenAnswer((_) => Future.value(true));
-
-      final result = await _storageService!.getUseBiometry();
-      verifyNoMoreInteractions(_mockSqliteService);
-      expect(result, true);
-    });
-  });
-
-  group("setUseBiometry", () {
-    testWidgets('success', (tester) async {
-      when(_mockCipherService!
-              .setUseBiometry(useBiometry: anyNamed("useBiometry")))
-          .thenAnswer((_) => Future.value(false));
-
-      final result = await _storageService!.setUseBiometry(true);
-      verifyNoMoreInteractions(_mockSqliteService);
-      expect(result, false);
-      verify(_mockCipherService!.setUseBiometry(useBiometry: true));
     });
   });
 }

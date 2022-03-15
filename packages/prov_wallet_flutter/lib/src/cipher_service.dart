@@ -5,11 +5,11 @@ abstract class CipherService {
 
   Future<String?> get platformVersion;
 
-  Future<bool> biometryAuth();
+  Future<bool> authenticateBiometry();
 
-  Future<void> resetAuth();
+  Future<bool> resetAuth();
 
-  Future<bool> getUseBiometry();
+  Future<bool?> getUseBiometry();
 
   Future<bool> setUseBiometry({required bool useBiometry});
 
@@ -19,7 +19,7 @@ abstract class CipherService {
     bool? useBiometry,
   });
 
-  Future<String> decryptKey({
+  Future<String?> decryptKey({
     required String id,
   });
 

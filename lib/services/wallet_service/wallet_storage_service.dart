@@ -30,8 +30,4 @@ abstract class WalletStorageService {
   Future<bool> removeWallet(String id);
 
   Future<bool> removeAllWallets();
-
-  Future<bool> getUseBiometry();
-
-  Future<bool> setUseBiometry(bool useBiometry);
 }

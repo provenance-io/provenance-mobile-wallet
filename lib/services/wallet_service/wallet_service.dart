@@ -69,12 +69,7 @@ class WalletService implements Disposable {
 
   Future<List<WalletDetails>> getWallets() => _storage.getWallets();
 
-  Future<bool> getUseBiometry() async => _storage.getUseBiometry();
 
-  Future setUseBiometry({
-    required bool useBiometry,
-  }) =>
-      _storage.setUseBiometry(useBiometry);
 
   Future<WalletDetails?> renameWallet({
     required String id,

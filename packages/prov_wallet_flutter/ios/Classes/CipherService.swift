@@ -19,9 +19,11 @@ class CipherService: NSObject {
 		authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Authentication", reply: { (success, error) in result(success) })
 	}
 	
-	static func resetAuth() {
+	static func resetAuth() -> Bool {
 		authContext.invalidate()
 		authContext = LAContext()
+		
+		return true
 	}
 	
 	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {

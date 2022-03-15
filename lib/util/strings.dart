@@ -134,6 +134,8 @@ class Strings {
   static const profileDeveloperCategoryTitle = 'Developer';
   static const profileDeveloperHttpClients500 = 'HTTP clients return 500';
   static const profileDeveloperServiceMocks = 'Service Mocks';
+  static const profileDeveloperConnectLabel = 'Connect';
+  static const profileDeveloperConnectInvalidAddress = 'Invalid address';
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";

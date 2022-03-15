@@ -16,10 +16,11 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if (call.method == "getPlatformVersion") {
 			result("iOS " + UIDevice.current.systemVersion)
-		} else if (call.method == "biometryAuth") {
+		} else if (call.method == "authenticateBiometry") {
 			CipherService.biometryAuth({ (success) in result(success) })
 		} else if (call.method == "resetAuth") {
-			CipherService.resetAuth()
+			let success = CipherService.resetAuth()
+			result(success)
 		} else if (call.method == "encryptKey") {
 			var success = false
 			

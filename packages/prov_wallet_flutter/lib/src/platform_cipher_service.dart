@@ -3,31 +3,71 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 
+class CipherServiceError {
+  CipherServiceError({
+    this.message,
+    this.details,
+  });
+
+  final String? message;
+  final String? details;
+}
+
 class PlatformCipherService implements CipherService {
   static const _channel = const MethodChannel('prov_wallet_flutter');
 
+  final _errorStream = StreamController<CipherServiceError>.broadcast();
+
+  Stream<CipherServiceError> get error => _errorStream.stream;
+
   @override
   Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
+    String? version;
+
+    try {
+      version = await _channel.invokeMethod('getPlatformVersion');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
 
     return version;
   }
 
   @override
-  Future<bool> biometryAuth() async {
-    final success = await _channel.invokeMethod('biometryAuth');
+  Future<bool> authenticateBiometry() async {
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('authenticateBiometry');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
 
     return success;
   }
 
   @override
-  Future<void> resetAuth() async {
-    await _channel.invokeMethod('resetAuth');
+  Future<bool> resetAuth() async {
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('resetAuth');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
-  Future<bool> getUseBiometry() async {
-    final result = await _channel.invokeMethod('getUseBiometry');
+  Future<bool?> getUseBiometry() async {
+    bool? result;
+
+    try {
+      result = await _channel.invokeMethod('getUseBiometry');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
 
     return result;
   }
@@ -38,9 +78,15 @@ class PlatformCipherService implements CipherService {
       'use_biometry': useBiometry,
     };
 
-    final result = await _channel.invokeMethod('setUseBiometry', params);
+    var success = false;
 
-    return result;
+    try {
+      success = await _channel.invokeMethod('setUseBiometry', params);
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
@@ -55,22 +101,34 @@ class PlatformCipherService implements CipherService {
       "use_biometry": useBiometry,
     };
 
-    final result = await _channel.invokeMethod('encryptKey', params);
+    var success = false;
 
-    return result;
+    try {
+      success = await _channel.invokeMethod('encryptKey', params);
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
-  Future<String> decryptKey({
+  Future<String?> decryptKey({
     required String id,
   }) async {
     var params = {
       'id': id,
     };
 
-    final result = await _channel.invokeMethod('decryptKey', params);
+    String? key;
 
-    return result;
+    try {
+      key = await _channel.invokeMethod('decryptKey', params);
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return key;
   }
 
   @override
@@ -79,26 +137,82 @@ class PlatformCipherService implements CipherService {
       'id': id,
     };
 
-    return await _channel.invokeMethod('removeKey', params);
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('removeKey', params);
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
   Future<bool> reset() async {
-    return await _channel.invokeMethod('resetKeys');
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('resetKeys');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
   Future<String?> getPin() async {
-    return await _channel.invokeMethod('getPin');
+    String? pin;
+
+    try {
+      pin = await _channel.invokeMethod('getPin');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return pin;
   }
 
   @override
   Future<bool> setPin(String pin) async {
-    return await _channel.invokeMethod('setPin', {'pin': pin});
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('setPin', {'pin': pin});
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
   }
 
   @override
   Future<bool> deletePin() async {
-    return await _channel.invokeMethod('deletePin');
+    var success = false;
+
+    try {
+      success = await _channel.invokeMethod('deletePin');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return success;
+  }
+
+  void dispose() {
+    _errorStream.close();
+  }
+
+  Future<void> _handleException(PlatformException e) async {
+    final message = e.message;
+    final details = e.details as String?;
+
+    final error = CipherServiceError(
+      message: message,
+      details: details,
+    );
+
+    _errorStream.add(error);
   }
 }

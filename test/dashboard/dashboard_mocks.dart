@@ -143,7 +143,7 @@ class MockCipherService implements CipherService {
   Future<String?> get platformVersion async => null;
 
   @override
-  Future<bool> biometryAuth() async => true;
+  Future<bool> authenticateBiometry() async => true;
 
   @override
   Future<String> decryptKey({required String id}) async => '';
@@ -172,7 +172,7 @@ class MockCipherService implements CipherService {
   Future<bool> reset() async => true;
 
   @override
-  Future<void> resetAuth() async => Future.value();
+  Future<bool> resetAuth() async => true;
 
   @override
   Future<bool> setPin(String pin) async => true;

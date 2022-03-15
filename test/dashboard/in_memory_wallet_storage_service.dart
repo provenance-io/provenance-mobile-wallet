@@ -16,11 +16,10 @@ class InMemoryWalletStorageService implements WalletStorageService {
     String? selectedWalletId,
     bool? useBiometry,
   })  : _datas = datas ?? [],
-        _selectedId = selectedWalletId,
-        _useBiometry = useBiometry ?? false;
+        _selectedId = selectedWalletId;
 
   String? _selectedId;
-  bool _useBiometry;
+
   final List<InMemoryStorageData> _datas;
 
   @override
@@ -53,11 +52,6 @@ class InMemoryWalletStorageService implements WalletStorageService {
     }
 
     return getWallet(id);
-  }
-
-  @override
-  Future<bool> getUseBiometry() async {
-    return _useBiometry;
   }
 
   @override
@@ -151,12 +145,5 @@ class InMemoryWalletStorageService implements WalletStorageService {
     }
 
     return result;
-  }
-
-  @override
-  Future<bool> setUseBiometry(bool useBiometry) async {
-    _useBiometry = useBiometry;
-
-    return true;
   }
 }
