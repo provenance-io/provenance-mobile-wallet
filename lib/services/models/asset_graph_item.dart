@@ -4,7 +4,7 @@ class AssetGraphItem {
   AssetGraphItem({required AssetGraphItemDto dto})
       : assert(dto.timestamp != null),
         assert(dto.price != null),
-        timestamp = DateTime.parse(dto.timestamp!),
+        timestamp = dto.timestamp!,
         price = dto.price!;
 
   AssetGraphItem.fake({
