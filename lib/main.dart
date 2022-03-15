@@ -54,6 +54,14 @@ void main() async {
   }
 
   get.registerSingleton<KeyValueService>(keyValueService);
+  final sqliteStorage = SqliteWalletStorageService();
+  final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
+
+  get.registerLazySingleton<WalletService>(
+    () => WalletService(
+      storage: walletStorage,
+    ),
+  );
 
   final authHelper = LocalAuthHelper();
   await authHelper.init();
@@ -104,6 +112,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case AuthStatus.authenticated:
           break;
         case AuthStatus.noAccount:
+        case AuthStatus.noWallet:
         case AuthStatus.timedOut:
           if (previousStatus == AuthStatus.authenticated) {
             _navigatorKey.currentState?.popUntil((route) => route.isFirst);
@@ -137,16 +146,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
     get.registerLazySingleton<WalletConnectionFactory>(
       () => (address) => WalletConnection(address),
-    );
-
-    final cipherService = get<CipherService>();
-    final sqliteStorage = SqliteWalletStorageService();
-    final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
-
-    get.registerLazySingleton<WalletService>(
-      () => WalletService(
-        storage: walletStorage,
-      ),
     );
 
     final deepLinkService = FirebaseDeepLinkService()..init();
