@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/src/list_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -104,7 +106,7 @@ class AssetBarChartState extends State<AssetBarChart> {
                       .toList(),
                 ],
                 alignment: BarChartAlignment.spaceAround,
-                maxY: 1,
+                maxY: graphList.map((e) => e.price).reduce(max),
               ),
             );
           },
