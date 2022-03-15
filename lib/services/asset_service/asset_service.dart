@@ -30,5 +30,5 @@ enum GraphingDataValue {
   weekly,
   monthly,
   yearly,
-  allTime,
+  all,
 }
