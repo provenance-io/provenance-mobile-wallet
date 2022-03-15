@@ -27,10 +27,10 @@ class AssetChartBloc extends Disposable {
       _chartDetails.value?.assetStatistics,
       false,
     );
+    final graphItemList =
+        await _assetService.getAssetGraphingData(_asset.denom, value);
     try {
       // This is gonna fail until these endpoints are built (or unless we are in mock)
-      final graphItemList =
-          await _assetService.getAssetGraphingData(_asset.denom, value);
       final assetStatistics =
           await _assetService.getAssetStatistics(_asset.denom);
       _chartDetails.value = AssetChartDetails(
@@ -44,7 +44,7 @@ class AssetChartBloc extends Disposable {
       _chartDetails.value = AssetChartDetails(
         value,
         _asset,
-        [],
+        graphItemList,
         null,
         true,
       );
