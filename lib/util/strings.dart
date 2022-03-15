@@ -341,7 +341,6 @@ class Strings {
   static const connectionDetails = "Connection Details";
   static const unknown = "Unknown";
   static const platform = "Platform";
-  static const dlob = "dLOB";
   static const url = "URL";
 
   static const receiveTitle = "Receive";
