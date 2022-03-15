@@ -177,7 +177,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                     ) {
                       return (!hasFocus && _noteController.text.isEmpty)
                           ? PwText(Strings.sendAmountNoteSuffix)
-                          : Container(
+                          : SizedBox(
                               width: 0,
                               height: 0,
                             );
@@ -200,15 +200,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                     child,
                   ) {
                     Widget widget;
-                    if (fee == null) {
-                      widget = PwText(Strings.sendAmountLoadingFeeEstimate);
-                    } else {
-                      widget = PwText(
-                        fee,
-                        textAlign: TextAlign.end,
-                        style: PwTextStyle.caption,
-                      );
-                    }
+                    widget = fee == null
+                        ? PwText(Strings.sendAmountLoadingFeeEstimate)
+                        : PwText(
+                            fee,
+                            textAlign: TextAlign.end,
+                            style: PwTextStyle.caption,
+                          );
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,

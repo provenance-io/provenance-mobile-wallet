@@ -47,10 +47,6 @@ class TransactionConfirmScreen extends StatefulWidget {
 }
 
 class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
-  final _builders = <Type, MessageBuilder>{
-    // Add a builder to override a specific message type.
-  };
-
   final PageController _pageController = PageController();
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
 
