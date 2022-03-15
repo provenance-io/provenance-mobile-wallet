@@ -44,10 +44,9 @@ dependencies:
   prov_wallet_flutter:
     path: packages/prov_wallet_flutter
   provenance_dart:
-    path: ../provenance-dart
-    # git:
-    #   url: git@github.com:provenance-io/provenance-dart.git
-      # ref: transactionGasFee
+    git:
+      url: git@github.com:provenance-io/provenance-dart.git
+      ref: transactionGasFee
   qr_code_scanner: ^0.5.1
   qr_flutter: ^4.0.0
   rxdart: ^0.27.3

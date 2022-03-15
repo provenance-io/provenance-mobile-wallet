@@ -677,9 +677,11 @@ packages:
   provenance_dart:
     dependency: "direct main"
     description:
-      path: "../provenance-dart"
-      relative: true
-    source: path
+      path: "."
+      ref: transactionGasFee
+      resolved-ref: c8f84772fb037efe895ff3aa08339943537a8a97
+      url: "git@github.com:provenance-io/provenance-dart.git"
+    source: git
     version: "0.0.1"
   pub_semver:
     dependency: transitive
