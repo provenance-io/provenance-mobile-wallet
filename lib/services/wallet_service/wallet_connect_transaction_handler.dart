@@ -2,12 +2,13 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class WalletConnectTransactionHandler implements TransactionHandler {
   @override
-  Future<proto.GasEstimate> estimateGas(
+  Future<WalletGasEstimate> estimateGas(
     proto.TxBody txBody,
     PublicKey publicKey,
   ) async {
@@ -29,34 +30,19 @@ class WalletConnectTransactionHandler implements TransactionHandler {
     final estimate = await pbClient.estimateTx(baseReq);
     final customFee = await gasService.getGasFee();
 
-    if (customFee != null) {
-      final calculatedAmount = customFee.amount * estimate.estimate;
-      final calculatedCoin = proto.Coin(
-        denom: customFee.denom,
-        amount: calculatedAmount.toString(),
-      );
-
-      final index = estimate.feeCalculated!
-          .indexWhere((coin) => coin.denom == customFee.denom);
-
-      if (index >= 0) {
-        if (calculatedAmount >
-            int.parse(estimate.feeCalculated![index].amount)) {
-          estimate.feeCalculated![index] = calculatedCoin;
-        }
-      } else {
-        estimate.feeCalculated!.add(calculatedCoin);
-      }
-    }
-
-    return estimate;
+    return WalletGasEstimate(
+      estimate.estimate,
+      customFee?.amount,
+      estimate.feeAdjustment,
+      estimate.feeCalculated,
+    );
   }
 
   @override
   Future<proto.RawTxResponsePair> executeTransaction(
     proto.TxBody txBody,
     PrivateKey privateKey, [
-    proto.GasEstimate? gasEstimate,
+    WalletGasEstimate? gasEstimate,
   ]) async {
     final publicKey = privateKey.defaultKey().publicKey;
     final coin = publicKey.coin;

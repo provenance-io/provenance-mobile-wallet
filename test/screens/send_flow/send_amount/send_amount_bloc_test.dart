@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
@@ -20,7 +20,10 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-const feeAmount = GasEstimate(20000000);
+const feeAmount = WalletGasEstimate(
+  20000000,
+  1,
+);
 
 @GenerateMocks([
   SendAmountBlocNavigator,
@@ -78,9 +81,16 @@ main() {
       final state = arg as SendAmountBlocState;
       expect(state.transactionFees, predicate((arg) {
         final feeAsset = arg as MultiSendAsset;
-        expect(feeAsset.limit.amount, Decimal.fromInt(feeAmount.estimate));
-        expect(feeAsset.limit.denom, "nhash");
-        expect(feeAsset.fees.length, 0);
+        expect(
+          feeAsset.estimate,
+          feeAmount.estimate,
+        );
+        expect(feeAsset.fees.first.denom, "nhash");
+        expect(
+          feeAsset.fees.first.amount,
+          Decimal.fromInt(feeAmount.estimate * feeAmount.baseFee!),
+        );
+        expect(feeAsset.fees.length, 1);
 
         return true;
       }));
@@ -147,7 +157,11 @@ main() {
 
     expect(amountAsset.amount, Decimal.parse("110"));
     expect(amountAsset.denom, hashAsset.denom);
-    expect(feeAsset.limit.amount, Decimal.fromInt(feeAmount.estimate));
-    expect(feeAsset.limit.denom, "nhash");
+    expect(feeAsset.estimate, feeAmount.estimate);
+    expect(feeAsset.fees.first.denom, "nhash");
+    expect(
+      feeAsset.fees.first.amount,
+      Decimal.fromInt(feeAmount.estimate * feeAmount.baseFee!),
+    );
   });
 }

@@ -84,14 +84,7 @@ class SendAmountBloc extends Disposable {
       }
 
       _fee = MultiSendAsset(
-        SendAsset(
-          "hash",
-          9,
-          "nhash",
-          Decimal.fromInt(estimate.limit),
-          "",
-          "",
-        ),
+        estimate.estimate,
         individualFees,
       );
 

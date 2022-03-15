@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -27,17 +29,21 @@ class SendReviewBlocState {
   String get total {
     final map = <String, SendAsset>{};
     map[sendingAsset.denom] = sendingAsset;
+    final fees = [...fee.fees];
 
-    for (var fee in fee.fees) {
+    for (var fee in fees) {
       var current = map[fee.denom];
       if (current == null) {
         map[fee.denom] = fee;
       } else {
-        map[fee.denom] = current.copyWith(amount: fee.amount + current.amount);
+        final total = current.amount + fee.amount;
+        map[fee.denom] = current.copyWith(amount: total);
       }
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.values
+        .map((e) => "${e.displayAmount} ${e.displayDenom}")
+        .join(" + ");
   }
 }
 
@@ -97,8 +103,9 @@ class SendReviewBloc implements Disposable {
 
     final privateKey = await get<WalletService>().loadKey(_walletDetails.id);
 
-    GasEstimate estimate = GasEstimate(
-      fee.limit.amount.toBigInt().toInt(),
+    WalletGasEstimate estimate = WalletGasEstimate(
+      fee.estimate,
+      null,
       null,
       fee.fees
           .map((e) => Coin(
@@ -110,11 +117,14 @@ class SendReviewBloc implements Disposable {
 
     return _walletService
         .executeTransaction(
-          body,
-          privateKey!,
-          estimate,
-        )
-        .then((_) => null);
+      body,
+      privateKey!,
+      estimate,
+    )
+        .then((response) {
+      log(response.asJsonString());
+      return null;
+    });
   }
 
   Future<void> complete() async {

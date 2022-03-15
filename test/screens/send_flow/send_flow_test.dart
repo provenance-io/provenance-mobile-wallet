@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
@@ -14,6 +13,7 @@ import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
@@ -54,7 +54,7 @@ main() {
     mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
     when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
-      final gasEstimate = GasEstimate(100);
+      final gasEstimate = WalletGasEstimate(100, null);
 
       return Future.value(gasEstimate);
     });

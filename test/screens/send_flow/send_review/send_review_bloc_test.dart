@@ -7,6 +7,7 @@ import 'package:provenance_dart/proto_bank.dart' as bank;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
@@ -50,7 +51,7 @@ void main() {
     mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
     when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
-      return Future.value(proto.GasEstimate(100));
+      return Future.value(WalletGasEstimate(100, null));
     });
 
     mockWalletService = MockWalletService();
@@ -124,7 +125,7 @@ void main() {
       expect(txBody.messages.length, 1);
 
       final estimate = captures.last as proto.GasEstimate;
-      expect(estimate.limit, feeAsset.limit.amount.toBigInt().toInt());
+      expect(estimate.limit, feeAsset.estimate);
       expect(estimate.feeCalculated, predicate((arg) {
         final coins = arg as List<proto.Coin>;
         expect(coins.length, feeAsset.fees.length);

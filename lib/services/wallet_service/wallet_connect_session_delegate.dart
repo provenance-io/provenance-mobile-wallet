@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -149,7 +150,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final id = Uuid().v1().toString();
 
-    proto.GasEstimate gasEstimate;
+    WalletGasEstimate gasEstimate;
     try {
       gasEstimate = await _transactionHandler.estimateGas(
         txBody,
@@ -157,26 +158,9 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       );
 
       if (signTransactionData.gasEstimate != null) {
-        final index = gasEstimate.feeCalculated?.indexWhere(
-          (coin) => coin.denom == signTransactionData.gasEstimate!.denom,
+        gasEstimate = gasEstimate.copyWithBaseFee(
+          int.parse(signTransactionData.gasEstimate!.amount),
         );
-
-        final scaledAmount = gasEstimate.estimate *
-            int.parse(signTransactionData.gasEstimate!.amount);
-
-        final scaledCoin = proto.Coin(
-          amount: scaledAmount.toString(),
-          denom: signTransactionData.gasEstimate!.denom,
-        );
-
-        if (index != null) {
-          if (scaledAmount >
-              int.parse(gasEstimate.feeCalculated![index].amount)) {
-            gasEstimate.feeCalculated![index] = scaledCoin;
-          }
-        } else {
-          gasEstimate.feeCalculated!.add(scaledCoin);
-        }
       }
     } on GrpcError catch (e) {
       events._onDidError.add(e.message ?? e.codeName);

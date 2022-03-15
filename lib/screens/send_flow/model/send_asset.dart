@@ -10,6 +10,16 @@ class SendAsset {
     this.imageUrl,
   );
 
+  SendAsset.nhash(Decimal amount)
+      : this(
+          "hash",
+          9,
+          "nhash",
+          amount,
+          "",
+          "",
+        );
+
   final String displayDenom;
   final int exponent;
   final String denom;
@@ -38,20 +48,26 @@ class SendAsset {
 }
 
 class MultiSendAsset {
-  MultiSendAsset(this.limit, this.fees);
+  MultiSendAsset(
+    this.estimate,
+    this.fees,
+  );
 
-  final SendAsset limit;
+  final int estimate;
   final List<SendAsset> fees;
 
   String get displayAmount {
     final map = <String, SendAsset>{};
-    map[limit.denom] = limit;
 
     for (var fee in fees) {
       var current = map[fee.denom];
-      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+      final total = (current?.amount ?? Decimal.zero) + fee.amount;
+
+      map[fee.denom] = current?.copyWith(amount: total) ?? fee;
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.values
+        .map((e) => "${e.displayAmount} ${e.displayDenom}")
+        .join(" + ");
   }
 }
