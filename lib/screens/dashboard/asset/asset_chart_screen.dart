@@ -114,7 +114,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                           ),
                         ),
                         PwText(
-                          details.asset.usdPrice.toStringAsFixed(3),
+                          details.asset.formattedUsdPrice,
                           style: PwTextStyle.h1,
                           color: PwColor.neutralNeutral,
                         ),
