@@ -124,7 +124,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     if (!details.isComingSoon) PwText("↑ \$0.008 (0.10%)"),
                     AssetBarChart(),
                     VerticalSpacer.medium(),
-                    if (!details.isComingSoon) AssetBarChartButtons(),
+                    AssetBarChartButtons(),
                     if (!details.isComingSoon) VerticalSpacer.xxLarge(),
                     if (!details.isComingSoon) AssetChartStatistics(),
                     VerticalSpacer.xxLarge(),
