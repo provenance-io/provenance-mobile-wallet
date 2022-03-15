@@ -60,7 +60,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     ),
   );
   final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
-  final _assetList = BehaviorSubject.seeded(<Asset>[]);
+  final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
