@@ -14,13 +14,19 @@ class SendAsset {
   final int exponent;
   final String denom;
   final Decimal amount;
-  final String fiatValue;
+  final double fiatValue;
   final String imageUrl;
 
   String get displayAmount {
     return (amount / Decimal.fromInt(10).pow(exponent))
         .toDecimal(scaleOnInfinitePrecision: exponent)
         .toString();
+  }
+
+  String get displayFiatAmount {
+    final conversionDecimal = Decimal.parse(fiatValue.toString());
+
+    return "\$${(amount * conversionDecimal).toStringAsFixed(9)}";
   }
 
   SendAsset copyWith({
@@ -52,6 +58,9 @@ class MultiSendAsset {
       map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.entries
+        .map((entry) =>
+            "${entry.value.displayAmount} ${entry.value.displayDenom}")
+        .join(" + ");
   }
 }

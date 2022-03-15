@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -36,6 +37,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
       return SendBloc(
         widget.walletDetails.address,
         get<AssetService>(),
+        get<PriceService>(),
         get<TransactionService>(),
         this,
       );
@@ -99,6 +101,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
       widget.walletDetails,
       _receivingAddress!,
       _asset!,
+      get<PriceService>(),
       this,
     )..init();
 

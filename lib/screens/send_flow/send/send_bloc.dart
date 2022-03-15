@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 
 abstract class SendBlocNavigator {
@@ -36,37 +35,55 @@ class SendBloc extends Disposable {
   SendBloc(
     this._provenanceAddress,
     this._assetService,
+    this._priceService,
     this._transactionService,
     this._navigator,
   );
 
-  final DateFormat _dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
   final _stateStreamController = StreamController<SendBlocState>();
   final String _provenanceAddress;
   final SendBlocNavigator _navigator;
   final AssetService _assetService;
   final TransactionService _transactionService;
+  final PriceService _priceService;
 
   Stream<SendBlocState> get stream => _stateStreamController.stream;
 
   Future<void> load() {
-    return Future.wait([
-      _assetService.getAssets(_provenanceAddress),
-      _transactionService.getTransactions(_provenanceAddress),
-    ]).then((results) {
-      final assetResponse = results[0] as List<Asset>;
-      final transResponse = results[1] as List<Transaction>;
+    final assetFuture =
+        _assetService.getAssets(_provenanceAddress).then((assets) async {
+      final denominations = assets.map((e) => e.denom).toSet().toList();
 
-      final assets = assetResponse.map((asset) {
+      final prices =
+          await _priceService.getAssetPrices(denominations).then((response) {
+        final map = <String, double>{};
+        for (var price in response) {
+          map[price.denomination] = price.usdPrice;
+        }
+
+        return map;
+      });
+
+      return assets.map((asset) {
+        final price = prices[asset.denom] ?? 0.0;
+
         return SendAsset(
           asset.display,
           asset.exponent,
           asset.denom,
           Decimal.parse(asset.amount),
-          "0",
+          price,
           asset.image,
         );
-      });
+      }).toList();
+    });
+
+    return Future.wait([
+      assetFuture,
+      _transactionService.getTransactions(_provenanceAddress),
+    ]).then((results) {
+      final assetResponse = results[0] as List<SendAsset>;
+      final transResponse = results[1] as List<Transaction>;
 
       final recentAddresses = transResponse.map((trans) {
         final timeStamp = trans.timestamp;
@@ -75,7 +92,7 @@ class SendBloc extends Disposable {
       });
 
       final state = SendBlocState(
-        assets.toList(),
+        assetResponse.toList(),
         recentAddresses.toList(),
       );
       _stateStreamController.add(state);
