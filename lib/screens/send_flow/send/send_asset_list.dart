@@ -42,7 +42,7 @@ class SendAssetCell extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Expanded(child: PwText(asset.fiatValue)),
+            Expanded(child: PwText(asset.displayFiatAmount)),
             Expanded(
               child: PwText(
                 asset.displayAmount,

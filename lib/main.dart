@@ -18,6 +18,7 @@ import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/platform_key_value_service.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -146,6 +147,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
     get.registerLazySingleton<WalletConnectionFactory>(
       () => (address) => WalletConnection(address),
+    );
+    get.registerLazySingleton<PriceService>(
+      () => PriceService(),
     );
 
     final deepLinkService = FirebaseDeepLinkService()..init();

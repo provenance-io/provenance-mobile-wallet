@@ -28,10 +28,18 @@ class SendReviewBlocState {
 
     for (var fee in fee.fees) {
       var current = map[fee.denom];
-      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+      if (current == null) {
+        map[fee.denom] = fee;
+      } else {
+        var value = current.amount + fee.amount;
+        map[fee.denom] = current.copyWith(amount: value);
+      }
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.entries
+        .map((entry) =>
+            "${entry.value.displayAmount} ${entry.value.displayDenom}")
+        .join(" + ");
   }
 }
 
