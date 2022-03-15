@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_service/dtos/asset_statistics_dto.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
@@ -33,15 +34,20 @@ class MockAssetService implements AssetService {
   Future<List<AssetGraphItem>> getAssetGraphingData(
     String assetType,
     GraphingDataValue value,
-  ) {
-    // TODO: implement getAssetGraphingData
-    throw UnimplementedError();
+  ) async {
+    return [];
   }
 
   @override
-  Future<AssetStatistics> getAssetStatistics(String assetType) {
-    // TODO: implement getAssetStatistics
-    throw UnimplementedError();
+  Future<AssetStatistics> getAssetStatistics(String assetType) async {
+    return AssetStatistics(
+      dto: AssetStatisticsDto(
+        amountChange: 0,
+        dayVolume: 0,
+        dayHigh: 0,
+        dayLow: 0,
+      ),
+    );
   }
 }
 

@@ -50,7 +50,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   WalletConnectSession? _walletSession;
-  TabController? _tabController;
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
@@ -99,8 +98,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   Future<void> load({TabController? tabController}) async {
     final isFirstLoad = _isFirstLoad;
     _isFirstLoad = false;
-
-    _tabController = tabController;
 
     final walletService = get<WalletService>();
     var details = await walletService.getSelectedWallet();
