@@ -34,13 +34,13 @@ class SendAmountBloc extends Disposable {
     this._navigator,
   );
 
-  final WalletDetails walletDetails;
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
   final PriceService _priceService;
 
   MultiSendAsset? _fee;
 
+  final WalletDetails walletDetails;
   final SendAsset asset;
   final String receivingAddress;
 
@@ -67,7 +67,8 @@ class SendAmountBloc extends Disposable {
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();
         final priceLookup = await _priceService.getAssetPrices(denoms).then(
-            (prices) => {for (var price in prices) price.denomination: price});
+              (prices) => {for (var price in prices) price.denomination: price},
+            );
 
         for (var fee in estimate.feeCalculated!) {
           final price = priceLookup[fee.denom]?.usdPrice ?? 0;
