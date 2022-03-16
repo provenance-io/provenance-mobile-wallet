@@ -226,6 +226,11 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   @override
   void onError(Exception exception) {
     logError(exception);
-    events._onDidError.add(exception.toString());
+
+    if (exception is WalletConnectException) {
+      events._onDidError.add(exception.message);
+    } else {
+      events._onDidError.add(exception.toString());
+    }
   }
 }
