@@ -46,6 +46,9 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
     walletEvents.added.listen(_onAdded).addTo(_subscriptions);
     walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
+    delegateEvents.onClose
+        .listen((_) => _clearSessionData())
+        .addTo(_subscriptions);
     WidgetsBinding.instance?.addObserver(this);
   }
 
@@ -234,7 +237,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   Future<bool> disconnectSession() async {
     final success = await _walletSession?.disconnect() ?? false;
 
-    await get<KeyValueService>().remove(PrefKey.sessionData);
+    await _clearSessionData();
 
     return success;
   }
@@ -418,6 +421,10 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     }
 
     loadAllWallets();
+  }
+
+  Future<bool> _clearSessionData() {
+    return get<KeyValueService>().remove(PrefKey.sessionData);
   }
 
   Future<void> _handleDynamicLink(Uri link) async {
