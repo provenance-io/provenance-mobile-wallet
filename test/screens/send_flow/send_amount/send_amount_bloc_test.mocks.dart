@@ -11,11 +11,9 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
     as _i6;
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i4;
-import 'package:provenance_wallet/services/models/price.dart' as _i11;
+import 'package:provenance_wallet/services/models/price.dart' as _i10;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i7;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i10;
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart'
     as _i9;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
@@ -123,10 +121,10 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
                   Future<List<_i7.WalletDetails>>.value(<_i7.WalletDetails>[]))
           as _i5.Future<List<_i7.WalletDetails>>);
   @override
-  _i5.Future<_i9.WalletConnectSession?> createSession(String? addressData) =>
-      (super.noSuchMethod(Invocation.method(#createSession, [addressData]),
-              returnValue: Future<_i9.WalletConnectSession?>.value())
-          as _i5.Future<_i9.WalletConnectSession?>);
+  _i5.Future<_i8.PrivateKey?> loadKey(String? walletId) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [walletId]),
+              returnValue: Future<_i8.PrivateKey?>.value())
+          as _i5.Future<_i8.PrivateKey?>);
   @override
   _i5.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
@@ -151,14 +149,14 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i10.PriceService {
+class MockPriceService extends _i1.Mock implements _i9.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<List<_i11.Price>> getAssetPrices(List<String>? denominations) =>
+  _i5.Future<List<_i10.Price>> getAssetPrices(List<String>? denominations) =>
       (super.noSuchMethod(Invocation.method(#getAssetPrices, [denominations]),
-              returnValue: Future<List<_i11.Price>>.value(<_i11.Price>[]))
-          as _i5.Future<List<_i11.Price>>);
+              returnValue: Future<List<_i10.Price>>.value(<_i10.Price>[]))
+          as _i5.Future<List<_i10.Price>>);
 }

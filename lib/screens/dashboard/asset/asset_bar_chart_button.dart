@@ -61,7 +61,7 @@ class AssetBarChartButtons extends StatelessWidget {
           AssetBarChartButton(dataValue: GraphingDataValue.weekly),
           AssetBarChartButton(dataValue: GraphingDataValue.monthly),
           AssetBarChartButton(dataValue: GraphingDataValue.yearly),
-          AssetBarChartButton(dataValue: GraphingDataValue.allTime),
+          AssetBarChartButton(dataValue: GraphingDataValue.all),
         ],
       ),
     );
