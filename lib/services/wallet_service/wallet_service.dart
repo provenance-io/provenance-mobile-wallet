@@ -151,7 +151,9 @@ class WalletService implements Disposable {
       Future.value(WalletConnectAddress.create(qrData) != null);
 
   Future<proto.GasEstimate> estimate(
-      proto.TxBody body, WalletDetails walletDetails) async {
+    proto.TxBody body,
+    WalletDetails walletDetails,
+  ) async {
     final pbClient = proto.PbClient(
       Uri.parse(walletDetails.coin.address),
       walletDetails.coin.chainId,
@@ -197,9 +199,7 @@ class WalletService implements Disposable {
       walletDetails.coin.chainId,
     );
 
-    if (gasEstimate == null) {
-      gasEstimate = await pbClient.estimateTx(baseReq);
-    }
+    gasEstimate ??= await pbClient.estimateTx(baseReq);
 
     return pbClient
         .broadcastTx(
@@ -230,6 +230,7 @@ class _PrivateKeySigner extends proto.Signer {
   @override
   List<int> sign(List<int> data) {
     final hash = Hash.sha256(data);
+
     return _privateKey.signData(hash)..removeLast();
   }
 }

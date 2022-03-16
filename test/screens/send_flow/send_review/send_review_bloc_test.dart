@@ -114,7 +114,7 @@ void main() {
         return true;
       }));
 
-      final msg = txBody.messages[0] as proto.Any;
+      final msg = txBody.messages[0];
       final sendMsg = bank.MsgSend.fromBuffer(msg.value);
       expect(sendMsg.fromAddress, walletDetails.address);
       expect(sendMsg.toAddress, receivingAddress);

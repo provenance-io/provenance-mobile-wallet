@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:collection/src/list_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';

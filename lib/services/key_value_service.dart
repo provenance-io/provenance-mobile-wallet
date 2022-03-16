@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:rxdart/streams.dart';
 
 abstract class KeyValueService {
@@ -37,8 +36,4 @@ enum PrefKey {
   sessionData,
   showDevMenu,
   httpClientDiagnostics500,
-}
-
-extension on PrefKey {
-  String get name => describeEnum(this);
 }
