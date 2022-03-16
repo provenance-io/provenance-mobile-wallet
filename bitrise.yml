@@ -106,8 +106,10 @@ workflows:
             # debug log
             set -x
 
-            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $IOS_BUILD_APP_INFO_PLIST`
-            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $IOS_BUILD_APP_INFO_PLIST`
+            PLIST="$BITRISE_APP_DIR_PATH/Info.plist"
+
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $PLIST`
             envman add --key GIT_TAG --value "v$VERSION+$BUILD"
         title: Add Git tag env var
     - git-tag@1:
@@ -180,8 +182,10 @@ workflows:
             # debug log
             set -x
 
-            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $IOS_BUILD_APP_INFO_PLIST`
-            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $IOS_BUILD_APP_INFO_PLIST`
+            PLIST="$BITRISE_APP_DIR_PATH/Info.plist"
+
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $PLIST`
             envman add --key GIT_TAG --value "v$VERSION+$BUILD"
         title: Add Git tag env var
     - git-tag@1:

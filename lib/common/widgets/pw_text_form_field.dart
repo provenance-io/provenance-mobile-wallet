@@ -9,6 +9,7 @@ class PwTextFormField extends StatelessWidget {
     this.validator,
     this.controller,
     this.autofocus = false,
+    this.hint,
   }) : super(key: key);
 
   final String label;
@@ -17,6 +18,7 @@ class PwTextFormField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
   final bool autofocus;
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class PwTextFormField extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validator,
             decoration: InputDecoration(
-              hintText: label,
+              hintText: hint ?? label,
               hintStyle: theme.textTheme.body
                   .copyWith(color: theme.colorScheme.neutral250),
               fillColor: theme.colorScheme.neutral750,

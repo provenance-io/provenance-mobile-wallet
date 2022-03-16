@@ -30,7 +30,11 @@ class RecentSendCell extends StatelessWidget {
             child: _buildChild(),
           ),
           Center(
-            child: Icon(Icons.arrow_forward_ios),
+            child: PwIcon(
+              PwIcons.caret,
+              color: Theme.of(context).colorScheme.neutralNeutral,
+              size: 12.0,
+            ),
           ),
         ],
       ),

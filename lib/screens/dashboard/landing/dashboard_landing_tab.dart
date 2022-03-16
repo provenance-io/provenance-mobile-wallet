@@ -2,6 +2,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/connection_details_modal.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/wallet_portfolio.dart';
@@ -210,34 +211,34 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                       itemBuilder: (context, index) {
                         final item = assets[index];
 
-                      return Column(
-                        children: [
-                          if (index == 0) PwListDivider(),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              bloc.openAsset(item);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.zero,
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  right: 16,
-                                  left: 16,
-                                  top: Spacing.xLarge,
-                                  bottom: Spacing.xLarge,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: SvgPicture.asset(
-                                        item.image,
+                        return Column(
+                          children: [
+                            if (index == 0) PwListDivider(),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                get<DashboardAssetBloc>().openAsset(item);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.zero,
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    right: 16,
+                                    left: 16,
+                                    top: Spacing.xLarge,
+                                    bottom: Spacing.xLarge,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
                                         width: 40,
                                         height: 40,
-                                        
+                                        child: SvgPicture.asset(
+                                          item.image,
+                                          width: 40,
+                                          height: 40,
                                         ),
                                       ),
                                       HorizontalSpacer.medium(),

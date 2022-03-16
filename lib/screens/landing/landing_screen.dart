@@ -82,7 +82,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 initialData: authHelper.status.value,
                 stream: authHelper.status,
                 builder: (context, snapshot) {
-                  var hasAccount = snapshot.data != AuthStatus.noAccount;
+                  var hasAccount = snapshot.data != AuthStatus.noAccount &&
+                      snapshot.data != AuthStatus.noWallet;
 
                   return PwPrimaryButton.fromString(
                     text: hasAccount

@@ -10,13 +10,13 @@ class SendAsset {
     this.imageUrl,
   );
 
-  SendAsset.nhash(Decimal amount)
+  SendAsset.nhash(Decimal amount, [double price = 0])
       : this(
           "hash",
           9,
           "nhash",
           amount,
-          "",
+          price,
           "",
         );
 
@@ -24,13 +24,19 @@ class SendAsset {
   final int exponent;
   final String denom;
   final Decimal amount;
-  final String fiatValue;
+  final double fiatValue;
   final String imageUrl;
 
   String get displayAmount {
     return (amount / Decimal.fromInt(10).pow(exponent))
         .toDecimal(scaleOnInfinitePrecision: exponent)
         .toString();
+  }
+
+  String get displayFiatAmount {
+    final conversionDecimal = Decimal.parse(fiatValue.toString());
+
+    return "\$${(amount * conversionDecimal).toStringAsFixed(2)}";
   }
 
   SendAsset copyWith({

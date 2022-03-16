@@ -4,11 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/pin/validate_pin.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AuthStatus {
   noAccount,
+  noWallet,
   authenticated,
   timedOut,
   unauthenticated,
@@ -21,16 +23,24 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   static const _inactivityTimeout = Duration(minutes: 2);
   final _cipherService = get<CipherService>();
+  final _walletService = get<WalletService>();
   final _status = BehaviorSubject<AuthStatus>();
   Timer? _inactivityTimer;
 
   ValueStream<AuthStatus> get status => _status;
 
   Future<void> init() async {
+    AuthStatus status;
     final code = await _cipherService.getPin();
-    _status.value = code == null || code.isEmpty
-        ? AuthStatus.noAccount
-        : AuthStatus.unauthenticated;
+    if (code == null || code.isEmpty) {
+      status = AuthStatus.noAccount;
+    } else {
+      final wallets = await _walletService.getWallets();
+      status =
+          wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+    }
+
+    _status.value = status;
   }
 
   void reset() {

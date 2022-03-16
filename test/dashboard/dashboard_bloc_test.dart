@@ -271,6 +271,7 @@ class TestState {
         txFee: i,
         pricePerUnit: i.toDouble(),
         totalPrice: i.toDouble(),
+        exponent: 1,
       );
 
       assets[id] = [asset];
@@ -308,13 +309,13 @@ class TestState {
 
     final cipherService = MockCipherService();
     get.registerSingleton<CipherService>(cipherService);
+    get.registerSingleton<WalletService>(walletService);
 
     final authHelper = LocalAuthHelper();
 
     get.registerSingleton<AssetService>(assetService);
     get.registerSingleton<TransactionService>(transactionService);
     get.registerSingleton<DeepLinkService>(deepLinkService);
-    get.registerSingleton<WalletService>(walletService);
     get.registerSingleton<KeyValueService>(keyValueService);
     get.registerSingleton<WalletConnectionFactory>(walletConnectionFactory);
 

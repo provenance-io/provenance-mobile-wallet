@@ -1,4 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
+import 'package:rxdart/streams.dart';
 
 abstract class KeyValueService {
   KeyValueService._();
@@ -14,6 +16,10 @@ abstract class KeyValueService {
   Future<String?> getString(PrefKey key);
 
   Future<bool> setString(PrefKey key, String value);
+
+  ValueStream<bool?> streamBool(PrefKey key);
+
+  ValueStream<String?> streamString(PrefKey key);
 }
 
 enum PrefKey {
@@ -28,8 +34,6 @@ enum PrefKey {
   showReturnDialog,
   isSubsequentRun,
   sessionData,
-}
-
-extension on PrefKey {
-  String get name => describeEnum(this);
+  showDevMenu,
+  httpClientDiagnostics500,
 }

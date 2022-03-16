@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:decimal/decimal.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 
@@ -19,15 +18,6 @@ final get = GetIt.instance;
 
 @GenerateMocks([SendAmountBloc])
 main() {
-  final stateAsset = SendAsset(
-    "hash",
-    9,
-    "nhash",
-    Decimal.fromInt(77),
-    "",
-    "",
-  );
-
   StreamController<SendAmountBlocState>? _streamController;
 
   MockSendAmountBloc? mockBloc;
@@ -102,7 +92,6 @@ main() {
         ),
         findsOneWidget,
       );
-      expect(find.text(hashAsset.fiatValue), findsOneWidget);
 
       final buttonFind = find.byType(PwButton);
       expect(buttonFind, findsOneWidget);
@@ -189,6 +178,44 @@ main() {
 
       final dialog = tester.widget<ErrorDialog>(dialogFind);
       expect(dialog.error, "Exception: Next Error");
+    });
+
+    testWidgets("Dollar amount of sent", (tester) async {
+      await _build(tester);
+      var dollarValueSentFind = find.byKey(ValueKey("DollarValueSent"));
+      expect(
+        tester.widget<PwText>(dollarValueSentFind).data,
+        "",
+      );
+
+      final textFormFind = find.byType(TextFormField);
+      await tester
+          .enterText(textFormFind, "1")
+          .then((_) => tester.pumpAndSettle());
+
+      expect(
+        tester.widget<PwText>(dollarValueSentFind).data,
+        hashAsset
+            .copyWith(
+              amount: Decimal.fromInt(1) *
+                  Decimal.fromInt(10).pow(hashAsset.exponent),
+            )
+            .displayFiatAmount,
+      );
+
+      await tester
+          .enterText(textFormFind, ".5")
+          .then((_) => tester.pumpAndSettle());
+
+      expect(
+        tester.widget<PwText>(dollarValueSentFind).data,
+        hashAsset
+            .copyWith(
+              amount: Decimal.parse(".5") *
+                  Decimal.fromInt(10).pow(hashAsset.exponent),
+            )
+            .displayFiatAmount,
+      );
     });
   });
 }

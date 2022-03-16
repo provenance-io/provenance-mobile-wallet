@@ -3,7 +3,6 @@ import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart'
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/gas_fee.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/notification/notification_client_id.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class DefaultGasFeeService extends GasFeeService with ClientNotificationMixin {
@@ -25,7 +24,7 @@ class DefaultGasFeeService extends GasFeeService with ClientNotificationMixin {
       },
     );
 
-    notifyOnError(data, serviceMobileWalletClientId);
+    notifyOnError(data);
 
     return data.data;
   }

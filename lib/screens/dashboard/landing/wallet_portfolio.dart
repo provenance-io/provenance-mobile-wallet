@@ -39,14 +39,14 @@ class WalletPortfolio extends StatelessWidget {
                 return PwText(
                   "\$-.--",
                   color: PwColor.neutralNeutral,
-                  style: PwTextStyle.display2,
+                  style: PwTextStyle.display1,
                 );
               }
               double portfolioValue = 0;
 
               if (snapshot.data!.isNotEmpty) {
                 portfolioValue = snapshot.data
-                        ?.map((e) => e.usdPrice * double.parse(e.displayAmount))
+                        ?.map((e) => e.usdPrice * double.parse(e.amount))
                         .reduce((value, element) => value + element) ??
                     0;
               }
@@ -54,7 +54,7 @@ class WalletPortfolio extends StatelessWidget {
               return PwText(
                 portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
-                style: PwTextStyle.display2,
+                style: PwTextStyle.display1,
               );
             },
           ),

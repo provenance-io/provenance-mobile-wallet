@@ -11,7 +11,9 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_scre
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
@@ -27,6 +29,7 @@ final get = GetIt.instance;
   TransactionService,
   WalletService,
   WalletConnectTransactionHandler,
+  PriceService,
 ])
 main() {
   SendFlowState? state;
@@ -49,6 +52,7 @@ main() {
   MockTransactionService? mockTransactionService;
   MockWalletService? mockWalletService;
   MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
+  MockPriceService? mockPriceService;
 
   setUp(() {
     mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
@@ -81,9 +85,14 @@ main() {
     mockWalletService = MockWalletService();
     when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
 
+    mockPriceService = MockPriceService();
+    when(mockPriceService!.getAssetPrices(any))
+        .thenAnswer((realInvocation) => Future.value(<Price>[]));
+
     get.registerSingleton<TransactionService>(mockTransactionService!);
     get.registerSingleton<AssetService>(mockAssetService!);
     get.registerSingleton<WalletService>(mockWalletService!);
+    get.registerSingleton<PriceService>(mockPriceService!);
   });
 
   tearDown(() {
@@ -91,6 +100,7 @@ main() {
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
     get.unregister<WalletConnectTransactionHandler>();
+    get.unregister<PriceService>();
   });
 
   testWidgets("Contents", (tester) async {

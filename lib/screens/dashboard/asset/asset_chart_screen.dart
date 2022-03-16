@@ -5,14 +5,18 @@ import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  const AssetChartScreen({
+  const AssetChartScreen(
+    this.asset, {
     Key? key,
   }) : super(key: key);
+
+  final Asset asset;
 
   @override
   _AssetChartScreenState createState() => _AssetChartScreenState();
@@ -23,16 +27,15 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
 
   @override
   void initState() {
-    _bloc = get<AssetChartBloc>();
-    _bloc.load();
+    if (!get.isRegistered<AssetChartBloc>()) {
+      final bloc = AssetChartBloc(widget.asset);
+      get.registerSingleton(bloc);
+      _bloc = bloc..load();
+    } else {
+      _bloc = get<AssetChartBloc>();
+    }
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    get<DashboardBloc>().closeAsset();
-    super.dispose();
   }
 
   @override
@@ -79,7 +82,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     PwIcons.back,
                   ),
                   onPressed: () {
-                    get<DashboardBloc>().closeAssetToDashboard();
+                    get.unregister<AssetChartBloc>();
+                    get<DashboardAssetBloc>().closeAsset();
                   },
                 ),
               ),

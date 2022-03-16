@@ -1,9 +1,15 @@
-import 'package:flutter_switch/flutter_switch.dart';
+import 'dart:async';
+
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/developer_menu.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -19,6 +25,25 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   static const _divider = PwListDivider();
+  static const _devTapsRequired = 10;
+  var _devTapCount = 0;
+  var _showDevMenu = false;
+  final _keyValueService = get<KeyValueService>();
+  Timer? _devTimer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initDevMenu();
+  }
+
+  @override
+  void dispose() {
+    _stopDevTimer();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +56,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             textDirection: TextDirection.ltr,
             children: [
-              AppBar(
-                primary: false,
-                backgroundColor: Theme.of(context).colorScheme.neutral750,
-                elevation: 0.0,
-                leading: Container(),
-                title: PwText(
-                  Strings.profile,
-                  style: PwTextStyle.subhead,
+              GestureDetector(
+                onTap: _onDevTap,
+                child: AppBar(
+                  primary: false,
+                  backgroundColor: Theme.of(context).colorScheme.neutral750,
+                  elevation: 0.0,
+                  leading: Container(),
+                  title: PwText(
+                    Strings.profile,
+                    style: PwTextStyle.subhead,
+                  ),
                 ),
               ),
-              _CategoryLabel(Strings.security),
+              CategoryLabel(Strings.security),
               _divider,
-              _FutureToggleItem(
+              FutureToggleItem(
                 text: Strings.faceId,
                 getValue: get<WalletService>().getUseBiometry,
                 setValue: (value) => get<WalletService>().setUseBiometry(
@@ -57,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context, snapshot) {
                   var accountName = snapshot.data?.name ?? "";
 
-                  return _LinkItem(
+                  return LinkItem(
                     text: Strings.pinCode,
                     onTap: () {
                       Navigator.push(
@@ -71,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _divider,
-              _LinkItem(
+              LinkItem(
                 text: Strings.resetWallets,
                 onTap: () async {
                   bool shouldReset = await PwDialog.showConfirmation(
@@ -87,21 +115,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _divider,
-              _CategoryLabel(Strings.general),
+              CategoryLabel(Strings.general),
               _divider,
-              _LinkItem(
+              LinkItem(
                 text: Strings.aboutProvenanceBlockchain,
                 onTap: () {
                   launchUrl('https://provenance.io/');
                 },
               ),
               _divider,
-              _LinkItem(
+              LinkItem(
                 text: Strings.moreInformation,
                 onTap: () {
                   launchUrl('https://docs.provenance.io/');
                 },
               ),
+              if (_showDevMenu) _divider,
+              if (_showDevMenu) DeveloperMenu(),
               _divider,
             ],
           ),
@@ -117,225 +147,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
       throw 'Could not launch $url';
     }
   }
-}
 
-class _CategoryLabel extends StatelessWidget {
-  const _CategoryLabel(
-    this.text, {
-    Key? key,
-  }) : super(key: key);
+  Future<void> _initDevMenu() async {
+    final showDevMenu = await _keyValueService.getBool(PrefKey.showDevMenu);
 
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: Spacing.xxLarge,
-      ),
-      padding: EdgeInsets.only(
-        top: Spacing.xxLarge,
-        bottom: Spacing.large,
-      ),
-      child: PwText(
-        text,
-        style: PwTextStyle.title,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-}
-
-class _LinkItem extends StatelessWidget {
-  const _LinkItem({
-    required this.text,
-    required this.onTap,
-    this.count,
-    Key? key,
-  }) : super(key: key);
-
-  final String text;
-  final void Function() onTap;
-  final int? count;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 64,
-        margin: EdgeInsets.symmetric(
-          horizontal: Spacing.xxLarge,
-        ),
-        child: Row(
-          children: [
-            _ItemLabel(
-              text: text,
-            ),
-            if (count != null) _ItemCount(count: count!),
-            Expanded(
-              child: Container(
-                alignment: Alignment.centerRight,
-                margin: EdgeInsets.only(
-                  right: Spacing.large,
-                ),
-                child: PwIcon(
-                  PwIcons.caret,
-                  color: Theme.of(context).colorScheme.neutralNeutral,
-                  size: 10,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FutureToggleItem extends StatefulWidget {
-  const _FutureToggleItem({
-    required this.text,
-    required this.getValue,
-    required this.setValue,
-    Key? key,
-  }) : super(key: key);
-
-  final String text;
-  final Future<bool> Function() getValue;
-  final Future Function(bool) setValue;
-
-  @override
-  __FutureToggleItemState createState() => __FutureToggleItemState();
-}
-
-class __FutureToggleItemState extends State<_FutureToggleItem> {
-  bool? _value;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _getValue();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _ToggleItem(
-      text: widget.text,
-      value: _value,
-      onChanged: (value) async {
-        await widget.setValue(value);
-        await _getValue();
-      },
-    );
-  }
-
-  Future _getValue() async {
-    final value = await widget.getValue();
-    if (value != _value) {
+    if (showDevMenu ?? false) {
       setState(() {
-        _value = value;
+        _showDevMenu = true;
       });
     }
   }
-}
 
-class _ToggleItem extends StatelessWidget {
-  const _ToggleItem({
-    required this.text,
-    required this.value,
-    required this.onChanged,
-    Key? key,
-  }) : super(key: key);
-
-  final String text;
-  final bool? value;
-  final void Function(bool) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64,
-      margin: EdgeInsets.symmetric(
-        horizontal: Spacing.xxLarge,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _ItemLabel(
-            text: text,
-          ),
-          Expanded(
-            child: Container(),
-          ),
-          Container(
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(
-              right: Spacing.medium,
-            ),
-            child: value == null
-                ? Container()
-                : FlutterSwitch(
-                    value: value!,
-                    onToggle: onChanged,
-                    inactiveColor: Theme.of(context).colorScheme.neutral450,
-                    activeColor: Theme.of(context).colorScheme.primary550,
-                    toggleColor: Theme.of(context).colorScheme.neutral800,
-                    padding: 3,
-                    height: 20,
-                    width: 40,
-                    borderRadius: Spacing.large,
-                    toggleSize: 14.0,
-                  ),
-          ),
-        ],
-      ),
-    );
+  void _startDevTimer() {
+    _devTimer = Timer(Duration(seconds: 5), () {
+      _devTapCount = 0;
+      _devTimer = null;
+    });
   }
-}
 
-class _ItemLabel extends StatelessWidget {
-  const _ItemLabel({
-    required this.text,
-    this.onTap,
-    Key? key,
-  }) : super(key: key);
-
-  final String text;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return PwText(
-      text,
-      style: PwTextStyle.body,
-      overflow: TextOverflow.ellipsis,
-    );
+  void _stopDevTimer() {
+    _devTimer?.cancel();
+    _devTimer = null;
+    _devTapCount = 0;
   }
-}
 
-class _ItemCount extends StatelessWidget {
-  const _ItemCount({
-    required this.count,
-    Key? key,
-  }) : super(key: key);
+  void _onDevTap() {
+    if (_devTimer == null) {
+      _startDevTimer();
+    }
 
-  final int count;
+    _devTapCount++;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).colorScheme.secondary250,
-      ),
-      padding: EdgeInsets.all(6),
-      child: PwText(
-        count.toString(),
-        style: PwTextStyle.xsBold,
-      ),
-    );
+    if (_devTapCount == _devTapsRequired) {
+      final showDevMenu = !_showDevMenu;
+      _stopDevTimer();
+      setState(() {
+        _showDevMenu = showDevMenu;
+      });
+      _keyValueService.setBool(PrefKey.showDevMenu, showDevMenu);
+    }
   }
 }

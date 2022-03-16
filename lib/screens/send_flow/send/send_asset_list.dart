@@ -26,7 +26,7 @@ class SendAssetCell extends StatelessWidget {
               error,
               stackTrace,
             ) {
-              return Container();
+              return PwIcon(PwIcons.hashLogo);
             },
           ),
         ),
@@ -42,7 +42,7 @@ class SendAssetCell extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Expanded(child: PwText(asset.fiatValue)),
+            Expanded(child: PwText(asset.displayFiatAmount)),
             Expanded(
               child: PwText(
                 asset.displayAmount,
@@ -104,8 +104,9 @@ class SendAssetList extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: theme.colorScheme.primary,
+          color: theme.colorScheme.neutral250,
         ),
+        color: theme.colorScheme.neutral700,
       ),
       child: child,
     );

@@ -41,7 +41,7 @@ class WalletGasEstimate extends GasEstimate {
       estimate,
       baseFee,
       feeAdjustment,
-      feeCalculated,
+      super.feeCalculated,
     );
   }
 }

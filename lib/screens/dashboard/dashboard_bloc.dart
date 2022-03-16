@@ -7,7 +7,6 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
@@ -51,7 +50,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   WalletConnectSession? _walletSession;
-  TabController? _tabController;
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
@@ -61,8 +59,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     ),
   );
   final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
-  final _assetList = BehaviorSubject.seeded(<Asset>[]);
-  final _selectedAsset = BehaviorSubject<Asset?>.seeded(null);
+  final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
@@ -79,7 +76,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
-  ValueStream<Asset?> get selectedAsset => _selectedAsset;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
   ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
@@ -102,8 +98,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   Future<void> load({TabController? tabController}) async {
     final isFirstLoad = _isFirstLoad;
     _isFirstLoad = false;
-
-    _tabController = tabController;
 
     final walletService = get<WalletService>();
     var details = await walletService.getSelectedWallet();
@@ -376,24 +370,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     _walletMap.value = map;
     _selectedWallet.value = currentWallet;
-  }
-
-  Future<void> openAsset(Asset asset) async {
-    get.registerSingleton<AssetChartBloc>(AssetChartBloc(asset));
-    _selectedAsset.value = asset;
-    _tabController?.animateTo(1);
-  }
-
-  Future<void> closeAssetToDashboard() async {
-    _tabController?.animateTo(0);
-    await closeAsset();
-  }
-
-  Future<void> closeAsset() async {
-    _selectedAsset.value = null;
-    if (get.isRegistered<AssetChartBloc>()) {
-      get.unregister<AssetChartBloc>();
-    }
   }
 
   @override
