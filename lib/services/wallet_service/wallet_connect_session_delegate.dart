@@ -29,12 +29,14 @@ class WalletConnectSessionDelegateEvents {
   final _sendRequest = PublishSubject<SendRequest>(sync: true);
   final _onDidError = PublishSubject<String>(sync: true);
   final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
+  final _onClose = PublishSubject<void>(sync: true);
 
   Stream<WalletConnectSessionRequestData> get sessionRequest => _sessionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<String> get onDidError => _onDidError;
   Stream<WalletConnectTxResponse> get onResponse => _onResponse;
+  Stream<void> get onClose => _onClose;
 
   void listen(WalletConnectSessionDelegateEvents other) {
     other.sessionRequest.listen(_sessionRequest.add).addTo(_subscriptions);
@@ -42,6 +44,7 @@ class WalletConnectSessionDelegateEvents {
     other.sendRequest.listen(_sendRequest.add).addTo(_subscriptions);
     other.onDidError.listen(_onDidError.add).addTo(_subscriptions);
     other.onResponse.listen(_onResponse.add).addTo(_subscriptions);
+    other.onClose.listen(_onClose.add).addTo(_subscriptions);
   }
 
   void clear() {
@@ -56,6 +59,7 @@ class WalletConnectSessionDelegateEvents {
     _sendRequest.close();
     _onDidError.close();
     _onResponse.close();
+    _onClose.close();
   }
 }
 
@@ -211,13 +215,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
   @override
   void onClose() {
-    events.dispose();
-
     for (var completer in _completerLookup.values) {
       completer(false);
     }
 
     _completerLookup.clear();
+    events._onClose.add(null);
   }
 
   @override
