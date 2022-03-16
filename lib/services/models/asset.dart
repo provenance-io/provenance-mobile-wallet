@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:provenance_wallet/common/widgets/icon.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -52,5 +54,9 @@ class Asset {
 
   String get formattedAmount {
     return (usdPrice * double.parse(amount)).toCurrency();
+  }
+
+  String get formattedUsdPrice {
+    return (usdPrice * pow(10, exponent)).toStringAsFixed(3);
   }
 }

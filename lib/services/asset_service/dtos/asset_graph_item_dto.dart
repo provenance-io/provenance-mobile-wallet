@@ -9,7 +9,7 @@ class AssetGraphItemDto {
     required this.price,
   });
 
-  final String? timestamp;
+  final DateTime? timestamp;
   final double? price;
 
   // ignore: member-ordering

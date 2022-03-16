@@ -1,13 +1,15 @@
 import 'dart:async';
 
+import 'package:convert/convert.dart' as convert;
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
+import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -62,7 +64,14 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    get<WalletService>().estimate(body, walletDetails).then((estimate) async {
+    final publicKey = wallet.PublicKey.fromCompressPublicHex(
+      convert.hex.decoder.convert(walletDetails.publicKey),
+      walletDetails.coin,
+    );
+
+    get<WalletConnectTransactionHandler>()
+        .estimateGas(body, publicKey)
+        .then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();
@@ -86,15 +95,9 @@ class SendAmountBloc extends Disposable {
 
       final priceList = await _priceService.getAssetPrices(["nhash"]);
       final price = (priceList.isNotEmpty) ? priceList.first.usdPrice : 0.0;
+
       _fee = MultiSendAsset(
-        SendAsset(
-          "hash",
-          9,
-          "nhash",
-          Decimal.fromInt(estimate.limit),
-          price,
-          "",
-        ),
+        estimate.estimate,
         individualFees,
       );
 

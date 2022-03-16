@@ -38,7 +38,7 @@ main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: textFind, matching: find.text("\$${52 * 123}")),
+        find.descendant(of: textFind, matching: find.text("\$${52 * 123}.00")),
         findsOneWidget,
       );
       expect(

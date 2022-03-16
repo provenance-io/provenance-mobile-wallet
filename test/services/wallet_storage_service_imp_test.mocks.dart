@@ -92,6 +92,15 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       (super.noSuchMethod(Invocation.getter(#platformVersion),
           returnValue: Future<String?>.value()) as _i3.Future<String?>);
   @override
+  _i3.Future<bool> biometryAuth() =>
+      (super.noSuchMethod(Invocation.method(#biometryAuth, []),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
+  _i3.Future<void> resetAuth() =>
+      (super.noSuchMethod(Invocation.method(#resetAuth, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+  @override
   _i3.Future<bool> getUseBiometry() =>
       (super.noSuchMethod(Invocation.method(#getUseBiometry, []),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
@@ -117,4 +126,16 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
   @override
   _i3.Future<bool> reset() => (super.noSuchMethod(Invocation.method(#reset, []),
       returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
+  _i3.Future<String?> getPin() =>
+      (super.noSuchMethod(Invocation.method(#getPin, []),
+          returnValue: Future<String?>.value()) as _i3.Future<String?>);
+  @override
+  _i3.Future<bool> setPin(String? pin) =>
+      (super.noSuchMethod(Invocation.method(#setPin, [pin]),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
+  _i3.Future<bool> deletePin() =>
+      (super.noSuchMethod(Invocation.method(#deletePin, []),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
 }

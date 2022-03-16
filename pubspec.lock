@@ -678,8 +678,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: walletConnectError
-      resolved-ref: "0497ffcd95901f4d1bb558ed517b7efe41248eb8"
+      ref: transactionGasFee
+      resolved-ref: a63d257a13bd426a4dba28225a92fd04d2ba4d83
       url: "git@github.com:provenance-io/provenance-dart.git"
     source: git
     version: "0.0.1"
