@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class AssetBarChart extends StatefulWidget {
   const AssetBarChart({Key? key}) : super(key: key);
@@ -34,19 +35,6 @@ class AssetBarChartState extends State<AssetBarChart> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   CircularProgressIndicator(),
-                ],
-              );
-            }
-
-            if (details.isComingSoon) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PwText(
-                    Strings.comingSoon.toUpperCase(),
-                    style: PwTextStyle.headline2,
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               );
             }
@@ -118,7 +106,7 @@ class AssetBarChartState extends State<AssetBarChart> {
                       .toList(),
                 ],
                 alignment: BarChartAlignment.spaceAround,
-                maxY: 1,
+                maxY: graphList.map((e) => e.price).reduce(max),
               ),
             );
           },

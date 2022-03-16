@@ -13,7 +13,7 @@ extension CoinHelper on wallet.Coin {
   String get address {
     switch (this) {
       case wallet.Coin.mainNet:
-        return "grpc://34.148.39.82:9090";
+        return "grpc://34.148.50.57:9090";
       case wallet.Coin.testNet:
         return "grpc://34.148.39.82:9090";
     }
