@@ -256,6 +256,10 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
           data.address,
           sessionData: data,
         );
+
+        if (!success) {
+          await get<KeyValueService>().remove(PrefKey.sessionData);
+        }
       }
     }
 
