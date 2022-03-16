@@ -199,14 +199,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                     fee,
                     child,
                   ) {
-                    Widget widget;
-                    widget = fee == null
-                        ? PwText(Strings.sendAmountLoadingFeeEstimate)
-                        : PwText(
-                            fee,
-                            textAlign: TextAlign.end,
-                            style: PwTextStyle.caption,
-                          );
+                    final msg = fee ?? Strings.sendAmountLoadingFeeEstimate;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -214,7 +207,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                       children: [
                         PwText(Strings.sendAmountTransactionLabel),
                         Expanded(
-                          child: widget,
+                          child: PwText(
+                            msg,
+                            textAlign: TextAlign.end,
+                            style: PwTextStyle.caption,
+                          ),
                         ),
                       ],
                     );

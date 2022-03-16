@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendReviewNaviagor {
   void complete();
@@ -25,8 +29,9 @@ class SendReviewBlocState {
   String get total {
     final map = <String, SendAsset>{};
     map[sendingAsset.denom] = sendingAsset;
+    final fees = [...fee.fees];
 
-    for (var fee in fee.fees) {
+    for (var fee in fees) {
       var current = map[fee.denom];
       if (current == null) {
         map[fee.denom] = fee;
@@ -64,7 +69,7 @@ class SendReviewBloc implements Disposable {
 
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
-  final WalletService _walletService;
+  final WalletConnectTransactionHandler _walletService;
   final WalletDetails _walletDetails;
   final String receivingAddress;
   final String? note;
@@ -78,7 +83,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.close();
   }
 
-  Future<void> doSend() {
+  Future<void> doSend() async {
     final amountToSend = sendingAsset.amount;
 
     final body = TxBody(
@@ -97,8 +102,11 @@ class SendReviewBloc implements Disposable {
       ],
     );
 
-    GasEstimate estimate = GasEstimate(
-      fee.limit.amount.toBigInt().toInt(),
+    final privateKey = await get<WalletService>().loadKey(_walletDetails.id);
+
+    WalletGasEstimate estimate = WalletGasEstimate(
+      fee.estimate,
+      null,
       null,
       fee.fees
           .map((e) => Coin(
@@ -108,11 +116,16 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    return _walletService.submitTransaction(
+    return _walletService
+        .executeTransaction(
       body,
-      _walletDetails,
+      privateKey!,
       estimate,
-    );
+    )
+        .then((response) {
+      log(response.asJsonString());
+      return null;
+    });
   }
 
   Future<void> complete() async {

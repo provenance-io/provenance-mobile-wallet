@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
@@ -16,6 +15,8 @@ import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import 'send_flow_test.mocks.dart';
@@ -27,6 +28,7 @@ final get = GetIt.instance;
   AssetService,
   TransactionService,
   WalletService,
+  WalletConnectTransactionHandler,
   PriceService,
 ])
 main() {
@@ -49,9 +51,22 @@ main() {
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
   MockWalletService? mockWalletService;
+  MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
   MockPriceService? mockPriceService;
 
   setUp(() {
+    mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
+    when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
+        .thenAnswer((realInvocation) {
+      final gasEstimate = WalletGasEstimate(100, null);
+
+      return Future.value(gasEstimate);
+    });
+
+    get.registerSingleton<WalletConnectTransactionHandler>(
+      mockWalletConnectTransactionHandler!,
+    );
+
     mockTransactionService = MockTransactionService();
     when(mockTransactionService!.getTransactions(any))
         .thenAnswer((realInvocation) {
@@ -69,11 +84,6 @@ main() {
 
     mockWalletService = MockWalletService();
     when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
-    when(mockWalletService!.estimate(any, any)).thenAnswer((realInvocation) {
-      final gasEstimate = GasEstimate(100);
-
-      return Future.value(gasEstimate);
-    });
 
     mockPriceService = MockPriceService();
     when(mockPriceService!.getAssetPrices(any))
@@ -89,6 +99,7 @@ main() {
     get.unregister<WalletService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
+    get.unregister<WalletConnectTransactionHandler>();
     get.unregister<PriceService>();
   });
 
