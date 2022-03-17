@@ -17,5 +17,5 @@ class Images {
   final String usdf = 'assets/images/usdf.svg';
   final String inu = 'assets/images/inu.svg';
   final String warning = 'assets/images/warning.png';
-  final String bigHash = 'assets/images/bigHash.svg';
+  final String bigHash = 'assets/images/bigHash.png';
 }

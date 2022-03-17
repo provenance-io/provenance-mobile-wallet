@@ -112,7 +112,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                   error,
                   stackTrace,
                 ) {
-                  return Container();
+                  return Image.asset(
+                    AssetPaths.images.bigHash,
+                    height: imageDimen,
+                    width: imageDimen,
+                  );
                 },
               ),
               VerticalSpacer.medium(),
