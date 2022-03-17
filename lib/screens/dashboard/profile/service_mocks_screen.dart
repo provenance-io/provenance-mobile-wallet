@@ -46,10 +46,18 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                     cancelText: Strings.cancel,
                   );
                   if (shouldRestart) {
-                    Phoenix.rebirth(context);
+                    try {
+                      await get.popScope();
+                      get.pushNewScope();
+                      Phoenix.rebirth(context);
+                    } catch (e) {
+                      // Already in base scope, can't pop it.
+                      get.pushNewScope();
+                      Phoenix.rebirth(context);
+                    }
+                  } else {
+                    Navigator.of(context).pop();
                   }
-                } else {
-                  Navigator.of(context).pop();
                 }
               },
             ),
