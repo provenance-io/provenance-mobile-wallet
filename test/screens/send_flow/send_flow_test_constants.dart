@@ -15,9 +15,9 @@ final walletDetails = WalletDetails(
 final hashAsset = SendAsset(
   "Hash",
   2,
-  "nHash",
+  "nhash",
   Decimal.fromInt(130),
-  "111",
+  111,
   "http://test.com",
 );
 final dollarAsset = SendAsset(
@@ -25,33 +25,26 @@ final dollarAsset = SendAsset(
   2,
   "USD",
   Decimal.fromInt(1),
-  "2",
+  2,
   "http://test1.com",
 );
 final feeAsset = MultiSendAsset(
-  SendAsset(
-    "Hash",
-    2,
-    "nHash",
-    Decimal.fromInt(9),
-    "",
-    "",
-  ),
+  2,
   [
     SendAsset(
       "USD",
       1,
       "USD",
       Decimal.fromInt(1),
-      "",
+      0,
       "hm",
     ),
     SendAsset(
       "Hash",
       22,
-      "nHash",
+      "nhash",
       Decimal.fromInt(9),
-      "",
+      0,
       "",
     ),
   ],

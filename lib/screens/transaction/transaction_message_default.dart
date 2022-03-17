@@ -31,18 +31,11 @@ class TransactionMessageDefault extends StatefulWidget {
 
   @override
   State<TransactionMessageDefault> createState() =>
-      _TransactionMessageDefaultState(pageController);
+      _TransactionMessageDefaultState();
 }
 
 class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
-  _TransactionMessageDefaultState(PageController? pageController)
-      : _pageController = pageController ?? PageController() {
-    _pageController.addListener(() {
-      _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
-    });
-  }
-
   final _processor = MessageFieldProcessor(
     converters: {
       MessageFieldName.fromAddress: convertAddress,
@@ -55,10 +48,20 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     },
   );
 
-  final PageController _pageController;
+  late final PageController _pageController;
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
 
   var slivers = <Widget>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = widget.pageController ?? PageController();
+    _pageController.addListener(() {
+      _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
+    });
+  }
 
   @override
   void dispose() {
@@ -66,20 +69,6 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
       _pageController.dispose();
     }
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // _buildSlivers();
-  }
-
-  @override
-  void didUpdateWidget(covariant TransactionMessageDefault oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // _buildSlivers();
   }
 
   @override

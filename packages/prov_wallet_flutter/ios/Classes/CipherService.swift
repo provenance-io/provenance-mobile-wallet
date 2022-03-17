@@ -107,7 +107,7 @@ class CipherService: NSObject {
 			throw ProvenanceWalletError(kind: .accessError, message: "Failed to create access control")
 		}
 		
-		let exists = containsPassword(key: key)
+		let exists = passwordExists(key: key)
 		if (exists) {
 			let query: [String: Any] = [
 				kSecClass as String: kSecClassGenericPassword,
@@ -124,7 +124,10 @@ class CipherService: NSObject {
 			let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
 			
 			guard status == errSecSuccess else {
-				throw ProvenanceWalletError(kind: .addSecItem, message: "Could not add item to keychain")
+				let message = SecCopyErrorMessageString(status, nil)
+				Utilities.log(message)
+				
+				throw ProvenanceWalletError(kind: .addSecItem, message: "Could not update item in keychain")
 			}
 		} else {
 			let query: [String: Any] = [
@@ -137,6 +140,9 @@ class CipherService: NSObject {
 			let status = SecItemAdd(query as CFDictionary, nil)
 			
 			guard status == errSecSuccess else {
+				let message = SecCopyErrorMessageString(status, nil)
+				Utilities.log(message)
+				
 				throw ProvenanceWalletError(kind: .addSecItem, message: "Could not add item to keychain")
 			}
 		}
@@ -166,7 +172,7 @@ class CipherService: NSObject {
 		}
 	}
 	
-	private static func containsPassword(key: String) -> Bool {
+	private static func passwordExists(key: String) -> Bool {
 		let query: [String: Any] = [
 			kSecClass as String: kSecClassGenericPassword,
 			kSecAttrAccount as String: key,
@@ -176,7 +182,7 @@ class CipherService: NSObject {
 		var result: AnyObject?
 		let status = SecItemCopyMatching(query as CFDictionary, &result)
 		
-		return status == errSecInteractionNotAllowed
+		return status == errSecInteractionNotAllowed || status == errSecSuccess
 	}
 	
 	private static func deletePassword(key: String) -> Bool {

@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -53,7 +54,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    get<DashboardBloc>().closeAsset();
+                    get<DashboardAssetBloc>().openViewAllTransactions();
                   },
                   child: Padding(
                     padding: EdgeInsets.zero,

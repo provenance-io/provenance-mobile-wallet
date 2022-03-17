@@ -10,17 +10,33 @@ class SendAsset {
     this.imageUrl,
   );
 
+  SendAsset.nhash(Decimal amount, [double price = 0])
+      : this(
+          "hash",
+          9,
+          "nhash",
+          amount,
+          price,
+          "",
+        );
+
   final String displayDenom;
   final int exponent;
   final String denom;
   final Decimal amount;
-  final String fiatValue;
+  final double fiatValue;
   final String imageUrl;
 
   String get displayAmount {
     return (amount / Decimal.fromInt(10).pow(exponent))
         .toDecimal(scaleOnInfinitePrecision: exponent)
         .toString();
+  }
+
+  String get displayFiatAmount {
+    final conversionDecimal = Decimal.parse(fiatValue.toString());
+
+    return "\$${(amount * conversionDecimal).toStringAsFixed(2)}";
   }
 
   SendAsset copyWith({
@@ -38,20 +54,26 @@ class SendAsset {
 }
 
 class MultiSendAsset {
-  MultiSendAsset(this.limit, this.fees);
+  MultiSendAsset(
+    this.estimate,
+    this.fees,
+  );
 
-  final SendAsset limit;
+  final int estimate;
   final List<SendAsset> fees;
 
   String get displayAmount {
     final map = <String, SendAsset>{};
-    map[limit.denom] = limit;
 
     for (var fee in fees) {
       var current = map[fee.denom];
-      map[fee.denom] = current?.copyWith(amount: fee.amount) ?? fee;
+      final total = (current?.amount ?? Decimal.zero) + fee.amount;
+
+      map[fee.denom] = current?.copyWith(amount: total) ?? fee;
     }
 
-    return map.values.map((e) => e.displayAmount).join(" + ");
+    return map.values
+        .map((e) => "${e.displayAmount} ${e.displayDenom}")
+        .join(" + ");
   }
 }

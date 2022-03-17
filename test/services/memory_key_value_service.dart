@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MemoryKeyValueService implements KeyValueService {
   MemoryKeyValueService({
@@ -6,6 +7,32 @@ class MemoryKeyValueService implements KeyValueService {
   }) : _data = data ?? {};
 
   final Map<String, Object> _data;
+
+  final _streams = <PrefKey, BehaviorSubject>{};
+
+  @override
+  ValueStream<bool?> streamBool(PrefKey key) {
+    var stream = _streams[key];
+    if (stream == null) {
+      stream = BehaviorSubject<bool?>();
+      stream.add(_data[key]);
+      _streams[key] = stream;
+    }
+
+    return stream as BehaviorSubject<bool?>;
+  }
+
+  @override
+  ValueStream<String?> streamString(PrefKey key) {
+    var stream = _streams[key];
+    if (stream == null) {
+      stream = BehaviorSubject<String?>();
+      stream.add(_data[key]);
+      _streams[key] = stream;
+    }
+
+    return stream as BehaviorSubject<String?>;
+  }
 
   @override
   Future<bool> containsKey(PrefKey key) async {

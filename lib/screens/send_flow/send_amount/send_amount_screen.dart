@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
@@ -46,6 +47,7 @@ class SendAmountPageState extends State<SendAmountPage> {
   final _feeNotifier = ValueNotifier<String?>(null);
   final FocusNode _noteFocusNode = FocusNode();
   final _focusNotifier = ValueNotifier(false);
+  final ValueNotifier<String> _fiatValueNotifier = ValueNotifier("");
 
   StreamSubscription? _streamSubscription;
 
@@ -59,6 +61,8 @@ class SendAmountPageState extends State<SendAmountPage> {
     });
 
     _bloc = get<SendAmountBloc>();
+    _feeNotifier.addListener(_updateSendPrice);
+
     _streamSubscription = _bloc!.stream.listen((blocState) {
       if (blocState.transactionFees == null) {
         _feeNotifier.value = null;
@@ -66,6 +70,8 @@ class SendAmountPageState extends State<SendAmountPage> {
 
       _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
+
+    _amountController.addListener(_updateSendPrice);
   }
 
   @override
@@ -129,11 +135,21 @@ class SendAmountPageState extends State<SendAmountPage> {
                 overflow: TextOverflow.ellipsis,
                 style: PwTextStyle.m,
               ),
-              PwText(
-                asset.fiatValue,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: PwTextStyle.m,
+              ValueListenableBuilder<String>(
+                valueListenable: _fiatValueNotifier,
+                builder: (
+                  context,
+                  value,
+                  child,
+                ) {
+                  return PwText(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: PwTextStyle.m,
+                    key: ValueKey("DollarValueSent"),
+                  );
+                },
               ),
               VerticalSpacer.medium(),
               Row(
@@ -161,7 +177,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                     ) {
                       return (!hasFocus && _noteController.text.isEmpty)
                           ? PwText(Strings.sendAmountNoteSuffix)
-                          : Container(
+                          : SizedBox(
                               width: 0,
                               height: 0,
                             );
@@ -183,16 +199,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                     fee,
                     child,
                   ) {
-                    Widget widget;
-                    if (fee == null) {
-                      widget = PwText(Strings.sendAmountLoadingFeeEstimate);
-                    } else {
-                      widget = PwText(
-                        fee,
-                        textAlign: TextAlign.end,
-                        style: PwTextStyle.caption,
-                      );
-                    }
+                    final msg = fee ?? Strings.sendAmountLoadingFeeEstimate;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -200,7 +207,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                       children: [
                         PwText(Strings.sendAmountTransactionLabel),
                         Expanded(
-                          child: widget,
+                          child: PwText(
+                            msg,
+                            textAlign: TextAlign.end,
+                            style: PwTextStyle.caption,
+                          ),
                         ),
                       ],
                     );
@@ -240,6 +251,21 @@ class SendAmountPageState extends State<SendAmountPage> {
           return ErrorDialog(error: error.toString());
         },
       );
+    }
+  }
+
+  void _updateSendPrice() {
+    final text = _amountController.text;
+    final sendAmount = Decimal.tryParse(text);
+
+    if (sendAmount == null) {
+      _fiatValueNotifier.value = "";
+    } else {
+      final scaledAmount =
+          (sendAmount * Decimal.fromInt(10).pow(_bloc!.asset.exponent));
+      final convertedAsset = _bloc!.asset.copyWith(amount: scaledAmount);
+
+      _fiatValueNotifier.value = convertedAsset.displayFiatAmount;
     }
   }
 }

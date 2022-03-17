@@ -44,8 +44,6 @@ class Strings {
   // App
   static const appName = 'Provenance Wallet';
 
-  static const comingSoon = 'Coming Soon...';
-
   static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
@@ -133,6 +131,8 @@ class Strings {
       'Are you sure you wish to reset all wallets?';
   static const pinCodeUpdated = 'Pin Code Updated Successfully';
   static const successName = 'Success';
+  static const profileDeveloperCategoryTitle = 'Developer';
+  static const profileDeveloperHttpClients500 = 'HTTP clients return 500';
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
@@ -227,6 +227,7 @@ class Strings {
   static const recordTheseWordsInTheCorrectOrder =
       'Make sure to record these words in the correct order using the corresponding numbers.';
   static const passphraseCopied = 'Passphrase Copied';
+  static const copyPassphrase = 'Copy Passphrase';
 
   // BackupComplete
   static const backupComplete = "Backup Complete";
@@ -337,7 +338,6 @@ class Strings {
   static const connectionDetails = "Connection Details";
   static const unknown = "Unknown";
   static const platform = "Platform";
-  static const dlob = "dLOB";
   static const url = "URL";
 
   static const receiveTitle = "Receive";
@@ -354,4 +354,5 @@ class Strings {
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
+  static const allTransactions = "All Transactions";
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_corner_border.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
@@ -14,8 +15,9 @@ class ReceiveScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: PwText(Strings.receiveTitle),
+      appBar: PwAppBar(
+        title: Strings.receiveTitle,
+        leadingIcon: PwIcons.back,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

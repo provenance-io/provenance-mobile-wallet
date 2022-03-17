@@ -60,7 +60,7 @@ class TradeDetailsScreen extends StatelessWidget {
                   HorizontalSpacer.large(),
                   GestureDetector(
                     onTap: () async {
-                      // TODO: Change this url based on flavor.
+                      // TODO: Change this url based on coin type.
                       final url =
                           'https://explorer.provenance.io/tx/${transaction.hash}';
                       if (await canLaunch(url)) {
@@ -162,7 +162,7 @@ class TradeDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsAmount,
               endChild: PwText(
-                transaction.amount.toString(),
+                transaction.displayAmount,
                 style: PwTextStyle.body,
               ),
             ),

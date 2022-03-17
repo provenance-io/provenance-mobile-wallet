@@ -1,7 +1,6 @@
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/notification/notification_client_id.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -32,7 +31,7 @@ class DefaultTransactionService extends TransactionService
       },
     );
 
-    notifyOnError(data, serviceMobileWalletClientId);
+    notifyOnError(data);
 
     return data.data ?? [];
   }

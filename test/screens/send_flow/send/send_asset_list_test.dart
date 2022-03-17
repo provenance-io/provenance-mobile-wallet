@@ -26,7 +26,7 @@ main() {
         0,
         "nHash",
         Decimal.fromInt(123),
-        "52",
+        52,
         "http://test.com",
       );
       await _build(tester, asset);
@@ -38,7 +38,7 @@ main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: textFind, matching: find.text("52")),
+        find.descendant(of: textFind, matching: find.text("\$${52 * 123}.00")),
         findsOneWidget,
       );
       expect(

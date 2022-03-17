@@ -27,6 +27,7 @@ class NotificationBar extends StatelessWidget {
           final title = notification.title;
           final message = notification.message;
           final kind = notification.kind;
+          final count = notification.count;
 
           final icon = _getIcon(context, kind);
           final backgroundColor = _getBackgroundColor(context, kind);
@@ -52,11 +53,39 @@ class NotificationBar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       textDirection: TextDirection.ltr,
                       children: [
-                        PwText(
-                          title,
-                          style: PwTextStyle.subhead,
-                          color: PwColor.notice800,
-                          textAlign: TextAlign.left,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            PwText(
+                              title,
+                              style: PwTextStyle.subhead,
+                              color: PwColor.notice800,
+                              textAlign: TextAlign.left,
+                            ),
+                            if (count != null)
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: Spacing.small,
+                                ),
+                                padding: EdgeInsets.only(
+                                  top: 1,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:
+                                      Theme.of(context).colorScheme.notice800,
+                                ),
+                                alignment: Alignment.center,
+                                width: 20,
+                                height: 20,
+                                child: PwText(
+                                  count.toString(),
+                                  style: PwTextStyle.body,
+                                  textAlign: TextAlign.center,
+                                  color: PwColor.notice350,
+                                ),
+                              ),
+                          ],
                         ),
                         if (message != null)
                           Container(

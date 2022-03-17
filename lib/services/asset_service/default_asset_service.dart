@@ -1,9 +1,10 @@
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
+import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/notification/notification_client_id.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class DefaultAssetService extends AssetService with ClientNotificationMixin {
@@ -31,7 +32,37 @@ class DefaultAssetService extends AssetService with ClientNotificationMixin {
       },
     );
 
-    notifyOnError(data, serviceMobileWalletClientId);
+    notifyOnError(data);
+
+    return data.data ?? [];
+  }
+
+  String get _assetPricingBasePath =>
+      '/service-mobile-wallet/external/api/v1/pricing/marker';
+  @override
+  Future<List<AssetGraphItem>> getAssetGraphingData(
+    String assetType,
+    GraphingDataValue value,
+  ) async {
+    final timeFrame = value.name.toUpperCase();
+    final data = await get<HttpClient>().get(
+      '$_assetPricingBasePath/$assetType?period=$timeFrame',
+      listConverter: (json) {
+        if (json is String) {
+          return <AssetGraphItem>[];
+        }
+
+        final List<AssetGraphItem> items = [];
+
+        items.addAll(json.map((t) {
+          return AssetGraphItem(dto: AssetGraphItemDto.fromJson(t));
+        }).toList());
+
+        return items..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      },
+    );
+
+    notifyOnError(data);
 
     return data.data ?? [];
   }

@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:grpc/grpc.dart';
-import 'package:protobuf/protobuf.dart';
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
@@ -11,6 +10,7 @@ import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,12 +29,14 @@ class WalletConnectSessionDelegateEvents {
   final _sendRequest = PublishSubject<SendRequest>(sync: true);
   final _onDidError = PublishSubject<String>(sync: true);
   final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
+  final _onClose = PublishSubject<void>(sync: true);
 
   Stream<WalletConnectSessionRequestData> get sessionRequest => _sessionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<String> get onDidError => _onDidError;
   Stream<WalletConnectTxResponse> get onResponse => _onResponse;
+  Stream<void> get onClose => _onClose;
 
   void listen(WalletConnectSessionDelegateEvents other) {
     other.sessionRequest.listen(_sessionRequest.add).addTo(_subscriptions);
@@ -42,6 +44,7 @@ class WalletConnectSessionDelegateEvents {
     other.sendRequest.listen(_sendRequest.add).addTo(_subscriptions);
     other.onDidError.listen(_onDidError.add).addTo(_subscriptions);
     other.onResponse.listen(_onResponse.add).addTo(_subscriptions);
+    other.onClose.listen(_onClose.add).addTo(_subscriptions);
   }
 
   void clear() {
@@ -56,6 +59,7 @@ class WalletConnectSessionDelegateEvents {
     _sendRequest.close();
     _onDidError.close();
     _onResponse.close();
+    _onClose.close();
   }
 }
 
@@ -139,40 +143,52 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   void onApproveTransaction(
     String description,
     String address,
-    List<GeneratedMessage> proposedMessages,
-    AcceptCallback<RawTxResponsePair?> callback,
+    SignTransactionData signTransactionData,
+    AcceptCallback<proto.RawTxResponsePair?> callback,
   ) async {
-    final txBody = TxBody(
-      messages: proposedMessages.map((msg) => msg.toAny()).toList(),
+    final txBody = proto.TxBody(
+      messages: signTransactionData.proposedMessages
+          .map((msg) => msg.toAny())
+          .toList(),
     );
 
     final id = Uuid().v1().toString();
 
-    GasEstimate? gasEstimate;
+    WalletGasEstimate gasEstimate;
     try {
-      gasEstimate = await _transactionHandler.estimateGas(txBody, _privateKey);
+      gasEstimate = await _transactionHandler.estimateGas(
+        txBody,
+        _privateKey.defaultKey().publicKey,
+      );
+
+      if (signTransactionData.gasEstimate != null) {
+        gasEstimate = gasEstimate.copyWithBaseFee(
+          int.parse(signTransactionData.gasEstimate!.amount),
+        );
+      }
     } on GrpcError catch (e) {
       events._onDidError.add(e.message ?? e.codeName);
       callback(null, e.message);
-    }
 
-    if (gasEstimate == null) {
       return null;
     }
 
     final sendRequest = SendRequest(
       id: id,
       description: description,
-      messages: proposedMessages,
+      messages: signTransactionData.proposedMessages,
       gasEstimate: gasEstimate,
     );
 
     _completerLookup[id] = (bool approve) async {
-      RawTxResponsePair? response;
+      proto.RawTxResponsePair? response;
 
       if (approve) {
-        response =
-            await _transactionHandler.executeTransaction(txBody, _privateKey);
+        response = await _transactionHandler.executeTransaction(
+          txBody,
+          _privateKey,
+          gasEstimate,
+        );
 
         final txResponse = response.txResponse;
 
@@ -185,7 +201,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
             gasUsed: txResponse.gasUsed.toInt(),
             height: txResponse.height.toInt(),
             txHash: txResponse.txhash,
-            fees: gasEstimate!.feeCalculated,
+            fees: gasEstimate.feeCalculated,
             codespace: txResponse.codespace,
           ),
         );
@@ -199,18 +215,22 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
   @override
   void onClose() {
-    events.dispose();
-
     for (var completer in _completerLookup.values) {
       completer(false);
     }
 
     _completerLookup.clear();
+    events._onClose.add(null);
   }
 
   @override
   void onError(Exception exception) {
     logError(exception);
-    events._onDidError.add(exception.toString());
+
+    if (exception is WalletConnectException) {
+      events._onDidError.add(exception.message);
+    } else {
+      events._onDidError.add(exception.toString());
+    }
   }
 }

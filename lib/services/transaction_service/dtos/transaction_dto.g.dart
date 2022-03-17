@@ -21,6 +21,7 @@ TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
       txFee: json['txFee'] as int?,
       pricePerUnit: (json['pricePerUnit'] as num?)?.toDouble(),
       totalPrice: (json['totalPrice'] as num?)?.toDouble(),
+      exponent: json['exponent'] as int?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
@@ -36,4 +37,5 @@ Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
       'txFee': instance.txFee,
       'pricePerUnit': instance.pricePerUnit,
       'totalPrice': instance.totalPrice,
+      'exponent': instance.exponent,
     };
