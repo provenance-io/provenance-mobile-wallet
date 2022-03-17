@@ -12,6 +12,7 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
+import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
@@ -26,6 +27,7 @@ import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
@@ -90,6 +92,10 @@ class ProvenanceWalletApp extends StatefulWidget {
 }
 
 class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
+  _ProvenanceWalletAppState() {
+    _setup();
+  }
+
   final _subscriptions = CompositeSubscription();
   final _navigatorKey = GlobalKey<NavigatorState>();
   var _authStatus = AuthStatus.noAccount;
@@ -101,9 +107,20 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: Strings.appName,
+      theme: ProvenanceThemeData.themeData,
+      debugShowCheckedModeBanner: false,
+      navigatorObservers: [
+        RouterObserver.instance.routeObserver,
+      ],
+      home: LandingScreen(),
+      navigatorKey: _navigatorKey,
+    );
+  }
 
+  Future<void> _setup() async {
     final keyValueService = get<KeyValueService>();
 
     final authHelper = get<LocalAuthHelper>();
@@ -142,11 +159,21 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<StatService>(
       () => DefaultStatService(),
     );
+    final isMockingAssetService =
+        await keyValueService.getBool(PrefKey.isMockingAssetService) ?? false;
+
     get.registerLazySingleton<AssetService>(
-      () => DefaultAssetService(),
+      () => isMockingAssetService ? MockAssetService() : DefaultAssetService(),
     );
+
+    final isMockingTransactionService =
+        await keyValueService.getBool(PrefKey.isMockingTransactionService) ??
+            false;
+
     get.registerLazySingleton<TransactionService>(
-      () => DefaultTransactionService(),
+      () => isMockingTransactionService
+          ? MockTransactionService()
+          : DefaultTransactionService(),
     );
     get.registerLazySingleton<NotificationService>(
       () => BasicNotificationService(),
@@ -167,19 +194,5 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     final deepLinkService = FirebaseDeepLinkService()..init();
     get.registerSingleton<DeepLinkService>(deepLinkService);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Strings.appName,
-      theme: ProvenanceThemeData.themeData,
-      debugShowCheckedModeBanner: false,
-      navigatorObservers: [
-        RouterObserver.instance.routeObserver,
-      ],
-      home: LandingScreen(),
-      navigatorKey: _navigatorKey,
-    );
   }
 }
