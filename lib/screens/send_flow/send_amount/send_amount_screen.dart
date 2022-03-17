@@ -244,6 +244,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                 ),
               ),
               Expanded(child: Container()),
+              VerticalSpacer.xxLarge(),
               ValueListenableBuilder(
                 valueListenable: _feeNotifier,
                 builder: (
