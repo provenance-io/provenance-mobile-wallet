@@ -126,7 +126,6 @@ class PinPadState extends State<PinPad> {
             _onCodeClick(_numbers[i]);
           },
         ));
-        //children.add(Container());
         children.add(ContainerCircleButton(
           child: PwIcon(
             PwIcons.remove,
