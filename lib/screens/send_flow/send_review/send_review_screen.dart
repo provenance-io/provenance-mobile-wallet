@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -20,7 +21,10 @@ class SendReviewCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      padding: EdgeInsets.symmetric(
+        vertical: Spacing.large,
+        horizontal: Spacing.xLarge,
+      ),
       child: Row(
         children: [
           PwText(label),
@@ -28,7 +32,6 @@ class SendReviewCell extends StatelessWidget {
             child: PwText(
               value,
               textAlign: TextAlign.end,
-              style: PwTextStyle.caption,
             ),
           ),
         ],
@@ -43,13 +46,13 @@ class SendReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: PwText(Strings.sendReviewTitle),
+      appBar: PwAppBar(
+        title: Strings.sendReviewTitle,
+        leadingIcon: PwIcons.back,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: Spacing.medium,
-          horizontal: Spacing.medium,
+        padding: const EdgeInsets.all(
+          Spacing.large,
         ),
         child: SendReviewPage(),
       ),
@@ -94,34 +97,59 @@ class SendReviewPageState extends State<SendReviewPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   VerticalSpacer.large(),
-                  const PwText(
-                    Strings.sendReviewConfirmYourInfo,
-                    style: PwTextStyle.h4,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.large,
+                    ),
+                    child: const PwText(
+                      Strings.sendReviewConfirmYourInfo,
+                      style: PwTextStyle.title,
+                    ),
                   ),
                   VerticalSpacer.large(),
-                  const PwText(
-                    Strings.sendReviewSendPleaseReview,
-                    style: PwTextStyle.body,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.large,
+                    ),
+                    child: const PwText(
+                      Strings.sendReviewSendPleaseReview,
+                      style: PwTextStyle.body,
+                    ),
                   ),
-                  VerticalSpacer.large(),
-                  SendReviewCell("To", state.receivingAddress),
-                  PwDivider(),
+                  VerticalSpacer.largeX4(),
+                  SendReviewCell(
+                    "To",
+                    state.receivingAddress.abbreviateAddress(),
+                  ),
+                  PwDivider(
+                    indent: Spacing.xLarge,
+                    endIndent: Spacing.xLarge,
+                  ),
                   SendReviewCell(
                     "Sending",
                     "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}",
                   ),
-                  PwDivider(),
+                  PwDivider(
+                    indent: Spacing.xLarge,
+                    endIndent: Spacing.xLarge,
+                  ),
                   SendReviewCell(
                     "Transaction Fee",
                     state.fee.displayAmount,
                   ),
-                  PwDivider(),
+                  PwDivider(
+                    indent: Spacing.xLarge,
+                    endIndent: Spacing.xLarge,
+                  ),
                   SendReviewCell("Total", state.total),
                   Expanded(
                     child: Container(),
                   ),
                   PwButton(
-                    child: PwText(Strings.sendReviewSendButtonTitle),
+                    child: PwText(
+                      Strings.sendReviewSendButtonTitle,
+                      style: PwTextStyle.bodyBold,
+                    ),
                     onPressed: _sendClicked,
                   ),
                   VerticalSpacer.large(),
