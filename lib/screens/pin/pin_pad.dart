@@ -38,16 +38,6 @@ class PinPadState extends State<PinPad> {
   final _inputCodes = <int>[];
 
   @override
-  void initState() {
-    if (widget.isConfirming) {
-      setState(() {
-        _numbers.shuffle();
-      });
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
