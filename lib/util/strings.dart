@@ -139,6 +139,10 @@ class Strings {
   static const developerMocksMockAssetService = "Mock Asset Service";
   static const developerMocksMockTransactionService =
       "Mock Transaction Service";
+  static const developerMocksServiceUpdate = "Service Update";
+  static const developerMocksRestartTheAppMessage =
+      "Restart the app to allow service changes?";
+  static const developerMocksRestart = "Restart";
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';

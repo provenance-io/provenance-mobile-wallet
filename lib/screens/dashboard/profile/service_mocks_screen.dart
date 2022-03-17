@@ -40,10 +40,10 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                 if (_didChange) {
                   var shouldRestart = await PwDialog.showConfirmation(
                     context,
-                    title: "Restart App?",
-                    message: "Restart the app to allow service changes?",
-                    confirmText: "Restart",
-                    cancelText: "Cancel",
+                    title: Strings.developerMocksServiceUpdate,
+                    message: Strings.developerMocksRestartTheAppMessage,
+                    confirmText: Strings.developerMocksRestart,
+                    cancelText: Strings.cancel,
                   );
                   if (shouldRestart) {
                     Phoenix.rebirth(context);
