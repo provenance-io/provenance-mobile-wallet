@@ -127,6 +127,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                 controller: _amountController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 validator: (newValue) => _bloc?.validateAmount(newValue),
+                autofocus: true,
                 style: Theme.of(context).textTheme.display1,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
