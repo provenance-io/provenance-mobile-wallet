@@ -7,6 +7,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -72,7 +73,7 @@ class SendAmountPageState extends State<SendAmountPage> {
 
       _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
-
+    _amountController.text = 0.toString();
     _amountController.addListener(_updateSendPrice);
   }
 
