@@ -143,7 +143,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                 "${asset.displayAmount} ${asset.displayDenom} ${Strings.sendAmountAvailable}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: PwTextStyle.m,
+                style: PwTextStyle.displayBody,
               ),
               ValueListenableBuilder<String>(
                 valueListenable: _fiatValueNotifier,
@@ -156,7 +156,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                     value,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: PwTextStyle.m,
+                    style: PwTextStyle.displayBody,
                     key: ValueKey("DollarValueSent"),
                   );
                 },
