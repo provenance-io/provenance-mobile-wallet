@@ -7,13 +7,11 @@ import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 class PinPad extends StatefulWidget {
   const PinPad({
     required this.onFinish,
-    required this.isConfirming,
     required this.subTitle,
     Key? key,
   }) : super(key: key);
 
   final Function onFinish;
-  final bool isConfirming;
   final String subTitle;
 
   @override

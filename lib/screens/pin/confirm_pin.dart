@@ -60,7 +60,6 @@ class ConfirmPinState extends State<ConfirmPin> {
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
                   subTitle: Strings.setAPinCodeToUnlockYourWallet,
-                  isConfirming: true,
                   onFinish: _onFinish,
                 ),
               ),
