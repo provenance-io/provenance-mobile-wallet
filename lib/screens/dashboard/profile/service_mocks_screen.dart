@@ -1,16 +1,11 @@
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
-import 'package:provenance_wallet/screens/landing/landing_screen.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
-import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
-import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -41,12 +36,20 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
           children: [
             PwAppBar(
               title: Strings.profileDeveloperServiceMocks,
-              leadingIconOnPress: () {
+              leadingIconOnPress: () async {
                 if (_didChange) {
-                  var navigator = Navigator.of(context);
-                  navigator.popUntil((route) => route.isFirst);
-                  navigator.pop();
-                  navigator.push(LandingScreen().route());
+                  var shouldRestart = await PwDialog.showConfirmation(
+                    context,
+                    title: "Restart App?",
+                    message: "Restart the app to allow service changes?",
+                    confirmText: "Restart",
+                    cancelText: "Cancel",
+                  );
+                  if (shouldRestart) {
+                    Phoenix.rebirth(context);
+                  }
+                } else {
+                  Navigator.of(context).pop();
                 }
               },
             ),
@@ -67,16 +70,6 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                       PrefKey.isMockingAssetService,
                       !data,
                     );
-                    get.unregister<AssetService>();
-                    if (value) {
-                      get.registerSingleton<AssetService>(
-                        MockAssetService(),
-                      );
-                    } else {
-                      get.registerSingleton<AssetService>(
-                        DefaultAssetService(),
-                      );
-                    }
                   },
                 );
               },
@@ -97,16 +90,6 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                       PrefKey.isMockingTransactionService,
                       !data,
                     );
-                    get.unregister<TransactionService>();
-                    if (value) {
-                      get.registerSingleton<TransactionService>(
-                        MockTransactionService(),
-                      );
-                    } else {
-                      get.registerSingleton<TransactionService>(
-                        DefaultTransactionService(),
-                      );
-                    }
                   },
                 );
               },
