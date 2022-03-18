@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class SendSuccessScreen extends StatelessWidget {
   const SendSuccessScreen({
@@ -45,12 +46,12 @@ class SendSuccessScreen extends StatelessWidget {
             ),
             VerticalSpacer.medium(),
             PwText(
-              "Your transfer details are below",
+              Strings.sendSuccessTransferDetailsBelow,
               style: PwTextStyle.displayBody,
             ),
             VerticalSpacer.largeX5(),
             SendReviewCell(
-              "Date",
+              Strings.sendDate,
               date.toIso8601String(),
             ),
             PwDivider(
@@ -58,7 +59,7 @@ class SendSuccessScreen extends StatelessWidget {
               endIndent: Spacing.xLarge,
             ),
             SendReviewCell(
-              "To",
+              Strings.sendTo,
               addressTo,
             ),
             PwDivider(

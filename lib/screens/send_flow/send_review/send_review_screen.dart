@@ -118,7 +118,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                   ),
                   VerticalSpacer.largeX4(),
                   SendReviewCell(
-                    "To",
+                    Strings.sendTo,
                     state.receivingAddress.abbreviateAddress(),
                   ),
                   PwDivider(
@@ -126,7 +126,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    "Sending",
+                    Strings.sendReviewSending,
                     "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}",
                   ),
                   PwDivider(
@@ -134,14 +134,17 @@ class SendReviewPageState extends State<SendReviewPage> {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    "Transaction Fee",
+                    Strings.sendReviewTransactionFee,
                     state.fee.displayAmount,
                   ),
                   PwDivider(
                     indent: Spacing.xLarge,
                     endIndent: Spacing.xLarge,
                   ),
-                  SendReviewCell("Total", state.total),
+                  SendReviewCell(
+                    Strings.sendReviewTotal,
+                    state.total,
+                  ),
                   Expanded(
                     child: Container(),
                   ),
