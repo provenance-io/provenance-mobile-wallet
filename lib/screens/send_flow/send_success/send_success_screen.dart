@@ -79,7 +79,7 @@ class SendSuccessScreen extends StatelessWidget {
                   Expanded(child: Container()),
                   PwButton(
                     child: PwText(
-                      Strings.next,
+                      Strings.sendDone,
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () {

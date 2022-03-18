@@ -366,4 +366,5 @@ class Strings {
       "Your transfer details are below";
   static const sendDate = "Date";
   static const sendTo = "To";
+  static const sendDone = "Done";
 }
