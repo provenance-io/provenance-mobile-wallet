@@ -176,7 +176,7 @@ class SendReviewPageState extends State<SendReviewPage> {
         builder: (context) => SendSuccessScreen(
           date: DateTime.now(),
           totalAmount: total,
-          addressTo: addressTo,
+          addressTo: addressTo.abbreviateAddress(),
         ),
       ).then((value) => _bloc!.complete());
     }).catchError((err) {
