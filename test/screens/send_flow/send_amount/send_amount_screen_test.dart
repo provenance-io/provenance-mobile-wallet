@@ -196,11 +196,12 @@ main() {
       expect(
         tester.widget<PwText>(dollarValueSentFind).data,
         hashAsset
-            .copyWith(
-              amount: Decimal.fromInt(1) *
-                  Decimal.fromInt(10).pow(hashAsset.exponent),
-            )
-            .displayFiatAmount,
+                .copyWith(
+                  amount: Decimal.fromInt(1) *
+                      Decimal.fromInt(10).pow(hashAsset.exponent),
+                )
+                .displayFiatAmount +
+            " USD",
       );
 
       await tester
@@ -210,11 +211,12 @@ main() {
       expect(
         tester.widget<PwText>(dollarValueSentFind).data,
         hashAsset
-            .copyWith(
-              amount: Decimal.parse(".5") *
-                  Decimal.fromInt(10).pow(hashAsset.exponent),
-            )
-            .displayFiatAmount,
+                .copyWith(
+                  amount: Decimal.parse(".5") *
+                      Decimal.fromInt(10).pow(hashAsset.exponent),
+                )
+                .displayFiatAmount +
+            " USD",
       );
     });
   });

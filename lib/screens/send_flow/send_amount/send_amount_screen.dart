@@ -153,7 +153,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                   child,
                 ) {
                   return PwText(
-                    '$value USD',
+                    '$value${value.isNotEmpty ? " USD" : ""}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: PwTextStyle.displayBody,

@@ -124,7 +124,7 @@ main() {
 
         var sendListFind = find.byType(SendAssetList);
         var sendList = tester.widget<SendAssetList>(sendListFind);
-        expect(sendList.selectedAsset, null);
+        expect(sendList.selectedAsset, hashAsset);
 
         await tester.tap(sendListFind);
         await tester.pumpAndSettle(); // wait for drop down menu to appear
