@@ -177,54 +177,54 @@ main() {
       });
     });
 
-    group("recent send list", () {
-      testWidgets("Bloc State", (tester) async {
-        await _build(tester);
+    // group("recent send list", () {
+    //   testWidgets("Bloc State", (tester) async {
+    //     await _build(tester);
 
-        var sendListFind = find.byType(RecentSendList);
-        var sendList = tester.widget<RecentSendList>(sendListFind);
+    //     var sendListFind = find.byType(RecentSendList);
+    //     var sendList = tester.widget<RecentSendList>(sendListFind);
 
-        expect(sendList.recentAddresses, <RecentAddress>[]);
+    //     expect(sendList.recentAddresses, <RecentAddress>[]);
 
-        _streamController!.add(
-          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
-        );
-        await tester.pumpAndSettle();
+    //     _streamController!.add(
+    //       SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+    //     );
+    //     await tester.pumpAndSettle();
 
-        sendListFind = find.byType(RecentSendList);
-        sendList = tester.widget<RecentSendList>(sendListFind);
-        expect(sendList.recentAddresses, [recentAddress1, recentAddress2]);
-      });
+    //     sendListFind = find.byType(RecentSendList);
+    //     sendList = tester.widget<RecentSendList>(sendListFind);
+    //     expect(sendList.recentAddresses, [recentAddress1, recentAddress2]);
+    //   });
 
-      testWidgets("recentSend clicked", (tester) async {
-        _streamController!.add(
-          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
-        );
-        await _build(tester);
-        await tester.pumpAndSettle();
+    //   testWidgets("recentSend clicked", (tester) async {
+    //     _streamController!.add(
+    //       SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+    //     );
+    //     await _build(tester);
+    //     await tester.pumpAndSettle();
 
-        await tester.tap(find.text(recentAddress1.address));
+    //     await tester.tap(find.text(recentAddress1.address));
 
-        final textFind = find.byType(TextField);
-        final addressFind = find.descendant(
-          of: textFind,
-          matching: find.text(recentAddress1.address),
-        );
-        expect(addressFind, findsOneWidget);
-      });
+    //     final textFind = find.byType(TextField);
+    //     final addressFind = find.descendant(
+    //       of: textFind,
+    //       matching: find.text(recentAddress1.address),
+    //     );
+    //     expect(addressFind, findsOneWidget);
+    //   });
 
-      testWidgets("View All clicked", (tester) async {
-        _streamController!.add(
-          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
-        );
-        await _build(tester);
-        await tester.pumpAndSettle();
+    //   testWidgets("View All clicked", (tester) async {
+    //     _streamController!.add(
+    //       SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+    //     );
+    //     await _build(tester);
+    //     await tester.pumpAndSettle();
 
-        await tester.tap(find.text("View All"));
+    //     await tester.tap(find.text("View All"));
 
-        verify(mockBloc!.showAllRecentSends());
-      });
-    });
+    //     verify(mockBloc!.showAllRecentSends());
+    //   });
+    // });
 
     group("Next", () {
       testWidgets("Clicked with no values entered", (tester) async {
