@@ -1,10 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
+import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -153,7 +153,9 @@ class SendReviewPageState extends State<SendReviewPage> {
                       Strings.sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
-                    onPressed: _sendClicked,
+                    onPressed: () {
+                      _sendClicked(state.total, state.receivingAddress);
+                    },
                   ),
                   VerticalSpacer.large(),
                 ],
@@ -165,12 +167,17 @@ class SendReviewPageState extends State<SendReviewPage> {
     );
   }
 
-  void _sendClicked() {
+  void _sendClicked(String total, String addressTo) {
     _bloc!.doSend().then((_) {
-      PwDialog.showMessage(
-        context,
-        message: "Success",
-        closeText: "Ok",
+      showDialog(
+        barrierColor: Colors.transparent,
+        useSafeArea: true,
+        context: context,
+        builder: (context) => SendSuccessScreen(
+          date: DateTime.now(),
+          totalAmount: total,
+          addressTo: addressTo,
+        ),
       ).then((value) => _bloc!.complete());
     }).catchError((err) {
       showDialog(
