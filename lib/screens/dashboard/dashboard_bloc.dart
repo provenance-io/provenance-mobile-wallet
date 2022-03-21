@@ -7,6 +7,7 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
@@ -325,21 +326,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         false;
   }
 
-  Future<void> selectWallet({required String id}) async {
-    await _walletSession?.disconnect();
-    await get<WalletService>().selectWallet(id: id);
-  }
-
-  Future<void> renameWallet({
-    required String id,
-    required String name,
-  }) async {
-    await get<WalletService>().renameWallet(
-      id: id,
-      name: name,
-    );
-  }
-
   Future<bool> isValidWalletConnectAddress(String address) {
     return get<WalletService>().isValidWalletConnectData(address);
   }
@@ -377,6 +363,17 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     _walletMap.value = map;
     _selectedWallet.value = currentWallet;
+  }
+
+  void registerWalletBloc() {
+    get.registerSingleton<WalletsBloc>(
+      WalletsBloc(
+        _walletSession,
+        loadAllWallets: loadAllWallets,
+        selectedWallet: selectedWallet,
+        walletMap: walletMap,
+      ),
+    );
   }
 
   @override
