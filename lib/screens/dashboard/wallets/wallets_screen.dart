@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallet_item.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
@@ -22,10 +22,11 @@ class WalletsScreen extends StatefulWidget {
 class WalletsScreenState extends State<WalletsScreen>
     with RouteAware, WidgetsBindingObserver {
   final _screenBottom = 130;
-  late DashboardBloc _bloc;
+  late WalletsBloc _bloc;
 
   @override
   void dispose() {
+    get.unregister<WalletsBloc>();
     WidgetsBinding.instance?.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
     super.dispose();
@@ -43,7 +44,7 @@ class WalletsScreenState extends State<WalletsScreen>
 
   @override
   void initState() {
-    _bloc = get<DashboardBloc>();
+    _bloc = get<WalletsBloc>();
     _bloc.loadAllWallets();
     WidgetsBinding.instance?.addObserver(this);
     super.initState();

@@ -140,6 +140,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
+                  bloc.registerWalletBloc();
                   await showDialog(
                     barrierColor: Theme.of(context).colorScheme.neutral750,
                     useSafeArea: true,
