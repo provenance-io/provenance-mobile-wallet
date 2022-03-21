@@ -677,9 +677,11 @@ packages:
   provenance_dart:
     dependency: "direct main"
     description:
-      path: "/Users/jd/figure/git/provenance-dart"
-      relative: false
-    source: path
+      path: "."
+      ref: develop
+      resolved-ref: "82e3c6ee9974839d9174a516b58c3b9eb85c6946"
+      url: "git@github.com:provenance-io/provenance-dart.git"
+    source: git
     version: "0.0.1"
   pub_semver:
     dependency: transitive
