@@ -3,15 +3,14 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/rename_wallet_dialog.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WalletItem extends StatelessWidget {
-  const WalletItem({
+  WalletItem({
     Key? key,
     required this.item,
     required bool isSelected,
@@ -20,7 +19,7 @@ class WalletItem extends StatelessWidget {
         super(key: key);
 
   final bool _isSelected;
-
+  final bloc = get<WalletsBloc>();
   final WalletDetails item;
   final int numAssets;
 
@@ -59,7 +58,7 @@ class WalletItem extends StatelessWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
-              var result = await showModalBottomSheet<MenuOperation>(
+              await showModalBottomSheet(
                 backgroundColor: Colors.transparent,
                 context: context,
                 builder: (BuildContext context) {
@@ -68,30 +67,69 @@ class WalletItem extends StatelessWidget {
                     children: [
                       PwGreyButton(
                         text: Strings.copyWalletAddress,
-                        onPressed: () {
-                          Navigator.of(context).pop(MenuOperation.copy);
+                        onPressed: () async {
+                          await Clipboard.setData(
+                            ClipboardData(
+                              text: item.address,
+                            ),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                Strings.addressCopied,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.neutral700,
+                            ),
+                          );
+                          Navigator.of(context).pop();
                         },
                       ),
                       PwListDivider(),
                       PwGreyButton(
                         text: Strings.rename,
-                        onPressed: () {
-                          Navigator.of(context).pop(MenuOperation.rename);
+                        onPressed: () async {
+                          final text = await showDialog<String?>(
+                            barrierColor:
+                                Theme.of(context).colorScheme.neutral750,
+                            useSafeArea: true,
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => RenameWalletDialog(
+                              currentName: item.name,
+                            ),
+                          );
+
+                          await bloc.renameWallet(
+                            id: item.id,
+                            name: text,
+                          );
+                          Navigator.of(context).pop();
                         },
                       ),
                       PwListDivider(),
                       PwGreyButton(
                         text: Strings.remove,
-                        onPressed: () {
-                          Navigator.of(context).pop(MenuOperation.delete);
+                        onPressed: () async {
+                          final dialogResult = await PwDialog.showConfirmation(
+                            context,
+                            message: Strings.removeThisWallet,
+                            confirmText: Strings.yes,
+                            cancelText: Strings.cancel,
+                          );
+                          if (dialogResult) {
+                            await bloc.removeWallet(item);
+                          }
+                          Navigator.of(context).pop();
                         },
                       ),
                       PwListDivider(),
                       if (!_isSelected)
                         PwGreyButton(
                           text: Strings.select,
-                          onPressed: () {
-                            Navigator.of(context).pop(MenuOperation.select);
+                          onPressed: () async {
+                            await bloc.selectWallet(id: item.id);
+                            Navigator.of(context).pop();
                           },
                         ),
                       PwListDivider(),
@@ -105,59 +143,6 @@ class WalletItem extends StatelessWidget {
                   );
                 },
               );
-
-              final bloc = get<DashboardBloc>();
-
-              switch (result) {
-                case MenuOperation.rename:
-                  final text = await showDialog<String?>(
-                    barrierColor: Theme.of(context).colorScheme.neutral750,
-                    useSafeArea: true,
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => RenameWalletDialog(
-                      currentName: item.name,
-                    ),
-                  );
-                  if (text != null) {
-                    await bloc.renameWallet(
-                      id: item.id,
-                      name: text,
-                    );
-                  }
-                  break;
-                case MenuOperation.copy:
-                  await Clipboard.setData(
-                    ClipboardData(
-                      text: item.address,
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        Strings.addressCopied,
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.neutral700,
-                    ),
-                  );
-                  break;
-                case MenuOperation.delete:
-                  final dialogResult = await PwDialog.showConfirmation(
-                    context,
-                    message: Strings.removeThisWallet,
-                    confirmText: Strings.yes,
-                    cancelText: Strings.cancel,
-                  );
-                  if (dialogResult) {
-                    await get<WalletService>().removeWallet(id: item.id);
-                  }
-                  break;
-                case MenuOperation.select:
-                  await bloc.selectWallet(id: item.id);
-
-                  break;
-                default:
-              }
             },
             child: SizedBox(
               width: 60,
@@ -175,11 +160,4 @@ class WalletItem extends StatelessWidget {
       ),
     );
   }
-}
-
-enum MenuOperation {
-  copy,
-  select,
-  rename,
-  delete,
 }
