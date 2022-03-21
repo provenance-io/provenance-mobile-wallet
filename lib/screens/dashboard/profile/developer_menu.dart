@@ -2,6 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/service_mocks_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -38,6 +40,16 @@ class DeveloperMenu extends StatelessWidget {
                 );
                 get<DashboardBloc>().load();
               },
+            );
+          },
+        ),
+        PwListDivider(),
+        LinkItem(
+          text: Strings.profileDeveloperServiceMocks,
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => ServiceMocksScreen(),
             );
           },
         ),

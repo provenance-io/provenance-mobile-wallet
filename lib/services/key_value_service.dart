@@ -36,4 +36,6 @@ enum PrefKey {
   sessionData,
   showDevMenu,
   httpClientDiagnostics500,
+  isMockingAssetService,
+  isMockingTransactionService,
 }

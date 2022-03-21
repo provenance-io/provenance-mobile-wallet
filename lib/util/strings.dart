@@ -133,6 +133,16 @@ class Strings {
   static const successName = 'Success';
   static const profileDeveloperCategoryTitle = 'Developer';
   static const profileDeveloperHttpClients500 = 'HTTP clients return 500';
+  static const profileDeveloperServiceMocks = 'Service Mocks';
+
+  // Service Mocks Screen
+  static const developerMocksMockAssetService = "Mock Asset Service";
+  static const developerMocksMockTransactionService =
+      "Mock Transaction Service";
+  static const developerMocksServiceUpdate = "Service Update";
+  static const developerMocksRestartTheAppMessage =
+      "Restart the app to allow service changes?";
+  static const developerMocksRestart = "Restart";
 
   // AddWallet Page
   static const chooseWalletType = 'Choose Wallet Type';
