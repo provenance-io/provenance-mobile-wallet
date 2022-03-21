@@ -6,15 +6,14 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
@@ -27,113 +26,35 @@ const walletConnectAddress =
     'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
 
 void main() {
-  test(
-    'Initial load',
-    () async {
-      final state = await TestState.create(
-        maxWalletId: 1,
-      );
-
-      final bloc = state.bloc;
-
-      expect(bloc.selectedWallet.value?.id, '0');
-      expect(bloc.assetList.value!.first.amount, '0');
-      expect(bloc.transactionDetails.value.transactions.first.amount, 0);
-    },
-  );
-
-  test('Add first wallet selects wallet', () async {
-    const maxWalletId = -1; // No initial wallets
-
+  test('Rename wallet updates selected wallet', () async {
     final state = await TestState.create(
-      maxWalletId: maxWalletId,
+      maxWalletId: 0,
     );
 
     final bloc = state.bloc;
 
-    expect(bloc.selectedWallet.value, isNull);
+    const newName = 'new';
+
+    await bloc.renameWallet(id: '0', name: newName);
+
+    await pumpEventQueue();
+
+    expect(bloc.selectedWallet.value!.name, newName);
   });
 
-  test('Remove selected wallet updates selected wallet', () async {
+  test('Remove non-selected wallet does not update selected wallet', () async {
     final state = await TestState.create(
       maxWalletId: 1,
     );
 
     final bloc = state.bloc;
 
-    await state.walletService.removeWallet(id: '0');
+    await bloc.selectWallet(id: '0');
+    await state.walletService.removeWallet(id: '1');
 
     await pumpEventQueue();
 
-    expect(bloc.selectedWallet.value!.id, '1');
-  });
-
-  test('Reset wallets removes selected wallet', () async {
-    final state = await TestState.create(
-      maxWalletId: 1,
-    );
-
-    final bloc = state.bloc;
-
-    await bloc.resetWallets();
-
-    await pumpEventQueue();
-
-    expect(bloc.selectedWallet.value, isNull);
-  });
-
-  test('Connect wallet requests session', () async {
-    final state = await TestState.create(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    WalletConnectSessionRequestData? details;
-    bloc.delegateEvents.sessionRequest.listen((e) async {
-      details = e;
-    });
-
-    await bloc.connectSession('0', walletConnectAddress);
-
-    await pumpEventQueue();
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.connecting,
-    );
-
-    expect(details, isNotNull);
-  });
-
-  test('Approve session connects session', () async {
-    final state = await TestState.createConnected(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.connected,
-    );
-  });
-
-  test('Disconnect session disconnects session', () async {
-    final state = await TestState.createConnected(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    await bloc.disconnectSession();
-
-    await pumpEventQueue();
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.disconnected,
-    );
+    expect(bloc.selectedWallet.value!.id, '0');
   });
 }
 
@@ -143,6 +64,7 @@ class TestState {
     this.transactionService,
     this.deepLinkService,
     this.walletService,
+    this.dbloc,
     this.bloc,
   );
 
@@ -150,7 +72,8 @@ class TestState {
   final TransactionService transactionService;
   final DeepLinkService deepLinkService;
   final WalletService walletService;
-  final DashboardBloc bloc;
+  final DashboardBloc dbloc;
+  final WalletsBloc bloc;
 
   static Future<TestState> createConnected({
     required int maxWalletId,
@@ -158,11 +81,12 @@ class TestState {
     final state = await create(maxWalletId: maxWalletId);
 
     final bloc = state.bloc;
+    final dbloc = state.dbloc;
 
     final connectedCompleter = Completer();
 
-    bloc.delegateEvents.sessionRequest.listen((e) async {
-      await bloc.approveSession(details: e, allowed: true);
+    dbloc.delegateEvents.sessionRequest.listen((e) async {
+      await dbloc.approveSession(details: e, allowed: true);
 
       await pumpEventQueue();
 
@@ -171,7 +95,7 @@ class TestState {
 
     final walletId = bloc.selectedWallet.value!.id;
 
-    await bloc.connectSession(walletId, walletConnectAddress);
+    await dbloc.connectSession(walletId, walletConnectAddress);
 
     await pumpEventQueue();
 
@@ -269,6 +193,10 @@ class TestState {
 
     await bloc.load();
 
+    bloc.registerWalletBloc();
+
+    final newBloc = get<WalletsBloc>();
+
     await pumpEventQueue();
 
     return TestState._(
@@ -277,6 +205,7 @@ class TestState {
       deepLinkService,
       walletService,
       bloc,
+      newBloc,
     );
   }
 }
