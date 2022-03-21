@@ -327,6 +327,10 @@ class Strings {
   static const sendReviewSendButtonTitle = "Send";
   static const sendReviewSendPleaseReview =
       "Please review the details below to make sure everything is correct";
+  static const sendReviewSending = "Sending";
+  static const sendReviewTransactionFee = "Transaction Fee";
+  static const sendReviewTotal = "Total";
+
   // Error Dialog
   static const unknownErrorTitle = 'UNKNOWN ERROR';
   static const somethingWentWrong = 'Something went wrong.';
@@ -356,4 +360,11 @@ class Strings {
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
+
+  // SendSuccessScreen
+  static const sendSuccessTransferDetailsBelow =
+      "Your transfer details are below";
+  static const sendDate = "Date";
+  static const sendTo = "To";
+  static const sendDone = "Done";
 }
