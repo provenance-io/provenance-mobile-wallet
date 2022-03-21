@@ -197,10 +197,13 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       return false;
     }
 
+    final walletMeta = WalletMeta(_selectedWallet.value?.name ?? "");
+
     final connection = get<WalletConnectionFactory>().call(address);
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
       transactionHandler: WalletConnectTransactionHandler(),
+      walletMeta: walletMeta
     );
     final session = WalletConnectSession(
       walletId: walletId,

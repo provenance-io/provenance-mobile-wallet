@@ -5,6 +5,7 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
@@ -66,12 +67,15 @@ class WalletConnectSessionDelegateEvents {
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
     required PrivateKey privateKey,
+    required WalletMeta walletMeta,
     required TransactionHandler transactionHandler,
   })  : _privateKey = privateKey,
-        _transactionHandler = transactionHandler;
+        _transactionHandler = transactionHandler,
+        _walletMeta = walletMeta;
 
   final PrivateKey _privateKey;
   final TransactionHandler _transactionHandler;
+  final WalletMeta _walletMeta;
 
   final _completerLookup = <String, CompleterDelegate>{};
 
@@ -99,7 +103,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         sessionApproval = SessionApprovalData(
           _privateKey,
           _privateKey.publicKey.coin.chainId,
-
+          _walletMeta,
         );
       }
 
