@@ -7,13 +7,11 @@ import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 class PinPad extends StatefulWidget {
   const PinPad({
     required this.onFinish,
-    required this.isConfirming,
     required this.subTitle,
     Key? key,
   }) : super(key: key);
 
   final Function onFinish;
-  final bool isConfirming;
   final String subTitle;
 
   @override
@@ -36,16 +34,6 @@ class PinPadState extends State<PinPad> {
     0,
   ];
   final _inputCodes = <int>[];
-
-  @override
-  void initState() {
-    if (widget.isConfirming) {
-      setState(() {
-        _numbers.shuffle();
-      });
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +124,6 @@ class PinPadState extends State<PinPad> {
             _onCodeClick(_numbers[i]);
           },
         ));
-        //children.add(Container());
         children.add(ContainerCircleButton(
           child: PwIcon(
             PwIcons.remove,

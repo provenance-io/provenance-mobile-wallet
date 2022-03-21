@@ -37,7 +37,6 @@ class ValidatePinState extends State<ValidatePin> {
             Expanded(
               child: PinPad(
                 subTitle: Strings.enterPinToVerifyYourIdentity,
-                isConfirming: false,
                 onFinish: _onFinish,
               ),
             ),
