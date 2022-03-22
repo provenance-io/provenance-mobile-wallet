@@ -66,12 +66,15 @@ class WalletConnectSessionDelegateEvents {
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
     required PrivateKey privateKey,
+    required WalletInfo walletInfo,
     required TransactionHandler transactionHandler,
   })  : _privateKey = privateKey,
-        _transactionHandler = transactionHandler;
+        _transactionHandler = transactionHandler,
+        _walletInfo = walletInfo;
 
   final PrivateKey _privateKey;
   final TransactionHandler _transactionHandler;
+  final WalletInfo _walletInfo;
 
   final _completerLookup = <String, CompleterDelegate>{};
 
@@ -99,6 +102,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         sessionApproval = SessionApprovalData(
           _privateKey,
           _privateKey.publicKey.coin.chainId,
+          _walletInfo,
         );
       }
 
