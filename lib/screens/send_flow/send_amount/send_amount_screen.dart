@@ -116,11 +116,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                   error,
                   stackTrace,
                 ) {
-                  return Image.asset(
-                    AssetPaths.images.bigHash,
-                    height: imageDimen,
-                    width: imageDimen,
-                  );
+                  return asset.displayDenom.toLowerCase() == 'hash'
+                      ? Image.asset(
+                          AssetPaths.images.bigHash,
+                          height: imageDimen,
+                          width: imageDimen,
+                        )
+                      : Container();
                 },
               ),
               VerticalSpacer.medium(),
