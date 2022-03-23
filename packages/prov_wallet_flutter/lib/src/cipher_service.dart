@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:prov_wallet_flutter/src/biometry_type.dart';
+
 abstract class CipherService {
   CipherService._();
 
   Future<String?> get platformVersion;
+
+  Future<BiometryType> getBiometryType();
 
   Future<bool> authenticateBiometry();
 

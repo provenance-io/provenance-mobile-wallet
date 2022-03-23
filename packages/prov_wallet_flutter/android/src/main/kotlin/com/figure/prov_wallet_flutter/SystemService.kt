@@ -1,29 +1,90 @@
 package com.figure.prov_wallet_flutter
 
-import android.app.KeyguardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.*
 import android.hardware.biometrics.BiometricManager
-import android.hardware.biometrics.BiometricManager.Authenticators
+import android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import android.hardware.biometrics.BiometricPrompt
-import android.os.Build
 import android.os.CancellationSignal
-import java.lang.Exception
+import android.util.Log
 import java.util.concurrent.Executor
-import javax.crypto.Cipher
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class AuthenticationHelpException(message: String, val code: String? = null, val details: String? = null) : Exception(message)
+enum class BiometryType(val value: String) {
+    None("none"),
+    FaceId("face_id"),
+    TouchId("touch_id")
+}
 
-class AuthenticationException(message: String, val code: String? = null, val details: String? = null) : Exception(message)
+class SystemService(private val packageManager: PackageManager, private val biometricManager: BiometricManager, private val executor: Executor) {
+    companion object {
+        private val TAG = "$SystemService"
+    }
+    fun getBiometryType(): BiometryType {
+        return when {
+            hasFaceId() -> {
+                BiometryType.FaceId
+            }
+            hasTouchId() -> {
+                BiometryType.TouchId
+            }
+            else -> {
+                BiometryType.None
+            }
+        }
+    }
 
-class SystemService(private val packageManager: PackageManager, private val biometricManager: BiometricManager, private val keyguardManager: KeyguardManager, private val executor: Executor) {
-    fun hasBiometry(): Boolean {
+//    fun checkAuthRequisites(): AuthRequisiteStatus {
+//        var state = AuthRequisiteStatus.UnknownIssue
+//
+//        if (Build.VERSION.SDK_INT == 29) {
+//            val result = biometricManager.canAuthenticate()
+//            state = convertAuthState(result)
+//        }
+//
+//        if (Build.VERSION.SDK_INT >= 30) {
+//            val authenticators = Authenticators.BIOMETRIC_STRONG or
+//                Authenticators.DEVICE_CREDENTIAL
+//            val result = biometricManager.canAuthenticate(authenticators)
+//            state = convertAuthState(result)
+//        }
+//
+//        if (!hasStrongBoxKeystore()) {
+////            state = AuthRequisiteStatus.NoStrongboxKeystore
+//        }
+//
+//        return state
+//    }
+
+    suspend fun authenticate(context: Context, useBiometry: Boolean): Boolean = suspendCoroutine { cont ->
+        val builder = BiometricPrompt.Builder(context)
+            .setTitle("Authenticate")
+            .setConfirmationRequired(false)
+
+        var authenticators = DEVICE_CREDENTIAL
+        if (useBiometry) {
+            authenticators = authenticators or BIOMETRIC_STRONG
+        }
+        builder.setAllowedAuthenticators(authenticators)
+
+        val prompt = builder.build()
+        val cancel = CancellationSignal()
+        val callback = AuthCallback(cont)
+
+        try {
+            prompt.authenticate(cancel, executor, callback)
+        } catch (e: Exception) {
+            Log.w(TAG, "Authentication exception", e)
+            cont.resume(false)
+        }
+    }
+
+    private fun hasFaceId(): Boolean {
         val features = setOf(
-            FEATURE_FINGERPRINT,
             FEATURE_IRIS,
             FEATURE_FACE
         )
@@ -31,112 +92,33 @@ class SystemService(private val packageManager: PackageManager, private val biom
         return features.any { packageManager.hasSystemFeature(it) }
     }
 
-    fun hasStrongBoxKeystore(): Boolean {
+    private fun hasTouchId(): Boolean {
+        return packageManager.hasSystemFeature(FEATURE_FINGERPRINT)
+    }
+
+    private fun hasStrongBoxKeystore(): Boolean {
         return packageManager.hasSystemFeature(FEATURE_STRONGBOX_KEYSTORE)
     }
 
-    fun canAuthenticate(): Boolean {
-        var result = BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
-
-        if (Build.VERSION.SDK_INT == 29) {
-            result = biometricManager.canAuthenticate()
+    private class AuthCallback(private val cont: Continuation<Boolean>) : BiometricPrompt.AuthenticationCallback() {
+        private companion object {
+            private val TAG = "$AuthCallback"
+        }
+        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
+            cont.resume(true)
         }
 
-        if (Build.VERSION.SDK_INT >= 30) {
-            val authenticators = Authenticators.BIOMETRIC_STRONG or
-                Authenticators.BIOMETRIC_WEAK or
-                Authenticators.DEVICE_CREDENTIAL
-            result = biometricManager.canAuthenticate(authenticators)
+        override fun onAuthenticationFailed() {
+            cont.resume(false)
         }
 
-        return result == BiometricManager.BIOMETRIC_SUCCESS || keyguardManager.isDeviceSecure
-    }
-
-    suspend fun authenticateCipher(context: Context, cipher: Cipher): Boolean = suspendCoroutine { cont ->
-        val cryptoObject = BiometricPrompt.CryptoObject(
-            cipher
-        )
-        val builder = BiometricPrompt.Builder(context)
-            .setTitle("Authenticate")
-            .setConfirmationRequired(false)
-
-//        if (Build.VERSION.SDK_INT == 29) {
-        builder.setDeviceCredentialAllowed(true)
-//        }
-
-//        if (Build.VERSION.SDK_INT >= 30) {
-//            val authenticators = Authenticators.BIOMETRIC_STRONG or
-//                Authenticators.BIOMETRIC_WEAK or
-//                Authenticators.DEVICE_CREDENTIAL
-//            builder.setAllowedAuthenticators(authenticators)
-//        }
-
-        val prompt = builder.build()
-
-        val cancel = CancellationSignal()
-
-        val callback = object: BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                cont.resume(result?.cryptoObject?.cipher != null)
-            }
-
-            override fun onAuthenticationFailed() {
-                cont.resume(false)
-            }
-
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                val e = AuthenticationException(errString.toString(), errorCode.toString())
-                cont.resumeWithException(e)
-            }
-
-            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                val e = AuthenticationHelpException(helpString.toString(), helpCode.toString())
-                cont.resumeWithException(e)
-            }
+        override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+            Log.w(TAG, "Authentication Error $errorCode: $errString")
+            cont.resume(false)
         }
 
-        prompt.authenticate(cryptoObject, cancel, executor, callback)
-    }
-
-    suspend fun authenticateBiometry(context: Context): Boolean = suspendCoroutine { cont ->
-        val builder = BiometricPrompt.Builder(context)
-            .setTitle("Authenticate")
-            .setConfirmationRequired(false)
-
-//        if (Build.VERSION.SDK_INT == 29) {
-            builder.setDeviceCredentialAllowed(true)
-//        }
-
-//        if (Build.VERSION.SDK_INT >= 30) {
-//            val authenticators = Authenticators.BIOMETRIC_STRONG or
-//                Authenticators.BIOMETRIC_WEAK or
-//                Authenticators.DEVICE_CREDENTIAL
-//            builder.setAllowedAuthenticators(authenticators)
-//        }
-
-        val prompt = builder.build()
-
-        val cancel = CancellationSignal()
-        val callback = object: BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                cont.resume(true)
-            }
-
-            override fun onAuthenticationFailed() {
-                cont.resume(false)
-            }
-
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                val e = AuthenticationException(errString.toString(), errorCode.toString())
-                cont.resumeWithException(e)
-            }
-
-            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                val e = AuthenticationHelpException(helpString.toString(), helpCode.toString())
-                cont.resumeWithException(e)
-            }
+        override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+            Log.w(TAG, "Authentication Help $helpCode: $helpString")
         }
-
-        prompt.authenticate(cancel, executor, callback)
     }
 }

@@ -34,6 +34,30 @@ class PlatformCipherService implements CipherService {
   }
 
   @override
+  Future<BiometryType> getBiometryType() async {
+    var type = BiometryType.none;
+
+    try {
+      final result = await _channel.invokeMethod('getBiometryType');
+      switch (result) {
+        case 'face_id':
+          type = BiometryType.faceId;
+          break;
+        case 'touch_id':
+          type = BiometryType.touchId;
+          break;
+        default:
+          type = BiometryType.none;
+          break;
+      }
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return type;
+  }
+
+  @override
   Future<bool> authenticateBiometry() async {
     var success = false;
 
@@ -98,7 +122,6 @@ class PlatformCipherService implements CipherService {
     var params = {
       "id": id,
       "private_key": privateKey,
-      "use_biometry": useBiometry,
     };
 
     var success = false;

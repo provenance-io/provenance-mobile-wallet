@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
+import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -98,29 +99,10 @@ class EnableFaceIdScreen extends StatelessWidget {
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
-                        ModalLoadingRoute.showLoading(
-                          Strings.pleaseWait,
+                        _submit(
                           context,
-                        );
-
-                        final details = await get<WalletService>().addWallet(
-                          phrase: words,
-                          name: accountName ?? '',
                           useBiometry: true,
                         );
-                        ModalLoadingRoute.dismiss(context);
-
-                        if (details != null) {
-                          await authHelper.enroll(
-                            code?.join() ?? '',
-                            accountName ?? '',
-                            true,
-                            context,
-                          );
-
-                          await Navigator.of(context)
-                              .push(WalletSetupConfirmation().route());
-                        }
                       },
                     ),
                   ),
@@ -134,28 +116,10 @@ class EnableFaceIdScreen extends StatelessWidget {
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
-                        ModalLoadingRoute.showLoading(
-                          Strings.pleaseWait,
+                        _submit(
                           context,
-                        );
-                        final details = await get<WalletService>().addWallet(
-                          phrase: words,
-                          name: accountName ?? '',
                           useBiometry: false,
                         );
-                        ModalLoadingRoute.dismiss(context);
-
-                        if (details != null) {
-                          await authHelper.enroll(
-                            code?.join() ?? '',
-                            accountName ?? '',
-                            false,
-                            context,
-                          );
-
-                          await Navigator.of(context)
-                              .push(WalletSetupConfirmation().route());
-                        }
                       },
                     ),
                   ),
@@ -167,5 +131,38 @@ class EnableFaceIdScreen extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  Future<void> _submit(
+    BuildContext context, {
+    required bool useBiometry,
+  }) async {
+    ModalLoadingRoute.showLoading(
+      Strings.pleaseWait,
+      context,
+    );
+
+    WalletDetails? details;
+
+    final enrolled = await authHelper.enroll(
+      code?.join() ?? '',
+      accountName ?? '',
+      useBiometry,
+      context,
+    );
+
+    if (enrolled) {
+      details = await get<WalletService>().addWallet(
+        phrase: words,
+        name: accountName ?? '',
+        useBiometry: useBiometry,
+      );
+    }
+
+    ModalLoadingRoute.dismiss(context);
+
+    if (details != null) {
+      await Navigator.of(context).push(WalletSetupConfirmation().route());
+    }
   }
 }

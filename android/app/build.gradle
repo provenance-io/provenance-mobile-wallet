@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId "io.provenance.wallet"
-        minSdkVersion 29
+        minSdkVersion 30
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

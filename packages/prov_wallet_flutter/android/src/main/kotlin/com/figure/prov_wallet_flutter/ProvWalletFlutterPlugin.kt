@@ -1,7 +1,5 @@
 package com.figure.prov_wallet_flutter
 
-
-import android.app.KeyguardManager
 import android.content.Context
 import android.hardware.biometrics.BiometricManager
 import android.security.keystore.UserNotAuthenticatedException
@@ -18,8 +16,6 @@ import java.io.*
 
 class Error {
     companion object {
-        const val authenticationException = "authentication_exception"
-        const val authenticationHelpException = "authentication_help_exception"
         const val userNotAuthenticated = "user_not_authenticated"
         const val unknown = "unknown"
     }
@@ -42,13 +38,14 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, name)
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        cipherService = CipherService(preferences)
+
         val packageManager = context.packageManager
         val biometricManager = context.getSystemService(BiometricManager::class.java)
-        val keyguardManager = context.getSystemService(KeyguardManager::class.java)
         val executor = context.mainExecutor
-        systemService = SystemService(packageManager, biometricManager, keyguardManager, executor)
+        systemService = SystemService(packageManager, biometricManager, executor)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        cipherService = CipherService(preferences, systemService)
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -58,55 +55,28 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
                     "getPlatformVersion" -> {
                         result.success("Android ${android.os.Build.VERSION.RELEASE}")
                     }
-                    "meetsRequisites" -> {
-                        val meetsRequisites = systemService.hasStrongBoxKeystore()
-                        result.success(meetsRequisites)
-                    }
-                    "hasBiometry" -> {
-                        val hasBiometry = systemService.hasBiometry()
-                        result.success(hasBiometry)
-                    }
-                    "canAuthenticate" -> {
-                        val canAuthenticate = systemService.canAuthenticate()
-                        result.success(canAuthenticate)
+                    "getBiometryType" -> {
+                        val type = systemService.getBiometryType()
+                        result.success(type.value)
                     }
                     "authenticateBiometry" -> {
-                        val success = systemService.authenticateBiometry(context)
+                        val success = systemService.authenticate(context, useBiometry = true)
                         result.success(success)
                     }
                     "resetAuth" -> {
-                        val success = cipherService.resetAuthentication()
-                        result.success(success)
+                        // Only timeout is supported on Android
+                        result.success(true)
                     }
                     "encryptKey" -> {
                         val id = call.argument<String>("id")!!
                         val privateKey = call.argument<String>("private_key")!!
-                        val useBiometry = call.argument<Boolean>("use_biometry")
-                        val secretKey = cipherService.getOrCreateSecretKey(useBiometry)
-                        val cipher = cipherService.getCipher(secretKey)
-
-                        var success = systemService.authenticateCipher(context, cipher)
-                        if (success) {
-                            val encrypted = cipherService.encrypt(cipher, privateKey)
-                            success = cipherService.putPref(id, encrypted)
-                        }
-
+                        val success = cipherService.encryptKey(context, id, privateKey)
                         result.success(success)
                     }
                     "decryptKey" -> {
                         val id = call.argument<String>("id")!!
-                        var decrypted: String? = null
 
-                        val encrypted = cipherService.getPref(id)
-                        if (encrypted != null) {
-                            val secretKey = cipherService.getOrCreateSecretKey()
-                            val cipher = cipherService.getCipher(secretKey, encrypted.iv)
-
-                            val success = systemService.authenticateCipher(context, cipher)
-                            if (success) {
-                                decrypted = cipherService.decrypt(cipher, encrypted.data)
-                            }
-                        }
+                        val decrypted = cipherService.decryptKey(context, id)
 
                         result.success(decrypted)
                     }
@@ -155,14 +125,6 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
                 Log.e(TAG, "Exception occurred", e)
 
                 when (e) {
-                    is AuthenticationException -> {
-                        details = "Code: ${e.code}\n" + details
-                        result.error(Error.authenticationException, e.message, details)
-                    }
-                    is AuthenticationHelpException -> {
-                        details = "Code: ${e.code}\n" + details
-                        result.error(Error.authenticationHelpException, e.message, details)
-                    }
                     is UserNotAuthenticatedException -> {
                         result.error(Error.userNotAuthenticated, e.message, details)
                     }

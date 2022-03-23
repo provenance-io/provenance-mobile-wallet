@@ -143,6 +143,9 @@ class MockCipherService implements CipherService {
   Future<String?> get platformVersion async => null;
 
   @override
+  Future<BiometryType> getBiometryType() async => BiometryType.faceId;
+
+  @override
   Future<bool> authenticateBiometry() async => true;
 
   @override

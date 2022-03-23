@@ -34,7 +34,8 @@ android {
     defaultConfig {
         // 28 required for strong box keystore
         // 29 required for biometric prompt fallback
-        minSdkVersion 29
+        // 30 required to skip implementing deprecated KeyguardManager.createConfirmDeviceCredentialIntent() for API 29
+        minSdkVersion 30
     }
 }
 

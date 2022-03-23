@@ -4,22 +4,21 @@ import android.app.KeyguardManager
 import android.content.SharedPreferences
 import android.hardware.biometrics.BiometricManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.figure.prov_wallet_flutter.CipherService
 import com.figure.prov_wallet_flutter.SystemService
 import io.flutter.embedding.android.FlutterActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.concurrent.Executor
 
 class MainActivity: FlutterActivity() {
     companion object {
         val TAG = "$MainActivity"
     }
+
+    private lateinit var mainScope: CoroutineScope
     private lateinit var  preferences: SharedPreferences
     private lateinit var cipherService: CipherService
     private lateinit var biometricManager: BiometricManager
@@ -27,70 +26,115 @@ class MainActivity: FlutterActivity() {
     private lateinit var executor: Executor
     private lateinit var systemService: SystemService
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mainScope = MainScope()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        cipherService = CipherService(preferences)
         biometricManager = context.getSystemService(BiometricManager::class.java)
         keyguardManager = context.getSystemService(KeyguardManager::class.java)
         executor = context.mainExecutor
-        systemService = SystemService(packageManager, biometricManager, keyguardManager, executor)
+        systemService = SystemService(packageManager, biometricManager, executor)
+        cipherService = CipherService(preferences, systemService)
+        cipherService.resetSecretKeys()
 
         setContentView(R.layout.main)
 
-        findViewById<Button>(R.id.go).apply {
+        findViewById<Button>(R.id.round_trip_bio).apply {
             setOnClickListener {
-                GlobalScope.launch {
+                mainScope.launch {
                     val input = "hello"
-                    val encrypted = encrypt(input)
-                    if (encrypted != null) {
-                        val actual = decrypt(encrypted.data, encrypted.iv)
-                        val text = if (actual == input) "Success!" else "Fail!"
+                    val id = "0"
+                    cipherService.setUseBiometry(true)
+                    var success = cipherService.encryptKey(context, id, input)
+                    if (success) {
+                        val actual = cipherService.decryptKey(context, id)
+                        success = actual == input
+                    }
 
-                        launch(Dispatchers.Main) {
-                            Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
-                        }
+                    val text = if (success) "Success!" else "Fail!"
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        findViewById<Button>(R.id.round_trip_pin).apply {
+            setOnClickListener {
+                mainScope.launch {
+                    val input = "hello"
+                    val id = "0"
+                    cipherService.setUseBiometry(false)
+                    var success = cipherService.encryptKey(context, id, input)
+                    if (success) {
+                        val actual = cipherService.decryptKey(context, id)
+                        success = actual == input
+                    }
+
+                    val text = if (success) "Success!" else "Fail!"
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        findViewById<Button>(R.id.verify_pin).apply {
+            setOnClickListener {
+                mainScope.launch {
+                    val initial = "123456"
+                    cipherService.setPin(initial)
+                    val actual = cipherService.getPin()
+                    val text = if (initial == actual) "Success!" else "Fail!"
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        findViewById<Button>(R.id.auth_bio).apply {
+            setOnClickListener {
+                mainScope.launch {
+                    val success = systemService.authenticate(context, useBiometry = true)
+                    val text = if (success) "Success!" else "Fail!"
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        findViewById<Button>(R.id.auth_pin).apply {
+            setOnClickListener {
+                mainScope.launch {
+                    val success = systemService.authenticate(context, useBiometry = false)
+                    val text = if (success) "Success!" else "Fail!"
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        findViewById<Button>(R.id.reset_secret_keys).apply {
+            setOnClickListener {
+                mainScope.launch {
+                    cipherService.resetSecretKeys()
+
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "Done", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
 
-    private suspend fun encrypt(data: String): CipherService.Encrypted? {
-        var encrypted: CipherService.Encrypted? = null
+    override fun onDestroy() {
+        mainScope.cancel()
 
-        val useBiometry = true
-        val secretKey = cipherService.getOrCreateSecretKey(useBiometry)
-        val cipher = cipherService.getCipher(secretKey, null)
-        val success = systemService.authenticateCipher(this@MainActivity, cipher)
-        if (success) {
-            try {
-                encrypted = cipherService.encrypt(cipher, data)
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception", e)
-
-            }
-        }
-
-        return encrypted
-    }
-
-    private suspend fun decrypt(data: String, iv: String): String? {
-        var decrypted: String? = null
-
-        val useBiometry = true
-        val secretKey = cipherService.getOrCreateSecretKey(useBiometry)
-        val cipher = cipherService.getCipher(secretKey, iv)
-        val success = systemService.authenticateCipher(this@MainActivity, cipher)
-        if (success) {
-            try {
-                decrypted = cipherService.decrypt(cipher, data)
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception", e)
-            }
-        }
-
-        return decrypted
+        super.onDestroy()
     }
 }
