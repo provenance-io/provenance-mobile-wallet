@@ -25,6 +25,7 @@ class _PwAppBarState extends State<PwAppBar> {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.neutral750,
       elevation: 0.0,
+      centerTitle: true,
       title: PwText(
         widget.title ?? "",
         style: PwTextStyle.subhead,
