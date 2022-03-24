@@ -223,8 +223,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                 padding: EdgeInsets.zero,
                                 child: Container(
                                   padding: EdgeInsets.only(
-                                    right: 16,
-                                    left: 16,
+                                    right: 8,
+                                    left: 8,
                                     top: Spacing.xLarge,
                                     bottom: Spacing.xLarge,
                                   ),
