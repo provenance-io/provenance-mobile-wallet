@@ -60,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: _onDevTap,
                 child: AppBar(
                   primary: false,
+                  centerTitle: true,
                   backgroundColor: Theme.of(context).colorScheme.neutral750,
                   elevation: 0.0,
                   leading: Container(),

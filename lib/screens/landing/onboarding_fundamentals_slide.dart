@@ -26,7 +26,7 @@ class _OnboardingFundamentalsSlideState
         constraints: BoxConstraints.tight(MediaQuery.of(context).size),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
