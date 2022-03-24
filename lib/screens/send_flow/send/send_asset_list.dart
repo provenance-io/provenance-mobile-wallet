@@ -28,7 +28,10 @@ class SendAssetCell extends StatelessWidget {
             ) {
               return asset.displayDenom.toLowerCase() == 'hash'
                   ? PwIcon(PwIcons.hashLogo)
-                  : Container();
+                  : PwIcon(
+                      PwIcons.provenance,
+                      color: Theme.of(context).colorScheme.logo,
+                    );
             },
           ),
         ),
