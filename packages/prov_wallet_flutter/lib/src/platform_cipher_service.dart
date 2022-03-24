@@ -71,6 +71,19 @@ class PlatformCipherService implements CipherService {
   }
 
   @override
+  Future<bool> getLockScreenEnabled() async {
+    var enabled = false;
+
+    try {
+      enabled = await _channel.invokeMethod('getLockScreenEnabled');
+    } on PlatformException catch (e) {
+      _handleException(e);
+    }
+
+    return enabled;
+  }
+
+  @override
   Future<bool> resetAuth() async {
     var success = false;
 

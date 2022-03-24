@@ -1,5 +1,6 @@
 package com.figure.prov_wallet_flutter
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.hardware.biometrics.BiometricManager
 import android.security.keystore.UserNotAuthenticatedException
@@ -30,6 +31,7 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
     private lateinit var context: Context
     private lateinit var cipherService: CipherService
     private lateinit var systemService: SystemService
+    private lateinit var keyguardManager: KeyguardManager
     private lateinit var mainScope: CoroutineScope
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -46,6 +48,8 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         cipherService = CipherService(preferences, systemService)
+
+        keyguardManager = context.getSystemService(KeyguardManager::class.java)
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -58,6 +62,10 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
                     "getBiometryType" -> {
                         val type = systemService.getBiometryType()
                         result.success(type.value)
+                    }
+                    "getLockScreenEnabled" -> {
+                        val enabled = keyguardManager.isDeviceSecure
+                        result.success(enabled)
                     }
                     "authenticateBiometry" -> {
                         val success = systemService.authenticate(context, useBiometry = true)

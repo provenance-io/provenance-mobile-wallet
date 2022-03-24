@@ -73,6 +73,9 @@ class Strings {
   // Landing Page
   static const createWallet = 'Create Wallet';
   static const recoverWallet = 'Recover Wallet';
+  static const lockScreenRequired =
+      'Please enable the device screen lock in security settings';
+  static const refresh = 'Refresh';
 
   // Fundamentals Slide
   static const strongFundamentals = 'STRONG\nFUNDAMENTALS';

@@ -9,6 +9,8 @@ abstract class CipherService {
 
   Future<BiometryType> getBiometryType();
 
+  Future<bool> getLockScreenEnabled();
+
   Future<bool> authenticateBiometry();
 
   Future<bool> resetAuth();
