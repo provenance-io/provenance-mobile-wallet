@@ -6,6 +6,7 @@ import android.content.pm.PackageManager.*
 import android.hardware.biometrics.BiometricManager
 import android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import android.hardware.biometrics.BiometricManager.BIOMETRIC_SUCCESS
 import android.hardware.biometrics.BiometricPrompt
 import android.os.CancellationSignal
 import android.util.Log
@@ -25,40 +26,26 @@ class SystemService(private val packageManager: PackageManager, private val biom
         private val TAG = "$SystemService"
     }
     fun getBiometryType(): BiometryType {
-        return when {
-            hasFaceId() -> {
-                BiometryType.FaceId
-            }
-            hasTouchId() -> {
-                BiometryType.TouchId
-            }
-            else -> {
-                BiometryType.None
+        val faceIdFeatures = setOf(
+            FEATURE_IRIS,
+            FEATURE_FACE
+        )
+
+        var type = BiometryType.None
+
+        val canAuthenticate = biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BIOMETRIC_SUCCESS
+        val hasFaceId = canAuthenticate && faceIdFeatures.any { packageManager.hasSystemFeature(it) }
+        if (hasFaceId) {
+            type = BiometryType.FaceId
+        } else {
+            val hasTouchId = canAuthenticate && packageManager.hasSystemFeature(FEATURE_FINGERPRINT)
+            if (hasTouchId) {
+                type = BiometryType.TouchId
             }
         }
-    }
 
-//    fun checkAuthRequisites(): AuthRequisiteStatus {
-//        var state = AuthRequisiteStatus.UnknownIssue
-//
-//        if (Build.VERSION.SDK_INT == 29) {
-//            val result = biometricManager.canAuthenticate()
-//            state = convertAuthState(result)
-//        }
-//
-//        if (Build.VERSION.SDK_INT >= 30) {
-//            val authenticators = Authenticators.BIOMETRIC_STRONG or
-//                Authenticators.DEVICE_CREDENTIAL
-//            val result = biometricManager.canAuthenticate(authenticators)
-//            state = convertAuthState(result)
-//        }
-//
-//        if (!hasStrongBoxKeystore()) {
-////            state = AuthRequisiteStatus.NoStrongboxKeystore
-//        }
-//
-//        return state
-//    }
+        return type
+    }
 
     suspend fun authenticate(context: Context, useBiometry: Boolean): Boolean = suspendCoroutine { cont ->
         val builder = BiometricPrompt.Builder(context)
@@ -81,19 +68,6 @@ class SystemService(private val packageManager: PackageManager, private val biom
             Log.w(TAG, "Authentication exception", e)
             cont.resume(false)
         }
-    }
-
-    private fun hasFaceId(): Boolean {
-        val features = setOf(
-            FEATURE_IRIS,
-            FEATURE_FACE
-        )
-
-        return features.any { packageManager.hasSystemFeature(it) }
-    }
-
-    private fun hasTouchId(): Boolean {
-        return packageManager.hasSystemFeature(FEATURE_FINGERPRINT)
     }
 
     private fun hasStrongBoxKeystore(): Boolean {

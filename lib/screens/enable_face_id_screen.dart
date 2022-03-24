@@ -1,3 +1,4 @@
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
@@ -14,6 +15,7 @@ class EnableFaceIdScreen extends StatelessWidget {
   EnableFaceIdScreen({
     Key? key,
     required this.words,
+    required this.biometryType,
     this.accountName,
     this.code,
     this.currentStep,
@@ -27,13 +29,59 @@ class EnableFaceIdScreen extends StatelessWidget {
   final int? currentStep;
   final int? numberOfSteps;
   final WalletAddImportType flowType;
+  final BiometryType biometryType;
   final authHelper = get<LocalAuthHelper>();
 
   @override
   Widget build(BuildContext context) {
+    String header;
+    String title;
+    String message;
+
+    switch (biometryType) {
+      case BiometryType.faceId:
+        header = Strings.faceId;
+        title = Strings.useFaceIdTitle;
+        message = Strings.useYourFaceId;
+        break;
+      case BiometryType.touchId:
+        header = Strings.touchId;
+        title = Strings.useTouchIdTitle;
+        message = Strings.useYourFingerPrint;
+        break;
+      case BiometryType.none:
+        header = Strings.useBiometryTitle;
+        title = Strings.useBiometryTitle;
+        message = Strings.useBiometryMessage;
+        break;
+    }
+
+    Widget skipButton;
+    skipButton = biometryType == BiometryType.none
+        ? PwTextButton.primaryAction(
+            context: context,
+            onPressed: () async {
+              _submit(context, useBiometry: false);
+            },
+            text: Strings.skipForNow,
+          )
+        : PwTextButton(
+            child: PwText(
+              Strings.skipForNow,
+              style: PwTextStyle.subhead,
+              color: PwColor.neutralNeutral,
+            ),
+            onPressed: () async {
+              _submit(
+                context,
+                useBiometry: false,
+              );
+            },
+          );
+
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.faceId,
+        title: header,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
@@ -72,7 +120,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwText(
-                      Strings.useFaceIdTitle,
+                      title,
                       style: PwTextStyle.title,
                       textAlign: TextAlign.center,
                     ),
@@ -81,7 +129,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwText(
-                      Strings.useYourFaceId,
+                      message,
                       style: PwTextStyle.body,
                       textAlign: TextAlign.center,
                     ),
@@ -90,38 +138,27 @@ class EnableFaceIdScreen extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: PwButton(
-                      child: PwText(
-                        Strings.enable,
-                        style: PwTextStyle.bodyBold,
-                        color: PwColor.neutralNeutral,
+                  if (biometryType != BiometryType.none)
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: PwButton(
+                        child: PwText(
+                          Strings.enable,
+                          style: PwTextStyle.bodyBold,
+                          color: PwColor.neutralNeutral,
+                        ),
+                        onPressed: () async {
+                          _submit(
+                            context,
+                            useBiometry: true,
+                          );
+                        },
                       ),
-                      onPressed: () async {
-                        _submit(
-                          context,
-                          useBiometry: true,
-                        );
-                      },
                     ),
-                  ),
                   VerticalSpacer.large(),
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
-                    child: PwTextButton(
-                      child: PwText(
-                        Strings.skipForNow,
-                        style: PwTextStyle.subhead,
-                        color: PwColor.neutralNeutral,
-                      ),
-                      onPressed: () async {
-                        _submit(
-                          context,
-                          useBiometry: false,
-                        );
-                      },
-                    ),
+                    child: skipButton,
                   ),
                   VerticalSpacer.largeX4(),
                 ],

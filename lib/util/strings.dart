@@ -207,6 +207,12 @@ class Strings {
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
       'Use your Face ID for faster, easier\naccess to your account.';
+  static const useTouchIdTitle = 'Use Touch ID?';
+  static const useYourFingerPrint =
+      "Use your Touch ID for faster,\neasier access to your account.";
+  static const useBiometryTitle = 'Biometry';
+  static const useBiometryMessage =
+      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
