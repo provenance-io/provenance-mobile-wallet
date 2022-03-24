@@ -122,7 +122,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                           height: imageDimen,
                           width: imageDimen,
                         )
-                      : Container();
+                      : PwIcon(
+                          PwIcons.provenance,
+                          color: Theme.of(context).colorScheme.logo,
+                          size: imageDimen,
+                        );
                 },
               ),
               VerticalSpacer.medium(),
