@@ -61,130 +61,123 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
         ),
         body: Container(
           color: Theme.of(context).colorScheme.neutral750,
-          child: LayoutBuilder(
-            builder:
-                (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: viewportConstraints,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ProgressStepper(
-                        widget.currentStep ?? 0,
-                        widget.numberOfSteps ?? 1,
-                        padding: EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          top: 12,
-                        ),
-                      ),
-                      VerticalSpacer.largeX3(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: Spacing.xxLarge,
-                          right: Spacing.xxLarge,
-                        ),
-                        child: PwText(
-                          Strings.recordTheseWordsInTheCorrectOrder,
-                          style: PwTextStyle.body,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      VerticalSpacer.xLarge(),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: Spacing.xxLarge,
-                          right: Spacing.xxLarge,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                          color: Theme.of(context).colorScheme.neutral700,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: Spacing.xxLarge,
-                            right: Spacing.xxLarge,
-                            top: Spacing.large,
-                            bottom: Spacing.large,
-                          ),
-                          child: Column(
-                            children: [
-                              WordsTable(
-                                words: words,
-                              ),
-                              VerticalSpacer.xLarge(),
-                              PwListDivider(),
-                              VerticalSpacer.xLarge(),
-                              GestureDetector(
-                                onTap: () async {
-                                  await Clipboard.setData(
-                                    ClipboardData(
-                                      text: words.join(' '),
-                                    ),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        Strings.passphraseCopied,
-                                      ),
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .neutral700,
-                                    ),
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        right: Spacing.medium,
-                                      ),
-                                      child: PwIcon(
-                                        PwIcons.copy,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .neutralNeutral,
-                                      ),
-                                    ),
-                                    PwText(Strings.copyPassphrase),
-                                  ],
-                                ),
-                              ),
-                              VerticalSpacer.xLarge(),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Container()),
-                      VerticalSpacer.xLarge(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: PwButton(
-                          child: PwText(
-                            Strings.continueName,
-                            style: PwTextStyle.bodyBold,
-                            color: PwColor.neutralNeutral,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(RecoveryWordsConfirmScreen(
-                              widget.flowType,
-                              accountName: widget.accountName,
-                              words: words,
-                              currentStep: widget.currentStep ?? 0,
-                              numberOfSteps: widget.numberOfSteps ?? 0,
-                            ).route());
-                          },
-                        ),
-                      ),
-                      VerticalSpacer.largeX4(),
-                    ],
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints.tight(MediaQuery.of(context).size),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ProgressStepper(
+                    widget.currentStep ?? 0,
+                    widget.numberOfSteps ?? 1,
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 12,
+                    ),
                   ),
-                ),
-              );
-            },
+                  VerticalSpacer.largeX3(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: Spacing.xxLarge,
+                      right: Spacing.xxLarge,
+                    ),
+                    child: PwText(
+                      Strings.recordTheseWordsInTheCorrectOrder,
+                      style: PwTextStyle.body,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  VerticalSpacer.xLarge(),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: Spacing.xxLarge,
+                      right: Spacing.xxLarge,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                      color: Theme.of(context).colorScheme.neutral700,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: Spacing.xxLarge,
+                        right: Spacing.xxLarge,
+                        top: Spacing.large,
+                        bottom: Spacing.large,
+                      ),
+                      child: Column(
+                        children: [
+                          WordsTable(
+                            words: words,
+                          ),
+                          VerticalSpacer.xLarge(),
+                          PwListDivider(),
+                          VerticalSpacer.xLarge(),
+                          GestureDetector(
+                            onTap: () async {
+                              await Clipboard.setData(
+                                ClipboardData(
+                                  text: words.join(' '),
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    Strings.passphraseCopied,
+                                  ),
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.neutral700,
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: Spacing.medium,
+                                  ),
+                                  child: PwIcon(
+                                    PwIcons.copy,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .neutralNeutral,
+                                  ),
+                                ),
+                                PwText(Strings.copyPassphrase),
+                              ],
+                            ),
+                          ),
+                          VerticalSpacer.xLarge(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Container()),
+                  VerticalSpacer.xLarge(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: PwButton(
+                      child: PwText(
+                        Strings.continueName,
+                        style: PwTextStyle.bodyBold,
+                        color: PwColor.neutralNeutral,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(RecoveryWordsConfirmScreen(
+                          widget.flowType,
+                          accountName: widget.accountName,
+                          words: words,
+                          currentStep: widget.currentStep ?? 0,
+                          numberOfSteps: widget.numberOfSteps ?? 0,
+                        ).route());
+                      },
+                    ),
+                  ),
+                  VerticalSpacer.largeX4(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

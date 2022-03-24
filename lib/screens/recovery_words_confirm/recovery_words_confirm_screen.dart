@@ -64,97 +64,93 @@ class RecoveryWordsConfirmScreenState
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: viewportConstraints,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ProgressStepper(
-                      widget.currentStep ?? 0,
-                      widget.numberOfSteps ?? 1,
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 12,
-                      ),
-                    ),
-                    VerticalSpacer.largeX3(),
-                    _error.isNotEmpty
-                        ? Padding(
-                            padding: EdgeInsets.only(
-                              bottom: Spacing.xLarge,
-                              right: Spacing.xxLarge,
-                              left: Spacing.xxLarge,
-                            ),
-                            child: PwText(
-                              _error,
-                              style: PwTextStyle.body,
-                              color: PwColor.error,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Container(),
-                    WordSelector(index: 0),
-                    VerticalSpacer.xLarge(),
-                    WordSelector(index: 1),
-                    VerticalSpacer.xLarge(),
-                    WordSelector(index: 2),
-                    VerticalSpacer.xLarge(),
-                    WordSelector(index: 3),
-                    VerticalSpacer.largeX3(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        right: Spacing.xxLarge,
-                        left: 20,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PwCheckBox(
-                            onSelect: (isChecked) {
-                              setState(() {
-                                _isResponsible = isChecked;
-                              });
-                            },
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 8),
-                              child: PwText(
-                                Strings.iAmResponsibleForMyWalletText,
-                                style: PwTextStyle.body,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: PwButton(
-                        child: PwText(
-                          Strings.continueName,
-                          style: PwTextStyle.bodyBold,
-                          color: PwColor.neutralNeutral,
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints.tight(MediaQuery.of(context).size),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ProgressStepper(
+                  widget.currentStep ?? 0,
+                  widget.numberOfSteps ?? 1,
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 12,
+                  ),
+                ),
+                VerticalSpacer.largeX3(),
+                _error.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          bottom: Spacing.xLarge,
+                          right: Spacing.xxLarge,
+                          left: Spacing.xxLarge,
                         ),
-                        onPressed: () {
-                          _validation();
+                        child: PwText(
+                          _error,
+                          style: PwTextStyle.body,
+                          color: PwColor.error,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : Container(),
+                WordSelector(index: 0),
+                VerticalSpacer.xLarge(),
+                WordSelector(index: 1),
+                VerticalSpacer.xLarge(),
+                WordSelector(index: 2),
+                VerticalSpacer.xLarge(),
+                WordSelector(index: 3),
+                VerticalSpacer.largeX3(),
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: Spacing.xxLarge,
+                    left: 20,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PwCheckBox(
+                        onSelect: (isChecked) {
+                          setState(() {
+                            _isResponsible = isChecked;
+                          });
                         },
                       ),
-                    ),
-                    VerticalSpacer.largeX4(),
-                  ],
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: PwText(
+                            Strings.iAmResponsibleForMyWalletText,
+                            style: PwTextStyle.body,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+                Expanded(
+                  child: Container(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: PwButton(
+                    child: PwText(
+                      Strings.continueName,
+                      style: PwTextStyle.bodyBold,
+                      color: PwColor.neutralNeutral,
+                    ),
+                    onPressed: () {
+                      _validation();
+                    },
+                  ),
+                ),
+                VerticalSpacer.largeX4(),
+              ],
+            ),
+          ),
         ),
       ),
     );
