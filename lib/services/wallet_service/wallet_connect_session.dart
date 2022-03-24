@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -41,7 +43,9 @@ class WalletConnectSession {
     required this.walletId,
     required WalletConnection connection,
     required WalletConnectSessionDelegate delegate,
+    required RemoteNotificationService remoteNotificationService,
   })  : _connection = connection,
+        _remoteNotificationService = remoteNotificationService,
         _delegate = delegate,
         sessionEvents = WalletConnectSessionEvents(),
         delegateEvents = WalletConnectSessionDelegateEvents()
@@ -49,10 +53,12 @@ class WalletConnectSession {
 
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
-
+  final RemoteNotificationService _remoteNotificationService;
   final String walletId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
+
+  String? topic;
 
   Future<bool> connect([WalletConnectSessionRestoreData? restoreData]) async {
     var success = false;
@@ -65,8 +71,13 @@ class WalletConnectSession {
       success = true;
 
       if (restoreData != null) {
+        log("Restored session: ${restoreData.data}");
         sessionEvents._state.value =
             WalletConnectSessionState.connected(restoreData.clientMeta);
+
+        topic = restoreData.data.peerId;
+
+        _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
       logStatic(
@@ -79,11 +90,17 @@ class WalletConnectSession {
     return success;
   }
 
+  Future<void> closeButRetainSession() {
+    return _connection.dispose();
+  }
+
   Future<bool> disconnect() async {
     _disconnect();
 
     if (_connection.value != WalletConnectState.disconnected) {
       await _connection.disconnect();
+
+      _remoteNotificationService.unregisterForPushNotifications(topic!);
     }
 
     return true;
@@ -119,6 +136,9 @@ class WalletConnectSession {
     if (success) {
       sessionEvents._state.value =
           WalletConnectSessionState.connected(details.data.clientMeta);
+
+      topic = details.data.peerId;
+      _remoteNotificationService.registerForPushNotifications(topic!);
     }
 
     return success;

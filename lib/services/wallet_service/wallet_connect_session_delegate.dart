@@ -63,6 +63,22 @@ class WalletConnectSessionDelegateEvents {
   }
 }
 
+
+
+abstract class WalletConnectionSessionCache {
+  FutureOr<void> createSession(String sessionId);
+
+  FutureOr<void> clearSession(String sessionId);
+
+  FutureOr<void> cacheSignRequest(String sessionId, List<int> message);
+
+  FutureOr<void> cacheTransactionRequest(String sessionId, List<int> message);
+
+
+
+
+}
+
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
     required PrivateKey privateKey,
@@ -122,6 +138,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     AcceptCallback<List<int>?> callback,
   ) async {
     final id = Uuid().v1().toString();
+    log("Approve sign");
 
     _completerLookup[id] = (bool accept) {
       List<int>? signedData;
@@ -150,6 +167,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     SignTransactionData signTransactionData,
     AcceptCallback<proto.RawTxResponsePair?> callback,
   ) async {
+    log("Approve trans");
     final txBody = proto.TxBody(
       messages: signTransactionData.proposedMessages
           .map((msg) => msg.toAny())

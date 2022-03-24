@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -23,6 +24,8 @@ import 'package:provenance_wallet/services/notification/basic_notification_servi
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/platform_key_value_service.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -33,6 +36,7 @@ import 'package:provenance_wallet/services/wallet_service/wallet_connect_transac
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/push_notification_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -49,6 +53,14 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+
+  final firebaseMessaging = FirebaseMessaging.instance;
+  final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
+  await pushNotificationHelper.init();
+
+  get.registerLazySingleton<RemoteNotificationService>(() {
+    return DefaultRemoteNotificationService(pushNotificationHelper);
+  });
 
   final cipherService = PlatformCipherService();
   get.registerSingleton<CipherService>(cipherService);
