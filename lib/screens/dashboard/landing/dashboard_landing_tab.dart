@@ -259,6 +259,23 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                         ],
                                       ),
                                       Expanded(child: Container()),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          PwText(
+                                            item.displayAmount,
+                                            color: PwColor.neutral200,
+                                            style: PwTextStyle.footnote,
+                                          ),
+                                          VerticalSpacer.custom(
+                                            spacing: 21,
+                                          ),
+                                        ],
+                                      ),
+                                      HorizontalSpacer.small(),
                                       PwIcon(
                                         PwIcons.caret,
                                         color: Theme.of(context)
