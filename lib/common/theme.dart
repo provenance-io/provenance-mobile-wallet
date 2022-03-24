@@ -150,8 +150,6 @@ class ProvenanceThemeData {
     fontFamily: 'GothicA1',
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    height: 19.2 / 12,
-    //letterSpacing: 19 * 0.04,
   );
 
   static const _colorScheme = ColorScheme(
