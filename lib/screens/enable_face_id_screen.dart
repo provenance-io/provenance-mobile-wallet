@@ -49,6 +49,7 @@ class EnableFaceIdScreen extends StatelessWidget {
         title = Strings.useTouchIdTitle;
         message = Strings.useYourFingerPrint;
         break;
+      case BiometryType.unknown:
       case BiometryType.none:
         header = Strings.useBiometryTitle;
         title = Strings.useBiometryTitle;

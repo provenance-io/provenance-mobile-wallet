@@ -18,7 +18,8 @@ import kotlin.coroutines.suspendCoroutine
 enum class BiometryType(val value: String) {
     None("none"),
     FaceId("face_id"),
-    TouchId("touch_id")
+    TouchId("touch_id"),
+    Unknown("unknown")
 }
 
 class SystemService(private val packageManager: PackageManager, private val biometricManager: BiometricManager, private val executor: Executor) {
@@ -26,25 +27,27 @@ class SystemService(private val packageManager: PackageManager, private val biom
         private val TAG = "$SystemService"
     }
     fun getBiometryType(): BiometryType {
-        val faceIdFeatures = setOf(
-            FEATURE_IRIS,
-            FEATURE_FACE
-        )
-
-        var type = BiometryType.None
-
         val canAuthenticate = biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BIOMETRIC_SUCCESS
-        val hasFaceId = canAuthenticate && faceIdFeatures.any { packageManager.hasSystemFeature(it) }
-        if (hasFaceId) {
-            type = BiometryType.FaceId
-        } else {
+        if (canAuthenticate) {
+            val faceIdFeatures = setOf(
+                FEATURE_IRIS,
+                FEATURE_FACE
+            )
+
+            val hasFaceId = canAuthenticate && faceIdFeatures.any { packageManager.hasSystemFeature(it) }
+            if (hasFaceId) {
+                return BiometryType.FaceId
+            }
+
             val hasTouchId = canAuthenticate && packageManager.hasSystemFeature(FEATURE_FINGERPRINT)
             if (hasTouchId) {
-                type = BiometryType.TouchId
+                return BiometryType.TouchId
             }
+
+            return BiometryType.Unknown
         }
 
-        return type
+        return BiometryType.None
     }
 
     suspend fun authenticate(context: Context, useBiometry: Boolean): Boolean = suspendCoroutine { cont ->

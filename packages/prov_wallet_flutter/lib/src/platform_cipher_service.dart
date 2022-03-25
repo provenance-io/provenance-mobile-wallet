@@ -46,8 +46,12 @@ class PlatformCipherService implements CipherService {
         case 'touch_id':
           type = BiometryType.touchId;
           break;
-        default:
+        case 'none':
           type = BiometryType.none;
+          break;
+        case 'unknown':
+        default:
+          type = BiometryType.unknown;
           break;
       }
     } on PlatformException catch (e) {
