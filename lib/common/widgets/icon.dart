@@ -26,6 +26,7 @@ class PwIcons {
   static const String newWindow = "new_window";
   static const String provenance = "provenance";
   static const String faceId = "face_id";
+  static const String touchId = "touch_id";
   static const String dashboard = "dashboard";
   static const String ellipsis = "ellipsis";
   static const String qr = "qr";

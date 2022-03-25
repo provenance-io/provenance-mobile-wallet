@@ -37,23 +37,27 @@ class EnableFaceIdScreen extends StatelessWidget {
     String header;
     String title;
     String message;
+    String icon;
 
     switch (biometryType) {
       case BiometryType.faceId:
         header = Strings.faceId;
         title = Strings.useFaceIdTitle;
         message = Strings.useYourFaceId;
+        icon = PwIcons.faceId;
         break;
       case BiometryType.touchId:
         header = Strings.touchId;
         title = Strings.useTouchIdTitle;
         message = Strings.useYourFingerPrint;
+        icon = PwIcons.touchId;
         break;
       case BiometryType.unknown:
       case BiometryType.none:
         header = Strings.useBiometryTitle;
         title = Strings.useBiometryTitle;
         message = Strings.useBiometryMessage;
+        icon = PwIcons.faceId;
         break;
     }
 
@@ -112,7 +116,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       PwIcon(
-                        PwIcons.faceId,
+                        icon,
                         color: Theme.of(context).colorScheme.neutralNeutral,
                       ),
                     ],
