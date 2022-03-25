@@ -104,7 +104,7 @@ class ModalLoadingRoute extends PopupRoute {
     String message,
     BuildContext context,
   ) {
-    if (instance != null) {
+    if (instance?.loadingState.currentState != null) {
       instance?.loadingState.currentState?.updateMessage(message);
     } else {
       instance = ModalLoadingRoute(loadingMessage: message);
