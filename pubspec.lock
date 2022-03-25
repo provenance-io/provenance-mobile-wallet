@@ -596,7 +596,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   path_drawing:
     dependency: transitive
     description:
@@ -862,7 +862,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.1"
   sqflite:
     dependency: "direct main"
     description:
