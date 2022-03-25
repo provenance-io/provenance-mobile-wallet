@@ -350,6 +350,7 @@ class Strings {
   static const sendReviewSending = "Sending";
   static const sendReviewTransactionFee = "Transaction Fee";
   static const sendReviewTotal = "Total";
+  static const sendReviewPleaseWaitDialog = "Executing transfer";
 
   // Error Dialog
   static const unknownErrorTitle = 'UNKNOWN ERROR';
