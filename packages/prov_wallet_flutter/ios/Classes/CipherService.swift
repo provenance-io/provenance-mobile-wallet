@@ -15,12 +15,25 @@ class CipherService: NSObject {
 	
 	private static var authContext = LAContext()
 	
-	static func getBiometryType() -> LABiometryType {
-		var type: LABiometryType = .none
+	static func getBiometryType() -> BiometryType {
+		var type: BiometryType = .none
 		if (authContext.biometryType != .none) {
 			let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
 			if (canEvaluate) {
-				type = authContext.biometryType
+				switch(authContext.biometryType) {
+				case LABiometryType.faceID:
+					type = .faceId
+					break
+				case LABiometryType.touchID:
+					type = .touchId
+					break
+				case LABiometryType.none:
+					type = .none
+					break
+				default:
+					type = .unknown
+					break
+				}
 			}
 		}
 		

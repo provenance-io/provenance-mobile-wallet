@@ -17,23 +17,8 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 		if (call.method == "getPlatformVersion") {
 			result("iOS " + UIDevice.current.systemVersion)
 		} else if (call.method == "getBiometryType") {
-			var type: String
-			let biometryType = CipherService.getBiometryType()
-			switch(biometryType) {
-			case .faceID:
-				type = "face_id"
-				break
-			case .touchID:
-				type = "touch_id"
-				break
-			case .none:
-				type = "none"
-				break
-			default:
-				type = "unknown"
-				break
-			}
-			result(type)
+			let type = CipherService.getBiometryType()
+			result(type.rawValue)
 		} else if (call.method == "authenticateBiometry") {
 			CipherService.biometryAuth({ (success) in result(success) })
 		} else if (call.method == "getLockScreenEnabled") {
