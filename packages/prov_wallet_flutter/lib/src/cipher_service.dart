@@ -22,7 +22,6 @@ abstract class CipherService {
   Future<bool> encryptKey({
     required String id,
     required String privateKey,
-    bool? useBiometry,
   });
 
   Future<String?> decryptKey({

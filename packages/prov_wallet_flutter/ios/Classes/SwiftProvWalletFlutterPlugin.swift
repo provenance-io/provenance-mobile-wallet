@@ -53,9 +53,8 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				guard let privateKey = argsFormatted?["private_key"] as? String else {
 					throw PluginError(kind: .invalidArgument, message: "privateKey is required")
 				}
-				let useBiometry = argsFormatted?["use_biometry"] as? Bool
 			
-				try CipherService.encryptKey(id: id, plainText: privateKey, useBiometry: useBiometry)
+				try CipherService.encryptKey(id: id, plainText: privateKey)
 				
 				success = true
 			} catch {

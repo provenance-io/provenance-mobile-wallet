@@ -69,8 +69,6 @@ class WalletService implements Disposable {
 
   Future<List<WalletDetails>> getWallets() => _storage.getWallets();
 
-
-
   Future<WalletDetails?> renameWallet({
     required String id,
     required String name,
@@ -90,7 +88,6 @@ class WalletService implements Disposable {
   Future<WalletDetails?> addWallet({
     required List<String> phrase,
     required String name,
-    bool? useBiometry,
     Coin coin = Coin.testNet,
   }) async {
     final seed = Mnemonic.createSeed(phrase);
@@ -99,7 +96,6 @@ class WalletService implements Disposable {
     final details = await _storage.addWallet(
       name: name,
       privateKey: privateKey,
-      useBiometry: useBiometry,
     );
 
     if (details != null) {

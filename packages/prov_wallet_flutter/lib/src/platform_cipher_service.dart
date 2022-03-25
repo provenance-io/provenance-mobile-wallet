@@ -134,7 +134,6 @@ class PlatformCipherService implements CipherService {
   Future<bool> encryptKey({
     required String id,
     required String privateKey,
-    bool? useBiometry,
   }) async {
     var params = {
       "id": id,

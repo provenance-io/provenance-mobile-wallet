@@ -193,7 +193,6 @@ class EnableFaceIdScreen extends StatelessWidget {
       details = await get<WalletService>().addWallet(
         phrase: words,
         name: accountName ?? '',
-        useBiometry: useBiometry,
       );
     }
 

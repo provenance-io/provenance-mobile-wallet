@@ -17,7 +17,6 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    bool? useBiometry,
   }) async {
     final publicKey = privateKey.defaultKey().publicKey;
 
@@ -36,7 +35,6 @@ class WalletStorageServiceImp implements WalletStorageService {
       final success = await _cipherService.encryptKey(
         id: details.id,
         privateKey: privateKeyStr,
-        useBiometry: useBiometry,
       );
 
       if (!success) {

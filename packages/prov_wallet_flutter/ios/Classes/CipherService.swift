@@ -42,8 +42,8 @@ class CipherService: NSObject {
 		return true
 	}
 	
-	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
-		let doUseBiometry = useBiometry ?? getUseBiometry()
+	static func encryptKey(id: String, plainText: String) throws {
+		let useBiometry = getUseBiometry()
 		
 		let cipher = getCipher()
 		let serializedKeys = try decrypt(cipherText: cipher)
@@ -51,10 +51,10 @@ class CipherService: NSObject {
 		
 		keyDict[id] = plainText
 		let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
-		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: doUseBiometry)
+		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: useBiometry)
 		
 		saveCipher(cipher: newCipherText)
-		saveUseBiometry(useBiometry: doUseBiometry)
+		saveUseBiometry(useBiometry: useBiometry)
 	}
 	
 	static func decryptKey(id: String) throws -> String {
