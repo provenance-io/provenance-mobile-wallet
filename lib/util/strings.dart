@@ -73,6 +73,9 @@ class Strings {
   // Landing Page
   static const createWallet = 'Create Wallet';
   static const recoverWallet = 'Recover Wallet';
+  static const lockScreenRequired =
+      'Please enable the device screen lock in security settings';
+  static const refresh = 'Refresh';
 
   // Fundamentals Slide
   static const strongFundamentals = 'STRONG\nFUNDAMENTALS';
@@ -134,6 +137,8 @@ class Strings {
   static const profileDeveloperCategoryTitle = 'Developer';
   static const profileDeveloperHttpClients500 = 'HTTP clients return 500';
   static const profileDeveloperServiceMocks = 'Service Mocks';
+  static const profileDeveloperConnectLabel = 'Connect';
+  static const profileDeveloperConnectInvalidAddress = 'Invalid address';
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";
@@ -202,6 +207,12 @@ class Strings {
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
       'Use your Face ID for faster, easier\naccess to your account.';
+  static const useTouchIdTitle = 'Use Touch ID?';
+  static const useYourFingerPrint =
+      "Use your Touch ID for faster,\neasier access to your account.";
+  static const useBiometryTitle = 'Biometry';
+  static const useBiometryMessage =
+      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';

@@ -22,7 +22,6 @@ abstract class WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    bool? useBiometry,
   });
 
   Future<PrivateKey?> loadKey(String id);
@@ -30,8 +29,4 @@ abstract class WalletStorageService {
   Future<bool> removeWallet(String id);
 
   Future<bool> removeAllWallets();
-
-  Future<bool> getUseBiometry();
-
-  Future<bool> setUseBiometry(bool useBiometry);
 }

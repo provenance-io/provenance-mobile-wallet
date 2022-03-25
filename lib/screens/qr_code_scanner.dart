@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 typedef IsValidCallback = Future<bool> Function(String input);
@@ -27,17 +28,9 @@ class QRCodeScannerState extends State<QRCodeScanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.neutral450,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-            size: 24,
-            color: Theme.of(context).colorScheme.neutralNeutral,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      appBar: PwAppBar(
+        leadingIcon: PwIcons.back,
+        color: Theme.of(context).colorScheme.neutral450,
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral450,
       body: _buildBody(context),

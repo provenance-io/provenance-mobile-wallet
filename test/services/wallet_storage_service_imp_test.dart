@@ -52,13 +52,11 @@ main() {
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
         privateKey: anyNamed("privateKey"),
-        useBiometry: anyNamed("useBiometry"),
       )).thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.addWallet(
         name: wallet.name,
         privateKey: privateKey!,
-        useBiometry: true,
       );
 
       expect(result, wallet);
@@ -73,7 +71,6 @@ main() {
       verify(_mockCipherService!.encryptKey(
         id: id,
         privateKey: privateKey!.serialize(publicKeyOnly: false),
-        useBiometry: true,
       ));
     });
 
@@ -91,7 +88,6 @@ main() {
         () => _storageService!.addWallet(
           name: "Name",
           privateKey: privateKey!,
-          useBiometry: true,
         ),
         throwsA(exception),
       );
@@ -112,18 +108,16 @@ main() {
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
         privateKey: anyNamed("privateKey"),
-        useBiometry: anyNamed("useBiometry"),
       )).thenAnswer((_) => Future.value(false));
 
       final result = await _storageService!.addWallet(
         name: "Name",
         privateKey: privateKey!,
-        useBiometry: true,
       );
 
       verify(_mockSqliteService!.removeWallet(id: id));
 
-      expect(result, isNotNull);
+      expect(result, isNull);
     });
   });
 
@@ -280,30 +274,6 @@ main() {
 
       final result = await _storageService!.selectWallet(id: "Id");
       expect(result, null);
-    });
-  });
-
-  group("getUseBiometry", () {
-    testWidgets('success', (tester) async {
-      when(_mockCipherService!.getUseBiometry())
-          .thenAnswer((_) => Future.value(true));
-
-      final result = await _storageService!.getUseBiometry();
-      verifyNoMoreInteractions(_mockSqliteService);
-      expect(result, true);
-    });
-  });
-
-  group("setUseBiometry", () {
-    testWidgets('success', (tester) async {
-      when(_mockCipherService!
-              .setUseBiometry(useBiometry: anyNamed("useBiometry")))
-          .thenAnswer((_) => Future.value(false));
-
-      final result = await _storageService!.setUseBiometry(true);
-      verifyNoMoreInteractions(_mockSqliteService);
-      expect(result, false);
-      verify(_mockCipherService!.setUseBiometry(useBiometry: true));
     });
   });
 }

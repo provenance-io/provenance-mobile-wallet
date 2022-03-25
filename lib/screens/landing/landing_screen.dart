@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/account_name.dart';
 import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
@@ -82,8 +83,16 @@ class _LandingScreenState extends State<LandingScreen> {
                 initialData: authHelper.status.value,
                 stream: authHelper.status,
                 builder: (context, snapshot) {
-                  var hasAccount = snapshot.data != AuthStatus.noAccount &&
-                      snapshot.data != AuthStatus.noWallet;
+                  final status = snapshot.data;
+                  if (status == AuthStatus.noLockScreen) {
+                    return PwText(
+                      Strings.lockScreenRequired,
+                      textAlign: TextAlign.center,
+                    );
+                  }
+
+                  var hasAccount = status != AuthStatus.noAccount &&
+                      status != AuthStatus.noWallet;
 
                   return PwPrimaryButton.fromString(
                     text: hasAccount
@@ -107,18 +116,38 @@ class _LandingScreenState extends State<LandingScreen> {
             VerticalSpacer.large(),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: PwTextButton(
-                child: PwText(
-                  Strings.recoverWallet,
-                  style: PwTextStyle.body,
-                  color: PwColor.neutralNeutral,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(AccountName(
-                    WalletAddImportType.onBoardingRecover,
-                    currentStep: 1,
-                    numberOfSteps: 4,
-                  ).route());
+              child: StreamBuilder<AuthStatus>(
+                initialData: authHelper.status.value,
+                stream: authHelper.status,
+                builder: (context, snapshot) {
+                  final status = snapshot.data;
+                  if (status == AuthStatus.noLockScreen) {
+                    return PwPrimaryButton.fromString(
+                      text: Strings.refresh,
+                      onPressed: () async {
+                        ModalLoadingRoute.showLoading('', context);
+                        // Give the loading modal time to display
+                        await Future.delayed(Duration(milliseconds: 500));
+                        await authHelper.init();
+                        ModalLoadingRoute.dismiss(context);
+                      },
+                    );
+                  }
+
+                  return PwTextButton(
+                    child: PwText(
+                      Strings.recoverWallet,
+                      style: PwTextStyle.body,
+                      color: PwColor.neutralNeutral,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(AccountName(
+                        WalletAddImportType.onBoardingRecover,
+                        currentStep: 1,
+                        numberOfSteps: 4,
+                      ).route());
+                    },
+                  );
                 },
               ),
             ),

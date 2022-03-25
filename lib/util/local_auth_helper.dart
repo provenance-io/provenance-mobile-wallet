@@ -11,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 enum AuthStatus {
   noAccount,
   noWallet,
+  noLockScreen,
   authenticated,
   timedOut,
   unauthenticated,
@@ -31,13 +32,18 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   Future<void> init() async {
     AuthStatus status;
-    final code = await _cipherService.getPin();
-    if (code == null || code.isEmpty) {
-      status = AuthStatus.noAccount;
+    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
+    if (!lockScreenEnabled) {
+      status = AuthStatus.noLockScreen;
     } else {
-      final wallets = await _walletService.getWallets();
-      status =
-          wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+      final code = await _cipherService.getPin();
+      if (code == null || code.isEmpty) {
+        status = AuthStatus.noAccount;
+      } else {
+        final wallets = await _walletService.getWallets();
+        status =
+            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+      }
     }
 
     _status.value = status;
@@ -73,9 +79,9 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
     var result = AuthStatus.unauthenticated;
 
-    final useBiometry = await _cipherService.getUseBiometry();
+    final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {
-      final success = await _cipherService.biometryAuth();
+      final success = await _cipherService.authenticateBiometry();
       result = success ? AuthStatus.authenticated : await _validatePin(context);
     } else {
       result = await _validatePin(context);

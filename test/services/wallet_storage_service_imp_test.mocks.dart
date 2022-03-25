@@ -92,18 +92,17 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       (super.noSuchMethod(Invocation.getter(#platformVersion),
           returnValue: Future<String?>.value()) as _i3.Future<String?>);
   @override
-  _i3.Future<bool> biometryAuth() =>
-      (super.noSuchMethod(Invocation.method(#biometryAuth, []),
+  _i3.Future<bool> authenticateBiometry() =>
+      (super.noSuchMethod(Invocation.method(#authenticateBiometry, []),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
-  _i3.Future<void> resetAuth() =>
+  _i3.Future<bool> resetAuth() =>
       (super.noSuchMethod(Invocation.method(#resetAuth, []),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
-  @override
-  _i3.Future<bool> getUseBiometry() =>
-      (super.noSuchMethod(Invocation.method(#getUseBiometry, []),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
+  _i3.Future<bool?> getUseBiometry() =>
+      (super.noSuchMethod(Invocation.method(#getUseBiometry, []),
+          returnValue: Future<bool?>.value()) as _i3.Future<bool?>);
   @override
   _i3.Future<bool> setUseBiometry({bool? useBiometry}) => (super.noSuchMethod(
       Invocation.method(#setUseBiometry, [], {#useBiometry: useBiometry}),
@@ -116,9 +115,9 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
               {#id: id, #privateKey: privateKey, #useBiometry: useBiometry}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
-  _i3.Future<String> decryptKey({String? id}) =>
+  _i3.Future<String?> decryptKey({String? id}) =>
       (super.noSuchMethod(Invocation.method(#decryptKey, [], {#id: id}),
-          returnValue: Future<String>.value('')) as _i3.Future<String>);
+          returnValue: Future<String?>.value()) as _i3.Future<String?>);
   @override
   _i3.Future<bool> removeKey({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeKey, [], {#id: id}),

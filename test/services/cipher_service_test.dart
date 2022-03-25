@@ -39,14 +39,12 @@ main() {
       final result = await _cipherService!.encryptKey(
         id: id,
         privateKey: bip32Serialized,
-        useBiometry: true,
       );
 
       expect(result, true);
       expect(_methodArgs!["encryptKey"], <String, dynamic>{
         "id": id,
         "private_key": bip32Serialized,
-        "use_biometry": true,
       });
     });
   });

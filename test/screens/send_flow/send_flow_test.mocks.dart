@@ -123,15 +123,6 @@ class MockWalletService extends _i1.Mock implements _i3.WalletService {
               Future<List<_i12.WalletDetails>>.value(<_i12.WalletDetails>[]))
       as _i7.Future<List<_i12.WalletDetails>>);
   @override
-  _i7.Future<bool> getUseBiometry() =>
-      (super.noSuchMethod(Invocation.method(#getUseBiometry, []),
-          returnValue: Future<bool>.value(false)) as _i7.Future<bool>);
-  @override
-  _i7.Future<dynamic> setUseBiometry({bool? useBiometry}) =>
-      (super.noSuchMethod(
-          Invocation.method(#setUseBiometry, [], {#useBiometry: useBiometry}),
-          returnValue: Future<dynamic>.value()) as _i7.Future<dynamic>);
-  @override
   _i7.Future<_i12.WalletDetails?> renameWallet({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameWallet, [], {#id: id, #name: name}),

@@ -58,6 +58,8 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                   } else {
                     Navigator.of(context).pop();
                   }
+                } else {
+                  Navigator.of(context).pop();
                 }
               },
             ),

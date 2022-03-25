@@ -1,25 +1,30 @@
 import 'dart:async';
 
+import 'package:prov_wallet_flutter/src/biometry_type.dart';
+
 abstract class CipherService {
   CipherService._();
 
   Future<String?> get platformVersion;
 
-  Future<bool> biometryAuth();
+  Future<BiometryType> getBiometryType();
 
-  Future<void> resetAuth();
+  Future<bool> getLockScreenEnabled();
 
-  Future<bool> getUseBiometry();
+  Future<bool> authenticateBiometry();
+
+  Future<bool> resetAuth();
+
+  Future<bool?> getUseBiometry();
 
   Future<bool> setUseBiometry({required bool useBiometry});
 
   Future<bool> encryptKey({
     required String id,
     required String privateKey,
-    bool? useBiometry,
   });
 
-  Future<String> decryptKey({
+  Future<String?> decryptKey({
     required String id,
   });
 

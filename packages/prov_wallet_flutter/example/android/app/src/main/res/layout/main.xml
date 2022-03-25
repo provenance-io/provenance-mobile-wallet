@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    app:layout_constraintVertical_chainStyle="packed">
+    <Button
+        android:id="@+id/round_trip_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/round_trip_pin"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:text="Round trip bio"
+        />
+    <Button
+        android:id="@+id/round_trip_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/round_trip_bio"
+        app:layout_constraintBottom_toTopOf="@+id/verify_pin"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:text="Round trip pin"
+        />
+    <Button
+        android:id="@+id/verify_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/round_trip_pin"
+        app:layout_constraintBottom_toTopOf="@+id/auth_bio"
+        android:text="Verify pin"
+        />
+    <Button
+        android:id="@+id/auth_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verify_pin"
+        app:layout_constraintBottom_toTopOf="@+id/auth_pin"
+        android:text="Auth bio"
+        />
+    <Button
+        android:id="@+id/auth_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_bio"
+        app:layout_constraintBottom_toTopOf="@id/reset_secret_keys"
+        android:text="Auth pin"
+        />
+    <Button
+        android:id="@+id/reset_secret_keys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_pin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Reset secret keys"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

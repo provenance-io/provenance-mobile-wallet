@@ -6,6 +6,7 @@ class PwTextFormField extends StatelessWidget {
     required this.label,
     this.keyboardType,
     this.onChanged,
+    this.onFieldSubmitted,
     this.validator,
     this.controller,
     this.autofocus = false,
@@ -15,6 +16,7 @@ class PwTextFormField extends StatelessWidget {
   final String label;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onFieldSubmitted;
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
   final bool autofocus;
@@ -52,6 +54,7 @@ class PwTextFormField extends StatelessWidget {
             autocorrect: false,
             controller: controller,
             onChanged: onChanged,
+            onFieldSubmitted: onFieldSubmitted,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validator,
             decoration: InputDecoration(

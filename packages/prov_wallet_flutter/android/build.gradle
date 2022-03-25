@@ -2,14 +2,14 @@ group 'com.figure.prov_wallet_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.6.10'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -17,7 +17,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -25,16 +25,26 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     defaultConfig {
-        minSdkVersion 16
+        // 28 required for strong box keystore
+        // 29 required for biometric prompt fallback
+        // 30 required to skip implementing deprecated KeyguardManager.createConfirmDeviceCredentialIntent() for API 29
+        minSdkVersion 30
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.biometric:biometric:1.1.0"
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation "androidx.security:security-crypto:1.0.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
 }
