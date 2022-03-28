@@ -63,22 +63,6 @@ class WalletConnectSessionDelegateEvents {
   }
 }
 
-
-
-abstract class WalletConnectionSessionCache {
-  FutureOr<void> createSession(String sessionId);
-
-  FutureOr<void> clearSession(String sessionId);
-
-  FutureOr<void> cacheSignRequest(String sessionId, List<int> message);
-
-  FutureOr<void> cacheTransactionRequest(String sessionId, List<int> message);
-
-
-
-
-}
-
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   WalletConnectSessionDelegate({
     required PrivateKey privateKey,

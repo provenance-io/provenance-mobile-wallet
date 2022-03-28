@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotificationHelper {
@@ -12,6 +14,10 @@ class PushNotificationHelper {
       badge: false,
       sound: false,
     );
+
+    return _firebaseMessaging
+        .getToken()
+        .then((value) => log("Firebase token: $value"));
   }
 
   Future<void> registerForTopic(String topic) {
