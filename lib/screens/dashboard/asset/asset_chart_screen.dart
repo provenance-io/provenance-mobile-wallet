@@ -121,7 +121,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                       ],
                     ),
                     // TODO: This is demo text, to be replaced by a service.
-                    if (!details.isComingSoon) PwText("↑ \$0.008 (0.10%)"),
+                    // ignore: dead_code
+                    if (false) PwText("↑ \$0.008 (0.10%)"),
                     AssetBarChart(),
                     VerticalSpacer.medium(),
                     AssetBarChartButtons(),
