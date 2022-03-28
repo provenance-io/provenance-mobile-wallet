@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:provenance_wallet/common/theme.dart';
 
 /// Loading Overlay inspired by https://pub.dev/packages/loading_overlay
 ///
@@ -57,7 +58,6 @@ class LoadingOverlay extends HookWidget {
 
     return Stack(
       children: [
-        child,
         if (isVisible.value)
           FadeTransition(
             opacity: _controller,
@@ -66,9 +66,15 @@ class LoadingOverlay extends HookWidget {
                 Opacity(
                   child: ModalBarrier(
                     dismissible: false,
-                    color: color ?? Theme.of(context).colorScheme.background,
+                    color: color ?? Theme.of(context).colorScheme.neutral750,
                   ),
                   opacity: opacity,
+                ),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 80),
+                    child: child,
+                  ),
                 ),
                 Center(child: progressIndicator),
               ],

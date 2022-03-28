@@ -28,6 +28,7 @@ class ModalLoadingState extends State<ModalLoading> {
       child: loadingMessage != null
           ? PwText(
               loadingMessage!,
+              color: PwColor.neutralNeutral,
             )
           : Container(),
     );
@@ -107,7 +108,8 @@ class ModalLoadingRoute extends PopupRoute {
     if (instance != null) {
       instance?.loadingState.currentState?.updateMessage(message);
     } else {
-      instance = ModalLoadingRoute(loadingMessage: message);
+      instance =
+          ModalLoadingRoute(loadingMessage: message, theme: Theme.of(context));
       Navigator.push(
         context,
         instance!,
