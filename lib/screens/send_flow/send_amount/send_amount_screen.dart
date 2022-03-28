@@ -179,6 +179,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                       child: TextField(
                         controller: _noteController,
                         focusNode: _noteFocusNode,
+                        style: Theme.of(context).textTheme.body.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .neutralNeutral,
+                              ),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(right: Spacing.large),
                           border: blankInputBorder,
