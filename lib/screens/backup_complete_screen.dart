@@ -100,7 +100,7 @@ class BackupCompleteScreen extends StatelessWidget {
                           } else if (flowType ==
                               WalletAddImportType.dashboardAdd) {
                             ModalLoadingRoute.showLoading(
-                              Strings.pleaseWait,
+                              "",
                               context,
                             );
 

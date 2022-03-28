@@ -180,7 +180,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     required bool useBiometry,
   }) async {
     ModalLoadingRoute.showLoading(
-      Strings.pleaseWait,
+      "",
       context,
     );
 

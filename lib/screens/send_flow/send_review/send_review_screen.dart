@@ -155,7 +155,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () async {
-                      ModalLoadingRoute.showLoading('Loading', context);
+                      ModalLoadingRoute.showLoading('', context);
                       // Give the loading modal time to display
                       await Future.delayed(Duration(milliseconds: 500));
                       _sendClicked(state.total, state.receivingAddress);
