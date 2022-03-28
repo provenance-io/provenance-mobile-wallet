@@ -73,7 +73,6 @@ class SendAmountPageState extends State<SendAmountPage> {
 
       _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
-    _amountController.text = 0.toString();
     _amountController.addListener(_updateSendPrice);
   }
 
@@ -139,6 +138,8 @@ class SendAmountPageState extends State<SendAmountPage> {
                 autofocus: true,
                 style: Theme.of(context).textTheme.display1,
                 decoration: InputDecoration(
+                  hintText: Strings.sendAmountHint,
+                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(color: Theme.of(context).colorScheme.neutralNeutral),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),
