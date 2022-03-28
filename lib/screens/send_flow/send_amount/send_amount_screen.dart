@@ -207,9 +207,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                         child,
                       ) {
                         return (!hasFocus && _noteController.text.isEmpty)
-                            ? PwText(
+                            ? GestureDetector(child:
+                            PwText(
                                 Strings.sendAmountNoteSuffix,
                                 style: PwTextStyle.body,
+                              ), onTap: () {
+                                _noteFocusNode.requestFocus();
+                                },
                               )
                             : SizedBox(
                                 width: 0,
