@@ -202,7 +202,11 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
       transactionHandler: WalletConnectTransactionHandler(),
-      walletInfo: WalletInfo(walletDetails.id, walletDetails.name, walletDetails.coin),
+      walletInfo: WalletInfo(
+        walletDetails.id, 
+        walletDetails.name, 
+        walletDetails.coin,
+        ),
     );
     final session = WalletConnectSession(
       walletId: walletId,
