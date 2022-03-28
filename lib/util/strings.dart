@@ -47,7 +47,7 @@ class Strings {
   static const notImplementedMessage = "Not Implemented";
 
   // Biometric Strings
-  static const biometric = 'Biometric';
+  static const biometry = 'Biometry';
   static const faceId = 'Face ID';
   static const touchId = 'Touch ID';
   static const face = 'Face';
