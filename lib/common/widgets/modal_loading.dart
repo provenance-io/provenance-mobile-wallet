@@ -26,9 +26,12 @@ class ModalLoadingState extends State<ModalLoading> {
     return LoadingOverlay(
       isLoading: true,
       child: loadingMessage != null
-          ? PwText(
-              loadingMessage!,
-              color: PwColor.neutralNeutral,
+          ? Material(
+              child: PwText(
+                loadingMessage!,
+                color: PwColor.neutralNeutral,
+                style: PwTextStyle.body,
+              ),
             )
           : Container(),
     );
