@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -11,7 +12,6 @@ import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.d
 import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: _onDevTap,
                 child: AppBar(
                   primary: false,
+                  centerTitle: true,
                   backgroundColor: Theme.of(context).colorScheme.neutral750,
                   elevation: 0.0,
                   leading: Container(),
@@ -73,8 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _divider,
               FutureToggleItem(
                 text: Strings.faceId,
-                getValue: get<WalletService>().getUseBiometry,
-                setValue: (value) => get<WalletService>().setUseBiometry(
+                getValue: () async =>
+                    await get<CipherService>().getUseBiometry() ?? false,
+                setValue: (value) => get<CipherService>().setUseBiometry(
                   useBiometry: value,
                 ),
               ),

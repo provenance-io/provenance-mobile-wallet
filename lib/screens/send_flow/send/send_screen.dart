@@ -53,7 +53,9 @@ class SendPageState extends State<SendPage> {
     _bloc!.stream.listen((state) {
       _recentSends.value = state.recentSendAddresses;
       _assets.value = state.availableAssets;
-      _denomNotifier.value = state.availableAssets.first;
+      _denomNotifier.value = (state.availableAssets.isNotEmpty)
+          ? state.availableAssets.first
+          : null;
     });
 
     _bloc!.load();

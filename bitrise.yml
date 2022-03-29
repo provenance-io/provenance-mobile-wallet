@@ -66,6 +66,11 @@ workflows:
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
+    - ios-auto-provision-appstoreconnect@2.2:
+        inputs:
+        - verbose_log: 'yes'
+        - scheme: "$BITRISE_DEV_SCHEME"
+        - distribution_type: app-store
     - set-xcode-build-number@1:
         inputs:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/Runner/Info.plist"
@@ -74,18 +79,19 @@ workflows:
         - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
     - flutter-build@0:
         inputs:
-        - additional_build_params: "--flavor dev"
+        - additional_build_params: "--flavor dev --release"
+        - ios_additional_params: ''
+        - android_additional_params: ''
+        - ios_output_pattern: |-
+            *build/ios/iphoneos/*.app
+            *build/ios/archive/*.xcarchive
+            *build/ios/ipa/*.ipa
         - android_output_type: appbundle
-    - sign-apk@1: {}
     - xcode-archive@4:
         inputs:
-        - configuration: ''
-        - cache_level: none
         - distribution_method: app-store
         - scheme: "$BITRISE_DEV_SCHEME"
-        - xcodebuild_options: ''
-        - automatic_code_signing: api-key
-        - export_method: app-store
+    - sign-apk@1: {}
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
         - password: "$APPLE_ID_PW"
@@ -252,7 +258,7 @@ workflows:
     - deploy-to-bitrise-io@2: {}
 meta:
   bitrise.io:
-    stack: osx-xcode-12.5.x
+    stack: osx-xcode-13.2.x
 app:
   envs:
   - opts:

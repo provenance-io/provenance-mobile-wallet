@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -153,7 +154,10 @@ class SendReviewPageState extends State<SendReviewPage> {
                       Strings.sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      ModalLoadingRoute.showLoading('', context);
+                      // Give the loading modal time to display
+                      await Future.delayed(Duration(milliseconds: 500));
                       _sendClicked(state.total, state.receivingAddress);
                     },
                   ),
@@ -169,6 +173,7 @@ class SendReviewPageState extends State<SendReviewPage> {
 
   void _sendClicked(String total, String addressTo) {
     _bloc!.doSend().then((_) {
+      ModalLoadingRoute.dismiss(context);
       showDialog(
         barrierColor: Colors.transparent,
         useSafeArea: true,
@@ -180,6 +185,7 @@ class SendReviewPageState extends State<SendReviewPage> {
         ),
       ).then((value) => _bloc!.complete());
     }).catchError((err) {
+      ModalLoadingRoute.dismiss(context);
       showDialog(
         context: context,
         builder: (context) {

@@ -64,7 +64,14 @@ class MultiSendAsset {
 
   String get displayAmount {
     final map = <String, SendAsset>{};
-
+    map['nhash'] = SendAsset(
+      "Hash",
+      9,
+      'nhash',
+      Decimal.fromInt(estimate),
+      0,
+      "",
+    );
     for (var fee in fees) {
       var current = map[fee.denom];
       final total = (current?.amount ?? Decimal.zero) + fee.amount;

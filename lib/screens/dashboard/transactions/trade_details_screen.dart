@@ -24,7 +24,7 @@ class TradeDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.tradeDetailsTitle,
+        title: Strings.transactionDetails,
         leadingIcon: PwIcons.back,
       ),
       body: Container(

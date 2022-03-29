@@ -27,6 +27,10 @@ class DefaultTransactionService extends TransactionService
           return Transaction(dto: TransactionDto.fromJson(t));
         }).toList());
 
+        transactions.sort(
+          (trans1, trans2) => trans2.timestamp.compareTo(trans1.timestamp),
+        );
+
         return transactions;
       },
     );

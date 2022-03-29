@@ -16,10 +16,17 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if (call.method == "getPlatformVersion") {
 			result("iOS " + UIDevice.current.systemVersion)
-		} else if (call.method == "biometryAuth") {
+		} else if (call.method == "getBiometryType") {
+			let type = CipherService.getBiometryType()
+			result(type.rawValue)
+		} else if (call.method == "authenticateBiometry") {
 			CipherService.biometryAuth({ (success) in result(success) })
+		} else if (call.method == "getLockScreenEnabled") {
+			let enabled = CipherService.getLockScreenEnabled()
+			result(enabled)
 		} else if (call.method == "resetAuth") {
-			CipherService.resetAuth()
+			let success = CipherService.resetAuth()
+			result(success)
 		} else if (call.method == "encryptKey") {
 			var success = false
 			
@@ -31,9 +38,8 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
 				guard let privateKey = argsFormatted?["private_key"] as? String else {
 					throw PluginError(kind: .invalidArgument, message: "privateKey is required")
 				}
-				let useBiometry = argsFormatted?["use_biometry"] as? Bool
 			
-				try CipherService.encryptKey(id: id, plainText: privateKey, useBiometry: useBiometry)
+				try CipherService.encryptKey(id: id, plainText: privateKey)
 				
 				success = true
 			} catch {

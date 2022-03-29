@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -111,9 +112,9 @@ main() {
   });
 
   test("validateAmount", () {
-    expect(bloc!.validateAmount(null), "'' is an invalid amount");
-    expect(bloc!.validateAmount(""), "'' is an invalid amount");
-    expect(bloc!.validateAmount("abc"), "'abc' is an invalid amount");
+    expect(bloc!.validateAmount(null), Strings.required);
+    expect(bloc!.validateAmount(""), Strings.required);
+    expect(bloc!.validateAmount("abc"), Strings.required);
     // expect(bloc!.validateAmount("1.1234567890"), "too many decimal places");
     expect(bloc!.validateAmount("100.000000001"), "Insufficient Hash");
     expect(bloc!.validateAmount("1.000000000"), null);
@@ -131,13 +132,13 @@ main() {
     expect(
       () => bloc!.showNext("", ""),
       throwsExceptionWithText(
-        "'' is an invalid amount",
+        Strings.required,
       ),
     );
     expect(
       () => bloc!.showNext("", "abc"),
       throwsExceptionWithText(
-        "'abc' is an invalid amount",
+        Strings.required,
       ),
     );
     // expect(() => bloc!.showNext("","1.1234567890"), throwsExceptionWithText("too many decimal places"));

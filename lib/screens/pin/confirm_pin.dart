@@ -1,11 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
@@ -81,7 +83,10 @@ class ConfirmPinState extends State<ConfirmPin> {
         ),
       );
     } else {
+      final biometryType = await get<CipherService>().getBiometryType();
+
       Navigator.of(context).push(EnableFaceIdScreen(
+        biometryType: biometryType,
         accountName: widget.accountName,
         code: widget.code,
         words: widget.words,

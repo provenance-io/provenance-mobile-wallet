@@ -6,26 +6,57 @@ import Foundation
 import LocalAuthentication
 
 class CipherService: NSObject {
-	static let keyCipher = "cipher"
-	static let keyUseBiometry = "useBiometry"
-	static let keyPin = "pin"
+	private static let keyCipher = "cipher"
+	private static let keyUseBiometry = "useBiometry"
+	private static let keyPin = "pin"
 	
-	static let secKeyTagBiometry = "io.provenance.wallet.biometry".data(using: .utf8)!
-	static let secKeyTagPasscode = "io.provenance.wallet.passcode".data(using: .utf8)!
+	private static let secKeyTagBiometry = "io.provenance.wallet.biometry".data(using: .utf8)!
+	private static let secKeyTagPasscode = "io.provenance.wallet.passcode".data(using: .utf8)!
 	
-	static var authContext = LAContext()
+	private static var authContext = LAContext()
+	
+	static func getBiometryType() -> BiometryType {
+		var type: BiometryType = .none
+		if (authContext.biometryType != .none) {
+			let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+			if (canEvaluate) {
+				switch(authContext.biometryType) {
+				case LABiometryType.faceID:
+					type = .faceId
+					break
+				case LABiometryType.touchID:
+					type = .touchId
+					break
+				case LABiometryType.none:
+					type = .none
+					break
+				default:
+					type = .unknown
+					break
+				}
+			}
+		}
+		
+		return type
+	}
+	
+	static func getLockScreenEnabled() -> Bool {
+		return authContext.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
+	}
 	
 	static func biometryAuth(_ result: @escaping (Bool) -> Void) {
 		authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Authentication", reply: { (success, error) in result(success) })
 	}
 	
-	static func resetAuth() {
+	static func resetAuth() -> Bool {
 		authContext.invalidate()
 		authContext = LAContext()
+		
+		return true
 	}
 	
-	static func encryptKey(id: String, plainText: String, useBiometry: Bool?) throws {
-		let doUseBiometry = useBiometry ?? getUseBiometry()
+	static func encryptKey(id: String, plainText: String) throws {
+		let useBiometry = getUseBiometry()
 		
 		let cipher = getCipher()
 		let serializedKeys = try decrypt(cipherText: cipher)
@@ -33,10 +64,10 @@ class CipherService: NSObject {
 		
 		keyDict[id] = plainText
 		let newSerializedKeys = serializePrivateKeys(dictionary: keyDict)
-		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: doUseBiometry)
+		let newCipherText = try encrypt(plainText: newSerializedKeys, useBiometry: useBiometry)
 		
 		saveCipher(cipher: newCipherText)
-		saveUseBiometry(useBiometry: doUseBiometry)
+		saveUseBiometry(useBiometry: useBiometry)
 	}
 	
 	static func decryptKey(id: String) throws -> String {

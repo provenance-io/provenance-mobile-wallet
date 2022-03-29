@@ -1,3 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.figure.prov_wallet_flutter">
+
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!-- <uses-feature android:name="android.hardware.strongbox_keystore" /> -->
 </manifest>

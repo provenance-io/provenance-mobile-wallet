@@ -110,7 +110,7 @@ class SendAmountBloc extends Disposable {
     proposedAmount ??= "";
     final val = Decimal.tryParse(proposedAmount);
     if (val == null) {
-      return "'$proposedAmount' ${Strings.sendAmountErrorInvalidAmount}";
+      return Strings.required;
     }
 
     final scaledValue = (val * Decimal.fromInt(10).pow(asset.exponent));

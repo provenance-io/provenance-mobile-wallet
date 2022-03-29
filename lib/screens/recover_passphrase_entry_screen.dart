@@ -138,7 +138,7 @@ class RecoverPassphraseEntryScreenState
                                     ).route());
                                   } else {
                                     ModalLoadingRoute.showLoading(
-                                      Strings.pleaseWait,
+                                      "",
                                       context,
                                     );
 

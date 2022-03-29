@@ -149,6 +149,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
           break;
         case AuthStatus.noAccount:
         case AuthStatus.noWallet:
+        case AuthStatus.noLockScreen:
         case AuthStatus.timedOut:
           if (previousStatus == AuthStatus.authenticated) {
             _navigatorKey.currentState?.popUntil((route) => route.isFirst);

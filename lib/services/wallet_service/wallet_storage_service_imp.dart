@@ -17,7 +17,6 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required PrivateKey privateKey,
-    bool? useBiometry,
   }) async {
     final publicKey = privateKey.defaultKey().publicKey;
 
@@ -36,11 +35,12 @@ class WalletStorageServiceImp implements WalletStorageService {
       final success = await _cipherService.encryptKey(
         id: details.id,
         privateKey: privateKeyStr,
-        useBiometry: useBiometry,
       );
 
       if (!success) {
         await _sqliteWalletStorageService.removeWallet(id: details.id);
+
+        return null;
       }
     }
 
@@ -66,7 +66,7 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<PrivateKey?> loadKey(String id) async {
     final serializedKey = await _cipherService.decryptKey(id: id);
 
-    return PrivateKey.fromBip32(serializedKey);
+    return serializedKey == null ? null : PrivateKey.fromBip32(serializedKey);
   }
 
   @override
@@ -103,15 +103,5 @@ class WalletStorageServiceImp implements WalletStorageService {
   @override
   Future<WalletDetails?> selectWallet({String? id}) {
     return _sqliteWalletStorageService.selectWallet(id: id);
-  }
-
-  @override
-  Future<bool> getUseBiometry() {
-    return _cipherService.getUseBiometry();
-  }
-
-  @override
-  Future<bool> setUseBiometry(bool useBiometry) {
-    return _cipherService.setUseBiometry(useBiometry: useBiometry);
   }
 }
