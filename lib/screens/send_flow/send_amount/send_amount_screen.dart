@@ -73,7 +73,6 @@ class SendAmountPageState extends State<SendAmountPage> {
 
       _feeNotifier.value = blocState.transactionFees?.displayAmount;
     });
-    _amountController.text = 0.toString();
     _amountController.addListener(_updateSendPrice);
   }
 
@@ -139,6 +138,8 @@ class SendAmountPageState extends State<SendAmountPage> {
                 autofocus: true,
                 style: Theme.of(context).textTheme.display1,
                 decoration: InputDecoration(
+                  hintText: Strings.sendAmountHint,
+                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(color: Theme.of(context).colorScheme.neutralNeutral),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),
@@ -178,6 +179,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                       child: TextField(
                         controller: _noteController,
                         focusNode: _noteFocusNode,
+                        style: Theme.of(context).textTheme.body.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .neutralNeutral,
+                              ),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(right: Spacing.large),
                           border: blankInputBorder,
@@ -201,9 +207,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                         child,
                       ) {
                         return (!hasFocus && _noteController.text.isEmpty)
-                            ? PwText(
+                            ? GestureDetector(child:
+                            PwText(
                                 Strings.sendAmountNoteSuffix,
                                 style: PwTextStyle.body,
+                              ), onTap: () {
+                                _noteFocusNode.requestFocus();
+                                },
                               )
                             : SizedBox(
                                 width: 0,

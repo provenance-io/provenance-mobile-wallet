@@ -328,7 +328,7 @@ class Strings {
 
   // SendAmountScreen
   static const sendAmountTitle = "Send Amount";
-  static const sendAmountHint = "Enter the amount to send";
+  static const sendAmountHint = "Enter an amount";
   static const sendAmountNextButton = "Next";
   static const sendAmountNoteHint = "Note";
   static const sendAmountAvailable = "available";
