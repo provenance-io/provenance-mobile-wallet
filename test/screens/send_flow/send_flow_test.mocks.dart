@@ -65,12 +65,14 @@ class MockAssetService extends _i1.Mock implements _i6.AssetService {
           as _i7.Future<List<_i8.Asset>>);
   @override
   _i7.Future<List<_i10.AssetGraphItem>> getAssetGraphingData(
-          _i9.Coin? coin, String? assetType, _i6.GraphingDataValue? value) =>
+          _i9.Coin? coin, String? assetType, _i6.GraphingDataValue? value,
+          {DateTime? startDate, DateTime? endDate}) =>
       (super.noSuchMethod(
-          Invocation.method(#getAssetGraphingData, [coin, assetType, value]),
-          returnValue: Future<List<_i10.AssetGraphItem>>.value(
-              <_i10.AssetGraphItem>[])) as _i7
-          .Future<List<_i10.AssetGraphItem>>);
+              Invocation.method(#getAssetGraphingData, [coin, assetType, value],
+                  {#startDate: startDate, #endDate: endDate}),
+              returnValue: Future<List<_i10.AssetGraphItem>>.value(
+                  <_i10.AssetGraphItem>[]))
+          as _i7.Future<List<_i10.AssetGraphItem>>);
 }
 
 /// A class which mocks [TransactionService].

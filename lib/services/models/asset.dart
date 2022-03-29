@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/widgets/icon.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -66,6 +67,9 @@ class Asset {
   }
 
   String get formattedUsdPrice {
-    return (usdPrice * pow(10, exponent)).toStringAsFixed(3);
+    final formatter = NumberFormat.simpleCurrency();
+    final scaledNumber = (usdPrice * pow(10, exponent));
+
+    return formatter.format(scaledNumber);
   }
 }
