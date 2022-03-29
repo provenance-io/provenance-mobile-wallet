@@ -14,17 +14,46 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
-class DefaultFirebaseOptions {
+class FirebaseProdOptions {
+  static const FirebaseOptions _web = FirebaseOptions(
+    apiKey: 'AIzaSyBNzgtDMBU_7Df1MjTGjHyj4_3pLYtdOY8',
+    appId: '1:634437787557:web:f9a567d7caa7d2542e124c',
+    messagingSenderId: '634437787557',
+    projectId: 'provenance-wallet',
+    authDomain: 'provenance-wallet.firebaseapp.com',
+    storageBucket: 'provenance-wallet.appspot.com',
+    measurementId: 'G-9RPSMGP29E',
+  );
+
+  static const FirebaseOptions _android = FirebaseOptions(
+    apiKey: 'AIzaSyBWoazpv3XXkS0QUQI3WRiIbGosBRYzV9E',
+    appId: '1:634437787557:android:6cdaeac5e0be92872e124c',
+    messagingSenderId: '634437787557',
+    projectId: 'provenance-wallet',
+    storageBucket: 'provenance-wallet.appspot.com',
+  );
+
+  static const FirebaseOptions _ios = FirebaseOptions(
+    apiKey: 'AIzaSyBFdnLXqAHt6_6c3rAM0c5pEPp9YAqZOvA',
+    appId: '1:634437787557:ios:5a4ca3c70660e28b2e124c',
+    messagingSenderId: '634437787557',
+    projectId: 'provenance-wallet',
+    storageBucket: 'provenance-wallet.appspot.com',
+    iosClientId:
+        '634437787557-6cvssdnj1fhps116t0601nao8hevus2p.apps.googleusercontent.com',
+    iosBundleId: 'io.provenance.wallet',
+  );
+
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      return _web;
     }
     // ignore: missing_enum_constant_in_switch
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        return _android;
       case TargetPlatform.iOS:
-        return ios;
+        return _ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -36,32 +65,4 @@ class DefaultFirebaseOptions {
       'DefaultFirebaseOptions are not supported for this platform.',
     );
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBNzgtDMBU_7Df1MjTGjHyj4_3pLYtdOY8',
-    appId: '1:634437787557:web:f9a567d7caa7d2542e124c',
-    messagingSenderId: '634437787557',
-    projectId: 'provenance-wallet',
-    authDomain: 'provenance-wallet.firebaseapp.com',
-    storageBucket: 'provenance-wallet.appspot.com',
-    measurementId: 'G-9RPSMGP29E',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBWoazpv3XXkS0QUQI3WRiIbGosBRYzV9E',
-    appId: '1:634437787557:android:6cdaeac5e0be92872e124c',
-    messagingSenderId: '634437787557',
-    projectId: 'provenance-wallet',
-    storageBucket: 'provenance-wallet.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBFdnLXqAHt6_6c3rAM0c5pEPp9YAqZOvA',
-    appId: '1:634437787557:ios:5a4ca3c70660e28b2e124c',
-    messagingSenderId: '634437787557',
-    projectId: 'provenance-wallet',
-    storageBucket: 'provenance-wallet.appspot.com',
-    iosClientId: '634437787557-6cvssdnj1fhps116t0601nao8hevus2p.apps.googleusercontent.com',
-    iosBundleId: 'io.provenance.wallet',
-  );
 }

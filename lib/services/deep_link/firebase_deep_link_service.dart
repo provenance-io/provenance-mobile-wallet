@@ -17,8 +17,15 @@ class FirebaseDeepLinkService implements DeepLinkService {
       _link.add(initialLink.link);
     }
 
-    FirebaseDynamicLinks.instance.onLink
-        .listen((e) => _link.add(e.link))
-        .addTo(_subscriptions);
+    FirebaseDynamicLinks.instance.onLink.listen((e) {
+      _onLink(e);
+    }).addTo(_subscriptions);
+  }
+
+  Future<void> _onLink(PendingDynamicLinkData? data) async {
+    final link = data?.link;
+    if (link != null) {
+      _link.add(link);
+    }
   }
 }
