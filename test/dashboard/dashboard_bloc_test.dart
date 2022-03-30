@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
@@ -13,20 +13,27 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
 import '../services/memory_key_value_service.dart';
+import 'dashboard_bloc_test.mocks.dart';
 import 'dashboard_mocks.dart';
 import 'in_memory_wallet_storage_service.dart';
 
-final get = GetIt.instance;
 const walletConnectAddress =
     'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
 
+@GenerateMocks([RemoteNotificationService])
 void main() {
+  tearDown(() async {
+    await get.reset(dispose: true);
+  });
+
   test(
     'Initial load',
     () async {
@@ -294,6 +301,7 @@ class TestState {
       );
     }
 
+    final mockRemoteNotificationService = MockRemoteNotificationService();
     final deepLinkService = MockDeepLinkService();
     final assetService = MockAssetService(assets);
     final transactionService = MockTransactionService(transactions);
@@ -318,6 +326,9 @@ class TestState {
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<KeyValueService>(keyValueService);
     get.registerSingleton<WalletConnectionFactory>(walletConnectionFactory);
+    get.registerSingleton<RemoteNotificationService>(
+      mockRemoteNotificationService,
+    );
 
     get.registerSingleton(authHelper);
 
