@@ -67,8 +67,11 @@ class Strings {
 
   // Notifications
   static const String notifyServiceErrorTitle = 'Service Error';
+  static const notifyNetworkErrorTitle = 'Network Disconnected';
   static const notifyServiceErrorMessage =
       'Unfortunately our services are down at the moment';
+  static const notifyNetworkErrorMessage =
+      'It appears as though no network is connected.';
 
   // Landing Page
   static const createWallet = 'Create Wallet';

@@ -70,6 +70,14 @@ class BasicNotificationService implements NotificationService, Disposable {
   NotificationInfo _createGroup(NotificationGroup group, int count) {
     NotificationInfo info;
     switch (group) {
+      case NotificationGroup.networkDisconnected:
+        info = NotificationInfo(
+          id: group.name,
+          title: Strings.notifyNetworkErrorTitle,
+          message: Strings.notifyNetworkErrorMessage,
+          kind: NotificationKind.warn,
+        );
+        break;
       case NotificationGroup.serviceError:
         info = NotificationInfo(
           id: group.name,

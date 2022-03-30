@@ -1,3 +1,4 @@
 enum NotificationGroup {
   serviceError,
+  networkDisconnected,
 }
