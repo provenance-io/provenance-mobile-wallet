@@ -205,7 +205,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     final walletDetails = _selectedWallet.value!;
     final connection = get<WalletConnectionFactory>().call(address);
-    // final pushNotificationHelper = get<PushNotificationHelper>();
     final remoteNotificationService = get<RemoteNotificationService>();
 
     final delegate = WalletConnectSessionDelegate(

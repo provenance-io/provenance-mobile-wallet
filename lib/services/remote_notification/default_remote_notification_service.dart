@@ -13,7 +13,7 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
   Future<void> registerForPushNotifications(
     String topic,
   ) async {
-    log("Registering for $topic");
+    logDebug("Registering for $topic");
     await _pushNotificationHelper.registerForTopic(topic);
   }
 
@@ -21,7 +21,7 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
   Future<void> unregisterForPushNotifications(
     String topic,
   ) async {
-    log("Unregistering for $topic");
+    logDebug("Unregistering for $topic");
     await _pushNotificationHelper.unregisterForTopic(topic);
   }
 }

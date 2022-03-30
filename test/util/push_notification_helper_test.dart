@@ -24,6 +24,9 @@ main() {
       sound: anyNamed("sound"),
     )).thenAnswer((_) => Future.value());
 
+    when(_mockFirebaseMessaging!.getToken())
+        .thenAnswer((_) => Future.value("ABCDE"));
+
     await _pushNotificationHelper!.init();
 
     final captures = verify(

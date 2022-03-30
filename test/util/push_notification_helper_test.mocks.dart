@@ -58,10 +58,10 @@ class MockFirebaseMessaging extends _i1.Mock implements _i4.FirebaseMessaging {
               returnValue: Future<_i3.RemoteMessage?>.value())
           as _i5.Future<_i3.RemoteMessage?>);
   @override
-  _i5.Future<void> deleteToken({String? senderId}) => (super.noSuchMethod(
-      Invocation.method(#deleteToken, [], {#senderId: senderId}),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  _i5.Future<void> deleteToken() =>
+      (super.noSuchMethod(Invocation.method(#deleteToken, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
   @override
   _i5.Future<String?> getAPNSToken() =>
       (super.noSuchMethod(Invocation.method(#getAPNSToken, []),
@@ -70,6 +70,9 @@ class MockFirebaseMessaging extends _i1.Mock implements _i4.FirebaseMessaging {
   _i5.Future<String?> getToken({String? vapidKey}) => (super.noSuchMethod(
       Invocation.method(#getToken, [], {#vapidKey: vapidKey}),
       returnValue: Future<String?>.value()) as _i5.Future<String?>);
+  @override
+  bool isSupported() => (super.noSuchMethod(Invocation.method(#isSupported, []),
+      returnValue: false) as bool);
   @override
   _i5.Future<_i3.NotificationSettings> getNotificationSettings() =>
       (super.noSuchMethod(Invocation.method(#getNotificationSettings, []),
