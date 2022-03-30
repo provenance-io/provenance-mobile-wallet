@@ -16,6 +16,7 @@ import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
@@ -94,6 +95,11 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
           sessionStatus == WalletConnectSessionStatus.disconnected &&
           authStatus == AuthStatus.authenticated) {
         tryRestoreSession(walletId);
+      }
+    } else if (state == AppLifecycleState.paused) {
+      if (_walletSession != null) {
+        _walletSession!.closeButRetainSession();
+        _walletSession = null;
       }
     }
   }
@@ -199,19 +205,22 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     final walletDetails = _selectedWallet.value!;
     final connection = get<WalletConnectionFactory>().call(address);
+    final remoteNotificationService = get<RemoteNotificationService>();
+
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
       transactionHandler: WalletConnectTransactionHandler(),
       walletInfo: WalletInfo(
-        walletDetails.id, 
-        walletDetails.name, 
+        walletDetails.id,
+        walletDetails.name,
         walletDetails.coin,
-        ),
+      ),
     );
     final session = WalletConnectSession(
       walletId: walletId,
       connection: connection,
       delegate: delegate,
+      remoteNotificationService: remoteNotificationService,
     );
 
     delegateEvents.listen(session.delegateEvents);

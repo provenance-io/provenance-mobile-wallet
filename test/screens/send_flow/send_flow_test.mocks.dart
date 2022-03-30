@@ -132,15 +132,10 @@ class MockWalletService extends _i1.Mock implements _i3.WalletService {
   _i7.Future<_i12.WalletDetails?> addWallet(
           {List<String>? phrase,
           String? name,
-          bool? useBiometry,
           _i13.Coin? coin = _i13.Coin.testNet}) =>
       (super.noSuchMethod(
-              Invocation.method(#addWallet, [], {
-                #phrase: phrase,
-                #name: name,
-                #useBiometry: useBiometry,
-                #coin: coin
-              }),
+              Invocation.method(
+                  #addWallet, [], {#phrase: phrase, #name: name, #coin: coin}),
               returnValue: Future<_i12.WalletDetails?>.value())
           as _i7.Future<_i12.WalletDetails?>);
   @override

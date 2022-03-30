@@ -5,6 +5,7 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i7;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
 import 'package:provenance_dart/wallet.dart' as _i5;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i4;
@@ -92,6 +93,15 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       (super.noSuchMethod(Invocation.getter(#platformVersion),
           returnValue: Future<String?>.value()) as _i3.Future<String?>);
   @override
+  _i3.Future<_i7.BiometryType> getBiometryType() => (super.noSuchMethod(
+          Invocation.method(#getBiometryType, []),
+          returnValue: Future<_i7.BiometryType>.value(_i7.BiometryType.none))
+      as _i3.Future<_i7.BiometryType>);
+  @override
+  _i3.Future<bool> getLockScreenEnabled() =>
+      (super.noSuchMethod(Invocation.method(#getLockScreenEnabled, []),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
   _i3.Future<bool> authenticateBiometry() =>
       (super.noSuchMethod(Invocation.method(#authenticateBiometry, []),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
@@ -108,11 +118,10 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       Invocation.method(#setUseBiometry, [], {#useBiometry: useBiometry}),
       returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
-  _i3.Future<bool> encryptKey(
-          {String? id, String? privateKey, bool? useBiometry}) =>
+  _i3.Future<bool> encryptKey({String? id, String? privateKey}) =>
       (super.noSuchMethod(
-          Invocation.method(#encryptKey, [],
-              {#id: id, #privateKey: privateKey, #useBiometry: useBiometry}),
+          Invocation.method(
+              #encryptKey, [], {#id: id, #privateKey: privateKey}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
   _i3.Future<String?> decryptKey({String? id}) =>

@@ -387,4 +387,9 @@ class Strings {
   static const sendDate = "Date";
   static const sendTo = "To";
   static const sendDone = "Done";
+
+  // PushNotification
+  static const channelTitle = "High Importance Notifications";
+  static const channelDescription =
+      "This channel is used for important notifications.";
 }
