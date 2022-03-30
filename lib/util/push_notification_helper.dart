@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 
 class PushNotificationHelper {
   PushNotificationHelper(this._firebaseMessaging);
@@ -15,9 +14,16 @@ class PushNotificationHelper {
       sound: false,
     );
 
-    return _firebaseMessaging
-        .getToken()
-        .then((value) => log("Firebase token: $value"));
+    try {
+      final token = await _firebaseMessaging.getToken();
+
+      logDebug('Firebase token: $token');
+    } on Exception catch (e) {
+      logError(
+        'Failed to get Firebase token',
+        error: e,
+      );
+    }
   }
 
   Future<void> registerForTopic(String topic) {
