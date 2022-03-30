@@ -94,7 +94,7 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
                         result.success(success)
                     }
                     "resetKeys" -> {
-                        val success = cipherService.clearPin()
+                        val success = cipherService.resetSecretKeys()
                         result.success(success)
                     }
                     "getUseBiometry" -> {
