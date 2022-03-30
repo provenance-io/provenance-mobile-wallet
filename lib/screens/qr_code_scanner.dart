@@ -53,56 +53,32 @@ class QRCodeScannerState extends State<QRCodeScanner> {
       builder: (context, constraints) {
         final ratio = constraints.maxHeight / 600;
 
-        return LoadingOverlay(
-          isLoading: false,
-          child: ClipRRect(
-            child: Stack(children: <Widget>[
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 144 * ratio,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: QRView(
-                        key: qrKey,
-                        onQRViewCreated: _onQRViewCreated,
-                        overlay: QrScannerOverlayShape(
-                          borderColor: Colors.red,
-                          borderRadius: 0,
-                          borderLength: 0,
-                          borderWidth: 0,
-                          cutOutSize: 300,
-                        ),
+        return ClipRRect(
+          child: Stack(children: <Widget>[
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 144 * ratio,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: QRView(
+                      key: qrKey,
+                      onQRViewCreated: _onQRViewCreated,
+                      overlay: QrScannerOverlayShape(
+                        borderColor: Colors.red,
+                        borderRadius: 0,
+                        borderLength: 0,
+                        borderWidth: 0,
+                        cutOutSize: 300,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              // Positioned(
-              //   left: 0,
-              //   right: 0,
-              //   bottom: 0,
-              //   child: Container(
-              //     height: 144 * ratio,
-              //     color: Theme.of(context).colorScheme.background,
-              //     child: Row(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Padding(
-              //               padding: EdgeInsets.only(top: 40),
-              //               child: FwText(
-              //                 'Scan QR Code',
-              //                 style: FwTextStyle.h3,
-              //                 color: FwColor.black,
-              //               )),
-              //         ]),
-              //   ),
-              // ),
-            ]),
-          ),
+            ),
+          ]),
         );
       },
     );
