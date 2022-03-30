@@ -23,16 +23,14 @@ class AssetChartBloc extends Disposable {
       value,
       _asset,
       [],
-      false,
     );
     final graphItemList =
         await _assetService.getAssetGraphingData(_asset.denom, value);
-      _chartDetails.value = AssetChartDetails(
-        value,
-        _asset,
-        graphItemList,
-        true,
-      );
+    _chartDetails.value = AssetChartDetails(
+      value,
+      _asset,
+      graphItemList,
+    );
   }
 
   @override
@@ -46,10 +44,8 @@ class AssetChartDetails {
     this.value,
     this.asset,
     this.graphItemList,
-    this.isComingSoon,
   );
   final GraphingDataValue value;
   final Asset asset;
   final List<AssetGraphItem> graphItemList;
-  final bool isComingSoon;
 }
