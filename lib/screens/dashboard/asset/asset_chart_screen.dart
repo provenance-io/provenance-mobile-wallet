@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_percentage_changed.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -120,9 +121,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         ),
                       ],
                     ),
-                    // TODO: This is demo text, to be replaced by a service.
-                    // ignore: dead_code
-                    if (false) PwText("↑ \$0.008 (0.10%)"),
+                    AssetPercentageChanged(),
                     AssetBarChart(),
                     VerticalSpacer.medium(),
                     AssetBarChartButtons(),
