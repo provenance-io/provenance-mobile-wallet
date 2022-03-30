@@ -14,6 +14,9 @@ AssetDto _$AssetDtoFromJson(Map<String, dynamic> json) => AssetDto(
       exponent: json['exponent'] as int?,
       displayAmount: json['displayAmount'] as String?,
       usdPrice: (json['usdPrice'] as num?)?.toDouble(),
+      dailyHigh: (json['dailyHigh'] as num?)?.toDouble(),
+      dailyLow: (json['dailyLow'] as num?)?.toDouble(),
+      dailyVolume: (json['dailyVolume'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$AssetDtoToJson(AssetDto instance) => <String, dynamic>{
@@ -24,4 +27,7 @@ Map<String, dynamic> _$AssetDtoToJson(AssetDto instance) => <String, dynamic>{
       'exponent': instance.exponent,
       'displayAmount': instance.displayAmount,
       'usdPrice': instance.usdPrice,
+      'dailyHigh': instance.dailyHigh,
+      'dailyLow': instance.dailyLow,
+      'dailyVolume': instance.dailyVolume,
     };
