@@ -14,6 +14,8 @@ import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
+import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
+import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
@@ -187,6 +189,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => isMockingTransactionService
           ? MockTransactionService()
           : DefaultTransactionService(),
+    );
+    get.registerLazySingleton<ConnectivityService>(
+      () => DefaultConnectivityService(),
     );
     get.registerLazySingleton<NotificationService>(
       () => BasicNotificationService(),
