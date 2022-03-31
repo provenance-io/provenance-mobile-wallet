@@ -164,3 +164,17 @@ sudo xattr -d com.apple.quarantine $FLUTTER_HOME/bin/cache/artifacts/usbmuxd/ipr
 This can help provide more insight into the Gradle build
 1. Open the Android project in Android Studio (the `android` dir that contains `settings.gradle`)
 2. Click run
+
+## Firebase
+[Firebase Console](https://console.firebase.google.com/project/provenance-wallet/overview)
+
+API keys have application and API restrictions that are managed in [Google Cloud](https://console.cloud.google.com/apis/credentials?project=provenance-wallet).
+
+Dynamic Links requires:
+1. Firebase Installations API
+
+Cloud Messaging requires:
+1. Cloud Messaging
+
+A Dynamic Link has a payload that includes a URL for the app to handle.  
+The URL is limited by an allowlist that is configured in the [Dynamic Links section](https://console.firebase.google.com/project/provenance-wallet/durablelinks/links/https:~2F~2Fprovenancewallet.page.link) of the Firebase console.

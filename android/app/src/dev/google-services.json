@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "634437787557",
+    "project_id": "provenance-wallet",
+    "storage_bucket": "provenance-wallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634437787557:android:6cdaeac5e0be92872e124c",
+        "android_client_info": {
+          "package_name": "io.provenance.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634437787557-2jcnqp0cvolk2jfjpt3iggp937b56bd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWoazpv3XXkS0QUQI3WRiIbGosBRYzV9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634437787557-2jcnqp0cvolk2jfjpt3iggp937b56bd0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "634437787557-5e2ib6tkmlpi6ms9n3tt5kb1g8msqce2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.provenance.wallet.dev",
+                "app_store_id": "1612125955"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634437787557:android:6851d041cec04bc32e124c",
+        "android_client_info": {
+          "package_name": "io.provenance.wallet.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634437787557-cevfs807ruh0f3pd8o50vgt04p9uh2cp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.provenance.wallet.dev",
+            "certificate_hash": "cb3b91bb050b0af1eb146d02668cd8422ab41edd"
+          }
+        },
+        {
+          "client_id": "634437787557-2jcnqp0cvolk2jfjpt3iggp937b56bd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWoazpv3XXkS0QUQI3WRiIbGosBRYzV9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634437787557-2jcnqp0cvolk2jfjpt3iggp937b56bd0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "634437787557-5e2ib6tkmlpi6ms9n3tt5kb1g8msqce2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.provenance.wallet.dev",
+                "app_store_id": "1612125955"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

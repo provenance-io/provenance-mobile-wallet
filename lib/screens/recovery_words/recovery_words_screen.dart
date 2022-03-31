@@ -30,7 +30,6 @@ class RecoveryWordsScreen extends StatefulWidget {
 }
 
 class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
-  bool _loading = true;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> words = [];
@@ -43,10 +42,6 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
 
   void generateWords() {
     words = Mnemonic.random(MnemonicStrength.high).toList();
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   @override
