@@ -30,6 +30,8 @@
 		2384DF3EA5DC7870FDE8BC8A /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
 		30A2B30E273C4BB400F5BC89 /* prov_wallet_flutter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = prov_wallet_flutter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		55826E3627F5EF26003076C3 /* GoogleService-io.provenance.wallet-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-io.provenance.wallet-Info.plist"; sourceTree = "<group>"; };
+		55826E3727F5EF26003076C3 /* GoogleService-io.provenance.wallet.dev-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-io.provenance.wallet.dev-Info.plist"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-dev.xcconfig"; path = "Flutter/Release-dev.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +68,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		55826E2727F54176003076C3 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				55826E3627F5EF26003076C3 /* GoogleService-io.provenance.wallet-Info.plist */,
+				55826E3727F5EF26003076C3 /* GoogleService-io.provenance.wallet.dev-Info.plist */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
 		597B4F4912138E0BEF8C6298 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +123,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				55826E2727F54176003076C3 /* Firebase */,
 				FA06BE9A27304134007EDFC7 /* Runner.entitlements */,
 				FA06BE9927304129007EDFC7 /* RunnerRelease.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -153,6 +165,7 @@
 			buildPhases = (
 				E148C2B9C2FD5BE2E6E71275 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
+				55826E2A27F541D4003076C3 /* Copy FIrebase File */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
@@ -231,6 +244,24 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
+		55826E2A27F541D4003076C3 /* Copy FIrebase File */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy FIrebase File";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert  path.\n\nPATH_TO_GOOGLE_PLISTS=\"${PROJECT_DIR}/Runner/Firebase\"\nPLIST_FILE=\"$PATH_TO_GOOGLE_PLISTS/GoogleService-${PRODUCT_BUNDLE_IDENTIFIER}-Info.plist\"\n   \ncp -r \"${PLIST_FILE}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" \n";
+		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,7 +274,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 		CC5970142D017E956B9F62B1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

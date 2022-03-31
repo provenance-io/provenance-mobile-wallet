@@ -72,15 +72,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               CategoryLabel(Strings.security),
               _divider,
-              FutureToggleItem(
-                text: Strings.faceId,
-                getValue: () async =>
-                    await get<CipherService>().getUseBiometry() ?? false,
-                setValue: (value) => get<CipherService>().setUseBiometry(
-                  useBiometry: value,
-                ),
+              FutureBuilder<BiometryType>(
+                future: get<CipherService>().getBiometryType(),
+                builder: (context, snapshot) {
+                  var type = snapshot.data;
+                  if (type == null || type == BiometryType.none) {
+                    return Container();
+                  }
+
+                  var label = '';
+
+                  switch (type) {
+                    case BiometryType.none:
+                      break;
+                    case BiometryType.faceId:
+                      label = Strings.faceId;
+                      break;
+                    case BiometryType.touchId:
+                      label = Strings.touchId;
+                      break;
+                    case BiometryType.unknown:
+                      label = Strings.biometry;
+                      break;
+                  }
+
+                  return Column(
+                    children: [
+                      FutureToggleItem(
+                        text: label,
+                        getValue: () async =>
+                            await get<CipherService>().getUseBiometry() ??
+                            false,
+                        setValue: (value) =>
+                            get<CipherService>().setUseBiometry(
+                          useBiometry: value,
+                        ),
+                      ),
+                      _divider,
+                    ],
+                  );
+                },
               ),
-              _divider,
               StreamBuilder<WalletDetails?>(
                 stream: get<DashboardBloc>().selectedWallet,
                 initialData: null,

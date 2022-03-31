@@ -181,8 +181,12 @@ class CipherService(private val preferences: SharedPreferences, private val syst
 
     private fun getOrCreateSecretKey(): SecretKey {
         keyStore.getKey(ALIAS_KEY, null)?.let {
+            Log.d(TAG, "Getting existing key")
+
             return it as SecretKey
         }
+
+        Log.d(TAG, "Creating new key")
 
         val paramsBuilder = KeyGenParameterSpec.Builder(
             ALIAS_KEY,
