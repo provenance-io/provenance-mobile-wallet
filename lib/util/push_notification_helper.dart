@@ -7,6 +7,8 @@ class PushNotificationHelper {
   final FirebaseMessaging _firebaseMessaging;
 
   Future<void> init() async {
+    await _firebaseMessaging.requestPermission(alert: true);
+
     /// if the app is in the foreground then we do not need to show anything
     await _firebaseMessaging.setForegroundNotificationPresentationOptions(
       alert: false,
@@ -17,7 +19,7 @@ class PushNotificationHelper {
     try {
       final token = await _firebaseMessaging.getToken();
 
-      logDebug('Firebase token: $token');
+      print('Firebase token: $token');
     } on Exception catch (e) {
       logError(
         'Failed to get Firebase token',

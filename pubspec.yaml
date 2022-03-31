@@ -30,7 +30,7 @@ dependencies:
   firebase_core: ^1.12.0
   firebase_crashlytics: ^2.5.0
   firebase_dynamic_links: ^4.0.5
-  firebase_messaging: ^10.0.0
+  firebase_messaging: ^11.2.11
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
@@ -60,8 +60,8 @@ dependencies:
   fl_chart: ^0.45.1
   flutter_phoenix: "^1.0.0"
 
-dependency_overrides: #this can be removed when we update to flutter > 2.8.1
-  firebase_messaging_platform_interface: 3.1.6
+# dependency_overrides: #this can be removed when we update to flutter > 2.8.1
+#   firebase_messaging_platform_interface: 3.1.6
 
 dev_dependencies:
   build_runner: ^2.0.6
