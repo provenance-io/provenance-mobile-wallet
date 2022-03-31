@@ -150,6 +150,10 @@ class WalletItem extends StatelessWidget {
                   );
                   if (dialogResult) {
                     await get<WalletService>().removeWallet(id: item.id);
+                    final list = await get<WalletService>().getWallets();
+                    if (list.isEmpty) {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    }
                   }
                   break;
                 case MenuOperation.select:
