@@ -15,15 +15,20 @@ class AssetPercentageChanged extends StatelessWidget {
       builder: (context, snapshot) {
         final list = snapshot.data?.graphItemList;
         if (list == null || list.length < 2) {
-          return PwText("\$0 (0%)");
+          return PwText("\$0 (0.0%)");
         } else {
           var last = list.last;
           var penultimate = list[list.length - 2];
           final displayPrice = last.price - penultimate.price;
           final percentageChanged = displayPrice / penultimate.price * 100;
+          final arrow = percentageChanged == 0
+              ? ""
+              : percentageChanged < 0
+                  ? '↓ '
+                  : '↑ ';
 
           return PwText(
-            "${percentageChanged.isNegative ? '↓' : '↑'} ${displayPrice.toCurrency()} ($percentageChanged%)",
+            "$arrow${displayPrice.toCurrency()} (${percentageChanged.toStringAsFixed(3)}%)",
           );
         }
       },
