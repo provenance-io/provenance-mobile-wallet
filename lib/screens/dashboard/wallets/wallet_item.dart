@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/dashboard/wallets/rename_wallet_dialog
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WalletItem extends StatelessWidget {
@@ -152,6 +153,7 @@ class WalletItem extends StatelessWidget {
                     await get<WalletService>().removeWallet(id: item.id);
                     final list = await get<WalletService>().getWallets();
                     if (list.isEmpty) {
+                      get<LocalAuthHelper>().reset();
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     }
                   }
