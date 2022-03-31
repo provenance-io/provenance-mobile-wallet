@@ -85,6 +85,22 @@ class WalletService implements Disposable {
     return details;
   }
 
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  }) async {
+    final details = await _storage.setWalletCoin(
+      id: id,
+      coin: coin,
+    );
+
+    if (details != null) {
+      events._updated.add(details);
+    }
+
+    return details;
+  }
+
   Future<WalletDetails?> addWallet({
     required List<String> phrase,
     required String name,

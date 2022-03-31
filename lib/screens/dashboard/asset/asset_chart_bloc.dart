@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
@@ -9,8 +10,9 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AssetChartBloc extends Disposable {
-  AssetChartBloc(this._asset);
+  AssetChartBloc(this._coin, this._asset);
 
+  final Coin _coin;
   final Asset _asset;
   final _assetService = get<AssetService>();
   final _chartDetails = BehaviorSubject<AssetChartDetails?>.seeded(null);
@@ -27,8 +29,12 @@ class AssetChartBloc extends Disposable {
       _chartDetails.value?.assetStatistics,
       false,
     );
-    final graphItemList =
-        await _assetService.getAssetGraphingData(_asset.denom, value);
+    final graphItemList = await _assetService.getAssetGraphingData(
+      _coin,
+      _asset.denom,
+      value,
+    );
+
     try {
       // This is gonna fail until these endpoints are built (or unless we are in mock)
       final assetStatistics =

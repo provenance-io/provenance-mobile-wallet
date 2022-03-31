@@ -217,7 +217,11 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                get<DashboardAssetBloc>().openAsset(item);
+                                final coin = bloc.selectedWallet.value?.coin;
+                                if (coin != null) {
+                                  get<DashboardAssetBloc>()
+                                      .openAsset(coin, item);
+                                }
                               },
                               child: Padding(
                                 padding: EdgeInsets.zero,

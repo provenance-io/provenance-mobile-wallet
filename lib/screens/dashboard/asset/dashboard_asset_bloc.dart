@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,8 +11,12 @@ class DashboardAssetBloc extends Disposable {
 
   ValueStream<AssetDetails?> get assetDetails => _assetDetails;
 
-  Future<void> openAsset(Asset asset) async {
-    _assetDetails.value = AssetDetails(asset, false);
+  Future<void> openAsset(Coin coin, Asset asset) async {
+    _assetDetails.value = AssetDetails(
+      coin,
+      asset,
+      false,
+    );
   }
 
   Future<void> openViewAllTransactions() async {
@@ -19,7 +24,11 @@ class DashboardAssetBloc extends Disposable {
     if (null == details) {
       return;
     }
-    _assetDetails.value = AssetDetails(details.asset, true);
+    _assetDetails.value = AssetDetails(
+      details.coin,
+      details.asset,
+      true,
+    );
   }
 
   Future<void> closeViewAllTransactions() async {
@@ -27,7 +36,11 @@ class DashboardAssetBloc extends Disposable {
     if (null == details) {
       return;
     }
-    _assetDetails.value = AssetDetails(details.asset, false);
+    _assetDetails.value = AssetDetails(
+      details.coin,
+      details.asset,
+      false,
+    );
   }
 
   Future<void> closeAsset() async {

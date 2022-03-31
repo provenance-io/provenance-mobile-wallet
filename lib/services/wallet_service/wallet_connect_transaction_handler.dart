@@ -1,6 +1,7 @@
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/extension/coin_helper.dart';
+import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/endpoints.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
@@ -13,7 +14,9 @@ class WalletConnectTransactionHandler implements TransactionHandler {
     PublicKey publicKey,
   ) async {
     final coin = publicKey.coin;
-    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
+    final chainId = ChainId.forCoin(coin);
+    final address = Endpoints.chain.forCoin(coin);
+    final pbClient = proto.PbClient(Uri.parse(address), chainId);
 
     final account = await pbClient.getBaseAccount(publicKey.address);
     final signer = _EstimateSigner(account.address, publicKey);
@@ -22,13 +25,13 @@ class WalletConnectTransactionHandler implements TransactionHandler {
     final baseReq = proto.BaseReq(
       txBody,
       [baseReqSigner],
-      coin.chainId,
+      chainId,
     );
 
     final gasService = get<GasFeeService>();
 
     final estimate = await pbClient.estimateTx(baseReq);
-    final customFee = await gasService.getGasFee();
+    final customFee = await gasService.getGasFee(coin);
 
     return WalletGasEstimate(
       estimate.estimate,
@@ -46,8 +49,10 @@ class WalletConnectTransactionHandler implements TransactionHandler {
   ]) async {
     final publicKey = privateKey.defaultKey().publicKey;
     final coin = publicKey.coin;
+    final chainId = ChainId.forCoin(coin);
+    final address = Endpoints.chain.forCoin(coin);
 
-    final pbClient = proto.PbClient(Uri.parse(coin.address), coin.chainId);
+    final pbClient = proto.PbClient(Uri.parse(address), chainId);
     final account = await pbClient.getBaseAccount(publicKey.address);
     final signer = _SignerImp(privateKey);
 
@@ -58,7 +63,7 @@ class WalletConnectTransactionHandler implements TransactionHandler {
     final baseReq = proto.BaseReq(
       txBody,
       [baseReqSigner],
-      coin.chainId,
+      chainId,
     );
 
     return pbClient

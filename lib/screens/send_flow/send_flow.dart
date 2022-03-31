@@ -35,6 +35,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
     super.initState();
     get.registerLazySingleton<SendBloc>(() {
       return SendBloc(
+        widget.walletDetails.coin,
         widget.walletDetails.address,
         get<AssetService>(),
         get<PriceService>(),

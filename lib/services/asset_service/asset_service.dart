@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/models/asset_statistic.dart';
@@ -5,6 +6,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class AssetService {
   Future<List<Asset>> getAssets(
+    Coin coin,
     String provenanceAddresses,
   ) {
     throw Strings.notImplementedMessage;
@@ -17,6 +19,7 @@ class AssetService {
   }
 
   Future<List<AssetGraphItem>> getAssetGraphingData(
+    Coin coin,
     String assetType,
     GraphingDataValue value,
   ) {
