@@ -129,6 +129,7 @@ class Strings {
   static const profileDeveloperServiceMocks = 'Service Mocks';
   static const profileDeveloperConnectLabel = 'Connect';
   static const profileDeveloperConnectInvalidAddress = 'Invalid address';
+  static const profileShowAdvancedUI = 'Show Advanced UI';
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";

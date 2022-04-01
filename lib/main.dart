@@ -155,15 +155,19 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<HttpClient>(
-      () => HttpClient(),
+    get.registerLazySingleton<MainHttpClient>(
+      () => MainHttpClient(),
+    );
+
+    get.registerLazySingleton<TestHttpClient>(
+      () => TestHttpClient(),
     );
 
     keyValueService.streamBool(PrefKey.httpClientDiagnostics500).listen((e) {
       final doError = e ?? false;
-      final client = get<HttpClient>();
       final statusCode = doError ? HttpStatus.internalServerError : null;
-      client.setDiagnosticsError(statusCode);
+      get<MainHttpClient>().setDiagnosticsError(statusCode);
+      get<TestHttpClient>().setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
     get.registerLazySingleton<StatService>(

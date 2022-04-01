@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
@@ -22,7 +23,7 @@ class LandingBloc extends Disposable {
   ValueStream<String> get blockTime => _blockTime.stream;
 
   Future<void> load() async {
-    final stats = await _service.getStats();
+    final stats = await _service.getStats(Coin.mainNet);
     if (stats == null) {
       return;
     }

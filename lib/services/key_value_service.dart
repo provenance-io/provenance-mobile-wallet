@@ -35,6 +35,7 @@ enum PrefKey {
   isSubsequentRun,
   sessionData,
   showDevMenu,
+  showAdvancedUI,
   httpClientDiagnostics500,
   isMockingAssetService,
   isMockingTransactionService,

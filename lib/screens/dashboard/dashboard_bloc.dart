@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/extension/coin_helper.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
@@ -109,41 +109,43 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     _isFirstLoad = false;
 
     final walletService = get<WalletService>();
-    var details = await walletService.getSelectedWallet();
-    details ??= await walletService.selectWallet();
+    var wallet = await walletService.getSelectedWallet();
+    wallet ??= await walletService.selectWallet();
 
-    _selectedWallet.tryAdd(details);
+    _selectedWallet.tryAdd(wallet);
 
-    final walletId = details?.id;
+    final walletId = wallet?.id;
     if (walletId != null && isFirstLoad) {
       tryRestoreSession(walletId);
     }
 
-    var errorCount = 0;
-    try {
-      final assetList = await _assetService.getAssets(details?.address ?? "");
-      _assetList.tryAdd(assetList);
-    } catch (e) {
-      errorCount++;
-      _assetList.value = [];
+    var assetList = <Asset>[];
+    var transactions = <Transaction>[];
+
+    if (wallet != null) {
+      assetList = await _assetService.getAssets(
+        wallet.coin,
+        wallet.address,
+      );
+
+      transactions = await _transactionService.getTransactions(
+        wallet.coin,
+        wallet.address,
+      );
     }
 
-    try {
-      var transactions =
-          (await _transactionService.getTransactions(details?.address ?? ""));
-      _transactionDetails.tryAdd(TransactionDetails(
-        walletAddress: _selectedWallet.value?.address ?? "",
+    _assetList.tryAdd(assetList);
+
+    _transactionDetails.tryAdd(
+      TransactionDetails(
+        walletAddress: wallet?.address ?? "",
         filteredTransactions: transactions,
         transactions: transactions.toList(),
-      ));
-    } catch (e) {
-      errorCount++;
-      transactionDetails.value.transactions =
-          transactionDetails.value.filteredTransactions = [];
-      if (errorCount == 2) {
-        _error.tryAdd(Strings.theSystemIsDown);
-      }
-    }
+      ),
+    );
+
+    transactionDetails.value.transactions =
+        transactionDetails.value.filteredTransactions = [];
   }
 
   void filterTransactions(String denom, String status) {
@@ -232,12 +234,13 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     if (sessionData != null) {
       final peerId = sessionData.peerId;
       final remotePeerId = sessionData.remotePeerId;
+      final chainId = ChainId.forCoin(privateKey.publicKey.coin);
 
       restoreData = WalletConnectSessionRestoreData(
         sessionData.clientMeta,
         SessionRestoreData(
           privateKey,
-          privateKey.publicKey.coin.chainId,
+          chainId,
           peerId,
           remotePeerId,
         ),
@@ -386,7 +389,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     for (var wallet in list) {
       var assets = wallet.address == selectedWallet.value?.address
           ? assetList.value
-          : (await _assetService.getAssets(wallet.address));
+          : (await _assetService.getAssets(wallet.coin, wallet.address));
       map[wallet] = assets?.length ?? 1;
     }
 

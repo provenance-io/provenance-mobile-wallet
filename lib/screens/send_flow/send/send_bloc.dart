@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -33,6 +34,7 @@ class SendBlocState {
 
 class SendBloc extends Disposable {
   SendBloc(
+    this._coin,
     this._provenanceAddress,
     this._assetService,
     this._priceService,
@@ -41,6 +43,7 @@ class SendBloc extends Disposable {
   );
 
   final _stateStreamController = StreamController<SendBlocState>();
+  final Coin _coin;
   final String _provenanceAddress;
   final SendBlocNavigator _navigator;
   final AssetService _assetService;
@@ -51,11 +54,12 @@ class SendBloc extends Disposable {
 
   Future<void> load() {
     final assetFuture =
-        _assetService.getAssets(_provenanceAddress).then((assets) async {
+        _assetService.getAssets(_coin, _provenanceAddress).then((assets) async {
       final denominations = assets.map((e) => e.denom).toSet().toList();
 
-      final prices =
-          await _priceService.getAssetPrices(denominations).then((response) {
+      final prices = await _priceService
+          .getAssetPrices(_coin, denominations)
+          .then((response) {
         final map = <String, double>{};
         for (var price in response) {
           map[price.denomination] = price.usdPrice;
@@ -80,7 +84,7 @@ class SendBloc extends Disposable {
 
     return Future.wait([
       assetFuture,
-      _transactionService.getTransactions(_provenanceAddress),
+      _transactionService.getTransactions(_coin, _provenanceAddress),
     ]).then((results) {
       final assetResponse = results[0] as List<SendAsset>;
       final transResponse = results[1] as List<Transaction>;

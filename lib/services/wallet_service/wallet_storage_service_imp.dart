@@ -101,6 +101,14 @@ class WalletStorageServiceImp implements WalletStorageService {
   }
 
   @override
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  }) {
+    return _sqliteWalletStorageService.setWalletCoin(id: id, coin: coin);
+  }
+
+  @override
   Future<WalletDetails?> selectWallet({String? id}) {
     return _sqliteWalletStorageService.selectWallet(id: id);
   }

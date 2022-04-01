@@ -46,6 +46,9 @@ class SqliteWalletStorageService {
   static const _sqlRenameWallet = '''
     UPDATE Wallet SET Name = ? WHERE Id = ?
   ''';
+  static const _sqlUpdateCoin = '''
+    UPDATE Wallet SET IsMainNet = ? WHERE Id = ?
+  ''';
   static const _sqlDeleteWallet = '''
     DELETE FROM Wallet WHERE Id = ?
   ''';
@@ -110,6 +113,22 @@ class SqliteWalletStorageService {
     int _ = await db.rawUpdate(_sqlRenameWallet, [name, id]);
 
     return await getWallet(id: id);
+  }
+
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  }) async {
+    final db = await _getDb();
+    final isMainNet = coin == Coin.mainNet ? 1 : 0;
+
+    WalletDetails? details;
+    int rowsChanged = await db.rawUpdate(_sqlUpdateCoin, [isMainNet, id]);
+    if (rowsChanged != 0) {
+      details = await getWallet(id: id);
+    }
+
+    return details;
   }
 
   Future<WalletDetails?> addWallet({
@@ -185,7 +204,7 @@ class SqliteWalletStorageService {
       address: address,
       name: name,
       publicKey: publicKey,
-      coin: (isMainNet)? Coin.mainNet : Coin.testNet,
+      coin: (isMainNet) ? Coin.mainNet : Coin.testNet,
     );
   }
 }
