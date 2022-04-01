@@ -15,7 +15,7 @@ class AssetPercentageChanged extends StatelessWidget {
       builder: (context, snapshot) {
         final list = snapshot.data?.graphItemList;
         if (list == null || list.length < 2) {
-          return PwText("\$0 (0.0%)");
+          return PwText("");
         } else {
           var last = list.last;
           var penultimate = list[list.length - 2];

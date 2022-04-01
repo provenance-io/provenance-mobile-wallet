@@ -37,7 +37,7 @@ class WalletPortfolio extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.data == null) {
                 return PwText(
-                  "\$-.--",
+                  "",
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.display1,
                 );
@@ -51,7 +51,7 @@ class WalletPortfolio extends StatelessWidget {
                     0;
               } else if (portfolioValue == 0) {
                 return PwText(
-                  "\$-.--",
+                  "",
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.display1,
                 );
