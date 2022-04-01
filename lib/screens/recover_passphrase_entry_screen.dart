@@ -14,11 +14,11 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
     this.flowType,
     this.accountName, {
     Key? key,
-    this.currentStep,
+    required this.currentStep,
     this.numberOfSteps,
   }) : super(key: key);
 
-  final int? currentStep;
+  final int currentStep;
   final int? numberOfSteps;
   final String accountName;
   final WalletAddImportType flowType;
@@ -69,7 +69,7 @@ class RecoverPassphraseEntryScreenState
         mainAxisSize: MainAxisSize.min,
         children: [
           ProgressStepper(
-            (widget.currentStep ?? 0),
+            widget.currentStep,
             widget.numberOfSteps ?? 1,
             padding: EdgeInsets.only(
               left: 20,
@@ -131,8 +131,7 @@ class RecoverPassphraseEntryScreenState
                                     Navigator.of(context).push(CreatePin(
                                       widget.flowType,
                                       accountName: widget.accountName,
-                                      currentStep:
-                                          (widget.currentStep ?? 0) + 1,
+                                      currentStep: widget.currentStep + 1,
                                       numberOfSteps: widget.numberOfSteps,
                                       words: words,
                                     ).route());
@@ -149,10 +148,10 @@ class RecoverPassphraseEntryScreenState
 
                                     ModalLoadingRoute.dismiss(context);
 
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    final steps = widget.currentStep;
+                                    for (var i = steps; i >= 1; i--) {
+                                      Navigator.pop(context);
+                                    }
                                   }
                                 }
                               },

@@ -13,14 +13,14 @@ class AccountName extends HookWidget {
     this.flowType, {
     Key? key,
     this.words,
-    this.currentStep,
+    required this.currentStep,
     this.numberOfSteps,
   }) : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final List<String>? words;
-  final int? currentStep;
+  final int currentStep;
   final int? numberOfSteps;
   final WalletAddImportType flowType;
 
@@ -45,7 +45,7 @@ class AccountName extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ProgressStepper(
-                currentStep ?? 0,
+                currentStep,
                 numberOfSteps ?? 1,
                 padding: EdgeInsets.only(
                   left: 20,
@@ -108,7 +108,7 @@ class AccountName extends HookWidget {
                           RecoverAccountScreen(
                             flowType,
                             accountNameProvider.text,
-                            currentStep: (currentStep ?? 0) + 1,
+                            currentStep: currentStep + 1,
                             numberOfSteps: numberOfSteps,
                           ).route(),
                         );
@@ -119,7 +119,7 @@ class AccountName extends HookWidget {
                           CreatePassphraseScreen(
                             flowType,
                             accountNameProvider.text,
-                            currentStep: (currentStep ?? 0) + 1,
+                            currentStep: currentStep + 1,
                             numberOfSteps: numberOfSteps,
                           ).route(),
                         );

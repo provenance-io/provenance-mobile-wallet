@@ -62,7 +62,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: [],
     ),
   );
-  final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
@@ -81,7 +80,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
   ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
-  ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
 
   @override
@@ -369,34 +367,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     get<LocalAuthHelper>().reset();
   }
 
-  Future<void> loadAllWallets() async {
-    final walletService = get<WalletService>();
-    final currentWallet = await walletService.getSelectedWallet();
-
-    var list = (await walletService.getWallets());
-    list.sort((a, b) {
-      if (b.address == currentWallet?.address) {
-        return 1;
-      } else if (a.address == currentWallet?.address) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    Map<WalletDetails, int> map = {};
-
-    for (var wallet in list) {
-      var assets = wallet.address == selectedWallet.value?.address
-          ? assetList.value
-          : (await _assetService.getAssets(wallet.coin, wallet.address));
-      map[wallet] = assets?.length ?? 1;
-    }
-
-    _walletMap.value = map;
-    _selectedWallet.value = currentWallet;
-  }
-
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
@@ -416,29 +386,22 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   void _onSelected(WalletDetails? details) {
     _selectedWallet.value = details;
     load();
-    loadAllWallets();
   }
 
   void _onRemoved(List<WalletDetails> removed) {
     if (removed.any((e) => e.id == _selectedWallet.value?.id)) {
       get<WalletService>().selectWallet();
     }
-
-    loadAllWallets();
   }
 
   void _onAdded(WalletDetails details) {
     _selectedWallet.value ??= details;
-
-    loadAllWallets();
   }
 
   void _onUpdated(WalletDetails details) {
     if (_selectedWallet.value?.id == details.id) {
       _selectedWallet.value = details;
     }
-
-    loadAllWallets();
   }
 
   Future<bool> _clearSessionData() {
