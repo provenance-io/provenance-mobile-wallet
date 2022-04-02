@@ -17,12 +17,12 @@ class WalletServiceEvents {
   final _added = PublishSubject<WalletDetails>();
   final _removed = PublishSubject<List<WalletDetails>>();
   final _updated = PublishSubject<WalletDetails>();
-  final _selected = PublishSubject<WalletDetails?>();
+  final _selected = BehaviorSubject<WalletDetails?>.seeded(null);
 
   Stream<WalletDetails> get added => _added;
   Stream<List<WalletDetails>> get removed => _removed;
   Stream<WalletDetails> get updated => _updated;
-  Stream<WalletDetails?> get selected => _selected;
+  ValueStream<WalletDetails?> get selected => _selected;
 
   void clear() {
     _subscriptions.clear();
@@ -54,6 +54,15 @@ class WalletService implements Disposable {
 
   final events = WalletServiceEvents();
 
+  Future<void> init() async {
+    final selected = await getSelectedWallet();
+    if (selected == null) {
+      selectWallet();
+    } else {
+      events._selected.add(selected);
+    }
+  }
+
   @override
   FutureOr onDispose() {
     events.dispose();
@@ -63,6 +72,8 @@ class WalletService implements Disposable {
     final details = await _storage.selectWallet(id: id);
 
     events._selected.add(details);
+
+    return details;
   }
 
   Future<WalletDetails?> getSelectedWallet() => _storage.getSelectedWallet();
@@ -80,6 +91,9 @@ class WalletService implements Disposable {
 
     if (details != null) {
       events._updated.add(details);
+      if (events.selected.value?.id == details.id) {
+        selectWallet(id: details.id);
+      }
     }
 
     return details;
@@ -116,6 +130,9 @@ class WalletService implements Disposable {
 
     if (details != null) {
       events._added.add(details);
+      if (events.selected.value == null) {
+        selectWallet(id: details.id);
+      }
     }
 
     return details;
@@ -127,6 +144,9 @@ class WalletService implements Disposable {
       final success = await _storage.removeWallet(id);
       if (success) {
         events._removed.add([details]);
+        if (events.selected.value?.id == id) {
+          selectWallet();
+        }
       } else {
         details = null;
       }
@@ -141,6 +161,7 @@ class WalletService implements Disposable {
     final success = await _storage.removeAllWallets();
     if (success) {
       events._removed.add(wallets);
+      events._selected.add(null);
     } else {
       wallets.clear();
     }

@@ -39,14 +39,10 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         .link
         .listen(_handleDynamicLink)
         .addTo(_subscriptions);
-    walletEvents.listen(get<WalletService>().events);
-    walletEvents.selected
+    _walletService.events.selected
         .distinct((a, b) => a?.id == b?.id)
         .listen(_onSelected)
         .addTo(_subscriptions);
-    walletEvents.removed.listen(_onRemoved).addTo(_subscriptions);
-    walletEvents.added.listen(_onAdded).addTo(_subscriptions);
-    walletEvents.updated.listen(_onUpdated).addTo(_subscriptions);
     delegateEvents.onClose
         .listen((_) => _clearSessionData())
         .addTo(_subscriptions);
@@ -62,13 +58,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: [],
     ),
   );
-  final _walletMap = BehaviorSubject.seeded(<WalletDetails, int>{});
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
-  final _selectedWallet = BehaviorSubject<WalletDetails?>.seeded(null);
   final _error = PublishSubject<String>();
 
   final _subscriptions = CompositeSubscription();
 
+  final _walletService = get<WalletService>();
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
@@ -76,18 +71,15 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   final delegateEvents = WalletConnectSessionDelegateEvents();
   final sessionEvents = WalletConnectSessionEvents();
-  final walletEvents = WalletServiceEvents();
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<List<Asset>?> get assetList => _assetList;
-  ValueStream<WalletDetails?> get selectedWallet => _selectedWallet.stream;
-  ValueStream<Map<WalletDetails, int>> get walletMap => _walletMap;
   Stream<String> get error => _error;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      final walletId = _selectedWallet.value?.id;
+      final walletId = _walletService.events.selected.value?.id;
       final sessionStatus = _walletSession?.sessionEvents.state.value.status ??
           WalletConnectSessionStatus.disconnected;
       final authStatus = get<LocalAuthHelper>().status.value;
@@ -104,25 +96,21 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     }
   }
 
-  Future<void> load({TabController? tabController}) async {
-    final isFirstLoad = _isFirstLoad;
-    _isFirstLoad = false;
-
-    final walletService = get<WalletService>();
-    var wallet = await walletService.getSelectedWallet();
-    wallet ??= await walletService.selectWallet();
-
-    _selectedWallet.tryAdd(wallet);
-
-    final walletId = wallet?.id;
-    if (walletId != null && isFirstLoad) {
-      tryRestoreSession(walletId);
-    }
+  Future<void> load() async {
+    final wallet = _walletService.events.selected.value;
 
     var assetList = <Asset>[];
     var transactions = <Transaction>[];
 
     if (wallet != null) {
+      final isFirstLoad = _isFirstLoad;
+      _isFirstLoad = false;
+
+      final walletId = wallet.id;
+      if (isFirstLoad) {
+        tryRestoreSession(walletId);
+      }
+
       assetList = await _assetService.getAssets(
         wallet.coin,
         wallet.address,
@@ -138,14 +126,11 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     _transactionDetails.tryAdd(
       TransactionDetails(
-        walletAddress: wallet?.address ?? "",
+        walletAddress: wallet?.address ?? '',
         filteredTransactions: transactions,
         transactions: transactions.toList(),
       ),
     );
-
-    transactionDetails.value.transactions =
-        transactionDetails.value.filteredTransactions = [];
   }
 
   void filterTransactions(String denom, String status) {
@@ -166,7 +151,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
           .toList();
     }
     _transactionDetails.value = TransactionDetails(
-      walletAddress: _selectedWallet.value?.address ?? "",
+      walletAddress: _walletService.events.selected.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
@@ -205,7 +190,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       return false;
     }
 
-    final walletDetails = _selectedWallet.value!;
+    final walletDetails = _walletService.events.selected.value!;
     final connection = get<WalletConnectionFactory>().call(address);
     final remoteNotificationService = get<RemoteNotificationService>();
 
@@ -369,40 +354,11 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     get<LocalAuthHelper>().reset();
   }
 
-  Future<void> loadAllWallets() async {
-    final walletService = get<WalletService>();
-    final currentWallet = await walletService.getSelectedWallet();
-
-    var list = (await walletService.getWallets());
-    list.sort((a, b) {
-      if (b.address == currentWallet?.address) {
-        return 1;
-      } else if (a.address == currentWallet?.address) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    Map<WalletDetails, int> map = {};
-
-    for (var wallet in list) {
-      var assets = wallet.address == selectedWallet.value?.address
-          ? assetList.value
-          : (await _assetService.getAssets(wallet.coin, wallet.address));
-      map[wallet] = assets?.length ?? 1;
-    }
-
-    _walletMap.value = map;
-    _selectedWallet.value = currentWallet;
-  }
-
   @override
   FutureOr onDispose() {
     _subscriptions.dispose();
     delegateEvents.dispose();
     sessionEvents.dispose();
-    walletEvents.dispose();
 
     _assetList.close();
 
@@ -414,31 +370,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   void _onSelected(WalletDetails? details) {
-    _selectedWallet.value = details;
     load();
-    loadAllWallets();
-  }
-
-  void _onRemoved(List<WalletDetails> removed) {
-    if (removed.any((e) => e.id == _selectedWallet.value?.id)) {
-      get<WalletService>().selectWallet();
-    }
-
-    loadAllWallets();
-  }
-
-  void _onAdded(WalletDetails details) {
-    _selectedWallet.value ??= details;
-
-    loadAllWallets();
-  }
-
-  void _onUpdated(WalletDetails details) {
-    if (_selectedWallet.value?.id == details.id) {
-      _selectedWallet.value = details;
-    }
-
-    loadAllWallets();
   }
 
   Future<bool> _clearSessionData() {
@@ -463,7 +395,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       final addressData = Uri.decodeComponent(data);
       final walletService = get<WalletService>();
       final isValid = await walletService.isValidWalletConnectData(addressData);
-      final walletId = _selectedWallet.value?.id;
+      final walletId = _walletService.events.selected.value?.id;
       if (isValid && walletId != null) {
         connectSession(walletId, addressData);
       } else {

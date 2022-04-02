@@ -73,11 +73,8 @@ void main() async {
   final sqliteStorage = SqliteWalletStorageService();
   final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
 
-  get.registerLazySingleton<WalletService>(
-    () => WalletService(
-      storage: walletStorage,
-    ),
-  );
+  final walletService = WalletService(storage: walletStorage)..init();
+  get.registerSingleton<WalletService>(walletService);
 
   final authHelper = LocalAuthHelper();
   await authHelper.init();
