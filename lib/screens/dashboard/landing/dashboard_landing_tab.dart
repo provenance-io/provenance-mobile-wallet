@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -30,6 +31,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
   @override
   Widget build(BuildContext context) {
     final bloc = get<DashboardBloc>();
+    final walletService = get<WalletService>();
 
     return Container(
       decoration: BoxDecoration(
@@ -71,7 +73,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                               builder: (context) => ConnectionDetailsModal(),
                             );
                           } else {
-                            final walletId = bloc.selectedWallet.value?.id;
+                            final walletId =
+                                walletService.events.selected.value?.id;
                             if (walletId != null) {
                               final success =
                                   await bloc.tryRestoreSession(walletId);
@@ -111,8 +114,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StreamBuilder<WalletDetails?>(
-                    initialData: bloc.selectedWallet.value,
-                    stream: bloc.selectedWallet,
+                    initialData: walletService.events.selected.value,
+                    stream: walletService.events.selected,
                     builder: (context, snapshot) {
                       final walletName = snapshot.data?.name ?? "";
 
@@ -124,8 +127,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     },
                   ),
                   StreamBuilder<WalletDetails?>(
-                    initialData: bloc.selectedWallet.value,
-                    stream: bloc.selectedWallet,
+                    initialData: walletService.events.selected.value,
+                    stream: walletService.events.selected,
                     builder: (context, snapshot) {
                       final walletAddress = snapshot.data?.address ?? "";
 
@@ -217,7 +220,8 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                final coin = bloc.selectedWallet.value?.coin;
+                                final coin =
+                                    walletService.events.selected.value?.coin;
                                 if (coin != null) {
                                   get<DashboardAssetBloc>()
                                       .openAsset(coin, item);

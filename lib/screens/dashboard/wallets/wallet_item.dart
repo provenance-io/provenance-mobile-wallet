@@ -22,11 +22,11 @@ class WalletItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bloc = get<DashboardBloc>();
+    final walletService = get<WalletService>();
 
     return StreamBuilder<WalletDetails?>(
-      initialData: bloc.selectedWallet.value,
-      stream: bloc.selectedWallet,
+      initialData: walletService.events.selected.value,
+      stream: walletService.events.selected,
       builder: (context, snapshot) {
         final isSelected = item.id == snapshot.data?.id;
 
