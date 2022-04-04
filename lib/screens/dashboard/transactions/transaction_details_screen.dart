@@ -49,8 +49,9 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Message Type",
+              title: Strings.tradeDetailsMessageType,
               endChild: PwText(
+                // TODO: Fix this when we get the message type.
                 "Send",
                 style: PwTextStyle.body,
               ),
@@ -79,7 +80,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Result",
+              title: Strings.tradeDetailsResult,
               endChild: PwText(
                 transaction.status,
                 style: PwTextStyle.body,
