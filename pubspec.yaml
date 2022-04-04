@@ -23,6 +23,7 @@ environment:
 dependencies:
   badges: ^2.0.1
   collection: ^1.15.0
+  connectivity_plus: ^2.2.1
   cupertino_icons: ^1.0.2
   decimal: ^2.1.0
   dio: ^4.0.0
@@ -59,7 +60,6 @@ dependencies:
   flutter_switch: ^0.3.2
   fl_chart: ^0.45.1
   flutter_phoenix: ^1.0.0
-  connectivity_plus: ^2.2.1
 
 # dependency_overrides: #this can be removed when we update to flutter > 2.8.1
 #   firebase_messaging_platform_interface: 3.1.6
