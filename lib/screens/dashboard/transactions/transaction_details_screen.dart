@@ -49,6 +49,55 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
+              title: "Message Type",
+              endChild: PwText(
+                "Send",
+                style: PwTextStyle.body,
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.tradeDetailsTimeStamp,
+              endChild: PwText(
+                transaction.formattedTime,
+                style: PwTextStyle.body,
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.tradeDetailsFee,
+              endChild: PwText(
+                transaction.displayFee,
+                style: PwTextStyle.body,
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: "Result",
+              endChild: PwText(
+                transaction.status,
+                style: PwTextStyle.body,
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.tradeDetailsBlock,
+              endChild: PwText(
+                transaction.block.toString(),
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
               title: Strings.tradeDetailsTransaction,
               endChild: Row(
                 children: [
@@ -79,46 +128,6 @@ class TransactionDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: "Result",
-              endChild: PwText(
-                transaction.status,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: "Message Type",
-              endChild: PwText(
-                "Send",
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsFee,
-              endChild: PwText(
-                transaction.displayFee,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsTimeStamp,
-              endChild: PwText(
-                transaction.formattedTime,
-                style: PwTextStyle.body,
               ),
             ),
           ],
