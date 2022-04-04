@@ -10,8 +10,8 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class TradeDetailsScreen extends StatelessWidget {
-  const TradeDetailsScreen({
+class TransactionDetailsScreen extends StatelessWidget {
+  const TransactionDetailsScreen({
     Key? key,
     required this.transaction,
   }) : super(key: key);
