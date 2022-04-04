@@ -2,10 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +20,7 @@ class TradeDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<DashboardBloc>();
+    final walletService = get<WalletService>();
 
     return Scaffold(
       appBar: PwAppBar(
@@ -34,8 +34,8 @@ class TradeDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsWallet,
               endChild: StreamBuilder<WalletDetails?>(
-                initialData: bloc.selectedWallet.value,
-                stream: bloc.selectedWallet,
+                initialData: walletService.events.selected.value,
+                stream: walletService.events.selected,
                 builder: (context, snapshot) {
                   final walletName = snapshot.data?.name ?? "";
 
@@ -122,8 +122,8 @@ class TradeDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsToAddress,
               endChild: StreamBuilder<WalletDetails?>(
-                initialData: bloc.selectedWallet.value,
-                stream: bloc.selectedWallet,
+                initialData: walletService.events.selected.value,
+                stream: walletService.events.selected,
                 builder: (context, snapshot) {
                   return Row(
                     children: [

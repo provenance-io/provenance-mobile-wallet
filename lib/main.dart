@@ -73,11 +73,8 @@ void main() async {
   final sqliteStorage = SqliteWalletStorageService();
   final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
 
-  get.registerLazySingleton<WalletService>(
-    () => WalletService(
-      storage: walletStorage,
-    ),
-  );
+  final walletService = WalletService(storage: walletStorage)..init();
+  get.registerSingleton<WalletService>(walletService);
 
   final authHelper = LocalAuthHelper();
   await authHelper.init();
@@ -155,15 +152,19 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<HttpClient>(
-      () => HttpClient(),
+    get.registerLazySingleton<MainHttpClient>(
+      () => MainHttpClient(),
+    );
+
+    get.registerLazySingleton<TestHttpClient>(
+      () => TestHttpClient(),
     );
 
     keyValueService.streamBool(PrefKey.httpClientDiagnostics500).listen((e) {
       final doError = e ?? false;
-      final client = get<HttpClient>();
       final statusCode = doError ? HttpStatus.internalServerError : null;
-      client.setDiagnosticsError(statusCode);
+      get<MainHttpClient>().setDiagnosticsError(statusCode);
+      get<TestHttpClient>().setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
     get.registerLazySingleton<StatService>(

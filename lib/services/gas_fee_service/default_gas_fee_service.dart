@@ -1,18 +1,20 @@
+import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/gas_fee.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/util/get.dart';
 
-class DefaultGasFeeService extends GasFeeService with ClientNotificationMixin {
-  String get _assetServiceBasePath =>
+class DefaultGasFeeService extends GasFeeService
+    with ClientNotificationMixin, ClientCoinMixin {
+  String get _path =>
       '/service-mobile-wallet/external/api/v1/pricing/gas-price';
 
   @override
-  Future<GasFee?> getGasFee() async {
-    final data = await get<HttpClient>().get(
-      _assetServiceBasePath,
+  Future<GasFee?> getGasFee(Coin coin) async {
+    final client = getClient(coin);
+    final data = await client.get(
+      _path,
       converter: (json) {
         if (json is String) {
           return null;

@@ -10,8 +10,10 @@ import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart'
 import 'package:provenance_wallet/screens/dashboard/profile/developer_menu.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -114,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               StreamBuilder<WalletDetails?>(
-                stream: get<DashboardBloc>().selectedWallet,
+                stream: get<WalletService>().events.selected,
                 initialData: null,
                 builder: (context, snapshot) {
                   var accountName = snapshot.data?.name ?? "";
@@ -162,6 +164,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: Strings.moreInformation,
                 onTap: () {
                   launchUrl('https://docs.provenance.io/');
+                },
+              ),
+              _divider,
+              StreamBuilder<bool?>(
+                initialData:
+                    _keyValueService.streamBool(PrefKey.showAdvancedUI).value,
+                stream: _keyValueService.streamBool(PrefKey.showAdvancedUI),
+                builder: (context, snapshot) {
+                  final show = snapshot.data;
+                  if (show == null) {
+                    return Container();
+                  }
+
+                  return ToggleItem(
+                    text: Strings.profileShowAdvancedUI,
+                    value: show,
+                    onChanged: (value) =>
+                        _keyValueService.setBool(PrefKey.showAdvancedUI, value),
+                  );
                 },
               ),
               if (_showDevMenu) _divider,

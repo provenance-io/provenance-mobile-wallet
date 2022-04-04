@@ -11,13 +11,13 @@ class RecoverAccountScreen extends StatelessWidget {
     this.flowType,
     this.accountName, {
     Key? key,
-    this.currentStep,
+    required this.currentStep,
     this.numberOfSteps,
   }) : super(key: key);
 
   final WalletAddImportType flowType;
   final String accountName;
-  final int? currentStep;
+  final int currentStep;
   final int? numberOfSteps;
 
   @override
@@ -34,7 +34,7 @@ class RecoverAccountScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProgressStepper(
-              currentStep ?? 0,
+              currentStep,
               numberOfSteps ?? 1,
               padding: EdgeInsets.only(
                 left: 20,
@@ -85,7 +85,7 @@ class RecoverAccountScreen extends StatelessWidget {
                     Navigator.of(context).push(RecoverPassphraseEntryScreen(
                       flowType,
                       accountName,
-                      currentStep: currentStep,
+                      currentStep: currentStep + 1,
                       numberOfSteps: numberOfSteps,
                     ).route());
                   }
