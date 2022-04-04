@@ -57,8 +57,11 @@ class Strings {
 
   // Notifications
   static const String notifyServiceErrorTitle = 'Service Error';
+  static const notifyNetworkErrorTitle = 'Network Disconnected';
   static const notifyServiceErrorMessage =
       'Unfortunately our services are down at the moment';
+  static const notifyNetworkErrorMessage =
+      'It appears as though no network is connected.';
 
   // Landing Page
   static const createWallet = 'Create Wallet';
@@ -363,11 +366,12 @@ class Strings {
   // AssetChartScreen
   static const statistics = "Statistics";
   static const dayVolume = "Day Volume";
-  static const changeAmount = "Change Amount";
+  static const currentPrice = "Current Price";
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
+  static const assetChartNotAvailable = "Not Available";
 
   // SendSuccessScreen
   static const sendSuccessTransferDetailsBelow =

@@ -12,6 +12,9 @@ class AssetDto {
     required this.exponent,
     required this.displayAmount,
     required this.usdPrice,
+    this.dailyHigh,
+    this.dailyLow,
+    this.dailyVolume,
   });
 
   final String? denom;
@@ -21,6 +24,9 @@ class AssetDto {
   final int? exponent;
   final String? displayAmount;
   final double? usdPrice;
+  final double? dailyHigh;
+  final double? dailyLow;
+  final double? dailyVolume;
 
   // ignore: member-ordering
   factory AssetDto.fromJson(Map<String, dynamic> json) =>

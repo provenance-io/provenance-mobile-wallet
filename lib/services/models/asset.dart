@@ -19,7 +19,10 @@ class Asset {
         displayAmount = dto.displayAmount!,
         description = dto.description!,
         exponent = dto.exponent!,
-        usdPrice = dto.usdPrice!;
+        usdPrice = dto.usdPrice!,
+        dailyHigh = dto.dailyHigh,
+        dailyLow = dto.dailyLow,
+        dailyVolume = dto.dailyVolume;
 
   Asset.fake({
     required this.denom,
@@ -29,6 +32,9 @@ class Asset {
     required this.exponent,
     required this.displayAmount,
     required this.usdPrice,
+    this.dailyHigh,
+    this.dailyLow,
+    this.dailyVolume,
   });
 
   final String denom;
@@ -38,6 +44,9 @@ class Asset {
   final int exponent;
   final String displayAmount;
   final double usdPrice;
+  final double? dailyHigh;
+  final double? dailyLow;
+  final double? dailyVolume;
 
   String get image {
     switch (display) {
