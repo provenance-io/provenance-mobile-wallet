@@ -132,6 +132,7 @@ class Strings {
   static const profileDeveloperServiceMocks = 'Service Mocks';
   static const profileDeveloperConnectLabel = 'Connect';
   static const profileDeveloperConnectInvalidAddress = 'Invalid address';
+  static const profileShowAdvancedUI = 'Show Advanced UI';
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";
@@ -368,11 +369,12 @@ class Strings {
   // AssetChartScreen
   static const statistics = "Statistics";
   static const dayVolume = "Day Volume";
-  static const changeAmount = "Change Amount";
+  static const currentPrice = "Current Price";
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
+  static const assetChartNotAvailable = "Not Available";
 
   // SendSuccessScreen
   static const sendSuccessTransferDetailsBelow =

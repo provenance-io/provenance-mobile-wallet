@@ -115,11 +115,35 @@ class InMemoryWalletStorageService implements WalletStorageService {
         id: old.details.id,
         address: old.details.address,
         name: name,
-        publicKey: "",
+        publicKey: old.details.publicKey,
         coin: Coin.testNet,
       );
       _datas[index] = InMemoryStorageData(renamed, old.key);
       result = renamed;
+    }
+
+    return result;
+  }
+
+  @override
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  }) async {
+    WalletDetails? result;
+
+    final index = _datas.indexWhere((e) => e.details.id == id);
+    if (index != -1) {
+      final old = _datas[index];
+      final updated = WalletDetails(
+        id: old.details.id,
+        address: old.details.address,
+        name: old.details.name,
+        publicKey: old.details.publicKey,
+        coin: coin,
+      );
+      _datas[index] = InMemoryStorageData(updated, old.key);
+      result = updated;
     }
 
     return result;

@@ -2,23 +2,24 @@
 // in provenance_wallet/test/screens/send_flow/send_amount/send_amount_bloc_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i6;
+import 'dart:async' as _i7;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i4;
-import 'package:provenance_dart/wallet.dart' as _i9;
+import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
-    as _i7;
+    as _i8;
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
-    as _i5;
-import 'package:provenance_wallet/services/models/price.dart' as _i12;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i8;
+    as _i6;
+import 'package:provenance_wallet/services/http_client.dart' as _i5;
+import 'package:provenance_wallet/services/models/price.dart' as _i13;
+import 'package:provenance_wallet/services/models/wallet_details.dart' as _i9;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i11;
+    as _i12;
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart'
-    as _i10;
+    as _i11;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
 
@@ -41,22 +42,24 @@ class _FakeWalletGasEstimate_1 extends _i1.Fake
 class _FakeRawTxResponsePair_2 extends _i1.Fake
     implements _i4.RawTxResponsePair {}
 
+class _FakeHttpClient_3 extends _i1.Fake implements _i5.HttpClient {}
+
 /// A class which mocks [SendAmountBlocNavigator].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSendAmountBlocNavigator extends _i1.Mock
-    implements _i5.SendAmountBlocNavigator {
+    implements _i6.SendAmountBlocNavigator {
   MockSendAmountBlocNavigator() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<void> showReviewSend(
-          _i7.SendAsset? amountToSend, _i7.MultiSendAsset? fee, String? note) =>
+  _i7.Future<void> showReviewSend(
+          _i8.SendAsset? amountToSend, _i8.MultiSendAsset? fee, String? note) =>
       (super.noSuchMethod(
           Invocation.method(#showReviewSend, [amountToSend, fee, note]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
 }
 
 /// A class which mocks [WalletService].
@@ -72,98 +75,114 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
       Invocation.getter(#events),
       returnValue: _FakeWalletServiceEvents_0()) as _i2.WalletServiceEvents);
   @override
-  _i6.Future<_i8.WalletDetails?> selectWallet({String? id}) =>
+  _i7.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
+  @override
+  _i7.Future<_i9.WalletDetails?> selectWallet({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectWallet, [], {#id: id}),
-              returnValue: Future<_i8.WalletDetails?>.value())
-          as _i6.Future<_i8.WalletDetails?>);
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
   @override
-  _i6.Future<_i8.WalletDetails?> getSelectedWallet() =>
+  _i7.Future<_i9.WalletDetails?> getSelectedWallet() =>
       (super.noSuchMethod(Invocation.method(#getSelectedWallet, []),
-              returnValue: Future<_i8.WalletDetails?>.value())
-          as _i6.Future<_i8.WalletDetails?>);
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
   @override
-  _i6.Future<List<_i8.WalletDetails>> getWallets() =>
+  _i7.Future<List<_i9.WalletDetails>> getWallets() =>
       (super.noSuchMethod(Invocation.method(#getWallets, []),
               returnValue:
-                  Future<List<_i8.WalletDetails>>.value(<_i8.WalletDetails>[]))
-          as _i6.Future<List<_i8.WalletDetails>>);
+                  Future<List<_i9.WalletDetails>>.value(<_i9.WalletDetails>[]))
+          as _i7.Future<List<_i9.WalletDetails>>);
   @override
-  _i6.Future<_i8.WalletDetails?> renameWallet({String? id, String? name}) =>
+  _i7.Future<_i9.WalletDetails?> renameWallet({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameWallet, [], {#id: id, #name: name}),
-              returnValue: Future<_i8.WalletDetails?>.value())
-          as _i6.Future<_i8.WalletDetails?>);
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
   @override
-  _i6.Future<_i8.WalletDetails?> addWallet(
+  _i7.Future<_i9.WalletDetails?> setWalletCoin({String? id, _i10.Coin? coin}) =>
+      (super.noSuchMethod(
+              Invocation.method(#setWalletCoin, [], {#id: id, #coin: coin}),
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
+  @override
+  _i7.Future<_i9.WalletDetails?> addWallet(
           {List<String>? phrase,
           String? name,
-          _i9.Coin? coin = _i9.Coin.testNet}) =>
+          _i10.Coin? coin = _i10.Coin.testNet}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWallet, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: Future<_i8.WalletDetails?>.value())
-          as _i6.Future<_i8.WalletDetails?>);
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
   @override
-  _i6.Future<_i8.WalletDetails?> removeWallet({String? id}) =>
+  _i7.Future<_i9.WalletDetails?> removeWallet({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeWallet, [], {#id: id}),
-              returnValue: Future<_i8.WalletDetails?>.value())
-          as _i6.Future<_i8.WalletDetails?>);
+              returnValue: Future<_i9.WalletDetails?>.value())
+          as _i7.Future<_i9.WalletDetails?>);
   @override
-  _i6.Future<List<_i8.WalletDetails>> resetWallets() =>
+  _i7.Future<List<_i9.WalletDetails>> resetWallets() =>
       (super.noSuchMethod(Invocation.method(#resetWallets, []),
               returnValue:
-                  Future<List<_i8.WalletDetails>>.value(<_i8.WalletDetails>[]))
-          as _i6.Future<List<_i8.WalletDetails>>);
+                  Future<List<_i9.WalletDetails>>.value(<_i9.WalletDetails>[]))
+          as _i7.Future<List<_i9.WalletDetails>>);
   @override
-  _i6.Future<_i9.PrivateKey?> loadKey(String? walletId) =>
+  _i7.Future<_i10.PrivateKey?> loadKey(String? walletId) =>
       (super.noSuchMethod(Invocation.method(#loadKey, [walletId]),
-              returnValue: Future<_i9.PrivateKey?>.value())
-          as _i6.Future<_i9.PrivateKey?>);
+              returnValue: Future<_i10.PrivateKey?>.value())
+          as _i7.Future<_i10.PrivateKey?>);
   @override
-  _i6.Future<bool> isValidWalletConnectData(String? qrData) => (super
+  _i7.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
 /// A class which mocks [WalletConnectTransactionHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletConnectTransactionHandler extends _i1.Mock
-    implements _i10.WalletConnectTransactionHandler {
+    implements _i11.WalletConnectTransactionHandler {
   MockWalletConnectTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i3.WalletGasEstimate> estimateGas(
-          _i4.TxBody? txBody, _i9.PublicKey? publicKey) =>
+  _i7.Future<_i3.WalletGasEstimate> estimateGas(
+          _i4.TxBody? txBody, _i10.PublicKey? publicKey) =>
       (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, publicKey]),
               returnValue: Future<_i3.WalletGasEstimate>.value(
                   _FakeWalletGasEstimate_1()))
-          as _i6.Future<_i3.WalletGasEstimate>);
+          as _i7.Future<_i3.WalletGasEstimate>);
   @override
-  _i6.Future<_i4.RawTxResponsePair> executeTransaction(
-          _i4.TxBody? txBody, _i9.PrivateKey? privateKey,
+  _i7.Future<_i4.RawTxResponsePair> executeTransaction(
+          _i4.TxBody? txBody, _i10.PrivateKey? privateKey,
           [_i3.WalletGasEstimate? gasEstimate]) =>
       (super.noSuchMethod(
               Invocation.method(
                   #executeTransaction, [txBody, privateKey, gasEstimate]),
               returnValue: Future<_i4.RawTxResponsePair>.value(
                   _FakeRawTxResponsePair_2()))
-          as _i6.Future<_i4.RawTxResponsePair>);
+          as _i7.Future<_i4.RawTxResponsePair>);
 }
 
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i11.PriceService {
+class MockPriceService extends _i1.Mock implements _i12.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<List<_i12.Price>> getAssetPrices(List<String>? denominations) =>
-      (super.noSuchMethod(Invocation.method(#getAssetPrices, [denominations]),
-              returnValue: Future<List<_i12.Price>>.value(<_i12.Price>[]))
-          as _i6.Future<List<_i12.Price>>);
+  _i7.Future<List<_i13.Price>> getAssetPrices(
+          _i10.Coin? coin, List<String>? denominations) =>
+      (super.noSuchMethod(
+              Invocation.method(#getAssetPrices, [coin, denominations]),
+              returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
+          as _i7.Future<List<_i13.Price>>);
+  @override
+  _i5.HttpClient getClient(_i10.Coin? coin) =>
+      (super.noSuchMethod(Invocation.method(#getClient, [coin]),
+          returnValue: _FakeHttpClient_3()) as _i5.HttpClient);
 }

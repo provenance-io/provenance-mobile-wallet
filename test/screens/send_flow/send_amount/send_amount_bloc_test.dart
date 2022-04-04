@@ -49,7 +49,7 @@ main() {
         .thenAnswer((_) => Future.value(feeAmount));
 
     mockPriceService = MockPriceService();
-    when(mockPriceService!.getAssetPrices(any))
+    when(mockPriceService!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<WalletConnectTransactionHandler>(

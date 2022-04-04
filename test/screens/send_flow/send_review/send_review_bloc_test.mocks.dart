@@ -63,6 +63,10 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
       Invocation.getter(#events),
       returnValue: _FakeWalletServiceEvents_0()) as _i2.WalletServiceEvents);
   @override
+  _i6.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+  @override
   _i6.Future<_i7.WalletDetails?> selectWallet({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectWallet, [], {#id: id}),
               returnValue: Future<_i7.WalletDetails?>.value())
@@ -82,6 +86,12 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
   _i6.Future<_i7.WalletDetails?> renameWallet({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameWallet, [], {#id: id, #name: name}),
+              returnValue: Future<_i7.WalletDetails?>.value())
+          as _i6.Future<_i7.WalletDetails?>);
+  @override
+  _i6.Future<_i7.WalletDetails?> setWalletCoin({String? id, _i8.Coin? coin}) =>
+      (super.noSuchMethod(
+              Invocation.method(#setWalletCoin, [], {#id: id, #coin: coin}),
               returnValue: Future<_i7.WalletDetails?>.value())
           as _i6.Future<_i7.WalletDetails?>);
   @override

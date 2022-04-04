@@ -2,6 +2,7 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -62,7 +63,7 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
     final error = _validate(value);
     if (error == null) {
       final bloc = get<DashboardBloc>();
-      final walletId = bloc.selectedWallet.value?.id;
+      final walletId = get<WalletService>().events.selected.value?.id;
       if (walletId != null) {
         bloc.connectSession(walletId, value);
       }

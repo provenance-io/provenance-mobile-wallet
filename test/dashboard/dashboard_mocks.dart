@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_statistics_dto.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
-import 'package:provenance_wallet/services/models/asset_statistic.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,27 +26,16 @@ class MockAssetService implements AssetService {
   final Map<String, List<Asset>> _assets;
 
   @override
-  Future<List<Asset>> getAssets(String provenanceAddresses) =>
+  Future<List<Asset>> getAssets(Coin coin, String provenanceAddresses) =>
       Future.value(_assets[provenanceAddresses] ?? []);
 
   @override
   Future<List<AssetGraphItem>> getAssetGraphingData(
+    Coin coin,
     String assetType,
     GraphingDataValue value,
   ) async {
     return [];
-  }
-
-  @override
-  Future<AssetStatistics> getAssetStatistics(String assetType) async {
-    return AssetStatistics(
-      dto: AssetStatisticsDto(
-        amountChange: 0,
-        dayVolume: 0,
-        dayHigh: 0,
-        dayLow: 0,
-      ),
-    );
   }
 }
 
@@ -57,7 +45,10 @@ class MockTransactionService implements TransactionService {
   final Map<String, List<Transaction>> _transactions;
 
   @override
-  Future<List<Transaction>> getTransactions(String provenanceAddress) =>
+  Future<List<Transaction>> getTransactions(
+    Coin coin,
+    String provenanceAddress,
+  ) =>
       Future.value(_transactions[provenanceAddress] ?? []);
 }
 

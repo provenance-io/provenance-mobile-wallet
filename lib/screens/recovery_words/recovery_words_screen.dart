@@ -52,12 +52,10 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
         title: Strings.recoveryPassphrase,
         leadingIcon: PwIcons.back,
       ),
-      body: Container(
-        color: Theme.of(context).colorScheme.neutral750,
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints.tight(MediaQuery.of(context).size),
+      backgroundColor: Theme.of(context).colorScheme.neutral750,
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -171,7 +169,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

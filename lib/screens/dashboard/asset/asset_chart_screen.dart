@@ -1,10 +1,12 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
+import 'package:provenance_wallet/screens/dashboard/asset/asset_percentage_changed.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -12,10 +14,12 @@ import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
   const AssetChartScreen(
+    this.coin,
     this.asset, {
     Key? key,
   }) : super(key: key);
 
+  final Coin coin;
   final Asset asset;
 
   @override
@@ -28,7 +32,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
   @override
   void initState() {
     if (!get.isRegistered<AssetChartBloc>()) {
-      final bloc = AssetChartBloc(widget.asset);
+      final bloc = AssetChartBloc(widget.coin, widget.asset);
       get.registerSingleton(bloc);
       _bloc = bloc..load();
     } else {
@@ -120,14 +124,12 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         ),
                       ],
                     ),
-                    // TODO: This is demo text, to be replaced by a service.
-                    // ignore: dead_code
-                    if (false) PwText("↑ \$0.008 (0.10%)"),
+                    AssetPercentageChanged(),
                     AssetBarChart(),
                     VerticalSpacer.medium(),
                     AssetBarChartButtons(),
-                    if (!details.isComingSoon) VerticalSpacer.xxLarge(),
-                    if (!details.isComingSoon) AssetChartStatistics(),
+                    VerticalSpacer.xxLarge(),
+                    AssetChartStatistics(),
                     VerticalSpacer.xxLarge(),
                     AssetChartRecentTransactions(),
                   ],

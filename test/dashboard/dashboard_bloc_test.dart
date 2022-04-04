@@ -42,8 +42,9 @@ void main() {
       );
 
       final bloc = state.bloc;
+      final walletService = state.walletService;
 
-      expect(bloc.selectedWallet.value?.id, '0');
+      expect(walletService.events.selected.value?.id, '0');
       expect(bloc.assetList.value!.first.amount, '0');
       expect(bloc.transactionDetails.value.transactions.first.amount, 0);
     },
@@ -56,9 +57,9 @@ void main() {
       maxWalletId: maxWalletId,
     );
 
-    final bloc = state.bloc;
+    final walletService = state.walletService;
 
-    expect(bloc.selectedWallet.value, isNull);
+    expect(walletService.events.selected.value, isNull);
   });
 
   test(
@@ -72,12 +73,13 @@ void main() {
       );
 
       final bloc = state.bloc;
+      final walletService = state.walletService;
 
       await bloc.selectWallet(id: maxWalletId.toString());
 
       await pumpEventQueue();
 
-      expect(bloc.selectedWallet.value!.id, maxWalletIdStr);
+      expect(walletService.events.selected.value!.id, maxWalletIdStr);
       expect(bloc.assetList.value!.first.amount, maxWalletIdStr);
       expect(
         bloc.transactionDetails.value.transactions.first.amount,
@@ -92,6 +94,7 @@ void main() {
     );
 
     final bloc = state.bloc;
+    final walletService = state.walletService;
 
     const newName = 'new';
 
@@ -99,7 +102,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(bloc.selectedWallet.value!.name, newName);
+    expect(walletService.events.selected.value!.name, newName);
   });
 
   test('Remove selected wallet updates selected wallet', () async {
@@ -107,13 +110,13 @@ void main() {
       maxWalletId: 1,
     );
 
-    final bloc = state.bloc;
+    final walletService = state.walletService;
 
     await state.walletService.removeWallet(id: '0');
 
     await pumpEventQueue();
 
-    expect(bloc.selectedWallet.value!.id, '1');
+    expect(walletService.events.selected.value!.id, '1');
   });
 
   test('Remove non-selected wallet does not update selected wallet', () async {
@@ -122,13 +125,14 @@ void main() {
     );
 
     final bloc = state.bloc;
+    final walletService = state.walletService;
 
     await bloc.selectWallet(id: '0');
-    await state.walletService.removeWallet(id: '1');
+    await walletService.removeWallet(id: '1');
 
     await pumpEventQueue();
 
-    expect(bloc.selectedWallet.value!.id, '0');
+    expect(walletService.events.selected.value!.id, '0');
   });
 
   test('Reset wallets removes selected wallet', () async {
@@ -137,12 +141,13 @@ void main() {
     );
 
     final bloc = state.bloc;
+    final walletService = state.walletService;
 
     await bloc.resetWallets();
 
     await pumpEventQueue();
 
-    expect(bloc.selectedWallet.value, isNull);
+    expect(walletService.events.selected.value, isNull);
   });
 
   test('Connect wallet requests session', () async {
@@ -221,6 +226,7 @@ class TestState {
     final state = await create(maxWalletId: maxWalletId);
 
     final bloc = state.bloc;
+    final walletService = state.walletService;
 
     final connectedCompleter = Completer();
 
@@ -232,7 +238,7 @@ class TestState {
       connectedCompleter.complete();
     });
 
-    final walletId = bloc.selectedWallet.value!.id;
+    final walletId = walletService.events.selected.value!.id;
 
     await bloc.connectSession(walletId, walletConnectAddress);
 
@@ -309,7 +315,7 @@ class TestState {
       storage: InMemoryWalletStorageService(
         datas: storageDatas,
       ),
-    );
+    )..init();
     final keyValueService = MemoryKeyValueService();
     walletConnectionFactory(WalletConnectAddress address) {
       return MockWalletConnection(address);
@@ -333,8 +339,6 @@ class TestState {
     get.registerSingleton(authHelper);
 
     final bloc = DashboardBloc();
-
-    await bloc.load();
 
     await pumpEventQueue();
 
