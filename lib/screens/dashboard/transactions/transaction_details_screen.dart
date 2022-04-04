@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -86,83 +85,9 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsFromAddress,
-              endChild: Row(
-                children: [
-                  PwText(
-                    transaction.senderAddress.abbreviateAddress(),
-                    style: PwTextStyle.body,
-                  ),
-                  HorizontalSpacer.large(),
-                  GestureDetector(
-                    onTap: () {
-                      Clipboard.setData(
-                        ClipboardData(text: transaction.senderAddress),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: PwText(Strings.addressCopied)),
-                      );
-                    },
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: PwIcon(
-                        PwIcons.copy,
-                        color: Theme.of(context).colorScheme.neutralNeutral,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsToAddress,
-              endChild: StreamBuilder<WalletDetails?>(
-                initialData: walletService.events.selected.value,
-                stream: walletService.events.selected,
-                builder: (context, snapshot) {
-                  return Row(
-                    children: [
-                      PwText(
-                        transaction.recipientAddress.abbreviateAddress(),
-                        style: PwTextStyle.body,
-                      ),
-                      HorizontalSpacer.large(),
-                      GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(
-                            ClipboardData(text: transaction.recipientAddress),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: PwText(Strings.addressCopied)),
-                          );
-                        },
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: PwIcon(
-                            PwIcons.copy,
-                            color: Theme.of(context).colorScheme.neutralNeutral,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsAmount,
+              title: "Result",
               endChild: PwText(
-                transaction.displayAmount,
+                transaction.status,
                 style: PwTextStyle.body,
               ),
             ),
@@ -170,19 +95,9 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsPricePerUnit,
+              title: "Message Type",
               endChild: PwText(
-                transaction.pricePerUnit.toCurrency(),
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsTotalPurchase,
-              endChild: PwText(
-                transaction.totalPrice.toCurrency(),
+                "Send",
                 style: PwTextStyle.body,
               ),
             ),
@@ -192,7 +107,7 @@ class TransactionDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsFee,
               endChild: PwText(
-                transaction.txFee.toString(),
+                transaction.displayFee,
                 style: PwTextStyle.body,
               ),
             ),
@@ -202,17 +117,7 @@ class TransactionDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
-                transaction.timestamp.toIso8601String(),
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.tradeDetailsBlock,
-              endChild: PwText(
-                transaction.block.toString(),
+                transaction.formattedTime,
                 style: PwTextStyle.body,
               ),
             ),
