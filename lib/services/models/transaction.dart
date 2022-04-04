@@ -63,6 +63,10 @@ class Transaction {
         .toString();
   }
 
+  String get displayFee {
+    return "${(Decimal.fromInt(txFee) / Decimal.fromInt(10).pow(exponent)).toDecimal(scaleOnInfinitePrecision: exponent).toString()} Hash";
+  }
+
   String get formattedTimestamp {
     return DateFormat('MMM d').format(timestamp);
   }
