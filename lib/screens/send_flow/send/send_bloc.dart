@@ -90,9 +90,9 @@ class SendBloc extends Disposable {
       final transResponse = results[1] as List<Transaction>;
 
       final recentAddresses = transResponse.map((trans) {
-        final timeStamp = trans.timestamp;
+        final timeStamp = trans.time;
 
-        return RecentAddress(trans.recipientAddress, timeStamp);
+        return RecentAddress(trans.signer, timeStamp);
       });
 
       final state = SendBlocState(

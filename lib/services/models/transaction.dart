@@ -1,77 +1,53 @@
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Transaction {
   Transaction({required TransactionDto dto})
-      : assert(dto.amount != null),
-        assert(dto.block != null),
-        assert(dto.denom != null),
+      : assert(dto.block != null),
+        assert(dto.feeAmount != null),
         assert(dto.hash != null),
-        assert(dto.recipientAddress != null),
-        assert(dto.senderAddress != null),
-        assert(dto.timestamp != null),
+        assert(dto.signer != null),
         assert(dto.status != null),
-        assert(dto.txFee != null),
-        assert(dto.pricePerUnit != null),
-        assert(dto.totalPrice != null),
-        assert(dto.exponent != null),
-        amount = dto.amount!,
+        assert(dto.time != null),
+        assert(dto.type != null),
         block = dto.block!,
-        denom = dto.denom!,
+        feeAmount = dto.feeAmount!,
         hash = dto.hash!,
-        recipientAddress = dto.recipientAddress!,
-        senderAddress = dto.senderAddress!,
-        status = dto.status!,
-        timestamp = dto.timestamp!,
-        txFee = dto.txFee!,
-        pricePerUnit = dto.pricePerUnit!,
-        totalPrice = dto.totalPrice!,
-        exponent = dto.exponent!;
+        signer = dto.signer!,
+        status = dto.status!.capitalize(),
+        time = dto.time!,
+        messageType = dto.type!.capitalize();
 
   Transaction.fake({
-    required this.amount,
     required this.block,
-    required this.denom,
+    required this.feeAmount,
     required this.hash,
-    required this.recipientAddress,
-    required this.senderAddress,
+    required this.signer,
     required this.status,
-    required this.timestamp,
-    required this.txFee,
-    required this.pricePerUnit,
-    required this.totalPrice,
-    required this.exponent,
+    required this.time,
+    required this.messageType,
   });
 
-  final int amount;
   final int block;
-  final String denom;
+  final String feeAmount;
   final String hash;
-  final String recipientAddress;
-  final String senderAddress;
+  final String signer;
   final String status;
-  final DateTime timestamp;
-  final int txFee;
-  final double pricePerUnit;
-  final double totalPrice;
-  final int exponent;
-
-  String get displayAmount {
-    return (Decimal.fromInt(amount) / Decimal.fromInt(10).pow(exponent))
-        .toDecimal(scaleOnInfinitePrecision: exponent)
-        .toString();
-  }
-
-  String get displayFee {
-    return "${(Decimal.fromInt(txFee) / Decimal.fromInt(10).pow(exponent)).toDecimal(scaleOnInfinitePrecision: exponent).toString()} Hash";
-  }
+  final DateTime time;
+  final String messageType;
 
   String get formattedTimestamp {
-    return DateFormat('MMM d').format(timestamp);
+    return DateFormat('MMM d').format(time);
   }
 
   String get formattedTime {
-    return DateFormat.yMMMd('en_US').add_Hms().format(timestamp);
+    return DateFormat.yMMMd('en_US').add_Hms().format(time);
+  }
+
+  String get displayFee {
+    // TODO: Consolidate hash conversion somewhere?
+    return "${(Decimal.parse(feeAmount) / Decimal.fromInt(10).pow(9)).toDecimal(scaleOnInfinitePrecision: 9).toString()} Hash";
   }
 }

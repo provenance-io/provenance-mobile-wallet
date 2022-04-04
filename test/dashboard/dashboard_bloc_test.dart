@@ -46,7 +46,6 @@ void main() {
 
       expect(walletService.events.selected.value?.id, '0');
       expect(bloc.assetList.value!.first.amount, '0');
-      expect(bloc.transactionDetails.value.transactions.first.amount, 0);
     },
   );
 
@@ -81,10 +80,6 @@ void main() {
 
       expect(walletService.events.selected.value!.id, maxWalletIdStr);
       expect(bloc.assetList.value!.first.amount, maxWalletIdStr);
-      expect(
-        bloc.transactionDetails.value.transactions.first.amount,
-        maxWalletId,
-      );
     },
   );
 
@@ -273,18 +268,13 @@ class TestState {
       );
 
       final transaction = Transaction.fake(
-        amount: i,
         block: i,
-        denom: id,
+        messageType: id,
         hash: id,
-        recipientAddress: id,
-        senderAddress: id,
+        signer: id,
         status: id,
-        timestamp: DateTime.fromMillisecondsSinceEpoch(i),
-        txFee: i,
-        pricePerUnit: i.toDouble(),
-        totalPrice: i.toDouble(),
-        exponent: 1,
+        time: DateTime.fromMillisecondsSinceEpoch(i),
+        feeAmount: i.toString(),
       );
 
       assets[id] = [asset];

@@ -43,16 +43,14 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    item.denom.toUpperCase(),
+                    Strings.transactionDenomHash,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
                   Row(
                     children: [
                       PwText(
-                        item.recipientAddress == walletAddress
-                            ? Strings.buy
-                            : Strings.sell,
+                        item.messageType,
                         color: PwColor.neutral200,
                         style: PwTextStyle.footnote,
                       ),

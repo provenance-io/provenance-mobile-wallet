@@ -26,28 +26,21 @@ class MockTransactionService extends TransactionService {
     var amount = faker.randomGenerator.integer(999999999);
     var address1 = faker.randomGenerator
         .fromCharSet('1234567890abcdefghijklmnopqrstuvwzyz', 41);
-    var address2 = faker.randomGenerator
-        .fromCharSet('1234567890abcdefghijklmnopqrstuvwzyz', 41);
-    var pricePerUnit = faker.randomGenerator.decimal();
 
     return Transaction.fake(
-      amount: amount,
       block: faker.randomGenerator.integer(9999999),
-      denom: faker.randomGenerator.element([
-        "nhash",
-        "cfigure",
+      messageType: faker.randomGenerator.element([
+        "send",
+        "delegate",
+        "cancel",
       ]),
       hash: faker.randomGenerator.fromPatternToHex([
         '################################################################',
       ]).toUpperCase(),
-      recipientAddress: address1,
-      senderAddress: address2,
+      signer: address1,
       status: "SUCCESS",
-      timestamp: DateTime.now(),
-      txFee: faker.randomGenerator.integer(999999999),
-      pricePerUnit: pricePerUnit,
-      totalPrice: pricePerUnit * amount,
-      exponent: 1,
+      time: DateTime.now(),
+      feeAmount: faker.randomGenerator.integer(999999999).toString(),
     );
   }
 }
