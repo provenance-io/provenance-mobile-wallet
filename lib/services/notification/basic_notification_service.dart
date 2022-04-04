@@ -1,25 +1,15 @@
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BasicNotificationService implements NotificationService, Disposable {
-  BasicNotificationService() {
-    get<ConnectivityService>()
-        .isConnected
-        .listen(_manageConnection)
-        .addTo(_subscriptions);
-  }
-
   final _grouped = <String, Set<String>>{};
   final _map = <String, NotificationInfo>{};
   final _stream = BehaviorSubject<List<NotificationInfo>>.seeded([]);
-  final _subscriptions = CompositeSubscription();
 
   @override
   ValueStream<List<NotificationInfo>> get notifications => _stream;
@@ -74,20 +64,11 @@ class BasicNotificationService implements NotificationService, Disposable {
   void onDispose() {
     _map.clear();
     _stream.close();
-    _subscriptions.dispose();
   }
 
   NotificationInfo _createGroup(NotificationGroup group, int count) {
     NotificationInfo info;
     switch (group) {
-      case NotificationGroup.networkDisconnected:
-        info = NotificationInfo(
-          id: group.name,
-          title: Strings.notifyNetworkErrorTitle,
-          message: Strings.notifyNetworkErrorMessage,
-          kind: NotificationKind.warn,
-        );
-        break;
       case NotificationGroup.serviceError:
         info = NotificationInfo(
           id: group.name,
@@ -100,19 +81,5 @@ class BasicNotificationService implements NotificationService, Disposable {
     }
 
     return info;
-  }
-
-  void _manageConnection(bool isConnected) {
-    if (!isConnected) {
-      notifyGrouped(
-        NotificationGroup.networkDisconnected,
-        NotificationGroup.networkDisconnected.toString(),
-      );
-    } else {
-      dismissGrouped(
-        NotificationGroup.networkDisconnected,
-        NotificationGroup.networkDisconnected.toString(),
-      );
-    }
   }
 }
