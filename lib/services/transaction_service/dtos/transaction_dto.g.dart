@@ -8,34 +8,23 @@ part of 'transaction_dto.dart';
 
 TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
     TransactionDto(
-      amount: json['amount'] as int?,
       block: json['block'] as int?,
-      denom: json['denom'] as String?,
+      feeAmount: json['feeAmount'] as String?,
       hash: json['hash'] as String?,
-      recipientAddress: json['recipientAddress'] as String?,
-      senderAddress: json['senderAddress'] as String?,
+      signer: json['signer'] as String?,
       status: json['status'] as String?,
-      timestamp: json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String),
-      txFee: json['txFee'] as int?,
-      pricePerUnit: (json['pricePerUnit'] as num?)?.toDouble(),
-      totalPrice: (json['totalPrice'] as num?)?.toDouble(),
-      exponent: json['exponent'] as int?,
+      time:
+          json['time'] == null ? null : DateTime.parse(json['time'] as String),
+      type: json['type'] as String?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
     <String, dynamic>{
-      'amount': instance.amount,
       'block': instance.block,
-      'denom': instance.denom,
+      'feeAmount': instance.feeAmount,
       'hash': instance.hash,
-      'recipientAddress': instance.recipientAddress,
-      'senderAddress': instance.senderAddress,
+      'signer': instance.signer,
       'status': instance.status,
-      'timestamp': instance.timestamp?.toIso8601String(),
-      'txFee': instance.txFee,
-      'pricePerUnit': instance.pricePerUnit,
-      'totalPrice': instance.totalPrice,
-      'exponent': instance.exponent,
+      'time': instance.time?.toIso8601String(),
+      'type': instance.type,
     };
