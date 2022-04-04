@@ -4,8 +4,7 @@ import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:rxdart/streams.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
 class BasicNotificationService implements NotificationService, Disposable {
   final _grouped = <String, Set<String>>{};
