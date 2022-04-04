@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 
@@ -6,6 +7,7 @@ class MockTransactionService extends TransactionService {
   final faker = Faker();
   @override
   Future<List<Transaction>> getTransactions(
+    Coin coin,
     String provenanceAddress,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));

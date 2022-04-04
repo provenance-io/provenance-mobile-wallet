@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:provenance_wallet/endpoints.dart';
 import 'package:provenance_wallet/services/http_client_diagnostic_interceptor.dart';
 import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
@@ -9,7 +10,6 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 const String httpHeaderAccept = 'Accept';
 const String httpHeaderContentType = 'content-type';
 const String httpHeaderAuth = 'Authorization';
-const String httpHeaderImpersonate = 'x-impersonate';
 
 const String contentTypeJson =
     'application/json;application/json;charset=UTF-8';
@@ -17,14 +17,29 @@ const String contentTypeMultiPart = 'multipart/form-data';
 
 typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
+class MainHttpClient extends HttpClient {
+  MainHttpClient()
+      : super(
+          baseUrl: Endpoints.figureTech.mainUrl,
+        );
+}
+
+class TestHttpClient extends HttpClient {
+  TestHttpClient()
+      : super(
+          baseUrl: Endpoints.figureTech.testUrl,
+        );
+}
+
 class HttpClient {
-  HttpClient() {
+  HttpClient({
+    required String baseUrl,
+  }) : _baseUrl = baseUrl {
     _initDio();
   }
 
-  String _impersonateId = '';
+  final String _baseUrl;
   String _organizationUuid = '';
-  bool _isProd = false;
   String _jwtToken = '';
   Interceptor? _diagosticsInterceptor;
   late Dio _dio;
@@ -34,9 +49,6 @@ class HttpClient {
   bool get hasJwt => jwtToken.isNotEmpty;
 
   String get jwtToken => _jwtToken;
-
-  bool get isProd => _isProd;
-  String get baseSocketUrl => "wss://${_isProd ? 'www' : 'test'}.figure.tech";
 
   Map<String, String> get headers {
     if (_jwtToken.isNotEmpty) {
@@ -54,14 +66,6 @@ class HttpClient {
     _organizationUuid = uuid;
   }
 
-  getImpersonateId() {
-    return _impersonateId;
-  }
-
-  setImpersonateId(String id) {
-    _impersonateId = id;
-  }
-
   setJwt(String jwt) {
     _jwtToken = jwt;
     _initDio();
@@ -71,11 +75,10 @@ class HttpClient {
     _jwtToken = jwt;
   }
 
-  setProd(bool isProd) {
-    _isProd = isProd;
-    _initDio();
-  }
-
+  ///
+  /// Force the client to throw an error on all requests
+  /// for diagnostic purposes.
+  ///
   setDiagnosticsError(int? statusCode) {
     if (statusCode != null) {
       final interceptor = HttpClientDiagnosticInterceptor(statusCode);
@@ -621,7 +624,7 @@ class HttpClient {
     });
 
     _dio.options.responseType = ResponseType.json;
-    _dio.options.baseUrl = 'https://${_isProd ? 'www' : 'test'}.figure.tech/';
+    _dio.options.baseUrl = _baseUrl;
     _dio.interceptors.add(InterceptorsWrapper(onRequest:
         (RequestOptions options, RequestInterceptorHandler handler) async {
       if (options.responseType != ResponseType.bytes) {
@@ -633,9 +636,6 @@ class HttpClient {
       }
       if (_jwtToken.isNotEmpty) {
         options.headers[httpHeaderAuth] = _jwtToken;
-      }
-      if (!isProd && _impersonateId.isNotEmpty) {
-        options.headers[httpHeaderImpersonate] = _impersonateId;
       }
       if (_organizationUuid.isNotEmpty) {
         options.headers['x-org-uuid'] = _organizationUuid;

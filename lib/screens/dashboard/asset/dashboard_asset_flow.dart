@@ -43,7 +43,7 @@ class DashboardAssetFlowState extends FlowBaseState<DashboardAssetFlow> {
 
           return details.showAllTransactions
               ? ViewAllTransactionsScreen()
-              : AssetChartScreen(details.asset);
+              : AssetChartScreen(details.coin, details.asset);
         },
       );
 }

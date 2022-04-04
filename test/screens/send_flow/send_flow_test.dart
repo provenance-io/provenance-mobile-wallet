@@ -63,7 +63,7 @@ main() {
     );
 
     mockTransactionService = MockTransactionService();
-    when(mockTransactionService!.getTransactions(any))
+    when(mockTransactionService!.getTransactions(any, any))
         .thenAnswer((realInvocation) {
       final response = <Transaction>[];
 
@@ -71,7 +71,7 @@ main() {
     });
 
     mockAssetService = MockAssetService();
-    when(mockAssetService!.getAssets(any)).thenAnswer((realInvocation) {
+    when(mockAssetService!.getAssets(any, any)).thenAnswer((realInvocation) {
       final response = <Asset>[];
 
       return Future.value(response);
@@ -81,7 +81,7 @@ main() {
     when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
 
     mockPriceService = MockPriceService();
-    when(mockPriceService!.getAssetPrices(any))
+    when(mockPriceService!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<TransactionService>(mockTransactionService!);

@@ -29,4 +29,9 @@ abstract class WalletStorageService {
   Future<bool> removeWallet(String id);
 
   Future<bool> removeAllWallets();
+
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  });
 }

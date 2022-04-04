@@ -119,7 +119,7 @@ class WalletPortfolio extends StatelessWidget {
                 ),
                 onPressed: () {
                   final walletDetails =
-                      get<DashboardBloc>().selectedWallet.value;
+                      get<WalletService>().events.selected.value;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

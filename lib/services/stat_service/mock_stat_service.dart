@@ -1,11 +1,12 @@
 import 'dart:math';
 
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/onboarding_stat.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 
 class MockStatService extends StatService {
   @override
-  Future<OnboardingStat?> getStats() async {
+  Future<OnboardingStat?> getStats(Coin coin) async {
     await Future.delayed(Duration(milliseconds: 500));
     var random = Random();
 

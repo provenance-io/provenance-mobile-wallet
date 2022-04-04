@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
@@ -13,10 +14,12 @@ import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
   const AssetChartScreen(
+    this.coin,
     this.asset, {
     Key? key,
   }) : super(key: key);
 
+  final Coin coin;
   final Asset asset;
 
   @override
@@ -29,7 +32,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
   @override
   void initState() {
     if (!get.isRegistered<AssetChartBloc>()) {
-      final bloc = AssetChartBloc(widget.asset);
+      final bloc = AssetChartBloc(widget.coin, widget.asset);
       get.registerSingleton(bloc);
       _bloc = bloc..load();
     } else {

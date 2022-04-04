@@ -10,8 +10,10 @@ import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart'
 import 'package:provenance_wallet/screens/dashboard/profile/developer_menu.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
+import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -72,17 +74,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               CategoryLabel(Strings.security),
               _divider,
-              FutureToggleItem(
-                text: Strings.faceId,
-                getValue: () async =>
-                    await get<CipherService>().getUseBiometry() ?? false,
-                setValue: (value) => get<CipherService>().setUseBiometry(
-                  useBiometry: value,
-                ),
+              FutureBuilder<BiometryType>(
+                future: get<CipherService>().getBiometryType(),
+                builder: (context, snapshot) {
+                  var type = snapshot.data;
+                  if (type == null || type == BiometryType.none) {
+                    return Container();
+                  }
+
+                  var label = '';
+
+                  switch (type) {
+                    case BiometryType.none:
+                      break;
+                    case BiometryType.faceId:
+                      label = Strings.faceId;
+                      break;
+                    case BiometryType.touchId:
+                      label = Strings.touchId;
+                      break;
+                    case BiometryType.unknown:
+                      label = Strings.biometry;
+                      break;
+                  }
+
+                  return Column(
+                    children: [
+                      FutureToggleItem(
+                        text: label,
+                        getValue: () async =>
+                            await get<CipherService>().getUseBiometry() ??
+                            false,
+                        setValue: (value) =>
+                            get<CipherService>().setUseBiometry(
+                          useBiometry: value,
+                        ),
+                      ),
+                      _divider,
+                    ],
+                  );
+                },
               ),
-              _divider,
               StreamBuilder<WalletDetails?>(
-                stream: get<DashboardBloc>().selectedWallet,
+                stream: get<WalletService>().events.selected,
                 initialData: null,
                 builder: (context, snapshot) {
                   var accountName = snapshot.data?.name ?? "";
@@ -130,6 +164,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: Strings.moreInformation,
                 onTap: () {
                   launchUrl('https://docs.provenance.io/');
+                },
+              ),
+              _divider,
+              StreamBuilder<bool?>(
+                initialData:
+                    _keyValueService.streamBool(PrefKey.showAdvancedUI).value,
+                stream: _keyValueService.streamBool(PrefKey.showAdvancedUI),
+                builder: (context, snapshot) {
+                  final show = snapshot.data;
+                  if (show == null) {
+                    return Container();
+                  }
+
+                  return ToggleItem(
+                    text: Strings.profileShowAdvancedUI,
+                    value: show,
+                    onChanged: (value) =>
+                        _keyValueService.setBool(PrefKey.showAdvancedUI, value),
+                  );
                 },
               ),
               if (_showDevMenu) _divider,

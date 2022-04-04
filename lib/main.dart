@@ -8,7 +8,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/theme.dart';
-import 'package:provenance_wallet/firebase_options.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -46,9 +45,7 @@ import 'util/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
@@ -76,11 +73,8 @@ void main() async {
   final sqliteStorage = SqliteWalletStorageService();
   final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
 
-  get.registerLazySingleton<WalletService>(
-    () => WalletService(
-      storage: walletStorage,
-    ),
-  );
+  final walletService = WalletService(storage: walletStorage)..init();
+  get.registerSingleton<WalletService>(walletService);
 
   final authHelper = LocalAuthHelper();
   await authHelper.init();
@@ -158,15 +152,19 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<HttpClient>(
-      () => HttpClient(),
+    get.registerLazySingleton<MainHttpClient>(
+      () => MainHttpClient(),
+    );
+
+    get.registerLazySingleton<TestHttpClient>(
+      () => TestHttpClient(),
     );
 
     keyValueService.streamBool(PrefKey.httpClientDiagnostics500).listen((e) {
       final doError = e ?? false;
-      final client = get<HttpClient>();
       final statusCode = doError ? HttpStatus.internalServerError : null;
-      client.setDiagnosticsError(statusCode);
+      get<MainHttpClient>().setDiagnosticsError(statusCode);
+      get<TestHttpClient>().setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
     get.registerLazySingleton<StatService>(

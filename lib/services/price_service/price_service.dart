@@ -1,15 +1,17 @@
-import 'package:provenance_wallet/services/http_client.dart';
+import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_service/dtos/price_dto.dart';
-import 'package:provenance_wallet/util/get.dart';
 
-class PriceService {
+class PriceService with ClientCoinMixin {
   String get _assetServiceBasePathv1 => '/service-pricing-engine/';
 
   Future<List<Price>> getAssetPrices(
+    Coin coin,
     List<String> denominations,
   ) async {
-    final data = await get<HttpClient>().get(
+    final client = getClient(coin);
+    final data = await client.get(
       '$_assetServiceBasePathv1/service-pricing-engine/api/v1/pricing/marker/denom/list?denom[]=${denominations.join(",")}',
       listConverter: (json) {
         if (json is String) {
