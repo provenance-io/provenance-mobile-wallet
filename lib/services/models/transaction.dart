@@ -15,8 +15,7 @@ class Transaction {
         assert(dto.txFee != null),
         assert(dto.pricePerUnit != null),
         assert(dto.totalPrice != null),
-        // FIXME: Uncomment this when dto has this property fr
-        //assert(dto.exponent != null),
+        assert(dto.exponent != null),
         amount = dto.amount!,
         block = dto.block!,
         denom = dto.denom!,
@@ -28,8 +27,7 @@ class Transaction {
         txFee = dto.txFee!,
         pricePerUnit = dto.pricePerUnit!,
         totalPrice = dto.totalPrice!,
-        // FIXME: Force unwrap this when dto has this property fr
-        exponent = dto.exponent ?? 1;
+        exponent = dto.exponent!;
 
   Transaction.fake({
     required this.amount,
