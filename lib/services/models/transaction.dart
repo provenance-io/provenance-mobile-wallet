@@ -66,4 +66,8 @@ class Transaction {
   String get formattedTimestamp {
     return DateFormat('MMM d').format(timestamp);
   }
+
+  String get formattedTime {
+    return DateFormat.yMMMd('en_US').add_Hms().format(timestamp);
+  }
 }
