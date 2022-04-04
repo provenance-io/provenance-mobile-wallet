@@ -18,7 +18,7 @@ class DefaultConnectivityService extends ConnectivityService
 
   final _subscriptions = CompositeSubscription();
   final _connectivity = Connectivity();
-  final _isConnected = BehaviorSubject<bool>(sync: true);
+  final _isConnected = BehaviorSubject<bool>(sync: false);
 
   @override
   ValueStream<bool> get isConnected => _isConnected.stream;
