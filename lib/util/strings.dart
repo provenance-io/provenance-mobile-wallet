@@ -371,6 +371,7 @@ class Strings {
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
+  static const assetChartNotAvailable = "Not Available";
 
   // SendSuccessScreen
   static const sendSuccessTransferDetailsBelow =

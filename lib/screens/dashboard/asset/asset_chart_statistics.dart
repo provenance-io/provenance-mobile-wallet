@@ -55,7 +55,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '${asset.dailyVolume ?? "Not Available"}',
+                        '${asset.dailyVolume ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -87,7 +87,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${asset.dailyHigh ?? "Not Available"}',
+                        '\$${asset.dailyHigh ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -103,7 +103,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${asset.dailyLow ?? "Not Available"}',
+                        '\$${asset.dailyLow ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
