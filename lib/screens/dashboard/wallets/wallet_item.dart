@@ -162,6 +162,7 @@ class WalletItem extends StatelessWidget {
             id: item.id,
             name: text,
           );
+          this.item.name = text;
         }
         break;
       case MenuOperation.copy:
