@@ -395,6 +395,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     sessionEvents.dispose();
 
     _assetList.close();
+    _transactionPages.close();
+    _isLoadingTransactions.close();
 
     _transactionDetails.close();
     _error.close();
