@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -12,13 +13,36 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class WalletItem extends StatelessWidget {
+class WalletItem extends StatefulWidget {
   const WalletItem({
     Key? key,
     required this.item,
   }) : super(key: key);
 
   final WalletDetails item;
+
+  @override
+  // ignore: no_logic_in_create_state
+  State<StatefulWidget> createState() => WalletItemState(
+        item.id,
+        item.address,
+        item.name,
+        item.coin,
+      );
+}
+
+class WalletItemState extends State<WalletItem> {
+  WalletItemState(
+    this._walletId,
+    this._walletAddress,
+    this._walletName,
+    this._walletCoin,
+  );
+
+  final String _walletId;
+  final String _walletAddress;
+  String _walletName;
+  final Coin _walletCoin;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +53,7 @@ class WalletItem extends StatelessWidget {
       initialData: walletService.events.selected.value,
       stream: walletService.events.selected,
       builder: (context, snapshot) {
-        final isSelected = item.id == snapshot.data?.id;
+        final isSelected = _walletId == snapshot.data?.id;
 
         return Container(
           color: isSelected ? colorScheme.secondary650 : colorScheme.neutral700,
@@ -46,11 +70,15 @@ class WalletItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PwText(
-                      item.name,
+                      _walletName,
                       style: PwTextStyle.bodyBold,
                     ),
                     FutureBuilder<int?>(
-                      future: get<WalletsBloc>().getAssetCount(item),
+                      future: get<WalletsBloc>().getAssetCount(
+                        _walletId,
+                        _walletCoin,
+                        _walletAddress,
+                      ),
                       builder: (context, snapshot) {
                         final numAssets = snapshot.data;
 
@@ -70,7 +98,6 @@ class WalletItem extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 onTap: () => _showMenu(
                   context,
-                  item,
                   isSelected,
                 ),
                 child: SizedBox(
@@ -94,7 +121,6 @@ class WalletItem extends StatelessWidget {
 
   Future<void> _showMenu(
     BuildContext context,
-    WalletDetails item,
     bool isSelected,
   ) async {
     var result = await showModalBottomSheet<MenuOperation>(
@@ -154,21 +180,21 @@ class WalletItem extends StatelessWidget {
           barrierDismissible: false,
           context: context,
           builder: (context) => RenameWalletDialog(
-            currentName: item.name,
+            currentName: _walletName,
           ),
         );
         if (text != null) {
           await bloc.renameWallet(
-            id: item.id,
+            id: _walletId,
             name: text,
           );
-          this.item.name = text;
+          _walletName = text;
         }
         break;
       case MenuOperation.copy:
         await Clipboard.setData(
           ClipboardData(
-            text: item.address,
+            text: _walletAddress,
           ),
         );
         ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +214,7 @@ class WalletItem extends StatelessWidget {
           cancelText: Strings.cancel,
         );
         if (dialogResult) {
-          await get<WalletService>().removeWallet(id: item.id);
+          await get<WalletService>().removeWallet(id: _walletId);
           final list = await get<WalletService>().getWallets();
           if (list.isEmpty) {
             get<LocalAuthHelper>().reset();
@@ -196,7 +222,7 @@ class WalletItem extends StatelessWidget {
         }
         break;
       case MenuOperation.select:
-        await bloc.selectWallet(id: item.id);
+        await bloc.selectWallet(id: _walletId);
 
         break;
       default:

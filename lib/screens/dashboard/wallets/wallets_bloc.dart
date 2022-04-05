@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
@@ -69,12 +70,16 @@ class WalletsBloc implements Disposable {
     return wallet;
   }
 
-  Future<int> getAssetCount(WalletDetails wallet) async {
-    var count = _assetCounts[wallet.id];
+  Future<int> getAssetCount(
+    String walletId,
+    Coin coin,
+    String address,
+  ) async {
+    var count = _assetCounts[walletId];
     if (count == null) {
-      final assets = await _assetService.getAssets(wallet.coin, wallet.address);
+      final assets = await _assetService.getAssets(coin, address);
       count = assets.length;
-      _assetCounts[wallet.id] = count;
+      _assetCounts[walletId] = count;
     }
 
     return count;
