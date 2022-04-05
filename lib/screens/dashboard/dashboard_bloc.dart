@@ -133,21 +133,22 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     );
   }
 
-  void filterTransactions(String denom, String status) {
+  void filterTransactions(String messageType, String status) {
     final stopwatch = Stopwatch()..start();
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
-    if (denom == Strings.dropDownAllAssets &&
+    if (messageType == Strings.dropDownAllAssets &&
         status == Strings.dropDownAllTransactions) {
       filtered = transactions.toList();
-    } else if (denom == Strings.dropDownAllAssets) {
-      filtered =
-          transactions.where((t) => t.status == status.toUpperCase()).toList();
+    } else if (messageType == Strings.dropDownAllAssets) {
+      filtered = transactions.where((t) => t.status == status).toList();
     } else if (status == Strings.dropDownAllTransactions) {
-      filtered = transactions.where((t) => t.denom == denom).toList();
+      filtered =
+          transactions.where((t) => t.messageType == messageType).toList();
     } else {
       filtered = transactions
-          .where((t) => t.denom == denom && t.status == status.toUpperCase())
+          .where((t) =>
+              t.messageType == messageType && t.status == status.toUpperCase())
           .toList();
     }
     _transactionDetails.value = TransactionDetails(
@@ -155,7 +156,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
-      selectedType: denom,
+      selectedType: messageType,
     );
     stopwatch.stop();
     logDebug(
@@ -427,7 +428,7 @@ class TransactionDetails {
     }
     _types = [
       Strings.dropDownAllAssets,
-      ...transactions.map((e) => e.denom).toSet().toList(),
+      ...transactions.map((e) => e.messageType).toSet().toList(),
     ];
 
     return _types;
@@ -441,7 +442,7 @@ class TransactionDetails {
       Strings.dropDownAllTransactions,
       ...transactions
           .map(
-            (e) => e.status.toLowerCase().capitalize(),
+            (e) => e.status,
           )
           .toSet()
           .toList(),

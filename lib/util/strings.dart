@@ -296,15 +296,12 @@ class Strings {
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
   static const tradeDetailsWallet = "Wallet";
-  static const tradeDetailsTransaction = "Transaction #";
-  static const tradeDetailsFromAddress = "From Address";
-  static const tradeDetailsToAddress = "To Address";
-  static const tradeDetailsAmount = "Amount";
-  static const tradeDetailsPricePerUnit = "Price Per Unit";
-  static const tradeDetailsTotalPurchase = "Total Purchase Price";
+  static const tradeDetailsTransaction = "Transaction Hash";
+  static const tradeDetailsResult = "Result";
+  static const tradeDetailsMessageType = "Message Type";
   static const tradeDetailsFee = "Fee";
-  static const tradeDetailsTimeStamp = "Time Stamp";
-  static const tradeDetailsBlock = "Block #";
+  static const tradeDetailsTimeStamp = "Time";
+  static const tradeDetailsBlock = "Block Height";
 
   //WordSelector
   static const selectWord = 'select word';
