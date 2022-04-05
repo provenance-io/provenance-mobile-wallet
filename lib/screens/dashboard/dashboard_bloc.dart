@@ -59,6 +59,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     ),
   );
   final _transactionPages = BehaviorSubject.seeded(1);
+  final _isLoadingTransactions = BehaviorSubject.seeded(false);
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _error = PublishSubject<String>();
 
@@ -75,6 +76,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<int> get transactionPages => _transactionPages;
+  ValueStream<bool> get isLoadingTransactions => _isLoadingTransactions;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 
@@ -138,6 +140,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<void> loadAdditionalTransactions() async {
+    _isLoadingTransactions.value = true;
     final wallet = _walletService.events.selected.value;
 
     var transactions = _transactionDetails.value.transactions;
@@ -158,6 +161,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         transactions: transactions.toList(),
       ),
     );
+    _isLoadingTransactions.value = false;
   }
 
   void filterTransactions(String messageType, String status) {
