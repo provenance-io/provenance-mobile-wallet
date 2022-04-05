@@ -51,8 +51,7 @@ class TransactionDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: Strings.tradeDetailsMessageType,
               endChild: PwText(
-                // TODO: Fix this when we get the message type.
-                "Send",
+                transaction.messageType,
                 style: PwTextStyle.body,
               ),
             ),
