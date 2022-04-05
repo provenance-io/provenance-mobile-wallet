@@ -43,8 +43,11 @@ extension StringExtension on String {
 class Strings {
   // App
   static const appName = 'Provenance Wallet';
-
   static const notImplementedMessage = "Not Implemented";
+
+  // Chain
+  static const chainMainNetName = 'Mainnet';
+  static const chainTestNetName = 'Testnet';
 
   // Biometric Strings
   static const biometry = 'Biometry';
@@ -133,6 +136,8 @@ class Strings {
   static const profileDeveloperConnectLabel = 'Connect';
   static const profileDeveloperConnectInvalidAddress = 'Invalid address';
   static const profileShowAdvancedUI = 'Show Advanced UI';
+  static const profileMenuUseMainnet = 'Use Mainnet';
+  static const profileMenuUseTestnet = 'Use Testnet';
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";

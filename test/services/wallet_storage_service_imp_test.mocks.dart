@@ -7,10 +7,11 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i7;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
-import 'package:provenance_dart/wallet.dart' as _i5;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i4;
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart'
     as _i2;
+import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart'
+    as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -59,21 +60,17 @@ class MockSqliteWalletStorageService extends _i1.Mock
               returnValue: Future<_i4.WalletDetails?>.value())
           as _i3.Future<_i4.WalletDetails?>);
   @override
-  _i3.Future<_i4.WalletDetails?> setWalletCoin({String? id, _i5.Coin? coin}) =>
+  _i3.Future<_i4.WalletDetails?> setChainId({String? id, String? chainId}) =>
       (super.noSuchMethod(
-              Invocation.method(#setWalletCoin, [], {#id: id, #coin: coin}),
+              Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
               returnValue: Future<_i4.WalletDetails?>.value())
           as _i3.Future<_i4.WalletDetails?>);
   @override
   _i3.Future<_i4.WalletDetails?> addWallet(
-          {String? name, String? address, String? publicKey, _i5.Coin? coin}) =>
+          {String? name, List<_i5.PublicKeyData>? publicKeys}) =>
       (super.noSuchMethod(
-              Invocation.method(#addWallet, [], {
-                #name: name,
-                #address: address,
-                #publicKey: publicKey,
-                #coin: coin
-              }),
+              Invocation.method(
+                  #addWallet, [], {#name: name, #publicKeys: publicKeys}),
               returnValue: Future<_i4.WalletDetails?>.value())
           as _i3.Future<_i4.WalletDetails?>);
   @override
