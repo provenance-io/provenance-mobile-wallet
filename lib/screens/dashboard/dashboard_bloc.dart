@@ -121,10 +121,35 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions = await _transactionService.getTransactions(
         wallet.coin,
         wallet.address,
+        _transactionPages.value,
       );
+      _transactionPages.value++;
     }
 
     _assetList.tryAdd(assetList);
+
+    _transactionDetails.tryAdd(
+      TransactionDetails(
+        walletAddress: wallet?.address ?? '',
+        filteredTransactions: transactions,
+        transactions: transactions.toList(),
+      ),
+    );
+  }
+
+  Future<void> loadAdditionalTransactions() async {
+    final wallet = _walletService.events.selected.value;
+
+    var transactions = _transactionDetails.value.transactions;
+
+    if (wallet != null) {
+      transactions.addAll(await _transactionService.getTransactions(
+        wallet.coin,
+        wallet.address,
+        _transactionPages.value,
+      ));
+      _transactionPages.value++;
+    }
 
     _transactionDetails.tryAdd(
       TransactionDetails(
