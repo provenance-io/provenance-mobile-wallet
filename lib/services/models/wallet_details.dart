@@ -12,7 +12,7 @@ class WalletDetails with Diagnosticable {
 
   final String id;
   final String address;
-  String name;
+  final String name;
   final String publicKey;
   final Coin coin;
 
