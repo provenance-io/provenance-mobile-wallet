@@ -6,6 +6,7 @@ abstract class TransactionService {
   Future<List<Transaction>> getTransactions(
     Coin coin,
     String provenanceAddress,
+    int pageNumber,
   ) {
     throw throw Strings.notImplementedMessage;
   }

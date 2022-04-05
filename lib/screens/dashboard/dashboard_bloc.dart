@@ -58,6 +58,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: [],
     ),
   );
+  final _transactionPages = BehaviorSubject.seeded(1);
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _error = PublishSubject<String>();
 
@@ -73,6 +74,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   final sessionEvents = WalletConnectSessionEvents();
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
+  ValueStream<int> get transactionPages => _transactionPages;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 

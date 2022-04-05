@@ -9,6 +9,7 @@ class MockTransactionService extends TransactionService {
   Future<List<Transaction>> getTransactions(
     Coin coin,
     String provenanceAddress,
+    int pageNumber,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     List<Transaction> transactions = [];
