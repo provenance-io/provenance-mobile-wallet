@@ -35,7 +35,7 @@ class _LandingScreenState extends State<LandingScreen> {
     get.registerSingleton(_bloc);
 
     _bloc.load();
-
+    _bloc.doAuth(context);
     super.initState();
   }
 
