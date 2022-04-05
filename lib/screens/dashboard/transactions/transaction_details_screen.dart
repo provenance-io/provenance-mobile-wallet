@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -108,9 +109,20 @@ class TransactionDetailsScreen extends StatelessWidget {
                   HorizontalSpacer.large(),
                   GestureDetector(
                     onTap: () async {
-                      // TODO: Change this url based on coin type.
-                      final url =
-                          'https://explorer.provenance.io/tx/${transaction.hash}';
+                      final wallet = await walletService.getSelectedWallet();
+                      String url;
+                      switch (wallet?.coin) {
+                        case Coin.testNet:
+                          url =
+                              'https://explorer.test.provenance.io/tx/${transaction.hash}';
+                          break;
+                        case Coin.mainNet:
+                          url =
+                              'https://explorer.provenance.io/tx/${transaction.hash}';
+                          break;
+                        default:
+                          url = "";
+                      }
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
