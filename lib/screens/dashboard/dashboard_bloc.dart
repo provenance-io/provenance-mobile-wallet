@@ -140,10 +140,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<void> loadAdditionalTransactions() async {
+    var transactions = _transactionDetails.value.transactions;
+    if (_transactionPages.value * 50 > transactions.length) {
+      return;
+    }
     _isLoadingTransactions.value = true;
     final wallet = _walletService.events.selected.value;
-
-    var transactions = _transactionDetails.value.transactions;
 
     if (wallet != null) {
       transactions.addAll(await _transactionService.getTransactions(
