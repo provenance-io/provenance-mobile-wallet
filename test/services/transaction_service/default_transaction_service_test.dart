@@ -60,7 +60,11 @@ main() {
     test('no notification', () async {
       _setupResults<List<Transaction>>(null);
 
-      await statService!.getTransactions(Coin.testNet, "AB");
+      await statService!.getTransactions(
+        Coin.testNet,
+        "AB",
+        1,
+      );
 
       verify(mockNotificationService!
           .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
@@ -69,7 +73,11 @@ main() {
     test('url', () async {
       _setupResults<List<Transaction>>(null);
 
-      await statService!.getTransactions(Coin.testNet, "AB");
+      await statService!.getTransactions(
+        Coin.testNet,
+        "AB",
+        1,
+      );
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
@@ -83,7 +91,7 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/address/AB/transactions/all',
+        '/service-mobile-wallet/external/api/v1/address/AB/transactions/all?count=50&page=1',
       );
     });
 
@@ -105,7 +113,11 @@ main() {
 
       _setupResults<List<Transaction>>(trans);
 
-      final result = await statService!.getTransactions(Coin.testNet, "AB");
+      final result = await statService!.getTransactions(
+        Coin.testNet,
+        "AB",
+        1,
+      );
 
       expect(
         result,
@@ -116,7 +128,11 @@ main() {
     test('Converter', () async {
       _setupResults<List<Transaction>>(null);
 
-      await statService!.getTransactions(Coin.testNet, "AB");
+      await statService!.getTransactions(
+        Coin.testNet,
+        "AB",
+        1,
+      );
 
       var captures = verify(mockHttpClient!.get(
         any,
