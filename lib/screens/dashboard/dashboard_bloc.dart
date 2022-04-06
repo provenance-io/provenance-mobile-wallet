@@ -139,7 +139,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<void> loadAdditionalTransactions() async {
-    var transactions = _transactionDetails.value.transactions;
+    var oldDetails = _transactionDetails.value;
+    var transactions = oldDetails.transactions;
     if (_transactionPages.value * 50 > transactions.length) {
       return;
     }
@@ -162,10 +163,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     _transactionDetails.tryAdd(
       TransactionDetails(
         walletAddress: wallet?.address ?? '',
-        filteredTransactions: transactions,
+        filteredTransactions: oldDetails.filteredTransactions,
         transactions: transactions.toList(),
       ),
     );
+    filterTransactions(oldDetails.selectedType, oldDetails.selectedStatus);
+
     _isLoadingTransactions.value = false;
   }
 
@@ -187,13 +190,13 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
               t.messageType == messageType && t.status == status.toUpperCase())
           .toList();
     }
-    _transactionDetails.value = TransactionDetails(
+    _transactionDetails.tryAdd(TransactionDetails(
       walletAddress: _walletService.events.selected.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
       selectedType: messageType,
-    );
+    ));
     stopwatch.stop();
     logDebug(
       "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
