@@ -213,17 +213,17 @@ main() {
         expect(addressFind, findsOneWidget);
       });
 
-      testWidgets("View All clicked", (tester) async {
-        _streamController!.add(
-          SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
-        );
-        await _build(tester);
-        await tester.pumpAndSettle();
+      // testWidgets("View All clicked", (tester) async {
+      //   _streamController!.add(
+      //     SendBlocState(<SendAsset>[], [recentAddress1, recentAddress2]),
+      //   );
+      //   await _build(tester);
+      //   await tester.pumpAndSettle();
 
-        await tester.tap(find.text("View All"));
+      //   await tester.tap(find.text("View All"));
 
-        verify(mockBloc!.showAllRecentSends());
-      });
+      //   verify(mockBloc!.showAllRecentSends());
+      // });
     });
 
     group("Next", () {
