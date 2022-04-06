@@ -6,24 +6,44 @@ import 'package:provenance_wallet/screens/dashboard/transactions/transaction_lis
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class TransactionLandingTab extends StatelessWidget {
+class TransactionLandingTab extends StatefulWidget {
   const TransactionLandingTab({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => TransactionLandingTabState();
+}
+
+class TransactionLandingTabState extends State<TransactionLandingTab> {
+  final _scrollController = ScrollController();
+  late DashboardBloc _bloc;
+
   final textDivider = " • ";
 
   @override
-  Widget build(BuildContext context) {
-    final bloc = get<DashboardBloc>();
+  void initState() {
+    super.initState();
+    _bloc = get<DashboardBloc>();
+    _scrollController.addListener(_onScrollEnd);
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.removeListener(_onScrollEnd);
+    _scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
         bottom: false,
         child: StreamBuilder<TransactionDetails>(
-          initialData: bloc.transactionDetails.value,
-          stream: bloc.transactionDetails,
+          initialData: _bloc.transactionDetails.value,
+          stream: _bloc.transactionDetails,
           builder: (context, snapshot) {
             final transactionDetails = snapshot.data;
             if (transactionDetails == null) {
@@ -63,7 +83,7 @@ class TransactionLandingTab extends StatelessWidget {
                           initialValue: transactionDetails.selectedType,
                           items: transactionDetails.types,
                           onValueChanged: (item) {
-                            bloc.filterTransactions(
+                            _bloc.filterTransactions(
                               item,
                               transactionDetails.selectedStatus,
                             );
@@ -82,10 +102,10 @@ class TransactionLandingTab extends StatelessWidget {
                           horizontal: Spacing.medium,
                         ),
                         child: PwDropDown.fromStrings(
-                          initialValue: Strings.dropDownAllTransactions,
+                          initialValue: Strings.dropDownAllStatuses,
                           items: transactionDetails.statuses,
                           onValueChanged: (item) {
-                            bloc.filterTransactions(
+                            _bloc.filterTransactions(
                               transactionDetails.selectedType,
                               item,
                             );
@@ -97,26 +117,54 @@ class TransactionLandingTab extends StatelessWidget {
                 ),
                 VerticalSpacer.medium(),
                 Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
-                      vertical: 20,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item =
-                          transactionDetails.filteredTransactions[index];
+                  child: Stack(
+                    children: [
+                      ListView.separated(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Spacing.xxLarge,
+                          vertical: 20,
+                        ),
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
+                          final item =
+                              transactionDetails.filteredTransactions[index];
 
-                      return TransactionListItem(
-                        walletAddress: transactionDetails.walletAddress,
-                        item: item,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return PwListDivider();
-                    },
-                    itemCount: transactionDetails.filteredTransactions.length,
-                    shrinkWrap: true,
-                    physics: AlwaysScrollableScrollPhysics(),
+                          return TransactionListItem(
+                            walletAddress: transactionDetails.walletAddress,
+                            item: item,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return PwListDivider();
+                        },
+                        itemCount:
+                            transactionDetails.filteredTransactions.length,
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                      ),
+                      StreamBuilder<bool>(
+                        initialData: _bloc.isLoadingTransactions.value,
+                        stream: _bloc.isLoadingTransactions,
+                        builder: (context, snapshot) {
+                          final isLoading = snapshot.data ?? false;
+                          if (isLoading) {
+                            return Positioned(
+                              bottom: 0,
+                              left: 0,
+                              child: SizedBox(
+                                height: 80,
+                                width: MediaQuery.of(context).size.width,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Container();
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -125,5 +173,13 @@ class TransactionLandingTab extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onScrollEnd() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent &&
+        !_bloc.isLoadingTransactions.value) {
+      _bloc.loadAdditionalTransactions();
+    }
   }
 }
