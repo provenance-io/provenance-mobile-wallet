@@ -125,7 +125,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         wallet.address,
         _transactionPages.value,
       );
-      _transactionPages.value++;
     }
 
     _assetList.tryAdd(assetList);
@@ -144,15 +143,19 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     if (_transactionPages.value * 50 > transactions.length) {
       return;
     }
+    _transactionPages.value++;
     _isLoadingTransactions.value = true;
     final wallet = _walletService.events.selected.value;
 
     if (wallet != null) {
-      transactions.addAll(await _transactionService.getTransactions(
+      final newTransactions = await _transactionService.getTransactions(
         wallet.coin,
         wallet.address,
         _transactionPages.value,
-      ));
+      );
+      if (newTransactions.isNotEmpty) {
+        transactions.addAll(newTransactions);
+      }
       _transactionPages.value++;
     }
 
