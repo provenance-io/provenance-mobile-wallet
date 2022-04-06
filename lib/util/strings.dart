@@ -288,8 +288,8 @@ class Strings {
   static const walletCreated = "WALLET CREATED";
 
   // TransactionsList
-  static const dropDownAllAssets = "All Assets";
-  static const dropDownAllTransactions = "All Transactions";
+  static const dropDownAllMessageTypes = "All Message Types";
+  static const dropDownAllStatuses = "All Statuses";
   static const buy = "Buy";
   static const sell = "Sell";
 

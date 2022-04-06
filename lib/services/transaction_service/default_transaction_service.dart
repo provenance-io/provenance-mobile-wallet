@@ -14,10 +14,11 @@ class DefaultTransactionService extends TransactionService
   Future<List<Transaction>> getTransactions(
     Coin coin,
     String provenanceAddress,
+    int pageNumber,
   ) async {
     final client = getClient(coin);
     final data = await client.get(
-      '$_transactionServiceBasePath/$provenanceAddress/transactions/all',
+      '$_transactionServiceBasePath/$provenanceAddress/transactions/all?count=50&page=$pageNumber',
       converter: (json) {
         if (json is String) {
           return <Transaction>[];

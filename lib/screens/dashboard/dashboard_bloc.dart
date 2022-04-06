@@ -58,6 +58,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: [],
     ),
   );
+  final _transactionPages = BehaviorSubject.seeded(1);
+  final _isLoadingTransactions = BehaviorSubject.seeded(false);
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
   final _error = PublishSubject<String>();
 
@@ -73,6 +75,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   final sessionEvents = WalletConnectSessionEvents();
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
+  ValueStream<int> get transactionPages => _transactionPages;
+  ValueStream<bool> get isLoadingTransactions => _isLoadingTransactions;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 
@@ -119,6 +123,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions = await _transactionService.getTransactions(
         wallet.coin,
         wallet.address,
+        _transactionPages.value,
       );
     }
 
@@ -133,16 +138,49 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     );
   }
 
+  Future<void> loadAdditionalTransactions() async {
+    var oldDetails = _transactionDetails.value;
+    var transactions = oldDetails.transactions;
+    if (_transactionPages.value * 50 > transactions.length) {
+      return;
+    }
+    _transactionPages.value++;
+    _isLoadingTransactions.value = true;
+    final wallet = _walletService.events.selected.value;
+
+    if (wallet != null) {
+      final newTransactions = await _transactionService.getTransactions(
+        wallet.coin,
+        wallet.address,
+        _transactionPages.value,
+      );
+      if (newTransactions.isNotEmpty) {
+        transactions.addAll(newTransactions);
+      }
+    }
+
+    _transactionDetails.tryAdd(
+      TransactionDetails(
+        walletAddress: wallet?.address ?? '',
+        filteredTransactions: oldDetails.filteredTransactions,
+        transactions: transactions.toList(),
+      ),
+    );
+    filterTransactions(oldDetails.selectedType, oldDetails.selectedStatus);
+
+    _isLoadingTransactions.value = false;
+  }
+
   void filterTransactions(String messageType, String status) {
     final stopwatch = Stopwatch()..start();
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
-    if (messageType == Strings.dropDownAllAssets &&
-        status == Strings.dropDownAllTransactions) {
+    if (messageType == Strings.dropDownAllMessageTypes &&
+        status == Strings.dropDownAllStatuses) {
       filtered = transactions.toList();
-    } else if (messageType == Strings.dropDownAllAssets) {
+    } else if (messageType == Strings.dropDownAllMessageTypes) {
       filtered = transactions.where((t) => t.status == status).toList();
-    } else if (status == Strings.dropDownAllTransactions) {
+    } else if (status == Strings.dropDownAllStatuses) {
       filtered =
           transactions.where((t) => t.messageType == messageType).toList();
     } else {
@@ -151,13 +189,13 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
               t.messageType == messageType && t.status == status.toUpperCase())
           .toList();
     }
-    _transactionDetails.value = TransactionDetails(
+    _transactionDetails.tryAdd(TransactionDetails(
       walletAddress: _walletService.events.selected.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
       selectedType: messageType,
-    );
+    ));
     stopwatch.stop();
     logDebug(
       "Filtering transactions took ${stopwatch.elapsed.inMilliseconds / 1000} seconds.",
@@ -362,6 +400,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     sessionEvents.dispose();
 
     _assetList.close();
+    _transactionPages.close();
+    _isLoadingTransactions.close();
 
     _transactionDetails.close();
     _error.close();
@@ -410,8 +450,8 @@ class TransactionDetails {
   TransactionDetails({
     required this.filteredTransactions,
     required this.transactions,
-    this.selectedType = Strings.dropDownAllAssets,
-    this.selectedStatus = Strings.dropDownAllTransactions,
+    this.selectedType = Strings.dropDownAllMessageTypes,
+    this.selectedStatus = Strings.dropDownAllStatuses,
     required this.walletAddress,
   });
   List<String> _types = [];
@@ -427,7 +467,7 @@ class TransactionDetails {
       return _types;
     }
     _types = [
-      Strings.dropDownAllAssets,
+      Strings.dropDownAllMessageTypes,
       ...transactions.map((e) => e.messageType).toSet().toList(),
     ];
 
@@ -439,7 +479,7 @@ class TransactionDetails {
       return _statuses;
     }
     _statuses = [
-      Strings.dropDownAllTransactions,
+      Strings.dropDownAllStatuses,
       ...transactions
           .map(
             (e) => e.status,

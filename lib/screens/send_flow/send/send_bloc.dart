@@ -84,7 +84,11 @@ class SendBloc extends Disposable {
 
     return Future.wait([
       assetFuture,
-      _transactionService.getTransactions(_coin, _provenanceAddress),
+      _transactionService.getTransactions(
+        _coin,
+        _provenanceAddress,
+        1,
+      ),
     ]).then((results) {
       final assetResponse = results[0] as List<SendAsset>;
       final transResponse = results[1] as List<Transaction>;

@@ -26,7 +26,10 @@ class MockAssetService implements AssetService {
   final Map<String, List<Asset>> _assets;
 
   @override
-  Future<List<Asset>> getAssets(Coin coin, String provenanceAddresses) =>
+  Future<List<Asset>> getAssets(
+    Coin coin,
+    String provenanceAddresses,
+  ) =>
       Future.value(_assets[provenanceAddresses] ?? []);
 
   @override
@@ -48,6 +51,7 @@ class MockTransactionService implements TransactionService {
   Future<List<Transaction>> getTransactions(
     Coin coin,
     String provenanceAddress,
+    int page,
   ) =>
       Future.value(_transactions[provenanceAddress] ?? []);
 }
