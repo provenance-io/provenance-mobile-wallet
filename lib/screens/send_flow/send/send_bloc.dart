@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -95,7 +95,7 @@ class SendBloc extends Disposable {
       final transResponse = results[1] as List<Transaction>;
 
       final recentAddresses =
-          transResponse.sublist(0, min(5, transResponse.length)).map((trans) {
+          transResponse.distinctBy((e) => e.signer).take(5).map((trans) {
         final timeStamp = trans.time;
 
         return RecentAddress(trans.signer, timeStamp);
