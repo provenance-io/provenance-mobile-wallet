@@ -157,7 +157,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       if (newTransactions.isNotEmpty) {
         transactions.addAll(newTransactions);
       }
-      _transactionPages.value++;
     }
 
     _transactionDetails.tryAdd(
