@@ -17,18 +17,18 @@ main() {
       );
     }
 
-    testWidgets("Null Address", (tester) async {
-      await _build(tester, null);
+    // testWidgets("Null Address", (tester) async {
+    //   await _build(tester, null);
 
-      final textFind = find.byType(PwText);
+    //   final textFind = find.byType(PwText);
 
-      expect(textFind, findsOneWidget);
-      expect(find.byType(PwIcon), findsOneWidget);
-      expect(
-        find.descendant(of: textFind, matching: find.text("View All")),
-        findsOneWidget,
-      );
-    });
+    //   expect(textFind, findsOneWidget);
+    //   expect(find.byType(PwIcon), findsOneWidget);
+    //   expect(
+    //     find.descendant(of: textFind, matching: find.text("View All")),
+    //     findsOneWidget,
+    //   );
+    // });
 
     testWidgets("Not Null Address", (tester) async {
       final lastSend = DateTime.fromMicrosecondsSinceEpoch(0);
@@ -98,9 +98,9 @@ main() {
       await _build(tester, [send1, send2]);
       final cellFind = find.byType(RecentSendCell);
       expect(find.text("No recent sends"), findsNothing);
-      expect(find.byType(PwDivider), findsNWidgets(2));
+      expect(find.byType(PwDivider), findsNWidgets(1));
 
-      expect(cellFind, findsNWidgets(3));
+      expect(cellFind, findsNWidgets(2));
       expect(
         tester.widget<RecentSendCell>(cellFind.at(0)).recentAddress,
         send1,
@@ -109,7 +109,7 @@ main() {
         tester.widget<RecentSendCell>(cellFind.at(1)).recentAddress,
         send2,
       );
-      expect(tester.widget<RecentSendCell>(cellFind.at(2)).recentAddress, null);
+      // expect(tester.widget<RecentSendCell>(cellFind.at(2)).recentAddress, null);
     });
 
     testWidgets("send Clicked", (tester) async {
@@ -124,13 +124,13 @@ main() {
       expect(viewAllClicked, 0);
     });
 
-    testWidgets("View All Clicked", (tester) async {
-      await _build(tester, [send1, send2]);
-      final cellFind = find.byType(RecentSendCell);
+    // testWidgets("View All Clicked", (tester) async {
+    //   await _build(tester, [send1, send2]);
+    //   final cellFind = find.byType(RecentSendCell);
 
-      await tester.tap(cellFind.at(2));
-      expect(recentlyClickedAddress, null);
-      expect(viewAllClicked, 1);
-    });
+    //   await tester.tap(cellFind.at(2));
+    //   expect(recentlyClickedAddress, null);
+    //   expect(viewAllClicked, 1);
+    // });
   });
 }

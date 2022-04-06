@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
@@ -93,7 +94,8 @@ class SendBloc extends Disposable {
       final assetResponse = results[0] as List<SendAsset>;
       final transResponse = results[1] as List<Transaction>;
 
-      final recentAddresses = transResponse.map((trans) {
+      final recentAddresses =
+          transResponse.sublist(0, min(5, transResponse.length)).map((trans) {
         final timeStamp = trans.time;
 
         return RecentAddress(trans.signer, timeStamp);

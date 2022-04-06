@@ -88,7 +88,7 @@ class RecentSendList extends StatelessWidget {
     }
 
     return ListView.separated(
-      itemCount: recentAddresses.length + 1,
+      itemCount: recentAddresses.length, // + 1,
       separatorBuilder: (context, index) => PwDivider(),
       itemBuilder: (context, index) {
         final address =
