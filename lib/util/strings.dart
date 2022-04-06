@@ -57,8 +57,11 @@ class Strings {
 
   // Notifications
   static const String notifyServiceErrorTitle = 'Service Error';
+  static const notifyNetworkErrorTitle = 'Network Disconnected';
   static const notifyServiceErrorMessage =
       'Unfortunately our services are down at the moment';
+  static const notifyNetworkErrorMessage =
+      'It appears as though no network is connected.';
 
   // Landing Page
   static const createWallet = 'Create Wallet';
@@ -293,15 +296,12 @@ class Strings {
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
   static const tradeDetailsWallet = "Wallet";
-  static const tradeDetailsTransaction = "Transaction #";
-  static const tradeDetailsFromAddress = "From Address";
-  static const tradeDetailsToAddress = "To Address";
-  static const tradeDetailsAmount = "Amount";
-  static const tradeDetailsPricePerUnit = "Price Per Unit";
-  static const tradeDetailsTotalPurchase = "Total Purchase Price";
+  static const tradeDetailsTransaction = "Transaction Hash";
+  static const tradeDetailsResult = "Result";
+  static const tradeDetailsMessageType = "Message Type";
   static const tradeDetailsFee = "Fee";
-  static const tradeDetailsTimeStamp = "Time Stamp";
-  static const tradeDetailsBlock = "Block #";
+  static const tradeDetailsTimeStamp = "Time";
+  static const tradeDetailsBlock = "Block Height";
 
   //WordSelector
   static const selectWord = 'select word';
@@ -366,11 +366,12 @@ class Strings {
   // AssetChartScreen
   static const statistics = "Statistics";
   static const dayVolume = "Day Volume";
-  static const changeAmount = "Change Amount";
+  static const currentPrice = "Current Price";
   static const dayHigh = "Day High";
   static const dayLow = "Day Low";
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
+  static const assetChartNotAvailable = "Not Available";
 
   // SendSuccessScreen
   static const sendSuccessTransferDetailsBelow =

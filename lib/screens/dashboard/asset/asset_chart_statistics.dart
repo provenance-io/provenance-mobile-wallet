@@ -25,8 +25,8 @@ class AssetChartStatistics extends StatelessWidget {
           initialData: bloc.chartDetails.value,
           stream: bloc.chartDetails,
           builder: (context, snapshot) {
-            final stats = snapshot.data?.assetStatistics;
-            if (stats == null) {
+            final asset = snapshot.data?.asset;
+            if (asset == null) {
               return Container();
             }
 
@@ -55,7 +55,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        stats.dayVolume.toString(),
+                        '${asset.dailyVolume ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -65,13 +65,13 @@ class AssetChartStatistics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PwText(
-                        Strings.changeAmount,
+                        Strings.currentPrice,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${stats.amountChange.toStringAsFixed(3)}',
+                        '\$${asset.usdPrice}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -87,7 +87,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${stats.dayHigh.toStringAsFixed(3)}',
+                        '\$${asset.dailyHigh ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -103,7 +103,7 @@ class AssetChartStatistics extends StatelessWidget {
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${stats.dayLow.toStringAsFixed(3)}',
+                        '\$${asset.dailyLow ?? Strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],

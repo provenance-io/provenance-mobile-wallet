@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/transactions/trade_details_screen.dart';
+import 'package:provenance_wallet/screens/dashboard/transactions/transaction_details_screen.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -18,7 +18,7 @@ class TransactionListItem extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        Navigator.of(context).push(TradeDetailsScreen(
+        Navigator.of(context).push(TransactionDetailsScreen(
           transaction: item,
         ).route());
       },
@@ -43,16 +43,14 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    item.denom.toUpperCase(),
+                    Strings.transactionDenomHash,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
                   Row(
                     children: [
                       PwText(
-                        item.recipientAddress == walletAddress
-                            ? Strings.buy
-                            : Strings.sell,
+                        item.messageType,
                         color: PwColor.neutral200,
                         style: PwTextStyle.footnote,
                       ),

@@ -73,8 +73,8 @@ main() {
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
-        listConverter: anyNamed("listConverter"),
-        converter: null,
+        listConverter: null,
+        converter: anyNamed("converter"),
         additionalHeaders: null,
         queryStringParameters: null,
         documentDownload: false,
@@ -83,7 +83,7 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/address/AB/transactions',
+        '/service-mobile-wallet/external/api/v1/address/AB/transactions/all',
       );
     });
 
@@ -91,19 +91,14 @@ main() {
       final trans = [
         Transaction(
           dto: TransactionDto(
-            amount: 100,
             block: 2,
-            denom: "nhash",
             hash:
                 "F78DE603565AB2CEDC5C990F0F7F56ADF670F7A86BBAC2C283CB5445F68CEFD7",
-            recipientAddress: "tp1g5ugfegkl5gmn049n5a9hgjn3ged0ekp8f2fwx",
-            senderAddress: "tp1mpapyn7sgdrrmpx8ed7haprt8m0039gg0nyn8f",
             status: "SUCCESS",
-            timestamp: DateTime.parse("2022-02-07T20:26:48Z"),
-            txFee: 958916040,
-            pricePerUnit: 9.4E-11,
-            totalPrice: 94.00,
-            exponent: 9,
+            feeAmount: "200",
+            signer: "BBB",
+            time: DateTime.now(),
+            type: "A",
           ),
         ),
       ];
@@ -125,34 +120,36 @@ main() {
 
       var captures = verify(mockHttpClient!.get(
         any,
-        listConverter: captureAnyNamed("listConverter"),
-        converter: null,
+        listConverter: null,
+        converter: captureAnyNamed("converter"),
         additionalHeaders: null,
         queryStringParameters: null,
         documentDownload: false,
         ignore403: false,
       )).captured;
 
-      final listConverter =
-          captures.first as List<Transaction>? Function(List<dynamic> json);
+      final listConverter = captures.first as List<Transaction>? Function(
+        Map<String, dynamic> json,
+      );
 
-      final json = [
-        {
-          "hash":
-              "F78DE603565AB2CEDC5C990F0F7F56ADF670F7A86BBAC2C283CB5445F68CEFD7",
-          "block": 6159353,
-          "txFee": 958916040,
-          "recipientAddress": "tp1g5ugfegkl5gmn049n5a9hgjn3ged0ekp8f2fwx",
-          "senderAddress": "tp1mpapyn7sgdrrmpx8ed7haprt8m0039gg0nyn8f",
-          "amount": 1000000000000,
-          "denom": "nhash",
-          "status": "SUCCESS",
-          "timestamp": "2022-02-07T20:26:48Z",
-          "exponent": 9,
-          "pricePerUnit": 9.4E-11,
-          "totalPrice": 94.000000000000,
-        },
-      ];
+      final json = {
+        "pages": 2,
+        "totalCount": 5,
+        "transactions": [
+          {
+            "hash":
+                "F78DE603565AB2CEDC5C990F0F7F56ADF670F7A86BBAC2C283CB5445F68CEFD7",
+            "block": 6159353,
+            "status": "SUCCESS",
+            "time": "2022-02-07T20:26:48Z",
+            "pricePerUnit": 9.4E-11,
+            "totalPrice": 94.000000000000,
+            "signer": "tp1mpapyn7sgdrrmpx8ed7haprt8m0039gg0nyn8f",
+            "feeAmount": "958916040",
+            "type": "A",
+          },
+        ],
+      };
 
       final converted = listConverter(json)!;
       expect(converted.length, 1);
@@ -164,25 +161,7 @@ main() {
         converted[0].block,
         6159353,
       );
-      expect(
-        converted[0].txFee,
-        958916040,
-      );
-      expect(
-        converted[0].recipientAddress,
-        "tp1g5ugfegkl5gmn049n5a9hgjn3ged0ekp8f2fwx",
-      );
-      expect(
-        converted[0].senderAddress,
-        "tp1mpapyn7sgdrrmpx8ed7haprt8m0039gg0nyn8f",
-      );
-      expect(converted[0].amount, 1000000000000);
-      expect(converted[0].denom, "nhash");
       expect(converted[0].status, "SUCCESS");
-      expect(converted[0].timestamp, DateTime.parse("2022-02-07T20:26:48Z"));
-      expect(converted[0].exponent, 9);
-      expect(converted[0].pricePerUnit, 9.4E-11);
-      expect(converted[0].totalPrice, 94.000000000000);
     });
   });
 }

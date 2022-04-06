@@ -16,6 +16,8 @@ import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
+import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
+import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
@@ -23,6 +25,8 @@ import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart'
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
+import 'package:provenance_wallet/services/notification/notification_info.dart';
+import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/platform_key_value_service.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
@@ -198,6 +202,24 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
           ? MockTransactionService()
           : DefaultTransactionService(),
     );
+    get.registerLazySingleton<ConnectivityService>(
+      () => DefaultConnectivityService(),
+    );
+    get<ConnectivityService>().isConnected.distinct().listen((isConnected) {
+      final notificationService = get<NotificationService>();
+      const networkDisconnectedId = "networkDisconnected";
+      if (!isConnected) {
+        notificationService.notify(NotificationInfo(
+          id: networkDisconnectedId,
+          title: Strings.notifyNetworkErrorTitle,
+          message: Strings.notifyNetworkErrorMessage,
+          kind: NotificationKind.warn,
+        ));
+      } else {
+        notificationService.dismiss(networkDisconnectedId);
+      }
+    }).addTo(_subscriptions);
+
     get.registerLazySingleton<NotificationService>(
       () => BasicNotificationService(),
     );
