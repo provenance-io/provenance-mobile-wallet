@@ -58,7 +58,7 @@ void main() {
 
     final walletService = state.walletService;
 
-    expect(walletService.events.selected.value, isNull);
+    expect(await walletService.events.selected.first, isNull);
   });
 
   test(
@@ -78,7 +78,7 @@ void main() {
 
       await pumpEventQueue();
 
-      expect(walletService.events.selected.value!.id, maxWalletIdStr);
+      expect((await walletService.events.selected.first)!.id, maxWalletIdStr);
       expect(bloc.assetList.value!.first.amount, maxWalletIdStr);
     },
   );
@@ -97,7 +97,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(walletService.events.selected.value!.name, newName);
+    expect((await walletService.events.selected.first)!.name, newName);
   });
 
   test('Remove selected wallet updates selected wallet', () async {
@@ -111,7 +111,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(walletService.events.selected.value!.id, '1');
+    expect((await walletService.events.selected.first)!.id, '1');
   });
 
   test('Remove non-selected wallet does not update selected wallet', () async {
@@ -127,7 +127,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(walletService.events.selected.value!.id, '0');
+    expect((await walletService.events.selected.first)!.id, '0');
   });
 
   test('Reset wallets removes selected wallet', () async {
@@ -142,7 +142,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(walletService.events.selected.value, isNull);
+    expect((await walletService.events.selected.first), isNull);
   });
 
   test('Connect wallet requests session', () async {
@@ -233,7 +233,7 @@ class TestState {
       connectedCompleter.complete();
     });
 
-    final walletId = walletService.events.selected.value!.id;
+    final walletId = (await walletService.events.selected.first)!.id;
 
     await bloc.connectSession(walletId, walletConnectAddress);
 

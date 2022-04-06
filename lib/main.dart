@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
+import 'package:provenance_wallet/endpoints.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -79,6 +82,15 @@ void main() async {
 
   final walletService = WalletService(storage: walletStorage)..init();
   get.registerSingleton<WalletService>(walletService);
+
+  get.registerSingleton<ProtobuffClientInjector>(
+    (coin) => PbClient(
+      Uri.parse(Endpoints.chain.forCoin(coin)),
+      ChainId.forCoin(
+        coin,
+      ),
+    ),
+  );
 
   final authHelper = LocalAuthHelper();
   await authHelper.init();

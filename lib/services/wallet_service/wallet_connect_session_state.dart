@@ -2,11 +2,11 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
 
 class WalletConnectSessionState {
-  WalletConnectSessionState.disconnected()
+  const WalletConnectSessionState.disconnected()
       : status = WalletConnectSessionStatus.disconnected,
         details = null;
 
-  WalletConnectSessionState.connecting()
+  const WalletConnectSessionState.connecting()
       : status = WalletConnectSessionStatus.connecting,
         details = null;
 
