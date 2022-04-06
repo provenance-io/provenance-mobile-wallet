@@ -173,12 +173,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final stopwatch = Stopwatch()..start();
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
-    if (messageType == Strings.dropDownAllAssets &&
-        status == Strings.dropDownAllTransactions) {
+    if (messageType == Strings.dropDownAllMessageTypes &&
+        status == Strings.dropDownAllStatuses) {
       filtered = transactions.toList();
-    } else if (messageType == Strings.dropDownAllAssets) {
+    } else if (messageType == Strings.dropDownAllMessageTypes) {
       filtered = transactions.where((t) => t.status == status).toList();
-    } else if (status == Strings.dropDownAllTransactions) {
+    } else if (status == Strings.dropDownAllStatuses) {
       filtered =
           transactions.where((t) => t.messageType == messageType).toList();
     } else {
@@ -448,8 +448,8 @@ class TransactionDetails {
   TransactionDetails({
     required this.filteredTransactions,
     required this.transactions,
-    this.selectedType = Strings.dropDownAllAssets,
-    this.selectedStatus = Strings.dropDownAllTransactions,
+    this.selectedType = Strings.dropDownAllMessageTypes,
+    this.selectedStatus = Strings.dropDownAllStatuses,
     required this.walletAddress,
   });
   List<String> _types = [];
@@ -465,7 +465,7 @@ class TransactionDetails {
       return _types;
     }
     _types = [
-      Strings.dropDownAllAssets,
+      Strings.dropDownAllMessageTypes,
       ...transactions.map((e) => e.messageType).toSet().toList(),
     ];
 
@@ -477,7 +477,7 @@ class TransactionDetails {
       return _statuses;
     }
     _statuses = [
-      Strings.dropDownAllTransactions,
+      Strings.dropDownAllStatuses,
       ...transactions
           .map(
             (e) => e.status,
