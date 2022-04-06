@@ -57,6 +57,32 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                   builder: (context, snapshot) {
                     final connected = snapshot.data?.status ==
                         WalletConnectSessionStatus.connected;
+                    Widget icon;
+                    switch (snapshot.data?.status) {
+                      case WalletConnectSessionStatus.connected:
+                        icon = PwIcon(
+                          PwIcons.linked,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          size: 48.0,
+                        );
+                        break;
+                      case WalletConnectSessionStatus.connecting:
+                        icon = SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                        break;
+                      default:
+                        icon = PwIcon(
+                          PwIcons.qr,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          size: 48.0,
+                        );
+                    }
+                    print(snapshot.data?.status);
 
                     return Padding(
                       padding: EdgeInsets.only(
@@ -99,11 +125,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             }
                           }
                         },
-                        child: PwIcon(
-                          connected ? PwIcons.linked : PwIcons.qr,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                          size: 48.0,
-                        ),
+                        child: icon,
                       ),
                     );
                   },
