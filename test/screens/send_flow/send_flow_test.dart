@@ -63,8 +63,11 @@ main() {
     );
 
     mockTransactionService = MockTransactionService();
-    when(mockTransactionService!.getTransactions(any, any))
-        .thenAnswer((realInvocation) {
+    when(mockTransactionService!.getTransactions(
+      any,
+      any,
+      any,
+    )).thenAnswer((realInvocation) {
       final response = <Transaction>[];
 
       return Future.value(response);

@@ -84,9 +84,10 @@ class MockTransactionService extends _i1.Mock
 
   @override
   _i7.Future<List<_i12.Transaction>> getTransactions(
-          _i9.Coin? coin, String? provenanceAddress) =>
+          _i9.Coin? coin, String? provenanceAddress, int? pageNumber) =>
       (super.noSuchMethod(
-              Invocation.method(#getTransactions, [coin, provenanceAddress]),
+              Invocation.method(
+                  #getTransactions, [coin, provenanceAddress, pageNumber]),
               returnValue:
                   Future<List<_i12.Transaction>>.value(<_i12.Transaction>[]))
           as _i7.Future<List<_i12.Transaction>>);
