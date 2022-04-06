@@ -14,9 +14,7 @@ class MockTransactionService extends TransactionService {
     await Future.delayed(Duration(milliseconds: 500));
     List<Transaction> transactions = [];
 
-    final length = faker.randomGenerator.integer(10, min: 5);
-
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < 50; i++) {
       transactions.add(_getTransaction());
     }
 
@@ -24,16 +22,16 @@ class MockTransactionService extends TransactionService {
   }
 
   Transaction _getTransaction() {
-    var amount = faker.randomGenerator.integer(999999999);
     var address1 = faker.randomGenerator
         .fromCharSet('1234567890abcdefghijklmnopqrstuvwzyz', 41);
 
     return Transaction.fake(
       block: faker.randomGenerator.integer(9999999),
       messageType: faker.randomGenerator.element([
-        "send",
-        "delegate",
-        "cancel",
+        "Send",
+        "Delegate",
+        "Cancel",
+        "Add_marker",
       ]),
       hash: faker.randomGenerator.fromPatternToHex([
         '################################################################',
