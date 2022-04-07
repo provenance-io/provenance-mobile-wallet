@@ -30,8 +30,10 @@ class MockAssetService extends AssetService {
   Future<List<AssetGraphItem>> getAssetGraphingData(
     Coin coin,
     String assetType,
-    GraphingDataValue value,
-  ) async {
+    GraphingDataValue value, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final List<AssetGraphItem> items = [];
 
     await Future.delayed(

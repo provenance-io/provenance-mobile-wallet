@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -5,15 +7,13 @@ import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_statistics.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_percentage_changed.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  const AssetChartScreen(
+  AssetChartScreen(
     this.coin,
     this.asset, {
     Key? key,
@@ -34,7 +34,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
     if (!get.isRegistered<AssetChartBloc>()) {
       final bloc = AssetChartBloc(widget.coin, widget.asset);
       get.registerSingleton(bloc);
-      _bloc = bloc..load();
+      _bloc = bloc..load(startDate: DateTime.now(), endDate: DateTime.now());
     } else {
       _bloc = get<AssetChartBloc>();
     }
@@ -100,36 +100,47 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                 color: Colors.transparent,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     PwText(
                       details.asset.display.toUpperCase(),
                       style: PwTextStyle.subhead,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 7),
-                          child: PwText(
-                            '\$',
-                            style: PwTextStyle.h2,
-                            color: PwColor.neutralNeutral,
-                          ),
-                        ),
-                        PwText(
+                    SizedBox(
+                      height: 45,
+                      child: FittedBox(
+                        alignment: Alignment.center,
+                        fit: BoxFit.fitWidth,
+                        child: PwText(
                           details.asset.formattedUsdPrice,
                           style: PwTextStyle.h1,
                           color: PwColor.neutralNeutral,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      ],
+                      ),
                     ),
-                    AssetPercentageChanged(),
-                    AssetBarChart(),
-                    VerticalSpacer.medium(),
-                    AssetBarChartButtons(),
-                    VerticalSpacer.xxLarge(),
-                    AssetChartStatistics(),
+                    AssetBarChart(snapshot.data!.value),
+                    VerticalSpacer.small(),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Container(
+                          alignment: Alignment.center,
+                          width: min(constraints.maxWidth, 75),
+                          child: AssetBarChartButtons(
+                            snapshot.data!.startDate,
+                            snapshot.data!.endDate,
+                            (startDate, endDate) {
+                              _bloc.load(
+                                startDate: startDate,
+                                endDate: endDate,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    if (!details.isComingSoon) VerticalSpacer.xxLarge(),
                     VerticalSpacer.xxLarge(),
                     AssetChartRecentTransactions(),
                   ],

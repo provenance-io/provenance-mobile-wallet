@@ -14,8 +14,10 @@ class AssetService {
   Future<List<AssetGraphItem>> getAssetGraphingData(
     Coin coin,
     String assetType,
-    GraphingDataValue value,
-  ) {
+    GraphingDataValue value, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
     throw Strings.notImplementedMessage;
   }
 }
