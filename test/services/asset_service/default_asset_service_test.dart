@@ -256,7 +256,7 @@ main() {
 
     test('url', () async {
       _setupResults<AssetGraphItem>(null);
-      final formatter = DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
+      final formatter = DefaultAssetService.formatter;
 
       DateTime startDate = DateTime.now().startOfDay;
       DateTime endDate = DateTime.now().endOfDay;

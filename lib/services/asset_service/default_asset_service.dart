@@ -10,9 +10,8 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
 
-@visibleForTesting
-class DateTimeFormatWithTimeZone extends DateFormat {
-  DateTimeFormatWithTimeZone(String pattern) : super(pattern);
+class _DateTimeFormatWithTimeZone extends DateFormat {
+  _DateTimeFormatWithTimeZone(String pattern) : super(pattern);
 
   @override
   String format(DateTime date) {
@@ -29,6 +28,9 @@ class DateTimeFormatWithTimeZone extends DateFormat {
 
 class DefaultAssetService extends AssetService
     with ClientNotificationMixin, ClientCoinMixin {
+  @visibleForTesting
+  static final formatter =
+      _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
   String get _assetServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
 
@@ -71,8 +73,6 @@ class DefaultAssetService extends AssetService
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final formatter = DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     startDate ??= DateTime.now().startOfDay;
     endDate ??= DateTime.now().endOfDay;
     final client = getClient(coin);
