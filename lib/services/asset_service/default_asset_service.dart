@@ -1,4 +1,6 @@
+import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
@@ -6,6 +8,22 @@ import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
+
+class _DateTimeFormatWithTimeZone extends DateFormat {
+  _DateTimeFormatWithTimeZone(String pattern) : super(pattern);
+
+  @override
+  String format(DateTime date) {
+    final formatted = super.format(date);
+    final numberFormatter = NumberFormat("00");
+
+    final timezone = date.timeZoneOffset;
+    final offsetInHours = timezone.inMinutes ~/ 60;
+    final offsetInMinutes = (timezone.inMinutes % 60).abs();
+
+    return "$formatted${numberFormatter.format(offsetInHours)}:${numberFormatter.format(offsetInMinutes)}";
+  }
+}
 
 class DefaultAssetService extends AssetService
     with ClientNotificationMixin, ClientCoinMixin {
@@ -47,13 +65,19 @@ class DefaultAssetService extends AssetService
   Future<List<AssetGraphItem>> getAssetGraphingData(
     Coin coin,
     String assetType,
-    GraphingDataValue value,
-  ) async {
+    GraphingDataValue value, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    final formatter = _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    startDate ??= DateTime.now().startOfDay;
+    endDate ??= DateTime.now().endOfDay;
     final client = getClient(coin);
     final timeFrame = value.name.toUpperCase();
 
     final data = await client.get(
-      '$_assetPricingBasePath/$assetType?period=$timeFrame',
+      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${formatter.format(startDate)}&endDate=${formatter.format(endDate)}',
       listConverter: (json) {
         if (json is String) {
           return <AssetGraphItem>[];
