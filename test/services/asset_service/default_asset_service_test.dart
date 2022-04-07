@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
@@ -255,6 +256,10 @@ main() {
 
     test('url', () async {
       _setupResults<AssetGraphItem>(null);
+      final formatter = DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+      DateTime startDate = DateTime.now().startOfDay;
+      DateTime endDate = DateTime.now().endOfDay;
 
       await assetService!.getAssetGraphingData(
         Coin.testNet,
@@ -274,7 +279,7 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL',
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&startDate=${formatter.format(startDate)}&endDate=${formatter.format(endDate)}',
       );
     });
 
