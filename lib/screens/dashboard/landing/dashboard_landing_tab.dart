@@ -98,7 +98,6 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           ],
                         );
                     }
-                    print(snapshot.data?.status);
 
                     return Padding(
                       padding: EdgeInsets.only(
