@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
@@ -9,6 +10,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
 
+@visibleForTesting
 class DateTimeFormatWithTimeZone extends DateFormat {
   DateTimeFormatWithTimeZone(String pattern) : super(pattern);
 
