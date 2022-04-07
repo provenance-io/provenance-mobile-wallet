@@ -23,9 +23,9 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
   Widget build(BuildContext context) {
     final keyValueService = get<KeyValueService>();
     final mockingAssetStream =
-        keyValueService.streamBool(PrefKey.isMockingAssetService);
+        keyValueService.stream<bool>(PrefKey.isMockingAssetService);
     final mockingTransactionsStream =
-        keyValueService.streamBool(PrefKey.isMockingTransactionService);
+        keyValueService.stream<bool>(PrefKey.isMockingTransactionService);
 
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
@@ -65,11 +65,15 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
             ),
             CategoryLabel(Strings.profileDeveloperServiceMocks),
             PwListDivider(),
-            StreamBuilder<bool?>(
-              initialData: mockingAssetStream.value,
+            StreamBuilder<KeyValueData<bool>>(
+              initialData: mockingAssetStream.valueOrNull,
               stream: mockingAssetStream,
               builder: (context, snapshot) {
-                final data = snapshot.data ?? false;
+                if (snapshot.data == null) {
+                  return Container();
+                }
+
+                final data = snapshot.data?.data ?? false;
 
                 return ToggleItem(
                   text: Strings.developerMocksMockAssetService,
@@ -85,11 +89,15 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
               },
             ),
             PwListDivider(),
-            StreamBuilder<bool?>(
-              initialData: mockingTransactionsStream.value,
+            StreamBuilder<KeyValueData<bool>>(
+              initialData: mockingTransactionsStream.valueOrNull,
               stream: mockingTransactionsStream,
               builder: (context, snapshot) {
-                final data = snapshot.data ?? false;
+                if (snapshot.data == null) {
+                  return Container();
+                }
+
+                final data = snapshot.data?.data ?? false;
 
                 return ToggleItem(
                   text: Strings.developerMocksMockTransactionService,

@@ -9,6 +9,8 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
@@ -20,7 +22,6 @@ import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
-import '../services/memory_key_value_service.dart';
 import 'dashboard_bloc_test.mocks.dart';
 import 'dashboard_mocks.dart';
 import 'in_memory_wallet_storage_service.dart';
@@ -313,7 +314,9 @@ class TestState {
         datas: storageDatas,
       ),
     )..init();
-    final keyValueService = MemoryKeyValueService();
+    final keyValueService = DefaultKeyValueService(
+      store: MemoryKeyValueStore(),
+    );
     walletConnectionFactory(WalletConnectAddress address) {
       return MockWalletConnection(address);
     }

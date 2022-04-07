@@ -17,7 +17,7 @@ class DeveloperMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyValueService = get<KeyValueService>();
     final diagnostics500Stream =
-        keyValueService.streamBool(PrefKey.httpClientDiagnostics500);
+        keyValueService.stream<bool>(PrefKey.httpClientDiagnostics500);
 
     return Column(
       textDirection: TextDirection.ltr,
@@ -27,11 +27,15 @@ class DeveloperMenu extends StatelessWidget {
         PwListDivider(),
         WalletConnectItem(),
         PwListDivider(),
-        StreamBuilder<bool?>(
-          initialData: diagnostics500Stream.value,
+        StreamBuilder<KeyValueData<bool>>(
+          initialData: diagnostics500Stream.valueOrNull,
           stream: diagnostics500Stream,
           builder: (context, snapshot) {
-            final data = snapshot.data ?? false;
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            final data = snapshot.data?.data ?? false;
 
             return ToggleItem(
               text: Strings.profileDeveloperHttpClients500,

@@ -303,7 +303,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         );
 
         if (!success) {
-          await get<KeyValueService>().remove(PrefKey.sessionData);
+          await get<KeyValueService>().removeString(PrefKey.sessionData);
         }
       }
     }
@@ -415,7 +415,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<bool> _clearSessionData() {
-    return get<KeyValueService>().remove(PrefKey.sessionData);
+    return get<KeyValueService>().removeString(PrefKey.sessionData);
   }
 
   Future<void> _handleDynamicLink(Uri link) async {

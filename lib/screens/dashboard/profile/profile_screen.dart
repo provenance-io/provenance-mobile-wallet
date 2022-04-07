@@ -167,12 +167,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _divider,
-              StreamBuilder<bool?>(
-                initialData:
-                    _keyValueService.streamBool(PrefKey.showAdvancedUI).value,
-                stream: _keyValueService.streamBool(PrefKey.showAdvancedUI),
+              StreamBuilder<KeyValueData<bool>>(
+                initialData: _keyValueService
+                    .stream<bool>(PrefKey.showAdvancedUI)
+                    .valueOrNull,
+                stream: _keyValueService.stream<bool>(PrefKey.showAdvancedUI),
                 builder: (context, snapshot) {
-                  final show = snapshot.data ?? false;
+                  final streamData = snapshot.data;
+                  if (streamData == null) {
+                    return Container();
+                  }
+
+                  final show = streamData.data ?? false;
 
                   return ToggleItem(
                     text: Strings.profileShowAdvancedUI,
