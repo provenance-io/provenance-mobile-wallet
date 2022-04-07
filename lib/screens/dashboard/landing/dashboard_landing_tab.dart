@@ -59,6 +59,13 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         WalletConnectSessionStatus.connected;
                     Widget icon;
                     switch (snapshot.data?.status) {
+                      case WalletConnectSessionStatus.disconnected:
+                        icon = PwIcon(
+                          PwIcons.qr,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          size: 48.0,
+                        );
+                        break;
                       case WalletConnectSessionStatus.connected:
                         icon = PwIcon(
                           PwIcons.linked,
@@ -66,20 +73,29 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                           size: 48.0,
                         );
                         break;
-                      case WalletConnectSessionStatus.connecting:
-                        icon = SizedBox(
-                          height: 48,
-                          width: 48,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                        break;
                       default:
-                        icon = PwIcon(
-                          PwIcons.qr,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                          size: 48.0,
+                        icon = Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            PwIcon(
+                              PwIcons.linked,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .neutralNeutral
+                                  .withAlpha(128),
+                              size: 48.0,
+                            ),
+                            SizedBox(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .neutralNeutral,
+                              ),
+                              height: 48,
+                              width: 48,
+                            ),
+                          ],
                         );
                     }
                     print(snapshot.data?.status);

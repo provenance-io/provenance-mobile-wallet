@@ -91,6 +91,8 @@ class WalletConnectSession {
   }
 
   Future<void> closeButRetainSession() {
+    _connection.removeListener(_statusListener);
+
     return _connection.dispose();
   }
 
