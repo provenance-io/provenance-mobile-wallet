@@ -1,6 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 
 class ChainId {
+  static const defaultChainId = mainNet;
   static const mainNet = 'pio-mainnet-1';
   static const testNet = 'pio-testnet-1';
 

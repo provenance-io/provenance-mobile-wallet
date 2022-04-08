@@ -205,9 +205,17 @@ class RecoverPassphraseEntryScreenState
                                       context,
                                     );
 
+                                    final chainId =
+                                        await _keyValueService.getString(
+                                              PrefKey.defaultChainId,
+                                            ) ??
+                                            ChainId.defaultChainId;
+                                    final coin = ChainId.toCoin(chainId);
+
                                     await get<WalletService>().addWallet(
                                       phrase: words,
                                       name: widget.accountName,
+                                      coin: coin,
                                     );
 
                                     ModalLoadingRoute.dismiss(context);

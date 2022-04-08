@@ -28,6 +28,7 @@ main() {
 
   group("addWallet", () {
     List<PrivateKey>? privateKeys;
+    Coin? selectedCoin;
     final publicKeys = <PublicKeyData>[];
     const id = "TestId";
     final wallet = WalletDetails(
@@ -44,6 +45,7 @@ main() {
         PrivateKey.fromSeed(seed, Coin.testNet),
         PrivateKey.fromSeed(seed, Coin.mainNet),
       ];
+      selectedCoin = Coin.testNet;
 
       publicKeys.clear();
       for (final privateKey in privateKeys!) {
@@ -61,6 +63,7 @@ main() {
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -71,12 +74,16 @@ main() {
       final result = await _storageService!.addWallet(
         name: wallet.name,
         privateKeys: privateKeys!,
+        selectedCoin: selectedCoin!,
       );
 
       expect(result, wallet);
 
-      verify(_mockSqliteService!
-          .addWallet(name: wallet.name, publicKeys: publicKeys));
+      verify(_mockSqliteService!.addWallet(
+        name: wallet.name,
+        publicKeys: publicKeys,
+        selectedChainId: ChainId.forCoin(selectedCoin!),
+      ));
 
       for (final privateKey in privateKeys!) {
         final keyId = _storageService!.privateKeyId(id, privateKey.coin);
@@ -94,12 +101,14 @@ main() {
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => _storageService!.addWallet(
           name: "Name",
           privateKeys: privateKeys!,
+          selectedCoin: selectedCoin!,
         ),
         throwsA(exception),
       );
@@ -113,6 +122,7 @@ main() {
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -123,6 +133,7 @@ main() {
       final result = await _storageService!.addWallet(
         name: "Name",
         privateKeys: privateKeys!,
+        selectedCoin: selectedCoin!,
       );
 
       verify(_mockSqliteService!.removeWallet(id: id));

@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteWalletStorageService {
@@ -173,8 +174,17 @@ class SqliteWalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required List<PublicKeyData> publicKeys,
+    required String selectedChainId,
   }) async {
-    if (publicKeys.isEmpty) {
+    if (publicKeys.isEmpty || selectedChainId.isEmpty) {
+      return null;
+    }
+
+    if (!publicKeys.any((e) => e.chainId == selectedChainId)) {
+      const message = 'Selected chain id is not in the list of public keys';
+      logError(message);
+      assert(false, message);
+
       return null;
     }
 
@@ -191,8 +201,7 @@ class SqliteWalletStorageService {
 
       final chainIds = <String>{};
 
-      for (var i = 0; i < publicKeys.length; i++) {
-        final publicKey = publicKeys[i];
+      for (var publicKey in publicKeys) {
         final chainId = publicKey.chainId;
 
         assert(
@@ -208,7 +217,7 @@ class SqliteWalletStorageService {
             'ChainId': chainId,
           });
 
-          if (i == 0) {
+          if (publicKey.chainId == selectedChainId) {
             chainIds.add(chainId);
 
             await txn.insert(

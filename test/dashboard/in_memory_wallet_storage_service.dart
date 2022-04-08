@@ -33,6 +33,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required List<PrivateKey> privateKeys,
+    required Coin selectedCoin,
   }) async {
     if (privateKeys.isEmpty) {
       return null;
@@ -41,7 +42,8 @@ class InMemoryWalletStorageService implements WalletStorageService {
     final id = Uuid().v1().toString();
 
     const selectedKeyIndex = 0;
-    final selectedPrivateKey = privateKeys.first;
+    final selectedPrivateKey =
+        privateKeys.firstWhere((e) => e.coin == selectedCoin);
     final selectedPublicKey = selectedPrivateKey.defaultKey().publicKey;
 
     final details = WalletDetails(
