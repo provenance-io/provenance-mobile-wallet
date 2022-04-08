@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/util/extensions/iterable_extensions.dart';
 
 abstract class SendBlocNavigator {
   Future<String?> scanAddress();
@@ -85,20 +85,21 @@ class SendBloc extends Disposable {
 
     return Future.wait([
       assetFuture,
-      _transactionService.getTransactions(
+      _transactionService.getSendTransactions(
         _coin,
         _provenanceAddress,
-        1,
       ),
     ]).then((results) {
       final assetResponse = results[0] as List<SendAsset>;
-      final transResponse = results[1] as List<Transaction>;
+      final transResponse = results[1] as List<SendTransaction>;
 
-      final recentAddresses =
-          transResponse.sublist(0, min(5, transResponse.length)).map((trans) {
-        final timeStamp = trans.time;
+      final recentAddresses = transResponse
+          .distinctBy((e) => e.recipientAddress)
+          .take(5)
+          .map((trans) {
+        final timeStamp = trans.timestamp;
 
-        return RecentAddress(trans.signer, timeStamp);
+        return RecentAddress(trans.recipientAddress, timeStamp);
       });
 
       final state = SendBlocState(

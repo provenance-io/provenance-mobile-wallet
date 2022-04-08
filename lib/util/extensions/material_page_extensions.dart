@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-extension MaterialPageExt<T> on Widget {
+extension MaterialPageExtensions<T> on Widget {
   MaterialPage<T> page({
     LocalKey? key,
     String? name,
@@ -15,12 +14,4 @@ extension MaterialPageExt<T> on Widget {
       );
 
   MaterialPageRoute<T> route() => MaterialPageRoute<T>(builder: (_) => this);
-}
-
-extension DoubleExt on double {
-  String toCurrency({showCents = true}) =>
-      NumberFormat.simpleCurrency(decimalDigits: showCents ? null : 0)
-          .format(this);
-
-  int toCoinAmount() => (this * 100).round();
 }

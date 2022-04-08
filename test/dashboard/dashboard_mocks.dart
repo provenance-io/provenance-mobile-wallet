@@ -7,6 +7,7 @@ import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
+import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
@@ -45,9 +46,13 @@ class MockAssetService implements AssetService {
 }
 
 class MockTransactionService implements TransactionService {
-  MockTransactionService([this._transactions = const {}]);
+  MockTransactionService([
+    this._sendTransactions = const {},
+    this._transactions = const {},
+  ]);
 
   final Map<String, List<Transaction>> _transactions;
+  final Map<String, List<SendTransaction>> _sendTransactions;
 
   @override
   Future<List<Transaction>> getTransactions(
@@ -56,6 +61,13 @@ class MockTransactionService implements TransactionService {
     int page,
   ) =>
       Future.value(_transactions[provenanceAddress] ?? []);
+
+  @override
+  Future<List<SendTransaction>> getSendTransactions(
+    Coin coin,
+    String provenanceAddress,
+  ) =>
+      Future.value(_sendTransactions[provenanceAddress] ?? []);
 }
 
 class MockWalletConnection extends ValueListenable<WalletConnectState>
