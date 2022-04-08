@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/service_mocks_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/wallet_connect_item.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -17,7 +17,7 @@ class DeveloperMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyValueService = get<KeyValueService>();
     final diagnostics500Stream =
-        keyValueService.streamBool(PrefKey.httpClientDiagnostics500);
+        keyValueService.stream<bool>(PrefKey.httpClientDiagnostics500);
 
     return Column(
       textDirection: TextDirection.ltr,
@@ -27,11 +27,15 @@ class DeveloperMenu extends StatelessWidget {
         PwListDivider(),
         WalletConnectItem(),
         PwListDivider(),
-        StreamBuilder<bool?>(
-          initialData: diagnostics500Stream.value,
+        StreamBuilder<KeyValueData<bool>>(
+          initialData: diagnostics500Stream.valueOrNull,
           stream: diagnostics500Stream,
           builder: (context, snapshot) {
-            final data = snapshot.data ?? false;
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            final data = snapshot.data?.data ?? false;
 
             return ToggleItem(
               text: Strings.profileDeveloperHttpClients500,

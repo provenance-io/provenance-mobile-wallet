@@ -23,12 +23,13 @@ import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/platform_key_value_service.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
@@ -69,7 +70,9 @@ void main() async {
   final cipherService = PlatformCipherService();
   get.registerSingleton<CipherService>(cipherService);
 
-  var keyValueService = PlatformKeyValueService();
+  var keyValueService = DefaultKeyValueService(
+    store: SharedPreferencesKeyValueStore(),
+  );
   var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
   if (!hasKey) {
     await cipherService.deletePin();
@@ -176,8 +179,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => TestHttpClient(),
     );
 
-    keyValueService.streamBool(PrefKey.httpClientDiagnostics500).listen((e) {
-      final doError = e ?? false;
+    keyValueService.stream<bool>(PrefKey.httpClientDiagnostics500).listen((e) {
+      final doError = e.data ?? false;
       final statusCode = doError ? HttpStatus.internalServerError : null;
       get<MainHttpClient>().setDiagnosticsError(statusCode);
       get<TestHttpClient>().setDiagnosticsError(statusCode);

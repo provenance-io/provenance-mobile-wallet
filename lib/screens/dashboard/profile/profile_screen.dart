@@ -11,7 +11,7 @@ import 'package:provenance_wallet/screens/dashboard/profile/developer_menu.dart'
 import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -167,12 +167,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _divider,
-              StreamBuilder<bool?>(
-                initialData:
-                    _keyValueService.streamBool(PrefKey.showAdvancedUI).value,
-                stream: _keyValueService.streamBool(PrefKey.showAdvancedUI),
+              StreamBuilder<KeyValueData<bool>>(
+                initialData: _keyValueService
+                    .stream<bool>(PrefKey.showAdvancedUI)
+                    .valueOrNull,
+                stream: _keyValueService.stream<bool>(PrefKey.showAdvancedUI),
                 builder: (context, snapshot) {
-                  final show = snapshot.data ?? false;
+                  final streamData = snapshot.data;
+                  if (streamData == null) {
+                    return Container();
+                  }
+
+                  final show = streamData.data ?? false;
 
                   return ToggleItem(
                     text: Strings.profileShowAdvancedUI,
