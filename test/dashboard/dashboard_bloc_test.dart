@@ -307,10 +307,17 @@ class TestState {
             publicKey: "",
             coin: Coin.testNet,
           ),
-          PrivateKey.fromSeed(
-            Mnemonic.createSeed([id]),
-            Coin.testNet,
-          ),
+          [
+            PrivateKey.fromSeed(
+              Mnemonic.createSeed([id]),
+              Coin.mainNet,
+            ),
+            PrivateKey.fromSeed(
+              Mnemonic.createSeed([id]),
+              Coin.testNet,
+            ),
+          ],
+          0,
         ),
       );
     }

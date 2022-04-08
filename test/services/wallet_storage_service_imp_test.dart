@@ -3,8 +3,10 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 
 import 'wallet_storage_service_imp_test.mocks.dart';
@@ -25,7 +27,8 @@ main() {
   });
 
   group("addWallet", () {
-    PrivateKey? privateKey;
+    List<PrivateKey>? privateKeys;
+    final publicKeys = <PublicKeyData>[];
     const id = "TestId";
     final wallet = WalletDetails(
       id: id,
@@ -36,17 +39,28 @@ main() {
     );
 
     setUp(() {
-      const bip32Serialized =
-          "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
-      privateKey = PrivateKey.fromBip32(bip32Serialized);
+      final seed = Mnemonic.createSeed(['test']);
+      privateKeys = [
+        PrivateKey.fromSeed(seed, Coin.testNet),
+        PrivateKey.fromSeed(seed, Coin.mainNet),
+      ];
+
+      publicKeys.clear();
+      for (final privateKey in privateKeys!) {
+        final publicKey = privateKey.defaultKey().publicKey;
+        final publicKeyData = PublicKeyData(
+          address: publicKey.address,
+          hex: publicKey.compressedPublicKeyHex,
+          chainId: ChainId.forCoin(privateKey.coin),
+        );
+        publicKeys.add(publicKeyData);
+      }
     });
 
     test('success', () async {
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
-        address: anyNamed("address"),
-        coin: anyNamed("coin"),
-        publicKey: anyNamed("publicKey"),
+        publicKeys: anyNamed("publicKeys"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -56,22 +70,22 @@ main() {
 
       final result = await _storageService!.addWallet(
         name: wallet.name,
-        privateKey: privateKey!,
+        privateKeys: privateKeys!,
       );
 
       expect(result, wallet);
 
-      verify(_mockSqliteService!.addWallet(
-        name: wallet.name,
-        address: privateKey!.defaultKey().publicKey.address,
-        coin: Coin.testNet,
-        publicKey: privateKey!.defaultKey().publicKey.compressedPublicKeyHex,
-      ));
+      verify(_mockSqliteService!
+          .addWallet(name: wallet.name, publicKeys: publicKeys));
 
-      verify(_mockCipherService!.encryptKey(
-        id: id,
-        privateKey: privateKey!.serialize(publicKeyOnly: false),
-      ));
+      for (final privateKey in privateKeys!) {
+        final keyId = _storageService!.privateKeyId(id, privateKey.coin);
+
+        verify(_mockCipherService!.encryptKey(
+          id: keyId,
+          privateKey: privateKey.serialize(publicKeyOnly: false),
+        ));
+      }
     });
 
     testWidgets('add wallet failure', (tester) async {
@@ -79,15 +93,13 @@ main() {
 
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
-        address: anyNamed("address"),
-        coin: anyNamed("coin"),
-        publicKey: anyNamed("publicKey"),
+        publicKeys: anyNamed("publicKeys"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => _storageService!.addWallet(
           name: "Name",
-          privateKey: privateKey!,
+          privateKeys: privateKeys!,
         ),
         throwsA(exception),
       );
@@ -100,9 +112,7 @@ main() {
           .thenAnswer((_) => Future.value(0));
       when(_mockSqliteService!.addWallet(
         name: anyNamed("name"),
-        address: anyNamed("address"),
-        coin: anyNamed("coin"),
-        publicKey: anyNamed("publicKey"),
+        publicKeys: anyNamed("publicKeys"),
       )).thenAnswer((_) => Future.value(wallet));
 
       when(_mockCipherService!.encryptKey(
@@ -112,7 +122,7 @@ main() {
 
       final result = await _storageService!.addWallet(
         name: "Name",
-        privateKey: privateKey!,
+        privateKeys: privateKeys!,
       );
 
       verify(_mockSqliteService!.removeWallet(id: id));
@@ -189,15 +199,17 @@ main() {
     const bip32Serialized =
         "tprv8kxV73NnPZyfSNfQThb5zjzysmbmGABtrZsGNcuhKnqPsmJFuyBvwJzSA24V59AAYWJfBVGxu4fGSKiLh3czp6kE1NNpP2SqUvHeStr8DC1";
     const id = "TestId";
+    const coin = Coin.testNet;
 
     testWidgets('success', (tester) async {
       when(_mockCipherService!.decryptKey(
         id: anyNamed("id"),
       )).thenAnswer((_) => Future.value(bip32Serialized));
 
-      final privateKey = await _storageService!.loadKey(id);
+      final keyId = _storageService!.privateKeyId(id, coin);
+      final privateKey = await _storageService!.loadKey(id, coin);
       expect(privateKey!.rawHex, PrivateKey.fromBip32(bip32Serialized).rawHex);
-      verify(_mockCipherService!.decryptKey(id: id));
+      verify(_mockCipherService!.decryptKey(id: keyId));
       verifyNoMoreInteractions(_mockSqliteService);
     });
   });
@@ -224,7 +236,11 @@ main() {
           .thenAnswer((_) => Future.value(1));
       await _storageService!.removeWallet(id);
 
-      verify(_mockCipherService!.removeKey(id: id));
+      for (final coin in Coin.values) {
+        final keyId = _storageService!.privateKeyId(id, coin);
+        verify(_mockCipherService!.removeKey(id: keyId));
+      }
+
       verify(_mockSqliteService!.removeWallet(id: id));
     });
   });

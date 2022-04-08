@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
@@ -15,21 +14,23 @@ class _DateTimeFormatWithTimeZone extends DateFormat {
 
   @override
   String format(DateTime date) {
-    final formatted = super.format(date);
+    final utcDate = date.toUtc();
+    final formatted = super.format(utcDate);
     final numberFormatter = NumberFormat("00");
 
-    final timezone = date.timeZoneOffset;
-    final offsetInHours = timezone.inMinutes ~/ 60;
-    final offsetInMinutes = (timezone.inMinutes % 60).abs();
+    final timezone = utcDate.timeZoneOffset;
+    final timezoneOffsetInMinutes = timezone.inMinutes.abs();
+    final offsetInHours = timezoneOffsetInMinutes ~/ 60;
+    final offsetInMinutes = (timezoneOffsetInMinutes % 60);
+    final prefix = timezone.inMinutes <= 0 ? "-" : "+";
 
-    return "$formatted${numberFormatter.format(offsetInHours)}:${numberFormatter.format(offsetInMinutes)}";
+    return "$formatted$prefix${numberFormatter.format(offsetInHours)}:${numberFormatter.format(offsetInMinutes)}";
   }
 }
 
 class DefaultAssetService extends AssetService
     with ClientNotificationMixin, ClientCoinMixin {
-  @visibleForTesting
-  static final formatter =
+  static final _formatter =
       _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
   String get _assetServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
@@ -79,7 +80,7 @@ class DefaultAssetService extends AssetService
     final timeFrame = value.name.toUpperCase();
 
     final data = await client.get(
-      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${formatter.format(startDate)}&endDate=${formatter.format(endDate)}',
+      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${_formatter.format(startDate)}&endDate=${_formatter.format(endDate)}',
       listConverter: (json) {
         if (json is String) {
           return <AssetGraphItem>[];

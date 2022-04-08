@@ -1,5 +1,33 @@
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+
+class PublicKeyData {
+  PublicKeyData({
+    required this.address,
+    required this.hex,
+    required this.chainId,
+  });
+
+  final String address;
+  final String hex;
+  final String chainId;
+
+  @override
+  int get hashCode => hashValues(
+        address,
+        hex,
+        chainId,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    return other is PublicKeyData &&
+        other.address == address &&
+        other.hex == hex &&
+        other.chainId == chainId;
+  }
+}
 
 abstract class WalletStorageService {
   WalletStorageService._();
@@ -21,10 +49,10 @@ abstract class WalletStorageService {
 
   Future<WalletDetails?> addWallet({
     required String name,
-    required PrivateKey privateKey,
+    required List<PrivateKey> privateKeys,
   });
 
-  Future<PrivateKey?> loadKey(String id);
+  Future<PrivateKey?> loadKey(String id, Coin coin);
 
   Future<bool> removeWallet(String id);
 

@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteWalletStorageService {
-  static const _version = 1;
+  static const _version = 2;
   static const _name = 'wallet.db';
   static const _sqlCreateTableConfig = '''
     CREATE TABLE "Config" (
@@ -21,24 +23,38 @@ class SqliteWalletStorageService {
   static const _sqlCreateTableWallet = '''
     CREATE TABLE "Wallet" (
       "Id"	INTEGER NOT NULL,
-      "Name"	TEXT,
-      "Address"	TEXT,
-      "PublicKey"	TEXT,
-      "IsMainNet"	INTEGER,
+      "Name"  TEXT,
       PRIMARY KEY("Id" AUTOINCREMENT)
     );
   ''';
+  static const _sqlCreateTablePublicKey = '''
+    CREATE TABLE "PublicKey" (
+      "Id"	INTEGER NOT NULL,
+      "WalletId"	INTEGER NOT NULL,
+      "Address"	TEXT,
+      "Hex"	TEXT,
+      "ChainId"	TEXT,
+      PRIMARY KEY("Id" AUTOINCREMENT)
+    );
+  ''';
+  static const _sqlCreateTableSelectedPublicKey = '''
+    CREATE TABLE "SelectedPublicKey" (
+	    "WalletId"	INTEGER NOT NULL UNIQUE,
+	    "PublicKeyId"	INTEGER NOT NULL,
+	    PRIMARY KEY("WalletId")
+    );
+  ''';
   static const _sqlGetWallets = '''
-    SELECT * FROM Wallet
+    SELECT w.Id, w.Name, pk.Address, pk.Hex, pk.ChainId FROM Wallet w INNER JOIN PublicKey pk ON w.Id = pk.WalletId INNER JOIN SelectedPublicKey spk ON w.Id = spk.WalletId AND pk.Id = spk.PublicKeyId
   ''';
   static const _sqlGetWallet = '''
-    SELECT * FROM Wallet WHERE Id = ?
+    SELECT w.Id, w.Name, pk.Address, pk.Hex, pk.ChainId FROM Wallet w INNER JOIN PublicKey pk ON w.Id = pk.WalletId INNER JOIN SelectedPublicKey spk ON w.Id = spk.WalletId AND pk.Id = spk.PublicKeyId WHERE w.Id = ?
   ''';
   static const _sqlGetSelectedWallet = '''
-    SELECT w.* FROM Wallet w INNER JOIN Config c ON w.Id = c.SelectedId
+    SELECT w.Id, w.Name, pk.Address, pk.Hex, pk.ChainId FROM Wallet w INNER JOIN SelectedPublicKey spk on w.Id = spk.WalletId INNER JOIN PublicKey pk on pk.Id = spk.PublicKeyId AND pk.Id = spk.PublicKeyId INNER JOIN Config c ON w.Id = c.SelectedId
   ''';
   static const _sqlGetFirstWallet = '''
-    SELECT * FROM Wallet ORDER BY Id LIMIT 1
+    SELECT w.Id, w.Name, pk.Address, pk.Hex, pk.ChainId FROM Wallet w INNER JOIN PublicKey pk ON w.Id = pk.WalletId ORDER BY w.Id LIMIT 1
   ''';
   static const _sqlUpdateSelectedWallet = '''
     UPDATE Config SET SelectedId = ? WHERE Id = 1
@@ -46,14 +62,15 @@ class SqliteWalletStorageService {
   static const _sqlRenameWallet = '''
     UPDATE Wallet SET Name = ? WHERE Id = ?
   ''';
-  static const _sqlUpdateCoin = '''
-    UPDATE Wallet SET IsMainNet = ? WHERE Id = ?
-  ''';
   static const _sqlDeleteWallet = '''
-    DELETE FROM Wallet WHERE Id = ?
+    DELETE FROM Wallet WHERE Id = ?;
+    DELETE FROM PublicKey WHERE WalletId = ?;
+    DELETE FROM SelectedPublicKey WHERE WalletId = ?;
   ''';
   static const _sqlDeleteAllWallets = '''
-    DELETE FROM Wallet
+    DELETE FROM Wallet;
+    DELETE FROM PublicKey;
+    DELETE FROM SelectedPublicKey;
   ''';
 
   static Future<Database>? _db;
@@ -115,17 +132,40 @@ class SqliteWalletStorageService {
     return await getWallet(id: id);
   }
 
-  Future<WalletDetails?> setWalletCoin({
+  Future<WalletDetails?> setChainId({
     required String id,
-    required Coin coin,
+    required String chainId,
   }) async {
     final db = await _getDb();
-    final isMainNet = coin == Coin.mainNet ? 1 : 0;
+    final selectArgs = [
+      id,
+      chainId,
+    ];
+    final selectResults = await db.rawQuery(
+      'SELECT pk.Id FROM PublicKey pk WHERE pk.WalletId = ? AND pk.ChainId = ?',
+      selectArgs,
+    );
+    int? publicKeyId;
+    if (selectResults.isNotEmpty) {
+      publicKeyId = selectResults.first['Id'] as int;
+    }
 
     WalletDetails? details;
-    int rowsChanged = await db.rawUpdate(_sqlUpdateCoin, [isMainNet, id]);
-    if (rowsChanged != 0) {
-      details = await getWallet(id: id);
+
+    if (publicKeyId != null) {
+      final updateArgs = [
+        publicKeyId,
+        id,
+      ];
+
+      final rowsChanged = await db.rawUpdate(
+        'UPDATE SelectedPublicKey Set PublicKeyId = ? WHERE WalletId = ?',
+        updateArgs,
+      );
+
+      if (rowsChanged != 0) {
+        details = await getWallet(id: id);
+      }
     }
 
     return details;
@@ -133,22 +173,61 @@ class SqliteWalletStorageService {
 
   Future<WalletDetails?> addWallet({
     required String name,
-    required String address,
-    required String publicKey,
-    required Coin coin,
+    required List<PublicKeyData> publicKeys,
   }) async {
-    final db = await _getDb();
-    final id = await db.insert(
-      'wallet',
-      {
-        'Name': name,
-        'Address': address,
-        'PublicKey': publicKey,
-        'IsMainNet': coin == Coin.mainNet ? 1 : 0,
-      },
-    );
+    if (publicKeys.isEmpty) {
+      return null;
+    }
 
-    final details = await getWallet(id: id.toString());
+    final db = await _getDb();
+
+    int? walletId;
+    await db.transaction((txn) async {
+      walletId = await txn.insert(
+        'Wallet',
+        {
+          'Name': name,
+        },
+      );
+
+      final chainIds = <String>{};
+
+      for (var i = 0; i < publicKeys.length; i++) {
+        final publicKey = publicKeys[i];
+        final chainId = publicKey.chainId;
+
+        assert(
+          !chainIds.contains(chainId),
+          'Duplicate chain-id "$chainId" not allowed',
+        );
+
+        if (!chainIds.contains(chainId)) {
+          final publicKeyId = await txn.insert('PublicKey', {
+            'WalletId': walletId,
+            'Address': publicKey.address,
+            'Hex': publicKey.hex,
+            'ChainId': chainId,
+          });
+
+          if (i == 0) {
+            chainIds.add(chainId);
+
+            await txn.insert(
+              'SelectedPublicKey',
+              {
+                'WalletId': walletId,
+                'PublicKeyId': publicKeyId,
+              },
+            );
+          }
+        }
+      }
+    });
+
+    WalletDetails? details;
+    if (walletId != null) {
+      details = await getWallet(id: walletId.toString());
+    }
 
     return details;
   }
@@ -179,32 +258,77 @@ class SqliteWalletStorageService {
 
     await Directory(databasePath).create(recursive: true);
 
-    return openDatabase(
+    final db = await openDatabase(
       path,
       version: _version,
       onCreate: _onCreate,
+      onUpgrade: _onUpdate,
     );
+
+    return db;
   }
 
-  static Future _onCreate(Database db, int version) async {
-    await db.execute(_sqlCreateTableConfig);
-    await db.execute(_sqlInitConfig);
-    await db.execute(_sqlCreateTableWallet);
+  static Future<void> _onCreate(Database db, int version) async {
+    final batch = db.batch();
+    _createV2(batch);
+    await batch.commit();
+  }
+
+  static Future<void> _onUpdate(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    final batch = db.batch();
+    if (oldVersion == 1 && newVersion == 2) {
+      _upgradeV1toV2(
+        batch,
+      );
+      _createV2(batch);
+    }
+
+    await batch.commit();
+  }
+
+  static void _createV2(Batch batch) {
+    batch.execute(_sqlCreateTableConfig);
+    batch.execute(_sqlInitConfig);
+    batch.execute(_sqlCreateTableWallet);
+    batch.execute(_sqlCreateTablePublicKey);
+    batch.execute(_sqlCreateTableSelectedPublicKey);
+  }
+
+  static void _upgradeV1toV2(
+    Batch batch,
+  ) {
+    batch.execute('DROP TABLE IF EXISTS Wallet');
+    batch.execute('DROP TABLE IF EXISTS Config');
   }
 
   static WalletDetails _mapWallet(Map<String, Object?> result) {
     final id = result['Id'] as int;
     final name = result['Name'] as String;
     final address = result['Address'] as String;
-    final publicKey = result['PublicKey'] as String;
-    final isMainNet = result['IsMainNet'] as int == 1;
+    final publicKey = result['Hex'] as String;
+    final chainId = result['ChainId'] as String;
+    Coin coin;
+    switch (chainId) {
+      case ChainId.mainNet:
+        coin = Coin.mainNet;
+        break;
+      case ChainId.testNet:
+        coin = Coin.testNet;
+        break;
+      default:
+        throw 'Unsupported chain-id: $chainId';
+    }
 
     return WalletDetails(
       id: id.toString(),
       address: address,
       name: name,
       publicKey: publicKey,
-      coin: (isMainNet) ? Coin.mainNet : Coin.testNet,
+      coin: coin,
     );
   }
 }

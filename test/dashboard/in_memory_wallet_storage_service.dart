@@ -4,10 +4,17 @@ import 'package:provenance_wallet/services/wallet_service/wallet_storage_service
 import 'package:uuid/uuid.dart';
 
 class InMemoryStorageData {
-  InMemoryStorageData(this.details, this.key);
+  InMemoryStorageData(
+    this.details,
+    this.keys,
+    this.selectedKeyIndex,
+  );
 
   final WalletDetails details;
-  final PrivateKey key;
+  final List<PrivateKey> keys;
+  final int selectedKeyIndex;
+
+  PrivateKey get selectedKey => keys[selectedKeyIndex];
 }
 
 class InMemoryWalletStorageService implements WalletStorageService {
@@ -25,21 +32,31 @@ class InMemoryWalletStorageService implements WalletStorageService {
   @override
   Future<WalletDetails?> addWallet({
     required String name,
-    required PrivateKey privateKey,
-    bool? useBiometry,
+    required List<PrivateKey> privateKeys,
   }) async {
+    if (privateKeys.isEmpty) {
+      return null;
+    }
+
     final id = Uuid().v1().toString();
-    final publicKey = privateKey.defaultKey().publicKey;
+
+    const selectedKeyIndex = 0;
+    final selectedPrivateKey = privateKeys.first;
+    final selectedPublicKey = selectedPrivateKey.defaultKey().publicKey;
 
     final details = WalletDetails(
       id: id,
-      address: publicKey.address,
       name: name,
-      publicKey: "",
-      coin: Coin.testNet,
+      address: selectedPublicKey.address,
+      publicKey: selectedPublicKey.compressedPublicKeyHex,
+      coin: selectedPrivateKey.coin,
     );
 
-    _datas.add(InMemoryStorageData(details, privateKey));
+    _datas.add(InMemoryStorageData(
+      details,
+      privateKeys,
+      selectedKeyIndex,
+    ));
 
     return details;
   }
@@ -74,12 +91,12 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<PrivateKey?> loadKey(String id) async {
+  Future<PrivateKey?> loadKey(String id, Coin coin) async {
     PrivateKey? result;
 
     for (final data in _datas) {
       if (data.details.id == id) {
-        result = data.key;
+        result = data.keys.firstWhere((e) => e.coin == coin);
       }
     }
 
@@ -116,9 +133,13 @@ class InMemoryWalletStorageService implements WalletStorageService {
         address: old.details.address,
         name: name,
         publicKey: old.details.publicKey,
-        coin: Coin.testNet,
+        coin: old.details.coin,
       );
-      _datas[index] = InMemoryStorageData(renamed, old.key);
+      _datas[index] = InMemoryStorageData(
+        renamed,
+        old.keys,
+        old.selectedKeyIndex,
+      );
       result = renamed;
     }
 
@@ -135,15 +156,23 @@ class InMemoryWalletStorageService implements WalletStorageService {
     final index = _datas.indexWhere((e) => e.details.id == id);
     if (index != -1) {
       final old = _datas[index];
-      final updated = WalletDetails(
-        id: old.details.id,
-        address: old.details.address,
-        name: old.details.name,
-        publicKey: old.details.publicKey,
-        coin: coin,
-      );
-      _datas[index] = InMemoryStorageData(updated, old.key);
-      result = updated;
+
+      final keyIndex = old.keys.indexWhere((e) => e.coin == coin);
+      if (keyIndex != -1) {
+        final updated = WalletDetails(
+          id: old.details.id,
+          address: old.details.address,
+          name: old.details.name,
+          publicKey: old.details.publicKey,
+          coin: coin,
+        );
+        _datas[index] = InMemoryStorageData(
+          updated,
+          old.keys,
+          keyIndex,
+        );
+        result = updated;
+      }
     }
 
     return result;
