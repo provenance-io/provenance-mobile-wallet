@@ -792,7 +792,7 @@ packages:
       path: "."
       ref: develop
       resolved-ref: b79216ab64aa497ae9711551e49e6e90dabaa743
-      url: "git@github.com:provenance-io/provenance-dart.git"
+      url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
     version: "0.0.1"
   pub_semver:

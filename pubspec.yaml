@@ -35,7 +35,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
-  flutter_lints: ^1.0.4 
+  flutter_lints: ^1.0.4
   flutter_native_splash: ^1.2.1
   flutter_svg: ^0.22.0
   get_it: ^7.2.0
@@ -48,7 +48,7 @@ dependencies:
     path: packages/prov_wallet_flutter
   provenance_dart:
     git:
-      url: git@github.com:provenance-io/provenance-dart.git
+      url: https://github.com/provenance-io/provenance-dart.git
       ref: develop
   qr_code_scanner: ^0.5.1
   qr_flutter: ^4.0.0
@@ -83,7 +83,6 @@ flutter_icons:
   adaptive_icon_foreground: "assets/app_icon/adaptive_foreground.png"
   adaptive_icon_background: "assets/app_icon/adaptive_background.png"
 
-
 flutter_native_splash:
   background_image: "assets/splash/background.png"
   image: "assets/splash/foreground.png"
@@ -113,7 +112,6 @@ flutter:
     - assets/
     - assets/images/
     - assets/splash/
-
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
