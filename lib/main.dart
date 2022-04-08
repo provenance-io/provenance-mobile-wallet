@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart';
@@ -53,73 +53,59 @@ import 'package:rxdart/rxdart.dart';
 import 'util/get.dart';
 
 // Toggle this for testing Crashlytics in your app locally.
-const _testingCrashlytics = false;
+const _testingCrashlytics = true;
 
 void main() async {
-  runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-      _initializeFlutterFire();
+  _initializeFlutterFire();
 
-      await SystemChrome.setPreferredOrientations(
-        [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ],
-      );
+  final firebaseMessaging = FirebaseMessaging.instance;
+  final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
+  await pushNotificationHelper.init();
 
-      final firebaseMessaging = FirebaseMessaging.instance;
-      final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-      await pushNotificationHelper.init();
+  get.registerLazySingleton<RemoteNotificationService>(() {
+    return DefaultRemoteNotificationService(pushNotificationHelper);
+  });
 
-      get.registerLazySingleton<RemoteNotificationService>(() {
-        return DefaultRemoteNotificationService(pushNotificationHelper);
-      });
+  final cipherService = PlatformCipherService();
+  get.registerSingleton<CipherService>(cipherService);
 
-      final cipherService = PlatformCipherService();
-      get.registerSingleton<CipherService>(cipherService);
+  var keyValueService = DefaultKeyValueService(
+    store: SharedPreferencesKeyValueStore(),
+  );
+  var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
+  if (!hasKey) {
+    await cipherService.deletePin();
+    keyValueService.setBool(PrefKey.isSubsequentRun, true);
+  }
 
-      var keyValueService = DefaultKeyValueService(
-        store: SharedPreferencesKeyValueStore(),
-      );
-      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
-      if (!hasKey) {
-        await cipherService.deletePin();
-        keyValueService.setBool(PrefKey.isSubsequentRun, true);
-      }
+  get.registerSingleton<KeyValueService>(keyValueService);
+  final sqliteStorage = SqliteWalletStorageService();
+  final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
 
-      get.registerSingleton<KeyValueService>(keyValueService);
-      final sqliteStorage = SqliteWalletStorageService();
-      final walletStorage =
-          WalletStorageServiceImp(sqliteStorage, cipherService);
+  final walletService = WalletService(storage: walletStorage)..init();
+  get.registerSingleton<WalletService>(walletService);
 
-      final walletService = WalletService(storage: walletStorage)..init();
-      get.registerSingleton<WalletService>(walletService);
+  get.registerSingleton<ProtobuffClientInjector>(
+    (coin) => PbClient(
+      Uri.parse(Endpoints.chain.forCoin(coin)),
+      ChainId.forCoin(
+        coin,
+      ),
+    ),
+  );
 
-      get.registerSingleton<ProtobuffClientInjector>(
-        (coin) => PbClient(
-          Uri.parse(Endpoints.chain.forCoin(coin)),
-          ChainId.forCoin(
-            coin,
-          ),
-        ),
-      );
+  final authHelper = LocalAuthHelper();
+  await authHelper.init();
 
-      final authHelper = LocalAuthHelper();
-      await authHelper.init();
+  get.registerSingleton<LocalAuthHelper>(authHelper);
 
-      get.registerSingleton<LocalAuthHelper>(authHelper);
-
-      runApp(
-        Phoenix(
-          child: ProvenanceWalletApp(),
-        ),
-      );
-    },
-    (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
-    },
+  runApp(
+    Phoenix(
+      child: ProvenanceWalletApp(),
+    ),
   );
 }
 
