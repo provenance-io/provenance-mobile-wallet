@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -31,7 +29,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   static const _divider = PwListDivider();
 
-  var _showDevMenu = false;
   final _keyValueService = get<KeyValueService>();
   late final TimedCounter _tapCounter;
 
@@ -39,7 +36,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
 
-    _initDevMenu();
     _tapCounter = TimedCounter(
       onSuccess: _toggleDevMenu,
     );
@@ -186,8 +182,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
-              if (_showDevMenu) _divider,
-              if (_showDevMenu) DeveloperMenu(),
+              StreamBuilder<KeyValueData<bool>>(
+                initialData: _keyValueService
+                    .stream<bool>(PrefKey.showDevMenu)
+                    .valueOrNull,
+                stream: _keyValueService.stream<bool>(PrefKey.showDevMenu),
+                builder: (context, snapshot) {
+                  final show = snapshot.data?.data ?? false;
+                  if (!show) {
+                    return Container();
+                  }
+
+                  return Column(
+                    children: const [
+                      _divider,
+                      DeveloperMenu(),
+                    ],
+                  );
+                },
+              ),
               _divider,
             ],
           ),
@@ -204,22 +217,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _initDevMenu() async {
-    final showDevMenu = await _keyValueService.getBool(PrefKey.showDevMenu);
-
-    if (showDevMenu ?? false) {
-      setState(() {
-        _showDevMenu = true;
-      });
-    }
-  }
-
-  void _toggleDevMenu() {
-    final showDevMenu = !_showDevMenu;
-    _tapCounter.cancel();
-    setState(() {
-      _showDevMenu = showDevMenu;
-    });
-    _keyValueService.setBool(PrefKey.showDevMenu, showDevMenu);
+  void _toggleDevMenu() async {
+    final value = await _keyValueService.getBool(PrefKey.showDevMenu) ?? false;
+    await _keyValueService.setBool(PrefKey.showDevMenu, !value);
   }
 }
