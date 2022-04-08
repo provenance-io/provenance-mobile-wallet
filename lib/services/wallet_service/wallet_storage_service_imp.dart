@@ -1,5 +1,7 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
@@ -16,31 +18,44 @@ class WalletStorageServiceImp implements WalletStorageService {
   @override
   Future<WalletDetails?> addWallet({
     required String name,
-    required PrivateKey privateKey,
+    required List<PrivateKey> privateKeys,
   }) async {
-    final publicKey = privateKey.defaultKey().publicKey;
+    final keyDatas = <PublicKeyData>[];
+    for (var privateKey in privateKeys) {
+      final publicKey = privateKey.defaultKey().publicKey;
+      final address = publicKey.address;
+      final hex = publicKey.compressedPublicKeyHex;
+      final network = ChainId.forCoin(publicKey.coin);
+      final data = PublicKeyData(
+        address: address,
+        hex: hex,
+        chainId: network,
+      );
+      keyDatas.add(data);
+    }
 
     final details = await _sqliteWalletStorageService.addWallet(
       name: name,
-      address: publicKey.address,
-      coin: publicKey.coin,
-      publicKey: publicKey.compressedPublicKeyHex,
-    );
-
-    final privateKeyStr = privateKey.serialize(
-      publicKeyOnly: false,
+      publicKeys: keyDatas,
     );
 
     if (details != null) {
-      final success = await _cipherService.encryptKey(
-        id: details.id,
-        privateKey: privateKeyStr,
-      );
+      for (var privateKey in privateKeys) {
+        final privateKeyStr = privateKey.serialize(
+          publicKeyOnly: false,
+        );
 
-      if (!success) {
-        await _sqliteWalletStorageService.removeWallet(id: details.id);
+        final keyId = privateKeyId(details.id, privateKey.coin);
+        final success = await _cipherService.encryptKey(
+          id: keyId,
+          privateKey: privateKeyStr,
+        );
 
-        return null;
+        if (!success) {
+          await _sqliteWalletStorageService.removeWallet(id: details.id);
+
+          return null;
+        }
       }
     }
 
@@ -63,8 +78,9 @@ class WalletStorageServiceImp implements WalletStorageService {
   }
 
   @override
-  Future<PrivateKey?> loadKey(String id) async {
-    final serializedKey = await _cipherService.decryptKey(id: id);
+  Future<PrivateKey?> loadKey(String walletId, Coin coin) async {
+    final keyId = privateKeyId(walletId, coin);
+    final serializedKey = await _cipherService.decryptKey(id: keyId);
 
     return serializedKey == null ? null : PrivateKey.fromBip32(serializedKey);
   }
@@ -83,11 +99,12 @@ class WalletStorageServiceImp implements WalletStorageService {
 
   @override
   Future<bool> removeWallet(String id) async {
-    var count = 0;
-    final success = await _cipherService.removeKey(id: id);
-    if (success) {
-      count = await _sqliteWalletStorageService.removeWallet(id: id);
+    for (final coin in Coin.values) {
+      final keyId = privateKeyId(id, coin);
+      await _cipherService.removeKey(id: keyId);
     }
+
+    final count = await _sqliteWalletStorageService.removeWallet(id: id);
 
     return count != 0;
   }
@@ -104,12 +121,26 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<WalletDetails?> setWalletCoin({
     required String id,
     required Coin coin,
-  }) {
-    return _sqliteWalletStorageService.setWalletCoin(id: id, coin: coin);
+  }) async {
+    final network = ChainId.forCoin(coin);
+
+    final details = await _sqliteWalletStorageService.setChainId(
+      id: id,
+      chainId: network,
+    );
+
+    return details;
   }
 
   @override
   Future<WalletDetails?> selectWallet({String? id}) {
     return _sqliteWalletStorageService.selectWallet(id: id);
+  }
+
+  @visibleForTesting
+  String privateKeyId(String walletId, Coin coin) {
+    final chainId = ChainId.forCoin(coin);
+
+    return '$walletId-$chainId';
   }
 }

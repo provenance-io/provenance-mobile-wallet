@@ -40,7 +40,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         .listen(_handleDynamicLink)
         .addTo(_subscriptions);
     _walletService.events.selected
-        .distinct((a, b) => a?.id == b?.id)
+        .distinct()
         .listen(_onSelected)
         .addTo(_subscriptions);
     delegateEvents.onClose

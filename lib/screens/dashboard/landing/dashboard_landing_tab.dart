@@ -2,6 +2,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/landing/connection_details_modal.dart';
@@ -110,35 +111,41 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                 ),
               ],
               centerTitle: false,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StreamBuilder<WalletDetails?>(
-                    initialData: walletService.events.selected.value,
-                    stream: walletService.events.selected,
-                    builder: (context, snapshot) {
-                      final walletName = snapshot.data?.name ?? "";
+              title: StreamBuilder<WalletDetails?>(
+                initialData: walletService.events.selected.value,
+                stream: walletService.events.selected,
+                builder: (context, snapshot) {
+                  final details = snapshot.data;
 
-                      return PwText(
-                        walletName,
+                  final name = details?.name ?? '';
+                  final walletAddress = details?.address ?? '';
+                  final coin = details?.coin;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PwText(
+                        name,
                         style: PwTextStyle.subhead,
                         overflow: TextOverflow.fade,
-                      );
-                    },
-                  ),
-                  StreamBuilder<WalletDetails?>(
-                    initialData: walletService.events.selected.value,
-                    stream: walletService.events.selected,
-                    builder: (context, snapshot) {
-                      final walletAddress = snapshot.data?.address ?? "";
-
-                      return PwText(
-                        "(${walletAddress.abbreviateAddress()})",
-                        style: PwTextStyle.body,
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                      Row(
+                        children: [
+                          PwText(
+                            walletAddress.abbreviateAddress(),
+                            style: PwTextStyle.body,
+                          ),
+                          if (coin != null) HorizontalSpacer.large(),
+                          if (coin != null)
+                            PwText(
+                              coin.displayName,
+                              style: PwTextStyle.body,
+                            ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
               ),
               leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,

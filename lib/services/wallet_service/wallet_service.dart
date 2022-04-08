@@ -110,6 +110,9 @@ class WalletService implements Disposable {
 
     if (details != null) {
       events._updated.add(details);
+      if (events.selected.value?.id == details.id) {
+        selectWallet(id: details.id);
+      }
     }
 
     return details;
@@ -121,11 +124,14 @@ class WalletService implements Disposable {
     Coin coin = Coin.testNet,
   }) async {
     final seed = Mnemonic.createSeed(phrase);
-    final privateKey = PrivateKey.fromSeed(seed, coin);
+    final privateKeys = [
+      PrivateKey.fromSeed(seed, Coin.mainNet),
+      PrivateKey.fromSeed(seed, Coin.testNet),
+    ];
 
     final details = await _storage.addWallet(
       name: name,
-      privateKey: privateKey,
+      privateKeys: privateKeys,
     );
 
     if (details != null) {
@@ -169,7 +175,15 @@ class WalletService implements Disposable {
     return wallets;
   }
 
-  Future<PrivateKey?> loadKey(String walletId) => _storage.loadKey(walletId);
+  Future<PrivateKey?> loadKey(String walletId) async {
+    final coin = events.selected.value?.coin;
+    PrivateKey? privateKey;
+    if (coin != null) {
+      privateKey = await _storage.loadKey(walletId, coin);
+    }
+
+    return privateKey;
+  }
 
   Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);

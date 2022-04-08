@@ -10,15 +10,17 @@ import 'package:rxdart/rxdart.dart';
 
 class WalletsBloc implements Disposable {
   WalletsBloc() {
-    _walletService.events.added.listen(_onAdded);
-    _walletService.events.removed.listen(_onRemoved);
+    _walletService.events.added.listen(_onAdded).addTo(_subscriptions);
+    _walletService.events.updated.listen(_onUpdated).addTo(_subscriptions);
+    _walletService.events.selected.listen(_onSelected).addTo(_subscriptions);
   }
 
   final _subscriptions = CompositeSubscription();
   final _walletService = get<WalletService>();
   final _assetService = get<AssetService>();
   final _count = BehaviorSubject.seeded(0);
-  final _removed = PublishSubject<WalletDataChange>();
+
+  final _updated = PublishSubject<WalletDetails>();
   final _insert = PublishSubject<int>();
   final _loading = BehaviorSubject.seeded(false);
 
@@ -27,7 +29,7 @@ class WalletsBloc implements Disposable {
   final _assetCounts = <String, int>{};
 
   ValueStream<int> get count => _count;
-  Stream<WalletDataChange> get removed => _removed;
+  Stream<WalletDetails> get updated => _updated;
   Stream<int> get insert => _insert;
   ValueStream<bool> get loading => _loading;
 
@@ -63,10 +65,29 @@ class WalletsBloc implements Disposable {
     }
   }
 
-  WalletDetails getWallet(int index) {
+  WalletDetails getWalletAtIndex(int index) {
     final wallet = _wallets[index];
 
     return wallet;
+  }
+
+  WalletDetails getWallet(String id) {
+    final wallet = _wallets.firstWhere((e) => e.id == id);
+
+    return wallet;
+  }
+
+  int getWalletIndex(String id) {
+    return _wallets.indexWhere((e) => e.id == id);
+  }
+
+  int removeWallet(String id) {
+    final index = _wallets.indexWhere((e) => e.id == id);
+    if (index != -1) {
+      _wallets.removeAt(index);
+    }
+
+    return index;
   }
 
   Future<int> getAssetCount(WalletDetails wallet) async {
@@ -84,8 +105,8 @@ class WalletsBloc implements Disposable {
   FutureOr onDispose() {
     _subscriptions.dispose();
     _count.close();
-    _removed.close();
     _insert.close();
+    _updated.close();
     _loading.close();
   }
 
@@ -94,21 +115,18 @@ class WalletsBloc implements Disposable {
     _insert.tryAdd(_wallets.length - 1);
   }
 
-  void _onRemoved(List<WalletDetails> wallets) {
-    for (final wallet in wallets) {
-      final index = _wallets.indexWhere((e) => e.id == wallet.id);
-      if (index != -1) {
-        final data = _wallets.removeAt(index);
-
-        _removed.tryAdd(WalletDataChange(index, data));
-      }
+  void _onUpdated(WalletDetails wallet) {
+    final index = _wallets.indexWhere((e) => e.id == wallet.id);
+    if (index != -1) {
+      _wallets[index] = wallet;
+      _assetCounts.remove(wallet.id);
+      _updated.add(wallet);
     }
   }
-}
 
-class WalletDataChange {
-  WalletDataChange(this.index, this.details);
-
-  final int index;
-  final WalletDetails details;
+  void _onSelected(WalletDetails? wallet) {
+    if (wallet != null) {
+      _updated.add(wallet);
+    }
+  }
 }

@@ -1,94 +1,120 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/rename_wallet_dialog.dart';
 import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
+import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
-class WalletItem extends StatelessWidget {
+class WalletItem extends StatefulWidget {
   const WalletItem({
     Key? key,
-    required this.item,
-  }) : super(key: key);
+    required WalletDetails wallet,
+  })  : _initialWallet = wallet,
+        super(key: key);
 
-  final WalletDetails item;
+  final WalletDetails _initialWallet;
+
+  @override
+  State<WalletItem> createState() => _WalletItemState();
+}
+
+class _WalletItemState extends State<WalletItem> {
+  final _subscriptions = CompositeSubscription();
+  final _bloc = get<WalletsBloc>();
+
+  late WalletDetails _wallet;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _wallet = widget._initialWallet;
+    _bloc.updated.listen((e) {
+      setState(() {
+        _wallet = e;
+      });
+    }).addTo(_subscriptions);
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final walletService = get<WalletService>();
 
-    return StreamBuilder<WalletDetails?>(
-      initialData: walletService.events.selected.value,
-      stream: walletService.events.selected,
-      builder: (context, snapshot) {
-        final isSelected = item.id == snapshot.data?.id;
+    final isSelected = _wallet.id == walletService.events.selected.value?.id;
 
-        return Container(
-          color: isSelected ? colorScheme.secondary650 : colorScheme.neutral700,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.xLarge,
-                  vertical: Spacing.large,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PwText(
-                      item.name,
-                      style: PwTextStyle.bodyBold,
-                    ),
-                    FutureBuilder<int?>(
-                      future: get<WalletsBloc>().getAssetCount(item),
-                      builder: (context, snapshot) {
-                        final numAssets = snapshot.data;
-
-                        return PwText(
-                          numAssets != null ? Strings.numAssets(numAssets) : '',
-                          style: PwTextStyle.bodySmall,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+    return Container(
+      color: isSelected ? colorScheme.secondary650 : colorScheme.neutral700,
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(
+                left: Spacing.xLarge,
+                top: Spacing.large,
+                bottom: Spacing.large,
               ),
-              Expanded(
-                child: Container(),
-              ),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => _showMenu(
-                  context,
-                  item,
-                  isSelected,
-                ),
-                child: SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: Center(
-                    child: PwIcon(
-                      PwIcons.ellipsis,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                textDirection: TextDirection.ltr,
+                children: [
+                  PwText(
+                    _wallet.name,
+                    style: PwTextStyle.bodyBold,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
                   ),
+                  FutureBuilder<int?>(
+                    future: get<WalletsBloc>().getAssetCount(_wallet),
+                    builder: (context, snapshot) {
+                      final numAssets = snapshot.data;
+
+                      return PwText(
+                        numAssets != null ? Strings.numAssets(numAssets) : '',
+                        style: PwTextStyle.bodySmall,
+                      );
+                    },
+                  ),
+                  PwText(
+                    _wallet.coin.displayName,
+                    style: PwTextStyle.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => _showMenu(
+              context,
+              _wallet,
+              isSelected,
+            ),
+            child: SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(
+                child: PwIcon(
+                  PwIcons.ellipsis,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
                 ),
               ),
-              VerticalSpacer.medium(),
-            ],
+            ),
           ),
-        );
-      },
+          VerticalSpacer.medium(),
+        ],
+      ),
     );
   }
 
@@ -97,6 +123,8 @@ class WalletItem extends StatelessWidget {
     WalletDetails item,
     bool isSelected,
   ) async {
+    final showAdvancedUI =
+        await get<KeyValueService>().getBool(PrefKey.showAdvancedUI) ?? false;
     var result = await showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
       context: context,
@@ -124,7 +152,7 @@ class WalletItem extends StatelessWidget {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
-            PwListDivider(),
+            if (!isSelected) PwListDivider(),
             if (!isSelected)
               PwGreyButton(
                 text: Strings.select,
@@ -132,7 +160,16 @@ class WalletItem extends StatelessWidget {
                   Navigator.of(context).pop(MenuOperation.select);
                 },
               ),
-            PwListDivider(),
+            if (showAdvancedUI) PwListDivider(),
+            if (showAdvancedUI)
+              PwGreyButton(
+                text: item.coin == Coin.mainNet
+                    ? Strings.profileMenuUseTestnet
+                    : Strings.profileMenuUseMainnet,
+                onPressed: () {
+                  Navigator.of(context).pop(MenuOperation.switchCoin);
+                },
+              ),
             PwGreyButton(
               enabled: false,
               text: "",
@@ -198,6 +235,10 @@ class WalletItem extends StatelessWidget {
         await bloc.selectWallet(id: item.id);
 
         break;
+      case MenuOperation.switchCoin:
+        final coin = item.coin == Coin.mainNet ? Coin.testNet : Coin.mainNet;
+        await get<WalletService>().setWalletCoin(id: item.id, coin: coin);
+        break;
       default:
     }
   }
@@ -208,4 +249,5 @@ enum MenuOperation {
   select,
   rename,
   delete,
+  switchCoin,
 }

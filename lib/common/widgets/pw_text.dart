@@ -16,6 +16,7 @@ class PwText extends StatelessWidget
     this.lineThrough = false,
     this.underline = false,
     this.textKey,
+    this.softWrap,
   }) : super(key: key);
 
   /// The text to display.
@@ -33,6 +34,7 @@ class PwText extends StatelessWidget
   final bool lineThrough;
   final bool underline;
   final Key? textKey;
+  final bool? softWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class PwText extends StatelessWidget
       overflow: overflow,
       maxLines: maxLines,
       key: textKey,
+      softWrap: softWrap,
     );
   }
 

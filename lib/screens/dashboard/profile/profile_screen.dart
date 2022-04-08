@@ -172,10 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _keyValueService.streamBool(PrefKey.showAdvancedUI).value,
                 stream: _keyValueService.streamBool(PrefKey.showAdvancedUI),
                 builder: (context, snapshot) {
-                  final show = snapshot.data;
-                  if (show == null) {
-                    return Container();
-                  }
+                  final show = snapshot.data ?? false;
 
                   return ToggleItem(
                     text: Strings.profileShowAdvancedUI,
