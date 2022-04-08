@@ -14,14 +14,17 @@ class _DateTimeFormatWithTimeZone extends DateFormat {
 
   @override
   String format(DateTime date) {
-    final formatted = super.format(date);
+    final utcDate = date.toUtc();
+    final formatted = super.format(utcDate);
     final numberFormatter = NumberFormat("00");
 
-    final timezone = date.timeZoneOffset;
-    final offsetInHours = timezone.inMinutes ~/ 60;
-    final offsetInMinutes = (timezone.inMinutes % 60).abs();
+    final timezone = utcDate.timeZoneOffset;
+    final timezoneOffsetInMinutes = timezone.inMinutes.abs();
+    final offsetInHours = timezoneOffsetInMinutes ~/ 60;
+    final offsetInMinutes = (timezoneOffsetInMinutes % 60);
+    final prefix = timezone.inMinutes <= 0 ? "-" : "+";
 
-    return "$formatted${numberFormatter.format(offsetInHours)}:${numberFormatter.format(offsetInMinutes)}";
+    return "$formatted$prefix${numberFormatter.format(offsetInHours)}:${numberFormatter.format(offsetInMinutes)}";
   }
 }
 
