@@ -11,7 +11,7 @@ import 'package:provenance_wallet/screens/dashboard/profile/developer_menu.dart'
 import 'package:provenance_wallet/screens/dashboard/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';

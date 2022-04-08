@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
 
 void main() {

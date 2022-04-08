@@ -23,8 +23,8 @@ import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';

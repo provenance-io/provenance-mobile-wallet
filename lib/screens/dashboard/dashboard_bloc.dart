@@ -9,7 +9,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';

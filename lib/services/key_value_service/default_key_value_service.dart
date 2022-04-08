@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_store.dart';
 import 'package:rxdart/rxdart.dart';
 

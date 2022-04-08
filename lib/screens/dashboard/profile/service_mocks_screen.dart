@@ -5,7 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 

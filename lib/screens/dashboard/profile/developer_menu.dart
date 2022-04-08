@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/dashboard/profile/link_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/service_mocks_screen.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
 import 'package:provenance_wallet/screens/dashboard/profile/wallet_connect_item.dart';
-import 'package:provenance_wallet/services/key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
