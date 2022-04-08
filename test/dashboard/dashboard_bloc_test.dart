@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/key_value_service/default_key_value_s
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
@@ -254,6 +255,7 @@ class TestState {
 
     final assets = <String, List<Asset>>{};
     final transactions = <String, List<Transaction>>{};
+    final sendTransactions = <String, List<SendTransaction>>{};
 
     for (var i = 0; i <= maxWalletId; i++) {
       final id = i.toString();
@@ -278,8 +280,24 @@ class TestState {
         feeAmount: i.toString(),
       );
 
+      final sendTransaction = SendTransaction.fake(
+        amount: i,
+        block: i,
+        denom: id,
+        hash: id,
+        recipientAddress: id,
+        senderAddress: id,
+        status: id,
+        timestamp: DateTime.fromMillisecondsSinceEpoch(i),
+        txFee: i,
+        pricePerUnit: i.toDouble(),
+        totalPrice: i.toDouble(),
+        exponent: i,
+      );
+
       assets[id] = [asset];
       transactions[id] = [transaction];
+      sendTransactions[id] = [sendTransaction];
 
       storageDatas.add(
         InMemoryStorageData(
@@ -308,7 +326,8 @@ class TestState {
     final mockRemoteNotificationService = MockRemoteNotificationService();
     final deepLinkService = MockDeepLinkService();
     final assetService = MockAssetService(assets);
-    final transactionService = MockTransactionService(transactions);
+    final transactionService =
+        MockTransactionService(sendTransactions, transactions);
     final walletService = WalletService(
       storage: InMemoryWalletStorageService(
         datas: storageDatas,

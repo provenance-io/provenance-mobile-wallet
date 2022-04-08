@@ -58,6 +58,47 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                   builder: (context, snapshot) {
                     final connected = snapshot.data?.status ==
                         WalletConnectSessionStatus.connected;
+                    Widget icon;
+                    switch (snapshot.data?.status) {
+                      case WalletConnectSessionStatus.disconnected:
+                        icon = PwIcon(
+                          PwIcons.qr,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          size: 48.0,
+                        );
+                        break;
+                      case WalletConnectSessionStatus.connected:
+                        icon = PwIcon(
+                          PwIcons.linked,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          size: 48.0,
+                        );
+                        break;
+                      default:
+                        icon = Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            PwIcon(
+                              PwIcons.linked,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .neutralNeutral
+                                  .withAlpha(128),
+                              size: 48.0,
+                            ),
+                            SizedBox(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .neutralNeutral,
+                              ),
+                              height: 48,
+                              width: 48,
+                            ),
+                          ],
+                        );
+                    }
 
                     return Padding(
                       padding: EdgeInsets.only(
@@ -100,11 +141,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                             }
                           }
                         },
-                        child: PwIcon(
-                          connected ? PwIcons.linked : PwIcons.qr,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                          size: 48.0,
-                        ),
+                        child: icon,
                       ),
                     );
                   },

@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/util/extensions/double_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 

@@ -30,6 +30,8 @@ class _DateTimeFormatWithTimeZone extends DateFormat {
 
 class DefaultAssetService extends AssetService
     with ClientNotificationMixin, ClientCoinMixin {
+  static final _formatter =
+      _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
   String get _assetServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';
 
@@ -72,15 +74,13 @@ class DefaultAssetService extends AssetService
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final formatter = _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     startDate ??= DateTime.now().startOfDay;
     endDate ??= DateTime.now().endOfDay;
     final client = getClient(coin);
     final timeFrame = value.name.toUpperCase();
 
     final data = await client.get(
-      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${formatter.format(startDate)}&endDate=${formatter.format(endDate)}',
+      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${_formatter.format(startDate)}&endDate=${_formatter.format(endDate)}',
       listConverter: (json) {
         if (json is String) {
           return <AssetGraphItem>[];
