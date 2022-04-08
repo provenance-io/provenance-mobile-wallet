@@ -4,8 +4,17 @@ A mobile wallet.
 
 ## Getting Started
 
+> NOTE: the current CI/CD build process uses a git pubspec from the Figure
+> private repo https://github.com/FigureTechnologies/mobile-tech-wallet-flutter-plugin.
+> The git pubspec reference uses the SSH reference.  Therefore, this project
+> must be cloned using SSH and the 
+> git@github.com:FigureTechnologies/mobile-figure-tech-wallet.git endpoint.
+> 
+> Refer to GitHub instructions to set up SSH: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
 ### Requisites
 1. A Mac machine
+2. A physical iOS device
 
 ### Software
 1. Install the [latest Xcode](https://developer.apple.com/download/all/)
