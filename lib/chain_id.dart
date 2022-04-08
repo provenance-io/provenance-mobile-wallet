@@ -12,4 +12,20 @@ class ChainId {
         return ChainId.testNet;
     }
   }
+
+  static Coin toCoin(String chainId) {
+    Coin coin;
+    switch (chainId) {
+      case ChainId.mainNet:
+        coin = Coin.mainNet;
+        break;
+      case ChainId.testNet:
+        coin = Coin.testNet;
+        break;
+      default:
+        throw 'Unsupported chain-id: $chainId';
+    }
+
+    return coin;
+  }
 }

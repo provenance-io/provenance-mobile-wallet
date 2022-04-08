@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
@@ -16,6 +18,7 @@ import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/timed_counter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -27,22 +30,24 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   static const _divider = PwListDivider();
-  static const _devTapsRequired = 10;
-  var _devTapCount = 0;
+
   var _showDevMenu = false;
   final _keyValueService = get<KeyValueService>();
-  Timer? _devTimer;
+  late final TimedCounter _tapCounter;
 
   @override
   void initState() {
     super.initState();
 
     _initDevMenu();
+    _tapCounter = TimedCounter(
+      onSuccess: _toggleDevMenu,
+    );
   }
 
   @override
   void dispose() {
-    _stopDevTimer();
+    _tapCounter.cancel();
 
     super.dispose();
   }
@@ -58,18 +63,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             textDirection: TextDirection.ltr,
             children: [
-              GestureDetector(
-                onTap: _onDevTap,
-                child: AppBar(
-                  primary: false,
-                  centerTitle: true,
-                  backgroundColor: Theme.of(context).colorScheme.neutral750,
-                  elevation: 0.0,
-                  leading: Container(),
-                  title: PwText(
-                    Strings.profile,
-                    style: PwTextStyle.subhead,
-                  ),
+              PwAppBarGestureDetector(
+                onTap: _tapCounter.increment,
+                child: PwAppBar(
+                  title: Strings.profile,
+                  hasIcon: false,
                 ),
               ),
               CategoryLabel(Strings.security),
@@ -216,33 +214,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _startDevTimer() {
-    _devTimer = Timer(Duration(seconds: 5), () {
-      _devTapCount = 0;
-      _devTimer = null;
+  void _toggleDevMenu() {
+    final showDevMenu = !_showDevMenu;
+    _tapCounter.cancel();
+    setState(() {
+      _showDevMenu = showDevMenu;
     });
-  }
-
-  void _stopDevTimer() {
-    _devTimer?.cancel();
-    _devTimer = null;
-    _devTapCount = 0;
-  }
-
-  void _onDevTap() {
-    if (_devTimer == null) {
-      _startDevTimer();
-    }
-
-    _devTapCount++;
-
-    if (_devTapCount == _devTapsRequired) {
-      final showDevMenu = !_showDevMenu;
-      _stopDevTimer();
-      setState(() {
-        _showDevMenu = showDevMenu;
-      });
-      _keyValueService.setBool(PrefKey.showDevMenu, showDevMenu);
-    }
+    _keyValueService.setBool(PrefKey.showDevMenu, showDevMenu);
   }
 }
