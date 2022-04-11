@@ -50,6 +50,7 @@ abstract class WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required List<PrivateKey> privateKeys,
+    required Coin selectedCoin,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);

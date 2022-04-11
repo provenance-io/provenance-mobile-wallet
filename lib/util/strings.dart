@@ -230,6 +230,9 @@ class Strings {
   // RecoverPassphraseEntry
   static const enterRecoveryPassphrase = 'Enter recovery passphrase';
   static const recover = 'Recover';
+  static String recoverPassphraseNetwork(String name) {
+    return 'Network: $name';
+  }
 
   // RecoveryWordsConfirm
   static const verifyPassphrase = 'Verify Passphrase';

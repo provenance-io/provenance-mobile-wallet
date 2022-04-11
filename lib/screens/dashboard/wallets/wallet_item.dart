@@ -42,7 +42,9 @@ class _WalletItemState extends State<WalletItem> {
     _wallet = widget._initialWallet;
     _bloc.updated.listen((e) {
       setState(() {
-        _wallet = e;
+        if (_wallet.id == e.id) {
+          _wallet = e;
+        }
       });
     }).addTo(_subscriptions);
   }

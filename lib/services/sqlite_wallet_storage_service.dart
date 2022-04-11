@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteWalletStorageService {
@@ -174,8 +174,17 @@ class SqliteWalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required List<PublicKeyData> publicKeys,
+    required String selectedChainId,
   }) async {
-    if (publicKeys.isEmpty) {
+    if (publicKeys.isEmpty || selectedChainId.isEmpty) {
+      return null;
+    }
+
+    if (!publicKeys.any((e) => e.chainId == selectedChainId)) {
+      const message = 'Selected chain id is not in the list of public keys';
+      logError(message);
+      assert(false, message);
+
       return null;
     }
 
@@ -192,8 +201,7 @@ class SqliteWalletStorageService {
 
       final chainIds = <String>{};
 
-      for (var i = 0; i < publicKeys.length; i++) {
-        final publicKey = publicKeys[i];
+      for (var publicKey in publicKeys) {
         final chainId = publicKey.chainId;
 
         assert(
@@ -209,7 +217,7 @@ class SqliteWalletStorageService {
             'ChainId': chainId,
           });
 
-          if (i == 0) {
+          if (publicKey.chainId == selectedChainId) {
             chainIds.add(chainId);
 
             await txn.insert(
@@ -311,17 +319,7 @@ class SqliteWalletStorageService {
     final address = result['Address'] as String;
     final publicKey = result['Hex'] as String;
     final chainId = result['ChainId'] as String;
-    Coin coin;
-    switch (chainId) {
-      case ChainId.mainNet:
-        coin = Coin.mainNet;
-        break;
-      case ChainId.testNet:
-        coin = Coin.testNet;
-        break;
-      default:
-        throw 'Unsupported chain-id: $chainId';
-    }
+    final coin = ChainId.toCoin(chainId);
 
     return WalletDetails(
       id: id.toString(),
