@@ -18,6 +18,8 @@ import 'package:provenance_wallet/services/asset_service/default_asset_service.d
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
@@ -54,6 +56,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
+  get.registerLazySingleton<CrashReportingService>(
+    () => FirebaseCrashReportingService(),
+  );
 
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
