@@ -23,6 +23,7 @@ class RecoverAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: PwAppBar(
         title: Strings.recoverAccount,
         leadingIcon: PwIcons.back,
