@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet_connect.dart';
@@ -83,6 +84,13 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      get<KeyValueService>()
+          .getBool(PrefKey.allowCrashlitics)
+          .then((value) async {
+        if (value == false) {
+          await FirebaseCrashlytics.instance.deleteUnsentReports();
+        }
+      });
       final walletId = _walletService.events.selected.value?.id;
       final sessionStatus = _walletSession?.sessionEvents.state.value.status ??
           WalletConnectSessionStatus.disconnected;

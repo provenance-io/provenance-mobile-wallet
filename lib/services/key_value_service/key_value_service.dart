@@ -55,6 +55,7 @@ enum PrefKey {
   httpClientDiagnostics500,
   isMockingAssetService,
   isMockingTransactionService,
+  allowCrashlitics,
   testBool,
   testString,
 }

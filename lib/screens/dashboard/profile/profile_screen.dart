@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -185,6 +187,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     value: show,
                     onChanged: (value) =>
                         _keyValueService.setBool(PrefKey.showAdvancedUI, value),
+                  );
+                },
+              ),
+              _divider,
+              StreamBuilder<KeyValueData<bool>>(
+                initialData: _keyValueService
+                    .stream<bool>(PrefKey.allowCrashlitics)
+                    .valueOrNull,
+                stream: _keyValueService.stream<bool>(PrefKey.allowCrashlitics),
+                builder: (context, snapshot) {
+                  final streamData = snapshot.data;
+                  if (streamData == null) {
+                    return Container();
+                  }
+
+                  final show = streamData.data ?? true;
+
+                  return ToggleItem(
+                    text: Strings.profileAllowCrashlitics,
+                    value: show,
+                    onChanged: (value) async {
+                      await _keyValueService.setBool(
+                        PrefKey.allowCrashlitics,
+                        value,
+                      );
+                      if (value) {
+                        await FirebaseCrashlytics.instance
+                            .setCrashlyticsCollectionEnabled(!kDebugMode);
+                      } else {
+                        await FirebaseCrashlytics.instance
+                            .setCrashlyticsCollectionEnabled(false);
+                        await FirebaseCrashlytics.instance
+                            .deleteUnsentReports();
+                      }
+                    },
                   );
                 },
               ),

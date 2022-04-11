@@ -61,7 +61,11 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
 
-      await _initializeFlutterFire();
+      var keyValueService = DefaultKeyValueService(
+        store: SharedPreferencesKeyValueStore(),
+      );
+
+      await _initializeFlutterFire(keyValueService);
 
       final firebaseMessaging = FirebaseMessaging.instance;
       final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
@@ -74,9 +78,6 @@ void main() async {
       final cipherService = PlatformCipherService();
       get.registerSingleton<CipherService>(cipherService);
 
-      var keyValueService = DefaultKeyValueService(
-        store: SharedPreferencesKeyValueStore(),
-      );
       var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
       if (!hasKey) {
         await cipherService.deletePin();
@@ -255,13 +256,13 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   }
 }
 
-Future<void> _initializeFlutterFire() async {
+Future<void> _initializeFlutterFire(KeyValueService service) async {
   // Wait for Firebase to initialize
 
   if (_testingCrashlytics) {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  } else {
-    // Else only enable it in non-debug builds.
+  } else if (await service.getBool(PrefKey.allowCrashlitics) ?? !kDebugMode) {
+    // Else only enable it in non-debug builds if we haven't opted out.
     await FirebaseCrashlytics.instance
         .setCrashlyticsCollectionEnabled(!kDebugMode);
   }
