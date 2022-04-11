@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:decimal/intl.dart';
+import 'package:intl/intl.dart';
 
 class SendAsset {
   const SendAsset(
@@ -34,9 +36,10 @@ class SendAsset {
   }
 
   String get displayFiatAmount {
-    final conversionDecimal = Decimal.parse(fiatValue.toString());
+    final conversionDecimal = Decimal.parse(fiatValue.toString()) * amount;
+    final numberFormatter = NumberFormat.simpleCurrency(decimalDigits: null);
 
-    return "\$${(amount * conversionDecimal).toStringAsFixed(2)}";
+    return numberFormatter.format(DecimalIntl(conversionDecimal));
   }
 
   SendAsset copyWith({

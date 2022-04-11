@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
@@ -159,10 +160,9 @@ class SendAmountPageState extends State<SendAmountPage> {
                   value,
                   child,
                 ) {
-                  return PwText(
-                    '$value${value.isNotEmpty ? " USD" : ""}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  return PwAutoSizineText(
+                    value,
+                    height: 25,
                     style: PwTextStyle.displayBody,
                     key: ValueKey("DollarValueSent"),
                   );
@@ -180,10 +180,9 @@ class SendAmountPageState extends State<SendAmountPage> {
                         controller: _noteController,
                         focusNode: _noteFocusNode,
                         style: Theme.of(context).textTheme.body.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .neutralNeutral,
-                              ),
+                              color:
+                                  Theme.of(context).colorScheme.neutralNeutral,
+                            ),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(right: Spacing.large),
                           border: blankInputBorder,
@@ -207,12 +206,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                         child,
                       ) {
                         return (!hasFocus && _noteController.text.isEmpty)
-                            ? GestureDetector(child:
-                            PwText(
-                                Strings.sendAmountNoteSuffix,
-                                style: PwTextStyle.body,
-                              ), onTap: () {
-                                _noteFocusNode.requestFocus();
+                            ? GestureDetector(
+                                child: PwText(
+                                  Strings.sendAmountNoteSuffix,
+                                  style: PwTextStyle.body,
+                                ),
+                                onTap: () {
+                                  _noteFocusNode.requestFocus();
                                 },
                               )
                             : SizedBox(

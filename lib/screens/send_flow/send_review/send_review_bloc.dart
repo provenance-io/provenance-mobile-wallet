@@ -44,7 +44,7 @@ class SendReviewBlocState {
     return map.entries
         .map((entry) =>
             "${entry.value.displayAmount} ${entry.value.displayDenom}")
-        .join(" + ");
+        .join(" + \n");
   }
 }
 

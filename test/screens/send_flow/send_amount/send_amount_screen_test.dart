@@ -7,6 +7,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
@@ -184,7 +185,7 @@ main() {
       await _build(tester);
       var dollarValueSentFind = find.byKey(ValueKey("DollarValueSent"));
       expect(
-        tester.widget<PwText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
         "",
       );
 
@@ -194,14 +195,13 @@ main() {
           .then((_) => tester.pumpAndSettle());
 
       expect(
-        tester.widget<PwText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
         hashAsset
-                .copyWith(
-                  amount: Decimal.fromInt(1) *
-                      Decimal.fromInt(10).pow(hashAsset.exponent),
-                )
-                .displayFiatAmount +
-            " USD",
+            .copyWith(
+              amount: Decimal.fromInt(1) *
+                  Decimal.fromInt(10).pow(hashAsset.exponent),
+            )
+            .displayFiatAmount,
       );
 
       await tester
@@ -209,14 +209,13 @@ main() {
           .then((_) => tester.pumpAndSettle());
 
       expect(
-        tester.widget<PwText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
         hashAsset
-                .copyWith(
-                  amount: Decimal.parse(".5") *
-                      Decimal.fromInt(10).pow(hashAsset.exponent),
-                )
-                .displayFiatAmount +
-            " USD",
+            .copyWith(
+              amount: Decimal.parse(".5") *
+                  Decimal.fromInt(10).pow(hashAsset.exponent),
+            )
+            .displayFiatAmount,
       );
     });
   });

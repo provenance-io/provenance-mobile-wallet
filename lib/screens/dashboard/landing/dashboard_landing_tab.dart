@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
@@ -303,8 +304,9 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                             style: PwTextStyle.bodyBold,
                                           ),
                                           VerticalSpacer.xSmall(),
-                                          PwText(
+                                          PwAutoSizineText(
                                             item.formattedAmount,
+                                            height: 16,
                                             color: PwColor.neutral200,
                                             style: PwTextStyle.footnote,
                                           ),
