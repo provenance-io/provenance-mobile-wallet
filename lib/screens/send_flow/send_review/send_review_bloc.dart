@@ -51,7 +51,7 @@ class SendReviewBlocState {
 class SendReviewBloc implements Disposable {
   SendReviewBloc(
     this._walletDetails,
-    this._walletService,
+    this._transactionHandler,
     this.receivingAddress,
     this.sendingAsset,
     this.fee,
@@ -69,7 +69,7 @@ class SendReviewBloc implements Disposable {
 
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
-  final WalletConnectTransactionHandler _walletService;
+  final WalletConnectTransactionHandler _transactionHandler;
   final WalletDetails _walletDetails;
   final String receivingAddress;
   final String? note;
@@ -116,7 +116,7 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    return _walletService
+    return _transactionHandler
         .executeTransaction(
       body,
       privateKey!,
