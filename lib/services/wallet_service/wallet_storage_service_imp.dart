@@ -19,6 +19,7 @@ class WalletStorageServiceImp implements WalletStorageService {
   Future<WalletDetails?> addWallet({
     required String name,
     required List<PrivateKey> privateKeys,
+    required Coin selectedCoin,
   }) async {
     final keyDatas = <PublicKeyData>[];
     for (var privateKey in privateKeys) {
@@ -34,9 +35,12 @@ class WalletStorageServiceImp implements WalletStorageService {
       keyDatas.add(data);
     }
 
+    final selectedChainId = ChainId.forCoin(selectedCoin);
+
     final details = await _sqliteWalletStorageService.addWallet(
       name: name,
       publicKeys: keyDatas,
+      selectedChainId: selectedChainId,
     );
 
     if (details != null) {

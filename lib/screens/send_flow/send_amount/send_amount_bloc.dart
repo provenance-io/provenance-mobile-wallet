@@ -122,6 +122,14 @@ class SendAmountBloc extends Disposable {
       return "${Strings.sendAmountErrorInsufficient} ${asset.displayDenom}";
     }
 
+    final dotIndex = proposedAmount.indexOf(".");
+    if (dotIndex >= 0) {
+      final decimalDigits = (proposedAmount.length - dotIndex - 1);
+      if (decimalDigits > asset.exponent) {
+        return Strings.sendAmountErrorTooManyDecimalPlaces;
+      }
+    }
+
     return null;
   }
 

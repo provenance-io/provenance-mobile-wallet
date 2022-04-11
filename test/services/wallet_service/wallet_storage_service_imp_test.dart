@@ -3,6 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
@@ -67,6 +68,7 @@ main() {
       when(mockSqliteWalletStorageService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.value(details));
 
       when(mockCipherService!.encryptKey(
@@ -76,19 +78,26 @@ main() {
     });
 
     test('success result', () async {
-      final outDetails = await walletStorageService!
-          .addWallet(name: "New Name", privateKeys: privateKeys);
+      final outDetails = await walletStorageService!.addWallet(
+        name: "New Name",
+        privateKeys: privateKeys,
+        selectedCoin: selectedPrivateKey.coin,
+      );
 
       expect(outDetails, details);
     });
 
     test('call sequence', () async {
-      await walletStorageService!
-          .addWallet(name: "New Name", privateKeys: privateKeys);
+      await walletStorageService!.addWallet(
+        name: "New Name",
+        privateKeys: privateKeys,
+        selectedCoin: selectedPrivateKey.coin,
+      );
 
       verify(mockSqliteWalletStorageService!.addWallet(
         name: "New Name",
         publicKeys: publicKeys,
+        selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
       ));
 
       for (final privateKey in privateKeys) {
@@ -111,10 +120,14 @@ main() {
       when(mockSqliteWalletStorageService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.value(null));
 
-      final result = await walletStorageService!
-          .addWallet(name: "New Name", privateKeys: privateKeys);
+      final result = await walletStorageService!.addWallet(
+        name: "New Name",
+        privateKeys: privateKeys,
+        selectedCoin: selectedPrivateKey.coin,
+      );
 
       expect(result, null);
       verifyNoMoreInteractions(mockCipherService!);
@@ -122,6 +135,7 @@ main() {
       verify(mockSqliteWalletStorageService!.addWallet(
         name: "New Name",
         publicKeys: publicKeys,
+        selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
       ));
       verifyNoMoreInteractions(mockSqliteWalletStorageService!);
     });
@@ -135,8 +149,11 @@ main() {
         privateKey: anyNamed("privateKey"),
       )).thenAnswer((_) => Future.value(false));
 
-      final result = await walletStorageService!
-          .addWallet(name: "New Name", privateKeys: privateKeys);
+      final result = await walletStorageService!.addWallet(
+        name: "New Name",
+        privateKeys: privateKeys,
+        selectedCoin: selectedPrivateKey.coin,
+      );
 
       expect(result, null);
       verify(mockSqliteWalletStorageService!.removeWallet(id: details.id));
@@ -148,11 +165,15 @@ main() {
       when(mockSqliteWalletStorageService!.addWallet(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
+        selectedChainId: anyNamed("selectedChainId"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => walletStorageService!
-            .addWallet(name: "New Name", privateKeys: privateKeys),
+        () => walletStorageService!.addWallet(
+          name: "New Name",
+          privateKeys: privateKeys,
+          selectedCoin: selectedPrivateKey.coin,
+        ),
         throwsA(exception),
       );
     });
@@ -166,8 +187,11 @@ main() {
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => walletStorageService!
-            .addWallet(name: "New Name", privateKeys: privateKeys),
+        () => walletStorageService!.addWallet(
+          name: "New Name",
+          privateKeys: privateKeys,
+          selectedCoin: selectedPrivateKey.coin,
+        ),
         throwsA(exception),
       );
     });

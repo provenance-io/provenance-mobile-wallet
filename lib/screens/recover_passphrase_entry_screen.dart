@@ -1,13 +1,18 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
+import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/timed_counter.dart';
 
 class RecoverPassphraseEntryScreen extends StatefulWidget {
   const RecoverPassphraseEntryScreen(
@@ -31,6 +36,9 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
 
 class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
+  final _keyValueService = get<KeyValueService>();
+  late final TimedCounter _tapCounter;
+
   List<TextEditingController> textControllers = <TextEditingController>[];
   List<FocusNode> focusNodes = <FocusNode>[];
   List<VoidCallback> callbacks = <VoidCallback>[];
@@ -38,6 +46,8 @@ class RecoverPassphraseEntryScreenState
   @override
   void initState() {
     super.initState();
+
+    _tapCounter = TimedCounter(onSuccess: _toggleAdvancedUI);
 
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
@@ -49,6 +59,8 @@ class RecoverPassphraseEntryScreenState
 
   @override
   void dispose() {
+    _tapCounter.cancel();
+
     for (var i = 0; i < textControllers.length; i++) {
       var controller = textControllers[i];
       var callback = callbacks[i];
@@ -60,13 +72,23 @@ class RecoverPassphraseEntryScreenState
 
   @override
   Widget build(BuildContext context) {
+    final defaultChainId =
+        _keyValueService.stream<String>(PrefKey.defaultChainId);
+    final showAdvancedUI =
+        _keyValueService.stream<bool>(PrefKey.showAdvancedUI);
+
     return Scaffold(
-      appBar: PwAppBar(
-        title: Strings.enterRecoveryPassphrase,
-        leadingIcon: PwIcons.back,
+      appBar: PwAppBarGestureDetector(
+        onTap: _tapCounter.increment,
+        child: PwAppBar(
+          title: Strings.enterRecoveryPassphrase,
+          leadingIcon: PwIcons.back,
+        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
+        textDirection: TextDirection.ltr,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProgressStepper(
             widget.currentStep,
@@ -77,6 +99,48 @@ class RecoverPassphraseEntryScreenState
               top: 12,
               bottom: 40,
             ),
+          ),
+          StreamBuilder<KeyValueData<bool>>(
+            initialData: showAdvancedUI.valueOrNull,
+            stream: showAdvancedUI,
+            builder: (context, snapshot) {
+              final showAdvancedUI = snapshot.data?.data ?? false;
+              if (!showAdvancedUI) {
+                return Container();
+              }
+
+              return StreamBuilder<KeyValueData<String>>(
+                initialData: defaultChainId.valueOrNull,
+                stream: defaultChainId,
+                builder: (context, snapshot) {
+                  final chainId = snapshot.data?.data ?? ChainId.mainNet;
+                  final coin = ChainId.toCoin(chainId);
+
+                  return GestureDetector(
+                    onTap: () {
+                      final newChainId = chainId == ChainId.mainNet
+                          ? ChainId.testNet
+                          : ChainId.mainNet;
+                      _keyValueService.setString(
+                        PrefKey.defaultChainId,
+                        newChainId,
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: Spacing.xLarge,
+                        left: Spacing.xLarge,
+                        bottom: Spacing.medium,
+                      ),
+                      child: PwText(
+                        Strings.recoverPassphraseNetwork(coin.displayName),
+                        style: PwTextStyle.body,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
           Expanded(
             child: ListView.separated(
@@ -141,9 +205,17 @@ class RecoverPassphraseEntryScreenState
                                       context,
                                     );
 
+                                    final chainId =
+                                        await _keyValueService.getString(
+                                              PrefKey.defaultChainId,
+                                            ) ??
+                                            ChainId.defaultChainId;
+                                    final coin = ChainId.toCoin(chainId);
+
                                     await get<WalletService>().addWallet(
                                       phrase: words,
                                       name: widget.accountName,
+                                      coin: coin,
                                     );
 
                                     ModalLoadingRoute.dismiss(context);
@@ -170,6 +242,15 @@ class RecoverPassphraseEntryScreenState
           ),
         ],
       ),
+    );
+  }
+
+  void _toggleAdvancedUI() async {
+    final value =
+        await _keyValueService.getBool(PrefKey.showAdvancedUI) ?? false;
+    await _keyValueService.setBool(
+      PrefKey.showAdvancedUI,
+      !value,
     );
   }
 

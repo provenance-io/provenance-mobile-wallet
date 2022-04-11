@@ -121,7 +121,7 @@ class WalletService implements Disposable {
   Future<WalletDetails?> addWallet({
     required List<String> phrase,
     required String name,
-    Coin coin = Coin.testNet,
+    required Coin coin,
   }) async {
     final seed = Mnemonic.createSeed(phrase);
     final privateKeys = [
@@ -132,6 +132,7 @@ class WalletService implements Disposable {
     final details = await _storage.addWallet(
       name: name,
       privateKeys: privateKeys,
+      selectedCoin: coin,
     );
 
     if (details != null) {
