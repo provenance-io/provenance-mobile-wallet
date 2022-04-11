@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -10,6 +11,29 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+
+class DecimalPointFormatter extends TextInputFormatter {
+  DecimalPointFormatter(this.decimalCount) : assert(decimalCount >= 0);
+
+  final int decimalCount;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+    final decimalIndex = text.indexOf(".");
+    if (decimalIndex >= 0) {
+      final decimals = text.length - (decimalIndex + 1);
+      if (decimals > decimalCount) {
+        return oldValue;
+      }
+    }
+
+    return newValue;
+  }
+}
 
 class SendAmountScreen extends StatelessWidget {
   const SendAmountScreen({
@@ -137,9 +161,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                 validator: (newValue) => _bloc?.validateAmount(newValue),
                 autofocus: true,
                 style: Theme.of(context).textTheme.display1,
+                inputFormatters: [
+                  DecimalPointFormatter(asset.exponent),
+                ],
                 decoration: InputDecoration(
                   hintText: Strings.sendAmountHint,
-                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(color: Theme.of(context).colorScheme.neutralNeutral),
+                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(
+                      color: Theme.of(context).colorScheme.neutralNeutral),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),
@@ -180,10 +208,9 @@ class SendAmountPageState extends State<SendAmountPage> {
                         controller: _noteController,
                         focusNode: _noteFocusNode,
                         style: Theme.of(context).textTheme.body.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .neutralNeutral,
-                              ),
+                              color:
+                                  Theme.of(context).colorScheme.neutralNeutral,
+                            ),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(right: Spacing.large),
                           border: blankInputBorder,
@@ -207,12 +234,13 @@ class SendAmountPageState extends State<SendAmountPage> {
                         child,
                       ) {
                         return (!hasFocus && _noteController.text.isEmpty)
-                            ? GestureDetector(child:
-                            PwText(
-                                Strings.sendAmountNoteSuffix,
-                                style: PwTextStyle.body,
-                              ), onTap: () {
-                                _noteFocusNode.requestFocus();
+                            ? GestureDetector(
+                                child: PwText(
+                                  Strings.sendAmountNoteSuffix,
+                                  style: PwTextStyle.body,
+                                ),
+                                onTap: () {
+                                  _noteFocusNode.requestFocus();
                                 },
                               )
                             : SizedBox(
