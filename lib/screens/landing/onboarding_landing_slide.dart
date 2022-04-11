@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/pw_onboarding_view.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class OnboardingLandingSlide extends StatelessWidget {
@@ -8,9 +9,8 @@ class OnboardingLandingSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+    return PwOnboardingView(
+      bottomOffset: 0.0,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,8 +41,6 @@ class OnboardingLandingSlide extends StatelessWidget {
             color: PwColor.neutralNeutral,
           ),
         ),
-        VerticalSpacer.largeX6(),
-        VerticalSpacer.largeX5(),
       ],
     );
   }
