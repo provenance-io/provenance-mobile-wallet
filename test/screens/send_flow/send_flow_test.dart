@@ -11,6 +11,7 @@ import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
@@ -58,7 +59,7 @@ main() {
       return Future.value(gasEstimate);
     });
 
-    get.registerSingleton<WalletConnectTransactionHandler>(
+    get.registerSingleton<TransactionHandler>(
       mockWalletConnectTransactionHandler!,
     );
 
@@ -97,7 +98,7 @@ main() {
     get.unregister<WalletService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
-    get.unregister<WalletConnectTransactionHandler>();
+    get.unregister<TransactionHandler>();
     get.unregister<PriceService>();
   });
 

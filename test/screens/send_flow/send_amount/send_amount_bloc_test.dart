@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -47,12 +48,14 @@ main() {
     mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
     when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
         .thenAnswer((_) => Future.value(feeAmount));
+    when(mockWalletConnectTransactionHandler!.onDispose())
+        .thenAnswer((realInvocation) => Future.value(null));
 
     mockPriceService = MockPriceService();
     when(mockPriceService!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<WalletConnectTransactionHandler>(
+    get.registerSingleton<TransactionHandler>(
       mockWalletConnectTransactionHandler!,
     );
 
@@ -76,7 +79,7 @@ main() {
 
   tearDown(() {
     get.unregister<WalletService>();
-    get.unregister<WalletConnectTransactionHandler>();
+    get.unregister<TransactionHandler>();
     get.unregister<MockWalletService>();
   });
 
