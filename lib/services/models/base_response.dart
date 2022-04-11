@@ -4,6 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
+const _serviceDownCodes = {
+  404,
+  500,
+  503,
+};
+
 class BaseResponse<T> {
   BaseResponse(
     Response? res,
@@ -35,7 +41,7 @@ class BaseResponse<T> {
       logError('error parsing: $e');
 
       isSuccessful = false;
-      isServiceDown = res?.statusCode == 500;
+      isServiceDown = _serviceDownCodes.contains(res?.statusCode);
     }
     message = (errorMessage == null) ? res?.statusMessage : errorMessage;
   }
@@ -92,7 +98,7 @@ class BaseResponse<T> {
 
     res.error = error;
     res.isSuccessful = false;
-    res.isServiceDown = error.response?.statusCode == 500;
+    res.isServiceDown = _serviceDownCodes.contains(error.response?.statusCode);
 
     return res;
   }
