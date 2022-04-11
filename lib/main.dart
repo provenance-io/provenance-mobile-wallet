@@ -56,56 +56,64 @@ import 'util/get.dart';
 const _testingCrashlytics = false;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
 
-  _initializeFlutterFire();
+      await _initializeFlutterFire();
 
-  final firebaseMessaging = FirebaseMessaging.instance;
-  final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-  await pushNotificationHelper.init();
+      final firebaseMessaging = FirebaseMessaging.instance;
+      final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
+      await pushNotificationHelper.init();
 
-  get.registerLazySingleton<RemoteNotificationService>(() {
-    return DefaultRemoteNotificationService(pushNotificationHelper);
-  });
+      get.registerLazySingleton<RemoteNotificationService>(() {
+        return DefaultRemoteNotificationService(pushNotificationHelper);
+      });
 
-  final cipherService = PlatformCipherService();
-  get.registerSingleton<CipherService>(cipherService);
+      final cipherService = PlatformCipherService();
+      get.registerSingleton<CipherService>(cipherService);
 
-  var keyValueService = DefaultKeyValueService(
-    store: SharedPreferencesKeyValueStore(),
-  );
-  var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
-  if (!hasKey) {
-    await cipherService.deletePin();
-    keyValueService.setBool(PrefKey.isSubsequentRun, true);
-  }
+      var keyValueService = DefaultKeyValueService(
+        store: SharedPreferencesKeyValueStore(),
+      );
+      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
+      if (!hasKey) {
+        await cipherService.deletePin();
+        keyValueService.setBool(PrefKey.isSubsequentRun, true);
+      }
 
-  get.registerSingleton<KeyValueService>(keyValueService);
-  final sqliteStorage = SqliteWalletStorageService();
-  final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
+      get.registerSingleton<KeyValueService>(keyValueService);
+      final sqliteStorage = SqliteWalletStorageService();
+      final walletStorage =
+          WalletStorageServiceImp(sqliteStorage, cipherService);
 
-  final walletService = WalletService(storage: walletStorage)..init();
-  get.registerSingleton<WalletService>(walletService);
+      final walletService = WalletService(storage: walletStorage)..init();
+      get.registerSingleton<WalletService>(walletService);
 
-  get.registerSingleton<ProtobuffClientInjector>(
-    (coin) => PbClient(
-      Uri.parse(Endpoints.chain.forCoin(coin)),
-      ChainId.forCoin(
-        coin,
-      ),
-    ),
-  );
+      get.registerSingleton<ProtobuffClientInjector>(
+        (coin) => PbClient(
+          Uri.parse(Endpoints.chain.forCoin(coin)),
+          ChainId.forCoin(
+            coin,
+          ),
+        ),
+      );
 
-  final authHelper = LocalAuthHelper();
-  await authHelper.init();
+      final authHelper = LocalAuthHelper();
+      await authHelper.init();
 
-  get.registerSingleton<LocalAuthHelper>(authHelper);
+      get.registerSingleton<LocalAuthHelper>(authHelper);
 
-  runApp(
-    Phoenix(
-      child: ProvenanceWalletApp(),
-    ),
+      runApp(
+        Phoenix(
+          child: ProvenanceWalletApp(),
+        ),
+      );
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    },
   );
 }
 
