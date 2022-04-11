@@ -53,7 +53,7 @@ import 'package:rxdart/rxdart.dart';
 import 'util/get.dart';
 
 // Toggle this for testing Crashlytics in your app locally.
-const _testingCrashlytics = true;
+const _testingCrashlytics = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
