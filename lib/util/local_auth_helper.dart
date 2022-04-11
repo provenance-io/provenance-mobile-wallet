@@ -30,25 +30,6 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   ValueStream<AuthStatus> get status => _status;
 
-  Future<void> init() async {
-    AuthStatus status;
-    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
-    if (!lockScreenEnabled) {
-      status = AuthStatus.noLockScreen;
-    } else {
-      final code = await _cipherService.getPin();
-      if (code == null || code.isEmpty) {
-        status = AuthStatus.noAccount;
-      } else {
-        final wallets = await _walletService.getWallets();
-        status =
-            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
-      }
-    }
-
-    _status.value = status;
-  }
-
   void reset() {
     _status.value = AuthStatus.noAccount;
   }
@@ -69,6 +50,22 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   }
 
   Future<AuthStatus> auth(BuildContext context) async {
+    AuthStatus status;
+    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
+    if (!lockScreenEnabled) {
+      status = AuthStatus.noLockScreen;
+    } else {
+      final code = await _cipherService.getPin();
+      if (code == null || code.isEmpty) {
+        status = AuthStatus.noAccount;
+      } else {
+        final wallets = await _walletService.getWallets();
+        status =
+            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+      }
+    }
+
+    _status.value = status;
     final pin = await _cipherService.getPin();
     if (pin == null || pin.isEmpty) {
       const result = AuthStatus.noAccount;
