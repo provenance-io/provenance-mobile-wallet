@@ -115,9 +115,9 @@ main() {
     expect(bloc!.validateAmount(null), Strings.required);
     expect(bloc!.validateAmount(""), Strings.required);
     expect(bloc!.validateAmount("abc"), Strings.required);
-    // expect(bloc!.validateAmount("1.1234567890"), "too many decimal places");
+    expect(bloc!.validateAmount("1.1234567890"), "too many decimal places");
     expect(bloc!.validateAmount("100.000000001"), "Insufficient Hash");
-    expect(bloc!.validateAmount("1.000000000"), null);
+    expect(bloc!.validateAmount("1.00"), null);
   });
 
   test("showNext - validation errors", () async {

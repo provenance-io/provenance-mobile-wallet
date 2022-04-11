@@ -220,4 +220,54 @@ main() {
       );
     });
   });
+
+  group("DecimalPointFormatter", () {
+    final oldNumber = TextEditingValue(text: "123.44");
+
+    test("assertFails", () {
+      expect(() => DecimalPointFormatter(-1), throwsAssertionError);
+    });
+
+    test("no decimal places", () {
+      final newNumber = TextEditingValue(text: "900");
+
+      final formatter = DecimalPointFormatter(2);
+
+      expect(
+        formatter.formatEditUpdate(
+          oldNumber,
+          newNumber,
+        ),
+        newNumber,
+      );
+    });
+
+    test("at limit decimal places", () {
+      final newNumber = TextEditingValue(text: "900.00");
+
+      final formatter = DecimalPointFormatter(2);
+
+      expect(
+        formatter.formatEditUpdate(
+          oldNumber,
+          newNumber,
+        ),
+        newNumber,
+      );
+    });
+
+    test("too many decimal places", () {
+      final newNumber = TextEditingValue(text: "900.001");
+
+      final formatter = DecimalPointFormatter(2);
+
+      expect(
+        formatter.formatEditUpdate(
+          oldNumber,
+          newNumber,
+        ),
+        oldNumber,
+      );
+    });
+  });
 }
