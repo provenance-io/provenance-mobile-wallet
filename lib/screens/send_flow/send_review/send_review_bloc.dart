@@ -116,16 +116,13 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    return _transactionHandler
-        .executeTransaction(
+    final response = await _transactionHandler.executeTransaction(
       body,
       privateKey!,
       estimate,
-    )
-        .then((response) {
-      log(response.asJsonString());
-      return null;
-    });
+    );
+
+    log(response.asJsonString());
   }
 
   Future<void> complete() async {

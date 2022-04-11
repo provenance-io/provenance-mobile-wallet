@@ -66,20 +66,13 @@ class WalletConnectTransactionHandler implements TransactionHandler {
       pbClient.chainId,
     );
 
-    return pbClient
-        .broadcastTx(
+    final responsePair = await pbClient.broadcastTx(
       baseReq,
       gasEstimate,
       proto.BroadcastMode.BROADCAST_MODE_BLOCK,
-    )
-        .then((response) {
-      if (response.txResponse.code != 0 ||
-          (response.txResponse.code == 0 && response.txResponse.height == 0)) {
-        throw Exception(response.txResponse.rawLog);
-      }
+    );
 
-      return response;
-    });
+    return responsePair;
   }
 }
 
