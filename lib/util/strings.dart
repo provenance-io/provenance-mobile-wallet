@@ -138,6 +138,7 @@ class Strings {
   static const profileShowAdvancedUI = 'Show Advanced UI';
   static const profileMenuUseMainnet = 'Use Mainnet';
   static const profileMenuUseTestnet = 'Use Testnet';
+  static const profileAllowCrashlitics = "Allow Crash Data Collection";
 
   // Service Mocks Screen
   static const developerMocksMockAssetService = "Mock Asset Service";
