@@ -11,8 +11,7 @@ import 'package:rxdart/subjects.dart';
 
 typedef ProtobuffClientInjector = proto.PbClient Function(Coin coin);
 
-class WalletConnectTransactionHandler
-    implements TransactionHandler, Disposable {
+class DefaultTransactionHandler implements TransactionHandler, Disposable {
   final _transaction = PublishSubject<TransactionResponse>();
 
   @override

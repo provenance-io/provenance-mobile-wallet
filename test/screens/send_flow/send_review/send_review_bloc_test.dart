@@ -8,7 +8,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import '../send_flow_test_constants.dart';
@@ -30,13 +30,13 @@ final walletDetails = WalletDetails(
 @GenerateMocks([
   SendReviewNaviagor,
   WalletService,
-  WalletConnectTransactionHandler,
+  TransactionHandler,
 ])
 void main() {
   PrivateKey? privateKey;
   MockWalletService? mockWalletService;
   MockSendReviewNaviagor? mockNavigator;
-  MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
+  MockTransactionHandler? mockTransactionHandler;
 
   SendReviewBloc? bloc;
 
@@ -48,8 +48,8 @@ void main() {
     privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
     mockNavigator = MockSendReviewNaviagor();
 
-    mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
-    when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
+    mockTransactionHandler = MockTransactionHandler();
+    when(mockTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
       return Future.value(WalletGasEstimate(100, null));
     });
@@ -63,7 +63,7 @@ void main() {
 
     bloc = SendReviewBloc(
       walletDetails,
-      mockWalletConnectTransactionHandler!,
+      mockTransactionHandler!,
       receivingAddress,
       dollarAsset,
       feeAsset,
@@ -102,7 +102,7 @@ void main() {
 
   group("doSend", () {
     test("args", () async {
-      when(mockWalletConnectTransactionHandler!.executeTransaction(
+      when(mockTransactionHandler!.executeTransaction(
         any,
         any,
         any,
@@ -113,8 +113,7 @@ void main() {
 
       await bloc!.doSend();
 
-      final captures =
-          verify(mockWalletConnectTransactionHandler!.executeTransaction(
+      final captures = verify(mockTransactionHandler!.executeTransaction(
         captureAny,
         privateKey!,
         captureAny,

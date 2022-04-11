@@ -13,20 +13,18 @@ import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/asset.dart' as _i8;
 import 'package:provenance_wallet/services/models/asset_graph_item.dart'
     as _i10;
-import 'package:provenance_wallet/services/models/price.dart' as _i18;
+import 'package:provenance_wallet/services/models/price.dart' as _i17;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
 import 'package:provenance_wallet/services/models/wallet_details.dart' as _i14;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i17;
+    as _i16;
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
     as _i11;
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart'
-    as _i16;
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart'
     as _i15;
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
@@ -181,20 +179,20 @@ class MockWalletService extends _i1.Mock implements _i2.WalletService {
           returnValue: Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
-/// A class which mocks [WalletConnectTransactionHandler].
+/// A class which mocks [TransactionHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWalletConnectTransactionHandler extends _i1.Mock
-    implements _i15.WalletConnectTransactionHandler {
-  MockWalletConnectTransactionHandler() {
+class MockTransactionHandler extends _i1.Mock
+    implements _i15.TransactionHandler {
+  MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Stream<_i16.TransactionResponse> get transaction =>
+  _i7.Stream<_i15.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i16.TransactionResponse>.empty())
-          as _i7.Stream<_i16.TransactionResponse>);
+              returnValue: Stream<_i15.TransactionResponse>.empty())
+          as _i7.Stream<_i15.TransactionResponse>);
   @override
   _i7.Future<_i3.WalletGasEstimate> estimateGas(
           _i4.TxBody? txBody, _i9.PublicKey? publicKey) =>
@@ -217,18 +215,18 @@ class MockWalletConnectTransactionHandler extends _i1.Mock
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i17.PriceService {
+class MockPriceService extends _i1.Mock implements _i16.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i18.Price>> getAssetPrices(
+  _i7.Future<List<_i17.Price>> getAssetPrices(
           _i9.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: Future<List<_i18.Price>>.value(<_i18.Price>[]))
-          as _i7.Future<List<_i18.Price>>);
+              returnValue: Future<List<_i17.Price>>.value(<_i17.Price>[]))
+          as _i7.Future<List<_i17.Price>>);
   @override
   _i5.HttpClient getClient(_i9.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),

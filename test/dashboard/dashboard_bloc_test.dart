@@ -18,9 +18,9 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -359,7 +359,7 @@ class TestState {
 
     get.registerSingleton(authHelper);
     get.registerSingleton<TransactionHandler>(
-      WalletConnectTransactionHandler(),
+      DefaultTransactionHandler(),
     );
     final bloc = DashboardBloc();
 
