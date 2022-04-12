@@ -185,7 +185,7 @@ main() {
       await _build(tester);
       var dollarValueSentFind = find.byKey(ValueKey("DollarValueSent"));
       expect(
-        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizingText>(dollarValueSentFind).data,
         "",
       );
 
@@ -195,7 +195,7 @@ main() {
           .then((_) => tester.pumpAndSettle());
 
       expect(
-        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizingText>(dollarValueSentFind).data,
         hashAsset
             .copyWith(
               amount: Decimal.fromInt(1) *
@@ -209,7 +209,7 @@ main() {
           .then((_) => tester.pumpAndSettle());
 
       expect(
-        tester.widget<PwAutoSizineText>(dollarValueSentFind).data,
+        tester.widget<PwAutoSizingText>(dollarValueSentFind).data,
         hashAsset
             .copyWith(
               amount: Decimal.parse(".5") *

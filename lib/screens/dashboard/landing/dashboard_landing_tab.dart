@@ -304,7 +304,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                             style: PwTextStyle.bodyBold,
                                           ),
                                           VerticalSpacer.xSmall(),
-                                          PwAutoSizineText(
+                                          PwAutoSizingText(
                                             item.formattedAmount,
                                             height: 16,
                                             color: PwColor.neutral200,

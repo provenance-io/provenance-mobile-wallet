@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
-class PwAutoSizineText extends StatelessWidget {
-  const PwAutoSizineText(
+class PwAutoSizingText extends StatelessWidget {
+  const PwAutoSizingText(
     this.data, {
     this.height = 45,
     this.style = PwTextStyle.body,

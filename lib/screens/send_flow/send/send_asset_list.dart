@@ -51,12 +51,12 @@ class SendAssetCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: PwAutoSizineText(
+                child: PwAutoSizingText(
                   asset.displayFiatAmount,
                 ),
               ),
               Expanded(
-                child: PwAutoSizineText(
+                child: PwAutoSizingText(
                   asset.displayAmount,
                   style: PwTextStyle.caption,
                   height: 25,

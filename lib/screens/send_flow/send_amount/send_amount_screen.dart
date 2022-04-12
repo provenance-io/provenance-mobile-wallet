@@ -140,7 +140,8 @@ class SendAmountPageState extends State<SendAmountPage> {
                 style: Theme.of(context).textTheme.display1,
                 decoration: InputDecoration(
                   hintText: Strings.sendAmountHint,
-                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(color: Theme.of(context).colorScheme.neutralNeutral),
+                  hintStyle: Theme.of(context).textTheme.displayBody.copyWith(
+                      color: Theme.of(context).colorScheme.neutralNeutral),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),
@@ -160,7 +161,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                   value,
                   child,
                 ) {
-                  return PwAutoSizineText(
+                  return PwAutoSizingText(
                     value,
                     height: 25,
                     style: PwTextStyle.displayBody,

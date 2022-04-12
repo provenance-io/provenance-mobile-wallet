@@ -59,7 +59,7 @@ class WalletPortfolio extends StatelessWidget {
                 );
               }
 
-              return PwAutoSizineText(
+              return PwAutoSizingText(
                 portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display1,
