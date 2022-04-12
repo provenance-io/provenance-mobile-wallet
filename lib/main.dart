@@ -257,13 +257,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 }
 
 Future<void> _initializeCrashlytics(KeyValueService service) async {
-  if (_testingCrashlytics) {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  } else if (await service.getBool(PrefKey.allowCrashlitics) ?? !kDebugMode) {
-    // Else only enable it in non-debug builds if we haven't opted out.
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
-  }
+  final allowCrashlytics = _testingCrashlytics ||
+      ((await service.getBool(PrefKey.allowCrashlitics) ?? true) &&
+          !kDebugMode);
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(allowCrashlytics);
 
   // Pass all uncaught errors to Crashlytics.
   final originalOnError = FlutterError.onError;
