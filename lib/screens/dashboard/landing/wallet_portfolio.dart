@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
@@ -58,7 +59,7 @@ class WalletPortfolio extends StatelessWidget {
                 );
               }
 
-              return PwText(
+              return PwAutoSizingText(
                 portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display1,

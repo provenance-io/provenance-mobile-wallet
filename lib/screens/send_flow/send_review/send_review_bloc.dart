@@ -7,7 +7,7 @@ import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -44,14 +44,14 @@ class SendReviewBlocState {
     return map.entries
         .map((entry) =>
             "${entry.value.displayAmount} ${entry.value.displayDenom}")
-        .join(" + ");
+        .join(" + \n");
   }
 }
 
 class SendReviewBloc implements Disposable {
   SendReviewBloc(
     this._walletDetails,
-    this._walletService,
+    this._transactionHandler,
     this.receivingAddress,
     this.sendingAsset,
     this.fee,
@@ -69,7 +69,7 @@ class SendReviewBloc implements Disposable {
 
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
-  final WalletConnectTransactionHandler _walletService;
+  final TransactionHandler _transactionHandler;
   final WalletDetails _walletDetails;
   final String receivingAddress;
   final String? note;
@@ -116,16 +116,13 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    return _walletService
-        .executeTransaction(
+    final response = await _transactionHandler.executeTransaction(
       body,
       privateKey!,
       estimate,
-    )
-        .then((response) {
-      log(response.asJsonString());
-      return null;
-    });
+    );
+
+    log(response.asJsonString());
   }
 
   Future<void> complete() async {

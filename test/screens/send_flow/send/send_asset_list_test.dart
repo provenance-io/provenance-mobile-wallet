@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
@@ -31,6 +32,7 @@ main() {
       );
       await _build(tester, asset);
 
+      final numberFormat = intl.NumberFormat.simpleCurrency();
       final textFind = find.byType(PwText);
       expect(textFind, findsNWidgets(3));
       expect(
@@ -38,7 +40,12 @@ main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: textFind, matching: find.text("\$${52 * 123}.00")),
+        find.descendant(
+          of: textFind,
+          matching: find.text(
+            numberFormat.format(52 * 123),
+          ),
+        ),
         findsOneWidget,
       );
       expect(

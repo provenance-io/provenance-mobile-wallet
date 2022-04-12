@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 
@@ -42,19 +43,27 @@ class SendAssetCell extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(child: PwText(asset.displayFiatAmount)),
-            Expanded(
-              child: PwText(
-                asset.displayAmount,
-                style: PwTextStyle.caption,
+        SizedBox(
+          width: 105,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: PwAutoSizingText(
+                  asset.displayFiatAmount,
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: PwAutoSizingText(
+                  asset.displayAmount,
+                  style: PwTextStyle.caption,
+                  height: 25,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
