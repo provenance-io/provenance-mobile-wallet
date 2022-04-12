@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
 class PushNotificationHelper {
@@ -19,7 +20,9 @@ class PushNotificationHelper {
     try {
       final token = await _firebaseMessaging.getToken();
 
-      print('Firebase token: $token');
+      if (kDebugMode) {
+        print('Firebase token: $token');
+      }
     } on Exception catch (e) {
       logError(
         'Failed to get Firebase token',

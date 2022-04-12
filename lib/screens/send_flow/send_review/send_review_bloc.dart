@@ -124,6 +124,7 @@ class SendReviewBloc implements Disposable {
     )
         .then((response) {
       log(response.asJsonString());
+
       return null;
     });
   }
