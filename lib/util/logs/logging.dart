@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 export 'package:logger/logger.dart';
 
@@ -144,8 +145,11 @@ class _Output extends LogOutput {
     dev.log('${event.lines[1]} ${event.lines[2]}', name: event.lines[0]);
 
     if (event.level != Level.debug) {
-      // no need to add time
-      FirebaseCrashlytics.instance.log('[${event.lines[0]}] ${event.lines[2]}');
+      if (get.isRegistered<CrashReportingService>()) {
+        // no need to add time
+        get<CrashReportingService>()
+            .log('[${event.lines[0]}] ${event.lines[2]}');
+      }
     }
   }
 }
