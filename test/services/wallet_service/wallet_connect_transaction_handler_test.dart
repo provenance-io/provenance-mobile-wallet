@@ -9,8 +9,8 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/models/gas_fee.dart';
+import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import 'wallet_connect_transaction_handler_test.mocks.dart';
@@ -88,7 +88,7 @@ Matcher _baseReqMatcher(
 main() {
   MockPbClient? mockPbClient;
   MockGasFeeService? mockGasFeeService;
-  WalletConnectTransactionHandler? transHandler;
+  DefaultTransactionHandler? transHandler;
 
   setUp(() {
     mockPbClient = MockPbClient();
@@ -114,7 +114,7 @@ main() {
     get.registerSingleton<ProtobuffClientInjector>((_) => mockPbClient!);
     get.registerSingleton<GasFeeService>(mockGasFeeService!);
 
-    transHandler = WalletConnectTransactionHandler();
+    transHandler = DefaultTransactionHandler();
   });
 
   tearDown(() {

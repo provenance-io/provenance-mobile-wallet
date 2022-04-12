@@ -39,7 +39,8 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -232,8 +233,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<WalletConnectionFactory>(
       () => (address) => WalletConnection(address),
     );
-    get.registerLazySingleton<WalletConnectTransactionHandler>(
-      () => WalletConnectTransactionHandler(),
+    get.registerLazySingleton<TransactionHandler>(
+      () => DefaultTransactionHandler(),
     );
 
     get.registerLazySingleton<PriceService>(

@@ -11,7 +11,7 @@ import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import 'send_flow_test.mocks.dart';
@@ -23,7 +23,7 @@ final get = GetIt.instance;
   AssetService,
   TransactionService,
   WalletService,
-  WalletConnectTransactionHandler,
+  TransactionHandler,
   PriceService,
 ])
 main() {
@@ -46,20 +46,20 @@ main() {
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
   MockWalletService? mockWalletService;
-  MockWalletConnectTransactionHandler? mockWalletConnectTransactionHandler;
+  MockTransactionHandler? mockTransactionHandler;
   MockPriceService? mockPriceService;
 
   setUp(() {
-    mockWalletConnectTransactionHandler = MockWalletConnectTransactionHandler();
-    when(mockWalletConnectTransactionHandler!.estimateGas(any, any))
+    mockTransactionHandler = MockTransactionHandler();
+    when(mockTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
       final gasEstimate = WalletGasEstimate(100, null);
 
       return Future.value(gasEstimate);
     });
 
-    get.registerSingleton<WalletConnectTransactionHandler>(
-      mockWalletConnectTransactionHandler!,
+    get.registerSingleton<TransactionHandler>(
+      mockTransactionHandler!,
     );
 
     mockTransactionService = MockTransactionService();
@@ -97,7 +97,7 @@ main() {
     get.unregister<WalletService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
-    get.unregister<WalletConnectTransactionHandler>();
+    get.unregister<TransactionHandler>();
     get.unregister<PriceService>();
   });
 
