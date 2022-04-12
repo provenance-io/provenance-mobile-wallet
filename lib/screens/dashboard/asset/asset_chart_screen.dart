@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  AssetChartScreen(
+  const AssetChartScreen(
     this.coin,
     this.asset, {
     Key? key,

@@ -53,6 +53,8 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
     if (WalletConnectAddress.create(value) == null) {
       return Strings.profileDeveloperConnectInvalidAddress;
     }
+
+    return null;
   }
 
   String? _onSubmitted(String? value) {
@@ -68,5 +70,7 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
         bloc.connectSession(walletId, value);
       }
     }
+
+    return null;
   }
 }
