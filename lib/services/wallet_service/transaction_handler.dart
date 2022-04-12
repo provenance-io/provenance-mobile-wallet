@@ -3,6 +3,8 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 
 abstract class TransactionHandler {
+  Stream<TransactionResponse> get transaction;
+
   Future<WalletGasEstimate> estimateGas(TxBody txBody, PublicKey publicKey);
 
   Future<RawTxResponsePair> executeTransaction(
@@ -10,4 +12,16 @@ abstract class TransactionHandler {
     PrivateKey privateKey, [
     WalletGasEstimate? gasEstimate,
   ]);
+}
+
+class TransactionResponse {
+  TransactionResponse({
+    required this.txBody,
+    required this.txResponse,
+    this.gasEstimate,
+  });
+
+  final TxBody txBody;
+  final TxResponse txResponse;
+  final WalletGasEstimate? gasEstimate;
 }

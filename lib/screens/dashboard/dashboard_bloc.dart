@@ -18,10 +18,10 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_restore
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -38,6 +38,9 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     get<DeepLinkService>()
         .link
         .listen(_handleDynamicLink)
+        .addTo(_subscriptions);
+    _transactionHandler.transaction
+        .listen(_onTransaction)
         .addTo(_subscriptions);
     _walletService.events.selected
         .distinct()
@@ -65,6 +68,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   final _subscriptions = CompositeSubscription();
 
+  final _transactionHandler = get<TransactionHandler>();
   final _walletService = get<WalletService>();
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
@@ -235,7 +239,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
-      transactionHandler: WalletConnectTransactionHandler(),
+      transactionHandler: _transactionHandler,
       walletInfo: WalletInfo(
         walletDetails.id,
         walletDetails.name,
@@ -411,6 +415,10 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   }
 
   void _onSelected(WalletDetails? details) {
+    load();
+  }
+
+  void _onTransaction(TransactionResponse response) {
     load();
   }
 

@@ -9,7 +9,7 @@ import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -69,7 +69,7 @@ class SendAmountBloc extends Disposable {
       walletDetails.coin,
     );
 
-    get<WalletConnectTransactionHandler>()
+    get<TransactionHandler>()
         .estimateGas(body, publicKey)
         .then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];

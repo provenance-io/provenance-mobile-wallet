@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
@@ -106,19 +107,11 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                       details.asset.display.toUpperCase(),
                       style: PwTextStyle.subhead,
                     ),
-                    SizedBox(
+                    PwAutoSizingText(
+                      details.asset.formattedUsdPrice,
                       height: 45,
-                      child: FittedBox(
-                        alignment: Alignment.center,
-                        fit: BoxFit.fitWidth,
-                        child: PwText(
-                          details.asset.formattedUsdPrice,
-                          style: PwTextStyle.h1,
-                          color: PwColor.neutralNeutral,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
+                      style: PwTextStyle.h1,
+                      color: PwColor.neutralNeutral,
                     ),
                     AssetBarChart(snapshot.data!.value),
                     VerticalSpacer.small(),

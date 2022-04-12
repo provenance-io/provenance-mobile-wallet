@@ -18,6 +18,8 @@ import 'package:provenance_wallet/services/asset_service/default_asset_service.d
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
@@ -39,7 +41,8 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -54,6 +57,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
+  get.registerLazySingleton<CrashReportingService>(
+    () => FirebaseCrashReportingService(),
+  );
 
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
@@ -231,8 +238,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<WalletConnectionFactory>(
       () => (address) => WalletConnection(address),
     );
-    get.registerLazySingleton<WalletConnectTransactionHandler>(
-      () => WalletConnectTransactionHandler(),
+    get.registerLazySingleton<TransactionHandler>(
+      () => DefaultTransactionHandler(),
     );
 
     get.registerLazySingleton<PriceService>(

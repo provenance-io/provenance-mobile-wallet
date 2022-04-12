@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
@@ -187,10 +188,9 @@ class SendAmountPageState extends State<SendAmountPage> {
                   value,
                   child,
                 ) {
-                  return PwText(
-                    '$value${value.isNotEmpty ? " USD" : ""}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  return PwAutoSizingText(
+                    value,
+                    height: 25,
                     style: PwTextStyle.displayBody,
                     key: ValueKey("DollarValueSent"),
                   );
