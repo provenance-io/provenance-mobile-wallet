@@ -25,7 +25,7 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   static const _inactivityTimeout = Duration(minutes: 2);
   final _cipherService = get<CipherService>();
   final _walletService = get<WalletService>();
-  final _status = BehaviorSubject<AuthStatus>();
+  final _status = BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
   Timer? _inactivityTimer;
 
   ValueStream<AuthStatus> get status => _status;
@@ -50,22 +50,7 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   }
 
   Future<AuthStatus> auth(BuildContext context) async {
-    AuthStatus status;
-    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
-    if (!lockScreenEnabled) {
-      status = AuthStatus.noLockScreen;
-    } else {
-      final code = await _cipherService.getPin();
-      if (code == null || code.isEmpty) {
-        status = AuthStatus.noAccount;
-      } else {
-        final wallets = await _walletService.getWallets();
-        status =
-            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
-      }
-    }
-
-    _status.value = status;
+    await _init();
     final pin = await _cipherService.getPin();
     if (pin == null || pin.isEmpty) {
       const result = AuthStatus.noAccount;
@@ -108,6 +93,25 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
       case AppLifecycleState.detached:
         break;
     }
+  }
+
+  Future<void> _init() async {
+    AuthStatus status;
+    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
+    if (!lockScreenEnabled) {
+      status = AuthStatus.noLockScreen;
+    } else {
+      final code = await _cipherService.getPin();
+      if (code == null || code.isEmpty) {
+        status = AuthStatus.noAccount;
+      } else {
+        final wallets = await _walletService.getWallets();
+        status =
+            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+      }
+    }
+
+    _status.value = status;
   }
 
   Future<AuthStatus> _validatePin(BuildContext context) async {
