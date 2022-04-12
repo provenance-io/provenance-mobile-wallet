@@ -65,7 +65,7 @@ void main() async {
         store: SharedPreferencesKeyValueStore(),
       );
 
-      await _initializeFlutterFire(keyValueService);
+      await _initializeCrashlytics(keyValueService);
 
       final firebaseMessaging = FirebaseMessaging.instance;
       final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
@@ -256,9 +256,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   }
 }
 
-Future<void> _initializeFlutterFire(KeyValueService service) async {
-  // Wait for Firebase to initialize
-
+Future<void> _initializeCrashlytics(KeyValueService service) async {
   if (_testingCrashlytics) {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   } else if (await service.getBool(PrefKey.allowCrashlitics) ?? !kDebugMode) {
