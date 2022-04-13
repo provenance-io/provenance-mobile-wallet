@@ -242,7 +242,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await bloc.load();
+                  await bloc.load(showLoading: false);
                 },
                 color: Theme.of(context).colorScheme.indicatorActive,
                 child: StreamBuilder<List<Asset>?>(

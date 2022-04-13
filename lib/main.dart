@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -53,63 +56,74 @@ import 'package:rxdart/rxdart.dart';
 
 import 'util/get.dart';
 
+// Toggle this for testing Crashlytics in your app locally.
+const _testingCrashlytics = false;
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
 
-  await Firebase.initializeApp();
+      await SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp],
+      );
 
-  get.registerLazySingleton<CrashReportingService>(
-    () => FirebaseCrashReportingService(),
-  );
+      get.registerLazySingleton<CrashReportingService>(
+        () => FirebaseCrashReportingService(),
+      );
 
-  await SystemChrome.setPreferredOrientations(
-    [DeviceOrientation.portraitUp],
-  );
+      var keyValueService = DefaultKeyValueService(
+        store: SharedPreferencesKeyValueStore(),
+      );
 
-  final firebaseMessaging = FirebaseMessaging.instance;
-  final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-  await pushNotificationHelper.init();
+      await _initializeCrashlytics(keyValueService);
 
-  get.registerLazySingleton<RemoteNotificationService>(() {
-    return DefaultRemoteNotificationService(pushNotificationHelper);
-  });
+      final firebaseMessaging = FirebaseMessaging.instance;
+      final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
+      await pushNotificationHelper.init();
 
-  final cipherService = PlatformCipherService();
-  get.registerSingleton<CipherService>(cipherService);
+      get.registerLazySingleton<RemoteNotificationService>(() {
+        return DefaultRemoteNotificationService(pushNotificationHelper);
+      });
 
-  var keyValueService = DefaultKeyValueService(
-    store: SharedPreferencesKeyValueStore(),
-  );
-  var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
-  if (!hasKey) {
-    await cipherService.deletePin();
-    keyValueService.setBool(PrefKey.isSubsequentRun, true);
-  }
+      final cipherService = PlatformCipherService();
+      get.registerSingleton<CipherService>(cipherService);
 
-  get.registerSingleton<KeyValueService>(keyValueService);
-  final sqliteStorage = SqliteWalletStorageService();
-  final walletStorage = WalletStorageServiceImp(sqliteStorage, cipherService);
+      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
+      if (!hasKey) {
+        await cipherService.deletePin();
+        keyValueService.setBool(PrefKey.isSubsequentRun, true);
+      }
 
-  final walletService = WalletService(storage: walletStorage)..init();
-  get.registerSingleton<WalletService>(walletService);
+      get.registerSingleton<KeyValueService>(keyValueService);
+      final sqliteStorage = SqliteWalletStorageService();
+      final walletStorage =
+          WalletStorageServiceImp(sqliteStorage, cipherService);
 
-  get.registerSingleton<ProtobuffClientInjector>(
-    (coin) => PbClient(
-      Uri.parse(Endpoints.chain.forCoin(coin)),
-      ChainId.forCoin(
-        coin,
-      ),
-    ),
-  );
+      final walletService = WalletService(storage: walletStorage)..init();
+      get.registerSingleton<WalletService>(walletService);
 
-  final authHelper = LocalAuthHelper();
+      get.registerSingleton<ProtobuffClientInjector>(
+        (coin) => PbClient(
+          Uri.parse(Endpoints.chain.forCoin(coin)),
+          ChainId.forCoin(
+            coin,
+          ),
+        ),
+      );
 
-  get.registerSingleton<LocalAuthHelper>(authHelper);
+      get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
 
-  runApp(
-    Phoenix(
-      child: ProvenanceWalletApp(),
-    ),
+      runApp(
+        Phoenix(
+          child: ProvenanceWalletApp(),
+        ),
+      );
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    },
   );
 }
 
@@ -249,4 +263,20 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final deepLinkService = FirebaseDeepLinkService()..init();
     get.registerSingleton<DeepLinkService>(deepLinkService);
   }
+}
+
+Future<void> _initializeCrashlytics(KeyValueService service) async {
+  final allowCrashlytics = _testingCrashlytics ||
+      ((await service.getBool(PrefKey.allowCrashlitics) ?? true) &&
+          !kDebugMode);
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(allowCrashlytics);
+
+  // Pass all uncaught errors to Crashlytics.
+  final originalOnError = FlutterError.onError;
+  FlutterError.onError = (FlutterErrorDetails errorDetails) async {
+    await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    // Forward to original handler.
+    originalOnError?.call(errorDetails);
+  };
 }
