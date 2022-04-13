@@ -71,6 +71,13 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   void initState() {
+    _bloc.isLoading.listen((e) {
+      if (e) {
+        ModalLoadingRoute.showLoading("", context);
+      } else {
+        ModalLoadingRoute.dismiss(context);
+      }
+    }).addTo(_subscriptions);
     _bloc.delegateEvents.sendRequest
         .listen(_onSendRequest)
         .addTo(_subscriptions);

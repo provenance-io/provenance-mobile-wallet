@@ -61,6 +61,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       transactions: [],
     ),
   );
+  final _isLoading = BehaviorSubject.seeded(false);
   final _transactionPages = BehaviorSubject.seeded(1);
   final _isLoadingTransactions = BehaviorSubject.seeded(false);
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
@@ -80,6 +81,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<int> get transactionPages => _transactionPages;
+  ValueStream<bool> get isLoading => _isLoading;
   ValueStream<bool> get isLoadingTransactions => _isLoadingTransactions;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
@@ -104,42 +106,52 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     }
   }
 
-  Future<void> load() async {
-    final wallet = _walletService.events.selected.value;
-
-    var assetList = <Asset>[];
-    var transactions = <Transaction>[];
-
-    if (wallet != null) {
-      final isFirstLoad = _isFirstLoad;
-      _isFirstLoad = false;
-
-      final walletId = wallet.id;
-      if (isFirstLoad) {
-        tryRestoreSession(walletId);
-      }
-
-      assetList = await _assetService.getAssets(
-        wallet.coin,
-        wallet.address,
-      );
-
-      transactions = await _transactionService.getTransactions(
-        wallet.coin,
-        wallet.address,
-        _transactionPages.value,
-      );
+  Future<void> load({bool showLoading = true}) async {
+    if (showLoading) {
+      _isLoading.tryAdd(true);
     }
 
-    _assetList.tryAdd(assetList);
+    try {
+      final wallet = _walletService.events.selected.value;
 
-    _transactionDetails.tryAdd(
-      TransactionDetails(
-        walletAddress: wallet?.address ?? '',
-        filteredTransactions: transactions,
-        transactions: transactions.toList(),
-      ),
-    );
+      var assetList = <Asset>[];
+      var transactions = <Transaction>[];
+
+      if (wallet != null) {
+        final isFirstLoad = _isFirstLoad;
+        _isFirstLoad = false;
+
+        final walletId = wallet.id;
+        if (isFirstLoad) {
+          tryRestoreSession(walletId);
+        }
+
+        assetList = await _assetService.getAssets(
+          wallet.coin,
+          wallet.address,
+        );
+
+        transactions = await _transactionService.getTransactions(
+          wallet.coin,
+          wallet.address,
+          _transactionPages.value,
+        );
+      }
+
+      _assetList.tryAdd(assetList);
+
+      _transactionDetails.tryAdd(
+        TransactionDetails(
+          walletAddress: wallet?.address ?? '',
+          filteredTransactions: transactions,
+          transactions: transactions.toList(),
+        ),
+      );
+    } finally {
+      if (showLoading) {
+        _isLoading.tryAdd(false);
+      }
+    }
   }
 
   Future<void> loadAdditionalTransactions() async {
@@ -403,6 +415,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     delegateEvents.dispose();
     sessionEvents.dispose();
 
+    _isLoading.close();
     _assetList.close();
     _transactionPages.close();
     _isLoadingTransactions.close();
