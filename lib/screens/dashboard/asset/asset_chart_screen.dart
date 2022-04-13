@@ -106,6 +106,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     PwText(
                       details.asset.display.toUpperCase(),
                       style: PwTextStyle.subhead,
+                      textAlign: TextAlign.center,
                     ),
                     PwAutoSizingText(
                       details.asset.formattedUsdPrice,
