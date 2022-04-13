@@ -51,20 +51,14 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   Future<AuthStatus> auth(BuildContext context) async {
     AuthStatus status;
+
     final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
     if (!lockScreenEnabled) {
       status = AuthStatus.noLockScreen;
-    } else {
-      final code = await _cipherService.getPin();
-      if (code == null || code.isEmpty) {
-        status = AuthStatus.noAccount;
-      } else {
-        final wallets = await _walletService.getWallets();
-        status =
-            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
-      }
-    }
+      _status.value = status;
 
+      return status;
+    }
     final pin = await _cipherService.getPin();
     if (pin == null || pin.isEmpty) {
       status = AuthStatus.noAccount;
@@ -73,7 +67,8 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
       return status;
     }
 
-    status = AuthStatus.unauthenticated;
+    final wallets = await _walletService.getWallets();
+    status = wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
 
     final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {
