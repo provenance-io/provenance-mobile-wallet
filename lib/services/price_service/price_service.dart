@@ -10,7 +10,7 @@ class PriceService with ClientCoinMixin {
     Coin coin,
     List<String> denominations,
   ) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final data = await client.get(
       '$_assetServiceBasePathv1/service-pricing-engine/api/v1/pricing/marker/denom/list?denom[]=${denominations.join(",")}',
       listConverter: (json) {

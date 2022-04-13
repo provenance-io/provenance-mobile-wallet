@@ -80,9 +80,7 @@ class WalletConnectSession {
         _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
-      logStatic(
-        WalletConnectSession,
-        Level.error,
+      logError(
         'Failed to connect: $e',
       );
     }

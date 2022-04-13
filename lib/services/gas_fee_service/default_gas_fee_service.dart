@@ -12,7 +12,7 @@ class DefaultGasFeeService extends GasFeeService
 
   @override
   Future<GasFee?> getGasFee(Coin coin) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final data = await client.get(
       _path,
       converter: (json) {

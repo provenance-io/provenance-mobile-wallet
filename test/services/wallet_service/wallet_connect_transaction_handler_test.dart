@@ -111,7 +111,9 @@ main() {
     when(mockGasFeeService!.getGasFee(wallet.Coin.testNet))
         .thenAnswer((_) => Future.value(gasFee));
 
-    get.registerSingleton<ProtobuffClientInjector>((_) => mockPbClient!);
+    get.registerSingleton<ProtobuffClientInjector>(
+      (_) => Future.value(mockPbClient!),
+    );
     get.registerSingleton<GasFeeService>(mockGasFeeService!);
 
     transHandler = DefaultTransactionHandler();

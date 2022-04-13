@@ -10,7 +10,7 @@ class DefaultStatService extends StatService with ClientCoinMixin {
 
   @override
   Future<OnboardingStat?> getStats(Coin coin) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final data = await client.get(
       _statServiceBasePath,
       converter: (json) => OnboardingStat(dto: StatDto.fromJson(json)),
