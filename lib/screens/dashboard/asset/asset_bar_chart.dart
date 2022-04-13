@@ -7,6 +7,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class AssetBarChart extends StatelessWidget {
   const AssetBarChart(
@@ -45,7 +46,7 @@ class AssetBarChart extends StatelessWidget {
                     ? _buildGraph(context, details!)
                     : Center(
                         child: PwText(
-                          "No data available.",
+                          Strings.assetChartNoDataAvailable,
                           style: PwTextStyle.body,
                         ),
                       )
