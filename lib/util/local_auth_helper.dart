@@ -50,28 +50,42 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   }
 
   Future<AuthStatus> auth(BuildContext context) async {
-    await _init();
-    final pin = await _cipherService.getPin();
-    if (pin == null || pin.isEmpty) {
-      const result = AuthStatus.noAccount;
-      _status.value = result;
-
-      return result;
+    AuthStatus status;
+    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
+    if (!lockScreenEnabled) {
+      status = AuthStatus.noLockScreen;
+    } else {
+      final code = await _cipherService.getPin();
+      if (code == null || code.isEmpty) {
+        status = AuthStatus.noAccount;
+      } else {
+        final wallets = await _walletService.getWallets();
+        status =
+            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+      }
     }
 
-    var result = AuthStatus.unauthenticated;
+    final pin = await _cipherService.getPin();
+    if (pin == null || pin.isEmpty) {
+      status = AuthStatus.noAccount;
+      _status.value = status;
+
+      return status;
+    }
+
+    status = AuthStatus.unauthenticated;
 
     final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {
       final success = await _cipherService.authenticateBiometry();
-      result = success ? AuthStatus.authenticated : await _validatePin(context);
+      status = success ? AuthStatus.authenticated : await _validatePin(context);
     } else {
-      result = await _validatePin(context);
+      status = await _validatePin(context);
     }
 
-    _status.value = result;
+    _status.value = status;
 
-    return result;
+    return status;
   }
 
   @override
@@ -93,25 +107,6 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
       case AppLifecycleState.detached:
         break;
     }
-  }
-
-  Future<void> _init() async {
-    AuthStatus status;
-    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
-    if (!lockScreenEnabled) {
-      status = AuthStatus.noLockScreen;
-    } else {
-      final code = await _cipherService.getPin();
-      if (code == null || code.isEmpty) {
-        status = AuthStatus.noAccount;
-      } else {
-        final wallets = await _walletService.getWallets();
-        status =
-            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
-      }
-    }
-
-    _status.value = status;
   }
 
   Future<AuthStatus> _validatePin(BuildContext context) async {
