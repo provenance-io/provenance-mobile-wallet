@@ -38,11 +38,17 @@ class AssetBarChart extends StatelessWidget {
           builder: (context, snapshot) {
             final details = snapshot.data;
 
-            final isDataReady = (details?.isComingSoon ?? true) ||
-                (details?.graphItemList.isNotEmpty ?? false);
+            final isDataReady = (details?.isLoadingFinished ?? false);
 
-            return (isDataReady)
-                ? _buildGraph(context, details!)
+            return isDataReady
+                ? (details?.graphItemList.isNotEmpty ?? false)
+                    ? _buildGraph(context, details!)
+                    : Center(
+                        child: PwText(
+                          "No data available.",
+                          style: PwTextStyle.body,
+                        ),
+                      )
                 : _buildWaitingWidget(context);
           },
         ),
