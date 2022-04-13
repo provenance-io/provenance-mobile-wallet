@@ -61,7 +61,6 @@ class AssetChartBloc extends Disposable {
       value,
       _asset,
       scaledItems,
-      false,
       startDate,
       endDate,
     );
@@ -78,14 +77,12 @@ class AssetChartDetails {
     this.value,
     this.asset,
     this.graphItemList,
-    this.isComingSoon,
     this.startDate,
     this.endDate,
   );
   final GraphingDataValue value;
   final Asset asset;
   final List<AssetGraphItem> graphItemList;
-  final bool isComingSoon;
   final DateTime startDate;
   final DateTime endDate;
 }

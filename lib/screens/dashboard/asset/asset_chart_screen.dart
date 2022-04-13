@@ -134,7 +134,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         );
                       },
                     ),
-                    if (!details.isComingSoon) VerticalSpacer.xxLarge(),
+                    VerticalSpacer.xxLarge(),
                     VerticalSpacer.xxLarge(),
                     AssetChartRecentTransactions(),
                   ],
