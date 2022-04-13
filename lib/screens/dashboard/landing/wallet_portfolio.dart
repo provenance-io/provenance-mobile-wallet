@@ -91,12 +91,14 @@ class WalletPortfolio extends StatelessWidget {
                 onPressed: () async {
                   final walletDetails =
                       await get<WalletService>().getSelectedWallet();
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SendFlow(walletDetails!),
                     ),
                   );
+
+                  bloc.load(showLoading: true);
                 },
               ),
               HorizontalSpacer.small(),
