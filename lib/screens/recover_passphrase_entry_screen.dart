@@ -161,7 +161,7 @@ class RecoverPassphraseEntryScreenState
                       child: Row(
                         children: [
                           PwText(
-                            "Passphrase ${index + 1}",
+                            Strings.recoverPassphraseWord(index + 1),
                           ),
                         ],
                       ),
