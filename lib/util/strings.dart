@@ -235,6 +235,10 @@ class Strings {
     return 'Network: $name';
   }
 
+  static String recoverPassphraseWord(int number) {
+    return 'Word $number';
+  }
+
   // RecoveryWordsConfirm
   static const verifyPassphrase = 'Verify Passphrase';
   static const next = 'Next';
