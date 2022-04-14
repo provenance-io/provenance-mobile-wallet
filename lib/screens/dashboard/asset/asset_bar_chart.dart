@@ -103,10 +103,7 @@ class AssetBarChart extends StatelessWidget {
       minX = min(minX, x);
     }
 
-    final xFormatter = _formatterForGraphingData(DateTimeRange(
-      start: DateTime.fromMillisecondsSinceEpoch(minX.toInt()),
-      end: DateTime.fromMillisecondsSinceEpoch(maxX.toInt()),
-    ));
+    final xFormatter = _formatterForGraphingData(details.value);
     final yFormatter = intl.NumberFormat.compactSimpleCurrency(
       decimalDigits: 2,
     );
@@ -142,55 +139,8 @@ class AssetBarChart extends StatelessWidget {
               context,
               value,
               child,
-            ) {
-              if (value == null || value.percentChange == 0.00) {
-                return PwText(
-                  "0.00",
-                  color: PwColor.neutral,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                );
-              }
-
-              final pwColor = (value.percentChange > 0)
-                  ? PwColor.positive
-                  : PwColor.negative;
-
-              final color = (value.percentChange > 0)
-                  ? Color.fromARGB(
-                      255,
-                      0x04,
-                      0xF1,
-                      0x9C,
-                    )
-                  : Color.fromARGB(
-                      255,
-                      0xF1,
-                      0x6F,
-                      0x04,
-                    );
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (value.percentChange != 0.0)
-                    Icon(
-                      (value.percentChange > 0.0)
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward,
-                      color: color,
-                    ),
-                  PwText(
-                    "\$${value.price.toString()} (${value.percentChange.toStringAsFixed(2)} %)",
-                    color: pwColor,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              );
-            },
+            ) =>
+                PriceChangeIndicator(value),
           ),
         ),
         Expanded(
@@ -251,29 +201,12 @@ class AssetBarChart extends StatelessWidget {
               ),
               lineTouchData: LineTouchData(
                 enabled: true,
-                getTouchedSpotIndicator: (data, spotIndexes) {
-                  return spotIndexes
-                      .map((e) => TouchedSpotIndicatorData(
-                            FlLine(color: graphColor, strokeWidth: 2),
-                            FlDotData(
-                              getDotPainter: (
-                                spot,
-                                percent,
-                                barData,
-                                index,
-                              ) {
-                                return FlDotCirclePainter(
-                                  radius: 4,
-                                  color: graphColor,
-                                  strokeWidth: 2,
-                                  strokeColor: graphColor,
-                                );
-                              },
-                            ),
-                          ))
-                      .toList();
-                },
+                handleBuiltInTouches: true,
+                getTouchedSpotIndicator: _getTouchedSpotIndicator,
                 touchCallback: (event, response) {
+                  if (!event.isInterestedForInteractions) {
+                    return;
+                  }
                   final spot = response?.lineBarSpots?.first;
 
                   if (spot == null || spot.spotIndex == 0) {
@@ -421,9 +354,106 @@ class AssetBarChart extends StatelessWidget {
     );
   }
 
-  intl.DateFormat _formatterForGraphingData(DateTimeRange dateRange) {
-    String dateFormat = "MM/dd HH:mm";
+  intl.DateFormat _formatterForGraphingData(
+    GraphingDataValue graphingDataValue,
+  ) {
+    String dateFormat;
+    switch (graphingDataValue) {
+      case GraphingDataValue.weekly:
+      case GraphingDataValue.monthly:
+        dateFormat = "MM/dd";
+        break;
+      case GraphingDataValue.yearly:
+        dateFormat = "MM/dd/yyyy";
+        break;
+      default:
+        dateFormat = "MM/dd HH:mm";
+    }
 
     return intl.DateFormat(dateFormat);
+  }
+
+  List<TouchedSpotIndicatorData> _getTouchedSpotIndicator(
+    LineChartBarData barData,
+    List<int> indicators,
+  ) {
+    final dataLine = FlLine(color: graphColor, strokeWidth: 2);
+    final dataPoint = FlDotCirclePainter(
+      radius: 4,
+      color: graphColor,
+      strokeWidth: 2,
+      strokeColor: graphColor,
+    );
+    final data = FlDotData(
+      getDotPainter: (
+        spot,
+        percent,
+        barData,
+        index,
+      ) {
+        return dataPoint;
+      },
+    );
+
+    return indicators
+        .map((e) => TouchedSpotIndicatorData(
+              dataLine,
+              data,
+            ))
+        .toList();
+  }
+}
+
+class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
+  PriceChangeIndicator(this.chartData, {Key? key}) : super(key: key);
+
+  final AssetChartPoinData? chartData;
+
+  @override
+  PwColor? get color {
+    final percentChanged = chartData?.percentChange ?? 0.0;
+
+    if (percentChanged == 0.0) {
+      return PwColor.neutral;
+    } else if (percentChanged < 0.0) {
+      return PwColor.negative;
+    } else {
+      return PwColor.positive;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pwColor = this.color;
+    final percentChanged = chartData?.percentChange ?? 0.0;
+    final color = getColor(context);
+
+    if (percentChanged == 0.00) {
+      return PwText(
+        "0.00",
+        color: pwColor,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (percentChanged != 0.0)
+          Icon(
+            (percentChanged > 0.0) ? Icons.arrow_upward : Icons.arrow_downward,
+            color: color,
+          ),
+        PwText(
+          "\$${chartData!.price.toString()} (${percentChanged.toStringAsFixed(2)} %)",
+          color: pwColor,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
   }
 }

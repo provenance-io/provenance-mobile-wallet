@@ -255,7 +255,7 @@ main() {
     //       .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
     // });
 
-    test('url', () async {
+    test('url with out start or end dates', () async {
       _setupResults<AssetGraphItem>(null);
 
       final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -279,7 +279,65 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&startDate=${dateFormat.format(now.startOfDay.toUtc())}-00:00&endDate=${dateFormat.format(now.endOfDay.toUtc())}-00:00',
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL',
+      );
+    });
+
+    test('url with start Date', () async {
+      _setupResults<AssetGraphItem>(null);
+
+      final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+      final now = DateTime.now();
+
+      await assetService!.getAssetGraphingData(
+        Coin.testNet,
+        "AssetTypeA",
+        GraphingDataValue.all,
+        startDate: now,
+      );
+
+      var captures = verify(mockHttpClient!.get(
+        captureAny,
+        listConverter: anyNamed("listConverter"),
+        converter: null,
+        additionalHeaders: null,
+        queryStringParameters: null,
+        documentDownload: false,
+        ignore403: false,
+      )).captured;
+
+      expect(
+        captures.first as String,
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&startDate=${dateFormat.format(now.startOfDay.toUtc())}-00:00',
+      );
+    });
+
+    test('url with end Date', () async {
+      _setupResults<AssetGraphItem>(null);
+
+      final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+      final now = DateTime.now();
+
+      await assetService!.getAssetGraphingData(
+        Coin.testNet,
+        "AssetTypeA",
+        GraphingDataValue.all,
+        endDate: now,
+      );
+
+      var captures = verify(mockHttpClient!.get(
+        captureAny,
+        listConverter: anyNamed("listConverter"),
+        converter: null,
+        additionalHeaders: null,
+        queryStringParameters: null,
+        documentDownload: false,
+        ignore403: false,
+      )).captured;
+
+      expect(
+        captures.first as String,
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&endDate=${dateFormat.format(now.endOfDay.toUtc())}-00:00',
       );
     });
 

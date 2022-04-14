@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -9,6 +7,7 @@ import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -35,10 +34,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
     if (!get.isRegistered<AssetChartBloc>()) {
       final bloc = AssetChartBloc(widget.coin, widget.asset);
       get.registerSingleton(bloc);
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(Duration(days: 5));
 
-      _bloc = bloc..load(startDate: startDate, endDate: endDate);
+      _bloc = bloc..load();
     } else {
       _bloc = get<AssetChartBloc>();
     }
@@ -119,21 +116,11 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     VerticalSpacer.small(),
                     AssetBarChart(snapshot.data!.value),
                     VerticalSpacer.small(),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Container(
-                          alignment: Alignment.center,
-                          width: min(constraints.maxWidth, 75),
-                          child: AssetBarChartButtons(
-                            snapshot.data!.startDate,
-                            snapshot.data!.endDate,
-                            (startDate, endDate) {
-                              _bloc.load(
-                                startDate: startDate,
-                                endDate: endDate,
-                              );
-                            },
-                          ),
+                    AssetBarChartButtons(
+                      initialValue: details.value,
+                      onValueChanged: (GraphingDataValue newValue) {
+                        _bloc.load(
+                          value: newValue,
                         );
                       },
                     ),
