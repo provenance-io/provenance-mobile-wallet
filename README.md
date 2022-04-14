@@ -160,6 +160,7 @@ This can help provide more insight into the Gradle build
 ## Firebase
 [Firebase Console](https://console.firebase.google.com/project/provenance-wallet/overview)
 
+### API Permissions
 API keys have application and API restrictions that are managed in [Google Cloud](https://console.cloud.google.com/apis/credentials?project=provenance-wallet).
 
 Dynamic Links requires:
@@ -168,5 +169,16 @@ Dynamic Links requires:
 Cloud Messaging requires:
 1. Cloud Messaging
 
+### Remote Config
+Remote Config may be used to override the endpoint defaults shipped in the app.
+
+Update endpoints
+1. Increment the version in `endpoints.dart`
+2. Update URLs in `endpoints.dart`
+3. Run `./generateEndpoints.sh`
+4. Commit the endpoint changes.
+5. Copy the json contents of `endpoints_dev.g.json` and `endpoints_prod.g.json` into the Firebase Remote Config console and publish.
+
+### Dynamic Links
 A Dynamic Link has a payload that includes a URL for the app to handle.  
 The URL is limited by an allowlist that is configured in the [Dynamic Links section](https://console.firebase.google.com/project/provenance-wallet/durablelinks/links/https:~2F~2Fprovenancewallet.page.link) of the Firebase console.

@@ -9,7 +9,7 @@ import 'package:provenance_wallet/services/wallet_service/transaction_handler.da
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
-typedef ProtobuffClientInjector = proto.PbClient Function(Coin coin);
+typedef ProtobuffClientInjector = Future<proto.PbClient> Function(Coin coin);
 
 class DefaultTransactionHandler implements TransactionHandler, Disposable {
   final _transaction = PublishSubject<TransactionResponse>();
@@ -30,7 +30,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final coin = publicKey.coin;
 
     final protoBuffInjector = get<ProtobuffClientInjector>();
-    final pbClient = protoBuffInjector(coin);
+    final pbClient = await protoBuffInjector(coin);
 
     final account = await pbClient.getBaseAccount(publicKey.address);
     final signer = _EstimateSigner(account.address, publicKey);
@@ -65,7 +65,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final coin = publicKey.coin;
     final protoBuffInjector = get<ProtobuffClientInjector>();
 
-    final pbClient = protoBuffInjector(coin);
+    final pbClient = await protoBuffInjector(coin);
 
     final account = await pbClient.getBaseAccount(publicKey.address);
     final signer = _SignerImp(privateKey);

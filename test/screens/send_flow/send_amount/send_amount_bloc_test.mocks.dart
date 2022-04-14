@@ -185,7 +185,8 @@ class MockPriceService extends _i1.Mock implements _i12.PriceService {
               returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
           as _i7.Future<List<_i13.Price>>);
   @override
-  _i5.HttpClient getClient(_i10.Coin? coin) =>
+  _i7.Future<_i5.HttpClient> getClient(_i10.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),
-          returnValue: _FakeHttpClient_3()) as _i5.HttpClient);
+              returnValue: Future<_i5.HttpClient>.value(_FakeHttpClient_3()))
+          as _i7.Future<_i5.HttpClient>);
 }

@@ -28,10 +28,12 @@ dependencies:
   decimal: ^2.1.0
   dio: ^4.0.0
   faker: ^2.0.0
+  # firebase_analytics: ^9.1.4
   firebase_core: ^1.12.0
   firebase_crashlytics: ^2.5.0
   firebase_dynamic_links: ^4.0.5
   firebase_messaging: ^11.2.11
+  firebase_remote_config: ^2.0.3
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
@@ -42,6 +44,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: 4.4.0
   logger: ^1.0.0
+  package_info_plus: ^1.4.2
   path:
   pretty_json: ^2.0.0
   prov_wallet_flutter:

@@ -25,7 +25,9 @@ main() {
     get.registerSingleton<NotificationService>(mockNotificationService!);
 
     mockHttpClient = MockTestHttpClient();
-    get.registerSingleton<TestHttpClient>(mockHttpClient!);
+    get.registerSingleton<Future<TestHttpClient>>(
+      Future.value(mockHttpClient!),
+    );
 
     statService = DefaultStatService();
   });

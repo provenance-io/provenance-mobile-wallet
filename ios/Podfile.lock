@@ -13,6 +13,9 @@ PODS:
   - Firebase/Messaging (8.11.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 8.11.0)
+  - Firebase/RemoteConfig (8.11.0):
+    - Firebase/CoreOnly
+    - FirebaseRemoteConfig (~> 8.11.0)
   - firebase_core (1.12.0):
     - Firebase/CoreOnly (= 8.11.0)
     - Flutter
@@ -28,6 +31,12 @@ PODS:
     - Firebase/Messaging (= 8.11.0)
     - firebase_core
     - Flutter
+  - firebase_remote_config (2.0.3):
+    - Firebase/RemoteConfig (= 8.11.0)
+    - firebase_core
+    - Flutter
+  - FirebaseABTesting (8.15.0):
+    - FirebaseCore (~> 8.0)
   - FirebaseCore (8.11.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
@@ -60,6 +69,12 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - nanopb (~> 2.30908.0)
+  - FirebaseRemoteConfig (8.11.0):
+    - FirebaseABTesting (~> 8.0)
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
   - Flutter (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -91,6 +106,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - package_info_plus (0.4.5):
+    - Flutter
   - PromisesObjC (2.0.0)
   - prov_wallet_flutter (0.0.1):
     - Flutter
@@ -116,7 +133,9 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
+  - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - prov_wallet_flutter (from `.symlinks/plugins/prov_wallet_flutter/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -127,12 +146,14 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Firebase
+    - FirebaseABTesting
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
     - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebaseMessaging
+    - FirebaseRemoteConfig
     - FMDB
     - GoogleDataTransport
     - GoogleUtilities
@@ -153,8 +174,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
+  firebase_remote_config:
+    :path: ".symlinks/plugins/firebase_remote_config/ios"
   Flutter:
     :path: Flutter
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   prov_wallet_flutter:
     :path: ".symlinks/plugins/prov_wallet_flutter/ios"
   qr_code_scanner:
@@ -175,18 +200,22 @@ SPEC CHECKSUMS:
   firebase_crashlytics: 0df152ee2d96f5a4aeddf2288fb277bbd0833b18
   firebase_dynamic_links: 6ed07f9bd759c62586763304561ee814e83bfd7f
   firebase_messaging: 4a993bb4aa1a83349988d853c637fbb0494dab15
+  firebase_remote_config: 5c895a49da445fd137ac46ccc0e8b5c21aa31a7d
+  FirebaseABTesting: 10cbce8db9985ae2e3847ea44e9947dd18f94e10
   FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
   FirebaseCoreDiagnostics: 64d9709d804a6c25bd77841371c1fcfd909d5601
   FirebaseCrashlytics: 62268addefae79601057818156e8bc69d71fee41
   FirebaseDynamicLinks: f506c83eb7eba0f9861f84cd6b65c38b3bd5ff6f
   FirebaseInstallations: 044eede8a049bce71c4541ee68d6e4364fcbe774
   FirebaseMessaging: 02e248e8997f71fa8cc9d78e9d49ec1a701ba14a
+  FirebaseRemoteConfig: a6a1ce9dabf404817ae2a44e8421d276660d9091
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   prov_wallet_flutter: 2e1c10316c2d8a3c2296e94203d78c38daf19dc0
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
