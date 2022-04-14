@@ -207,8 +207,10 @@ main() {
       notificationService!
           .dismissGrouped(NotificationGroup.serviceError, "Inst2");
 
-      notificationService!.dismissGrouped(NotificationGroup.serviceError,
-          "Inst2"); // triggers another notification, but the count does not change
+      notificationService!.dismissGrouped(
+        NotificationGroup.serviceError,
+        "Inst2",
+      ); // triggers another notification, but the count does not change
 
       notificationService!
           .dismissGrouped(NotificationGroup.serviceError, "Inst1");

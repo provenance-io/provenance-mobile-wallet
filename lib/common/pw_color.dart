@@ -30,7 +30,7 @@ mixin PwColorMixin on Widget {
       case PwColor.error:
         return theme.colorScheme.error;
       case PwColor.secondary2:
-        return theme.colorScheme.secondaryVariant;
+        return theme.colorScheme.secondaryContainer;
       case PwColor.secondary250:
         return theme.colorScheme.secondary250;
       case PwColor.neutral700:

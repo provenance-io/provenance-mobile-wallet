@@ -113,10 +113,7 @@ void main() async {
         ),
       );
 
-      final authHelper = LocalAuthHelper();
-      await authHelper.init();
-
-      get.registerSingleton<LocalAuthHelper>(authHelper);
+      get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
 
       runApp(
         Phoenix(
