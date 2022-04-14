@@ -7,6 +7,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class AssetBarChart extends StatelessWidget {
   const AssetBarChart(
@@ -38,11 +39,17 @@ class AssetBarChart extends StatelessWidget {
           builder: (context, snapshot) {
             final details = snapshot.data;
 
-            final isDataReady = (details?.isComingSoon ?? true) ||
-                (details?.graphItemList.isNotEmpty ?? false);
+            final isDataReady = (details?.isLoadingFinished ?? false);
 
-            return (isDataReady)
-                ? _buildGraph(context, details!)
+            return isDataReady
+                ? (details?.graphItemList.isNotEmpty ?? false)
+                    ? _buildGraph(context, details!)
+                    : Center(
+                        child: PwText(
+                          Strings.assetChartNoDataAvailable,
+                          style: PwTextStyle.body,
+                        ),
+                      )
                 : _buildWaitingWidget(context);
           },
         ),

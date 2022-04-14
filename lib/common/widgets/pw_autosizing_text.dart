@@ -6,6 +6,7 @@ class PwAutoSizingText extends StatelessWidget {
     this.height = 45,
     this.style = PwTextStyle.body,
     this.color,
+    this.fit = BoxFit.fitHeight,
     Key? key,
   }) : super(key: key);
 
@@ -13,6 +14,7 @@ class PwAutoSizingText extends StatelessWidget {
   final double? height;
   final PwTextStyle style;
   final PwColor? color;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class PwAutoSizingText extends StatelessWidget {
       height: height,
       child: FittedBox(
         alignment: Alignment.center,
-        fit: BoxFit.fitWidth,
+        fit: fit,
         child: PwText(
           (data.isNotEmpty) ? data : " ",
           style: style,
