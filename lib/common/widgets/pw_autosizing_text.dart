@@ -20,7 +20,7 @@ class PwAutoSizingText extends StatelessWidget {
       height: height,
       child: FittedBox(
         alignment: Alignment.center,
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.contain,
         child: PwText(
           (data.isNotEmpty) ? data : " ",
           style: style,

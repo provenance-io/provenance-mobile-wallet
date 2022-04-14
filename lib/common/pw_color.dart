@@ -15,6 +15,9 @@ enum PwColor {
   notice350,
   notice800,
   primaryP500,
+  negative,
+  positive,
+  neutral,
 }
 
 mixin PwColorMixin on Widget {
@@ -53,6 +56,27 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.notice800;
       case PwColor.primaryP500:
         return theme.colorScheme.primary500;
+      case PwColor.negative:
+        return Color.fromARGB(
+          255,
+          0xF1,
+          0x6F,
+          0x04,
+        );
+      case PwColor.positive:
+        return Color.fromARGB(
+          255,
+          0x04,
+          0xF1,
+          0x9C,
+        );
+      case PwColor.neutral:
+        return Color.fromARGB(
+          255,
+          0xA6,
+          0xA6,
+          0xA6,
+        );
       default:
         return null;
     }

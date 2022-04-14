@@ -35,7 +35,10 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
     if (!get.isRegistered<AssetChartBloc>()) {
       final bloc = AssetChartBloc(widget.coin, widget.asset);
       get.registerSingleton(bloc);
-      _bloc = bloc..load(startDate: DateTime.now(), endDate: DateTime.now());
+      final endDate = DateTime.now();
+      final startDate = endDate.subtract(Duration(days: 5));
+
+      _bloc = bloc..load(startDate: startDate, endDate: endDate);
     } else {
       _bloc = get<AssetChartBloc>();
     }
@@ -113,6 +116,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                       style: PwTextStyle.h1,
                       color: PwColor.neutralNeutral,
                     ),
+                    VerticalSpacer.small(),
                     AssetBarChart(snapshot.data!.value),
                     VerticalSpacer.small(),
                     LayoutBuilder(
@@ -134,7 +138,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                       },
                     ),
                     if (!details.isComingSoon) VerticalSpacer.xxLarge(),
-                    VerticalSpacer.xxLarge(),
+                    // VerticalSpacer.xxLarge(),
                     AssetChartRecentTransactions(),
                   ],
                 ),
