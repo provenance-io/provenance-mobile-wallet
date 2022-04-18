@@ -84,6 +84,7 @@ class WalletConnectSession {
         _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
+      _inactivityTimer = null;
       logError(
         'Failed to connect: $e',
       );
