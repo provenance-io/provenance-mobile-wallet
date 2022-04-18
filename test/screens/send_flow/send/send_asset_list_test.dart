@@ -28,7 +28,6 @@ main() {
         "nHash",
         Decimal.fromInt(123),
         52,
-        "http://test.com",
       );
       await _build(tester, asset);
 

@@ -18,7 +18,6 @@ final hashAsset = SendAsset(
   "nhash",
   Decimal.fromInt(130),
   111,
-  "http://test.com",
 );
 final dollarAsset = SendAsset(
   "USD",
@@ -26,7 +25,6 @@ final dollarAsset = SendAsset(
   "USD",
   Decimal.fromInt(1),
   2,
-  "http://test1.com",
 );
 final feeAsset = MultiSendAsset(
   2,
@@ -37,7 +35,6 @@ final feeAsset = MultiSendAsset(
       "USD",
       Decimal.fromInt(1),
       0,
-      "hm",
     ),
     SendAsset(
       "Hash",
@@ -45,7 +42,6 @@ final feeAsset = MultiSendAsset(
       "nhash",
       Decimal.fromInt(9),
       0,
-      "",
     ),
   ],
 );
