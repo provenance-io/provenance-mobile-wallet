@@ -154,6 +154,7 @@ class WalletConnectSession {
   }
 
   void _disconnect() {
+    _inactivityTimer = null;
     _connection.removeListener(_statusListener);
     sessionEvents._state.value = WalletConnectSessionState.disconnected();
   }
