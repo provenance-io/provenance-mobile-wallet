@@ -85,7 +85,7 @@ main() {
 
       final textAmountFind = find.byType(TextFormField);
       final textAmount = tester.widget<TextFormField>(textAmountFind);
-      expect(textAmount.autovalidateMode, AutovalidateMode.always);
+      expect(textAmount.autovalidateMode, AutovalidateMode.onUserInteraction);
 
       expect(
         find.text(
