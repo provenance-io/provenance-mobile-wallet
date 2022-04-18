@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
@@ -79,13 +80,12 @@ main() {
     testWidgets("Contents", (tester) async {
       await _build(tester);
 
-      final iconFind = find.byType(Image);
-      final icon = tester.widget<Image>(iconFind);
-      expect((icon.image as NetworkImage).url, "http://test.com");
+      final iconFind = find.byType(SvgPicture);
+      expect(iconFind, findsOneWidget);
 
       final textAmountFind = find.byType(TextFormField);
       final textAmount = tester.widget<TextFormField>(textAmountFind);
-      expect(textAmount.autovalidateMode, AutovalidateMode.always);
+      expect(textAmount.autovalidateMode, AutovalidateMode.onUserInteraction);
 
       expect(
         find.text(
