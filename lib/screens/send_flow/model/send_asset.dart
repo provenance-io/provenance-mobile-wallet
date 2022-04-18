@@ -9,7 +9,6 @@ class SendAsset {
     this.denom,
     this.amount,
     this.fiatValue,
-    this.imageUrl,
   );
 
   SendAsset.nhash(Decimal amount, [double price = 0])
@@ -19,7 +18,6 @@ class SendAsset {
           "nhash",
           amount,
           price,
-          "",
         );
 
   final String displayDenom;
@@ -27,7 +25,6 @@ class SendAsset {
   final String denom;
   final Decimal amount;
   final double fiatValue;
-  final String imageUrl;
 
   String get displayAmount {
     return (amount / Decimal.fromInt(10).pow(exponent))
@@ -51,7 +48,6 @@ class SendAsset {
       denom,
       amount,
       fiatValue,
-      imageUrl,
     );
   }
 }
@@ -73,7 +69,6 @@ class MultiSendAsset {
       'nhash',
       Decimal.fromInt(estimate),
       0,
-      "",
     );
     for (var fee in fees) {
       var current = map[fee.denom];

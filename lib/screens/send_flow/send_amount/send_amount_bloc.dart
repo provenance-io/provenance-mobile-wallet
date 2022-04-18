@@ -89,7 +89,6 @@ class SendAmountBloc extends Disposable {
             fee.denom,
             Decimal.parse(fee.amount),
             price,
-            "",
           );
           individualFees.add(sendAsset);
         }
@@ -160,7 +159,6 @@ class SendAmountBloc extends Disposable {
       asset.denom,
       scaledValue,
       asset.fiatValue,
-      asset.imageUrl,
     );
 
     return _navigator.showReviewSend(
