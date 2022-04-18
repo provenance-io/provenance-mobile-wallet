@@ -1,13 +1,29 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provenance_wallet/util/lazy.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
 class PushNotificationHelper {
-  PushNotificationHelper(this._firebaseMessaging);
+  PushNotificationHelper(this._firebaseMessaging) {
+    _lazyInit = Lazy(() => _init());
+  }
 
   final FirebaseMessaging _firebaseMessaging;
+  late final Lazy<Future<void>> _lazyInit;
 
-  Future<void> init() async {
+  Future<void> registerForTopic(String topic) async {
+    await _lazyInit.value;
+
+    return _firebaseMessaging.subscribeToTopic(topic);
+  }
+
+  Future<void> unregisterForTopic(String topic) async {
+    await _lazyInit.value;
+
+    return _firebaseMessaging.unsubscribeFromTopic(topic);
+  }
+
+  Future<void> _init() async {
     await _firebaseMessaging.requestPermission(alert: true);
 
     /// if the app is in the foreground then we do not need to show anything
@@ -29,13 +45,5 @@ class PushNotificationHelper {
         error: e,
       );
     }
-  }
-
-  Future<void> registerForTopic(String topic) {
-    return _firebaseMessaging.subscribeToTopic(topic);
-  }
-
-  Future<void> unregisterForTopic(String topic) {
-    return _firebaseMessaging.unsubscribeFromTopic(topic);
   }
 }

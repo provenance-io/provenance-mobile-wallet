@@ -65,7 +65,7 @@ import 'util/get.dart';
 const _testingCrashlytics = false;
 const _tag = 'main';
 
-void main() async {
+void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -87,7 +87,6 @@ void main() async {
 
       final firebaseMessaging = FirebaseMessaging.instance;
       final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-      await pushNotificationHelper.init();
 
       get.registerLazySingleton<RemoteNotificationService>(() {
         return DefaultRemoteNotificationService(pushNotificationHelper);

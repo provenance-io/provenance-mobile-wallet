@@ -36,10 +36,6 @@ class MockPushNotificationHelper extends _i1.Mock
   }
 
   @override
-  _i4.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
-  @override
   _i4.Future<void> registerForTopic(String? topic) =>
       (super.noSuchMethod(Invocation.method(#registerForTopic, [topic]),
           returnValue: Future<void>.value(),
