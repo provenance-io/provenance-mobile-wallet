@@ -1,7 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_details_screen.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
@@ -43,7 +42,7 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    Strings.transactionDenomHash,
+                    item.denom,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
