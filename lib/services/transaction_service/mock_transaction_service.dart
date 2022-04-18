@@ -57,6 +57,10 @@ class MockTransactionService extends TransactionService {
       status: "SUCCESS",
       time: DateTime.now(),
       feeAmount: faker.randomGenerator.integer(999999999).toString(),
+      denom: faker.randomGenerator.element([
+        "nhash",
+        "cfigure",
+      ]),
     );
   }
 
