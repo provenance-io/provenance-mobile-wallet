@@ -131,27 +131,9 @@ class SendAmountPageState extends State<SendAmountPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.network(
-                asset.imageUrl,
-                width: imageDimen,
-                height: imageDimen,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
-                  return asset.displayDenom.toLowerCase() == 'hash'
-                      ? Image.asset(
-                          AssetPaths.images.bigHash,
-                          height: imageDimen,
-                          width: imageDimen,
-                        )
-                      : PwIcon(
-                          PwIcons.provenance,
-                          color: Theme.of(context).colorScheme.logo,
-                          size: imageDimen,
-                        );
-                },
+              AssetPaths.getSvgPictureFrom(
+                denom: asset.denom,
+                size: imageDimen,
               ),
               VerticalSpacer.medium(),
               TextFormField(
@@ -168,7 +150,8 @@ class SendAmountPageState extends State<SendAmountPage> {
                 decoration: InputDecoration(
                   hintText: Strings.sendAmountHint,
                   hintStyle: Theme.of(context).textTheme.displayBody.copyWith(
-                      color: Theme.of(context).colorScheme.neutralNeutral),
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),

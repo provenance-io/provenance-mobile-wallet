@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
@@ -73,10 +72,9 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
               centerTitle: true,
               title: Column(
                 children: [
-                  SvgPicture.asset(
-                    details.asset.image,
-                    width: 30,
-                    height: 30,
+                  AssetPaths.getSvgPictureFrom(
+                    denom: details.asset.denom,
+                    size: 30,
                   ),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_wallet/util/assets.dart';
 
 class SendAssetCell extends StatelessWidget {
   const SendAssetCell(
@@ -20,20 +21,8 @@ class SendAssetCell extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(Spacing.xSmall),
-          child: Image.network(
-            asset.imageUrl,
-            errorBuilder: (
-              context,
-              error,
-              stackTrace,
-            ) {
-              return asset.displayDenom.toLowerCase() == 'hash'
-                  ? PwIcon(PwIcons.hashLogo)
-                  : PwIcon(
-                      PwIcons.provenance,
-                      color: Theme.of(context).colorScheme.logo,
-                    );
-            },
+          child: AssetPaths.getSvgPictureFrom(
+            denom: asset.displayDenom,
           ),
         ),
         HorizontalSpacer.small(),
