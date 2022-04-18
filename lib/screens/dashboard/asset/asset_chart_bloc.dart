@@ -23,8 +23,6 @@ class AssetChartBloc extends Disposable {
   Future<void> load({
     GraphingDataValue value = GraphingDataValue.hourly,
   }) async {
-    final minimiumDate = DateTime.parse('2022-03-11T23:58:01.55Z');
-
     // change the datapoint scale so that tooltips on the chart are smoother
     GraphingDataValue modifiedDataValue = value;
     final endDate = DateTime.now();
@@ -33,7 +31,7 @@ class AssetChartBloc extends Disposable {
     switch (value) {
       case GraphingDataValue.hourly:
         startDate = endDate.subtract(Duration(hours: 24));
-        modifiedDataValue = GraphingDataValue.min;
+        modifiedDataValue = GraphingDataValue.hourly;
         break;
       case GraphingDataValue.daily:
         startDate = endDate.subtract(Duration(days: 7));
