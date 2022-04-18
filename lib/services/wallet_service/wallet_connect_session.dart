@@ -51,6 +51,8 @@ class WalletConnectSession {
         delegateEvents = WalletConnectSessionDelegateEvents()
           ..listen(delegate.events);
 
+  static const _inactivityTimeout = Duration(minutes: 30);
+  Timer? _inactivityTimer;
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
   final RemoteNotificationService _remoteNotificationService;
@@ -160,5 +162,11 @@ class WalletConnectSession {
     } else if (status == WalletConnectState.connecting) {
       sessionEvents._state.value = WalletConnectSessionState.connecting();
     }
+  }
+
+  void _startInactivityTimer() {
+    _inactivityTimer = Timer(_inactivityTimeout, () {
+      disconnect();
+    });
   }
 }
