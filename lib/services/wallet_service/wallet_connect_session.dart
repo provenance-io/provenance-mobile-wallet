@@ -73,6 +73,8 @@ class WalletConnectSession {
       success = true;
 
       if (restoreData != null) {
+        _startInactivityTimer();
+
         log("Restored session: ${restoreData.data}");
         sessionEvents._state.value =
             WalletConnectSessionState.connected(restoreData.clientMeta);
@@ -120,6 +122,8 @@ class WalletConnectSession {
     required String requestId,
     required bool allowed,
   }) async {
+    _startInactivityTimer();
+
     return _delegate.complete(requestId, allowed);
   }
 
@@ -127,6 +131,8 @@ class WalletConnectSession {
     required requestId,
     required bool allowed,
   }) async {
+    _startInactivityTimer();
+
     return _delegate.complete(requestId, allowed);
   }
 
@@ -134,6 +140,7 @@ class WalletConnectSession {
     required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
+    _startInactivityTimer();
     final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value =
