@@ -136,7 +136,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     ),
                     VerticalSpacer.xxLarge(),
                     VerticalSpacer.xxLarge(),
-                    AssetChartRecentTransactions(),
+                    AssetChartRecentTransactions(asset: widget.asset),
                   ],
                 ),
               ),
