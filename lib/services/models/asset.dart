@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/common/widgets/icon.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
-import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/extensions/double_extensions.dart';
 
 class Asset {
@@ -48,21 +46,6 @@ class Asset {
   final double? dailyHigh;
   final double? dailyLow;
   final double? dailyVolume;
-
-  String get image {
-    switch (display) {
-      case "USDF":
-        return AssetPaths.images.usdf;
-      case "INU":
-        return AssetPaths.images.inu;
-      case "ETF":
-        return AssetPaths.images.etf;
-      case "HASH":
-        return 'assets/${PwIcons.hashLogo}.svg';
-      default:
-        return 'assets/${PwIcons.provenance}.svg';
-    }
-  }
 
   String get formattedAmount {
     return (usdPrice * double.parse(amount)).toCurrency();

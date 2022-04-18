@@ -1,5 +1,34 @@
+import 'package:flutter_svg/svg.dart';
+import 'package:provenance_wallet/common/widgets/icon.dart';
+
 class AssetPaths {
   static const images = Images();
+
+  static SvgPicture getSvgPictureFrom({
+    required String denom,
+    double? size,
+  }) =>
+      SvgPicture.asset(
+        AssetPaths._getImage(denom),
+        width: size,
+        height: size,
+      );
+
+  static String _getImage(String denom) {
+    switch (denom.toUpperCase()) {
+      case "USDF":
+        return AssetPaths.images.usdf;
+      case "INU":
+        return AssetPaths.images.inu;
+      case "ETF":
+        return AssetPaths.images.etf;
+      case "HASH":
+      case "NHASH":
+        return 'assets/${PwIcons.hashLogo}.svg';
+      default:
+        return 'assets/${PwIcons.provenance}.svg';
+    }
+  }
 }
 
 class Images {
