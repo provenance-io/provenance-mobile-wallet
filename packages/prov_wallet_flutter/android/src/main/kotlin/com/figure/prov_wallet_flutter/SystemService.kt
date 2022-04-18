@@ -85,8 +85,11 @@ class SystemService(private val packageManager: PackageManager, private val biom
             cont.resume(true)
         }
 
+        // User is rejected but may continue trying to authenticate.
+        // e.g. A non-enrolled fingerprint was placed on the sensor.
+        // See https://android-developers.googleblog.com/2019/10/one-biometric-api-over-all-android.html
         override fun onAuthenticationFailed() {
-            cont.resume(false)
+            Log.w(TAG, "Authentication failed");
         }
 
         override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {

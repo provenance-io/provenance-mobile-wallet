@@ -137,7 +137,7 @@ class SendAmountPageState extends State<SendAmountPage> {
               ),
               VerticalSpacer.medium(),
               TextFormField(
-                autovalidateMode: AutovalidateMode.always,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 textAlign: TextAlign.center,
                 controller: _amountController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
