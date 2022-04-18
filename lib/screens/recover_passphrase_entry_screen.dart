@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -170,7 +169,6 @@ class RecoverPassphraseEntryScreenState
                     _TextFormField(
                       controller: textController,
                       focusNode: focusNode,
-                      handlePaste: _handlePaste,
                     ),
                     index != textControllers.length - 1
                         ? Container()
@@ -263,28 +261,10 @@ class RecoverPassphraseEntryScreenState
     callbacks.add(listen);
   }
 
-  _handlePaste(TextEditingController controller) {
-    _pasteWords(controller);
-  }
-
   _handleTextControllerTextChange(TextEditingController controller) {
     String pastedText = controller.text;
     if (pastedText.isNotEmpty) {
       List<String> parts = pastedText.split(' ');
-      if (parts.length == 48) {
-        parts.removeWhere((element) => element.startsWith("[0-9]"));
-      }
-      if (parts.length == 24) {
-        _putPartsInText(parts);
-      }
-    }
-  }
-
-  _pasteWords(TextEditingController controller) async {
-    ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    String? pastedText = data?.text;
-    if (pastedText != null) {
-      List<String> parts = pastedText.split('\\s+');
       if (parts.length == 48) {
         parts.removeWhere((element) => element.startsWith("[0-9]"));
       }
