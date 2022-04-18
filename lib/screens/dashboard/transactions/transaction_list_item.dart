@@ -33,7 +33,9 @@ class TransactionListItem extends StatelessWidget {
                 width: Spacing.largeX3,
                 height: Spacing.largeX3,
                 child: AssetPaths.getSvgPictureFrom(
-                    denom: item.denom, size: Spacing.largeX3),
+                  denom: item.denom,
+                  size: Spacing.largeX3,
+                ),
               ),
               HorizontalSpacer.medium(),
               Column(
