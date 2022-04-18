@@ -315,6 +315,7 @@ class Strings {
   static const tradeDetailsFee = "Fee";
   static const tradeDetailsTimeStamp = "Time";
   static const tradeDetailsBlock = "Block Height";
+  static const tradeDetailsAssetName = "Asset Name";
 
   //WordSelector
   static const selectWord = 'select word';
