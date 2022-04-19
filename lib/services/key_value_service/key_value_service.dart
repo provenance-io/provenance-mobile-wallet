@@ -57,5 +57,6 @@ enum PrefKey {
   showAdvancedUI,
   showDevMenu,
   testBool,
+  testDateTime,
   testString,
 }
