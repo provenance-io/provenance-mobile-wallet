@@ -80,7 +80,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 VerticalSpacer.large(),
                 VerticalSpacer.medium(),
                 Image.asset(
-                  Assets.images.createPassphrase,
+                  Assets.imagePaths.createPassphrase,
                   width: 180,
                 ),
                 Expanded(

@@ -52,7 +52,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                     VerticalSpacer.large(),
                     VerticalSpacer.medium(),
                     Image.asset(
-                      Assets.images.walletFinished,
+                      Assets.imagePaths.walletFinished,
                       width: 180,
                     ),
                     Expanded(

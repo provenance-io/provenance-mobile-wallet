@@ -56,7 +56,7 @@ class _LandingScreenState extends State<LandingScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(Assets.images.background),
+            image: AssetImage(Assets.imagePaths.background),
             fit: BoxFit.cover,
             alignment: Alignment.topCenter,
           ),

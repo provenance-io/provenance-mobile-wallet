@@ -37,7 +37,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(Assets.images.background),
+          image: AssetImage(Assets.imagePaths.background),
           fit: BoxFit.cover,
         ),
       ),

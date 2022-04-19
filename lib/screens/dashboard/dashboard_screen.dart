@@ -169,7 +169,7 @@ class DashboardScreenState extends State<DashboardScreen>
       title: Strings.dashboardConnectionRequestTitle,
       message: Strings.dashboardConnectionRequestDetails(name),
       icon: Image.asset(
-        Assets.images.connectionRequest,
+        Assets.imagePaths.connectionRequest,
       ),
     );
 
