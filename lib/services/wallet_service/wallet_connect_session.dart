@@ -187,6 +187,9 @@ class WalletConnectSession {
     );
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(inactivityTimeout, () {
+      get<KeyValueService>().removeString(
+        PrefKey.sessionSuspendedTime,
+      );
       disconnect();
     });
   }
