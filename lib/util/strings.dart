@@ -42,7 +42,7 @@ extension StringExtension on String {
 
 class Strings {
   // App
-  static const appName = 'Provenance Wallet';
+  static const appName = 'Provenance Blockchain Wallet';
   static const notImplementedMessage = "Not Implemented";
 
   // Chain
@@ -88,7 +88,7 @@ class Strings {
       'Fully control your wallet and crypto, and manage it independently. ';
 
   // Landing Slide
-  static const provenanceTitle = 'PROVENANCE\nWALLET';
+  static const provenanceTitle = 'PROVENANCE BLOCKCHAIN\nWALLET';
   static const provenanceWalletDescription =
       'A wallet provides an easy way to manage multiple blockchain accounts.';
 
@@ -186,7 +186,7 @@ class Strings {
   static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
   static const nameYourAccountText =
-      'Name your account to easily identify it while using the Provenance Wallet.';
+      'Name your account to easily identify it while using the Provenance Blockchain Wallet.';
   static const infoIsStoredLocallyText =
       "These names are stored locally, and can only be seen by you.";
   static const continueName = 'Continue';
