@@ -305,6 +305,9 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
   Future<bool> tryRestoreSession(String walletId) async {
     var success = false;
     final json = await get<KeyValueService>().getString(PrefKey.sessionData);
+    final date =
+        await get<KeyValueService>().getDateTime(PrefKey.sessionSuspendedTime);
+    await get<KeyValueService>().removeDateTime(PrefKey.sessionSuspendedTime);
     SessionData? data;
     if (json != null) {
       try {
