@@ -435,8 +435,14 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     load();
   }
 
-  Future<bool> _clearSessionData() {
-    return get<KeyValueService>().removeString(PrefKey.sessionData);
+  Future<bool> _clearSessionData() async {
+    final keyValueService = get<KeyValueService>();
+    final sessionDataRemoved =
+        await keyValueService.removeString(PrefKey.sessionData);
+    final timeStampRemoved =
+        await keyValueService.removeDateTime(PrefKey.sessionSuspendedTime);
+
+    return sessionDataRemoved && timeStampRemoved;
   }
 
   Future<void> _handleDynamicLink(Uri link) async {
