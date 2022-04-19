@@ -79,35 +79,6 @@ class DefaultKeyValueService implements KeyValueService, Disposable {
   }
 
   @override
-  Future<bool> removeDateTime(PrefKey key) async {
-    await _getStreamData<DateTime>(key).completer.future;
-
-    final success = await _store.remove(key);
-    if (success) {
-      _streamDatas[key]?.stream.add(KeyValueData<DateTime>());
-    }
-
-    return success;
-  }
-
-  @override
-  Future<bool> setDateTime(PrefKey key, DateTime value) async {
-    await _getStreamData<String>(key).completer.future;
-
-    final success = await _store.setDateTime(key, value);
-    if (success) {
-      _streamDatas[key]?.stream.add(KeyValueData<DateTime>(data: value));
-    }
-
-    return success;
-  }
-
-  @override
-  Future<DateTime?> getDateTime(PrefKey key) {
-    return _store.get<DateTime>(key);
-  }
-
-  @override
   FutureOr onDispose() {
     for (final data in _streamDatas.values) {
       data.stream.close();

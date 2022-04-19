@@ -36,12 +36,6 @@ abstract class KeyValueService {
   Future<bool> setString(PrefKey key, String value);
 
   Future<bool> removeString(PrefKey key);
-
-  Future<DateTime?> getDateTime(PrefKey key);
-
-  Future<bool> setDateTime(PrefKey key, DateTime value);
-
-  Future<bool> removeDateTime(PrefKey key);
 }
 
 enum PrefKey {
@@ -57,6 +51,5 @@ enum PrefKey {
   showAdvancedUI,
   showDevMenu,
   testBool,
-  testDateTime,
   testString,
 }

@@ -14,8 +14,4 @@ abstract class KeyValueStore {
   Future<String?> getString(PrefKey key);
 
   Future<bool> setString(PrefKey key, String value);
-
-  Future<DateTime?> getDateTime(PrefKey key);
-
-  Future<bool> setDateTime(PrefKey key, DateTime value);
 }

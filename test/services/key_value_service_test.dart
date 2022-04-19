@@ -24,13 +24,11 @@ void main() {
     () async {
       const valueBool = true;
       const valueString = 'test';
-      final valueDate = DateTime.now();
       final service = DefaultKeyValueService(
         store: MemoryKeyValueStore(
           data: {
             PrefKey.testBool.name: valueBool,
             PrefKey.testString.name: valueString,
-            PrefKey.testDateTime.name: valueDate,
           },
         ),
       );
@@ -45,12 +43,6 @@ void main() {
       await expectLater(
         streamString,
         emits(KeyValueData(data: valueString)),
-      );
-
-      final streamDateTime = service.stream<DateTime>(PrefKey.testDateTime);
-      await expectLater(
-        streamDateTime,
-        emits(KeyValueData(data: valueDate)),
       );
     },
   );

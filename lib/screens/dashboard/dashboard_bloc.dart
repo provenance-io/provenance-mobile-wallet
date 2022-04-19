@@ -100,8 +100,10 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       }
     } else if (state == AppLifecycleState.paused) {
       if (_walletSession != null) {
-        get<KeyValueService>()
-            .setDateTime(PrefKey.sessionSuspendedTime, DateTime.now());
+        get<KeyValueService>().setString(
+          PrefKey.sessionSuspendedTime,
+          DateTime.now().toIso8601String(),
+        );
         _walletSession!.closeButRetainSession();
         _walletSession = null;
       }
@@ -305,10 +307,12 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   Future<bool> tryRestoreSession(String walletId) async {
     var success = false;
-    final json = await get<KeyValueService>().getString(PrefKey.sessionData);
-    final date =
-        await get<KeyValueService>().getDateTime(PrefKey.sessionSuspendedTime);
-    await get<KeyValueService>().removeDateTime(PrefKey.sessionSuspendedTime);
+    final keyValueService = get<KeyValueService>();
+    final json = await keyValueService.getString(PrefKey.sessionData);
+    final date = DateTime.tryParse(
+      await keyValueService.getString(PrefKey.sessionSuspendedTime) ?? "",
+    );
+    await keyValueService.removeString(PrefKey.sessionSuspendedTime);
     SessionData? data;
 
     if (json != null && date != null) {
@@ -450,7 +454,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final sessionDataRemoved =
         await keyValueService.removeString(PrefKey.sessionData);
     final timeStampRemoved =
-        await keyValueService.removeDateTime(PrefKey.sessionSuspendedTime);
+        await keyValueService.removeString(PrefKey.sessionSuspendedTime);
 
     return sessionDataRemoved && timeStampRemoved;
   }
