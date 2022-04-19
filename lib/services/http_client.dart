@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:provenance_wallet/endpoints.dart';
 import 'package:provenance_wallet/services/http_client_diagnostic_interceptor.dart';
 import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
@@ -18,16 +17,18 @@ const String contentTypeMultiPart = 'multipart/form-data';
 typedef SessionTimeoutCallback = void Function(bool hasJwt);
 
 class MainHttpClient extends HttpClient {
-  MainHttpClient()
-      : super(
-          baseUrl: Endpoints.figureTech.mainUrl,
+  MainHttpClient({
+    required String baseUrl,
+  }) : super(
+          baseUrl: baseUrl,
         );
 }
 
 class TestHttpClient extends HttpClient {
-  TestHttpClient()
-      : super(
-          baseUrl: Endpoints.figureTech.testUrl,
+  TestHttpClient({
+    required String baseUrl,
+  }) : super(
+          baseUrl: baseUrl,
         );
 }
 

@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  AssetChartScreen(
+  const AssetChartScreen(
     this.coin,
     this.asset, {
     Key? key,
@@ -106,6 +106,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     PwText(
                       details.asset.display.toUpperCase(),
                       style: PwTextStyle.subhead,
+                      textAlign: TextAlign.center,
                     ),
                     PwAutoSizingText(
                       details.asset.formattedUsdPrice,
@@ -124,8 +125,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         );
                       },
                     ),
-                    if (!details.isComingSoon) VerticalSpacer.xxLarge(),
-                    // VerticalSpacer.xxLarge(),
+                    VerticalSpacer.xxLarge(),
+                    VerticalSpacer.xxLarge(),
                     AssetChartRecentTransactions(),
                   ],
                 ),

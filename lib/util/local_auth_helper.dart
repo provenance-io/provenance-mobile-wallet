@@ -25,29 +25,10 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   static const _inactivityTimeout = Duration(minutes: 2);
   final _cipherService = get<CipherService>();
   final _walletService = get<WalletService>();
-  final _status = BehaviorSubject<AuthStatus>();
+  final _status = BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
   Timer? _inactivityTimer;
 
   ValueStream<AuthStatus> get status => _status;
-
-  Future<void> init() async {
-    AuthStatus status;
-    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
-    if (!lockScreenEnabled) {
-      status = AuthStatus.noLockScreen;
-    } else {
-      final code = await _cipherService.getPin();
-      if (code == null || code.isEmpty) {
-        status = AuthStatus.noAccount;
-      } else {
-        final wallets = await _walletService.getWallets();
-        status =
-            wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
-      }
-    }
-
-    _status.value = status;
-  }
 
   void reset() {
     _status.value = AuthStatus.noAccount;
@@ -69,27 +50,37 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
   }
 
   Future<AuthStatus> auth(BuildContext context) async {
+    AuthStatus status;
+
+    final lockScreenEnabled = await _cipherService.getLockScreenEnabled();
+    if (!lockScreenEnabled) {
+      status = AuthStatus.noLockScreen;
+      _status.value = status;
+
+      return status;
+    }
     final pin = await _cipherService.getPin();
     if (pin == null || pin.isEmpty) {
-      const result = AuthStatus.noAccount;
-      _status.value = result;
+      status = AuthStatus.noAccount;
+      _status.value = status;
 
-      return result;
+      return status;
     }
 
-    var result = AuthStatus.unauthenticated;
+    final wallets = await _walletService.getWallets();
+    status = wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
 
     final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {
       final success = await _cipherService.authenticateBiometry();
-      result = success ? AuthStatus.authenticated : await _validatePin(context);
+      status = success ? AuthStatus.authenticated : await _validatePin(context);
     } else {
-      result = await _validatePin(context);
+      status = await _validatePin(context);
     }
 
-    _status.value = result;
+    _status.value = status;
 
-    return result;
+    return status;
   }
 
   @override

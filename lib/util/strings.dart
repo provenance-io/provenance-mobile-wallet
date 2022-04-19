@@ -235,6 +235,10 @@ class Strings {
     return 'Network: $name';
   }
 
+  static String recoverPassphraseWord(int number) {
+    return 'Word $number';
+  }
+
   // RecoveryWordsConfirm
   static const verifyPassphrase = 'Verify Passphrase';
   static const next = 'Next';
@@ -381,6 +385,7 @@ class Strings {
   static const recentTransactions = "Recent Transactions";
   static const allTransactions = "All Transactions";
   static const assetChartNotAvailable = "Not Available";
+  static const assetChartNoDataAvailable = "No data available.";
 
   // SendSuccessScreen
   static const sendSuccessTransferDetailsBelow =

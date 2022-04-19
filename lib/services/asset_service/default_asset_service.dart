@@ -40,7 +40,7 @@ class DefaultAssetService extends AssetService
     Coin coin,
     String provenanceAddresses,
   ) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
 
     final data = await client.get(
       '$_assetServiceBasePath/$provenanceAddresses/assets',
@@ -74,7 +74,7 @@ class DefaultAssetService extends AssetService
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final timeFrame = value.name.toUpperCase();
 
     String uri = '$_assetPricingBasePath/$assetType?period=$timeFrame';

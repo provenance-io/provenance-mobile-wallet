@@ -102,7 +102,7 @@ class AssetChartBloc extends Disposable {
       value,
       _asset,
       scaledItems,
-      false,
+      true,
     );
   }
 
@@ -117,10 +117,10 @@ class AssetChartDetails {
     this.value,
     this.asset,
     this.graphItemList,
-    this.isComingSoon,
+    this.isLoadingFinished,
   );
   final GraphingDataValue value;
   final Asset asset;
   final List<AssetGraphItem> graphItemList;
-  final bool isComingSoon;
+  final bool isLoadingFinished;
 }

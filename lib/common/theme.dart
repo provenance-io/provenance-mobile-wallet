@@ -300,9 +300,9 @@ class ProvenanceThemeData {
 
   static const _colorScheme = ProvenanceColorScheme(
     primary: _primary500,
-    primaryVariant: _primary550,
+    primaryContainer: _primary550,
     secondary: _secondary400,
-    secondaryVariant: _secondary400,
+    secondaryContainer: _secondary400,
     background: _neutral750,
     surface: _neutral50,
     onBackground: _neutralNeutral,

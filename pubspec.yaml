@@ -32,16 +32,21 @@ dependencies:
   firebase_crashlytics: ^2.5.0
   firebase_dynamic_links: ^4.0.5
   firebase_messaging: ^11.2.11
+  firebase_remote_config: ^2.0.3
+  fl_chart: ^0.45.1
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
   flutter_lints: ^1.0.4
   flutter_native_splash: ^1.2.1
+  flutter_phoenix: ^1.0.0
   flutter_svg: ^0.22.0
+  flutter_switch: ^0.3.2
   get_it: ^7.2.0
   intl: ^0.17.0
   json_annotation: 4.4.0
   logger: ^1.0.0
+  package_info_plus: ^1.4.2
   path:
   pretty_json: ^2.0.0
   prov_wallet_flutter:
@@ -58,9 +63,6 @@ dependencies:
   uni_links: ^0.5.1
   url_launcher: ^6.0.10
   uuid: ^3.0.4
-  flutter_switch: ^0.3.2
-  fl_chart: ^0.45.1
-  flutter_phoenix: ^1.0.0
 
 # dependency_overrides: #this can be removed when we update to flutter > 2.8.1
 #   firebase_messaging_platform_interface: 3.1.6
@@ -68,11 +70,11 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.0.6
   dart_code_metrics: ^4.9.0
+  flutter_launcher_icons: 0.9.2
   flutter_test:
     sdk: flutter
   json_serializable: ^6.0.0
   mockito: ^5.1.0
-  flutter_launcher_icons: 0.9.2
 
 # different icons per flavor are supported by creating files with the name flutter_launcher_icons-<flavor>.yaml
 flutter_icons:

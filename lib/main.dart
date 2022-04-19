@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart'
+    show FirebaseRemoteConfig;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,12 +15,14 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
-import 'package:provenance_wallet/endpoints.dart';
 import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
+import 'package:provenance_wallet/services/config_service/config_service.dart';
+import 'package:provenance_wallet/services/config_service/default_config_service.dart';
+import 'package:provenance_wallet/services/config_service/local_config.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
@@ -49,6 +53,7 @@ import 'package:provenance_wallet/services/wallet_service/transaction_handler.da
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -58,6 +63,7 @@ import 'util/get.dart';
 
 // Toggle this for testing Crashlytics in your app locally.
 const _testingCrashlytics = false;
+const _tag = 'main';
 
 void main() async {
   runZonedGuarded(
@@ -96,6 +102,21 @@ void main() async {
         keyValueService.setBool(PrefKey.isSubsequentRun, true);
       }
 
+      final configService = DefaultConfigService(
+        keyValueService: keyValueService,
+        firebaseRemoteConfig: FirebaseRemoteConfig.instance,
+      );
+      get.registerSingleton<ConfigService>(configService);
+
+      final config = await configService.getLocalConfig();
+      get.registerSingleton<LocalConfig>(config);
+
+      logStatic(
+        _tag,
+        Level.info,
+        'Initializing: $config',
+      );
+
       get.registerSingleton<KeyValueService>(keyValueService);
       final sqliteStorage = SqliteWalletStorageService();
       final walletStorage =
@@ -104,19 +125,7 @@ void main() async {
       final walletService = WalletService(storage: walletStorage)..init();
       get.registerSingleton<WalletService>(walletService);
 
-      get.registerSingleton<ProtobuffClientInjector>(
-        (coin) => PbClient(
-          Uri.parse(Endpoints.chain.forCoin(coin)),
-          ChainId.forCoin(
-            coin,
-          ),
-        ),
-      );
-
-      final authHelper = LocalAuthHelper();
-      await authHelper.init();
-
-      get.registerSingleton<LocalAuthHelper>(authHelper);
+      get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
 
       runApp(
         Phoenix(
@@ -194,19 +203,44 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<MainHttpClient>(
-      () => MainHttpClient(),
+    final configService = get<ConfigService>();
+    final remoteConfig = configService.getRemoteConfig();
+
+    get.registerSingleton<ProtobuffClientInjector>(
+      (coin) => remoteConfig.then(
+        (value) => PbClient(
+          Uri.parse(value.endpoints.chain.forCoin(coin)),
+          ChainId.forCoin(
+            coin,
+          ),
+        ),
+      ),
     );
 
-    get.registerLazySingleton<TestHttpClient>(
-      () => TestHttpClient(),
+    get.registerSingleton<Future<MainHttpClient>>(
+      remoteConfig.then(
+        (value) => MainHttpClient(
+          baseUrl: value.endpoints.figureTech.mainUrl,
+        ),
+      ),
     );
 
-    keyValueService.stream<bool>(PrefKey.httpClientDiagnostics500).listen((e) {
+    get.registerSingleton<Future<TestHttpClient>>(
+      remoteConfig.then(
+        (value) => TestHttpClient(
+          baseUrl: value.endpoints.figureTech.testUrl,
+        ),
+      ),
+    );
+
+    keyValueService
+        .stream<bool>(PrefKey.httpClientDiagnostics500)
+        .listen((e) async {
       final doError = e.data ?? false;
       final statusCode = doError ? HttpStatus.internalServerError : null;
-      get<MainHttpClient>().setDiagnosticsError(statusCode);
-      get<TestHttpClient>().setDiagnosticsError(statusCode);
+
+      (await get<Future<MainHttpClient>>()).setDiagnosticsError(statusCode);
+      (await get<Future<TestHttpClient>>()).setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
     get.registerLazySingleton<StatService>(

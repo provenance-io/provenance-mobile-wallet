@@ -17,7 +17,7 @@ class DefaultTransactionService extends TransactionService
     Coin coin,
     String provenanceAddress,
   ) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final data = await client.get(
       '$_transactionServiceBasePath/$provenanceAddress/transactions',
       listConverter: (json) {
@@ -50,7 +50,7 @@ class DefaultTransactionService extends TransactionService
     String provenanceAddress,
     int pageNumber,
   ) async {
-    final client = getClient(coin);
+    final client = await getClient(coin);
     final data = await client.get(
       '$_transactionServiceBasePath/$provenanceAddress/transactions/all?count=50&page=$pageNumber',
       converter: (json) {

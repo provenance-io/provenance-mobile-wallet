@@ -39,6 +39,7 @@ abstract class KeyValueService {
 }
 
 enum PrefKey {
+  endpoints,
   releaseMode,
   declinedSecureAuth,
   defaultChainId,

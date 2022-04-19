@@ -18,9 +18,9 @@ final _log = _Logger(
 
 /// Extension on Object to use `runtimeType`
 extension Log on Object {
-  void log(dynamic message) => _log.info(message, type: runtimeType);
+  void log(dynamic message) => _log.info(message, tag: '$runtimeType');
 
-  void logDebug(dynamic message) => _log.debug(message, type: runtimeType);
+  void logDebug(dynamic message) => _log.debug(message, tag: '$runtimeType');
 
   void logError(
     dynamic message, {
@@ -29,7 +29,7 @@ extension Log on Object {
   }) =>
       _log.error(
         message,
-        type: runtimeType,
+        tag: '$runtimeType',
         error: error,
         stackTrace: stackTrace,
       );
@@ -37,7 +37,7 @@ extension Log on Object {
 
 /// For calling from static methods
 void logStatic(
-  Type type,
+  String tag,
   Level level,
   dynamic message, {
   dynamic error,
@@ -45,13 +45,13 @@ void logStatic(
   if (level == Level.error) {
     _log.error(
       message,
-      type: type,
+      tag: tag,
       error: error,
     );
   } else if (level == Level.debug) {
-    _log.debug(message, type: type);
+    _log.debug(message, tag: tag);
   } else {
-    _log.info(message, type: type);
+    _log.info(message, tag: tag);
   }
 }
 
@@ -66,29 +66,37 @@ class _Logger extends Logger {
           filter: filter,
         );
 
-  void info(dynamic message, {required Type type}) => log(
+  void info(
+    dynamic message, {
+    required String tag,
+  }) =>
+      log(
         Level.info,
-        ['$type', message],
+        [tag, message],
         null,
         null,
       );
 
-  void debug(dynamic message, {required Type type}) => _log.log(
+  void debug(
+    dynamic message, {
+    required String tag,
+  }) =>
+      _log.log(
         Level.debug,
-        ['$type', message],
+        [tag, message],
         null,
         null,
       );
 
   void error(
     dynamic message, {
-    required Type type,
+    required String tag,
     dynamic error,
     StackTrace? stackTrace,
   }) =>
       _log.log(
         Level.error,
-        ['$type', message],
+        [tag, message],
         error,
         stackTrace,
       );

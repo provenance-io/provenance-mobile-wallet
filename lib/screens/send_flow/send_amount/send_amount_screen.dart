@@ -155,7 +155,7 @@ class SendAmountPageState extends State<SendAmountPage> {
               ),
               VerticalSpacer.medium(),
               TextFormField(
-                autovalidateMode: AutovalidateMode.always,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 textAlign: TextAlign.center,
                 controller: _amountController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -168,7 +168,8 @@ class SendAmountPageState extends State<SendAmountPage> {
                 decoration: InputDecoration(
                   hintText: Strings.sendAmountHint,
                   hintStyle: Theme.of(context).textTheme.displayBody.copyWith(
-                      color: Theme.of(context).colorScheme.neutralNeutral),
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   ),

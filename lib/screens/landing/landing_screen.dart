@@ -128,7 +128,6 @@ class _LandingScreenState extends State<LandingScreen> {
                         ModalLoadingRoute.showLoading('', context);
                         // Give the loading modal time to display
                         await Future.delayed(Duration(milliseconds: 500));
-                        await authHelper.init();
                         ModalLoadingRoute.dismiss(context);
                       },
                     );

@@ -3,12 +3,12 @@ import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 mixin ClientCoinMixin on Object {
-  HttpClient getClient(Coin coin) {
+  Future<HttpClient> getClient(Coin coin) {
     switch (coin) {
       case Coin.mainNet:
-        return get<MainHttpClient>();
+        return get<Future<MainHttpClient>>();
       case Coin.testNet:
-        return get<TestHttpClient>();
+        return get<Future<TestHttpClient>>();
     }
   }
 }
