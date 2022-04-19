@@ -161,6 +161,9 @@ class WalletConnectSession {
   }
 
   void _disconnect() {
+    get<KeyValueService>().removeString(
+      PrefKey.sessionSuspendedTime,
+    );
     _inactivityTimer?.cancel();
     _inactivityTimer = null;
     _connection.removeListener(_statusListener);
@@ -187,9 +190,6 @@ class WalletConnectSession {
     );
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(inactivityTimeout, () {
-      get<KeyValueService>().removeString(
-        PrefKey.sessionSuspendedTime,
-      );
       disconnect();
     });
   }
