@@ -57,26 +57,38 @@ mixin PwColorMixin on Widget {
       case PwColor.primaryP500:
         return theme.colorScheme.primary500;
       case PwColor.negative:
-        return Color.fromARGB(
-          255,
-          0xF1,
-          0x6F,
-          0x04,
-        );
+        if (theme.colorScheme is ProvenanceColorScheme) {
+          return (theme.colorScheme as ProvenanceColorScheme).graphNegative;
+        }
+        return null;
+      // return Color.fromARGB(
+      //   255,
+      //   0xF1,
+      //   0x6F,
+      //   0x04,
+      // );
       case PwColor.positive:
-        return Color.fromARGB(
-          255,
-          0x04,
-          0xF1,
-          0x9C,
-        );
+        // return Color.fromARGB(
+        //   255,
+        //   0x04,
+        //   0xF1,
+        //   0x9C,
+        // );
+        if (theme.colorScheme is ProvenanceColorScheme) {
+          return (theme.colorScheme as ProvenanceColorScheme).graphPositive;
+        }
+        return null;
       case PwColor.neutral:
-        return Color.fromARGB(
-          255,
-          0xA6,
-          0xA6,
-          0xA6,
-        );
+        // return Color.fromARGB(
+        //   255,
+        //   0xA6,
+        //   0xA6,
+        //   0xA6,
+        // );
+        if (theme.colorScheme is ProvenanceColorScheme) {
+          return (theme.colorScheme as ProvenanceColorScheme).graphNeutral;
+        }
+        return null;
       default:
         return null;
     }
