@@ -224,6 +224,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     String walletId,
     String addressData, {
     SessionData? sessionData,
+    Duration? remainingTime,
   }) async {
     var success = false;
 
@@ -289,7 +290,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       );
     }
 
-    success = await session.connect(restoreData);
+    success = await session.connect(restoreData, remainingTime);
 
     return success;
   }
@@ -309,18 +310,22 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         await get<KeyValueService>().getDateTime(PrefKey.sessionSuspendedTime);
     await get<KeyValueService>().removeDateTime(PrefKey.sessionSuspendedTime);
     SessionData? data;
-    if (json != null) {
+
+    if (json != null && date != null) {
       try {
         data = SessionData.fromJson(jsonDecode(json));
       } on Exception {
         logError('Failed to decode session data');
       }
 
-      if (data != null && data.walletId == walletId) {
+      final remainingMinutes = 30 - DateTime.now().difference(date).inMinutes;
+
+      if (data != null && data.walletId == walletId && remainingMinutes > 0) {
         success = await connectSession(
           walletId,
           data.address,
           sessionData: data,
+          remainingTime: Duration(minutes: remainingMinutes),
         );
 
         if (!success) {
