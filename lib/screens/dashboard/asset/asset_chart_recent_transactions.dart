@@ -38,8 +38,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
               return Container();
             }
             final transactions = transactionDetails.transactions
-                .where((element) =>
-                    element.denom.contains(asset.denom.toLowerCase()))
+                .where((element) => element.denom == asset.denom)
                 .take(4)
                 .toList();
 
