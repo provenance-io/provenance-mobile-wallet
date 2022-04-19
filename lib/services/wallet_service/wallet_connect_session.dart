@@ -62,9 +62,12 @@ class WalletConnectSession {
 
   String? topic;
 
-  Future<bool> connect([WalletConnectSessionRestoreData? restoreData]) async {
+  Future<bool> connect([
+    WalletConnectSessionRestoreData? restoreData,
+    Duration? timeoutDuration,
+  ]) async {
     var success = false;
-
+    var inactivityTimeout = timeoutDuration ?? _inactivityTimeout;
     try {
       _connection.addListener(_statusListener);
 
@@ -73,7 +76,7 @@ class WalletConnectSession {
       success = true;
 
       if (restoreData != null) {
-        _startInactivityTimer();
+        _startInactivityTimer(inactivityTimeout);
 
         log("Restored session: ${restoreData.data}");
         sessionEvents._state.value =
@@ -124,7 +127,7 @@ class WalletConnectSession {
     required String requestId,
     required bool allowed,
   }) async {
-    _startInactivityTimer();
+    _startInactivityTimer(_inactivityTimeout);
 
     return _delegate.complete(requestId, allowed);
   }
@@ -133,7 +136,7 @@ class WalletConnectSession {
     required requestId,
     required bool allowed,
   }) async {
-    _startInactivityTimer();
+    _startInactivityTimer(_inactivityTimeout);
 
     return _delegate.complete(requestId, allowed);
   }
@@ -142,7 +145,7 @@ class WalletConnectSession {
     required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
-    _startInactivityTimer();
+    _startInactivityTimer(_inactivityTimeout);
     final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value =
@@ -175,9 +178,9 @@ class WalletConnectSession {
     }
   }
 
-  void _startInactivityTimer() {
+  void _startInactivityTimer(Duration inactivityTimeout) {
     _inactivityTimer?.cancel();
-    _inactivityTimer = Timer(_inactivityTimeout, () {
+    _inactivityTimer = Timer(inactivityTimeout, () {
       disconnect();
     });
   }
