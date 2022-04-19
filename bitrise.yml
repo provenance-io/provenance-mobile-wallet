@@ -103,6 +103,24 @@ workflows:
         - track: internal
         - status: ''
         - service_account_json_key_path: "$BITRISEIO_BITRISEIO_ANDROID_SVC_ACCT_JSON_URL_URL"
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            PLIST="$BITRISE_APP_DIR_PATH/Info.plist"
+
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $PLIST`
+            envman add --key GIT_TAG --value "v$VERSION+$BUILD"
+        title: Add Git tag env var
+    - git-tag@1:
+        inputs:
+        - tag: "$GIT_TAG"
     - slack@3:
         inputs:
         - channel: ''
@@ -166,6 +184,24 @@ workflows:
         - package_name: io.provenance.wallet
         - track: internal
         - service_account_json_key_path: "$BITRISEIO_BITRISEIO_ANDROID_SVC_ACCT_JSON_URL_URL"
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            PLIST="$BITRISE_APP_DIR_PATH/Info.plist"
+
+            VERSION=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" $PLIST`
+            BUILD=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" $PLIST`
+            envman add --key GIT_TAG --value "v$VERSION+$BUILD"
+        title: Add Git tag env var
+    - git-tag@1:
+        inputs:
+        - tag: "$GIT_TAG"
     - slack@3:
         inputs:
         - channel: ''
