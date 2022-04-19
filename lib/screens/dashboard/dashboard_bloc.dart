@@ -100,6 +100,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       }
     } else if (state == AppLifecycleState.paused) {
       if (_walletSession != null) {
+        get<KeyValueService>()
+            .setDateTime(PrefKey.sessionSuspendedTime, DateTime.now());
         _walletSession!.closeButRetainSession();
         _walletSession = null;
       }
