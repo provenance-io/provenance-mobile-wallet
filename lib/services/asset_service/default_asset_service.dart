@@ -74,13 +74,19 @@ class DefaultAssetService extends AssetService
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    startDate ??= DateTime.now().startOfDay;
-    endDate ??= DateTime.now().endOfDay;
     final client = await getClient(coin);
     final timeFrame = value.name.toUpperCase();
 
+    String uri = '$_assetPricingBasePath/$assetType?period=$timeFrame';
+    if (startDate != null) {
+      uri = "$uri&startDate=${_formatter.format(startDate.startOfDay)}";
+    }
+    if (endDate != null) {
+      uri = "$uri&endDate=${_formatter.format(endDate.endOfDay)}";
+    }
+
     final data = await client.get(
-      '$_assetPricingBasePath/$assetType?period=$timeFrame&startDate=${_formatter.format(startDate)}&endDate=${_formatter.format(endDate)}',
+      uri,
       listConverter: (json) {
         if (json is String) {
           return <AssetGraphItem>[];

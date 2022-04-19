@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -22,25 +21,67 @@ class AssetChartBloc extends Disposable {
   ValueStream<AssetChartDetails?> get chartDetails => _chartDetails.stream;
 
   Future<void> load({
-    required DateTime startDate,
-    required DateTime endDate,
     GraphingDataValue value = GraphingDataValue.hourly,
   }) async {
-    startDate = startDate.startOfDay;
-    endDate = endDate.endOfDay;
+    // change the datapoint scale so that tooltips on the chart are smoother
+    GraphingDataValue modifiedDataValue = value;
+    final endDate = DateTime.now();
+    DateTime? startDate;
+
+    switch (value) {
+      case GraphingDataValue.hourly:
+        startDate = endDate.subtract(Duration(hours: 24));
+        modifiedDataValue = GraphingDataValue.hourly;
+        break;
+      case GraphingDataValue.daily:
+        startDate = endDate.subtract(Duration(days: 7));
+        modifiedDataValue = GraphingDataValue.hourly;
+        break;
+      case GraphingDataValue.weekly:
+        startDate = endDate.subtract(Duration(days: 4 * 7));
+        modifiedDataValue = GraphingDataValue.daily;
+        break;
+      case GraphingDataValue.monthly:
+        startDate = DateTime(
+          endDate.year - 1,
+          endDate.month,
+          endDate.day,
+          endDate.hour,
+          endDate.minute,
+          endDate.second,
+          endDate.millisecond,
+          endDate.microsecond,
+        );
+        modifiedDataValue = GraphingDataValue.weekly;
+        break;
+      case GraphingDataValue.yearly:
+        startDate = DateTime(
+          endDate.year - 4,
+          endDate.month,
+          endDate.day,
+          endDate.hour,
+          endDate.minute,
+          endDate.second,
+          endDate.millisecond,
+          endDate.microsecond,
+        );
+        modifiedDataValue = GraphingDataValue.monthly;
+        break;
+      default:
+      // no specific start date.
+    }
+
     _chartDetails.value = AssetChartDetails(
       value,
       _asset,
       [],
       false,
-      startDate,
-      endDate,
     );
 
     final graphItemList = await _assetService.getAssetGraphingData(
       _coin,
       _asset.denom,
-      value,
+      modifiedDataValue,
       startDate: startDate,
       endDate: endDate,
     );
@@ -62,8 +103,6 @@ class AssetChartBloc extends Disposable {
       _asset,
       scaledItems,
       true,
-      startDate,
-      endDate,
     );
   }
 
@@ -79,13 +118,9 @@ class AssetChartDetails {
     this.asset,
     this.graphItemList,
     this.isLoadingFinished,
-    this.startDate,
-    this.endDate,
   );
   final GraphingDataValue value;
   final Asset asset;
   final List<AssetGraphItem> graphItemList;
   final bool isLoadingFinished;
-  final DateTime startDate;
-  final DateTime endDate;
 }
