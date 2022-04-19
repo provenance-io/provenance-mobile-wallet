@@ -255,6 +255,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final walletDetails = _walletService.events.selected.value!;
     final connection = get<WalletConnectionFactory>().call(address);
     final remoteNotificationService = get<RemoteNotificationService>();
+    final keyValueService = get<KeyValueService>();
 
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
@@ -270,6 +271,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       connection: connection,
       delegate: delegate,
       remoteNotificationService: remoteNotificationService,
+      keyValueService: keyValueService,
     );
 
     delegateEvents.listen(session.delegateEvents);

@@ -8,7 +8,6 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_restore
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -46,18 +45,21 @@ class WalletConnectSession {
     required WalletConnection connection,
     required WalletConnectSessionDelegate delegate,
     required RemoteNotificationService remoteNotificationService,
+    required KeyValueService keyValueService,
   })  : _connection = connection,
         _remoteNotificationService = remoteNotificationService,
         _delegate = delegate,
         sessionEvents = WalletConnectSessionEvents(),
         delegateEvents = WalletConnectSessionDelegateEvents()
-          ..listen(delegate.events);
+          ..listen(delegate.events),
+        _keyValueService = keyValueService;
 
   static const _inactivityTimeout = Duration(minutes: 30);
   Timer? _inactivityTimer;
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
   final RemoteNotificationService _remoteNotificationService;
+  final KeyValueService _keyValueService;
   final String walletId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
@@ -161,7 +163,7 @@ class WalletConnectSession {
   }
 
   void _disconnect() {
-    get<KeyValueService>().removeString(
+    _keyValueService.removeString(
       PrefKey.sessionSuspendedTime,
     );
     _inactivityTimer?.cancel();
@@ -184,7 +186,7 @@ class WalletConnectSession {
   }
 
   void _startInactivityTimer(Duration inactivityTimeout) {
-    get<KeyValueService>().setString(
+    _keyValueService.setString(
       PrefKey.sessionSuspendedTime,
       DateTime.now().toIso8601String(),
     );
