@@ -88,25 +88,27 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      final walletId = _walletService.events.selected.value?.id;
-      final sessionStatus = _walletSession?.sessionEvents.state.value.status ??
-          WalletConnectSessionStatus.disconnected;
-      final authStatus = get<LocalAuthHelper>().status.value;
-      if (walletId != null &&
-          sessionStatus == WalletConnectSessionStatus.disconnected &&
-          authStatus == AuthStatus.authenticated) {
-        tryRestoreSession(walletId);
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_walletSession != null) {
-        get<KeyValueService>().setString(
-          PrefKey.sessionSuspendedTime,
-          DateTime.now().toIso8601String(),
-        );
-        _walletSession!.closeButRetainSession();
-        _walletSession = null;
-      }
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        if (_walletSession != null) {
+          _walletSession!.closeButRetainSession();
+          _walletSession = null;
+        }
+        break;
+      case AppLifecycleState.resumed:
+        final walletId = _walletService.events.selected.value?.id;
+        final sessionStatus =
+            _walletSession?.sessionEvents.state.value.status ??
+                WalletConnectSessionStatus.disconnected;
+        final authStatus = get<LocalAuthHelper>().status.value;
+        if (walletId != null &&
+            sessionStatus == WalletConnectSessionStatus.disconnected &&
+            authStatus == AuthStatus.authenticated) {
+          tryRestoreSession(walletId);
+        }
+        break;
     }
   }
 
