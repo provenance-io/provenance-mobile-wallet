@@ -27,6 +27,22 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
   final String accountName;
   final WalletAddImportType flowType;
 
+  static final keyContinueButton =
+      ValueKey('$RecoverPassphraseEntryScreen.continue_button');
+
+  static final keyAppBar = ValueKey('$RecoverPassphraseEntryScreen.app_bar');
+
+  static final networkToggle =
+      ValueKey('$RecoverPassphraseEntryScreen.network_toggle');
+
+  static final networkName =
+      ValueKey('$RecoverPassphraseEntryScreen.network_name');
+
+  static final wordList = ValueKey('$RecoverPassphraseEntryScreen.word_list');
+
+  static Key keyPassphraseWordTextField(int index) =>
+      ValueKey('$RecoverPassphraseEntryScreen.word_$index');
+
   @override
   State<StatefulWidget> createState() {
     return RecoverPassphraseEntryScreenState();
@@ -42,11 +58,17 @@ class RecoverPassphraseEntryScreenState
   List<FocusNode> focusNodes = <FocusNode>[];
   List<VoidCallback> callbacks = <VoidCallback>[];
 
+  @visibleForTesting
+  static const toggleAdvancedUICount = 10;
+
   @override
   void initState() {
     super.initState();
 
-    _tapCounter = TimedCounter(onSuccess: _toggleAdvancedUI);
+    _tapCounter = TimedCounter(
+      onSuccess: _toggleAdvancedUI,
+      requiredCount: toggleAdvancedUICount,
+    );
 
     for (var i = 0; i < 24; i++) {
       var word = TextEditingController();
@@ -78,6 +100,7 @@ class RecoverPassphraseEntryScreenState
 
     return Scaffold(
       appBar: PwAppBarGestureDetector(
+        key: RecoverPassphraseEntryScreen.keyAppBar,
         onTap: _tapCounter.increment,
         child: PwAppBar(
           title: Strings.enterRecoveryPassphrase,
@@ -116,6 +139,7 @@ class RecoverPassphraseEntryScreenState
                   final coin = ChainId.toCoin(chainId);
 
                   return GestureDetector(
+                    key: RecoverPassphraseEntryScreen.networkToggle,
                     onTap: () {
                       final newChainId = chainId == ChainId.mainNet
                           ? ChainId.testNet
@@ -133,6 +157,7 @@ class RecoverPassphraseEntryScreenState
                       ),
                       child: PwText(
                         Strings.recoverPassphraseNetwork(coin.displayName),
+                        key: RecoverPassphraseEntryScreen.networkName,
                         style: PwTextStyle.body,
                       ),
                     ),
@@ -143,6 +168,7 @@ class RecoverPassphraseEntryScreenState
           ),
           Expanded(
             child: ListView.separated(
+              key: RecoverPassphraseEntryScreen.wordList,
               padding: EdgeInsets.only(
                 left: 20,
                 right: 20,
@@ -167,6 +193,8 @@ class RecoverPassphraseEntryScreenState
                     ),
                     VerticalSpacer.small(),
                     _TextFormField(
+                      key: RecoverPassphraseEntryScreen
+                          .keyPassphraseWordTextField(index),
                       controller: textController,
                       focusNode: focusNode,
                     ),
@@ -177,6 +205,8 @@ class RecoverPassphraseEntryScreenState
                               vertical: Spacing.largeX4,
                             ),
                             child: PwButton(
+                              key: RecoverPassphraseEntryScreen
+                                  .keyContinueButton,
                               child: PwText(
                                 Strings.continueName,
                                 style: PwTextStyle.bodyBold,

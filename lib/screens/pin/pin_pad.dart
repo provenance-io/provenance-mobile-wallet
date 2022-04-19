@@ -4,6 +4,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/pin/code_panel.dart';
 import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 
+Key keyPinPadNumber(int number) => ValueKey('$PinPad.number_$number');
+
 double _clamp(
   double value,
   double min,
@@ -156,6 +158,7 @@ class PinPadState extends State<PinPad> {
               children.add(Container());
 
               children.add(ContainerCircleButton(
+                key: keyPinPadNumber(_numbers[i]),
                 child: PwText(
                   _numbers[i].toString(),
                   style: PwTextStyle.display1,
@@ -174,6 +177,7 @@ class PinPadState extends State<PinPad> {
               ));
             } else {
               children.add(ContainerCircleButton(
+                key: keyPinPadNumber(_numbers[i]),
                 child: PwText(
                   _numbers[i].toString(),
                   style: PwTextStyle.display1,

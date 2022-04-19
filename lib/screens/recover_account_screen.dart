@@ -15,6 +15,9 @@ class RecoverAccountScreen extends StatelessWidget {
     this.numberOfSteps,
   }) : super(key: key);
 
+  static final keyContinueButton =
+      ValueKey('$RecoverAccountScreen.continue_button');
+
   final WalletAddImportType flowType;
   final String accountName;
   final int currentStep;
@@ -75,6 +78,7 @@ class RecoverAccountScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwButton(
+                key: keyContinueButton,
                 child: PwText(
                   Strings.continueName,
                   style: PwTextStyle.bodyBold,

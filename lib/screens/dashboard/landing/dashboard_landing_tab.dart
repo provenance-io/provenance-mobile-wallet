@@ -24,6 +24,11 @@ class DashboardLandingTab extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  static final keyWalletNameText =
+      ValueKey('$DashboardLandingTab.wallet_name_text');
+  static final keyWalletAddressText =
+      ValueKey('$DashboardLandingTab.wallet_address_text');
+
   @override
   _DashboardLandingTabState createState() => _DashboardLandingTabState();
 }
@@ -163,6 +168,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                     children: [
                       PwText(
                         name,
+                        key: DashboardLandingTab.keyWalletNameText,
                         style: PwTextStyle.subhead,
                         overflow: TextOverflow.fade,
                       ),
@@ -170,6 +176,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                         children: [
                           PwText(
                             walletAddress.abbreviateAddress(),
+                            key: DashboardLandingTab.keyWalletAddressText,
                             style: PwTextStyle.body,
                           ),
                           if (coin != null) HorizontalSpacer.large(),

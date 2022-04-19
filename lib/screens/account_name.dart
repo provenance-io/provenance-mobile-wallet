@@ -19,6 +19,9 @@ class AccountName extends HookWidget {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  static final keyNameTextField = ValueKey('$AccountName.name_text_field');
+  static final keyContinueButton = ValueKey('$AccountName.continue_button');
+
   final List<String>? words;
   final int currentStep;
   final int? numberOfSteps;
@@ -81,6 +84,7 @@ class AccountName extends HookWidget {
                   bottom: Spacing.small,
                 ),
                 child: PwTextFormField(
+                  key: keyNameTextField,
                   label: Strings.accountName,
                   autofocus: true,
                   validator: (value) {
@@ -95,6 +99,7 @@ class AccountName extends HookWidget {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: PwButton(
+                  key: keyContinueButton,
                   child: PwText(
                     Strings.continueName,
                     style: PwTextStyle.bodyBold,

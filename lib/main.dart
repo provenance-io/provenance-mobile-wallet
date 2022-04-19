@@ -66,6 +66,11 @@ const _testingCrashlytics = false;
 const _tag = 'main';
 
 void main() {
+  final originalOnError = FlutterError.onError;
+  FlutterError.onError = (FlutterErrorDetails errorDetails) {
+    originalOnError?.call(errorDetails);
+    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+  };
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -307,12 +312,4 @@ Future<void> _initializeCrashlytics(KeyValueService service) async {
           !kDebugMode);
   await FirebaseCrashlytics.instance
       .setCrashlyticsCollectionEnabled(allowCrashlytics);
-
-  // Pass all uncaught errors to Crashlytics.
-  final originalOnError = FlutterError.onError;
-  FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-    await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    // Forward to original handler.
-    originalOnError?.call(errorDetails);
-  };
 }
