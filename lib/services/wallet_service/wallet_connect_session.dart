@@ -84,6 +84,7 @@ class WalletConnectSession {
         _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
+      _inactivityTimer?.cancel();
       _inactivityTimer = null;
       logError(
         'Failed to connect: $e',
@@ -155,6 +156,7 @@ class WalletConnectSession {
   }
 
   void _disconnect() {
+    _inactivityTimer?.cancel();
     _inactivityTimer = null;
     _connection.removeListener(_statusListener);
     sessionEvents._state.value = WalletConnectSessionState.disconnected();
@@ -174,6 +176,7 @@ class WalletConnectSession {
   }
 
   void _startInactivityTimer() {
+    _inactivityTimer?.cancel();
     _inactivityTimer = Timer(_inactivityTimeout, () {
       disconnect();
     });
