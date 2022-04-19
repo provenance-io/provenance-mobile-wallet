@@ -314,7 +314,6 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final date = DateTime.tryParse(
       await keyValueService.getString(PrefKey.sessionSuspendedTime) ?? "",
     );
-    await keyValueService.removeString(PrefKey.sessionSuspendedTime);
     SessionData? data;
 
     if (json != null && date != null) {
@@ -335,7 +334,8 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
         );
 
         if (!success) {
-          await get<KeyValueService>().removeString(PrefKey.sessionData);
+          await keyValueService.removeString(PrefKey.sessionData);
+          await keyValueService.removeString(PrefKey.sessionSuspendedTime);
         }
       }
     }
