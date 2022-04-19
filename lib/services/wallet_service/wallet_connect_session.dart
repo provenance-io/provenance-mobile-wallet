@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -179,6 +181,10 @@ class WalletConnectSession {
   }
 
   void _startInactivityTimer(Duration inactivityTimeout) {
+    get<KeyValueService>().setString(
+      PrefKey.sessionSuspendedTime,
+      DateTime.now().toIso8601String(),
+    );
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(inactivityTimeout, () {
       disconnect();
