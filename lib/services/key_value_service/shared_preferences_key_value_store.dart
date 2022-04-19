@@ -43,4 +43,16 @@ class SharedPreferencesKeyValueStore implements KeyValueStore {
   Future<bool> setString(PrefKey key, String value) async {
     return (await _pref).setString(key.name, value);
   }
+
+  @override
+  Future<DateTime?> getDateTime(PrefKey key) async {
+    final stringDate = (await _pref).getString(key.name);
+
+    return DateTime.tryParse(stringDate ?? "");
+  }
+
+  @override
+  Future<bool> setDateTime(PrefKey key, DateTime value) async {
+    return (await _pref).setString(key.name, value.toIso8601String());
+  }
 }
