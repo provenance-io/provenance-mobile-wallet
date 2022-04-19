@@ -46,16 +46,4 @@ class MemoryKeyValueStore implements KeyValueStore {
 
     return true;
   }
-
-  @override
-  Future<DateTime?> getDateTime(PrefKey key) async {
-    return _data[key.name] as DateTime?;
-  }
-
-  @override
-  Future<bool> setDateTime(PrefKey key, DateTime value) async {
-    _data[key.name] = value;
-
-    return true;
-  }
 }
