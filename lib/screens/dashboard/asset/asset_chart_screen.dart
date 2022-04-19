@@ -56,7 +56,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
         return Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(AssetPaths.images.background),
+              image: AssetImage(Assets.images.background),
               fit: BoxFit.cover,
               alignment: Alignment.topCenter,
             ),
@@ -72,7 +72,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
               centerTitle: true,
               title: Column(
                 children: [
-                  AssetPaths.getSvgPictureFrom(
+                  Assets.getSvgPictureFrom(
                     denom: details.asset.denom,
                     size: 30,
                   ),

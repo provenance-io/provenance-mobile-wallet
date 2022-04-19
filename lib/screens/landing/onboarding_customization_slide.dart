@@ -22,7 +22,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            AssetPaths.images.coins,
+            Assets.images.coins,
             height: 180,
           ),
         ],

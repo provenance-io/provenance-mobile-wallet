@@ -131,7 +131,7 @@ class SendAmountPageState extends State<SendAmountPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AssetPaths.getSvgPictureFrom(
+              Assets.getSvgPictureFrom(
                 denom: asset.denom,
                 size: imageDimen,
               ),

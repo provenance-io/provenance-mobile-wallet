@@ -37,7 +37,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AssetPaths.images.background),
+          image: AssetImage(Assets.images.background),
           fit: BoxFit.cover,
         ),
       ),
@@ -287,7 +287,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                       SizedBox(
                                         width: 40,
                                         height: 40,
-                                        child: AssetPaths.getSvgPictureFrom(
+                                        child: Assets.getSvgPictureFrom(
                                           denom: item.denom,
                                           size: 40,
                                         ),

@@ -21,7 +21,7 @@ class SendAssetCell extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(Spacing.xSmall),
-          child: AssetPaths.getSvgPictureFrom(
+          child: Assets.getSvgPictureFrom(
             denom: asset.displayDenom,
           ),
         ),

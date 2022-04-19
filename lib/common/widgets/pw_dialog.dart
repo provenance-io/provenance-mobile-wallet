@@ -28,7 +28,7 @@ class PwDialog {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(AssetPaths.images.background),
+                  image: AssetImage(Assets.images.background),
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
                 ),

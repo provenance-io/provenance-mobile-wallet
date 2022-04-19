@@ -76,7 +76,7 @@ class BackupCompleteScreen extends StatelessWidget {
                     ),
                     VerticalSpacer.xxLarge(),
                     Image.asset(
-                      AssetPaths.images.backupComplete,
+                      Assets.images.backupComplete,
                       width: 180,
                     ),
                     Expanded(

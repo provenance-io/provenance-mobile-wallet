@@ -51,7 +51,7 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                     VerticalSpacer.large(),
                     VerticalSpacer.medium(),
                     Image.asset(
-                      AssetPaths.images.createPassphrase,
+                      Assets.images.createPassphrase,
                       width: 180,
                     ),
                     Expanded(

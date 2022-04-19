@@ -1,15 +1,15 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/common/widgets/icon.dart';
 
-class AssetPaths {
-  static const images = Images();
+class Assets {
+  static const images = ImagePaths();
 
   static SvgPicture getSvgPictureFrom({
     required String denom,
     double? size,
   }) =>
       SvgPicture.asset(
-        AssetPaths._getImage(denom),
+        Assets._getImage(denom),
         width: size,
         height: size,
       );
@@ -17,11 +17,11 @@ class AssetPaths {
   static String _getImage(String denom) {
     switch (denom.toUpperCase()) {
       case "USDF":
-        return AssetPaths.images.usdf;
+        return Assets.images.usdf;
       case "INU":
-        return AssetPaths.images.inu;
+        return Assets.images.inu;
       case "ETF":
-        return AssetPaths.images.etf;
+        return Assets.images.etf;
       case "HASH":
       case "NHASH":
         return 'assets/${PwIcons.hashLogo}.svg';
@@ -31,8 +31,8 @@ class AssetPaths {
   }
 }
 
-class Images {
-  const Images();
+class ImagePaths {
+  const ImagePaths();
 
   final String background = 'assets/images/background.png';
   final String coins = "assets/images/coins.png";

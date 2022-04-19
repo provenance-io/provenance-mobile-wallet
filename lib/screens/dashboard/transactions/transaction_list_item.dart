@@ -32,7 +32,7 @@ class TransactionListItem extends StatelessWidget {
               SizedBox(
                 width: Spacing.largeX3,
                 height: Spacing.largeX3,
-                child: AssetPaths.getSvgPictureFrom(
+                child: Assets.getSvgPictureFrom(
                   denom: item.denom,
                   size: Spacing.largeX3,
                 ),
