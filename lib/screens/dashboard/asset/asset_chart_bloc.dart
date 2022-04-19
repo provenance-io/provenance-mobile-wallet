@@ -42,11 +42,29 @@ class AssetChartBloc extends Disposable {
         modifiedDataValue = GraphingDataValue.daily;
         break;
       case GraphingDataValue.monthly:
-        startDate = endDate.subtract(Duration(days: 365)); // 12 months
+        startDate = DateTime(
+          endDate.year - 1,
+          endDate.month,
+          endDate.day,
+          endDate.hour,
+          endDate.minute,
+          endDate.second,
+          endDate.millisecond,
+          endDate.microsecond,
+        );
         modifiedDataValue = GraphingDataValue.weekly;
         break;
       case GraphingDataValue.yearly:
-        startDate = endDate.subtract(Duration(days: 365 * 4));
+        startDate = DateTime(
+          endDate.year - 4,
+          endDate.month,
+          endDate.day,
+          endDate.hour,
+          endDate.minute,
+          endDate.second,
+          endDate.millisecond,
+          endDate.microsecond,
+        );
         modifiedDataValue = GraphingDataValue.monthly;
         break;
       default:
