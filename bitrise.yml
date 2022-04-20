@@ -19,7 +19,7 @@ workflows:
     - git-clone@6: {}
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
         - is_update: 'false'
     - cache-pull@2: {}
     - script@1:
@@ -62,7 +62,7 @@ workflows:
     - git-clone@6: {}
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
@@ -136,6 +136,11 @@ workflows:
         - color_on_error: "$COLOR_FAILURE"
         - webhook_url: "$SLACK_WEBHOOK_URL"
     - cache-push@2: {}
+    - firebase-dsym-upload@2:
+        inputs:
+        - fdu_fabric_location: "./ios/Pods/FirebaseCrashlytics/upload-symbols"
+        - fdu_dsym_location: "./build/ios/Release-prod-iphoneos/ProvenanceWallet.app.dSYM"
+        - fdu_google_services_location: "./ios/Runner/Firebase/GoogleService-io.provenance.wallet.dev-Info.plist"
     after_run: []
   deploy-prod:
     steps:
@@ -144,7 +149,7 @@ workflows:
     - git-clone@6: {}
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
@@ -212,6 +217,11 @@ workflows:
         - color_on_error: "$COLOR_FAILURE"
         - webhook_url: "$SLACK_WEBHOOK_URL"
     - cache-push@2: {}
+    - firebase-dsym-upload@2:
+        inputs:
+        - fdu_fabric_location: "./ios/Pods/FirebaseCrashlytics/upload-symbols"
+        - fdu_dsym_location: "./build/ios/Release-prod-iphoneos/ProvenanceWallet.app.dSYM"
+        - fdu_google_services_location: "./ios/Runner/Firebase/GoogleService-io.provenance.wallet-Info.plist"
     after_run: []
   PR:
     steps:
@@ -220,7 +230,7 @@ workflows:
     - git-clone@6: {}
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.8.1-stable.zip
+        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
         - is_update: 'false'
     - cache-pull@2: {}
     - script@1:

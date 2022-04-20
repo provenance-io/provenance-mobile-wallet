@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:move_to_background/move_to_background.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -102,52 +103,59 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.neutral800,
-        child: Column(
+    return WillPopScope(
+      onWillPop: () {
+        MoveToBackground.moveTaskToBack();
+
+        return Future.value(false);
+      },
+      child: Scaffold(
+        bottomNavigationBar: Container(
+          color: Theme.of(context).colorScheme.neutral800,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              VerticalSpacer.large(),
+              TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                tabs: [
+                  TabItem(
+                    0 == _currentTabIndex,
+                    Strings.dashboard,
+                    PwIcons.dashboard,
+                  ),
+                  TabItem(
+                    1 == _currentTabIndex,
+                    Strings.transactions,
+                    PwIcons.staking,
+                  ),
+                  TabItem(
+                    2 == _currentTabIndex,
+                    Strings.profile,
+                    PwIcons.userAccount,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            VerticalSpacer.large(),
-            TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.transparent,
-              tabs: [
-                TabItem(
-                  0 == _currentTabIndex,
-                  Strings.dashboard,
-                  PwIcons.dashboard,
-                ),
-                TabItem(
-                  1 == _currentTabIndex,
-                  Strings.transactions,
-                  PwIcons.staking,
-                ),
-                TabItem(
-                  2 == _currentTabIndex,
-                  Strings.profile,
-                  PwIcons.userAccount,
-                ),
-              ],
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: const [
+                  DashboardAssetFlow(),
+                  TransactionLandingTab(),
+                  ProfileScreen(),
+                ],
+              ),
             ),
           ],
         ),
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: const [
-                DashboardAssetFlow(),
-                TransactionLandingTab(),
-                ProfileScreen(),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
