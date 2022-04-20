@@ -38,6 +38,12 @@ void main() {
         streamBool,
         emits(KeyValueData(data: valueBool)),
       );
+
+      final streamString = service.stream<String>(PrefKey.testString);
+      await expectLater(
+        streamString,
+        emits(KeyValueData(data: valueString)),
+      );
     },
   );
 

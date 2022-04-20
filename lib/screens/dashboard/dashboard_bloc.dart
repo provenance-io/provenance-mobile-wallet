@@ -88,21 +88,27 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      final walletId = _walletService.events.selected.value?.id;
-      final sessionStatus = _walletSession?.sessionEvents.state.value.status ??
-          WalletConnectSessionStatus.disconnected;
-      final authStatus = get<LocalAuthHelper>().status.value;
-      if (walletId != null &&
-          sessionStatus == WalletConnectSessionStatus.disconnected &&
-          authStatus == AuthStatus.authenticated) {
-        tryRestoreSession(walletId);
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_walletSession != null) {
-        _walletSession!.closeButRetainSession();
-        _walletSession = null;
-      }
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        if (_walletSession != null) {
+          _walletSession!.closeButRetainSession();
+          _walletSession = null;
+        }
+        break;
+      case AppLifecycleState.resumed:
+        final walletId = _walletService.events.selected.value?.id;
+        final sessionStatus =
+            _walletSession?.sessionEvents.state.value.status ??
+                WalletConnectSessionStatus.disconnected;
+        final authStatus = get<LocalAuthHelper>().status.value;
+        if (walletId != null &&
+            sessionStatus == WalletConnectSessionStatus.disconnected &&
+            authStatus == AuthStatus.authenticated) {
+          tryRestoreSession(walletId);
+        }
+        break;
     }
   }
 
@@ -222,6 +228,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     String walletId,
     String addressData, {
     SessionData? sessionData,
+    Duration? remainingTime,
   }) async {
     var success = false;
 
@@ -248,6 +255,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     final walletDetails = _walletService.events.selected.value!;
     final connection = get<WalletConnectionFactory>().call(address);
     final remoteNotificationService = get<RemoteNotificationService>();
+    final keyValueService = get<KeyValueService>();
 
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
@@ -263,6 +271,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       connection: connection,
       delegate: delegate,
       remoteNotificationService: remoteNotificationService,
+      keyValueService: keyValueService,
     );
 
     delegateEvents.listen(session.delegateEvents);
@@ -287,7 +296,7 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
       );
     }
 
-    success = await session.connect(restoreData);
+    success = await session.connect(restoreData, remainingTime);
 
     return success;
   }
@@ -302,24 +311,33 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
 
   Future<bool> tryRestoreSession(String walletId) async {
     var success = false;
-    final json = await get<KeyValueService>().getString(PrefKey.sessionData);
+    final keyValueService = get<KeyValueService>();
+    final json = await keyValueService.getString(PrefKey.sessionData);
+    final date = DateTime.tryParse(
+      await keyValueService.getString(PrefKey.sessionSuspendedTime) ?? "",
+    );
     SessionData? data;
-    if (json != null) {
+
+    if (json != null && date != null) {
       try {
         data = SessionData.fromJson(jsonDecode(json));
       } on Exception {
         logError('Failed to decode session data');
       }
 
-      if (data != null && data.walletId == walletId) {
+      final remainingMinutes = 30 - DateTime.now().difference(date).inMinutes;
+
+      if (data != null && data.walletId == walletId && remainingMinutes > 0) {
         success = await connectSession(
           walletId,
           data.address,
           sessionData: data,
+          remainingTime: Duration(minutes: remainingMinutes),
         );
 
         if (!success) {
-          await get<KeyValueService>().removeString(PrefKey.sessionData);
+          await keyValueService.removeString(PrefKey.sessionData);
+          await keyValueService.removeString(PrefKey.sessionSuspendedTime);
         }
       }
     }
@@ -435,8 +453,14 @@ class DashboardBloc extends Disposable with WidgetsBindingObserver {
     load();
   }
 
-  Future<bool> _clearSessionData() {
-    return get<KeyValueService>().removeString(PrefKey.sessionData);
+  Future<bool> _clearSessionData() async {
+    final keyValueService = get<KeyValueService>();
+    final sessionDataRemoved =
+        await keyValueService.removeString(PrefKey.sessionData);
+    final timeStampRemoved =
+        await keyValueService.removeString(PrefKey.sessionSuspendedTime);
+
+    return sessionDataRemoved && timeStampRemoved;
   }
 
   Future<void> _handleDynamicLink(Uri link) async {

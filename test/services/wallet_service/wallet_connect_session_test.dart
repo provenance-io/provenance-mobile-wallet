@@ -3,6 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
@@ -22,6 +23,7 @@ final publicKey = privateKey.defaultKey().publicKey;
   WalletConnection,
   WalletConnectSessionDelegate,
   RemoteNotificationService,
+  KeyValueService,
 ])
 main() {
   group("WalletConnectSession", () {
@@ -30,12 +32,14 @@ main() {
     MockRemoteNotificationService? mockRemoteNotificationService;
     WalletConnectSession? session;
     WalletConnectSessionDelegateEvents? events;
+    MockKeyValueService? mockKeyValueService;
 
     setUp(() {
       mockWalletConnection = MockWalletConnection();
       mockWalletConnectSessionDelegate = MockWalletConnectSessionDelegate();
       mockRemoteNotificationService = MockRemoteNotificationService();
       events = WalletConnectSessionDelegateEvents();
+      mockKeyValueService = MockKeyValueService();
 
       when(mockWalletConnectSessionDelegate!.events).thenReturn(events!);
 
@@ -44,6 +48,7 @@ main() {
         connection: mockWalletConnection!,
         delegate: mockWalletConnectSessionDelegate!,
         remoteNotificationService: mockRemoteNotificationService!,
+        keyValueService: mockKeyValueService!,
       );
     });
 
@@ -81,6 +86,9 @@ main() {
           ),
         );
 
+        when(mockKeyValueService!.setString(any, any))
+            .thenAnswer((_) => Future.value(true));
+
         when(mockWalletConnection!.connect(any, any))
             .thenAnswer((_) => Future.value());
 
@@ -93,6 +101,7 @@ main() {
           mockRemoteNotificationService!
               .registerForPushNotifications(restore.data.peerId),
         );
+
         expect(result, true);
         expect(
           session!.sessionEvents.state.value.details,
@@ -113,6 +122,8 @@ main() {
       test('completed', () async {
         when(mockWalletConnectSessionDelegate!.complete(any, any))
             .thenAnswer((_) => Future.value(true));
+        when(mockKeyValueService!.setString(any, any))
+            .thenAnswer((_) => Future.value(true));
         final result = await session!
             .signTransactionFinish(requestId: "ABCD", allowed: true);
 
@@ -125,6 +136,8 @@ main() {
       test('completed', () async {
         when(mockWalletConnectSessionDelegate!.complete(any, any))
             .thenAnswer((_) => Future.value(true));
+        when(mockKeyValueService!.setString(any, any))
+            .thenAnswer((_) => Future.value(true));
         final result =
             await session!.sendMessageFinish(requestId: "ABCD", allowed: true);
 
@@ -136,6 +149,8 @@ main() {
     group('approveSession', () {
       test('success', () async {
         when(mockWalletConnectSessionDelegate!.complete(any, any))
+            .thenAnswer((_) => Future.value(true));
+        when(mockKeyValueService!.setString(any, any))
             .thenAnswer((_) => Future.value(true));
         final details = WalletConnectSessionRequestData(
           "ABC",

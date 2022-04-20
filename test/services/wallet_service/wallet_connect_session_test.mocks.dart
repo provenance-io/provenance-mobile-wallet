@@ -2,18 +2,21 @@
 // in provenance_wallet/test/services/wallet_service/wallet_connect_session_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i5;
-import 'dart:ui' as _i6;
+import 'dart:async' as _i6;
+import 'dart:ui' as _i7;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i7;
+import 'package:provenance_dart/proto.dart' as _i8;
 import 'package:provenance_dart/src/wallet_connect/wallet_connect_address.dart'
     as _i2;
-import 'package:provenance_dart/wallet_connect.dart' as _i4;
+import 'package:provenance_dart/wallet_connect.dart' as _i5;
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
+    as _i10;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
-    as _i8;
+    as _i9;
 import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart'
     as _i3;
+import 'package:rxdart/rxdart.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -31,10 +34,12 @@ class _FakeWalletConnectAddress_0 extends _i1.Fake
 class _FakeWalletConnectSessionDelegateEvents_1 extends _i1.Fake
     implements _i3.WalletConnectSessionDelegateEvents {}
 
+class _FakeValueStream_2<T> extends _i1.Fake implements _i4.ValueStream<T> {}
+
 /// A class which mocks [WalletConnection].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWalletConnection extends _i1.Mock implements _i4.WalletConnection {
+class MockWalletConnection extends _i1.Mock implements _i5.WalletConnection {
   MockWalletConnection() {
     _i1.throwOnMissingStub(this);
   }
@@ -44,32 +49,32 @@ class MockWalletConnection extends _i1.Mock implements _i4.WalletConnection {
       Invocation.getter(#address),
       returnValue: _FakeWalletConnectAddress_0()) as _i2.WalletConnectAddress);
   @override
-  _i4.WalletConnectState get value => (super.noSuchMethod(
+  _i5.WalletConnectState get value => (super.noSuchMethod(
           Invocation.getter(#value),
-          returnValue: _i4.WalletConnectState.connecting)
-      as _i4.WalletConnectState);
+          returnValue: _i5.WalletConnectState.connecting)
+      as _i5.WalletConnectState);
   @override
-  _i5.Future<void> connect(_i4.WalletConnectionDelegate? delegate,
-          [_i4.SessionRestoreData? restoreData]) =>
+  _i6.Future<void> connect(_i5.WalletConnectionDelegate? delegate,
+          [_i5.SessionRestoreData? restoreData]) =>
       (super.noSuchMethod(Invocation.method(#connect, [delegate, restoreData]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
-  _i5.Future<void> dispose() =>
+  _i6.Future<void> dispose() =>
       (super.noSuchMethod(Invocation.method(#dispose, []),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
-  _i5.Future<void> disconnect() =>
+  _i6.Future<void> disconnect() =>
       (super.noSuchMethod(Invocation.method(#disconnect, []),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
-  void addListener(_i6.VoidCallback? listener) =>
+  void addListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i6.VoidCallback? listener) =>
+  void removeListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
@@ -89,17 +94,17 @@ class MockWalletConnectSessionDelegate extends _i1.Mock
               returnValue: _FakeWalletConnectSessionDelegateEvents_1())
           as _i3.WalletConnectSessionDelegateEvents);
   @override
-  _i5.Future<bool> complete(String? requestId, bool? allowed) =>
+  _i6.Future<bool> complete(String? requestId, bool? allowed) =>
       (super.noSuchMethod(Invocation.method(#complete, [requestId, allowed]),
-          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
   @override
-  void onApproveSession(_i4.SessionRequestData? data,
-          _i4.AcceptCallback<_i4.SessionApprovalData?>? callback) =>
+  void onApproveSession(_i5.SessionRequestData? data,
+          _i5.AcceptCallback<_i5.SessionApprovalData?>? callback) =>
       super.noSuchMethod(Invocation.method(#onApproveSession, [data, callback]),
           returnValueForMissingStub: null);
   @override
   void onApproveSign(String? description, String? address, List<int>? msg,
-          _i4.AcceptCallback<List<int>?>? callback) =>
+          _i5.AcceptCallback<List<int>?>? callback) =>
       super.noSuchMethod(
           Invocation.method(
               #onApproveSign, [description, address, msg, callback]),
@@ -108,8 +113,8 @@ class MockWalletConnectSessionDelegate extends _i1.Mock
   void onApproveTransaction(
           String? description,
           String? address,
-          _i4.SignTransactionData? signTransactionData,
-          _i4.AcceptCallback<_i7.RawTxResponsePair?>? callback) =>
+          _i5.SignTransactionData? signTransactionData,
+          _i5.AcceptCallback<_i8.RawTxResponsePair?>? callback) =>
       super.noSuchMethod(
           Invocation.method(#onApproveTransaction,
               [description, address, signTransactionData, callback]),
@@ -127,19 +132,62 @@ class MockWalletConnectSessionDelegate extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoteNotificationService extends _i1.Mock
-    implements _i8.RemoteNotificationService {
+    implements _i9.RemoteNotificationService {
   MockRemoteNotificationService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<void> registerForPushNotifications(String? topic) => (super
+  _i6.Future<void> registerForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#registerForPushNotifications, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
-  _i5.Future<void> unregisterForPushNotifications(String? topic) => (super
+  _i6.Future<void> unregisterForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#unregisterForPushNotifications, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+}
+
+/// A class which mocks [KeyValueService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockKeyValueService extends _i1.Mock implements _i10.KeyValueService {
+  MockKeyValueService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<bool> containsKey(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#containsKey, [key]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+  @override
+  _i4.ValueStream<_i10.KeyValueData<T>> stream<T>(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#stream, [key]),
+              returnValue: _FakeValueStream_2<_i10.KeyValueData<T>>())
+          as _i4.ValueStream<_i10.KeyValueData<T>>);
+  @override
+  _i6.Future<bool?> getBool(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#getBool, [key]),
+          returnValue: Future<bool?>.value()) as _i6.Future<bool?>);
+  @override
+  _i6.Future<bool> setBool(_i10.PrefKey? key, bool? value) =>
+      (super.noSuchMethod(Invocation.method(#setBool, [key, value]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+  @override
+  _i6.Future<bool> removeBool(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#removeBool, [key]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+  @override
+  _i6.Future<String?> getString(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#getString, [key]),
+          returnValue: Future<String?>.value()) as _i6.Future<String?>);
+  @override
+  _i6.Future<bool> setString(_i10.PrefKey? key, String? value) =>
+      (super.noSuchMethod(Invocation.method(#setString, [key, value]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
+  @override
+  _i6.Future<bool> removeString(_i10.PrefKey? key) =>
+      (super.noSuchMethod(Invocation.method(#removeString, [key]),
+          returnValue: Future<bool>.value(false)) as _i6.Future<bool>);
 }
