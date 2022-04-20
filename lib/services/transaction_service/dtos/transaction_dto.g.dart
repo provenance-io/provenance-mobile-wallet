@@ -16,6 +16,7 @@ TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
       type: json['type'] as String?,
+      denom: json['denom'] as String?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
@@ -27,4 +28,5 @@ Map<String, dynamic> _$TransactionDtoToJson(TransactionDto instance) =>
       'status': instance.status,
       'time': instance.time?.toIso8601String(),
       'type': instance.type,
+      'denom': instance.denom,
     };

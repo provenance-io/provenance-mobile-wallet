@@ -23,7 +23,7 @@ class SendSuccessScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(AssetPaths.images.background),
+            image: AssetImage(Assets.imagePaths.background),
             fit: BoxFit.cover,
             alignment: Alignment.topCenter,
           ),
@@ -44,7 +44,7 @@ class SendSuccessScreen extends StatelessWidget {
                     spacing: 110,
                   ),
                   Image.asset(
-                    AssetPaths.images.transactionComplete,
+                    Assets.imagePaths.transactionComplete,
                     height: 80,
                     width: 80,
                   ),

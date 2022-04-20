@@ -12,6 +12,7 @@ class TransactionDto {
     this.status,
     this.time,
     this.type,
+    this.denom,
   });
 
   final int? block;
@@ -21,6 +22,7 @@ class TransactionDto {
   final String? status;
   final DateTime? time;
   final String? type;
+  final String? denom;
 
   // ignore: member-ordering
   factory TransactionDto.fromJson(Map<String, dynamic> json) =>

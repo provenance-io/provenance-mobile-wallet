@@ -60,6 +60,18 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
+              title: transaction.denom.isEmpty
+                  ? Strings.assetChartNotAvailable
+                  : Strings.tradeDetailsAssetName,
+              endChild: PwText(
+                transaction.denom,
+                style: PwTextStyle.body,
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
               title: Strings.tradeDetailsTimeStamp,
               endChild: PwText(
                 transaction.formattedTime,

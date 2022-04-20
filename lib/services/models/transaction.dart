@@ -18,7 +18,8 @@ class Transaction {
         signer = dto.signer!,
         status = dto.status!.capitalize(),
         time = dto.time!,
-        messageType = dto.type!.capitalize();
+        messageType = dto.type!.capitalize(),
+        denom = dto.denom ?? "";
 
   Transaction.fake({
     required this.block,
@@ -28,6 +29,7 @@ class Transaction {
     required this.status,
     required this.time,
     required this.messageType,
+    required this.denom,
   });
 
   final int block;
@@ -37,6 +39,7 @@ class Transaction {
   final String status;
   final DateTime time;
   final String messageType;
+  final String denom;
 
   String get formattedTimestamp {
     return DateFormat('MMM d').format(time);

@@ -65,7 +65,7 @@ class RecoverAccountScreen extends StatelessWidget {
             VerticalSpacer.large(),
             VerticalSpacer.medium(),
             Image.asset(
-              AssetPaths.images.recoverAccount,
+              Assets.imagePaths.recoverAccount,
               width: 180,
             ),
             Expanded(

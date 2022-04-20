@@ -1,4 +1,3 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -38,7 +37,7 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AssetPaths.images.background),
+          image: AssetImage(Assets.imagePaths.background),
           fit: BoxFit.cover,
         ),
       ),
@@ -288,10 +287,9 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                                       SizedBox(
                                         width: 40,
                                         height: 40,
-                                        child: SvgPicture.asset(
-                                          item.image,
-                                          width: 40,
-                                          height: 40,
+                                        child: Assets.getSvgPictureFrom(
+                                          denom: item.denom,
+                                          size: 40,
                                         ),
                                       ),
                                       HorizontalSpacer.medium(),

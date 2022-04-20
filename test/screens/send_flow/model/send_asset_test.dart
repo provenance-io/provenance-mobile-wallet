@@ -10,7 +10,6 @@ void main() {
       "nhash",
       Decimal.fromInt(1000000001),
       754.33,
-      "AA",
     );
 
     expect(asset.displayAmount, "1.000000001");
@@ -21,7 +20,6 @@ void main() {
       "nhash",
       Decimal.fromInt(1000000001),
       754.33,
-      "AA",
     );
 
     expect(asset.displayAmount, "100000000.1");
@@ -34,7 +32,6 @@ void main() {
       "nhash",
       Decimal.fromInt(1000000001),
       754.33,
-      "AA",
     );
     var copy = asset.copyWith(amount: Decimal.fromInt(500));
 
@@ -54,7 +51,6 @@ void main() {
           "nhash",
           Decimal.fromInt(20000),
           0,
-          "",
         ),
         SendAsset(
           "Usd",
@@ -62,7 +58,6 @@ void main() {
           "usd",
           Decimal.fromInt(20000),
           0,
-          "",
         ),
         SendAsset(
           "Hash",
@@ -70,7 +65,6 @@ void main() {
           "nhash",
           Decimal.fromInt(200),
           0,
-          "",
         ),
       ]);
     });

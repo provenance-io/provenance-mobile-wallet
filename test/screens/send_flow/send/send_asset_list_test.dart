@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -28,7 +29,6 @@ main() {
         "nHash",
         Decimal.fromInt(123),
         52,
-        "http://test.com",
       );
       await _build(tester, asset);
 
@@ -52,7 +52,7 @@ main() {
         find.descendant(of: textFind, matching: find.text("123")),
         findsOneWidget,
       );
-      expect(find.byType(Image), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
     });
   });
 

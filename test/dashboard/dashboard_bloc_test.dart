@@ -280,6 +280,7 @@ class TestState {
         status: id,
         time: DateTime.fromMillisecondsSinceEpoch(i),
         feeAmount: i.toString(),
+        denom: id,
       );
 
       final sendTransaction = SendTransaction.fake(

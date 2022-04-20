@@ -78,7 +78,6 @@ class SendBloc extends Disposable {
           asset.denom,
           Decimal.parse(asset.amount),
           price,
-          asset.image,
         );
       }).toList();
     });

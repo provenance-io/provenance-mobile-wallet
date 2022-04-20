@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/dashboard/transactions/transaction_details_screen.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/assets.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
@@ -32,9 +32,8 @@ class TransactionListItem extends StatelessWidget {
               SizedBox(
                 width: Spacing.largeX3,
                 height: Spacing.largeX3,
-                child: PwIcon(
-                  PwIcons.hashLogo,
-                  color: Theme.of(context).colorScheme.neutralNeutral,
+                child: Assets.getSvgPictureFrom(
+                  denom: item.denom,
                   size: Spacing.largeX3,
                 ),
               ),
@@ -43,7 +42,7 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    Strings.transactionDenomHash,
+                    item.denom,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),

@@ -30,7 +30,7 @@ class ErrorDialog extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(AssetPaths.images.background),
+            image: AssetImage(Assets.imagePaths.background),
             fit: BoxFit.cover,
             alignment: Alignment.topCenter,
           ),
@@ -72,7 +72,7 @@ class ErrorDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        AssetPaths.images.warning,
+                        Assets.imagePaths.warning,
                         height: 80,
                       ),
                     ],
