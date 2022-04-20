@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
@@ -44,25 +45,33 @@ class WalletConnectSession {
     required WalletConnection connection,
     required WalletConnectSessionDelegate delegate,
     required RemoteNotificationService remoteNotificationService,
+    required KeyValueService keyValueService,
   })  : _connection = connection,
         _remoteNotificationService = remoteNotificationService,
         _delegate = delegate,
         sessionEvents = WalletConnectSessionEvents(),
         delegateEvents = WalletConnectSessionDelegateEvents()
-          ..listen(delegate.events);
+          ..listen(delegate.events),
+        _keyValueService = keyValueService;
 
+  static const _inactivityTimeout = Duration(minutes: 30);
+  Timer? _inactivityTimer;
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
   final RemoteNotificationService _remoteNotificationService;
+  final KeyValueService _keyValueService;
   final String walletId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
 
   String? topic;
 
-  Future<bool> connect([WalletConnectSessionRestoreData? restoreData]) async {
+  Future<bool> connect([
+    WalletConnectSessionRestoreData? restoreData,
+    Duration? timeoutDuration,
+  ]) async {
     var success = false;
-
+    var inactivityTimeout = timeoutDuration ?? _inactivityTimeout;
     try {
       _connection.addListener(_statusListener);
 
@@ -71,6 +80,8 @@ class WalletConnectSession {
       success = true;
 
       if (restoreData != null) {
+        _startInactivityTimer(inactivityTimeout);
+
         log("Restored session: ${restoreData.data}");
         sessionEvents._state.value =
             WalletConnectSessionState.connected(restoreData.clientMeta);
@@ -80,6 +91,8 @@ class WalletConnectSession {
         _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
+      _inactivityTimer?.cancel();
+      _inactivityTimer = null;
       logError(
         'Failed to connect: $e',
       );
@@ -118,6 +131,8 @@ class WalletConnectSession {
     required String requestId,
     required bool allowed,
   }) async {
+    _startInactivityTimer(_inactivityTimeout);
+
     return _delegate.complete(requestId, allowed);
   }
 
@@ -125,6 +140,8 @@ class WalletConnectSession {
     required requestId,
     required bool allowed,
   }) async {
+    _startInactivityTimer(_inactivityTimeout);
+
     return _delegate.complete(requestId, allowed);
   }
 
@@ -132,6 +149,7 @@ class WalletConnectSession {
     required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
+    _startInactivityTimer(_inactivityTimeout);
     final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value =
@@ -145,6 +163,11 @@ class WalletConnectSession {
   }
 
   void _disconnect() {
+    _keyValueService.removeString(
+      PrefKey.sessionSuspendedTime,
+    );
+    _inactivityTimer?.cancel();
+    _inactivityTimer = null;
     _connection.removeListener(_statusListener);
     sessionEvents._state.value = WalletConnectSessionState.disconnected();
   }
@@ -160,5 +183,16 @@ class WalletConnectSession {
     } else if (status == WalletConnectState.connecting) {
       sessionEvents._state.value = WalletConnectSessionState.connecting();
     }
+  }
+
+  void _startInactivityTimer(Duration inactivityTimeout) {
+    _keyValueService.setString(
+      PrefKey.sessionSuspendedTime,
+      DateTime.now().toIso8601String(),
+    );
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(inactivityTimeout, () {
+      disconnect();
+    });
   }
 }
