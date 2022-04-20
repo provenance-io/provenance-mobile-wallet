@@ -263,7 +263,7 @@ class Strings {
   // RestoreAccountIntro
   static const recoverAccount = 'Recover Account';
   static const inTheFollowingStepsText =
-      "In the following steps, you'll enter your 25-word recovery passphrase to recover your account.";
+      "In the following steps, you'll enter your 24-word recovery passphrase to recover your account.";
 
   // Session Confirmation
   static const sessionApprove = 'Approve';
