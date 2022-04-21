@@ -1,4 +1,4 @@
-# Provenance Mobile Wallet
+# Provenance Blockchain Wallet
 
 A mobile wallet.
 
