@@ -46,19 +46,15 @@ class TransactionListItem extends StatelessWidget {
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 180,
-                        child: PwText(
-                          item.messageType + textDivider + item.formattedTime,
-                          color: PwColor.neutral200,
-                          style: PwTextStyle.footnote,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 180,
+                    child: PwText(
+                      item.messageType + textDivider + item.formattedTime,
+                      color: PwColor.neutral200,
+                      style: PwTextStyle.footnote,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
                   ),
                 ],
               ),
