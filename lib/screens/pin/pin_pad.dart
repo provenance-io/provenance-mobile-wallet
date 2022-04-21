@@ -117,7 +117,12 @@ class PinPadState extends State<PinPad> {
       });
 
       if (_inputCodes.length == 6) {
-        widget.onFinish(_inputCodes);
+        final copy = List<int>.from(_inputCodes);
+
+        widget.onFinish(copy);
+        setState(() {
+          _inputCodes.clear();
+        });
       }
     }
   }
