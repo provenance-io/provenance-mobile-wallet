@@ -63,13 +63,13 @@ android {
     productFlavors {
         prod {
             dimension "app"
-            resValue "string", "app_name", "Provenance Wallet"
+            resValue "string", "app_name", "Provenance Blockchain Wallet"
         }
 
         dev {
             dimension "app"
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "Prov Wallet Dev"
+            resValue "string", "app_name", "Prov Blockchain Wallet Dev"
         }
     }
     
