@@ -4,6 +4,20 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/pin/code_panel.dart';
 import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
 
+double _clamp(
+  double value,
+  double min,
+  double max,
+) {
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
+}
+
 class PinPad extends StatefulWidget {
   const PinPad({
     required this.onFinish,
@@ -109,49 +123,80 @@ class PinPadState extends State<PinPad> {
   }
 
   Widget _buildGridView(BuildContext context) {
-    var children = <Widget>[];
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final availableHeight = _clamp(
+            constraints.maxHeight,
+            220,
+            480,
+          );
+          final availableWidth = _clamp(
+            constraints.maxWidth,
+            0,
+            480,
+          );
 
-    for (var i = 0; i < _numbers.length; i++) {
-      if (i == _numbers.length - 1) {
-        children.add(Container());
+          const int columnCount = 3;
+          final maxCrossExtent = availableWidth / columnCount;
+          final maxMainExtent = availableHeight / 4;
 
-        children.add(ContainerCircleButton(
-          child: PwText(
-            _numbers[i].toString(),
-            style: PwTextStyle.display1,
-          ),
-          onClick: () {
-            _onCodeClick(_numbers[i]);
-          },
-        ));
-        children.add(ContainerCircleButton(
-          child: PwIcon(
-            PwIcons.remove,
-            size: 22,
-            color: Theme.of(context).colorScheme.neutralNeutral,
-          ),
-          onClick: _deleteCode,
-        ));
-      } else {
-        children.add(ContainerCircleButton(
-          child: PwText(
-            _numbers[i].toString(),
-            style: PwTextStyle.display1,
-          ),
-          onClick: () {
-            _onCodeClick(_numbers[i]);
-          },
-        ));
-      }
-    }
+          final ratio = maxCrossExtent / maxMainExtent;
 
-    return GridView.count(
-      clipBehavior: Clip.none,
-      crossAxisCount: 3,
-      childAspectRatio: 1.6,
-      mainAxisSpacing: 35,
-      padding: EdgeInsets.all(8),
-      children: children,
+          var children = <Widget>[];
+
+          for (var i = 0; i < _numbers.length; i++) {
+            if (i == _numbers.length - 1) {
+              children.add(Container());
+
+              children.add(ContainerCircleButton(
+                child: PwText(
+                  _numbers[i].toString(),
+                  style: PwTextStyle.display1,
+                ),
+                onClick: () {
+                  _onCodeClick(_numbers[i]);
+                },
+              ));
+              children.add(ContainerCircleButton(
+                child: PwIcon(
+                  PwIcons.remove,
+                  size: 22,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
+                ),
+                onClick: _deleteCode,
+              ));
+            } else {
+              children.add(ContainerCircleButton(
+                child: PwText(
+                  _numbers[i].toString(),
+                  style: PwTextStyle.display1,
+                ),
+                onClick: () {
+                  _onCodeClick(_numbers[i]);
+                },
+              ));
+            }
+          }
+
+          return Center(
+            child: SizedBox(
+              height: availableHeight,
+              width: availableWidth,
+              child: GridView.count(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                crossAxisCount: columnCount,
+                childAspectRatio: ratio,
+                padding: EdgeInsets.zero,
+                children: children,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
