@@ -148,7 +148,7 @@ class PinPadState extends State<PinPad> {
     return GridView.count(
       clipBehavior: Clip.none,
       crossAxisCount: 3,
-      childAspectRatio: 1.6,
+      childAspectRatio: 1.5,
       mainAxisSpacing: 35,
       padding: EdgeInsets.all(8),
       children: children,
