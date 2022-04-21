@@ -42,28 +42,19 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    item.denom,
+                    item.displayDenom,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
-                  Row(
-                    children: [
-                      PwText(
-                        item.messageType,
-                        color: PwColor.neutral200,
-                        style: PwTextStyle.footnote,
-                      ),
-                      PwText(
-                        textDivider,
-                        color: PwColor.neutral200,
-                        style: PwTextStyle.footnote,
-                      ),
-                      PwText(
-                        item.formattedTimestamp,
-                        color: PwColor.neutral200,
-                        style: PwTextStyle.footnote,
-                      ),
-                    ],
+                  SizedBox(
+                    width: 180,
+                    child: PwText(
+                      item.messageType + textDivider + item.formattedTime,
+                      color: PwColor.neutral200,
+                      style: PwTextStyle.footnote,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
                   ),
                 ],
               ),
