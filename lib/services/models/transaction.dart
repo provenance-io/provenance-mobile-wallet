@@ -41,6 +41,14 @@ class Transaction {
   final String messageType;
   final String denom;
 
+  String get displayDenom {
+    return denom.isEmpty
+        ? Strings.assetChartNotAvailable
+        : 'nhash' == denom
+            ? Strings.transactionDenomHash
+            : denom.capitalize();
+  }
+
   String get formattedTimestamp {
     return DateFormat('MMM d').format(time);
   }
