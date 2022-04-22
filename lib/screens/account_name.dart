@@ -35,6 +35,10 @@ class AccountName extends HookWidget {
                 flowType == WalletAddImportType.dashboardRecover
             ? PwIcons.back
             : null,
+        bottom: ProgressStepper(
+          currentStep,
+          numberOfSteps ?? 1,
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -44,15 +48,6 @@ class AccountName extends HookWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ProgressStepper(
-                currentStep,
-                numberOfSteps ?? 1,
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: Spacing.medium,
-                ),
-              ),
               VerticalSpacer.largeX3(),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
