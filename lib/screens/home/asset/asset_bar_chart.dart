@@ -9,8 +9,8 @@ import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class AssetChartPoinData {
-  AssetChartPoinData(
+class AssetChartPointData {
+  AssetChartPointData(
     this.price,
     this.percentChange,
     this.timestamp,
@@ -34,7 +34,8 @@ class AssetBarChart extends StatelessWidget {
   final Color graphColor;
   final Color graphFillColor;
   final Color labelColor;
-  final ValueNotifier<AssetChartPoinData?> changeNotifier = ValueNotifier(null);
+  final ValueNotifier<AssetChartPointData?> changeNotifier =
+      ValueNotifier(null);
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +141,7 @@ class AssetBarChart extends StatelessWidget {
       children: [
         SizedBox(
           height: 24,
-          child: ValueListenableBuilder<AssetChartPoinData?>(
+          child: ValueListenableBuilder<AssetChartPointData?>(
             valueListenable: changeNotifier,
             builder: (
               context,
@@ -225,7 +226,7 @@ class AssetBarChart extends StatelessWidget {
                     final percentChange =
                         (amountChanged / (currentValue * 1000).toInt()) / 100;
 
-                    changeNotifier.value = AssetChartPoinData(
+                    changeNotifier.value = AssetChartPointData(
                       amountChanged / 1000,
                       percentChange,
                       DateTime.fromMillisecondsSinceEpoch(
@@ -414,7 +415,7 @@ class AssetBarChart extends StatelessWidget {
 class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
   PriceChangeIndicator(this.chartData, {Key? key}) : super(key: key);
 
-  final AssetChartPoinData? chartData;
+  final AssetChartPointData? chartData;
 
   @override
   PwColor? get color {
