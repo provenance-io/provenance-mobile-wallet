@@ -34,6 +34,9 @@ class EnableFaceIdScreen extends StatelessWidget {
   final BiometryType biometryType;
   final authHelper = get<LocalAuthHelper>();
 
+  static final keyEnableButton = ValueKey('$EnableFaceIdScreen.enable_button');
+  static final keySkipButton = ValueKey('$EnableFaceIdScreen.skip_button');
+
   @override
   Widget build(BuildContext context) {
     String header;
@@ -66,6 +69,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     Widget skipButton;
     skipButton = biometryType == BiometryType.none
         ? PwTextButton.primaryAction(
+            key: keySkipButton,
             context: context,
             onPressed: () async {
               _submit(context, useBiometry: false);
@@ -73,6 +77,7 @@ class EnableFaceIdScreen extends StatelessWidget {
             text: Strings.skipForNow,
           )
         : PwTextButton(
+            key: keySkipButton,
             child: PwText(
               Strings.skipForNow,
               style: PwTextStyle.subhead,
@@ -149,6 +154,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
+                        key: keyEnableButton,
                         child: PwText(
                           Strings.enable,
                           style: PwTextStyle.bodyBold,

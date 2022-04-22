@@ -5,12 +5,13 @@ import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-// TODO: On init, activate notifications.
-
 class WalletSetupConfirmation extends StatelessWidget {
   const WalletSetupConfirmation({
     Key? key,
   }) : super(key: key);
+
+  static final keyContinueButton =
+      ValueKey('$WalletSetupConfirmation.continue_button');
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +62,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
+                        key: keyContinueButton,
                         child: PwText(
                           Strings.continueName,
                           style: PwTextStyle.subhead,

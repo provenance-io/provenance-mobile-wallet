@@ -65,7 +65,12 @@ import 'util/get.dart';
 const _testingCrashlytics = false;
 const _tag = 'main';
 
-void main() async {
+void main() {
+  final originalOnError = FlutterError.onError;
+  FlutterError.onError = (FlutterErrorDetails errorDetails) {
+    originalOnError?.call(errorDetails);
+    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+  };
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -87,7 +92,6 @@ void main() async {
 
       final firebaseMessaging = FirebaseMessaging.instance;
       final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-      await pushNotificationHelper.init();
 
       get.registerLazySingleton<RemoteNotificationService>(() {
         return DefaultRemoteNotificationService(pushNotificationHelper);
@@ -308,12 +312,4 @@ Future<void> _initializeCrashlytics(KeyValueService service) async {
           !kDebugMode);
   await FirebaseCrashlytics.instance
       .setCrashlyticsCollectionEnabled(allowCrashlytics);
-
-  // Pass all uncaught errors to Crashlytics.
-  final originalOnError = FlutterError.onError;
-  FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-    await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    // Forward to original handler.
-    originalOnError?.call(errorDetails);
-  };
 }

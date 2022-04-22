@@ -18,6 +18,9 @@ class LandingScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  static final keyRecoverWalletButton =
+      ValueKey('$LandingScreen.recover_wallet_button');
+
   @override
   State<StatefulWidget> createState() {
     return _LandingScreenState();
@@ -134,6 +137,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   }
 
                   return PwTextButton(
+                    key: LandingScreen.keyRecoverWalletButton,
                     child: PwText(
                       Strings.recoverWallet,
                       style: PwTextStyle.body,
