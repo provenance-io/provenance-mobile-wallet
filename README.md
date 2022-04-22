@@ -157,6 +157,17 @@ This can help provide more insight into the Gradle build
 1. Open the Android project in Android Studio (the `android` dir that contains `settings.gradle`)
 2. Click run
 
+## Testing
+### Running Integration Tests
+1. Run `./generateSampleTestData.sh` to generate the test data json file `../integration_test_data.json`
+2. In the generated json file, replace the placeholder text with a space-separated 24 word Testnet seed phrase
+    1. Do not use a Mainnet seed phrase; this is unprotected
+    2. Currently the account does not require any Hash
+4. Connect a device
+5. Run `./runIntegrationTests.sh`  
+
+Note: You will have to manually address any system prompts (e.g. Face ID, permissions requests, etc.) as they pop up
+
 ## Firebase
 [Firebase Console](https://console.firebase.google.com/project/provenance-wallet/overview)
 
