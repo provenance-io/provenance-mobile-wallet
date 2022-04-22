@@ -139,7 +139,7 @@ workflows:
     - firebase-dsym-upload@2:
         inputs:
         - fdu_fabric_location: "./ios/Pods/FirebaseCrashlytics/upload-symbols"
-        - fdu_dsym_location: "./build/ios/Release-prod-iphoneos/ProvenanceWallet.app.dSYM"
+        - fdu_dsym_location: "./build/ios/Release-dev-iphoneos/ProvenanceWallet.app.dSYM"
         - fdu_google_services_location: "./ios/Runner/Firebase/GoogleService-io.provenance.wallet.dev-Info.plist"
     after_run: []
   deploy-prod:
@@ -156,6 +156,7 @@ workflows:
     - ios-auto-provision-appstoreconnect@2.2:
         inputs:
         - verbose_log: 'yes'
+        - scheme: "$BITRISE_PROD_SCHEME"
         - distribution_type: app-store
     - set-xcode-build-number@1:
         inputs:
