@@ -174,6 +174,7 @@ workflows:
         - configuration: ''
         - cache_level: none
         - distribution_method: app-store
+        - scheme: "$BITRISE_PROD_SCHEME"
         - export_method: app-store
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
