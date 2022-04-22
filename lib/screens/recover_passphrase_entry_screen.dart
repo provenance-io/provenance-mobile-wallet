@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
+import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -107,10 +108,7 @@ class RecoverPassphraseEntryScreenState
           leadingIcon: PwIcons.back,
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        textDirection: TextDirection.ltr,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: PwOnboardingScreen(
         children: [
           ProgressStepper(
             widget.currentStep,
@@ -166,106 +164,104 @@ class RecoverPassphraseEntryScreenState
               );
             },
           ),
-          Expanded(
-            child: ListView.separated(
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Column(
               key: RecoverPassphraseEntryScreen.wordList,
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-              ),
-              itemBuilder: (context, index) {
-                final textController = textControllers[index];
-                final focusNode = focusNodes[index];
+              mainAxisSize: MainAxisSize.min,
+              children: textControllers.map(
+                (textController) {
+                  final index = textControllers.indexOf(textController);
+                  final focusNode = focusNodes[index];
 
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    VerticalSpacer.xxLarge(),
-                    SizedBox(
-                      height: 22,
-                      child: Row(
-                        children: [
-                          PwText(
-                            Strings.recoverPassphraseWord(index + 1),
-                          ),
-                        ],
-                      ),
-                    ),
-                    VerticalSpacer.small(),
-                    _TextFormField(
-                      key: RecoverPassphraseEntryScreen
-                          .keyPassphraseWordTextField(index),
-                      controller: textController,
-                      focusNode: focusNode,
-                    ),
-                    index != textControllers.length - 1
-                        ? Container()
-                        : Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: Spacing.largeX4,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      VerticalSpacer.xxLarge(),
+                      SizedBox(
+                        height: 22,
+                        child: Row(
+                          children: [
+                            PwText(
+                              Strings.recoverPassphraseWord(index + 1),
                             ),
-                            child: PwButton(
-                              key: RecoverPassphraseEntryScreen
-                                  .keyContinueButton,
-                              child: PwText(
-                                Strings.continueName,
-                                style: PwTextStyle.bodyBold,
+                          ],
+                        ),
+                      ),
+                      VerticalSpacer.small(),
+                      _TextFormField(
+                        key: RecoverPassphraseEntryScreen
+                            .keyPassphraseWordTextField(index),
+                        controller: textController,
+                        focusNode: focusNode,
+                      ),
+                      index != textControllers.length - 1
+                          ? Container()
+                          : Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: Spacing.largeX4,
                               ),
-                              onPressed: () async {
-                                if (textControllers
-                                    .every((e) => e.text.isNotEmpty)) {
-                                  final words = textControllers
-                                      .map((e) => e.text.trim())
-                                      .toList();
+                              child: PwButton(
+                                key: RecoverPassphraseEntryScreen
+                                    .keyContinueButton,
+                                child: PwText(
+                                  Strings.continueName,
+                                  style: PwTextStyle.bodyBold,
+                                ),
+                                onPressed: () async {
+                                  if (textControllers
+                                      .every((e) => e.text.isNotEmpty)) {
+                                    final words = textControllers
+                                        .map((e) => e.text.trim())
+                                        .toList();
 
-                                  if (widget.flowType ==
-                                      WalletAddImportType.onBoardingRecover) {
-                                    Navigator.of(context).push(CreatePin(
-                                      widget.flowType,
-                                      accountName: widget.accountName,
-                                      currentStep: widget.currentStep + 1,
-                                      numberOfSteps: widget.numberOfSteps,
-                                      words: words,
-                                    ).route());
-                                  } else {
-                                    ModalLoadingRoute.showLoading(
-                                      "",
-                                      context,
-                                    );
+                                    if (widget.flowType ==
+                                        WalletAddImportType.onBoardingRecover) {
+                                      Navigator.of(context).push(CreatePin(
+                                        widget.flowType,
+                                        accountName: widget.accountName,
+                                        currentStep: widget.currentStep + 1,
+                                        numberOfSteps: widget.numberOfSteps,
+                                        words: words,
+                                      ).route());
+                                    } else {
+                                      ModalLoadingRoute.showLoading(
+                                        "",
+                                        context,
+                                      );
 
-                                    final chainId =
-                                        await _keyValueService.getString(
-                                              PrefKey.defaultChainId,
-                                            ) ??
-                                            ChainId.defaultChainId;
-                                    final coin = ChainId.toCoin(chainId);
+                                      final chainId =
+                                          await _keyValueService.getString(
+                                                PrefKey.defaultChainId,
+                                              ) ??
+                                              ChainId.defaultChainId;
+                                      final coin = ChainId.toCoin(chainId);
 
-                                    await get<WalletService>().addWallet(
-                                      phrase: words,
-                                      name: widget.accountName,
-                                      coin: coin,
-                                    );
+                                      await get<WalletService>().addWallet(
+                                        phrase: words,
+                                        name: widget.accountName,
+                                        coin: coin,
+                                      );
 
-                                    ModalLoadingRoute.dismiss(context);
+                                      ModalLoadingRoute.dismiss(context);
 
-                                    final steps = widget.currentStep;
-                                    for (var i = steps; i >= 1; i--) {
-                                      Navigator.pop(context);
+                                      final steps = widget.currentStep;
+                                      for (var i = steps; i >= 1; i--) {
+                                        Navigator.pop(context);
+                                      }
                                     }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Container();
-              },
-              itemCount: textControllers.length,
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
+                    ],
+                  );
+                },
+              ).toList(),
             ),
           ),
         ],

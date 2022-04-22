@@ -52,9 +52,13 @@ class WalletSetupConfirmation extends StatelessWidget {
                     ),
                     VerticalSpacer.large(),
                     VerticalSpacer.medium(),
-                    Image.asset(
-                      Assets.imagePaths.walletFinished,
+                    Container(
                       width: 180,
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        Assets.imagePaths.walletFinished,
+                        width: 180,
+                      ),
                     ),
                     Expanded(
                       child: Container(),
