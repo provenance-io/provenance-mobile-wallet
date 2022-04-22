@@ -33,6 +33,10 @@ class BackupCompleteScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: Strings.backupComplete,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          currentStep ?? 0,
+          numberOfSteps ?? 1,
+        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -46,15 +50,6 @@ class BackupCompleteScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ProgressStepper(
-                      currentStep ?? 0,
-                      numberOfSteps ?? 1,
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 12,
-                      ),
-                    ),
                     VerticalSpacer.largeX6(),
                     VerticalSpacer.largeX5(),
                     PwText(

@@ -95,6 +95,10 @@ class EnableFaceIdScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: header,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          currentStep ?? 0,
+          numberOfSteps ?? 1,
+        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -107,15 +111,6 @@ class EnableFaceIdScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ProgressStepper(
-                    currentStep ?? 0,
-                    numberOfSteps ?? 1,
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 12,
-                    ),
-                  ),
                   VerticalSpacer.custom(
                     spacing: 104,
                   ),
