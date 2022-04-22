@@ -8,8 +8,10 @@ part of 'integration_test_data.dart';
 
 IntegrationTestData _$IntegrationTestDataFromJson(Map<String, dynamic> json) =>
     IntegrationTestData(
-      recoverWalletTest: RecoverWalletTestData.fromJson(
-          json['recoverWalletTest'] as Map<String, dynamic>),
+      recoverWalletTest: json['recoverWalletTest'] == null
+          ? null
+          : RecoverWalletTestData.fromJson(
+              json['recoverWalletTest'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$IntegrationTestDataToJson(
@@ -21,7 +23,7 @@ Map<String, dynamic> _$IntegrationTestDataToJson(
 RecoverWalletTestData _$RecoverWalletTestDataFromJson(
         Map<String, dynamic> json) =>
     RecoverWalletTestData(
-      recoveryPhrase: json['recoveryPhrase'] as String,
+      recoveryPhrase: json['recoveryPhrase'] as String?,
     );
 
 Map<String, dynamic> _$RecoverWalletTestDataToJson(

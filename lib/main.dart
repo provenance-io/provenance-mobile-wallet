@@ -15,7 +15,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
