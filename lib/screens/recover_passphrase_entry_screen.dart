@@ -198,6 +198,9 @@ class RecoverPassphraseEntryScreenState
                             .keyPassphraseWordTextField(index),
                         controller: textController,
                         focusNode: focusNode,
+                        inputAction: (textControllers.last != textController)
+                            ? TextInputAction.next
+                            : TextInputAction.done,
                       ),
                       index != textControllers.length - 1
                           ? Container()
@@ -316,6 +319,7 @@ class _TextFormField extends StatelessWidget {
     this.focusNode,
     this.handlePaste,
     this.controller,
+    this.inputAction = TextInputAction.done,
   }) : super(key: key);
 
   final TextInputType? keyboardType;
@@ -324,6 +328,7 @@ class _TextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final Function? handlePaste;
+  final TextInputAction inputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -335,6 +340,7 @@ class _TextFormField extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       focusNode: focusNode,
+      textInputAction: inputAction,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (word) {
         if (word == null || word.isEmpty) {
