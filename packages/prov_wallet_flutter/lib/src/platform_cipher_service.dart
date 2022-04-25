@@ -2,22 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-
-class CipherServiceError {
-  CipherServiceError({
-    this.message,
-    this.details,
-  });
-
-  final String? message;
-  final String? details;
-}
+import 'package:prov_wallet_flutter/src/cipher_service_error.dart';
+import 'package:prov_wallet_flutter/src/cipher_service_error_code.dart';
 
 class PlatformCipherService implements CipherService {
   static const _channel = const MethodChannel('prov_wallet_flutter');
 
   final _errorStream = StreamController<CipherServiceError>.broadcast();
 
+  @override
   Stream<CipherServiceError> get error => _errorStream.stream;
 
   @override
@@ -244,10 +237,12 @@ class PlatformCipherService implements CipherService {
   }
 
   Future<void> _handleException(PlatformException e) async {
+    final code = CipherServiceErrorCode.values.byName(e.code);
     final message = e.message;
     final details = e.details as String?;
 
     final error = CipherServiceError(
+      code: code,
       message: message,
       details: details,
     );

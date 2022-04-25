@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:prov_wallet_flutter/src/biometry_type.dart';
+import 'package:prov_wallet_flutter/src/cipher_service_error.dart';
 
 abstract class CipherService {
   CipherService._();
 
   Future<String?> get platformVersion;
+
+  Stream<CipherServiceError> get error;
 
   Future<BiometryType> getBiometryType();
 

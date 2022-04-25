@@ -1,8 +1,19 @@
 import Flutter
 import Foundation
+import UIKit
 
 public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
     var flutterChannel: FlutterMethodChannel?
+    let cipherService: CipherService
+    let upgradeTask: Task<Void, Error>
+
+    override public init() {
+        let service = CipherService()
+        cipherService = service
+        upgradeTask = Task {
+            try await service.upgrade()
+        }
+    }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "prov_wallet_flutter", binaryMessenger: registrar.messenger())
@@ -14,143 +25,100 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if call.method == "getPlatformVersion" {
-            result("iOS " + UIDevice.current.systemVersion)
-        } else if call.method == "getBiometryType" {
-            let type = CipherService.getBiometryType()
-            result(type.rawValue)
-        } else if call.method == "authenticateBiometry" {
-            CipherService.biometryAuth { success in result(success) }
-        } else if call.method == "getLockScreenEnabled" {
-            let enabled = CipherService.getLockScreenEnabled()
-            result(enabled)
-        } else if call.method == "resetAuth" {
-            let success = CipherService.resetAuth()
-            result(success)
-        } else if call.method == "encryptKey" {
-            var success = false
+        Task {
+            var value: Any?
 
             do {
-                let argsFormatted = call.arguments as? [String: Any]
-                guard let id = argsFormatted?["id"] as? String else {
-                    throw PluginError(kind: .invalidArgument, message: "id is required")
+                try await upgradeTask.value
+
+                if call.method == "getPlatformVersion" {
+                    let systemVersion = await UIDevice.current.systemVersion
+                    value = "iOS " + systemVersion
+                } else if call.method == "getBiometryType" {
+                    let type = cipherService.getBiometryType()
+                    value = type.rawValue
+                } else if call.method == "authenticateBiometry" {
+                    value = await cipherService.authenticate()
+                } else if call.method == "getLockScreenEnabled" {
+                    value = cipherService.getLockScreenEnabled()
+                } else if call.method == "resetAuth" {
+                    value = cipherService.resetAuth()
+                } else if call.method == "encryptKey" {
+                    let argsFormatted = call.arguments as? [String: Any]
+                    guard let id = argsFormatted?["id"] as? String else {
+                        throw CipherServiceError(kind: .invalidArgument, message: "id is required")
+                    }
+                    guard let privateKey = argsFormatted?["private_key"] as? String else {
+                        throw CipherServiceError(kind: .invalidArgument, message: "privateKey is required")
+                    }
+
+                    try await cipherService.encryptKey(id: id, plainText: privateKey)
+
+                    value = true
+                } else if call.method == "decryptKey" {
+                    let argsFormatted = call.arguments as? [String: Any]
+                    guard let id = argsFormatted?["id"] as? String else {
+                        throw CipherServiceError(kind: .invalidArgument, message: "id is required")
+                    }
+
+                    value = try await cipherService.decryptKey(id: id)
+                } else if call.method == "removeKey" {
+                    let argsFormatted = call.arguments as? [String: Any]
+                    guard let id = argsFormatted?["id"] as? String else {
+                        throw CipherServiceError(kind: .invalidArgument, message: "id is required")
+                    }
+
+                    value = try cipherService.removeKey(id: id)
+                } else if call.method == "resetKeys" {
+                    value = cipherService.resetKeys()
+                } else if call.method == "getUseBiometry" {
+                    value = cipherService.getUseBiometry()
+                } else if call.method == "setUseBiometry" {
+                    let argsFormatted = call.arguments as? [String: Any]
+                    let useBiometry = argsFormatted?["use_biometry"] as? Bool ?? true
+
+                    cipherService.setUseBiometry(useBiometry: useBiometry)
+                    value = true
+                } else if call.method == "getPin" {
+                    value = cipherService.getPin()
+                } else if call.method == "setPin" {
+                    let argsFormatted = call.arguments as? [String: Any]
+                    guard let pin = argsFormatted?["pin"] as? String else {
+                        throw CipherServiceError(kind: .invalidArgument, message: "pin is required")
+                    }
+
+                    value = try cipherService.setPin(pin: pin)
+                } else if call.method == "deletePin" {
+                    value = cipherService.deletePin()
                 }
-                guard let privateKey = argsFormatted?["private_key"] as? String else {
-                    throw PluginError(kind: .invalidArgument, message: "privateKey is required")
-                }
-
-                try CipherService.encryptKey(id: id, plainText: privateKey)
-
-                success = true
             } catch {
-                showError(title: "Encrypt", error: error)
+                Utilities.log("Plugin error: \(error)")
+                value = getFlutterError(error: error)
             }
 
-            result(success)
-        } else if call.method == "decryptKey" {
-            var key: String?
+            let ret = value
 
-            do {
-                let argsFormatted = call.arguments as? [String: Any]
-                guard let id = argsFormatted?["id"] as? String else {
-                    throw PluginError(kind: .invalidArgument, message: "id is required")
-                }
-
-                key = try CipherService.decryptKey(id: id)
-            } catch {
-                showError(title: "Decrypt", error: error)
+            await MainActor.run {
+                result(ret)
             }
-
-            result(key)
-        } else if call.method == "removeKey" {
-            var success = false
-
-            do {
-                let argsFormatted = call.arguments as? [String: Any]
-                guard let id = argsFormatted?["id"] as? String else {
-                    throw PluginError(kind: .invalidArgument, message: "id is required")
-                }
-
-                success = try CipherService.removeKey(id: id)
-            } catch {
-                showError(title: "Remove Key", error: error)
-            }
-
-            result(success)
-        } else if call.method == "resetKeys" {
-            CipherService.resetKeys()
-
-            result(true)
-        } else if call.method == "getUseBiometry" {
-            let useBiometry = CipherService.getUseBiometry()
-
-            result(useBiometry)
-        } else if call.method == "setUseBiometry" {
-            var success = false
-
-            do {
-                let argsFormatted = call.arguments as? [String: Any]
-                let useBiometry = argsFormatted?["use_biometry"] as? Bool ?? true
-
-                try CipherService.setUseBiometry(useBiometry: useBiometry)
-                success = true
-            } catch {
-                showError(title: "Set Biometry", error: error)
-            }
-
-            result(success)
-        } else if call.method == "getPin" {
-            var value: String?
-
-            do {
-                value = try CipherService.getPin()
-            } catch {
-                showError(title: "Get pin", error: error)
-            }
-
-            result(value)
-        } else if call.method == "setPin" {
-            var success = false
-
-            do {
-                let argsFormatted = call.arguments as? [String: Any]
-                guard let pin = argsFormatted?["pin"] as? String else {
-                    throw PluginError(kind: .invalidArgument, message: "pin is required")
-                }
-
-                success = try CipherService.setPin(pin: pin)
-
-            } catch {
-                showError(title: "Set pin", error: error)
-            }
-
-            result(success)
-        } else if call.method == "deletePin" {
-            let success = CipherService.deletePin()
-
-            result(success)
         }
     }
 
-    private func showError(title: String, error: Error) {
+    private func getFlutterError(error: Error) -> FlutterError {
+        var code: String
         var message: String
-        if error is ProvenanceWalletError {
-            message = (error as! ProvenanceWalletError).message
-        } else if error is PluginError {
-            message = (error as! PluginError).message
+        var details: Error?
+
+        if error is CipherServiceError {
+            let provError = error as! CipherServiceError
+            code = String(describing: provError.kind)
+            message = provError.message
         } else {
+            code = String(describing: CipherServiceError.CipherServiceErrorCode.unknown)
             message = error.localizedDescription
+            details = error
         }
 
-        ErrorHandler.show(title: title, message: message, completionHandler: nil)
+        return FlutterError(code: code, message: message, details: details)
     }
-}
-
-struct PluginError: Error {
-    enum ErrorKind {
-        case invalidArgument
-    }
-
-    let kind: ErrorKind
-    let message: String
 }

@@ -15,13 +15,6 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.*
 import java.io.*
 
-class Error {
-    companion object {
-        const val userNotAuthenticated = "user_not_authenticated"
-        const val unknown = "unknown"
-    }
-}
-
 class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
     private companion object {
         val TAG = "$ProvWalletFlutterPlugin"
@@ -128,16 +121,16 @@ class ProvWalletFlutterPlugin: FlutterPlugin, MethodCallHandler {
                 val printWriter = PrintWriter(stringWriter)
                 e.printStackTrace(printWriter)
 
-                var details = e.toString()
+                val details = e.toString()
 
                 Log.e(TAG, "Exception occurred", e)
 
                 when (e) {
                     is UserNotAuthenticatedException -> {
-                        result.error(Error.userNotAuthenticated, e.message, details)
+                        result.error(CipherServiceErrorCode.notAuthenticated.name, e.message, details)
                     }
                     else -> {
-                        result.error(Error.unknown, e.message, details)
+                        result.error(CipherServiceErrorCode.unknown.name, e.message, details)
                     }
                 }
             }
