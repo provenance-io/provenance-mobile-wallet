@@ -103,6 +103,12 @@ class DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isTallScreen = (mediaQuery.size.height > 600);
+
+    final double topPadding = (isTallScreen) ? 10 : 5;
+    final double bottomPadding = (isTallScreen) ? 28 : 5;
+
     return WillPopScope(
       onWillPop: () {
         MoveToBackground.moveTaskToBack();
@@ -124,16 +130,22 @@ class DashboardScreenState extends State<DashboardScreen>
                     0 == _currentTabIndex,
                     Strings.dashboard,
                     PwIcons.dashboard,
+                    topPadding: topPadding,
+                    bottomPadding: bottomPadding,
                   ),
                   TabItem(
                     1 == _currentTabIndex,
                     Strings.transactions,
                     PwIcons.staking,
+                    topPadding: topPadding,
+                    bottomPadding: bottomPadding,
                   ),
                   TabItem(
                     2 == _currentTabIndex,
                     Strings.profile,
                     PwIcons.userAccount,
+                    topPadding: topPadding,
+                    bottomPadding: bottomPadding,
                   ),
                 ],
               ),
