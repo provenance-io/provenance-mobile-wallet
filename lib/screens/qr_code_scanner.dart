@@ -7,10 +7,10 @@ typedef IsValidCallback = Future<bool> Function(String input);
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({
     Key? key,
-    this.isValidCallback,
+    required this.isValidCallback,
   }) : super(key: key);
 
-  final IsValidCallback? isValidCallback;
+  final IsValidCallback isValidCallback;
 
   @override
   createState() => QRCodeScannerState();
@@ -86,12 +86,12 @@ class QRCodeScannerState extends State<QRCodeScanner> {
 
   _handleQrData(String qrData) async {
     await controller?.pauseCamera();
-    final isValid = await widget.isValidCallback?.call(qrData) ?? true;
+    final isValid = await widget.isValidCallback.call(qrData);
     if (isValid && !_handled) {
       _handled = true;
       Navigator.of(context).pop(qrData);
     } else {
-      controller?.resumeCamera();
+      await controller?.resumeCamera();
     }
   }
 
