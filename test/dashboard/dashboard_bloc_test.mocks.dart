@@ -5,7 +5,7 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
+import 'package:provenance_blockchain_wallet/services/remote_notification/remote_notification_service.dart'
     as _i2;
 
 // ignore_for_file: type=lint

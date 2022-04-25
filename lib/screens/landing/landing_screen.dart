@@ -1,17 +1,17 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
-import 'package:provenance_wallet/screens/landing/onboarding_landing_slide.dart';
-import 'package:provenance_wallet/screens/landing/page_indicator.dart';
-import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/local_auth_helper.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_blockchain_wallet/screens/account_name.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/onboarding_customization_slide.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/onboarding_fundamentals_slide.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/onboarding_landing_slide.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/page_indicator.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/local_auth_helper.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({

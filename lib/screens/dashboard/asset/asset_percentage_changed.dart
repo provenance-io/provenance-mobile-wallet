@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
-import 'package:provenance_wallet/util/extensions/double_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
+import 'package:provenance_blockchain_wallet/util/extensions/double_extensions.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 class AssetPercentageChanged extends StatelessWidget {
   const AssetPercentageChanged({Key? key}) : super(key: key);

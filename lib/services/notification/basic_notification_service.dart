@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/notification/notification_group.dart';
-import 'package:provenance_wallet/services/notification/notification_info.dart';
-import 'package:provenance_wallet/services/notification/notification_kind.dart';
-import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_kind.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BasicNotificationService implements NotificationService, Disposable {

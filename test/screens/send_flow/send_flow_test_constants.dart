@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
 
 final walletDetails = WalletDetails(
   address: "tp1g5ugfegkl5gmn049n5a9hgjn3ged0ekp8f2fwx",

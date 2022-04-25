@@ -1,6 +1,6 @@
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
 
 class PublicKeyData {
   PublicKeyData({

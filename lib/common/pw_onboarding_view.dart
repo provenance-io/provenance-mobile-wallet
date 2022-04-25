@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/scheduler.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 /// *
 /// This control standardizes how the onboarding screens look/behave. The

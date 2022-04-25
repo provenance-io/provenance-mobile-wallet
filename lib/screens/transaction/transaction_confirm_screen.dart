@@ -1,11 +1,11 @@
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_data_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_message_default.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_name.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_data_screen.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_message_default.dart';
-import 'package:provenance_wallet/util/messages/message_field_name.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 typedef MessageBuilder = Widget Function(
   String requestId,

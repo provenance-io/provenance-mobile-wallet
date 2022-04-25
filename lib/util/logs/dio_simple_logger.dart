@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 
 class SimpleLogInterceptor extends Interceptor {
   @override

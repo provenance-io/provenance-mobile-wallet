@@ -5,13 +5,14 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/services/notification/notification_group.dart'
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart'
     as _i7;
-import 'package:provenance_wallet/services/notification/notification_info.dart'
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart'
     as _i6;
-import 'package:provenance_wallet/services/notification/notification_service.dart'
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart'
     as _i5;
-import 'package:provenance_wallet/util/push_notification_helper.dart' as _i3;
+import 'package:provenance_blockchain_wallet/util/push_notification_helper.dart'
+    as _i3;
 import 'package:rxdart/streams.dart' as _i2;
 
 // ignore_for_file: type=lint

@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 void main() {
   testWidgets('Sample test', (WidgetTester tester) async {

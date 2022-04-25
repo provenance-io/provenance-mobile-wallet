@@ -1,15 +1,15 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/wallets/wallet_item.dart';
-import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/screens/account_name.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/wallets/wallet_item.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/wallets/wallets_bloc.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WalletsScreen extends StatefulWidget {

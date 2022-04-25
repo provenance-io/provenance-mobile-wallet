@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_details.dart';
+import 'package:provenance_blockchain_wallet/services/models/asset.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_details.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DashboardAssetBloc extends Disposable {

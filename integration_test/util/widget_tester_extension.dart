@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/util/integration_test_data.dart';
+import 'package:provenance_blockchain_wallet/util/integration_test_data.dart';
 
 extension WidgetTesterExtension on WidgetTester {
   Future<IntegrationTestData> loadTestData() async {

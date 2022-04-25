@@ -7,10 +7,11 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i7;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i4;
-import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart'
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart'
+    as _i4;
+import 'package:provenance_blockchain_wallet/services/sqlite_wallet_storage_service.dart'
     as _i2;
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart'
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_storage_service.dart'
     as _i5;
 
 // ignore_for_file: type=lint

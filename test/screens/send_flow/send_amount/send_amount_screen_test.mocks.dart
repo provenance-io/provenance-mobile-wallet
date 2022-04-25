@@ -6,11 +6,12 @@ import 'dart:async' as _i6;
 
 import 'package:flutter/src/foundation/diagnostics.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart'
     as _i4;
-import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
+import 'package:provenance_blockchain_wallet/screens/send_flow/send_amount/send_amount_bloc.dart'
     as _i5;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i2;
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart'
+    as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

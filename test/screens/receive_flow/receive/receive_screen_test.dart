@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'receive_screen_test.mocks.dart';

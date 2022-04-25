@@ -1,5 +1,5 @@
+import 'package:provenance_blockchain_wallet/services/models/asset.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 
 class AssetDetails {
   AssetDetails(

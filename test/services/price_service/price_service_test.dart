@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_blockchain_wallet/services/http_client.dart';
+import 'package:provenance_blockchain_wallet/services/models/base_response.dart';
+import 'package:provenance_blockchain_wallet/services/models/price.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart';
+import 'package:provenance_blockchain_wallet/services/price_service/dtos/price_dto.dart';
+import 'package:provenance_blockchain_wallet/services/price_service/price_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/http_client.dart';
-import 'package:provenance_wallet/services/models/base_response.dart';
-import 'package:provenance_wallet/services/models/price.dart';
-import 'package:provenance_wallet/services/notification/notification_group.dart';
-import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/price_service/dtos/price_dto.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 
 import 'price_service_test.mocks.dart';
 

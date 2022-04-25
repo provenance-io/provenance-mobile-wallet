@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/pin/code_panel.dart';
-import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/pin/code_panel.dart';
+import 'package:provenance_blockchain_wallet/screens/pin/container_circle_button.dart';
 
 Key keyPinPadNumber(int number) => ValueKey('$PinPad.number_$number');
 

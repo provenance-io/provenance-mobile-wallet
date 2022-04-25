@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_field_title.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_field_value.dart';
-import 'package:provenance_wallet/util/messages/message_field.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_field_title.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_field_value.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 mixin TransactionMessageMixin<T extends StatefulWidget> on State<T> {
   Widget createFieldGroupSliver(

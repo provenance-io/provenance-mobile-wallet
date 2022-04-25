@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/push_notification_helper.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart';
+import 'package:provenance_blockchain_wallet/services/remote_notification/default_remote_notification_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/push_notification_helper.dart';
 
 import './default_remote_notification_service_test.mocks.dart';
 

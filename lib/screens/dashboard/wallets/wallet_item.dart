@@ -1,19 +1,19 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_blockchain_wallet/extension/coin_extension.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/wallets/rename_wallet_dialog.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/wallets/wallets_bloc.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/local_auth_helper.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/wallets/rename_wallet_dialog.dart';
-import 'package:provenance_wallet/screens/dashboard/wallets/wallets_bloc.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/local_auth_helper.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WalletItem extends StatefulWidget {

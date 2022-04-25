@@ -1,12 +1,12 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
-import 'package:provenance_wallet/screens/recover_account_screen.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_text_form_field.dart';
+import 'package:provenance_blockchain_wallet/screens/create_passphrase_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/recover_account_screen.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class AccountName extends HookWidget {
   AccountName(

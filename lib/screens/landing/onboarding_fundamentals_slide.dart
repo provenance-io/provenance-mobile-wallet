@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/pw_onboarding_view.dart';
-import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_onboarding_view.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/landing_bloc.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class OnboardingFundamentalsSlide extends StatefulWidget {
   const OnboardingFundamentalsSlide({

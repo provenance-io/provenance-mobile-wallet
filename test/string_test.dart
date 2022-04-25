@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 void main() {
   test('Abbreviate max length string returns original', () {

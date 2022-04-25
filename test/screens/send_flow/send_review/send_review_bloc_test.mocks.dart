@@ -7,14 +7,15 @@ import 'dart:async' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i4;
 import 'package:provenance_dart/wallet.dart' as _i8;
-import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart'
+import 'package:provenance_blockchain_wallet/screens/send_flow/send_review/send_review_bloc.dart'
     as _i5;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i7;
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart'
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart'
+    as _i7;
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart'
     as _i3;
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart'
+import 'package:provenance_blockchain_wallet/services/wallet_service/transaction_handler.dart'
     as _i9;
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart'
     as _i2;
 
 // ignore_for_file: type=lint

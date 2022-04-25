@@ -1,5 +1,5 @@
 import 'package:flutter_svg/svg.dart';
-import 'package:provenance_wallet/common/widgets/icon.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/icon.dart';
 
 class Assets {
   static const imagePaths = ImagePaths();

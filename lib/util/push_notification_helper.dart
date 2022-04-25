@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/util/lazy.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/util/lazy.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 
 class PushNotificationHelper {
   PushNotificationHelper(this._firebaseMessaging) {

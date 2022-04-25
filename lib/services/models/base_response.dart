@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:provenance_wallet/services/http_client.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/services/http_client.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 
 const _serviceDownCodes = {
   404,

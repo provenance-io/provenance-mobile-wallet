@@ -1,10 +1,10 @@
-import 'package:provenance_wallet/common/flow_base.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_screen.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/view_all_transactions_screen.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/flow_base.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_chart_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/view_all_transactions_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 import 'asset_details.dart';
 

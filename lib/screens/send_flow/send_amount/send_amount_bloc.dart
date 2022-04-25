@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:convert/convert.dart' as convert;
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/price_service/price_service.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/transaction_handler.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 abstract class SendAmountBlocNavigator {
   Future<void> showReviewSend(

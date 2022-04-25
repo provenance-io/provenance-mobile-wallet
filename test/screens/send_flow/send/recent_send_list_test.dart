@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_divider.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/send/recent_send_list.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/send/send_bloc.dart';
 
 main() {
   group("RecentSendCell", () {

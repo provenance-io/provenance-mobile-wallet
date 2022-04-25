@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 class PwPrimaryButton extends StatelessWidget {
   factory PwPrimaryButton.fromString({

@@ -1,14 +1,14 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_bloc.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive_flow.dart';
-import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/extensions/double_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_autosizing_text.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/dashboard_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive_flow.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/send_flow.dart';
+import 'package:provenance_blockchain_wallet/services/models/asset.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/extensions/double_extensions.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 typedef OnAddressCaptured = Future<void> Function(String address);
 

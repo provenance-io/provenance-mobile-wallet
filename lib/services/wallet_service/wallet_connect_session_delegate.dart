@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:grpc/grpc.dart';
+import 'package:provenance_blockchain_wallet/chain_id.dart';
+import 'package:provenance_blockchain_wallet/services/models/requests/send_request.dart';
+import 'package:provenance_blockchain_wallet/services/models/requests/sign_request.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_connect_tx_response.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/transaction_handler.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 

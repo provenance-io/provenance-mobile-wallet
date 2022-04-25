@@ -2,16 +2,16 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_blockchain_wallet/chain_id.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/gas_fee.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/default_transaction_handler.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_auth.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/services/models/gas_fee.dart';
-import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/util/get.dart';
 
 import 'wallet_connect_transaction_handler_test.mocks.dart';
 

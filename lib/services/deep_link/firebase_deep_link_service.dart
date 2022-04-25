@@ -1,5 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_blockchain_wallet/services/deep_link/deep_link_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FirebaseDeepLinkService implements DeepLinkService {

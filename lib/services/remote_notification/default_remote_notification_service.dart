@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/push_notification_helper.dart';
+import 'package:provenance_blockchain_wallet/services/notification/client_notification_mixin.dart';
+import 'package:provenance_blockchain_wallet/services/remote_notification/remote_notification_service.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/util/push_notification_helper.dart';
 
 class DefaultRemoteNotificationService extends RemoteNotificationService
     with ClientNotificationMixin {

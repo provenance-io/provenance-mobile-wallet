@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/notification/notification_info.dart';
-import 'package:provenance_wallet/services/notification/notification_kind.dart';
-import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_kind.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 class NotificationBar extends StatelessWidget {
   const NotificationBar({Key? key}) : super(key: key);

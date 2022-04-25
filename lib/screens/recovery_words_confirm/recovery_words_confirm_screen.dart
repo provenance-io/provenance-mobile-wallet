@@ -1,13 +1,13 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_check_box.dart';
-import 'package:provenance_wallet/screens/backup_complete_screen.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_check_box.dart';
+import 'package:provenance_blockchain_wallet/screens/backup_complete_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/recovery_words_confirm/word_selector.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   const RecoveryWordsConfirmScreen(

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/transaction_handler.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
 typedef ProtobuffClientInjector = Future<proto.PbClient> Function(Coin coin);

@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 typedef DeleteCode = void Function();
 typedef PassCodeVerify = Future<bool> Function(List<int> passcode);

@@ -1,14 +1,14 @@
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_mixin.dart';
+import 'package:provenance_blockchain_wallet/util/denom.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_converters.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_group.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_name.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_processor.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
-import 'package:provenance_wallet/util/denom.dart';
-import 'package:provenance_wallet/util/messages/message_field.dart';
-import 'package:provenance_wallet/util/messages/message_field_converters.dart';
-import 'package:provenance_wallet/util/messages/message_field_group.dart';
-import 'package:provenance_wallet/util/messages/message_field_name.dart';
-import 'package:provenance_wallet/util/messages/message_field_processor.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionMessageDefault extends StatefulWidget {
   const TransactionMessageDefault({

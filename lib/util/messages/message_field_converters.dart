@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/util/denom.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/util/denom.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 Object? convertAmount(Object? obj) {
   String? amount;

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
-import 'package:provenance_wallet/util/extensions/double_extensions.dart';
+import 'package:provenance_blockchain_wallet/services/asset_service/dtos/asset_dto.dart';
+import 'package:provenance_blockchain_wallet/util/extensions/double_extensions.dart';
 
 class Asset {
   Asset({required AssetDto dto})

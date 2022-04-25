@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/services/config_service/endpoints.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/endpoints.dart';
 
 class RemoteConfig with Diagnosticable {
   RemoteConfig({

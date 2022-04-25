@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/services/config_service/flavor.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/flavor.dart';
 
 class LocalConfig with Diagnosticable {
   LocalConfig({

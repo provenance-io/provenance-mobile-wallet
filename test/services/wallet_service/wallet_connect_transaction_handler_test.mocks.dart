@@ -60,9 +60,10 @@ import 'package:provenance_dart/src/proto/proto_gen/provenance/name/v1/query.pbg
     as _i19;
 import 'package:provenance_dart/src/proto/raw_tx_response.dart' as _i28;
 import 'package:provenance_dart/wallet.dart' as _i34;
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart'
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/gas_fee_service.dart'
     as _i32;
-import 'package:provenance_wallet/services/models/gas_fee.dart' as _i33;
+import 'package:provenance_blockchain_wallet/services/models/gas_fee.dart'
+    as _i33;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

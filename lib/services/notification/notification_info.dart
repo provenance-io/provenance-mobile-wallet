@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/notification/notification_kind.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_kind.dart';
 
 class NotificationInfo {
   NotificationInfo({

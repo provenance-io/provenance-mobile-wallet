@@ -1,6 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/send_transaction_dto.dart';
+import 'package:provenance_blockchain_wallet/services/transaction_service/dtos/send_transaction_dto.dart';
 
 class SendTransaction {
   SendTransaction({required SendTransactionDto dto})

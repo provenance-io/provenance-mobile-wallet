@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:logger/logger.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 export 'package:logger/logger.dart';
 

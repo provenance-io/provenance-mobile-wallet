@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
 
 abstract class KeyValueStore {
   Future<bool> containsKey(PrefKey key);

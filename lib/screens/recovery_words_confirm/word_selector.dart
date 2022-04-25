@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm/word_button.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/recovery_words_confirm/word_button.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class WordSelector extends StatefulWidget {
   const WordSelector({

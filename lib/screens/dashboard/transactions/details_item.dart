@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 class DetailsItem extends StatelessWidget {
   DetailsItem({

@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/services/asset_service/asset_service.dart';
 
 class AssetBarChartButton extends StatelessWidget {
   const AssetBarChartButton({

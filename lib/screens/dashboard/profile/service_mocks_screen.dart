@@ -1,13 +1,13 @@
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/dashboard/profile/category_label.dart';
-import 'package:provenance_wallet/screens/dashboard/profile/toggle_item.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/profile/category_label.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/profile/toggle_item.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class ServiceMocksScreen extends StatefulWidget {
   const ServiceMocksScreen({Key? key}) : super(key: key);

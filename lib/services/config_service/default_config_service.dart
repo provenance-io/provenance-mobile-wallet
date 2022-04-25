@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provenance_wallet/services/config_service/config_service.dart';
-import 'package:provenance_wallet/services/config_service/endpoints.dart';
-import 'package:provenance_wallet/services/config_service/flavor.dart';
-import 'package:provenance_wallet/services/config_service/local_config.dart';
-import 'package:provenance_wallet/services/config_service/remote_config.dart';
-import 'package:provenance_wallet/services/config_service/remote_config_key.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/util/lazy.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/config_service.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/endpoints.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/flavor.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/local_config.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/remote_config.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/remote_config_key.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/util/lazy.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 
 class DefaultConfigService implements ConfigService {
   DefaultConfigService({

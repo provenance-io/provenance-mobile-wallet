@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 typedef IsValidCallback = Future<bool> Function(String input);

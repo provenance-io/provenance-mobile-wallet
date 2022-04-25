@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
 
 abstract class ReceiveNavigator {}
 

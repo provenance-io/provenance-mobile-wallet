@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
-import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_autosizing_text.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
 
 class SendAssetCell extends StatelessWidget {
   const SendAssetCell(

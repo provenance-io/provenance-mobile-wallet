@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
 
 class PwModalMessage extends StatelessWidget {
   const PwModalMessage({

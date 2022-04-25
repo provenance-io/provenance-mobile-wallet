@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 
 class WalletDetails with Diagnosticable {
   WalletDetails({

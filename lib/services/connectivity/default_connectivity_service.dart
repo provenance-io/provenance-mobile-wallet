@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/services/connectivity/connectivity_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DefaultConnectivityService extends ConnectivityService

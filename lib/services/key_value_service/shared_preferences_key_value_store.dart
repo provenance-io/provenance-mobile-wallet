@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_store.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesKeyValueStore implements KeyValueStore {

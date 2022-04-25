@@ -1,7 +1,7 @@
+import 'package:provenance_blockchain_wallet/services/client_coin_mixin.dart';
+import 'package:provenance_blockchain_wallet/services/models/price.dart';
+import 'package:provenance_blockchain_wallet/services/price_service/dtos/price_dto.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/models/price.dart';
-import 'package:provenance_wallet/services/price_service/dtos/price_dto.dart';
 
 class PriceService with ClientCoinMixin {
   String get _assetServiceBasePathv1 => '/service-pricing-engine/';

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
-import 'package:provenance_wallet/services/notification/notification_group.dart';
-import 'package:provenance_wallet/services/notification/notification_info.dart';
-import 'package:provenance_wallet/services/notification/notification_kind.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/services/notification/basic_notification_service.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_kind.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 Matcher _notificationMatcher(int count) {
   return predicate((args) {

@@ -1,11 +1,11 @@
-import 'package:provenance_wallet/common/flow_base.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/change_pin_flow/change_pin_bloc.dart';
-import 'package:provenance_wallet/screens/change_pin_flow/changed_pin_successfully_screen.dart';
-import 'package:provenance_wallet/screens/change_pin_flow/confirm_new_pin_screen.dart';
-import 'package:provenance_wallet/screens/change_pin_flow/create_new_pin_screen.dart';
-import 'package:provenance_wallet/screens/change_pin_flow/enable_biometrics_screen.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/flow_base.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/change_pin_flow/change_pin_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/change_pin_flow/changed_pin_successfully_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/change_pin_flow/confirm_new_pin_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/change_pin_flow/create_new_pin_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/change_pin_flow/enable_biometrics_screen.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 class ChangePinFlow extends FlowBase {
   const ChangePinFlow(

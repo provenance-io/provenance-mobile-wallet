@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
+import 'package:provenance_blockchain_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class AssetChartPoinData {
   AssetChartPoinData(

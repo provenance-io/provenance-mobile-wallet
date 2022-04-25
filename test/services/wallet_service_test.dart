@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import '../dashboard/in_memory_wallet_storage_service.dart';
 

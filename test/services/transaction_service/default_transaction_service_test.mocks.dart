@@ -7,13 +7,14 @@ import 'dart:convert' as _i7;
 
 import 'package:dio/dio.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/services/http_client.dart' as _i4;
-import 'package:provenance_wallet/services/models/base_response.dart' as _i2;
-import 'package:provenance_wallet/services/notification/notification_group.dart'
+import 'package:provenance_blockchain_wallet/services/http_client.dart' as _i4;
+import 'package:provenance_blockchain_wallet/services/models/base_response.dart'
+    as _i2;
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart'
     as _i10;
-import 'package:provenance_wallet/services/notification/notification_info.dart'
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart'
     as _i9;
-import 'package:provenance_wallet/services/notification/notification_service.dart'
+import 'package:provenance_blockchain_wallet/services/notification/notification_service.dart'
     as _i8;
 import 'package:rxdart/streams.dart' as _i3;
 

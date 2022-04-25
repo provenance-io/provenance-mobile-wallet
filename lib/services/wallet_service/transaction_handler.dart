@@ -1,6 +1,6 @@
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
 
 abstract class TransactionHandler {
   Stream<TransactionResponse> get transaction;

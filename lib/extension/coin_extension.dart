@@ -1,6 +1,6 @@
+import 'package:provenance_blockchain_wallet/chain_id.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 extension CoinExtension on Coin {
   String get chainId {

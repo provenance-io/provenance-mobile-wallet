@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/common/pw_onboarding_view.dart';
-import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
+import 'package:provenance_blockchain_wallet/common/pw_onboarding_view.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_spacer.dart';
 
 main() {
   Future<void> _build(

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/flavor.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/config_service/flavor.dart';
 
 part 'endpoints.g.dart';
 

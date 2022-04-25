@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/transaction_handler.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendReviewNaviagor {
   void complete();

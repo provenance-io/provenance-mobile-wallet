@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:provenance_wallet/services/http_client_diagnostic_interceptor.dart';
-import 'package:provenance_wallet/services/models/base_response.dart';
-import 'package:provenance_wallet/util/logs/dio_simple_logger.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/services/http_client_diagnostic_interceptor.dart';
+import 'package:provenance_blockchain_wallet/services/models/base_response.dart';
+import 'package:provenance_blockchain_wallet/util/logs/dio_simple_logger.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 
 const String httpHeaderAccept = 'Accept';
 const String httpHeaderContentType = 'content-type';

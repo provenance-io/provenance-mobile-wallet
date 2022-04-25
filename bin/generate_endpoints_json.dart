@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:pretty_json/pretty_json.dart';
-import 'package:provenance_wallet/services/config_service/endpoints.dart';
-import 'package:provenance_wallet/services/config_service/flavor.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/endpoints.dart';
+import 'package:provenance_blockchain_wallet/services/config_service/flavor.dart';
 
 ///
 /// Generates json for the Firebase Remote Config console.

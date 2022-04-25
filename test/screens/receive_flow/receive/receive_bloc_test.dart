@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_bloc.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
 
 import 'receive_bloc_test.mocks.dart';
 

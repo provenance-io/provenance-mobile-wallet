@@ -1,7 +1,7 @@
+import 'package:provenance_blockchain_wallet/services/models/send_transactions.dart';
+import 'package:provenance_blockchain_wallet/services/models/transaction.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/models/send_transactions.dart';
-import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 abstract class TransactionService {
   Future<List<SendTransaction>> getSendTransactions(

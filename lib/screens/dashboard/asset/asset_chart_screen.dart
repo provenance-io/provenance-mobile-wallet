@@ -1,15 +1,15 @@
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_autosizing_text.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_bar_chart.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
+import 'package:provenance_blockchain_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/asset.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_bar_chart_button.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_bloc.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/asset_chart_recent_transactions.dart';
-import 'package:provenance_wallet/screens/dashboard/asset/dashboard_asset_bloc.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 
 class AssetChartScreen extends StatefulWidget {
   const AssetChartScreen(

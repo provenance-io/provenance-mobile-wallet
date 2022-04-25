@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_corner_border.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_corner_border.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_bloc.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceiveScreen extends StatelessWidget {

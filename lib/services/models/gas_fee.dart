@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
 
 class GasFee {
   GasFee({required GasFeeDto dto})

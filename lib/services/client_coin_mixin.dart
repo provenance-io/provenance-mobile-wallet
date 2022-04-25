@@ -1,6 +1,6 @@
+import 'package:provenance_blockchain_wallet/services/http_client.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/http_client.dart';
-import 'package:provenance_wallet/util/get.dart';
 
 mixin ClientCoinMixin on Object {
   Future<HttpClient> getClient(Coin coin) {

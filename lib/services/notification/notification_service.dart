@@ -1,5 +1,5 @@
-import 'package:provenance_wallet/services/notification/notification_group.dart';
-import 'package:provenance_wallet/services/notification/notification_info.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_group.dart';
+import 'package:provenance_blockchain_wallet/services/notification/notification_info.dart';
 import 'package:rxdart/streams.dart';
 
 abstract class NotificationService {

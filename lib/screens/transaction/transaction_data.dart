@@ -1,5 +1,5 @@
 import 'package:pretty_json/pretty_json.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 class TransactionData extends StatefulWidget {
   const TransactionData({

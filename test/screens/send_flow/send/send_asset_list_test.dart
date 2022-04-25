@@ -2,10 +2,10 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/send/send_asset_list.dart';
 
 import '../send_flow_test_constants.dart';
 

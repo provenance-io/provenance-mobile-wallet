@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/pin/validate_pin.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/pin/validate_pin.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AuthStatus {

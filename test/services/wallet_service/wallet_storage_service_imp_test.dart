@@ -2,13 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_blockchain_wallet/chain_id.dart';
+import 'package:provenance_blockchain_wallet/extension/coin_extension.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/sqlite_wallet_storage_service.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_storage_service.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 
 import 'wallet_storage_service_imp_test.mocks.dart';
 

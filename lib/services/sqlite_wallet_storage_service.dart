@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_blockchain_wallet/chain_id.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_storage_service.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteWalletStorageService {

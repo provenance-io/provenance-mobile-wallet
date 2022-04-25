@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 class TabItem extends StatelessWidget {
   const TabItem(

@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/extension/stream_controller.dart';
+import 'package:provenance_blockchain_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WalletsBloc implements Disposable {

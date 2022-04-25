@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provenance_wallet/common/theme.dart';
+import 'package:provenance_blockchain_wallet/common/theme.dart';
 
 /// Loading Overlay inspired by https://pub.dev/packages/loading_overlay
 ///

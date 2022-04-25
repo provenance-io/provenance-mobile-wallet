@@ -1,9 +1,9 @@
-import 'package:provenance_wallet/common/flow_base.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_blockchain_wallet/common/flow_base.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_bloc.dart';
+import 'package:provenance_blockchain_wallet/screens/receive_flow/receive/receive_screen.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_details.dart';
+import 'package:provenance_blockchain_wallet/util/get.dart';
 
 class ReceiveFlow extends FlowBase {
   const ReceiveFlow(

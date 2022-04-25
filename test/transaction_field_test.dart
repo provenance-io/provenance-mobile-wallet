@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provenance_blockchain_wallet/util/denom.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_group.dart';
+import 'package:provenance_blockchain_wallet/util/messages/message_field_processor.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_dart/proto_marker.dart';
-import 'package:provenance_wallet/util/denom.dart';
-import 'package:provenance_wallet/util/messages/message_field.dart';
-import 'package:provenance_wallet/util/messages/message_field_group.dart';
-import 'package:provenance_wallet/util/messages/message_field_processor.dart';
 
 final msgSend = MsgSend(
   fromAddress: 'abcdefghijklmnop',

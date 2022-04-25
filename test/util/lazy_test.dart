@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/util/lazy.dart';
+import 'package:provenance_blockchain_wallet/util/lazy.dart';
 
 void main() {
   test('Given create with return value, then value is returned.', () {

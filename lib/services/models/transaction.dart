@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/services/transaction_service/dtos/transaction_dto.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class Transaction {
   Transaction({required TransactionDto dto})

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 export '../pw_text_style.dart';
 

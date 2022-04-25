@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/extension/coin_extension.dart';
+import 'package:provenance_blockchain_wallet/main.dart' as app;
+import 'package:provenance_blockchain_wallet/screens/account_name.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
+import 'package:provenance_blockchain_wallet/screens/enable_face_id_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/landing/landing_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/pin/pin_pad.dart';
+import 'package:provenance_blockchain_wallet/screens/recover_account_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/recover_passphrase_entry_screen.dart';
+import 'package:provenance_blockchain_wallet/screens/wallet_setup_confirmation.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/main.dart' as app;
-import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
-import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
-import 'package:provenance_wallet/screens/landing/landing_screen.dart';
-import 'package:provenance_wallet/screens/pin/pin_pad.dart';
-import 'package:provenance_wallet/screens/recover_account_screen.dart';
-import 'package:provenance_wallet/screens/recover_passphrase_entry_screen.dart';
-import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
 
 import 'util/widget_tester_extension.dart';
 

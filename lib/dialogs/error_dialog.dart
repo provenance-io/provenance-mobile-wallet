@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/button.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class ErrorDialog extends StatelessWidget {
   const ErrorDialog({

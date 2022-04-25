@@ -1,6 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
+import 'package:provenance_blockchain_wallet/screens/send_flow/model/send_asset.dart';
 
 void main() {
   test("displayAmount", () {

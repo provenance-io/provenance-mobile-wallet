@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
 
 extension Spacing on double {
   /// 4 px

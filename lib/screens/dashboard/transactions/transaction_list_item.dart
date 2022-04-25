@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/transactions/transaction_details_screen.dart';
-import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/screens/dashboard/transactions/transaction_details_screen.dart';
+import 'package:provenance_blockchain_wallet/services/models/transaction.dart';
+import 'package:provenance_blockchain_wallet/util/assets.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({

@@ -1,9 +1,9 @@
+import 'package:provenance_blockchain_wallet/services/client_coin_mixin.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
+import 'package:provenance_blockchain_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/gas_fee.dart';
+import 'package:provenance_blockchain_wallet/services/notification/client_notification_mixin.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/services/models/gas_fee.dart';
-import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
 
 class DefaultGasFeeService extends GasFeeService
     with ClientNotificationMixin, ClientCoinMixin {

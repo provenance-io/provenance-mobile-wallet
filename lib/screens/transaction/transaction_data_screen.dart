@@ -1,7 +1,7 @@
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/transaction/transaction_data.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_blockchain_wallet/common/pw_design.dart';
+import 'package:provenance_blockchain_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_blockchain_wallet/screens/transaction/transaction_data.dart';
+import 'package:provenance_blockchain_wallet/util/strings.dart';
 
 class TransactionDataScreen extends StatelessWidget {
   const TransactionDataScreen({

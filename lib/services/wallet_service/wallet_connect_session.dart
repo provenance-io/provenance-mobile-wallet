@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:provenance_blockchain_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_blockchain_wallet/services/models/wallet_connect_session_restore_data.dart';
+import 'package:provenance_blockchain_wallet/services/remote_notification/remote_notification_service.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_blockchain_wallet/services/wallet_service/wallet_connect_session_state.dart';
+import 'package:provenance_blockchain_wallet/util/logs/logging.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
-import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WalletConnectSessionEvents {
