@@ -1,4 +1,3 @@
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -127,27 +126,12 @@ class _DashboardLandingTabState extends State<DashboardLandingTab> {
                               final success =
                                   await bloc.tryRestoreSession(walletId);
                               if (!success) {
-                                final wallet =
-                                    await walletService.getSelectedWallet();
                                 final addressData = await Navigator.of(
                                   context,
                                 ).push(
                                   QRCodeScanner(
                                     isValidCallback: (input) {
-                                      switch (wallet?.coin) {
-                                        case Coin.mainNet:
-                                          return Future.value(
-                                            input.isNotEmpty &&
-                                                !input.contains("test"),
-                                          );
-                                        case Coin.testNet:
-                                          return Future.value(
-                                            input.isNotEmpty &&
-                                                input.contains("test"),
-                                          );
-                                        default:
-                                          return Future.value(false);
-                                      }
+                                      return Future.value(input.isNotEmpty);
                                     },
                                   ).route(),
                                 );
