@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
@@ -90,7 +91,22 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   @override
   Future<String?> scanAddress() {
-    return showPage((context) => QRCodeScanner());
+    return showPage((context) => QRCodeScanner(
+          isValidCallback: (input) {
+            switch (widget.walletDetails.coin) {
+              case Coin.mainNet:
+                return Future.value(
+                  input.isNotEmpty && input.startsWith("pb1"),
+                );
+              case Coin.testNet:
+                return Future.value(
+                  input.isNotEmpty && input.startsWith("tp1"),
+                );
+              default:
+                return Future.value(false);
+            }
+          },
+        ));
   }
 
   @override
