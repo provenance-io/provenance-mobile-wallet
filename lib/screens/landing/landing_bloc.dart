@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
+import 'package:provenance_wallet/screens/home/home_screen.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -37,7 +37,7 @@ class LandingBloc extends Disposable {
   Future<void> doAuth(BuildContext context) async {
     final status = await get<LocalAuthHelper>().auth(context);
     if (status == AuthStatus.authenticated) {
-      Navigator.of(context).push(DashboardScreen().route());
+      Navigator.of(context).push(HomeScreen().route());
     }
   }
 

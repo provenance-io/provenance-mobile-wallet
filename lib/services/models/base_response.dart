@@ -7,6 +7,7 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 const _serviceDownCodes = {
   404,
   500,
+  502,
   503,
 };
 
