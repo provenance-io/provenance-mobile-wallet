@@ -67,8 +67,8 @@ class Strings {
       'It appears as though no network is connected.';
 
   // Landing Page
-  static const createWallet = 'Create Wallet';
-  static const recoverWallet = 'Recover Wallet';
+  static const createWallet = 'Create Account';
+  static const recoverWallet = 'Recover Account';
   static const lockScreenRequired =
       'Please enable the device screen lock in security settings';
   static const refresh = 'Refresh';
@@ -125,9 +125,9 @@ class Strings {
   static const sendFeedback = 'Send Feedback';
   static const contactUs = 'Contact Us';
   static const policiesAndTerms = 'Policies & Terms';
-  static const resetWallets = 'Reset Wallets';
+  static const resetWallets = 'Reset Wallet';
   static const resetWalletsAreYouSure =
-      'Are you sure you wish to reset all wallets?';
+      'Are you sure you wish to reset all accounts?';
   static const pinCodeUpdated = 'Pin Code Updated Successfully';
   static const successName = 'Success';
   static const profileDeveloperCategoryTitle = 'Developer';
@@ -157,16 +157,16 @@ class Strings {
   static const importExistingWallet = 'Import existing wallet';
 
   // Rename Wallet Dialog
-  static const renameWallet = 'Rename Wallet';
+  static const renameWallet = 'Rename Account';
   static const renameWalletDescription =
-      'Please enter the new name you would like to call your wallet.';
+      'Please enter the new name you would like to call your account.';
   static const walletName = 'Wallet Name';
   static const required = '*required';
   static const confirm = 'Confirm';
 
   // Wallets Page
   static const loadingWallets = 'Loading Wallets';
-  static const wallets = 'Wallets';
+  static const wallets = 'Accounts';
   static const selectedWallet = 'Selected Wallet';
   static const allWallets = 'All Wallets';
   static String numAssets(int numAssets) =>
@@ -177,9 +177,9 @@ class Strings {
   static const rename = 'Rename';
   static const remove = 'Remove';
   static const removeThisWallet =
-      'Are you sure you want to remove this wallet?';
+      'Are you sure you want to remove this account?';
   static const yes = 'Yes';
-  static const copyWalletAddress = 'Copy Wallet Address';
+  static const copyWalletAddress = 'Copy Account Address';
   static const addressCopied = 'Address copied';
 
   // Account Name
@@ -206,13 +206,13 @@ class Strings {
   // EnableFaceId
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
-      'Use your Face ID for faster, easier\naccess to your account.';
+      'Use your Face ID for faster, easier\naccess to your wallet.';
   static const useTouchIdTitle = 'Use Touch ID?';
   static const useYourFingerPrint =
-      "Use your Touch ID for faster,\neasier access to your account.";
+      "Use your Touch ID for faster,\neasier access to your wallet.";
   static const useBiometryTitle = 'Biometry';
   static const useBiometryMessage =
-      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your account.';
+      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your wallet.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
@@ -298,7 +298,7 @@ class Strings {
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
   // WalletSetupConfirmation
-  static const walletCreated = "WALLET CREATED";
+  static const walletCreated = "ACCOUNT CREATED";
 
   // TransactionsList
   static const dropDownAllMessageTypes = "All Message Types";
@@ -308,7 +308,7 @@ class Strings {
 
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
-  static const tradeDetailsWallet = "Wallet";
+  static const tradeDetailsWallet = "Account";
   static const tradeDetailsTransaction = "Transaction Hash";
   static const tradeDetailsResult = "Result";
   static const tradeDetailsMessageType = "Message Type";
@@ -372,8 +372,8 @@ class Strings {
 
   static const receiveTitle = "Receive";
   static const receiveMessage =
-      "Show this QR code or share wallet address to receive asset";
-  static const receiveWalletAddressTitle = "Wallet Address";
+      "Show this QR code or share account address to receive asset";
+  static const receiveWalletAddressTitle = "Account Address";
   static const receiveWalletAddressCopiedMessage =
       "Your address was copied to the clipboard";
 
