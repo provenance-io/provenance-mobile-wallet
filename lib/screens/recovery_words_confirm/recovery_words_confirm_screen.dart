@@ -61,6 +61,10 @@ class RecoveryWordsConfirmScreenState
       appBar: PwAppBar(
         title: Strings.verifyPassphrase,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          widget.currentStep ?? 0,
+          widget.numberOfSteps ?? 1,
+        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -70,15 +74,6 @@ class RecoveryWordsConfirmScreenState
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ProgressStepper(
-                    widget.currentStep ?? 0,
-                    widget.numberOfSteps ?? 1,
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 12,
-                    ),
-                  ),
                   VerticalSpacer.largeX3(),
                   _error.isNotEmpty
                       ? Padding(
