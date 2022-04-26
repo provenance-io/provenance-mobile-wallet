@@ -3,7 +3,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
-import '../dashboard/in_memory_wallet_storage_service.dart';
+import '../dashboard/memory_wallet_storage_service.dart';
 
 void main() {
   test('On set coin expect selected wallet updates', () async {
@@ -77,8 +77,8 @@ Future<WalletService> createService({
   return service;
 }
 
-List<InMemoryStorageData> createDatas(int count, Coin selectedCoin) {
-  final datas = <InMemoryStorageData>[];
+List<MemoryStorageData> createDatas(int count, Coin selectedCoin) {
+  final datas = <MemoryStorageData>[];
 
   for (var i = 0; i < count; i++) {
     final str = i.toString();
@@ -90,7 +90,7 @@ List<InMemoryStorageData> createDatas(int count, Coin selectedCoin) {
     final selectedIndex = privateKeys.indexWhere((e) => e.coin == selectedCoin);
     assert(selectedIndex != -1, 'Unknown selected coin');
 
-    final data = InMemoryStorageData(
+    final data = MemoryStorageData(
       WalletDetails(
         id: str,
         address: str,
