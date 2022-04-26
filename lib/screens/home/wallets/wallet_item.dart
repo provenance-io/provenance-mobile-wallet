@@ -239,7 +239,7 @@ class _WalletItemState extends State<WalletItem> {
         break;
       case MenuOperation.switchCoin:
         final coin = item.coin == Coin.mainNet ? Coin.testNet : Coin.mainNet;
-        await get<WalletService>().setWalletCoin(id: item.id, coin: coin);
+        await bloc.setWalletCoin(id: item.id, coin: coin);
         break;
       default:
     }

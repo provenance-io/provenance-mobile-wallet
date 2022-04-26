@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -85,6 +86,8 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   ValueStream<bool> get isLoadingTransactions => _isLoadingTransactions;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
+
+  WalletConnectSession? get currentSession => _walletSession;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -414,6 +417,15 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       id: id,
       name: name,
     );
+  }
+
+  Future<WalletDetails?> setWalletCoin({
+    required String id,
+    required Coin coin,
+  }) async {
+    await _walletSession?.disconnect();
+
+    return await get<WalletService>().setWalletCoin(id: id, coin: coin);
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {

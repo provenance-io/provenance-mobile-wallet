@@ -35,8 +35,10 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+
     final mediaQuery = MediaQuery.of(context);
     final bloc = get<HomeBloc>();
+
     final walletService = get<WalletService>();
     final isTallScreen = (mediaQuery.size.height > 600);
 
@@ -130,7 +132,11 @@ class _DashboardState extends State<Dashboard> {
                                 final addressData = await Navigator.of(
                                   context,
                                 ).push(
-                                  QRCodeScanner().route(),
+                                  QRCodeScanner(
+                                    isValidCallback: (input) {
+                                      return Future.value(input.isNotEmpty);
+                                    },
+                                  ).route(),
                                 );
 
                                 if (addressData != null) {

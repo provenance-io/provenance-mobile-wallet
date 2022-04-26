@@ -65,7 +65,6 @@ class ConnectionDetailsModal extends StatelessWidget {
                     ),
                   ),
                 ),
-                // TODO: Put Required action items here.
                 Expanded(child: Container()),
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
