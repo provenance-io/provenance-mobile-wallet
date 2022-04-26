@@ -52,19 +52,14 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
       appBar: PwAppBar(
         title: Strings.recoveryPassphrase,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          widget.currentStep ?? 0,
+          widget.numberOfSteps ?? 1,
+        ),
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
       body: PwOnboardingScreen(
         children: [
-          ProgressStepper(
-            widget.currentStep ?? 0,
-            widget.numberOfSteps ?? 1,
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 12,
-            ),
-          ),
           VerticalSpacer.largeX3(),
           Padding(
             padding: EdgeInsets.only(

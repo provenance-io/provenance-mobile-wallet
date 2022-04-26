@@ -35,6 +35,10 @@ class CreatePinState extends State<CreatePin> {
       appBar: PwAppBar(
         title: Strings.setPinCode,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          widget.currentStep ?? 0,
+          widget.numberOfSteps ?? 1,
+        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -42,15 +46,6 @@ class CreatePinState extends State<CreatePin> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProgressStepper(
-              widget.currentStep ?? 0,
-              widget.numberOfSteps ?? 1,
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(top: 18),

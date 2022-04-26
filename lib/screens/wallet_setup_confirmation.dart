@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/dashboard/dashboard_screen.dart';
+import 'package:provenance_wallet/screens/home/home_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -75,7 +75,7 @@ class WalletSetupConfirmation extends StatelessWidget {
                         onPressed: () async {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            DashboardScreen().route(),
+                            HomeScreen().route(),
                             (route) => route.isFirst,
                           );
                         },

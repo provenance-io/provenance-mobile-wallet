@@ -31,18 +31,13 @@ class RecoverAccountScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: Strings.recoverAccount,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          currentStep,
+          numberOfSteps ?? 1,
+        ),
       ),
       body: PwOnboardingScreen(
         children: [
-          ProgressStepper(
-            currentStep,
-            numberOfSteps ?? 1,
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 12,
-            ),
-          ),
           VerticalSpacer.largeX6(),
           VerticalSpacer.xxLarge(),
           PwText(

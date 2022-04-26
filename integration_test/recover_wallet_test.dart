@@ -5,8 +5,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/account_name.dart';
-import 'package:provenance_wallet/screens/dashboard/landing/dashboard_landing_tab.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
+import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
@@ -109,7 +109,7 @@ void main() {
       );
 
       final nameWidget = tester.widgetWithKey<PwText>(
-        DashboardLandingTab.keyWalletNameText,
+        Dashboard.keyWalletNameText,
       );
 
       expect(nameWidget.data, accountName);

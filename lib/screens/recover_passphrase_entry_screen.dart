@@ -106,20 +106,14 @@ class RecoverPassphraseEntryScreenState
         child: PwAppBar(
           title: Strings.enterRecoveryPassphrase,
           leadingIcon: PwIcons.back,
+          bottom: ProgressStepper(
+            widget.currentStep,
+            widget.numberOfSteps ?? 1,
+          ),
         ),
       ),
       body: PwOnboardingScreen(
         children: [
-          ProgressStepper(
-            widget.currentStep,
-            widget.numberOfSteps ?? 1,
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 12,
-              bottom: 40,
-            ),
-          ),
           StreamBuilder<KeyValueData<bool>>(
             initialData: showAdvancedUI.valueOrNull,
             stream: showAdvancedUI,

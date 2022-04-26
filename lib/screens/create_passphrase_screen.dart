@@ -27,18 +27,13 @@ class CreatePassphraseScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: Strings.createPassphrase,
         leadingIcon: PwIcons.back,
+        bottom: ProgressStepper(
+          currentStep ?? 0,
+          numberOfSteps ?? 1,
+        ),
       ),
       body: PwOnboardingScreen(
         children: [
-          ProgressStepper(
-            currentStep ?? 0,
-            numberOfSteps ?? 1,
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: Spacing.medium,
-            ),
-          ),
           VerticalSpacer.largeX6(),
           VerticalSpacer.xxLarge(),
           PwText(
