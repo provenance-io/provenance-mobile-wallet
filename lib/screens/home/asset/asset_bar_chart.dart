@@ -223,13 +223,12 @@ class AssetBarChart extends StatelessWidget {
                     changeNotifier.value = null;
                   } else {
                     final price = spot.y;
-                    final amountChanged =
-                        ((price - currentValue) * 1000).toInt();
+                    final amountChanged = ((price - currentValue));
                     final percentChange =
-                        (amountChanged / (currentValue * 1000).toInt()) / 100;
+                        ((amountChanged / currentValue) * 1000) / 10;
 
                     changeNotifier.value = AssetChartPointData(
-                      amountChanged / 1000,
+                      (amountChanged * 1000).toInt() / 1000,
                       percentChange,
                       DateTime.fromMillisecondsSinceEpoch(
                         spot.x.toInt(),
