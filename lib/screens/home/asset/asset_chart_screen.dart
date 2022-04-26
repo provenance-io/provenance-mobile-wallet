@@ -44,6 +44,10 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isTallScreen = mediaQuery.size.height > 600;
+    final priceHeight = (isTallScreen) ? 45.0 : 35.0;
+
     return StreamBuilder<AssetChartDetails?>(
       initialData: _bloc.chartDetails.value,
       stream: _bloc.chartDetails,
@@ -108,12 +112,15 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     ),
                     PwAutoSizingText(
                       details.asset.formattedUsdPrice,
-                      height: 45,
+                      height: priceHeight,
                       style: PwTextStyle.h1,
                       color: PwColor.neutralNeutral,
                     ),
                     VerticalSpacer.small(),
-                    AssetBarChart(snapshot.data!.value),
+                    AssetBarChart(
+                      snapshot.data!.value,
+                      isCompact: !isTallScreen,
+                    ),
                     VerticalSpacer.small(),
                     AssetBarChartButtons(
                       initialValue: details.value,
@@ -123,8 +130,12 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         );
                       },
                     ),
-                    VerticalSpacer.xxLarge(),
-                    VerticalSpacer.xxLarge(),
+                    (isTallScreen)
+                        ? VerticalSpacer.xxLarge()
+                        : VerticalSpacer.medium(),
+                    (isTallScreen)
+                        ? VerticalSpacer.xxLarge()
+                        : VerticalSpacer.medium(),
                     AssetChartRecentTransactions(asset: widget.asset),
                   ],
                 ),

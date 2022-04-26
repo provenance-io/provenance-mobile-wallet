@@ -7,18 +7,22 @@ class TabItem extends StatelessWidget {
     this.tabAsset, {
     Key? key,
     this.isLoading = false,
+    this.topPadding = 10,
+    this.bottomPadding = 28,
   }) : super(key: key);
   final bool isCurrent;
   final bool isLoading;
   final String tabAsset;
   final String tabName;
+  final double topPadding;
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
-          VerticalSpacer.custom(spacing: 10),
+          VerticalSpacer.custom(spacing: topPadding),
           SizedBox(
             width: Spacing.xLarge,
             height: Spacing.xLarge,
@@ -33,7 +37,7 @@ class TabItem extends StatelessWidget {
                 : const CircularProgressIndicator(),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 28),
+            padding: EdgeInsets.only(top: 5, bottom: bottomPadding),
             child: PwText(
               tabName,
               style: PwTextStyle.footnote,

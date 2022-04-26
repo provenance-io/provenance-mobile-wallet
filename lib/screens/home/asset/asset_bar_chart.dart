@@ -28,12 +28,14 @@ class AssetBarChart extends StatelessWidget {
     this.graphColor = Colors.blue,
     this.graphFillColor = Colors.white,
     this.labelColor = Colors.white,
+    this.isCompact = false,
   }) : super(key: key);
 
   final GraphingDataValue timeInterval;
   final Color graphColor;
   final Color graphFillColor;
   final Color labelColor;
+  final bool isCompact;
   final ValueNotifier<AssetChartPointData?> changeNotifier =
       ValueNotifier(null);
 
@@ -42,7 +44,7 @@ class AssetBarChart extends StatelessWidget {
     final bloc = get<AssetChartBloc>();
 
     return AspectRatio(
-      aspectRatio: 323 / 228,
+      aspectRatio: (isCompact) ? 3 / 2 : 323 / 228,
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),

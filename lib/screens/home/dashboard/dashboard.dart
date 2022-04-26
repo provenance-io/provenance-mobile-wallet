@@ -35,8 +35,10 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final bloc = get<HomeBloc>();
     final walletService = get<WalletService>();
+    final isTallScreen = (mediaQuery.size.height > 600);
 
     return Container(
       decoration: BoxDecoration(
@@ -215,8 +217,10 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            VerticalSpacer.xxLarge(),
-            WalletPortfolio(),
+            (isTallScreen) ? VerticalSpacer.xxLarge() : VerticalSpacer.medium(),
+            WalletPortfolio(
+              labelHeight: (isTallScreen) ? 45 : 30,
+            ),
             VerticalSpacer.xxLarge(),
             StreamBuilder<List<Asset>?>(
               initialData: bloc.assetList.value,

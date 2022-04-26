@@ -13,7 +13,9 @@ import 'package:provenance_wallet/util/strings.dart';
 typedef OnAddressCaptured = Future<void> Function(String address);
 
 class WalletPortfolio extends StatelessWidget {
-  const WalletPortfolio({Key? key}) : super(key: key);
+  const WalletPortfolio({Key? key, this.labelHeight = 45.0}) : super(key: key);
+
+  final double labelHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class WalletPortfolio extends StatelessWidget {
                 portfolioValue.toCurrency(),
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.display1,
+                height: labelHeight,
               );
             },
           ),
