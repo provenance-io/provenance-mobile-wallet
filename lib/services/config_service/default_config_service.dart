@@ -70,7 +70,12 @@ class DefaultConfigService implements ConfigService {
     // Call fetch() and activate() separately. Calling fetchAndActivate()
     // seems to return true every time regardless of whether the remote
     // config was actually updated.
-    await _firebaseRemoteConfig.fetch();
+    try {
+      await _firebaseRemoteConfig.fetch();
+    } on Exception catch (e) {
+      logDebug('Failed to fetch remote config: $e');
+    }
+
     final didActivate = await _firebaseRemoteConfig.activate();
     if (didActivate) {
       logDebug('Activated new remote config');
