@@ -26,11 +26,6 @@ A mobile wallet.
 
 ### Xcode Configuration
 
-> Before continuing, be sure your Apple ID is added to the Figure 
-> Technologies Inc. (FDT7XCU6W7) Apple development team.  The following
-> steps assume you have selected the Figure Technologies Inc. team when
-> using developer.apple.com
-
 Create a development certificate
 1. Go to the [Apple certificates list](https://developer.apple.com/account/resources/certificates/list)
 2. Click the "+" icon
@@ -48,11 +43,11 @@ Register your iOS device
 
 Add your device to the development provisioning profile
 1. Go to the [Apple profiles list](https://developer.apple.com/account/resources/profiles/list)
-2. Select Figure Tech Wallet Dev, and click Edit
+2. Select the desired profile, and click Edit
 3. Under Certificates, select the certificate that you created
 4. Under Devices, select the device that you added
 5. Click Save
-6. In the profile list, hover the Figure Tech Wallet Dev profile and click Download
+6. In the profile list, hover over the profile and click Download
 7. Once downloaded, double click to install
 
 Verify your signing configuration
@@ -168,11 +163,8 @@ This can help provide more insight into the Gradle build
 
 Note: You will have to manually address any system prompts (e.g. Face ID, permissions requests, etc.) as they pop up
 
-## Firebase
-[Firebase Console](https://console.firebase.google.com/project/provenance-wallet/overview)
-
 ### API Permissions
-API keys have application and API restrictions that are managed in [Google Cloud](https://console.cloud.google.com/apis/credentials?project=provenance-wallet).
+API keys have application and API restrictions that are managed in Google Cloud
 
 Dynamic Links requires:
 1. Firebase Installations API
@@ -192,4 +184,4 @@ Update endpoints
 
 ### Dynamic Links
 A Dynamic Link has a payload that includes a URL for the app to handle.  
-The URL is limited by an allowlist that is configured in the [Dynamic Links section](https://console.firebase.google.com/project/provenance-wallet/durablelinks/links/https:~2F~2Fprovenancewallet.page.link) of the Firebase console.
+The URL is limited by an allowlist that is configured in the Dynamic Links section of the Firebase console.
