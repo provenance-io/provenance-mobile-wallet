@@ -164,7 +164,7 @@ This can help provide more insight into the Gradle build
 Note: You will have to manually address any system prompts (e.g. Face ID, permissions requests, etc.) as they pop up
 
 ### API Permissions
-API keys have application and API restrictions that are managed in Google Cloud
+API keys have application and API restrictions that are managed in Google Cloud.
 
 Dynamic Links requires:
 1. Firebase Installations API
