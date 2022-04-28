@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -168,10 +167,8 @@ class AssetBarChart extends StatelessWidget {
                   rotateAngle: xLabelAngle,
                   getTextStyles: (context, value) => labelStyle,
                   getTitles: (double value) {
-                    final index = value.toInt();
-                    final item = graphList[index];
                     final timeStamp = DateTime.fromMillisecondsSinceEpoch(
-                      item.timestamp.millisecondsSinceEpoch,
+                      value.toInt(),
                     );
 
                     return xFormatter.format(timeStamp);
@@ -256,9 +253,9 @@ class AssetBarChart extends StatelessWidget {
                   isCurved: true,
                   colors: [graphColor],
                   spots: graphList
-                      .mapIndexed(
-                        (index, element) => FlSpot(
-                          index.toDouble(),
+                      .map(
+                        (element) => FlSpot(
+                          element.timestamp.millisecondsSinceEpoch.toDouble(),
                           element.price,
                         ),
                       )
