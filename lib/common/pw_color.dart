@@ -18,6 +18,8 @@ enum PwColor {
   negative,
   positive,
   neutral,
+  graphLine,
+  graphFill,
 }
 
 mixin PwColorMixin on Widget {
@@ -69,6 +71,16 @@ mixin PwColorMixin on Widget {
       case PwColor.neutral:
         if (theme.colorScheme is ProvenanceColorScheme) {
           return (theme.colorScheme as ProvenanceColorScheme).graphNeutral;
+        }
+        return null;
+      case PwColor.graphFill:
+        if (theme.colorScheme is ProvenanceColorScheme) {
+          return (theme.colorScheme as ProvenanceColorScheme).graphFill;
+        }
+        return null;
+      case PwColor.graphLine:
+        if (theme.colorScheme is ProvenanceColorScheme) {
+          return (theme.colorScheme as ProvenanceColorScheme).graphLine;
         }
         return null;
       default:

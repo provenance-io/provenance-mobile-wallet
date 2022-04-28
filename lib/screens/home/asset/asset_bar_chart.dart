@@ -32,7 +32,7 @@ class AssetBarChart extends StatelessWidget {
 
   final GraphingDataValue timeInterval;
   final Color graphColor;
-  final Color graphFillColor;
+  final Color? graphFillColor;
   final Color labelColor;
   final bool isCompact;
   final ValueNotifier<AssetChartPointData?> changeNotifier =
@@ -136,6 +136,11 @@ class AssetBarChart extends StatelessWidget {
     final adjustmentY = yRange * valueAdjustment;
 
     final currentValue = graphList.first.price;
+
+    final graphPointPainter = FlDotCirclePainter(
+      color: graphColor,
+      radius: 2,
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -248,7 +253,16 @@ class AssetBarChart extends StatelessWidget {
                 LineChartBarData(
                   barWidth: 2,
                   isStrokeCapRound: true,
-                  dotData: FlDotData(show: false),
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (
+                      _,
+                      __,
+                      ___,
+                      ____,
+                    ) =>
+                        graphPointPainter,
+                  ),
                   preventCurveOverShooting: true,
                   isCurved: true,
                   colors: [graphColor],
@@ -260,15 +274,17 @@ class AssetBarChart extends StatelessWidget {
                         ),
                       )
                       .toList(),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    gradientFrom: const Offset(0, 0),
-                    gradientTo: const Offset(0, 1),
-                    colors: [
-                      graphColor,
-                      graphFillColor,
-                    ],
-                  ),
+                  belowBarData: (graphFillColor == null)
+                      ? null
+                      : BarAreaData(
+                          show: true,
+                          gradientFrom: const Offset(0, 0),
+                          gradientTo: const Offset(0, 1),
+                          colors: [
+                            graphColor,
+                            graphFillColor!,
+                          ],
+                        ),
                 ),
               ],
             ),

@@ -1,5 +1,6 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart_button.dart';
@@ -56,6 +57,9 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
         if (null == details) {
           return Container();
         }
+
+        final colorScheme =
+            Theme.of(context).colorScheme as ProvenanceColorScheme;
 
         return Container(
           decoration: BoxDecoration(
@@ -120,6 +124,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     AssetBarChart(
                       snapshot.data!.value,
                       isCompact: !isTallScreen,
+                      graphColor: colorScheme.graphLine,
+                      graphFillColor: colorScheme.graphFill,
                     ),
                     VerticalSpacer.small(),
                     AssetBarChartButtons(
