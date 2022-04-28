@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -164,6 +164,7 @@
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
 				E148C2B9C2FD5BE2E6E71275 /* [CP] Check Pods Manifest.lock */,
+				83019912281AFB4100C5AB01 /* ShellScript */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				55826E2A27F541D4003076C3 /* Copy FIrebase File */,
 				97C146EA1CF9000F007C117D /* Sources */,
@@ -261,6 +262,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert  path.\n\nPATH_TO_GOOGLE_PLISTS=\"${PROJECT_DIR}/Runner/Firebase\"\nPLIST_FILE=\"$PATH_TO_GOOGLE_PLISTS/GoogleService-${PRODUCT_BUNDLE_IDENTIFIER}-Info.plist\"\n   \ncp -r \"${PLIST_FILE}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" \n";
+		};
+		83019912281AFB4100C5AB01 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/../swiftformat\" \"$SRCROOT/..\"\n";
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
