@@ -14,4 +14,16 @@ class AssetGraphItem {
 
   final DateTime timestamp;
   final double price;
+
+  AssetGraphItem copyWith({
+    double? newPrice,
+    DateTime? newTimestamp,
+  }) {
+    return AssetGraphItem(
+      dto: AssetGraphItemDto(
+        timestamp: newTimestamp ?? timestamp,
+        price: newPrice ?? price,
+      ),
+    );
+  }
 }

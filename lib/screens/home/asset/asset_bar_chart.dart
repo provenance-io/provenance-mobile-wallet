@@ -104,7 +104,7 @@ class AssetBarChart extends StatelessWidget {
 
     for (var item in graphList) {
       final y = item.price;
-      final x = item.timestamp.millisecondsSinceEpoch.toDouble();
+      final x = item.timestamp.microsecondsSinceEpoch.toDouble();
 
       maxY = max(maxY, y);
       minY = min(minY, y);
@@ -125,15 +125,11 @@ class AssetBarChart extends StatelessWidget {
     );
 
     final leftSize = _sizeFromRotatedText(
-      yFormatter.format(0.08),
+      yFormatter.format(1050.02),
       yLabelAngle,
       textDirection,
       labelStyle,
     );
-    final yRange = maxY - minY;
-    const valueAdjustment = .05;
-
-    final adjustmentY = yRange * valueAdjustment;
 
     final currentValue = graphList.first.price;
 
@@ -141,6 +137,46 @@ class AssetBarChart extends StatelessWidget {
       color: graphColor,
       radius: 2,
     );
+
+    if (minY == maxY) {
+      minY *= .9;
+      maxY *= 1.1;
+    }
+
+    checkToShowTitle(
+      minValue,
+      maxValue,
+      sideTitles,
+      appliedInterval,
+      value,
+    ) {
+      final mod = value % appliedInterval;
+
+      return mod == 0.0;
+    }
+
+    const microsecondsInAMinute = 1000000 * 60;
+    double? interval;
+    switch (details.value) {
+      case GraphingDataValue.hourly:
+        interval = microsecondsInAMinute * 5; //every 5 minuts
+        break;
+      case GraphingDataValue.daily:
+        interval = microsecondsInAMinute * 60; //every hour
+        break;
+      case GraphingDataValue.weekly:
+        interval = microsecondsInAMinute * 60 * 24 * 2; //every 2 days
+        break;
+      case GraphingDataValue.monthly:
+        interval = microsecondsInAMinute * 60 * 24 * 7; //every week
+        break;
+      case GraphingDataValue.yearly:
+        interval =
+            microsecondsInAMinute * 60 * 24 * 30; //approximately every month
+        break;
+      default:
+        interval = null;
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -157,36 +193,32 @@ class AssetBarChart extends StatelessWidget {
                 PriceChangeIndicator(value),
           ),
         ),
+        VerticalSpacer.small(),
         Expanded(
           child: LineChart(
             LineChartData(
-              maxY: maxY + adjustmentY,
-              minY: max(0.0, minY - adjustmentY),
+              maxY: maxY - minY,
+              minY: 0,
+              maxX: maxX - minX,
+              minX: 0,
               gridData: FlGridData(show: false),
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: SideTitles(
+                  interval: interval,
                   textAlign: TextAlign.center,
                   showTitles: true,
                   reservedSize: bottomSize.height,
                   rotateAngle: xLabelAngle,
                   getTextStyles: (context, value) => labelStyle,
                   getTitles: (double value) {
-                    final timeStamp = DateTime.fromMillisecondsSinceEpoch(
-                      value.toInt(),
+                    final timeStamp = DateTime.fromMicrosecondsSinceEpoch(
+                      (value + minX).toInt(),
                     );
 
                     return xFormatter.format(timeStamp);
                   },
-                  checkToShowTitle: (
-                    minValue,
-                    maxValue,
-                    sideTitles,
-                    appliedInterval,
-                    value,
-                  ) {
-                    return true;
-                  },
+                  checkToShowTitle: checkToShowTitle,
                 ),
                 leftTitles: SideTitles(
                   showTitles: true,
@@ -194,16 +226,8 @@ class AssetBarChart extends StatelessWidget {
                   reservedSize: leftSize.width,
                   rotateAngle: yLabelAngle,
                   getTextStyles: (context, value) => labelStyle,
-                  getTitles: (double value) => yFormatter.format(value),
-                  checkToShowTitle: (
-                    minValue,
-                    maxValue,
-                    sideTitles,
-                    appliedInterval,
-                    value,
-                  ) {
-                    return true;
-                  },
+                  getTitles: (double value) => yFormatter.format(value + minY),
+                  checkToShowTitle: checkToShowTitle,
                 ),
                 topTitles: SideTitles(showTitles: false),
                 rightTitles: SideTitles(showTitles: false),
@@ -217,6 +241,8 @@ class AssetBarChart extends StatelessWidget {
                 getTouchedSpotIndicator: _getTouchedSpotIndicator,
                 touchCallback: (event, response) {
                   if (!event.isInterestedForInteractions) {
+                    changeNotifier.value = null;
+
                     return;
                   }
                   final spot = response?.lineBarSpots?.first;
@@ -224,17 +250,18 @@ class AssetBarChart extends StatelessWidget {
                   if (spot == null || spot.spotIndex == 0) {
                     changeNotifier.value = null;
                   } else {
-                    final price = spot.y;
+                    final price = spot.y + minY;
                     final amountChanged = ((price - currentValue));
                     final percentChange =
                         ((amountChanged / currentValue) * 1000) / 10;
+                    final timestamp = DateTime.fromMicrosecondsSinceEpoch(
+                      spot.x.toInt() + minX.toInt(),
+                    );
 
                     changeNotifier.value = AssetChartPointData(
                       (amountChanged * 1000).toInt() / 1000,
                       percentChange,
-                      DateTime.fromMillisecondsSinceEpoch(
-                        spot.x.toInt(),
-                      ),
+                      timestamp,
                     );
                   }
                 },
@@ -269,8 +296,9 @@ class AssetBarChart extends StatelessWidget {
                   spots: graphList
                       .map(
                         (element) => FlSpot(
-                          element.timestamp.millisecondsSinceEpoch.toDouble(),
-                          element.price,
+                          (element.timestamp.microsecondsSinceEpoch - minX)
+                              .toDouble(),
+                          element.price - minY,
                         ),
                       )
                       .toList(),
@@ -447,12 +475,12 @@ class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
   @override
   Widget build(BuildContext context) {
     final pwColor = this.color;
-    final percentChanged = chartData?.percentChange ?? 0.0;
+    final percentChanged = chartData?.percentChange;
     final color = getColor(context);
 
-    if (percentChanged == 0.00) {
+    if (percentChanged == null) {
       return PwText(
-        "0.00",
+        "",
         color: pwColor,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
