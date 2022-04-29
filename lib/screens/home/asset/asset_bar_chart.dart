@@ -182,7 +182,7 @@ class AssetBarChart extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(
-          height: 24,
+          height: 45,
           child: ValueListenableBuilder<AssetChartPointData?>(
             valueListenable: changeNotifier,
             builder: (
@@ -486,6 +486,7 @@ class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
         overflow: TextOverflow.ellipsis,
       );
     }
+    final format = intl.DateFormat("hh:mm a, MMM dd, yyyy");
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -497,11 +498,22 @@ class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
             (percentChanged > 0.0) ? Icons.arrow_upward : Icons.arrow_downward,
             color: color,
           ),
-        PwText(
-          "\$${chartData!.price.toString()} (${percentChanged.toStringAsFixed(2)} %)",
-          color: pwColor,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            PwText(
+              "\$${chartData!.price.toString()} (${percentChanged.toStringAsFixed(2)} %)",
+              color: pwColor,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Expanded(
+              child: PwText(
+                format.format(chartData!.timestamp),
+                style: PwTextStyle.caption,
+              ),
+            ),
+          ],
         ),
       ],
     );
