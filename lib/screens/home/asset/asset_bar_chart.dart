@@ -12,22 +12,29 @@ class AssetChartPointData {
   AssetChartPointData(
     this.price,
     this.percentChange,
+    this.amountChanged,
     this.timestamp,
   );
 
   final double price;
+  final double amountChanged;
   final double percentChange;
   final DateTime timestamp;
 }
 
+typedef OnTouchPointChangedDelegate = void Function(
+  AssetChartPointData? chardDataPoint,
+);
+
 class AssetBarChart extends StatelessWidget {
-  AssetBarChart(
+  const AssetBarChart(
     this.timeInterval, {
     Key? key,
     this.graphColor = Colors.blue,
     this.graphFillColor = Colors.white,
     this.labelColor = Colors.white,
     this.isCompact = false,
+    required this.onTouchPointChanged,
   }) : super(key: key);
 
   final GraphingDataValue timeInterval;
@@ -35,8 +42,7 @@ class AssetBarChart extends StatelessWidget {
   final Color? graphFillColor;
   final Color labelColor;
   final bool isCompact;
-  final ValueNotifier<AssetChartPointData?> changeNotifier =
-      ValueNotifier(null);
+  final OnTouchPointChangedDelegate onTouchPointChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -178,147 +184,129 @@ class AssetBarChart extends StatelessWidget {
         interval = null;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        SizedBox(
-          height: 45,
-          child: ValueListenableBuilder<AssetChartPointData?>(
-            valueListenable: changeNotifier,
-            builder: (
-              context,
-              value,
-              child,
-            ) =>
-                PriceChangeIndicator(value),
+    return LineChart(
+      LineChartData(
+        maxY: maxY - minY,
+        minY: 0,
+        maxX: maxX - minX,
+        minX: 0,
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: SideTitles(
+            interval: interval,
+            textAlign: TextAlign.center,
+            showTitles: true,
+            reservedSize: bottomSize.height,
+            rotateAngle: xLabelAngle,
+            getTextStyles: (context, value) => labelStyle,
+            getTitles: (double value) {
+              final timeStamp = DateTime.fromMicrosecondsSinceEpoch(
+                (value + minX).toInt(),
+              );
+
+              return xFormatter.format(timeStamp);
+            },
+            checkToShowTitle: checkToShowTitle,
+          ),
+          leftTitles: SideTitles(
+            showTitles: true,
+            textAlign: TextAlign.center,
+            reservedSize: leftSize.width,
+            rotateAngle: yLabelAngle,
+            getTextStyles: (context, value) => labelStyle,
+            getTitles: (double value) => yFormatter.format(value + minY),
+            checkToShowTitle: checkToShowTitle,
+          ),
+          topTitles: SideTitles(showTitles: false),
+          rightTitles: SideTitles(showTitles: false),
+        ),
+        borderData: FlBorderData(
+          show: false,
+        ),
+        lineTouchData: LineTouchData(
+          enabled: true,
+          handleBuiltInTouches: true,
+          getTouchedSpotIndicator: _getTouchedSpotIndicator,
+          touchCallback: (event, response) {
+            if (!event.isInterestedForInteractions) {
+              onTouchPointChanged.call(null);
+
+              return;
+            }
+            final spot = response?.lineBarSpots?.first;
+
+            AssetChartPointData? pointData;
+
+            if (!(spot == null || spot.spotIndex == 0)) {
+              final price = spot.y + minY;
+              final amountChanged = ((price - currentValue));
+              final percentChange =
+                  ((amountChanged / currentValue) * 1000) / 10;
+              final timestamp = DateTime.fromMicrosecondsSinceEpoch(
+                spot.x.toInt() + minX.toInt(),
+              );
+
+              pointData = AssetChartPointData(
+                (price * 1000).toInt() / 1000,
+                percentChange,
+                (amountChanged * 1000).toInt() / 1000,
+                timestamp,
+              );
+            }
+            onTouchPointChanged.call(pointData);
+          },
+          touchTooltipData: LineTouchTooltipData(
+            tooltipBgColor: Colors.transparent,
+            tooltipPadding: const EdgeInsets.all(0),
+            tooltipMargin: 10,
+            getTooltipItems: (touchedBarSpots) => touchedBarSpots.map(
+              (e) {
+                return null;
+              },
+            ).toList(),
           ),
         ),
-        VerticalSpacer.small(),
-        Expanded(
-          child: LineChart(
-            LineChartData(
-              maxY: maxY - minY,
-              minY: 0,
-              maxX: maxX - minX,
-              minX: 0,
-              gridData: FlGridData(show: false),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                  interval: interval,
-                  textAlign: TextAlign.center,
-                  showTitles: true,
-                  reservedSize: bottomSize.height,
-                  rotateAngle: xLabelAngle,
-                  getTextStyles: (context, value) => labelStyle,
-                  getTitles: (double value) {
-                    final timeStamp = DateTime.fromMicrosecondsSinceEpoch(
-                      (value + minX).toInt(),
-                    );
-
-                    return xFormatter.format(timeStamp);
-                  },
-                  checkToShowTitle: checkToShowTitle,
-                ),
-                leftTitles: SideTitles(
-                  showTitles: true,
-                  textAlign: TextAlign.center,
-                  reservedSize: leftSize.width,
-                  rotateAngle: yLabelAngle,
-                  getTextStyles: (context, value) => labelStyle,
-                  getTitles: (double value) => yFormatter.format(value + minY),
-                  checkToShowTitle: checkToShowTitle,
-                ),
-                topTitles: SideTitles(showTitles: false),
-                rightTitles: SideTitles(showTitles: false),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              lineTouchData: LineTouchData(
-                enabled: true,
-                handleBuiltInTouches: true,
-                getTouchedSpotIndicator: _getTouchedSpotIndicator,
-                touchCallback: (event, response) {
-                  if (!event.isInterestedForInteractions) {
-                    changeNotifier.value = null;
-
-                    return;
-                  }
-                  final spot = response?.lineBarSpots?.first;
-
-                  if (spot == null || spot.spotIndex == 0) {
-                    changeNotifier.value = null;
-                  } else {
-                    final price = spot.y + minY;
-                    final amountChanged = ((price - currentValue));
-                    final percentChange =
-                        ((amountChanged / currentValue) * 1000) / 10;
-                    final timestamp = DateTime.fromMicrosecondsSinceEpoch(
-                      spot.x.toInt() + minX.toInt(),
-                    );
-
-                    changeNotifier.value = AssetChartPointData(
-                      (amountChanged * 1000).toInt() / 1000,
-                      percentChange,
-                      timestamp,
-                    );
-                  }
-                },
-                touchTooltipData: LineTouchTooltipData(
-                  tooltipBgColor: Colors.transparent,
-                  tooltipPadding: const EdgeInsets.all(0),
-                  tooltipMargin: 10,
-                  getTooltipItems: (touchedBarSpots) => touchedBarSpots.map(
-                    (e) {
-                      return null;
-                    },
-                  ).toList(),
-                ),
-              ),
-              lineBarsData: [
-                LineChartBarData(
-                  barWidth: 2,
-                  isStrokeCapRound: true,
-                  dotData: FlDotData(
-                    show: true,
-                    getDotPainter: (
-                      _,
-                      __,
-                      ___,
-                      ____,
-                    ) =>
-                        graphPointPainter,
-                  ),
-                  preventCurveOverShooting: true,
-                  isCurved: true,
-                  colors: [graphColor],
-                  spots: graphList
-                      .map(
-                        (element) => FlSpot(
-                          (element.timestamp.microsecondsSinceEpoch - minX)
-                              .toDouble(),
-                          element.price - minY,
-                        ),
-                      )
-                      .toList(),
-                  belowBarData: (graphFillColor == null)
-                      ? null
-                      : BarAreaData(
-                          show: true,
-                          gradientFrom: const Offset(0, 0),
-                          gradientTo: const Offset(0, 1),
-                          colors: [
-                            graphColor,
-                            graphFillColor!,
-                          ],
-                        ),
-                ),
-              ],
+        lineBarsData: [
+          LineChartBarData(
+            barWidth: 2,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (
+                _,
+                __,
+                ___,
+                ____,
+              ) =>
+                  graphPointPainter,
             ),
+            preventCurveOverShooting: true,
+            isCurved: true,
+            colors: [graphColor],
+            spots: graphList
+                .map(
+                  (element) => FlSpot(
+                    (element.timestamp.microsecondsSinceEpoch - minX)
+                        .toDouble(),
+                    element.price - minY,
+                  ),
+                )
+                .toList(),
+            belowBarData: (graphFillColor == null)
+                ? null
+                : BarAreaData(
+                    show: true,
+                    gradientFrom: const Offset(0, 0),
+                    gradientTo: const Offset(0, 1),
+                    colors: [
+                      graphColor,
+                      graphFillColor!,
+                    ],
+                  ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -451,71 +439,5 @@ class AssetBarChart extends StatelessWidget {
               data,
             ))
         .toList();
-  }
-}
-
-class PriceChangeIndicator extends StatelessWidget with PwColorMixin {
-  PriceChangeIndicator(this.chartData, {Key? key}) : super(key: key);
-
-  final AssetChartPointData? chartData;
-
-  @override
-  PwColor? get color {
-    final percentChanged = chartData?.percentChange ?? 0.0;
-
-    if (percentChanged == 0.0) {
-      return PwColor.neutral;
-    } else if (percentChanged < 0.0) {
-      return PwColor.negative;
-    } else {
-      return PwColor.positive;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pwColor = this.color;
-    final percentChanged = chartData?.percentChange;
-    final color = getColor(context);
-
-    if (percentChanged == null) {
-      return PwText(
-        "",
-        color: pwColor,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      );
-    }
-    final format = intl.DateFormat("hh:mm a, MMM dd, yyyy");
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (percentChanged != 0.0)
-          Icon(
-            (percentChanged > 0.0) ? Icons.arrow_upward : Icons.arrow_downward,
-            color: color,
-          ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PwText(
-              "\$${chartData!.price.toString()} (${percentChanged.toStringAsFixed(2)} %)",
-              color: pwColor,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Expanded(
-              child: PwText(
-                format.format(chartData!.timestamp),
-                style: PwTextStyle.caption,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }
