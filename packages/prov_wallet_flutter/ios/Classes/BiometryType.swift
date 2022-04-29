@@ -6,8 +6,8 @@
 import Foundation
 
 enum BiometryType: String {
-	case faceId = "face_id"
-	case touchId = "touch_id"
-	case unknown = "unknown"
-	case none = "none"
+    case faceId = "face_id"
+    case touchId = "touch_id"
+    case unknown
+    case none
 }
