@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -65,7 +64,7 @@ class AssetChartBloc extends Disposable {
           endDate.millisecond,
           endDate.microsecond,
         );
-        modifiedDataValue = GraphingDataValue.monthly;
+        modifiedDataValue = GraphingDataValue.weekly;
         break;
       default:
       // no specific start date.
@@ -90,14 +89,16 @@ class AssetChartBloc extends Disposable {
     // in the more convenient type
     final scaleValue = pow(10, _asset.exponent);
     final scaledItems = graphItemList.map((item) {
-      return AssetGraphItem(
-        dto: AssetGraphItemDto(
-          timestamp: item.timestamp,
-          price: item.price * scaleValue,
-        ),
-      );
+      return item.copyWith(newPrice: item.price * scaleValue);
     }).toList();
 
+    // a list with 1 items will only display a single point. This was the line will extend across the screen
+    if (scaledItems.length == 1) {
+      final first = scaledItems.first;
+      final copyDto = first.copyWith(newTimestamp: DateTime.now());
+
+      scaledItems.add(copyDto);
+    }
     _chartDetails.value = AssetChartDetails(
       value,
       _asset,

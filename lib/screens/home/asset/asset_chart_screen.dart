@@ -1,11 +1,14 @@
+import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart_button.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
+import 'package:provenance_wallet/screens/home/asset/price_change_indicator.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -27,6 +30,8 @@ class AssetChartScreen extends StatefulWidget {
 
 class _AssetChartScreenState extends State<AssetChartScreen> {
   late AssetChartBloc _bloc;
+  final ValueNotifier<AssetChartPointData?> changeNotifier =
+      ValueNotifier(null);
 
   @override
   void initState() {
@@ -56,6 +61,9 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
         if (null == details) {
           return Container();
         }
+
+        final colorScheme =
+            Theme.of(context).colorScheme as ProvenanceColorScheme;
 
         return Container(
           decoration: BoxDecoration(
@@ -110,16 +118,45 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                       style: PwTextStyle.subhead,
                       textAlign: TextAlign.center,
                     ),
-                    PwAutoSizingText(
-                      details.asset.formattedUsdPrice,
-                      height: priceHeight,
-                      style: PwTextStyle.h1,
-                      color: PwColor.neutralNeutral,
+                    ValueListenableBuilder<AssetChartPointData?>(
+                      valueListenable: changeNotifier,
+                      builder: (
+                        context,
+                        value,
+                        chil,
+                      ) {
+                        final formatter = NumberFormat.simpleCurrency();
+                        final priceString = (value != null)
+                            ? formatter.format(value.price)
+                            : details.asset.formattedUsdPrice;
+
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            PwAutoSizingText(
+                              priceString,
+                              height: priceHeight,
+                              style: PwTextStyle.h1,
+                              color: PwColor.neutralNeutral,
+                            ),
+                            SizedBox(
+                              child: PriceChangeIndicator(value),
+                              height: 45,
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                    VerticalSpacer.small(),
                     AssetBarChart(
                       snapshot.data!.value,
                       isCompact: !isTallScreen,
+                      graphColor: colorScheme.graphLine,
+                      graphFillColor: colorScheme.graphFill,
+                      onTouchPointChanged: (touchPoint) {
+                        changeNotifier.value = touchPoint;
+                      },
                     ),
                     VerticalSpacer.small(),
                     AssetBarChartButtons(

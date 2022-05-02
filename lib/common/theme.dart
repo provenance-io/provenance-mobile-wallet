@@ -34,6 +34,8 @@ class ProvenanceColorScheme extends ColorScheme {
     this.graphNegative,
     this.graphNeutral,
     this.graphPositive,
+    this.graphFill,
+    required this.graphLine,
   }) : super(
           brightness: brightness,
           primary: primary,
@@ -68,6 +70,8 @@ class ProvenanceColorScheme extends ColorScheme {
   final Color? graphNegative;
   final Color? graphNeutral;
   final Color? graphPositive;
+  final Color graphLine;
+  final Color? graphFill;
 
   @override
   ProvenanceColorScheme copyWith({
@@ -104,6 +108,8 @@ class ProvenanceColorScheme extends ColorScheme {
     Color? graphNegative,
     Color? graphNeutral,
     Color? graphPositive,
+    Color? graphFill,
+    Color? graphLine,
   }) {
     return ProvenanceColorScheme(
       brightness: brightness ?? this.brightness,
@@ -137,6 +143,8 @@ class ProvenanceColorScheme extends ColorScheme {
       graphNegative: graphNegative ?? this.graphNegative,
       graphNeutral: graphNeutral ?? this.graphNeutral,
       graphPositive: graphPositive ?? this.graphPositive,
+      graphLine: graphLine ?? this.graphLine,
+      graphFill: graphFill ?? this.graphFill,
     );
   }
 }
@@ -324,6 +332,13 @@ class ProvenanceThemeData {
       0xF1,
       0x9C,
     ),
+    graphLine: Color.fromARGB(
+      255,
+      0x04,
+      0xF1,
+      0xED,
+    ),
+    graphFill: null,
   );
 
   static final TextTheme _textTheme = TextTheme(
