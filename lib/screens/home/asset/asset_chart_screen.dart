@@ -149,7 +149,6 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                         );
                       },
                     ),
-                    // VerticalSpacer.small(),
                     AssetBarChart(
                       snapshot.data!.value,
                       isCompact: !isTallScreen,
