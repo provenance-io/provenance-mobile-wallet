@@ -181,18 +181,28 @@ class PwDialog {
       message: msg ?? 'Unknown Error',
       bottom: Column(
         children: [
-          PwPrimaryButton.fromString(
-            text: Strings.okay,
-            onPressed: () {
-              Navigator.of(context).pop();
-              okAction?.call();
-            },
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.xLarge,
+            ),
+            child: PwPrimaryButton.fromString(
+              text: Strings.okay,
+              onPressed: () {
+                Navigator.of(context).pop();
+                okAction?.call();
+              },
+            ),
           ),
           if (showCancel) ...[
             const VerticalSpacer.small(),
-            PwTextButton(
-              child: PwText(Strings.cancel),
-              onPressed: () => Navigator.of(context).pop(),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.xLarge,
+              ),
+              child: PwTextButton(
+                child: PwText(Strings.cancel),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
           ],
         ],
