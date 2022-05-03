@@ -53,6 +53,7 @@ class AccountName extends HookWidget {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwText(
                 Strings.nameYourAccountText,
+                key: keyNameTextField,
                 style: PwTextStyle.body,
                 textAlign: TextAlign.center,
                 color: PwColor.neutralNeutral,

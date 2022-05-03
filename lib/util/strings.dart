@@ -399,4 +399,17 @@ class Strings {
   static const channelTitle = "High Importance Notifications";
   static const channelDescription =
       "This channel is used for important notifications.";
+
+  // Cipher errors
+  static const cipherErrorTitle = 'Cipher Error';
+  static const cipherAccessError = 'An access error occurred.';
+  static const cipherAccountKeyNotFoundError = 'Account key not found.';
+  static const cipherAddSecItemError = 'Failed to add security item.';
+  static const cipherDataPersistenceError = 'Data persistence failed.';
+  static const cipherInvalidArgumentError = 'Invalid argument.';
+  static const cipherPublicKeyError = 'Public key error.';
+  static const cipherSecKeyNotFoundError = 'Security item not found.';
+  static const cipherUnknownError = 'Unknown error.';
+  static const cipherUpgradeError = 'An error occured during while upgrading.';
+  static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
 }

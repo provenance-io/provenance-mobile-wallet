@@ -15,6 +15,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -184,6 +185,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   Future<void> _setup() async {
     final keyValueService = get<KeyValueService>();
 
+    get<CipherService>().error.listen((e) {
+      logDebug("CipherService error: $e");
+
+      final navContext = _navigatorKey.currentContext;
+      if (navContext != null) {
+        showCipherServiceError(navContext, e);
+      }
+    }).addTo(_subscriptions);
+
     final authHelper = get<LocalAuthHelper>();
     _authStatus = authHelper.status.value;
 
@@ -312,4 +322,46 @@ Future<void> _initializeCrashlytics(KeyValueService service) async {
           !kDebugMode);
   await FirebaseCrashlytics.instance
       .setCrashlyticsCollectionEnabled(allowCrashlytics);
+}
+
+void showCipherServiceError(BuildContext context, CipherServiceError error) {
+  String message;
+  switch (error.code) {
+    case CipherServiceErrorCode.accessError:
+      message = Strings.cipherAccessError;
+      break;
+    case CipherServiceErrorCode.accountKeyNotFound:
+      message = Strings.cipherAccountKeyNotFoundError;
+      break;
+    case CipherServiceErrorCode.addSecItem:
+      message = Strings.cipherAddSecItemError;
+      break;
+    case CipherServiceErrorCode.dataPersistence:
+      message = Strings.cipherDataPersistenceError;
+      break;
+    case CipherServiceErrorCode.invalidArgument:
+      message = Strings.cipherInvalidArgumentError;
+      break;
+    case CipherServiceErrorCode.publicKeyError:
+      message = Strings.cipherPublicKeyError;
+      break;
+    case CipherServiceErrorCode.secKeyNotFound:
+      message = Strings.cipherSecKeyNotFoundError;
+      break;
+    case CipherServiceErrorCode.unknown:
+      message = Strings.cipherUnknownError;
+      break;
+    case CipherServiceErrorCode.upgradeError:
+      message = Strings.cipherUpgradeError;
+      break;
+    case CipherServiceErrorCode.unsupportedAlgorithm:
+      message = Strings.cipherUnsupportedAlgorithmError;
+      break;
+  }
+
+  PwDialog.showError(
+    context,
+    title: Strings.cipherErrorTitle,
+    message: message,
+  );
 }

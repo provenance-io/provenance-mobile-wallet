@@ -148,6 +148,11 @@ class MockWalletConnection extends ValueListenable<WalletConnectState>
 }
 
 class MockCipherService implements CipherService {
+  final _error = PublishSubject<CipherServiceError>();
+
+  @override
+  Stream<CipherServiceError> get error => _error;
+
   @override
   Future<String?> get platformVersion async => null;
 
