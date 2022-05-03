@@ -25,7 +25,7 @@ void main() {
 
       final testData = await tester.loadTestData();
 
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(seconds: 1));
 
       await tester.tapKeyAndSettle(
         LandingScreen.keyRecoverAccountButton,

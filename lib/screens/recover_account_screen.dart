@@ -76,6 +76,7 @@ class RecoverAccountScreen extends StatelessWidget {
             child: PwButton(
               child: PwText(
                 Strings.continueName,
+                key: RecoverAccountScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),
