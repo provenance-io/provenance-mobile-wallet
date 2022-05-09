@@ -38,8 +38,10 @@ class RecoverAccountScreen extends StatelessWidget {
       ),
       body: PwOnboardingScreen(
         children: [
-          VerticalSpacer.largeX6(),
-          VerticalSpacer.xxLarge(),
+          Expanded(
+            flex: 1,
+            child: SizedBox(),
+          ),
           PwText(
             Strings.recoverAccount.toUpperCase(),
             style: PwTextStyle.headline2,
@@ -57,8 +59,7 @@ class RecoverAccountScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          VerticalSpacer.large(),
-          VerticalSpacer.medium(),
+          VerticalSpacer.xxLarge(),
           Container(
             width: 180,
             alignment: Alignment.center,
@@ -68,9 +69,9 @@ class RecoverAccountScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(),
+            flex: 2,
+            child: SizedBox(),
           ),
-          VerticalSpacer.xxLarge(),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
@@ -93,8 +94,7 @@ class RecoverAccountScreen extends StatelessWidget {
               },
             ),
           ),
-          VerticalSpacer.xxLarge(),
-          VerticalSpacer.xxLarge(),
+          VerticalSpacer.largeX4(),
         ],
       ),
     );
