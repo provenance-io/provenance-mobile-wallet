@@ -12,6 +12,19 @@
             ]
         },
         {
+            "name": "Debug - dev - Memory",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev",
+                "--dart-define",
+                "CIPHER_SERVICE=memory"
+            ]
+        },
+        {
             "name": "Debug - prod",
             "type": "dart",
             "request": "launch",
@@ -44,26 +57,5 @@
                 "prod"
             ]
         },
-        {
-            "name": "Integration Test - dev",
-            "type": "dart",
-            "request": "launch",
-            "program": "integration_test/recover_wallet_test.dart",
-            "flutterMode": "debug",
-            "args": [
-                "--flavor",
-                "dev"
-            ],
-            "codeLens": {
-                "for": [
-                    "debug-test-file",
-                    "run-test-file",
-                    "debug-test",
-                    "run-test"
-                ],
-                "path": "integration_test",
-                "title": "${debugType} (dev)"
-            }
-        }
     ]
 }

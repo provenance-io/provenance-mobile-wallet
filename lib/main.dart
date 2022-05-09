@@ -66,6 +66,11 @@ import 'util/get.dart';
 const _testingCrashlytics = false;
 const _tag = 'main';
 
+const _cipherServiceKind = String.fromEnvironment(
+  'CIPHER_SERVICE',
+  defaultValue: 'platform',
+);
+
 void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
@@ -98,8 +103,23 @@ void main() {
         return DefaultRemoteNotificationService(pushNotificationHelper);
       });
 
-      final cipherService = PlatformCipherService();
+      CipherService cipherService;
+
+      switch (CipherServiceKind.values.byName(_cipherServiceKind)) {
+        case CipherServiceKind.platform:
+          cipherService = PlatformCipherService();
+          break;
+        case CipherServiceKind.memory:
+          cipherService = MemoryCipherService();
+          break;
+      }
+
       get.registerSingleton<CipherService>(cipherService);
+      logStatic(
+        _tag,
+        Level.info,
+        '$CipherService implementation: ${cipherService.runtimeType}',
+      );
 
       var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
       if (!hasKey) {

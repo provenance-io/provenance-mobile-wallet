@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:prov_wallet_flutter/src/biometry_type.dart';
 import 'package:prov_wallet_flutter/src/cipher_service_error.dart';
 
+enum CipherServiceKind {
+  platform,
+  memory,
+}
+
 abstract class CipherService {
   CipherService._();
 
@@ -33,7 +38,7 @@ abstract class CipherService {
 
   Future<bool> removeKey({required String id});
 
-  Future<bool> reset();
+  Future<bool> resetKeys();
 
   Future<String?> getPin();
 

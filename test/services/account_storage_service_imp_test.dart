@@ -227,12 +227,13 @@ main() {
 
   group("removeAllWallets", () {
     testWidgets('success', (tester) async {
-      when(_mockCipherService!.reset()).thenAnswer((_) => Future.value(true));
+      when(_mockCipherService!.resetKeys())
+          .thenAnswer((_) => Future.value(true));
       when(_mockSqliteService!.removeAllAccounts())
           .thenAnswer((_) => Future.value(1));
       await _storageService!.removeAllAccounts();
 
-      verify(_mockCipherService!.reset());
+      verify(_mockCipherService!.resetKeys());
       verify(_mockSqliteService!.removeAllAccounts());
     });
   });

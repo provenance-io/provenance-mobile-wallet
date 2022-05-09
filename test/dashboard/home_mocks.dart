@@ -189,7 +189,7 @@ class MockCipherService implements CipherService {
   Future<bool> removeKey({required String id}) async => true;
 
   @override
-  Future<bool> reset() async => true;
+  Future<bool> resetKeys() async => true;
 
   @override
   Future<bool> resetAuth() async => true;
