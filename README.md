@@ -1,6 +1,12 @@
 # Provenance Blockchain Wallet
 
-A mobile wallet.
+Harness the power of distributed apps built on the Provenance Blockchain. The Provenance Blockchain Wallet connects you to the world of decentralized financial services within the Provenance Blockchain ecosystem.
+
+Provenance Blockchain facilitates the establishment of an ecosystem that garners participation amongst financial functions including asset originators, fund managers, servicers, banks, and investors.
+
+The Provenance Blockchain Wallet provides users in all categories the ability to hold and exchange HASH, the native token on the Provenance Blockchain, and connect to next generation financial service dApps powered by blockchain through a simple QR scanning process.
+
+Using biometrics and on-device secured enclaves, the Provenance Blockchain Wallet provides users with a secure, efficient, and robust self-custody key solution.  With the Provenance Blockchain Wallet you control your keys, you authorize dApps to connect with your wallet, and you sign all Provenance Blockchain transactions completely on your device.
 
 ## Getting Started
 
