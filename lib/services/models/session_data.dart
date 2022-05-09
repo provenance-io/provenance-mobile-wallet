@@ -2,14 +2,14 @@ import 'package:provenance_dart/wallet_connect.dart';
 
 class SessionData {
   SessionData(
-    this.walletId,
+    this.accountId,
     this.peerId,
     this.remotePeerId,
     this.address,
     this.clientMeta,
   );
 
-  final String walletId;
+  final String accountId;
   final String peerId;
   final String remotePeerId;
   final String address;
@@ -27,7 +27,7 @@ class SessionData {
   }
 
   Map<String, dynamic> toJson() => {
-        'walletId': walletId,
+        'walletId': accountId,
         'peerId': peerId,
         'remotePeerId': remotePeerId,
         'address': address,

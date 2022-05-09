@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -18,8 +18,8 @@ class LandingScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static final keyRecoverWalletButton =
-      ValueKey('$LandingScreen.recover_wallet_button');
+  static final keyRecoverAccountButton =
+      ValueKey('$LandingScreen.recover_account_button');
 
   @override
   State<StatefulWidget> createState() {
@@ -94,19 +94,18 @@ class _LandingScreenState extends State<LandingScreen> {
                     );
                   }
 
-                  var hasAccount = status != AuthStatus.noAccount &&
-                      status != AuthStatus.noWallet;
+                  var hasAccount = status != AuthStatus.noAccount;
 
                   return PwPrimaryButton.fromString(
                     text: hasAccount
                         ? Strings.continueName
-                        : Strings.createWallet,
+                        : Strings.createAccount,
                     onPressed: () {
                       if (hasAccount) {
                         _bloc.doAuth(context);
                       } else {
                         Navigator.of(context).push(AccountName(
-                          WalletAddImportType.onBoardingAdd,
+                          AccountAddImportType.onBoardingAdd,
                           currentStep: 1,
                           numberOfSteps: 4,
                         ).route());
@@ -137,15 +136,15 @@ class _LandingScreenState extends State<LandingScreen> {
                   }
 
                   return PwTextButton(
-                    key: LandingScreen.keyRecoverWalletButton,
+                    key: LandingScreen.keyRecoverAccountButton,
                     child: PwText(
-                      Strings.recoverWallet,
+                      Strings.recoverAccount,
                       style: PwTextStyle.body,
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: () {
                       Navigator.of(context).push(AccountName(
-                        WalletAddImportType.onBoardingRecover,
+                        AccountAddImportType.onBoardingRecover,
                         currentStep: 1,
                         numberOfSteps: 4,
                       ).route());

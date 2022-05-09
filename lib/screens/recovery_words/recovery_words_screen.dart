@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -22,7 +22,7 @@ class RecoveryWordsScreen extends StatefulWidget {
   final int? currentStep;
   final int? numberOfSteps;
   final String accountName;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {

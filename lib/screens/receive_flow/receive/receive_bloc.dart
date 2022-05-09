@@ -2,26 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 
 abstract class ReceiveNavigator {}
 
 class ReceiveState {
-  ReceiveState(this.walletAddress);
+  ReceiveState(this.accountAddress);
 
-  final String walletAddress;
+  final String accountAddress;
 }
 
 class ReceiveBloc implements Disposable {
-  ReceiveBloc(this._walletDetails, this._navigator) {
+  ReceiveBloc(this._accountDetails, this._navigator) {
     final state = ReceiveState(
-      _walletDetails.address,
+      _accountDetails.address,
     );
 
     _streamController.add(state);
   }
 
-  final WalletDetails _walletDetails;
+  final AccountDetails _accountDetails;
   final ReceiveNavigator _navigator;
   final _streamController = StreamController<ReceiveState>();
 
@@ -33,6 +33,6 @@ class ReceiveBloc implements Disposable {
   }
 
   Future<void> copyAddressToClipboard() {
-    return Clipboard.setData(ClipboardData(text: _walletDetails.address));
+    return Clipboard.setData(ClipboardData(text: _accountDetails.address));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -26,7 +26,7 @@ class AccountName extends HookWidget {
   final List<String>? words;
   final int currentStep;
   final int? numberOfSteps;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,8 @@ class AccountName extends HookWidget {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
-        leadingIcon: flowType == WalletAddImportType.dashboardAdd ||
-                flowType == WalletAddImportType.dashboardRecover
+        leadingIcon: flowType == AccountAddImportType.dashboardAdd ||
+                flowType == AccountAddImportType.dashboardRecover
             ? PwIcons.back
             : null,
         bottom: ProgressStepper(
@@ -100,8 +100,8 @@ class AccountName extends HookWidget {
                 ),
                 onPressed: () {
                   if (_formKey.currentState?.validate() == true) {
-                    if (flowType == WalletAddImportType.onBoardingRecover ||
-                        flowType == WalletAddImportType.dashboardRecover) {
+                    if (flowType == AccountAddImportType.onBoardingRecover ||
+                        flowType == AccountAddImportType.dashboardRecover) {
                       Navigator.of(context).push(
                         RecoverAccountScreen(
                           flowType,
@@ -110,8 +110,8 @@ class AccountName extends HookWidget {
                           numberOfSteps: numberOfSteps,
                         ).route(),
                       );
-                    } else if (flowType == WalletAddImportType.onBoardingAdd ||
-                        flowType == WalletAddImportType.dashboardAdd) {
+                    } else if (flowType == AccountAddImportType.onBoardingAdd ||
+                        flowType == AccountAddImportType.dashboardAdd) {
                       Navigator.of(context).push(
                         CreatePassphraseScreen(
                           flowType,

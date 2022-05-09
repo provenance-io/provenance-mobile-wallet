@@ -9,13 +9,13 @@ import 'package:provenance_dart/proto.dart' as _i4;
 import 'package:provenance_dart/wallet.dart' as _i8;
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart'
     as _i5;
-import 'package:provenance_wallet/services/models/wallet_details.dart' as _i7;
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart'
-    as _i3;
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart'
-    as _i9;
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
+import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
+    as _i3;
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
+    as _i9;
+import 'package:provenance_wallet/services/models/account_details.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,11 +27,11 @@ import 'package:provenance_wallet/services/wallet_service/wallet_service.dart'
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeWalletServiceEvents_0 extends _i1.Fake
-    implements _i2.WalletServiceEvents {}
+class _FakeAccountServiceEvents_0 extends _i1.Fake
+    implements _i2.AccountServiceEvents {}
 
-class _FakeWalletGasEstimate_1 extends _i1.Fake
-    implements _i3.WalletGasEstimate {}
+class _FakeAccountGasEstimate_1 extends _i1.Fake
+    implements _i3.AccountGasEstimate {}
 
 class _FakeRawTxResponsePair_2 extends _i1.Fake
     implements _i4.RawTxResponsePair {}
@@ -50,72 +50,73 @@ class MockSendReviewNaviagor extends _i1.Mock
       returnValueForMissingStub: null);
 }
 
-/// A class which mocks [WalletService].
+/// A class which mocks [AccountService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWalletService extends _i1.Mock implements _i2.WalletService {
-  MockWalletService() {
+class MockAccountService extends _i1.Mock implements _i2.AccountService {
+  MockAccountService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.WalletServiceEvents get events => (super.noSuchMethod(
+  _i2.AccountServiceEvents get events => (super.noSuchMethod(
       Invocation.getter(#events),
-      returnValue: _FakeWalletServiceEvents_0()) as _i2.WalletServiceEvents);
+      returnValue: _FakeAccountServiceEvents_0()) as _i2.AccountServiceEvents);
   @override
   _i6.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
-  _i6.Future<_i7.WalletDetails?> selectWallet({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#selectWallet, [], {#id: id}),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+  _i6.Future<_i7.AccountDetails?> selectAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<_i7.WalletDetails?> getSelectedWallet() =>
-      (super.noSuchMethod(Invocation.method(#getSelectedWallet, []),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+  _i6.Future<_i7.AccountDetails?> getSelectedAccount() =>
+      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<List<_i7.WalletDetails>> getWallets() =>
-      (super.noSuchMethod(Invocation.method(#getWallets, []),
-              returnValue:
-                  Future<List<_i7.WalletDetails>>.value(<_i7.WalletDetails>[]))
-          as _i6.Future<List<_i7.WalletDetails>>);
+  _i6.Future<List<_i7.AccountDetails>> getAccounts() => (super.noSuchMethod(
+          Invocation.method(#getAccounts, []),
+          returnValue:
+              Future<List<_i7.AccountDetails>>.value(<_i7.AccountDetails>[]))
+      as _i6.Future<List<_i7.AccountDetails>>);
   @override
-  _i6.Future<_i7.WalletDetails?> renameWallet({String? id, String? name}) =>
+  _i6.Future<_i7.AccountDetails?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
-              Invocation.method(#renameWallet, [], {#id: id, #name: name}),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+              Invocation.method(#renameAccount, [], {#id: id, #name: name}),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<_i7.WalletDetails?> setWalletCoin({String? id, _i8.Coin? coin}) =>
+  _i6.Future<_i7.AccountDetails?> setAccountCoin(
+          {String? id, _i8.Coin? coin}) =>
       (super.noSuchMethod(
-              Invocation.method(#setWalletCoin, [], {#id: id, #coin: coin}),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+              Invocation.method(#setAccountCoin, [], {#id: id, #coin: coin}),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<_i7.WalletDetails?> addWallet(
+  _i6.Future<_i7.AccountDetails?> addAccount(
           {List<String>? phrase, String? name, _i8.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #addWallet, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+                  #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<_i7.WalletDetails?> removeWallet({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#removeWallet, [], {#id: id}),
-              returnValue: Future<_i7.WalletDetails?>.value())
-          as _i6.Future<_i7.WalletDetails?>);
+  _i6.Future<_i7.AccountDetails?> removeAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
+              returnValue: Future<_i7.AccountDetails?>.value())
+          as _i6.Future<_i7.AccountDetails?>);
   @override
-  _i6.Future<List<_i7.WalletDetails>> resetWallets() =>
-      (super.noSuchMethod(Invocation.method(#resetWallets, []),
-              returnValue:
-                  Future<List<_i7.WalletDetails>>.value(<_i7.WalletDetails>[]))
-          as _i6.Future<List<_i7.WalletDetails>>);
+  _i6.Future<List<_i7.AccountDetails>> resetAccounts() => (super.noSuchMethod(
+          Invocation.method(#resetAccounts, []),
+          returnValue:
+              Future<List<_i7.AccountDetails>>.value(<_i7.AccountDetails>[]))
+      as _i6.Future<List<_i7.AccountDetails>>);
   @override
-  _i6.Future<_i8.PrivateKey?> loadKey(String? walletId) =>
-      (super.noSuchMethod(Invocation.method(#loadKey, [walletId]),
+  _i6.Future<_i8.PrivateKey?> loadKey(String? accountId) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [accountId]),
               returnValue: Future<_i8.PrivateKey?>.value())
           as _i6.Future<_i8.PrivateKey?>);
   @override
@@ -139,16 +140,16 @@ class MockTransactionHandler extends _i1.Mock
               returnValue: Stream<_i9.TransactionResponse>.empty())
           as _i6.Stream<_i9.TransactionResponse>);
   @override
-  _i6.Future<_i3.WalletGasEstimate> estimateGas(
+  _i6.Future<_i3.AccountGasEstimate> estimateGas(
           _i4.TxBody? txBody, _i8.PublicKey? publicKey) =>
       (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, publicKey]),
-              returnValue: Future<_i3.WalletGasEstimate>.value(
-                  _FakeWalletGasEstimate_1()))
-          as _i6.Future<_i3.WalletGasEstimate>);
+              returnValue: Future<_i3.AccountGasEstimate>.value(
+                  _FakeAccountGasEstimate_1()))
+          as _i6.Future<_i3.AccountGasEstimate>);
   @override
   _i6.Future<_i4.RawTxResponsePair> executeTransaction(
           _i4.TxBody? txBody, _i8.PrivateKey? privateKey,
-          [_i3.WalletGasEstimate? gasEstimate]) =>
+          [_i3.AccountGasEstimate? gasEstimate]) =>
       (super.noSuchMethod(
               Invocation.method(
                   #executeTransaction, [txBody, privateKey, gasEstimate]),

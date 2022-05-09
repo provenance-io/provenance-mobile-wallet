@@ -1,5 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
@@ -20,7 +20,7 @@ class CreatePin extends StatefulHookWidget {
   final String? accountName;
   final int? currentStep;
   final int? numberOfSteps;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {
@@ -50,7 +50,7 @@ class CreatePinState extends State<CreatePin> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourWallet,
+                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
                   onFinish: _onFinish,
                 ),
               ),

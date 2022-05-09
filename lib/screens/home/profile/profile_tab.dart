@@ -13,9 +13,9 @@ import 'package:provenance_wallet/screens/home/profile/developer_menu.dart';
 import 'package:provenance_wallet/screens/home/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/home/profile/link_item.dart';
 import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
@@ -111,8 +111,8 @@ class _ProfileTabState extends State<ProfileTab> {
                   );
                 },
               ),
-              StreamBuilder<WalletDetails?>(
-                stream: get<WalletService>().events.selected,
+              StreamBuilder<AccountDetails?>(
+                stream: get<AccountService>().events.selected,
                 initialData: null,
                 builder: (context, snapshot) {
                   var accountName = snapshot.data?.name ?? "";
@@ -132,17 +132,17 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
               _divider,
               LinkItem(
-                text: Strings.resetWallets,
+                text: Strings.resetAccounts,
                 onTap: () async {
                   bool shouldReset = await PwDialog.showConfirmation(
                     context,
-                    title: Strings.resetWallets,
-                    message: Strings.resetWalletsAreYouSure,
+                    title: Strings.resetAccounts,
+                    message: Strings.resetAccountsAreYouSure,
                     cancelText: Strings.cancel,
-                    confirmText: Strings.resetWallets,
+                    confirmText: Strings.resetAccounts,
                   );
                   if (shouldReset) {
-                    await get<HomeBloc>().resetWallets();
+                    await get<HomeBloc>().resetAccounts();
                   }
                 },
               ),

@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -8,8 +8,8 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dar
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
@@ -26,7 +26,7 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
   final int currentStep;
   final int? numberOfSteps;
   final String accountName;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
 
   static final keyContinueButton =
       ValueKey('$RecoverPassphraseEntryScreen.continue_button');
@@ -217,7 +217,8 @@ class RecoverPassphraseEntryScreenState
                                         .toList();
 
                                     if (widget.flowType ==
-                                        WalletAddImportType.onBoardingRecover) {
+                                        AccountAddImportType
+                                            .onBoardingRecover) {
                                       Navigator.of(context).push(CreatePin(
                                         widget.flowType,
                                         accountName: widget.accountName,
@@ -238,7 +239,7 @@ class RecoverPassphraseEntryScreenState
                                               ChainId.defaultChainId;
                                       final coin = ChainId.toCoin(chainId);
 
-                                      await get<WalletService>().addWallet(
+                                      await get<AccountService>().addAccount(
                                         phrase: words,
                                         name: widget.accountName,
                                         coin: coin,

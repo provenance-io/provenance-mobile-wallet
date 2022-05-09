@@ -1,6 +1,6 @@
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:uuid/uuid.dart';
 
 class MemoryStorageData {
@@ -10,14 +10,14 @@ class MemoryStorageData {
     this.selectedKeyIndex,
   );
 
-  final WalletDetails details;
+  final AccountDetails details;
   final List<PrivateKey> keys;
   final int selectedKeyIndex;
 
   PrivateKey get selectedKey => keys[selectedKeyIndex];
 }
 
-class InMemoryWalletStorageService implements WalletStorageService {
+class InMemoryWalletStorageService implements AccountStorageService {
   InMemoryWalletStorageService({
     List<MemoryStorageData>? datas,
     String? selectedWalletId,
@@ -30,7 +30,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
   final List<MemoryStorageData> _datas;
 
   @override
-  Future<WalletDetails?> addWallet({
+  Future<AccountDetails?> addAccount({
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
@@ -46,7 +46,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
         privateKeys.firstWhere((e) => e.coin == selectedCoin);
     final selectedPublicKey = selectedPrivateKey.defaultKey().publicKey;
 
-    final details = WalletDetails(
+    final details = AccountDetails(
       id: id,
       name: name,
       address: selectedPublicKey.address,
@@ -64,18 +64,18 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<WalletDetails?> getSelectedWallet() async {
+  Future<AccountDetails?> getSelectedAccount() async {
     final id = _selectedId;
     if (id == null) {
       return null;
     }
 
-    return getWallet(id);
+    return getAccount(id);
   }
 
   @override
-  Future<WalletDetails?> getWallet(String id) async {
-    WalletDetails? result;
+  Future<AccountDetails?> getAccount(String id) async {
+    AccountDetails? result;
 
     for (final data in _datas) {
       if (data.details.id == id) {
@@ -88,7 +88,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<List<WalletDetails>> getWallets() async {
+  Future<List<AccountDetails>> getAccounts() async {
     return _datas.map((e) => e.details).toList();
   }
 
@@ -106,14 +106,14 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<bool> removeAllWallets() async {
+  Future<bool> removeAllAccounts() async {
     _datas.clear();
 
     return true;
   }
 
   @override
-  Future<bool> removeWallet(String id) async {
+  Future<bool> removeAccount(String id) async {
     final length = _datas.length;
     _datas.removeWhere((e) => e.details.id == id);
 
@@ -121,16 +121,16 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<WalletDetails?> renameWallet({
+  Future<AccountDetails?> renameAccount({
     required String id,
     required String name,
   }) async {
-    WalletDetails? result;
+    AccountDetails? result;
 
     final index = _datas.indexWhere((e) => e.details.id == id);
     if (index != -1) {
       final old = _datas[index];
-      final renamed = WalletDetails(
+      final renamed = AccountDetails(
         id: old.details.id,
         address: old.details.address,
         name: name,
@@ -149,11 +149,11 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<WalletDetails?> setWalletCoin({
+  Future<AccountDetails?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
-    WalletDetails? result;
+    AccountDetails? result;
 
     final index = _datas.indexWhere((e) => e.details.id == id);
     if (index != -1) {
@@ -161,7 +161,7 @@ class InMemoryWalletStorageService implements WalletStorageService {
 
       final keyIndex = old.keys.indexWhere((e) => e.coin == coin);
       if (keyIndex != -1) {
-        final updated = WalletDetails(
+        final updated = AccountDetails(
           id: old.details.id,
           address: old.details.address,
           name: old.details.name,
@@ -181,8 +181,8 @@ class InMemoryWalletStorageService implements WalletStorageService {
   }
 
   @override
-  Future<WalletDetails?> selectWallet({String? id}) async {
-    WalletDetails? result;
+  Future<AccountDetails?> selectAccount({String? id}) async {
+    AccountDetails? result;
 
     if (id == null && _datas.isNotEmpty) {
       final first = _datas.first.details;
