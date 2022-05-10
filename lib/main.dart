@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig;
@@ -62,8 +61,8 @@ import 'package:rxdart/rxdart.dart';
 
 import 'util/get.dart';
 
-// Toggle this for testing Crashlytics in your app locally.
-const _testingCrashlytics = false;
+// Toggle this for testing crash reporting in your app locally.
+const _testingCrashReporting = false;
 const _tag = 'main';
 
 const _cipherServiceKind = String.fromEnvironment(
@@ -75,7 +74,7 @@ void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    get<CrashReportingService>().recordFlutterError(errorDetails);
   };
   runZonedGuarded(
     () async {
@@ -86,15 +85,22 @@ void main() {
         [DeviceOrientation.portraitUp],
       );
 
-      get.registerLazySingleton<CrashReportingService>(
-        () => FirebaseCrashReportingService(),
+      final crashReportingService = FirebaseCrashReportingService();
+      get.registerSingleton<CrashReportingService>(
+        crashReportingService,
       );
 
       var keyValueService = DefaultKeyValueService(
         store: SharedPreferencesKeyValueStore(),
       );
 
-      await _initializeCrashlytics(keyValueService);
+      final allowCrashReporting = _testingCrashReporting ||
+          ((await keyValueService.getBool(PrefKey.allowCrashlitics) ?? true) &&
+              !kDebugMode);
+
+      await crashReportingService.enableCrashCollection(
+        enable: allowCrashReporting,
+      );
 
       final firebaseMessaging = FirebaseMessaging.instance;
       final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
@@ -159,7 +165,10 @@ void main() {
       );
     },
     (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
+      get<CrashReportingService>().recordError(
+        error,
+        stack: stack,
+      );
     },
   );
 }
@@ -333,14 +342,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final deepLinkService = FirebaseDeepLinkService()..init();
     get.registerSingleton<DeepLinkService>(deepLinkService);
   }
-}
-
-Future<void> _initializeCrashlytics(KeyValueService service) async {
-  final allowCrashlytics = _testingCrashlytics ||
-      ((await service.getBool(PrefKey.allowCrashlitics) ?? true) &&
-          !kDebugMode);
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(allowCrashlytics);
 }
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {
