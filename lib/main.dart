@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart'
-    show FirebaseRemoteConfig;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,9 +22,10 @@ import 'package:provenance_wallet/services/account_service/transaction_handler.d
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
-import 'package:provenance_wallet/services/config_service/config_service.dart';
-import 'package:provenance_wallet/services/config_service/default_config_service.dart';
+import 'package:provenance_wallet/services/config_service/default_local_config_service.dart';
+import 'package:provenance_wallet/services/config_service/firebase_remote_config_service.dart';
 import 'package:provenance_wallet/services/config_service/local_config.dart';
+import 'package:provenance_wallet/services/config_service/remote_config_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
@@ -133,14 +132,16 @@ void main() {
         keyValueService.setBool(PrefKey.isSubsequentRun, true);
       }
 
-      final configService = DefaultConfigService(
-        keyValueService: keyValueService,
-        firebaseRemoteConfig: FirebaseRemoteConfig.instance,
-      );
-      get.registerSingleton<ConfigService>(configService);
-
-      final config = await configService.getLocalConfig();
+      final localConfigService = DefaultLocalConfigService();
+      final config = await localConfigService.getConfig();
       get.registerSingleton<LocalConfig>(config);
+
+      get.registerSingleton<RemoteConfigService>(
+        FirebaseRemoteConfigService(
+          keyValueService: keyValueService,
+          localConfigService: localConfigService,
+        ),
+      );
 
       logStatic(
         _tag,
@@ -245,7 +246,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    final configService = get<ConfigService>();
+    final configService = get<RemoteConfigService>();
     final remoteConfig = configService.getRemoteConfig();
 
     get.registerSingleton<ProtobuffClientInjector>(
