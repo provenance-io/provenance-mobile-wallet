@@ -876,7 +876,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: b79216ab64aa497ae9711551e49e6e90dabaa743
+      resolved-ref: c62b041d248389e991c149205a8e8336ff0b99f9
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
     version: "0.0.1"
