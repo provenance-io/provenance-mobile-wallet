@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:move_to_background/move_to_background.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -109,65 +108,58 @@ class HomeScreenState extends State<HomeScreen>
     final double topPadding = (isTallScreen) ? 10 : 5;
     final double bottomPadding = (isTallScreen) ? 28 : 5;
 
-    return WillPopScope(
-      onWillPop: () {
-        MoveToBackground.moveTaskToBack();
-
-        return Future.value(false);
-      },
-      child: Scaffold(
-        bottomNavigationBar: Container(
-          color: Theme.of(context).colorScheme.neutral800,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              VerticalSpacer.large(),
-              TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                tabs: [
-                  TabItem(
-                    0 == _currentTabIndex,
-                    Strings.dashboard,
-                    PwIcons.dashboard,
-                    topPadding: topPadding,
-                    bottomPadding: bottomPadding,
-                  ),
-                  TabItem(
-                    1 == _currentTabIndex,
-                    Strings.transactions,
-                    PwIcons.staking,
-                    topPadding: topPadding,
-                    bottomPadding: bottomPadding,
-                  ),
-                  TabItem(
-                    2 == _currentTabIndex,
-                    Strings.profile,
-                    PwIcons.userAccount,
-                    topPadding: topPadding,
-                    bottomPadding: bottomPadding,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        body: Column(
+    return Scaffold(
+      bottomNavigationBar: Container(
+        color: Theme.of(context).colorScheme.neutral800,
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: const [
-                  DashboardTab(),
-                  TransactionTab(),
-                  ProfileTab(),
-                ],
-              ),
+            VerticalSpacer.large(),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.transparent,
+              tabs: [
+                TabItem(
+                  0 == _currentTabIndex,
+                  Strings.dashboard,
+                  PwIcons.dashboard,
+                  topPadding: topPadding,
+                  bottomPadding: bottomPadding,
+                ),
+                TabItem(
+                  1 == _currentTabIndex,
+                  Strings.transactions,
+                  PwIcons.staking,
+                  topPadding: topPadding,
+                  bottomPadding: bottomPadding,
+                ),
+                TabItem(
+                  2 == _currentTabIndex,
+                  Strings.profile,
+                  PwIcons.userAccount,
+                  topPadding: topPadding,
+                  bottomPadding: bottomPadding,
+                ),
+              ],
             ),
           ],
         ),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: const [
+                DashboardTab(),
+                TransactionTab(),
+                ProfileTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

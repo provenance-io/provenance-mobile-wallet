@@ -17,7 +17,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
-import 'package:provenance_wallet/screens/landing/landing_screen.dart';
+import 'package:provenance_wallet/screens/start_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
@@ -177,7 +177,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
-      home: LandingScreen(),
+      home: StartScreen(),
       navigatorKey: _navigatorKey,
     );
   }
