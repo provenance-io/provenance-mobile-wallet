@@ -417,9 +417,9 @@ class AssetBarChart extends StatelessWidget {
   ) {
     final dataLine = FlLine(color: graphColor, strokeWidth: 2);
     final dataPoint = FlDotCirclePainter(
-      radius: 4,
+      radius: 0,
       color: graphColor,
-      strokeWidth: 2,
+      strokeWidth: 1,
       strokeColor: graphColor,
     );
     final data = FlDotData(
