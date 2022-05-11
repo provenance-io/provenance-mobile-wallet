@@ -67,8 +67,15 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
     }
 
     final accounts = await _accountService.getAccounts();
-    status =
-        accounts.isEmpty ? AuthStatus.noAccount : AuthStatus.unauthenticated;
+
+    if (accounts.isEmpty) {
+      status = AuthStatus.noAccount;
+      _status.value = status;
+
+      return status;
+    } else {
+      status = AuthStatus.unauthenticated;
+    }
 
     final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {
