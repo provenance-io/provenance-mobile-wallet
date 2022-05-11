@@ -227,30 +227,20 @@ class _DashboardState extends State<Dashboard> {
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
             VerticalSpacer.xxLarge(),
-            StreamBuilder<List<Asset>?>(
-              initialData: bloc.assetList.value,
-              stream: bloc.assetList,
-              builder: (context, snapshot) {
-                final assets = snapshot.data ?? [];
-
-                return assets.isEmpty
-                    ? Container()
-                    : Padding(
-                        padding: EdgeInsets.only(
-                          left: Spacing.xxLarge,
-                          right: Spacing.xxLarge,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
-                            PwText(
-                              Strings.myAssets,
-                              style: PwTextStyle.title,
-                            ),
-                          ],
-                        ),
-                      );
-              },
+            Padding(
+              padding: EdgeInsets.only(
+                left: Spacing.xxLarge,
+                right: Spacing.xxLarge,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  PwText(
+                    Strings.myAssets,
+                    style: PwTextStyle.title,
+                  ),
+                ],
+              ),
             ),
             VerticalSpacer.medium(),
             Expanded(
