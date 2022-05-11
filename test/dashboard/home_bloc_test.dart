@@ -27,7 +27,7 @@ import 'package:provenance_wallet/util/local_auth_helper.dart';
 
 import 'home_bloc_test.mocks.dart';
 import 'home_mocks.dart';
-import 'memory_wallet_storage_service.dart';
+import 'memory_account_storage_service.dart';
 
 const walletConnectAddress =
     'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
@@ -332,7 +332,7 @@ class TestState {
     final transactionService =
         MockTransactionService(sendTransactions, transactions);
     final walletService = AccountService(
-      storage: InMemoryWalletStorageService(
+      storage: MemoryAccountStorageService(
         datas: storageDatas,
       ),
     )..init();
