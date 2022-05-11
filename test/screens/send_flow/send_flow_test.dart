@@ -4,15 +4,15 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 
 import 'send_flow_test.mocks.dart';
 import 'send_flow_test_constants.dart';
@@ -22,7 +22,7 @@ final get = GetIt.instance;
 @GenerateMocks([
   AssetService,
   TransactionService,
-  WalletService,
+  AccountService,
   TransactionHandler,
   PriceService,
 ])
@@ -45,7 +45,7 @@ main() {
 
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
-  MockWalletService? mockWalletService;
+  MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
   MockPriceService? mockPriceService;
 
@@ -53,7 +53,7 @@ main() {
     mockTransactionHandler = MockTransactionHandler();
     when(mockTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
-      final gasEstimate = WalletGasEstimate(100, null);
+      final gasEstimate = AccountGasEstimate(100, null);
 
       return Future.value(gasEstimate);
     });
@@ -80,8 +80,8 @@ main() {
       return Future.value(response);
     });
 
-    mockWalletService = MockWalletService();
-    when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
+    mockAccountService = MockAccountService();
+    when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
 
     mockPriceService = MockPriceService();
     when(mockPriceService!.getAssetPrices(any, any))
@@ -89,12 +89,12 @@ main() {
 
     get.registerSingleton<TransactionService>(mockTransactionService!);
     get.registerSingleton<AssetService>(mockAssetService!);
-    get.registerSingleton<WalletService>(mockWalletService!);
+    get.registerSingleton<AccountService>(mockAccountService!);
     get.registerSingleton<PriceService>(mockPriceService!);
   });
 
   tearDown(() {
-    get.unregister<WalletService>();
+    get.unregister<AccountService>();
     get.unregister<TransactionService>();
     get.unregister<AssetService>();
     get.unregister<TransactionHandler>();

@@ -36,7 +36,7 @@ class CreateNewPinState extends State<CreateNewPinScreen> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourWallet,
+                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
                   onFinish: bloc.confirmPin,
                 ),
               ),

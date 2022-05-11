@@ -5,10 +5,10 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendReviewNaviagor {
@@ -50,7 +50,7 @@ class SendReviewBlocState {
 
 class SendReviewBloc implements Disposable {
   SendReviewBloc(
-    this._walletDetails,
+    this._accountDetails,
     this._transactionHandler,
     this.receivingAddress,
     this.sendingAsset,
@@ -70,7 +70,7 @@ class SendReviewBloc implements Disposable {
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
   final TransactionHandler _transactionHandler;
-  final WalletDetails _walletDetails;
+  final AccountDetails _accountDetails;
   final String receivingAddress;
   final String? note;
   final SendAsset sendingAsset;
@@ -90,7 +90,7 @@ class SendReviewBloc implements Disposable {
       memo: note,
       messages: [
         MsgSend(
-          fromAddress: _walletDetails.address,
+          fromAddress: _accountDetails.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -102,9 +102,9 @@ class SendReviewBloc implements Disposable {
       ],
     );
 
-    final privateKey = await get<WalletService>().loadKey(_walletDetails.id);
+    final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
 
-    WalletGasEstimate estimate = WalletGasEstimate(
+    AccountGasEstimate estimate = AccountGasEstimate(
       fee.estimate,
       null,
       null,

@@ -10,18 +10,18 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendFlow extends FlowBase {
-  const SendFlow(this.walletDetails, {Key? key}) : super(key: key);
+  const SendFlow(this.accountDetails, {Key? key}) : super(key: key);
 
-  final WalletDetails walletDetails;
+  final AccountDetails accountDetails;
   @override
   State<StatefulWidget> createState() => SendFlowState();
 }
@@ -36,8 +36,8 @@ class SendFlowState extends FlowBaseState<SendFlow>
     super.initState();
     get.registerLazySingleton<SendBloc>(() {
       return SendBloc(
-        widget.walletDetails.coin,
-        widget.walletDetails.address,
+        widget.accountDetails.coin,
+        widget.accountDetails.address,
         get<AssetService>(),
         get<PriceService>(),
         get<TransactionService>(),
@@ -93,7 +93,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   Future<String?> scanAddress() {
     return showPage((context) => QRCodeScanner(
           isValidCallback: (input) {
-            switch (widget.walletDetails.coin) {
+            switch (widget.accountDetails.coin) {
               case Coin.mainNet:
                 return Future.value(
                   input.isNotEmpty && input.startsWith("pb1"),
@@ -115,7 +115,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
     _receivingAddress = address;
 
     final bloc = SendAmountBloc(
-      widget.walletDetails,
+      widget.accountDetails,
       _receivingAddress!,
       _asset!,
       get<PriceService>(),
@@ -155,7 +155,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
     String note,
   ) {
     final bloc = SendReviewBloc(
-      widget.walletDetails,
+      widget.accountDetails,
       get<TransactionHandler>(),
       _receivingAddress!,
       amountToSend,

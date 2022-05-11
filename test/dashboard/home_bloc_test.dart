@@ -6,22 +6,22 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
@@ -78,7 +78,7 @@ void main() {
       final bloc = state.bloc;
       final walletService = state.walletService;
 
-      await bloc.selectWallet(id: maxWalletId.toString());
+      await bloc.selectAccount(id: maxWalletId.toString());
 
       await pumpEventQueue();
 
@@ -97,7 +97,7 @@ void main() {
 
     const newName = 'new';
 
-    await bloc.renameWallet(id: '0', name: newName);
+    await bloc.renameAccount(id: '0', name: newName);
 
     await pumpEventQueue();
 
@@ -111,7 +111,7 @@ void main() {
 
     final walletService = state.walletService;
 
-    await state.walletService.removeWallet(id: '0');
+    await state.walletService.removeAccount(id: '0');
 
     await pumpEventQueue();
 
@@ -126,8 +126,8 @@ void main() {
     final bloc = state.bloc;
     final walletService = state.walletService;
 
-    await bloc.selectWallet(id: '0');
-    await walletService.removeWallet(id: '1');
+    await bloc.selectAccount(id: '0');
+    await walletService.removeAccount(id: '1');
 
     await pumpEventQueue();
 
@@ -142,7 +142,7 @@ void main() {
     final bloc = state.bloc;
     final walletService = state.walletService;
 
-    await bloc.resetWallets();
+    await bloc.resetAccounts();
 
     await pumpEventQueue();
 
@@ -216,7 +216,7 @@ class TestState {
   final AssetService assetService;
   final TransactionService transactionService;
   final DeepLinkService deepLinkService;
-  final WalletService walletService;
+  final AccountService walletService;
   final HomeBloc bloc;
 
   static Future<TestState> createConnected({
@@ -304,7 +304,7 @@ class TestState {
 
       storageDatas.add(
         MemoryStorageData(
-          WalletDetails(
+          AccountDetails(
             id: id,
             address: id,
             name: id,
@@ -331,7 +331,7 @@ class TestState {
     final assetService = MockAssetService(assets);
     final transactionService =
         MockTransactionService(sendTransactions, transactions);
-    final walletService = WalletService(
+    final walletService = AccountService(
       storage: InMemoryWalletStorageService(
         datas: storageDatas,
       ),
@@ -345,7 +345,7 @@ class TestState {
 
     final cipherService = MockCipherService();
     get.registerSingleton<CipherService>(cipherService);
-    get.registerSingleton<WalletService>(walletService);
+    get.registerSingleton<AccountService>(walletService);
 
     final authHelper = LocalAuthHelper();
 

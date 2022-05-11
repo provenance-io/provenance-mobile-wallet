@@ -67,8 +67,8 @@ class Strings {
       'It appears as though no network is connected.';
 
   // Landing Page
-  static const createWallet = 'Create Account';
-  static const recoverWallet = 'Recover Account';
+  static const createAccount = 'Create Account';
+  static const recoverAccount = 'Recover Account';
   static const lockScreenRequired =
       'Please enable the device screen lock in security settings';
   static const refresh = 'Refresh';
@@ -125,8 +125,8 @@ class Strings {
   static const sendFeedback = 'Send Feedback';
   static const contactUs = 'Contact Us';
   static const policiesAndTerms = 'Policies & Terms';
-  static const resetWallets = 'Reset Wallet';
-  static const resetWalletsAreYouSure =
+  static const resetAccounts = 'Reset Accounts';
+  static const resetAccountsAreYouSure =
       'Are you sure you wish to reset all accounts?';
   static const pinCodeUpdated = 'Pin Code Updated Successfully';
   static const successName = 'Success';
@@ -149,37 +149,27 @@ class Strings {
       "Restart the app to allow service changes?";
   static const developerMocksRestart = "Restart";
 
-  // AddWallet Page
-  static const chooseWalletType = 'Choose Wallet Type';
-  static const basicWallet = 'Basic Wallet';
-  static const standardSingleUserWallet = 'Standard, single-user wallet.';
-  static const importRecoverWallet = 'Import/recover Wallet';
-  static const importExistingWallet = 'Import existing wallet';
-
-  // Rename Wallet Dialog
-  static const renameWallet = 'Rename Account';
-  static const renameWalletDescription =
+  // Rename Account Dialog
+  static const renameAccount = 'Rename Account';
+  static const renameAccountDescription =
       'Please enter the new name you would like to call your account.';
-  static const walletName = 'Wallet Name';
+  static const renameAccountAccountName = 'Account Name';
   static const required = '*required';
   static const confirm = 'Confirm';
 
-  // Wallets Page
-  static const loadingWallets = 'Loading Wallets';
-  static const wallets = 'Accounts';
-  static const selectedWallet = 'Selected Wallet';
-  static const allWallets = 'All Wallets';
+  // Accounts Page
+  static const accounts = 'Accounts';
   static String numAssets(int numAssets) =>
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
-  // Wallet Item
+  // Account Item
   static const select = 'Select';
   static const rename = 'Rename';
   static const remove = 'Remove';
-  static const removeThisWallet =
+  static const removeThisAccount =
       'Are you sure you want to remove this account?';
   static const yes = 'Yes';
-  static const copyWalletAddress = 'Copy Account Address';
+  static const copyAccountAddress = 'Copy Account Address';
   static const addressCopied = 'Address copied';
 
   // Account Name
@@ -200,19 +190,19 @@ class Strings {
 
   // CreatePin
   static const setPinCode = 'Set Pin Code';
-  static const setAPinCodeToUnlockYourWallet =
-      "Set a pin code to unlock your wallet.";
+  static const setAPinCodeToUnlockYourAccount =
+      "Set a pin code to unlock your account.";
 
   // EnableFaceId
   static const useFaceIdTitle = 'Use Face ID?';
   static const useYourFaceId =
-      'Use your Face ID for faster, easier\naccess to your wallet.';
+      'Use your Face ID for faster, easier\naccess to your account.';
   static const useTouchIdTitle = 'Use Touch ID?';
   static const useYourFingerPrint =
-      "Use your Touch ID for faster,\neasier access to your wallet.";
+      "Use your Touch ID for faster,\neasier access to your account.";
   static const useBiometryTitle = 'Biometry';
   static const useBiometryMessage =
-      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your wallet.';
+      'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your account.';
   static const enable = 'Enable';
   static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
@@ -245,10 +235,10 @@ class Strings {
   static const pleaseMakeASelection = 'Please make a selection for the 4 rows.';
   static const yourSelectionsDoNotMatch =
       "Your selections don't match. Please try again.";
-  static const youMustAgreeToTheWalletSeedphraseTerms =
+  static const youMustAgreeToThePassphraseTerms =
       "Before continuing you must agree to the passphrase terms.";
-  static const iAmResponsibleForMyWalletText =
-      "I agree that I am solely responsible for my wallet and cannot recover my account if the passphrase is lost.";
+  static const iAmResponsibleForMyAccountText =
+      "I agree that I am solely responsible for my account and cannot recover it if the passphrase is lost.";
 
   // RecoveryWords
   static const recoveryPassphrase = 'Recovery Passphrase';
@@ -261,7 +251,6 @@ class Strings {
   static const backupComplete = "Backup Complete";
 
   // RestoreAccountIntro
-  static const recoverAccount = 'Recover Account';
   static const inTheFollowingStepsText =
       "In the following steps, you'll enter your 24-word recovery passphrase to recover your account.";
 
@@ -297,8 +286,8 @@ class Strings {
       'Enter pin to verify your identity.';
   static const yourPinDoesNotMatch = "Your pin doesn't match.";
 
-  // WalletSetupConfirmation
-  static const walletCreated = "ACCOUNT CREATED";
+  // AccountSetupConfirmation
+  static const accountCreated = "ACCOUNT CREATED";
 
   // TransactionsList
   static const dropDownAllMessageTypes = "All Message Types";
@@ -308,7 +297,7 @@ class Strings {
 
   // TradeDetailsScreen
   static const tradeDetailsTitle = "Trade Details";
-  static const tradeDetailsWallet = "Account";
+  static const tradeDetailsAccount = "Account";
   static const tradeDetailsTransaction = "Transaction Hash";
   static const tradeDetailsResult = "Result";
   static const tradeDetailsMessageType = "Message Type";
@@ -373,8 +362,8 @@ class Strings {
   static const receiveTitle = "Receive";
   static const receiveMessage =
       "Show this QR code or share account address to receive asset";
-  static const receiveWalletAddressTitle = "Account Address";
-  static const receiveWalletAddressCopiedMessage =
+  static const receiveAccountAddressTitle = "Account Address";
+  static const receiveAccountAddressCopiedMessage =
       "Your address was copied to the clipboard";
 
   // AssetChartScreen

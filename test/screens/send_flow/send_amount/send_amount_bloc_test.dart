@@ -5,11 +5,11 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 import '../send_flow_test_constants.dart';
@@ -23,14 +23,14 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-const feeAmount = WalletGasEstimate(
+const feeAmount = AccountGasEstimate(
   20000000,
   1,
 );
 
 @GenerateMocks([
   SendAmountBlocNavigator,
-  WalletService,
+  AccountService,
   TransactionHandler,
   PriceService,
 ])
@@ -39,7 +39,7 @@ main() {
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
-  MockWalletService? mockWalletService;
+  MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
   MockPriceService? mockPriceService;
 
@@ -56,13 +56,13 @@ main() {
       mockTransactionHandler!,
     );
 
-    mockWalletService = MockWalletService();
-    get.registerSingleton<MockWalletService>(
-      mockWalletService!,
+    mockAccountService = MockAccountService();
+    get.registerSingleton<MockAccountService>(
+      mockAccountService!,
     );
 
-    when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
-    get.registerSingleton<WalletService>(mockWalletService!);
+    when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
+    get.registerSingleton<AccountService>(mockAccountService!);
 
     mockNavigator = MockSendAmountBlocNavigator();
     bloc = SendAmountBloc(
@@ -75,9 +75,9 @@ main() {
   });
 
   tearDown(() {
-    get.unregister<WalletService>();
+    get.unregister<AccountService>();
     get.unregister<TransactionHandler>();
-    get.unregister<MockWalletService>();
+    get.unregister<MockAccountService>();
   });
 
   test("properties", () {

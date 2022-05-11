@@ -130,7 +130,7 @@ class TransactionTabState extends State<TransactionTab> {
                               transactionDetails.filteredTransactions[index];
 
                           return TransactionListItem(
-                            walletAddress: transactionDetails.walletAddress,
+                            address: transactionDetails.address,
                             item: item,
                           );
                         },

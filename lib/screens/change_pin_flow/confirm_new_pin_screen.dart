@@ -33,7 +33,7 @@ class ConfirmNewPinScreenState extends State<ConfirmNewPinScreen> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourWallet,
+                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
                   onFinish: _onFinish,
                 ),
               ),

@@ -1,13 +1,13 @@
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -23,7 +23,7 @@ class BackupCompleteScreen extends StatelessWidget {
   }) : super(key: key);
 
   final List<String> words;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
   final String? accountName;
   final int? currentStep;
   final int? numberOfSteps;
@@ -81,7 +81,7 @@ class BackupCompleteScreen extends StatelessWidget {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () async {
-                if (flowType == WalletAddImportType.onBoardingAdd) {
+                if (flowType == AccountAddImportType.onBoardingAdd) {
                   Navigator.of(context).push(CreatePin(
                     flowType,
                     words: words,
@@ -89,7 +89,7 @@ class BackupCompleteScreen extends StatelessWidget {
                     currentStep: (currentStep ?? 0) + 1,
                     numberOfSteps: numberOfSteps,
                   ).route());
-                } else if (flowType == WalletAddImportType.dashboardAdd) {
+                } else if (flowType == AccountAddImportType.dashboardAdd) {
                   ModalLoadingRoute.showLoading(
                     "",
                     context,
@@ -100,7 +100,7 @@ class BackupCompleteScreen extends StatelessWidget {
                       ChainId.defaultChainId;
                   final coin = ChainId.toCoin(chainId);
 
-                  await get<WalletService>().addWallet(
+                  await get<AccountService>().addAccount(
                     phrase: words,
                     name: accountName ?? '',
                     coin: coin,

@@ -4,13 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/pin/validate_pin.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AuthStatus {
   noAccount,
-  noWallet,
   noLockScreen,
   authenticated,
   timedOut,
@@ -24,7 +23,7 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
 
   static const _inactivityTimeout = Duration(minutes: 2);
   final _cipherService = get<CipherService>();
-  final _walletService = get<WalletService>();
+  final _accountService = get<AccountService>();
   final _status = BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
   Timer? _inactivityTimer;
 
@@ -67,8 +66,9 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
       return status;
     }
 
-    final wallets = await _walletService.getWallets();
-    status = wallets.isEmpty ? AuthStatus.noWallet : AuthStatus.unauthenticated;
+    final accounts = await _accountService.getAccounts();
+    status =
+        accounts.isEmpty ? AuthStatus.noAccount : AuthStatus.unauthenticated;
 
     final useBiometry = await _cipherService.getUseBiometry() ?? false;
     if (useBiometry) {

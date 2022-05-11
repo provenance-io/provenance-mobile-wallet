@@ -3,9 +3,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +20,7 @@ class TransactionDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final walletService = get<WalletService>();
+    final accountService = get<AccountService>();
 
     return Scaffold(
       appBar: PwAppBar(
@@ -32,15 +32,15 @@ class TransactionDetailsScreen extends StatelessWidget {
         child: ListView(
           children: [
             DetailsItem(
-              title: Strings.tradeDetailsWallet,
-              endChild: StreamBuilder<WalletDetails?>(
-                initialData: walletService.events.selected.value,
-                stream: walletService.events.selected,
+              title: Strings.tradeDetailsAccount,
+              endChild: StreamBuilder<AccountDetails?>(
+                initialData: accountService.events.selected.value,
+                stream: accountService.events.selected,
                 builder: (context, snapshot) {
-                  final walletName = snapshot.data?.name ?? "";
+                  final accountName = snapshot.data?.name ?? "";
 
                   return PwText(
-                    walletName,
+                    accountName,
                     style: PwTextStyle.body,
                   );
                 },
@@ -119,9 +119,9 @@ class TransactionDetailsScreen extends StatelessWidget {
                   HorizontalSpacer.large(),
                   GestureDetector(
                     onTap: () async {
-                      final wallet = await walletService.getSelectedWallet();
+                      final account = await accountService.getSelectedAccount();
                       String url;
-                      switch (wallet?.coin) {
+                      switch (account?.coin) {
                         case Coin.testNet:
                           url =
                               'https://explorer.test.provenance.io/tx/${transaction.hash}';
