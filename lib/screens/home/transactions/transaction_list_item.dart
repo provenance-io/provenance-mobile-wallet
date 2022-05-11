@@ -6,11 +6,11 @@ import 'package:provenance_wallet/util/assets.dart';
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
     Key? key,
-    required this.walletAddress,
+    required this.address,
     required this.item,
   }) : super(key: key);
 
-  final String walletAddress;
+  final String address;
   final Transaction item;
   final textDivider = " • ";
   @override

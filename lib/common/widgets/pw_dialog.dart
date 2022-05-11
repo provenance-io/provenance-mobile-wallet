@@ -12,7 +12,7 @@ class PwDialog {
     required String title,
     String? message,
     Widget? icon,
-    String dismissButtonText = 'Back to Wallet',
+    String dismissButtonText = 'Back to Account',
     bool barrierDismissible = true,
   }) {
     return showGeneralDialog(

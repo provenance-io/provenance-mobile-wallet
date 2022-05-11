@@ -77,7 +77,7 @@ class ReceivePageState extends State<ReceivePage> {
                       color: Colors.white,
                       child: QrImage(
                         size: dimen,
-                        data: state.walletAddress,
+                        data: state.accountAddress,
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.white,
                       ),
@@ -87,7 +87,7 @@ class ReceivePageState extends State<ReceivePage> {
               ),
               VerticalSpacer.large(),
               PwText(
-                Strings.receiveWalletAddressTitle,
+                Strings.receiveAccountAddressTitle,
                 style: PwTextStyle.caption,
               ),
               VerticalSpacer.medium(),
@@ -111,7 +111,7 @@ class ReceivePageState extends State<ReceivePage> {
                   children: [
                     Expanded(
                       child: PwText(
-                        state.walletAddress,
+                        state.accountAddress,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -144,7 +144,7 @@ class ReceivePageState extends State<ReceivePage> {
       await _bloc!.copyAddressToClipboard();
       PwDialog.showMessage(
         context,
-        message: Strings.receiveWalletAddressCopiedMessage,
+        message: Strings.receiveAccountAddressCopiedMessage,
       );
     } catch (e) {
       PwDialog.showError(

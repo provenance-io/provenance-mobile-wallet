@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -19,7 +19,7 @@ class RecoverAccountScreen extends StatelessWidget {
   static final keyContinueButton =
       ValueKey('$RecoverAccountScreen.continue_button');
 
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
   final String accountName;
   final int currentStep;
   final int? numberOfSteps;
@@ -80,8 +80,8 @@ class RecoverAccountScreen extends StatelessWidget {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () {
-                if (flowType == WalletAddImportType.onBoardingRecover ||
-                    flowType == WalletAddImportType.dashboardRecover) {
+                if (flowType == AccountAddImportType.onBoardingRecover ||
+                    flowType == AccountAddImportType.dashboardRecover) {
                   Navigator.of(context).push(RecoverPassphraseEntryScreen(
                     flowType,
                     accountName,

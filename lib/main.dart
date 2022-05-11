@@ -18,6 +18,10 @@ import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
+import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
@@ -43,16 +47,12 @@ import 'package:provenance_wallet/services/notification/notification_service.dar
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/services/sqlite_wallet_storage_service.dart';
+import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_storage_service_imp.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
@@ -123,12 +123,12 @@ void main() {
       );
 
       get.registerSingleton<KeyValueService>(keyValueService);
-      final sqliteStorage = SqliteWalletStorageService();
-      final walletStorage =
-          WalletStorageServiceImp(sqliteStorage, cipherService);
+      final sqliteStorage = SqliteAccountStorageService();
+      final accountStorage =
+          AccountStorageServiceImp(sqliteStorage, cipherService);
 
-      final walletService = WalletService(storage: walletStorage)..init();
-      get.registerSingleton<WalletService>(walletService);
+      final accountService = AccountService(storage: accountStorage)..init();
+      get.registerSingleton<AccountService>(accountService);
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
 
@@ -207,7 +207,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case AuthStatus.authenticated:
           break;
         case AuthStatus.noAccount:
-        case AuthStatus.noWallet:
         case AuthStatus.noLockScreen:
         case AuthStatus.timedOut:
           if (previousStatus == AuthStatus.authenticated) {

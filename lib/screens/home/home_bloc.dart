@@ -8,22 +8,22 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -43,7 +43,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     _transactionHandler.transaction
         .listen(_onTransaction)
         .addTo(_subscriptions);
-    _walletService.events.selected
+    _accountService.events.selected
         .distinct()
         .listen(_onSelected)
         .addTo(_subscriptions);
@@ -53,11 +53,11 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     WidgetsBinding.instance?.addObserver(this);
   }
 
-  WalletConnectSession? _walletSession;
+  WalletConnectSession? _currentSession;
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
-      walletAddress: "",
+      address: "",
       filteredTransactions: [],
       transactions: [],
     ),
@@ -71,7 +71,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   final _subscriptions = CompositeSubscription();
 
   final _transactionHandler = get<TransactionHandler>();
-  final _walletService = get<WalletService>();
+  final _accountService = get<AccountService>();
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
 
@@ -87,7 +87,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 
-  WalletConnectSession? get currentSession => _walletSession;
+  WalletConnectSession? get currentSession => _currentSession;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -95,21 +95,21 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
-        if (_walletSession != null) {
-          _walletSession!.closeButRetainSession();
-          _walletSession = null;
+        if (_currentSession != null) {
+          _currentSession!.closeButRetainSession();
+          _currentSession = null;
         }
         break;
       case AppLifecycleState.resumed:
-        final walletId = _walletService.events.selected.value?.id;
+        final accountId = _accountService.events.selected.value?.id;
         final sessionStatus =
-            _walletSession?.sessionEvents.state.value.status ??
+            _currentSession?.sessionEvents.state.value.status ??
                 WalletConnectSessionStatus.disconnected;
         final authStatus = get<LocalAuthHelper>().status.value;
-        if (walletId != null &&
+        if (accountId != null &&
             sessionStatus == WalletConnectSessionStatus.disconnected &&
             authStatus == AuthStatus.authenticated) {
-          tryRestoreSession(walletId);
+          tryRestoreSession(accountId);
         }
         break;
     }
@@ -121,28 +121,28 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     }
 
     try {
-      final wallet = _walletService.events.selected.value;
+      final account = _accountService.events.selected.value;
 
       var assetList = <Asset>[];
       var transactions = <Transaction>[];
 
-      if (wallet != null) {
+      if (account != null) {
         final isFirstLoad = _isFirstLoad;
         _isFirstLoad = false;
 
-        final walletId = wallet.id;
+        final accountId = account.id;
         if (isFirstLoad) {
-          tryRestoreSession(walletId);
+          tryRestoreSession(accountId);
         }
 
         assetList = await _assetService.getAssets(
-          wallet.coin,
-          wallet.address,
+          account.coin,
+          account.address,
         );
 
         transactions = await _transactionService.getTransactions(
-          wallet.coin,
-          wallet.address,
+          account.coin,
+          account.address,
           _transactionPages.value,
         );
       }
@@ -151,7 +151,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
       _transactionDetails.tryAdd(
         TransactionDetails(
-          walletAddress: wallet?.address ?? '',
+          address: account?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
         ),
@@ -171,12 +171,12 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     }
     _transactionPages.value++;
     _isLoadingTransactions.value = true;
-    final wallet = _walletService.events.selected.value;
+    final account = _accountService.events.selected.value;
 
-    if (wallet != null) {
+    if (account != null) {
       final newTransactions = await _transactionService.getTransactions(
-        wallet.coin,
-        wallet.address,
+        account.coin,
+        account.address,
         _transactionPages.value,
       );
       if (newTransactions.isNotEmpty) {
@@ -186,7 +186,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
     _transactionDetails.tryAdd(
       TransactionDetails(
-        walletAddress: wallet?.address ?? '',
+        address: account?.address ?? '',
         filteredTransactions: oldDetails.filteredTransactions,
         transactions: transactions.toList(),
       ),
@@ -215,7 +215,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
           .toList();
     }
     _transactionDetails.tryAdd(TransactionDetails(
-      walletAddress: _walletService.events.selected.value?.address ?? "",
+      address: _accountService.events.selected.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
@@ -228,20 +228,20 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<bool> connectSession(
-    String walletId,
+    String accountId,
     String addressData, {
     SessionData? sessionData,
     Duration? remainingTime,
   }) async {
     var success = false;
 
-    final oldSession = _walletSession;
+    final oldSession = _currentSession;
     if (oldSession != null) {
       await oldSession.dispose();
     }
 
-    final walletService = get<WalletService>();
-    final privateKey = await walletService.loadKey(walletId);
+    final accountService = get<AccountService>();
+    final privateKey = await accountService.loadKey(accountId);
     if (privateKey == null) {
       logError('Failed to locate the private key');
 
@@ -255,7 +255,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       return false;
     }
 
-    final walletDetails = _walletService.events.selected.value!;
+    final accountDetails = _accountService.events.selected.value!;
     final connection = get<WalletConnectionFactory>().call(address);
     final remoteNotificationService = get<RemoteNotificationService>();
     final keyValueService = get<KeyValueService>();
@@ -264,13 +264,13 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       privateKey: privateKey,
       transactionHandler: _transactionHandler,
       walletInfo: WalletInfo(
-        walletDetails.id,
-        walletDetails.name,
-        walletDetails.coin,
+        accountDetails.id,
+        accountDetails.name,
+        accountDetails.coin,
       ),
     );
     final session = WalletConnectSession(
-      walletId: walletId,
+      accountId: accountId,
       connection: connection,
       delegate: delegate,
       remoteNotificationService: remoteNotificationService,
@@ -280,7 +280,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     delegateEvents.listen(session.delegateEvents);
     sessionEvents.listen(session.sessionEvents);
 
-    _walletSession = session;
+    _currentSession = session;
 
     WalletConnectSessionRestoreData? restoreData;
     if (sessionData != null) {
@@ -305,14 +305,14 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   }
 
   Future<bool> disconnectSession() async {
-    final success = await _walletSession?.disconnect() ?? false;
+    final success = await _currentSession?.disconnect() ?? false;
 
     await _clearSessionData();
 
     return success;
   }
 
-  Future<bool> tryRestoreSession(String walletId) async {
+  Future<bool> tryRestoreSession(String accountId) async {
     var success = false;
     final keyValueService = get<KeyValueService>();
     final json = await keyValueService.getString(PrefKey.sessionData);
@@ -330,9 +330,9 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
       final remainingMinutes = 30 - DateTime.now().difference(date).inMinutes;
 
-      if (data != null && data.walletId == walletId && remainingMinutes > 0) {
+      if (data != null && data.accountId == accountId && remainingMinutes > 0) {
         success = await connectSession(
-          walletId,
+          accountId,
           data.address,
           sessionData: data,
           remainingTime: Duration(minutes: remainingMinutes),
@@ -352,7 +352,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
-    final session = _walletSession;
+    final session = _currentSession;
     if (session == null) {
       return false;
     }
@@ -368,7 +368,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       final address = details.data.address.raw;
 
       final data = SessionData(
-        session.walletId,
+        session.accountId,
         peerId,
         remotePeerId,
         address,
@@ -386,7 +386,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     required String requestId,
     required bool allowed,
   }) async {
-    return await _walletSession?.sendMessageFinish(
+    return await _currentSession?.sendMessageFinish(
           requestId: requestId,
           allowed: allowed,
         ) ??
@@ -397,44 +397,44 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     required String requestId,
     required bool allowed,
   }) async {
-    return await _walletSession?.signTransactionFinish(
+    return await _currentSession?.signTransactionFinish(
           requestId: requestId,
           allowed: allowed,
         ) ??
         false;
   }
 
-  Future<void> selectWallet({required String id}) async {
-    await _walletSession?.disconnect();
-    await get<WalletService>().selectWallet(id: id);
+  Future<void> selectAccount({required String id}) async {
+    await _currentSession?.disconnect();
+    await get<AccountService>().selectAccount(id: id);
   }
 
-  Future<void> renameWallet({
+  Future<void> renameAccount({
     required String id,
     required String name,
   }) async {
-    await get<WalletService>().renameWallet(
+    await get<AccountService>().renameAccount(
       id: id,
       name: name,
     );
   }
 
-  Future<WalletDetails?> setWalletCoin({
+  Future<AccountDetails?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
-    await _walletSession?.disconnect();
+    await _currentSession?.disconnect();
 
-    return await get<WalletService>().setWalletCoin(id: id, coin: coin);
+    return await get<AccountService>().setAccountCoin(id: id, coin: coin);
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {
-    return get<WalletService>().isValidWalletConnectData(address);
+    return get<AccountService>().isValidWalletConnectData(address);
   }
 
-  Future<void> resetWallets() async {
+  Future<void> resetAccounts() async {
     await disconnectSession();
-    await get<WalletService>().resetWallets();
+    await get<AccountService>().resetAccounts();
     await get<CipherService>().deletePin();
     get<LocalAuthHelper>().reset();
   }
@@ -453,11 +453,11 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     _transactionDetails.close();
     _error.close();
 
-    _walletSession?.dispose();
+    _currentSession?.dispose();
     WidgetsBinding.instance?.removeObserver(this);
   }
 
-  void _onSelected(WalletDetails? details) {
+  void _onSelected(AccountDetails? details) {
     load();
   }
 
@@ -491,11 +491,12 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
   Future<void> _handleWalletConnectLink(String? data) async {
     if (data != null) {
       final addressData = Uri.decodeComponent(data);
-      final walletService = get<WalletService>();
-      final isValid = await walletService.isValidWalletConnectData(addressData);
-      final walletId = _walletService.events.selected.value?.id;
-      if (isValid && walletId != null) {
-        connectSession(walletId, addressData);
+      final accountService = get<AccountService>();
+      final isValid =
+          await accountService.isValidWalletConnectData(addressData);
+      final accountId = _accountService.events.selected.value?.id;
+      if (isValid && accountId != null) {
+        connectSession(accountId, addressData);
       } else {
         logError('Invalid wallet connect data');
       }
@@ -509,7 +510,7 @@ class TransactionDetails {
     required this.transactions,
     this.selectedType = Strings.dropDownAllMessageTypes,
     this.selectedStatus = Strings.dropDownAllStatuses,
-    required this.walletAddress,
+    required this.address,
   });
   List<String> _types = [];
   List<String> _statuses = [];
@@ -518,7 +519,7 @@ class TransactionDetails {
   List<Transaction> transactions;
   String selectedType;
   String selectedStatus;
-  String walletAddress;
+  String address;
   List<String> get types {
     if (_types.isNotEmpty) {
       return _types;

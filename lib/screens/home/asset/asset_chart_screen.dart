@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart_button.dart';

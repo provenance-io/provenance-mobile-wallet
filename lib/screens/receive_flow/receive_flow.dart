@@ -2,16 +2,16 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ReceiveFlow extends FlowBase {
   const ReceiveFlow(
-    this._walletDetails, {
+    this._accountDetails, {
     Key? key,
   }) : super(key: key);
 
-  final WalletDetails _walletDetails;
+  final AccountDetails _accountDetails;
 
   @override
   State<StatefulWidget> createState() => ReceiveFlowState();
@@ -23,7 +23,7 @@ class ReceiveFlowState extends FlowBaseState<ReceiveFlow>
   void initState() {
     super.initState();
     get.registerLazySingleton<ReceiveBloc>(() => ReceiveBloc(
-          widget._walletDetails,
+          widget._accountDetails,
           this,
         ));
   }

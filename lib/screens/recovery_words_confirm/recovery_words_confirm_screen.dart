@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -24,7 +24,7 @@ class RecoveryWordsConfirmScreen extends StatefulWidget {
   final int? currentStep;
   final int? numberOfSteps;
   final String? accountName;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {
@@ -114,7 +114,7 @@ class RecoveryWordsConfirmScreenState
                     child: Padding(
                       padding: EdgeInsets.only(top: 8),
                       child: PwText(
-                        Strings.iAmResponsibleForMyWalletText,
+                        Strings.iAmResponsibleForMyAccountText,
                         style: PwTextStyle.body,
                       ),
                     ),
@@ -158,7 +158,7 @@ class RecoveryWordsConfirmScreenState
         selectedWords[3] != trueWords[3]) {
       setError(Strings.yourSelectionsDoNotMatch);
     } else if (!_isResponsible) {
-      setError(Strings.youMustAgreeToTheWalletSeedphraseTerms);
+      setError(Strings.youMustAgreeToThePassphraseTerms);
     } else {
       Navigator.of(context).push(BackupCompleteScreen(
         widget.flowType,
