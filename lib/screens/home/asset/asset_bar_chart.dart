@@ -192,11 +192,11 @@ class AssetBarChart extends StatelessWidget {
         minX: 0,
         gridData: FlGridData(show: false),
         titlesData: FlTitlesData(
-          show: true,
+          show: false,
           bottomTitles: SideTitles(
             interval: interval,
             textAlign: TextAlign.center,
-            showTitles: true,
+            showTitles: false,
             reservedSize: bottomSize.height,
             rotateAngle: xLabelAngle,
             getTextStyles: (context, value) => labelStyle,
@@ -210,7 +210,7 @@ class AssetBarChart extends StatelessWidget {
             checkToShowTitle: checkToShowTitle,
           ),
           leftTitles: SideTitles(
-            showTitles: true,
+            showTitles: false,
             textAlign: TextAlign.center,
             reservedSize: leftSize.width,
             rotateAngle: yLabelAngle,
@@ -270,9 +270,9 @@ class AssetBarChart extends StatelessWidget {
         lineBarsData: [
           LineChartBarData(
             barWidth: 2,
-            isStrokeCapRound: true,
+            isStrokeCapRound: false,
             dotData: FlDotData(
-              show: true,
+              show: false,
               getDotPainter: (
                 _,
                 __,
