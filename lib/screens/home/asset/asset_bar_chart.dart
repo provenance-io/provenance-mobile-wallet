@@ -165,7 +165,7 @@ class AssetBarChart extends StatelessWidget {
     double? interval;
     switch (details.value) {
       case GraphingDataValue.hourly:
-        interval = microsecondsInAMinute * 5; //every 5 minuts
+        interval = microsecondsInAMinute * 5; //every 5 minutes
         break;
       case GraphingDataValue.daily:
         interval = microsecondsInAMinute * 60; //every hour
