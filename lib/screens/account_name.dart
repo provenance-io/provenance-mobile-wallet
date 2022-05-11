@@ -53,7 +53,6 @@ class AccountName extends HookWidget {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwText(
                 Strings.nameYourAccountText,
-                key: keyNameTextField,
                 style: PwTextStyle.body,
                 textAlign: TextAlign.center,
                 color: PwColor.neutralNeutral,
@@ -77,6 +76,7 @@ class AccountName extends HookWidget {
                 bottom: Spacing.small,
               ),
               child: PwTextFormField(
+                key: keyNameTextField,
                 label: Strings.accountName,
                 autofocus: true,
                 validator: (value) {
@@ -95,6 +95,7 @@ class AccountName extends HookWidget {
               child: PwButton(
                 child: PwText(
                   Strings.continueName,
+                  key: AccountName.keyContinueButton,
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),

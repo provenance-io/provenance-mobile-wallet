@@ -4,7 +4,7 @@ part 'integration_test_data.g.dart';
 
 @JsonSerializable()
 class IntegrationTestData {
-  IntegrationTestData({
+  const IntegrationTestData({
     this.recoverWalletTest,
   });
 
@@ -19,7 +19,7 @@ class IntegrationTestData {
 
 @JsonSerializable()
 class RecoverWalletTestData {
-  RecoverWalletTestData({
+  const RecoverWalletTestData({
     this.recoveryPhrase,
   });
 
