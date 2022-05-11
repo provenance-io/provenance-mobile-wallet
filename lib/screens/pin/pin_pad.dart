@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/pin/code_panel.dart';
 import 'package:provenance_wallet/screens/pin/container_circle_button.dart';
@@ -83,7 +84,7 @@ class PinPadState extends State<PinPad> {
         ),
         VerticalSpacer.xxLarge(),
         Expanded(
-          flex: Platform.isIOS ? 5 : 6,
+          flex: (kIsWeb || Platform.isIOS) ? 5 : 6,
           child: Container(
             padding: EdgeInsets.only(
               left: 20,

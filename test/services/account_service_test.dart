@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-
-import '../dashboard/memory_account_storage_service.dart';
 
 void main() {
   test('On set coin expect selected wallet updates', () async {

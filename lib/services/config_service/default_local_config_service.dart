@@ -35,6 +35,8 @@ class DefaultLocalConfigService implements LocalConfigService {
         return Flavor.prod;
       case 'io.provenance.wallet.dev':
         return Flavor.dev;
+      case 'provenance_wallet':
+        return Flavor.web;
       default:
         throw 'Unknown packageId: $packageId';
     }

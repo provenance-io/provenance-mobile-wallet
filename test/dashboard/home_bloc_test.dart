@@ -25,9 +25,9 @@ import 'package:provenance_wallet/services/transaction_service/transaction_servi
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
+import '../../lib/services/account_service/memory_account_storage_service.dart';
 import 'home_bloc_test.mocks.dart';
 import 'home_mocks.dart';
-import 'memory_account_storage_service.dart';
 
 const walletConnectAddress =
     'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';

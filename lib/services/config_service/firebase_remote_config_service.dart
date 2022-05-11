@@ -109,6 +109,8 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
         return RemoteConfigKey.endpointsProd;
       case Flavor.dev:
         return RemoteConfigKey.endpointsDev;
+      case Flavor.web:
+        return RemoteConfigKey.endpointsDev;
     }
   }
 }

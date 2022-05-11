@@ -12,16 +12,18 @@
             ]
         },
         {
-            "name": "Debug - dev - Memory",
+            "name": "Debug - web",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
             "flutterMode": "debug",
             "args": [
-                "--flavor",
-                "dev",
                 "--dart-define",
-                "CIPHER_SERVICE=memory"
+                "CIPHER_SERVICE=memory",
+                "--dart-define",
+                "ENABLE_FIREBASE=false",
+                "--dart-define",
+                "ACCOUNT_STORAGE=memory"
             ]
         },
         {
