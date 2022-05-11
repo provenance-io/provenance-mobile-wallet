@@ -270,7 +270,7 @@ class _DashboardState extends State<Dashboard> {
                         denom: "nhash",
                         amount: "0",
                         description: "",
-                        display: "0",
+                        display: "HASH",
                         displayAmount: "0",
                         exponent: 9,
                         usdPrice: 0,
