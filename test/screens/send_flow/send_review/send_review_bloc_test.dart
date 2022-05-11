@@ -6,10 +6,10 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_bank.dart' as bank;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/model/wallet_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -18,7 +18,7 @@ final get = GetIt.instance;
 
 const receivingAddress = "ReceivingAddress";
 
-final walletDetails = WalletDetails(
+final accountDetails = AccountDetails(
   id: "Id",
   address: "Address",
   name: "Name",
@@ -29,12 +29,12 @@ final walletDetails = WalletDetails(
 
 @GenerateMocks([
   SendReviewNaviagor,
-  WalletService,
+  AccountService,
   TransactionHandler,
 ])
 void main() {
   PrivateKey? privateKey;
-  MockWalletService? mockWalletService;
+  MockAccountService? mockAccountService;
   MockSendReviewNaviagor? mockNavigator;
   MockTransactionHandler? mockTransactionHandler;
 
@@ -51,18 +51,18 @@ void main() {
     mockTransactionHandler = MockTransactionHandler();
     when(mockTransactionHandler!.estimateGas(any, any))
         .thenAnswer((realInvocation) {
-      return Future.value(WalletGasEstimate(100, null));
+      return Future.value(AccountGasEstimate(100, null));
     });
 
-    mockWalletService = MockWalletService();
-    when(mockWalletService!.onDispose()).thenAnswer((_) => Future.value());
-    when(mockWalletService!.loadKey(any))
+    mockAccountService = MockAccountService();
+    when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
+    when(mockAccountService!.loadKey(any))
         .thenAnswer((_) => Future.value(privateKey!));
 
-    get.registerSingleton<WalletService>(mockWalletService!);
+    get.registerSingleton<AccountService>(mockAccountService!);
 
     bloc = SendReviewBloc(
-      walletDetails,
+      accountDetails,
       mockTransactionHandler!,
       receivingAddress,
       dollarAsset,
@@ -73,7 +73,7 @@ void main() {
   });
 
   tearDown(() {
-    get.unregister<WalletService>();
+    get.unregister<AccountService>();
   });
 
   test("StateStream", () async {
@@ -142,7 +142,7 @@ void main() {
 
       final msg = txBody.messages[0];
       final sendMsg = bank.MsgSend.fromBuffer(msg.value);
-      expect(sendMsg.fromAddress, walletDetails.address);
+      expect(sendMsg.fromAddress, accountDetails.address);
       expect(sendMsg.toAddress, receivingAddress);
       expect(sendMsg.amount.length, 1);
       expect(sendMsg.amount[0].denom, dollarAsset.denom);

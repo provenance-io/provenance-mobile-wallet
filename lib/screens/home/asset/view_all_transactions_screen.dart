@@ -67,7 +67,7 @@ class ViewAllTransactionsScreen extends StatelessWidget {
                       final item = transactionDetails.transactions[index];
 
                       return TransactionListItem(
-                        walletAddress: transactionDetails.walletAddress,
+                        address: transactionDetails.address,
                         item: item,
                       );
                     },

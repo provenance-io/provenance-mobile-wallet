@@ -1,14 +1,14 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/common/enum/wallet_add_import_type.dart';
+import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/wallet_setup_confirmation.dart';
+import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -22,7 +22,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     this.code,
     this.currentStep,
     this.numberOfSteps,
-    this.flowType = WalletAddImportType.onBoardingAdd,
+    this.flowType = AccountAddImportType.onBoardingAdd,
   }) : super(key: key);
 
   final List<String> words;
@@ -30,7 +30,7 @@ class EnableFaceIdScreen extends StatelessWidget {
   final List<int>? code;
   final int? currentStep;
   final int? numberOfSteps;
-  final WalletAddImportType flowType;
+  final AccountAddImportType flowType;
   final BiometryType biometryType;
   final authHelper = get<LocalAuthHelper>();
 
@@ -187,7 +187,7 @@ class EnableFaceIdScreen extends StatelessWidget {
       context,
     );
 
-    WalletDetails? details;
+    AccountDetails? details;
 
     final enrolled = await authHelper.enroll(
       code?.join() ?? '',
@@ -201,7 +201,7 @@ class EnableFaceIdScreen extends StatelessWidget {
           await get<KeyValueService>().getString(PrefKey.defaultChainId) ??
               ChainId.defaultChainId;
       final coin = ChainId.toCoin(chainId);
-      details = await get<WalletService>().addWallet(
+      details = await get<AccountService>().addAccount(
         phrase: words,
         name: accountName ?? '',
         coin: coin,
@@ -211,7 +211,8 @@ class EnableFaceIdScreen extends StatelessWidget {
     ModalLoadingRoute.dismiss(context);
 
     if (details != null) {
-      await Navigator.of(context).push(WalletSetupConfirmation().route());
+      await Navigator.of(context)
+          .push(AccountSetupConfirmationScreen().route());
     }
   }
 }

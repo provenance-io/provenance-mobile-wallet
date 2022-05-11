@@ -48,7 +48,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
                     .map((e) {
                       return [
                         TransactionListItem(
-                          walletAddress: transactionDetails.walletAddress,
+                          address: transactionDetails.address,
                           item: e,
                         ),
                         PwListDivider(),

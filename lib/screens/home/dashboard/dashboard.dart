@@ -3,18 +3,18 @@ import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
+import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
+import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/connection_details_modal.dart';
-import 'package:provenance_wallet/screens/home/dashboard/wallet_portfolio.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
-import 'package:provenance_wallet/screens/home/wallets/wallets_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/wallet_service/wallet_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -24,9 +24,9 @@ class Dashboard extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static final keyWalletNameText = ValueKey('$Dashboard.wallet_name_text');
-  static final keyWalletAddressText =
-      ValueKey('$Dashboard.wallet_address_text');
+  static final keyAccountNameText = ValueKey('$Dashboard.account_name_text');
+  static final keyAccountAddressText =
+      ValueKey('$Dashboard.account_address_text');
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -35,11 +35,10 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-
     final mediaQuery = MediaQuery.of(context);
     final bloc = get<HomeBloc>();
 
-    final walletService = get<WalletService>();
+    final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
 
     return Container(
@@ -123,11 +122,11 @@ class _DashboardState extends State<Dashboard> {
                               builder: (context) => ConnectionDetailsModal(),
                             );
                           } else {
-                            final walletId =
-                                walletService.events.selected.value?.id;
-                            if (walletId != null) {
+                            final accountId =
+                                accountService.events.selected.value?.id;
+                            if (accountId != null) {
                               final success =
-                                  await bloc.tryRestoreSession(walletId);
+                                  await bloc.tryRestoreSession(accountId);
                               if (!success) {
                                 final addressData = await Navigator.of(
                                   context,
@@ -141,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
 
                                 if (addressData != null) {
                                   bloc
-                                      .connectSession(walletId, addressData)
+                                      .connectSession(accountId, addressData)
                                       .catchError((err) {
                                     PwDialog.showError(
                                       context,
@@ -160,14 +159,14 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
               centerTitle: false,
-              title: StreamBuilder<WalletDetails?>(
-                initialData: walletService.events.selected.value,
-                stream: walletService.events.selected,
+              title: StreamBuilder<AccountDetails?>(
+                initialData: accountService.events.selected.value,
+                stream: accountService.events.selected,
                 builder: (context, snapshot) {
                   final details = snapshot.data;
 
                   final name = details?.name ?? '';
-                  final walletAddress = details?.address ?? '';
+                  final accountAddress = details?.address ?? '';
                   final coin = details?.coin;
 
                   return Column(
@@ -175,15 +174,15 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       PwText(
                         name,
-                        key: Dashboard.keyWalletNameText,
+                        key: Dashboard.keyAccountNameText,
                         style: PwTextStyle.subhead,
                         overflow: TextOverflow.fade,
                       ),
                       Row(
                         children: [
                           PwText(
-                            walletAddress.abbreviateAddress(),
-                            key: Dashboard.keyWalletAddressText,
+                            accountAddress.abbreviateAddress(),
+                            key: Dashboard.keyAccountAddressText,
                             style: PwTextStyle.body,
                           ),
                           if (coin != null) HorizontalSpacer.large(),
@@ -206,7 +205,7 @@ class _DashboardState extends State<Dashboard> {
                     useSafeArea: true,
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletsScreen(),
+                    builder: (context) => AccountsScreen(),
                   );
                 },
                 child: Padding(
@@ -224,7 +223,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             (isTallScreen) ? VerticalSpacer.xxLarge() : VerticalSpacer.medium(),
-            WalletPortfolio(
+            AccountPortfolio(
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
             VerticalSpacer.xxLarge(),
@@ -281,7 +280,7 @@ class _DashboardState extends State<Dashboard> {
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
                                 final coin =
-                                    walletService.events.selected.value?.coin;
+                                    accountService.events.selected.value?.coin;
                                 if (coin != null) {
                                   get<DashboardTabBloc>().openAsset(coin, item);
                                 }

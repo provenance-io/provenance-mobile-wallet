@@ -5,11 +5,11 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
-import 'package:provenance_dart/wallet.dart' as wallet;
+import 'package:provenance_dart/wallet.dart' as account;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/wallet_details.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/wallet_service/transaction_handler.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -29,7 +29,7 @@ class SendAmountBlocState {
 
 class SendAmountBloc extends Disposable {
   SendAmountBloc(
-    this.walletDetails,
+    this.accountDetails,
     this.receivingAddress,
     this.asset,
     this._priceService,
@@ -42,7 +42,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
-  final WalletDetails walletDetails;
+  final AccountDetails accountDetails;
   final SendAsset asset;
   final String receivingAddress;
 
@@ -52,7 +52,7 @@ class SendAmountBloc extends Disposable {
     final body = TxBody(
       messages: [
         MsgSend(
-          fromAddress: walletDetails.address,
+          fromAddress: accountDetails.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -64,9 +64,9 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final publicKey = wallet.PublicKey.fromCompressPublicHex(
-      convert.hex.decoder.convert(walletDetails.publicKey),
-      walletDetails.coin,
+    final publicKey = account.PublicKey.fromCompressPublicHex(
+      convert.hex.decoder.convert(accountDetails.publicKey),
+      accountDetails.coin,
     );
 
     get<TransactionHandler>()
@@ -75,11 +75,11 @@ class SendAmountBloc extends Disposable {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();
-        final priceLookup =
-            await _priceService.getAssetPrices(walletDetails.coin, denoms).then(
-                  (prices) =>
-                      {for (var price in prices) price.denomination: price},
-                );
+        final priceLookup = await _priceService
+            .getAssetPrices(accountDetails.coin, denoms)
+            .then(
+              (prices) => {for (var price in prices) price.denomination: price},
+            );
 
         for (var fee in estimate.feeCalculated!) {
           final price = priceLookup[fee.denom]?.usdPrice ?? 0;
@@ -95,7 +95,7 @@ class SendAmountBloc extends Disposable {
       }
 
       final priceList =
-          await _priceService.getAssetPrices(walletDetails.coin, ["nhash"]);
+          await _priceService.getAssetPrices(accountDetails.coin, ["nhash"]);
       final price = (priceList.isNotEmpty) ? priceList.first.usdPrice : 0.0;
 
       _fee = MultiSendAsset(
