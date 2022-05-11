@@ -29,18 +29,23 @@ class AssetChartBloc extends Disposable {
 
     switch (value) {
       case GraphingDataValue.hourly:
+        startDate = endDate.subtract(Duration(minutes: 30));
+        modifiedDataValue = GraphingDataValue.minute;
+        break;
+      case GraphingDataValue.daily:
         startDate = endDate.subtract(Duration(hours: 24));
         modifiedDataValue = GraphingDataValue.hourly;
         break;
-      case GraphingDataValue.daily:
-        startDate = endDate.subtract(Duration(days: 7));
-        modifiedDataValue = GraphingDataValue.hourly;
-        break;
       case GraphingDataValue.weekly:
-        startDate = endDate.subtract(Duration(days: 4 * 7));
+        startDate = endDate.subtract(Duration(days: 7));
         modifiedDataValue = GraphingDataValue.daily;
         break;
       case GraphingDataValue.monthly:
+        startDate = endDate.subtract(Duration(days: 4 * 7));
+
+        modifiedDataValue = GraphingDataValue.weekly;
+        break;
+      case GraphingDataValue.yearly:
         startDate = DateTime(
           endDate.year - 1,
           endDate.month,
@@ -51,9 +56,10 @@ class AssetChartBloc extends Disposable {
           endDate.millisecond,
           endDate.microsecond,
         );
+
         modifiedDataValue = GraphingDataValue.weekly;
         break;
-      case GraphingDataValue.yearly:
+      case GraphingDataValue.all:
         startDate = DateTime(
           endDate.year - 4,
           endDate.month,
