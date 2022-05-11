@@ -35,7 +35,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-
     final mediaQuery = MediaQuery.of(context);
     final bloc = get<HomeBloc>();
 
@@ -264,7 +263,19 @@ class _DashboardState extends State<Dashboard> {
                   initialData: bloc.assetList.value,
                   stream: bloc.assetList,
                   builder: (context, snapshot) {
-                    final assets = snapshot.data ?? [];
+                    var assets = snapshot.data ?? [];
+
+                    if (assets.isEmpty) {
+                      assets.add(Asset.fake(
+                        denom: "nhash",
+                        amount: "0",
+                        description: "",
+                        display: "0",
+                        displayAmount: "0",
+                        exponent: 9,
+                        usdPrice: 0,
+                      ));
+                    }
 
                     return ListView.separated(
                       padding: EdgeInsets.only(
