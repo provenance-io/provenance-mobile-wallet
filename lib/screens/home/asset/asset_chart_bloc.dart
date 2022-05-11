@@ -107,7 +107,17 @@ class AssetChartBloc extends Disposable {
     }
     _chartDetails.value = AssetChartDetails(
       value,
-      _asset,
+      Asset.fake(
+        denom: _asset.denom,
+        amount: _asset.amount,
+        display: _asset.display,
+        description: _asset.description,
+        exponent: _asset.exponent,
+        displayAmount: _asset.displayAmount,
+        usdPrice: graphItemList.isNotEmpty
+            ? graphItemList.last.price
+            : _asset.usdPrice,
+      ),
       scaledItems,
       true,
     );
