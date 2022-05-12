@@ -48,7 +48,8 @@ class AssetBarChartButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const values = GraphingDataValue.values;
+    var values = GraphingDataValue.values.toList();
+    values.removeAt(0);
 
     return Flexible(
       child: Row(

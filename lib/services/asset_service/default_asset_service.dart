@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
@@ -79,10 +78,10 @@ class DefaultAssetService extends AssetService
 
     String uri = '$_assetPricingBasePath/$assetType?period=$timeFrame';
     if (startDate != null) {
-      uri = "$uri&startDate=${_formatter.format(startDate.startOfDay)}";
+      uri = "$uri&startDate=${_formatter.format(startDate)}";
     }
     if (endDate != null) {
-      uri = "$uri&endDate=${_formatter.format(endDate.endOfDay)}";
+      uri = "$uri&endDate=${_formatter.format(endDate)}";
     }
 
     final data = await client.get(

@@ -18,7 +18,7 @@ class Asset {
         displayAmount = dto.displayAmount!,
         description = dto.description!,
         exponent = dto.exponent!,
-        usdPrice = dto.usdPrice!,
+        usdPrice = dto.usdPrice ?? 0,
         dailyHigh = dto.dailyHigh,
         dailyLow = dto.dailyLow,
         dailyVolume = dto.dailyVolume;

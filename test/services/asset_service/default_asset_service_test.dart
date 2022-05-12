@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/extension/date_time.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
@@ -310,7 +309,7 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&startDate=${dateFormat.format(now.startOfDay.toUtc())}-00:00',
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&startDate=${dateFormat.format(now.toUtc())}-00:00',
       );
     });
 
@@ -339,7 +338,7 @@ main() {
 
       expect(
         captures.first as String,
-        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&endDate=${dateFormat.format(now.endOfDay.toUtc())}-00:00',
+        '/service-mobile-wallet/external/api/v1/pricing/marker/AssetTypeA?period=ALL&endDate=${dateFormat.format(now.toUtc())}-00:00',
       );
     });
 

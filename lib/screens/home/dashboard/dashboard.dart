@@ -227,30 +227,20 @@ class _DashboardState extends State<Dashboard> {
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
             VerticalSpacer.xxLarge(),
-            StreamBuilder<List<Asset>?>(
-              initialData: bloc.assetList.value,
-              stream: bloc.assetList,
-              builder: (context, snapshot) {
-                final assets = snapshot.data ?? [];
-
-                return assets.isEmpty
-                    ? Container()
-                    : Padding(
-                        padding: EdgeInsets.only(
-                          left: Spacing.xxLarge,
-                          right: Spacing.xxLarge,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
-                            PwText(
-                              Strings.myAssets,
-                              style: PwTextStyle.title,
-                            ),
-                          ],
-                        ),
-                      );
-              },
+            Padding(
+              padding: EdgeInsets.only(
+                left: Spacing.xxLarge,
+                right: Spacing.xxLarge,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  PwText(
+                    Strings.myAssets,
+                    style: PwTextStyle.title,
+                  ),
+                ],
+              ),
             ),
             VerticalSpacer.medium(),
             Expanded(
@@ -263,7 +253,19 @@ class _DashboardState extends State<Dashboard> {
                   initialData: bloc.assetList.value,
                   stream: bloc.assetList,
                   builder: (context, snapshot) {
-                    final assets = snapshot.data ?? [];
+                    var assets = snapshot.data ?? [];
+
+                    if (assets.isEmpty) {
+                      assets.add(Asset.fake(
+                        denom: "nhash",
+                        amount: "0",
+                        description: "",
+                        display: "HASH",
+                        displayAmount: "0",
+                        exponent: 9,
+                        usdPrice: 0,
+                      ));
+                    }
 
                     return ListView.separated(
                       padding: EdgeInsets.only(

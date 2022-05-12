@@ -23,6 +23,7 @@ class AssetService {
 }
 
 enum GraphingDataValue {
+  minute,
   hourly,
   daily,
   weekly,

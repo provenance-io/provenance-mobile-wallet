@@ -53,12 +53,6 @@ class AccountPortfolio extends StatelessWidget {
                         ?.map((e) => e.usdPrice * double.parse(e.amount))
                         .reduce((value, element) => value + element) ??
                     0;
-              } else if (portfolioValue == 0) {
-                return PwText(
-                  "",
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.display1,
-                );
               }
 
               return PwAutoSizingText(
