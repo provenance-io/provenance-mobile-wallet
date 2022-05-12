@@ -10,7 +10,7 @@ class DefaultConnectivityService extends ConnectivityService
     with WidgetsBindingObserver
     implements Disposable {
   DefaultConnectivityService() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _connectivity.onConnectivityChanged
         .listen(_connectivityChanged)
         .addTo(_subscriptions);
@@ -25,7 +25,7 @@ class DefaultConnectivityService extends ConnectivityService
 
   @override
   FutureOr onDispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _subscriptions.dispose();
   }
 

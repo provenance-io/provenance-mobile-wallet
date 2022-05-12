@@ -16,7 +16,7 @@ dependencies:
   decimal: ^2.1.0
   dio: ^4.0.0
   faker: ^2.0.0
-  firebase_core: ^1.13.1
+  firebase_core: ^1.16.0
   firebase_crashlytics: ^2.7.2
   firebase_dynamic_links: ^4.2.2
   firebase_messaging: ^11.3.0

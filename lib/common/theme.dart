@@ -31,6 +31,7 @@ class ProvenanceColorScheme extends ColorScheme {
     Color? inverseSurface,
     Color? onInverseSurface,
     Color? inversePrimary,
+    Color? surfaceTint,
     this.graphNegative,
     this.graphNeutral,
     this.graphPositive,
@@ -65,6 +66,7 @@ class ProvenanceColorScheme extends ColorScheme {
           inverseSurface: inverseSurface,
           onInverseSurface: onInverseSurface,
           inversePrimary: inversePrimary,
+          surfaceTint: surfaceTint,
         );
 
   final Color? graphNegative;
@@ -103,6 +105,7 @@ class ProvenanceColorScheme extends ColorScheme {
     Color? inverseSurface,
     Color? onInverseSurface,
     Color? inversePrimary,
+    Color? surfaceTint,
     Color? primaryVariant,
     Color? secondaryVariant,
     Color? graphNegative,
@@ -140,6 +143,7 @@ class ProvenanceColorScheme extends ColorScheme {
       inverseSurface: inverseSurface ?? this.inverseSurface,
       onInverseSurface: onInverseSurface ?? this.onInverseSurface,
       inversePrimary: inversePrimary ?? this.inversePrimary,
+      surfaceTint: surfaceTint ?? this.surfaceTint,
       graphNegative: graphNegative ?? this.graphNegative,
       graphNeutral: graphNeutral ?? this.graphNeutral,
       graphPositive: graphPositive ?? this.graphPositive,

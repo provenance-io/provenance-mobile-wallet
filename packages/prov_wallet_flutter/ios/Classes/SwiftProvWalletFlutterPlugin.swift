@@ -35,7 +35,7 @@ public class SwiftProvWalletFlutterPlugin: NSObject, FlutterPlugin {
                     let systemVersion = await UIDevice.current.systemVersion
                     value = "iOS " + systemVersion
                 } else if call.method == "getBiometryType" {
-                    let type = cipherService.getBiometryType()
+                    let type = cipherService.biometryType
                     value = type.rawValue
                 } else if call.method == "authenticateBiometry" {
                     value = await cipherService.authenticate()

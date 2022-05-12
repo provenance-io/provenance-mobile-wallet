@@ -25,7 +25,7 @@ extension WidgetTesterExtension on WidgetTester {
     } on Exception catch (_) {
       print('===== Start widget dump =====');
 
-      final app = WidgetsBinding.instance?.renderViewElement?.toStringDeep();
+      final app = WidgetsBinding.instance.renderViewElement?.toStringDeep();
       print(app);
 
       print('===== End widget dump =======');
