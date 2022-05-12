@@ -17,7 +17,7 @@ class DashboardTab extends FlowBase {
   State<StatefulWidget> createState() => DashboardTabState();
 }
 
-class DashboardTabState extends FlowBaseState<DashboardTab> {
+class DashboardTabState extends State<DashboardTab> {
   late DashboardTabBloc _bloc;
 
   @override
@@ -32,7 +32,7 @@ class DashboardTabState extends FlowBaseState<DashboardTab> {
   }
 
   @override
-  Widget createStartPage() => StreamBuilder<AssetDetails?>(
+  Widget build(BuildContext context) => StreamBuilder<AssetDetails?>(
         initialData: _bloc.assetDetails.value,
         stream: _bloc.assetDetails,
         builder: (context, snapshot) {
