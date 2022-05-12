@@ -160,14 +160,53 @@ This can help provide more insight into the Gradle build
 
 ## Testing
 ### Running Integration Tests
+Command Line
 1. Run `./generateSampleTestData.sh` to generate the test data json file `../integration_test_data.json`
 2. In the generated json file, replace the placeholder text with a space-separated 24 word Testnet seed phrase
     1. Do not use a Mainnet seed phrase; this is unprotected
     2. Currently the account does not require any Hash
 4. Connect a device
-5. Run `./runIntegrationTests.sh`  
+5. Run `./runIntegrationTests.sh`
 
-Note: You will have to manually address any system prompts (e.g. Face ID, permissions requests, etc.) as they pop up
+Visual Studio Code
+1. Open user settings. Code -> Preferences -> Settings
+2. Select the User tab
+3. Select the Open Settings (JSON) button at the top right of the IDE
+4. Add a launch configuration
+```
+"launch": {
+    "configurations": [
+        {
+            "name": "Prov Wallet Test - dev",
+            "type": "dart",
+            "request": "launch",
+            "program": "integration_test/recover_wallet_test.dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev",
+                "--dart-define",
+                "TEST_DATA_JSON={ \"recoverWalletTest\": { \"recoveryPhrase\": \"enter your seed phrase here\" } }",
+                "--dart-define",
+                "CIPHER_SERVICE=memory"
+            ],
+            "codeLens": {
+                "for": [
+                    "debug-test-file",
+                    "run-test-file",
+                    "debug-test",
+                    "run-test"
+                ],
+                "path": "integration_test",
+                "title": "${debugType} (dev)"
+            }
+        }
+    ],
+    "compounds": []
+}
+```
+
+Note: If `CIPHER_SERVICE=memory` private keys will be stored in-memory only, and platform authentication prompts will be disabled.
 
 ### API Permissions
 API keys have application and API restrictions that are managed in Google Cloud.

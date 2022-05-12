@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart'
-    show FirebaseRemoteConfig;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,19 +17,26 @@ import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_kind.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
 import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
-import 'package:provenance_wallet/services/config_service/config_service.dart';
-import 'package:provenance_wallet/services/config_service/default_config_service.dart';
+import 'package:provenance_wallet/services/config_service/default_local_config_service.dart';
+import 'package:provenance_wallet/services/config_service/default_remote_config_service.dart';
+import 'package:provenance_wallet/services/config_service/firebase_remote_config_service.dart';
 import 'package:provenance_wallet/services/config_service/local_config.dart';
+import 'package:provenance_wallet/services/config_service/remote_config_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/logging_crash_reporting_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
@@ -46,6 +50,7 @@ import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
+import 'package:provenance_wallet/services/remote_notification/disabled_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
@@ -62,58 +67,45 @@ import 'package:rxdart/rxdart.dart';
 
 import 'util/get.dart';
 
-// Toggle this for testing Crashlytics in your app locally.
-const _testingCrashlytics = false;
+// Toggle this for testing crash reporting in your app locally.
+const _testingCrashReporting = false;
 const _tag = 'main';
+
+const _cipherServiceKind = String.fromEnvironment(
+  'CIPHER_SERVICE',
+  defaultValue: 'platform',
+);
+const _accountServiceKind = String.fromEnvironment(
+  'ACCOUNT_STORAGE',
+  defaultValue: 'sqlite',
+);
+const _enableFirebase = bool.fromEnvironment(
+  'ENABLE_FIREBASE',
+  defaultValue: true,
+);
 
 void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    get<CrashReportingService>().recordFlutterError(errorDetails);
   };
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
 
       await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp],
       );
 
-      get.registerLazySingleton<CrashReportingService>(
-        () => FirebaseCrashReportingService(),
-      );
-
-      var keyValueService = DefaultKeyValueService(
+      final keyValueService = DefaultKeyValueService(
         store: SharedPreferencesKeyValueStore(),
       );
 
-      await _initializeCrashlytics(keyValueService);
+      get.registerSingleton<KeyValueService>(keyValueService);
 
-      final firebaseMessaging = FirebaseMessaging.instance;
-      final pushNotificationHelper = PushNotificationHelper(firebaseMessaging);
-
-      get.registerLazySingleton<RemoteNotificationService>(() {
-        return DefaultRemoteNotificationService(pushNotificationHelper);
-      });
-
-      final cipherService = PlatformCipherService();
-      get.registerSingleton<CipherService>(cipherService);
-
-      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
-      if (!hasKey) {
-        await cipherService.deletePin();
-        keyValueService.setBool(PrefKey.isSubsequentRun, true);
-      }
-
-      final configService = DefaultConfigService(
-        keyValueService: keyValueService,
-        firebaseRemoteConfig: FirebaseRemoteConfig.instance,
-      );
-      get.registerSingleton<ConfigService>(configService);
-
-      final config = await configService.getLocalConfig();
+      final localConfigService = DefaultLocalConfigService();
+      final config = await localConfigService.getConfig();
       get.registerSingleton<LocalConfig>(config);
 
       logStatic(
@@ -122,12 +114,108 @@ void main() {
         'Initializing: $config',
       );
 
-      get.registerSingleton<KeyValueService>(keyValueService);
-      final sqliteStorage = SqliteAccountStorageService();
-      final accountStorage =
-          AccountStorageServiceImp(sqliteStorage, cipherService);
+      CrashReportingService crashReportingService;
+      RemoteNotificationService remoteNotificationService;
+      RemoteConfigService remoteConfigService;
+      DeepLinkService deepLinkService;
 
-      final accountService = AccountService(storage: accountStorage)..init();
+      logStatic(
+        _tag,
+        Level.info,
+        'Enable Firebase: $_enableFirebase',
+      );
+
+      if (_enableFirebase) {
+        await Firebase.initializeApp();
+
+        crashReportingService = FirebaseCrashReportingService();
+
+        final firebaseMessaging = FirebaseMessaging.instance;
+        final pushNotificationHelper =
+            PushNotificationHelper(firebaseMessaging);
+        remoteNotificationService =
+            DefaultRemoteNotificationService(pushNotificationHelper);
+        remoteConfigService = FirebaseRemoteConfigService(
+          keyValueService: keyValueService,
+          localConfigService: localConfigService,
+        );
+        deepLinkService = FirebaseDeepLinkService()..init();
+      } else {
+        crashReportingService = LoggingCrashReportingService();
+        remoteNotificationService = DisabledRemoteNotificationService();
+        remoteConfigService = DefaultRemoteConfigService(
+          localConfigService: localConfigService,
+        );
+        deepLinkService = DisabledDeepLinkService();
+      }
+
+      get.registerSingleton<CrashReportingService>(
+        crashReportingService,
+      );
+
+      final allowCrashReporting = _testingCrashReporting ||
+          ((await keyValueService.getBool(PrefKey.allowCrashlitics) ?? true) &&
+              !kDebugMode);
+
+      await crashReportingService.enableCrashCollection(
+        enable: allowCrashReporting,
+      );
+
+      get.registerSingleton<RemoteNotificationService>(
+        remoteNotificationService,
+      );
+
+      get.registerSingleton<RemoteConfigService>(
+        remoteConfigService,
+      );
+
+      get.registerSingleton<DeepLinkService>(deepLinkService);
+
+      CipherService cipherService;
+
+      switch (CipherServiceKind.values.byName(_cipherServiceKind)) {
+        case CipherServiceKind.platform:
+          cipherService = PlatformCipherService();
+          break;
+        case CipherServiceKind.memory:
+          cipherService = MemoryCipherService();
+          break;
+      }
+
+      get.registerSingleton<CipherService>(cipherService);
+      logStatic(
+        _tag,
+        Level.info,
+        '$CipherService implementation: ${cipherService.runtimeType}',
+      );
+
+      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
+      if (!hasKey) {
+        await cipherService.deletePin();
+        keyValueService.setBool(PrefKey.isSubsequentRun, true);
+      }
+
+      AccountStorageService accountStorageService;
+
+      switch (AccountStorageServiceKind.values.byName(_accountServiceKind)) {
+        case AccountStorageServiceKind.sqlite:
+          final sqliteStorage = SqliteAccountStorageService();
+          accountStorageService =
+              AccountStorageServiceImp(sqliteStorage, cipherService);
+          break;
+        case AccountStorageServiceKind.memory:
+          accountStorageService = MemoryAccountStorageService();
+          break;
+      }
+
+      logStatic(
+        _tag,
+        Level.info,
+        '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
+      );
+
+      final accountService = AccountService(storage: accountStorageService)
+        ..init();
       get.registerSingleton<AccountService>(accountService);
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
@@ -139,7 +227,20 @@ void main() {
       );
     },
     (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
+      // TODO: Replace with unified logging once stacktraces can print.
+      final logger = Logger();
+      logger.e(
+        'Error',
+        error,
+        stack,
+      );
+
+      if (get.isRegistered<CrashReportingService>()) {
+        get<CrashReportingService>().recordError(
+          error,
+          stack: stack,
+        );
+      }
     },
   );
 }
@@ -216,7 +317,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    final configService = get<ConfigService>();
+    final configService = get<RemoteConfigService>();
     final remoteConfig = configService.getRemoteConfig();
 
     get.registerSingleton<ProtobuffClientInjector>(
@@ -309,18 +410,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<PriceService>(
       () => PriceService(),
     );
-
-    final deepLinkService = FirebaseDeepLinkService()..init();
-    get.registerSingleton<DeepLinkService>(deepLinkService);
   }
-}
-
-Future<void> _initializeCrashlytics(KeyValueService service) async {
-  final allowCrashlytics = _testingCrashlytics ||
-      ((await service.getBool(PrefKey.allowCrashlitics) ?? true) &&
-          !kDebugMode);
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(allowCrashlytics);
 }
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {

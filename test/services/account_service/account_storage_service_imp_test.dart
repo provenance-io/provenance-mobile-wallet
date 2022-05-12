@@ -295,7 +295,7 @@ main() {
 
   group("removeAllWallets", () {
     setUp(() {
-      when(mockCipherService!.reset()).thenAnswer(
+      when(mockCipherService!.resetKeys()).thenAnswer(
         (_) => Future.value(true),
       );
 
@@ -310,14 +310,14 @@ main() {
 
     test("function calls", () async {
       await accountStorageService!.removeAllAccounts();
-      verify(mockCipherService!.reset());
+      verify(mockCipherService!.resetKeys());
       verify(mockSqliteAccountStorageService!.removeAllAccounts());
     });
 
     test("error during cipher reset", () async {
       final exception = Exception("A");
 
-      when(mockCipherService!.reset())
+      when(mockCipherService!.resetKeys())
           .thenAnswer((_) => Future.error(exception));
 
       expect(

@@ -146,8 +146,9 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       (super.noSuchMethod(Invocation.method(#removeKey, [], {#id: id}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
-  _i3.Future<bool> reset() => (super.noSuchMethod(Invocation.method(#reset, []),
-      returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  _i3.Future<bool> resetKeys() =>
+      (super.noSuchMethod(Invocation.method(#resetKeys, []),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
   _i3.Future<String?> getPin() =>
       (super.noSuchMethod(Invocation.method(#getPin, []),

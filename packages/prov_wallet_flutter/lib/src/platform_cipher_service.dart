@@ -181,7 +181,7 @@ class PlatformCipherService implements CipherService {
   }
 
   @override
-  Future<bool> reset() async {
+  Future<bool> resetKeys() async {
     var success = false;
 
     try {

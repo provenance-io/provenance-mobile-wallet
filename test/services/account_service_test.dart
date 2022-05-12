@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-
-import '../dashboard/memory_wallet_storage_service.dart';
 
 void main() {
   test('On set coin expect selected wallet updates', () async {
@@ -63,7 +62,7 @@ Future<AccountService> createService({
 }) async {
   final datas = createDatas(dataCount, coin);
   final service = AccountService(
-    storage: InMemoryWalletStorageService(
+    storage: MemoryAccountStorageService(
       datas: datas,
       selectedWalletId: selectedWalletId,
       useBiometry: useBiometry,

@@ -16,11 +16,11 @@ dependencies:
   decimal: ^2.1.0
   dio: ^4.0.0
   faker: ^2.0.0
-  firebase_core: ^1.12.0
-  firebase_crashlytics: ^2.5.0
-  firebase_dynamic_links: ^4.0.5
-  firebase_messaging: ^11.2.11
-  firebase_remote_config: ^2.0.3
+  firebase_core: ^1.13.1
+  firebase_crashlytics: ^2.7.2
+  firebase_dynamic_links: ^4.2.2
+  firebase_messaging: ^11.3.0
+  firebase_remote_config: ^2.0.6
   fl_chart: ^0.45.1
   flutter:
     sdk: flutter

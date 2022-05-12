@@ -41,6 +41,8 @@ class Endpoints {
         return _endpoints;
       case Flavor.dev:
         return _endpoints;
+      case Flavor.web:
+        return _endpoints;
     }
   }
 

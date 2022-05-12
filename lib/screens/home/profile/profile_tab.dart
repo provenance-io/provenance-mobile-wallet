@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -14,6 +13,7 @@ import 'package:provenance_wallet/screens/home/profile/future_toggle_item.dart';
 import 'package:provenance_wallet/screens/home/profile/link_item.dart';
 import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -206,14 +206,19 @@ class _ProfileTabState extends State<ProfileTab> {
                         PrefKey.allowCrashlitics,
                         value,
                       );
+
+                      final crashReportingService =
+                          get<CrashReportingService>();
+
                       if (value) {
-                        await FirebaseCrashlytics.instance
-                            .setCrashlyticsCollectionEnabled(!kDebugMode);
+                        await crashReportingService.enableCrashCollection(
+                          enable: !kDebugMode,
+                        );
                       } else {
-                        await FirebaseCrashlytics.instance
-                            .setCrashlyticsCollectionEnabled(false);
-                        await FirebaseCrashlytics.instance
-                            .deleteUnsentReports();
+                        await crashReportingService.enableCrashCollection(
+                          enable: false,
+                        );
+                        await crashReportingService.deleteUnsentReports();
                       }
                     },
                   );

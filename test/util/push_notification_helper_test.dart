@@ -28,6 +28,7 @@ main() {
           notificationCenter: enabled,
           showPreviews: AppleShowPreviewSetting.always,
           sound: AppleNotificationSetting.enabled,
+          timeSensitive: AppleNotificationSetting.enabled,
         ),
       ),
     );

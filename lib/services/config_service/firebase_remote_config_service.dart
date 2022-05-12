@@ -3,24 +3,22 @@ import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provenance_wallet/services/config_service/config_service.dart';
 import 'package:provenance_wallet/services/config_service/endpoints.dart';
 import 'package:provenance_wallet/services/config_service/flavor.dart';
-import 'package:provenance_wallet/services/config_service/local_config.dart';
+import 'package:provenance_wallet/services/config_service/local_config_service.dart';
 import 'package:provenance_wallet/services/config_service/remote_config.dart';
 import 'package:provenance_wallet/services/config_service/remote_config_key.dart';
+import 'package:provenance_wallet/services/config_service/remote_config_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/lazy.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
-class DefaultConfigService implements ConfigService {
-  DefaultConfigService({
+class FirebaseRemoteConfigService implements RemoteConfigService {
+  FirebaseRemoteConfigService({
     required KeyValueService keyValueService,
-    required FirebaseRemoteConfig firebaseRemoteConfig,
+    required LocalConfigService localConfigService,
   })  : _keyValueService = keyValueService,
-        _firebaseRemoteConfig = firebaseRemoteConfig {
-    _lazyLocalConfig = Lazy(_getLocalConfig);
+        _localConfigService = localConfigService {
     _lazyRemoteConfig = Lazy(_getRemoteConfig);
   }
 
@@ -30,34 +28,17 @@ class DefaultConfigService implements ConfigService {
   static const _remoteMinFetchInterval = Duration(seconds: 10);
 
   final KeyValueService _keyValueService;
-  final FirebaseRemoteConfig _firebaseRemoteConfig;
+  final LocalConfigService _localConfigService;
+  final FirebaseRemoteConfig _firebaseRemoteConfig =
+      FirebaseRemoteConfig.instance;
 
-  late final Lazy<Future<LocalConfig>> _lazyLocalConfig;
   late final Lazy<Future<RemoteConfig>> _lazyRemoteConfig;
-
-  @override
-  Future<LocalConfig> getLocalConfig() => _lazyLocalConfig.value;
 
   @override
   Future<RemoteConfig> getRemoteConfig() => _lazyRemoteConfig.value;
 
-  Future<LocalConfig> _getLocalConfig() async {
-    final info = await PackageInfo.fromPlatform();
-
-    final flavor = _getFlavor(info.packageName);
-
-    final config = LocalConfig(
-      packageId: info.packageName,
-      version: info.version,
-      buildNumber: info.buildNumber,
-      flavor: flavor,
-    );
-
-    return config;
-  }
-
   Future<RemoteConfig> _getRemoteConfig() async {
-    final localConfig = await getLocalConfig();
+    final localConfig = await _localConfigService.getConfig();
     final flavor = localConfig.flavor;
 
     await _firebaseRemoteConfig.setConfigSettings(
@@ -122,22 +103,13 @@ class DefaultConfigService implements ConfigService {
     return remoteConfig;
   }
 
-  Flavor _getFlavor(String packageId) {
-    switch (packageId) {
-      case 'io.provenance.wallet':
-        return Flavor.prod;
-      case 'io.provenance.wallet.dev':
-        return Flavor.dev;
-      default:
-        throw 'Unknown packageId: $packageId';
-    }
-  }
-
   RemoteConfigKey _getRemoteConfigKey(Flavor flavor) {
     switch (flavor) {
       case Flavor.prod:
         return RemoteConfigKey.endpointsProd;
       case Flavor.dev:
+        return RemoteConfigKey.endpointsDev;
+      case Flavor.web:
         return RemoteConfigKey.endpointsDev;
     }
   }

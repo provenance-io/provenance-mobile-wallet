@@ -17,8 +17,8 @@ class MemoryStorageData {
   PrivateKey get selectedKey => keys[selectedKeyIndex];
 }
 
-class InMemoryWalletStorageService implements AccountStorageService {
-  InMemoryWalletStorageService({
+class MemoryAccountStorageService implements AccountStorageService {
+  MemoryAccountStorageService({
     List<MemoryStorageData>? datas,
     String? selectedWalletId,
     bool? useBiometry,
