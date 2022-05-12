@@ -17,7 +17,31 @@ class CipherService: NSObject {
     private let prefKeyPin = "pin"
     private let secKeyPrefix = "io.provenance.wallet.key."
 
-    private var authContext = LAContext()
+    private var authContext: LAContext
+
+    let biometryType: BiometryType
+
+    override init() {
+        authContext = LAContext()
+
+        var type = BiometryType.unknown
+
+        let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        if canEvaluate {
+            switch authContext.biometryType {
+            case LABiometryType.faceID:
+                type = .faceId
+            case LABiometryType.touchID:
+                type = .touchId
+            case LABiometryType.none:
+                type = .none
+            default:
+                type = .unknown
+            }
+        }
+
+        biometryType = type
+    }
 
     func upgrade() async throws {
         let existingVersion = getVersion()
@@ -42,24 +66,7 @@ class CipherService: NSObject {
     }
 
     func getBiometryType() -> BiometryType {
-        var type: BiometryType = .none
-        if authContext.biometryType != .none {
-            let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-            if canEvaluate {
-                switch authContext.biometryType {
-                case LABiometryType.faceID:
-                    type = .faceId
-                case LABiometryType.touchID:
-                    type = .touchId
-                case LABiometryType.none:
-                    type = .none
-                default:
-                    type = .unknown
-                }
-            }
-        }
-
-        return type
+        return biometryType
     }
 
     func getLockScreenEnabled() -> Bool {

@@ -50,7 +50,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     delegateEvents.onClose
         .listen((_) => _clearSessionData())
         .addTo(_subscriptions);
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   WalletConnectSession? _currentSession;
@@ -454,7 +454,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     _error.close();
 
     _currentSession?.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   void _onSelected(AccountDetails? details) {

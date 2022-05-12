@@ -32,7 +32,7 @@ class _PwOnboardingViewState extends State<PwOnboardingView> {
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       final columnSize = _columnKey.currentContext!.size;
       final scrollSize = _scrollKey.currentContext!.size;
 
