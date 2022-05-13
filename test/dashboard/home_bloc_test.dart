@@ -5,6 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
@@ -251,6 +252,8 @@ class TestState {
   static Future<TestState> create({
     required int maxWalletId,
   }) async {
+    WidgetsFlutterBinding.ensureInitialized();
+
     await get.reset(dispose: true);
 
     final storageDatas = <MemoryStorageData>[];

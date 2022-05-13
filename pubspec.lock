@@ -689,6 +689,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: fe88e168d1055a528e582c688eb15d86b5f296bf
+      resolved-ref: fe88e168d1055a528e582c688eb15d86b5f296bf
+      url: "https://github.com/juliansteenbakker/mobile_scanner.git"
+    source: git
+    version: "1.0.0"
   mockito:
     dependency: "direct dev"
     description:
@@ -894,13 +903,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  qr_code_scanner:
-    dependency: "direct main"
-    description:
-      name: qr_code_scanner
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.2"
   qr_flutter:
     dependency: "direct main"
     description:

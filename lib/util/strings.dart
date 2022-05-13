@@ -113,6 +113,9 @@ class Strings {
   static const profile = "Profile";
   static const errorDisconnected = 'Disconnected';
 
+  // QR Scanner
+  static const qrScannerTitle = 'Scan QR Code';
+
   // Profile Page
   static const linkedServices = 'Linked Services';
   static const security = 'Security';

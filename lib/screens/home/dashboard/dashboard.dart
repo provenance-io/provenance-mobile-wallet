@@ -130,6 +130,7 @@ class _DashboardState extends State<Dashboard> {
                               if (!success) {
                                 final addressData = await Navigator.of(
                                   context,
+                                  rootNavigator: true,
                                 ).push(
                                   QRCodeScanner(
                                     isValidCallback: (input) {

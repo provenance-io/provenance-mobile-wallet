@@ -1,6 +1,9 @@
+import 'dart:math';
+
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 typedef IsValidCallback = Future<bool> Function(String input);
 
@@ -23,17 +26,40 @@ class QRCodeScannerState extends State<QRCodeScanner> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   var qrText = '';
-  QRViewController? controller;
+  MobileScannerController? controller;
 
   @override
   Widget build(BuildContext context) {
+    final background = Theme.of(context).colorScheme.neutral800;
+
     return Scaffold(
       appBar: PwAppBar(
-        leadingIcon: PwIcons.back,
-        color: Theme.of(context).colorScheme.neutral450,
+        leadingIcon: PwIcons.close,
+        color: background,
+        title: Strings.qrScannerTitle,
       ),
-      backgroundColor: Theme.of(context).colorScheme.neutral450,
-      body: _buildBody(context),
+      backgroundColor: background,
+      body: Container(
+        margin: EdgeInsets.only(
+          bottom: Spacing.largeX6,
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            MobileScanner(
+              key: qrKey,
+              allowDuplicates: false,
+              onDetect: _onDetect,
+            ),
+            ClipPath(
+              clipper: InvertedClipper(),
+              child: Container(
+                color: background.withOpacity(.6),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -48,59 +74,31 @@ class QRCodeScannerState extends State<QRCodeScanner> {
     super.dispose();
   }
 
-  _buildBody(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final ratio = constraints.maxHeight / 600;
-
-        return ClipRRect(
-          child: Stack(children: <Widget>[
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 144 * ratio,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: QRView(
-                      key: qrKey,
-                      onQRViewCreated: _onQRViewCreated,
-                      overlay: QrScannerOverlayShape(
-                        borderColor: Colors.red,
-                        borderRadius: 0,
-                        borderLength: 0,
-                        borderWidth: 0,
-                        cutOutSize: 300,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ]),
-        );
-      },
-    );
-  }
-
-  _handleQrData(String qrData) async {
-    await controller?.pauseCamera();
-    final isValid = await widget.isValidCallback.call(qrData);
-    if (isValid && !_handled) {
-      _handled = true;
-      Navigator.of(context).pop(qrData);
-    } else {
-      await controller?.resumeCamera();
+  void _onDetect(Barcode barcode, MobileScannerArguments? arguments) async {
+    final data = barcode.rawValue;
+    if (data != null) {
+      final isValid = await widget.isValidCallback.call(data);
+      if (isValid && !_handled) {
+        _handled = true;
+        Navigator.of(context).pop(data);
+      }
     }
   }
+}
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        _handleQrData(scanData.code);
-      });
-    });
+class InvertedClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final side = min(size.width, size.height) - Spacing.largeX6;
+    final xOffset = (size.width - side) / 2;
+    final yOffset = (size.height - side) / 2;
+
+    return Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..addRect(Rect.fromLTWH(xOffset, yOffset, side, side))
+      ..fillType = PathFillType.evenOdd;
   }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }
