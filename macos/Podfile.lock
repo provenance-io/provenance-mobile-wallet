@@ -13,7 +13,7 @@ PODS:
   - Firebase/RemoteConfig (8.15.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 8.15.0)
-  - firebase_core (1.16.0):
+  - firebase_core (1.17.0):
     - Firebase/CoreOnly (~> 8.15.0)
     - FlutterMacOS
   - firebase_crashlytics (2.8.0):
@@ -104,12 +104,16 @@ PODS:
   - package_info_plus_macos (0.0.1):
     - FlutterMacOS
   - PromisesObjC (2.1.0)
+  - prov_wallet_flutter (0.0.1):
+    - FlutterMacOS
+    - SwiftyJSON (~> 4.0)
   - ReachabilitySwift (5.0.0)
   - shared_preferences_macos (0.0.1):
     - FlutterMacOS
   - sqflite (0.0.2):
     - FlutterMacOS
     - FMDB (>= 2.7.5)
+  - SwiftyJSON (4.3.0)
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
 
@@ -122,6 +126,7 @@ DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - mobile_scanner (from `Flutter/ephemeral/.symlinks/plugins/mobile_scanner/macos`)
   - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
+  - prov_wallet_flutter (from `Flutter/ephemeral/.symlinks/plugins/prov_wallet_flutter/macos`)
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
@@ -142,6 +147,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - ReachabilitySwift
+    - SwiftyJSON
 
 EXTERNAL SOURCES:
   connectivity_plus_macos:
@@ -160,6 +166,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/mobile_scanner/macos
   package_info_plus_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos
+  prov_wallet_flutter:
+    :path: Flutter/ephemeral/.symlinks/plugins/prov_wallet_flutter/macos
   shared_preferences_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos
   sqflite:
@@ -170,7 +178,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   connectivity_plus_macos: f6e86fd000e971d361e54b5afcadc8c8fa773308
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
-  firebase_core: 32b2cbd1a3901d33889368b570ec079118403230
+  firebase_core: 895eaa063bde36f163d959810717e0f7a3bac614
   firebase_crashlytics: dfa8b309709256872f9595234b8c969cc8fc86f2
   firebase_messaging: 6022495751261cf73c7fb5dd136358220f452894
   firebase_remote_config: d2a5814534dddfa125e6db3b094717b2a5507f5e
@@ -189,9 +197,11 @@ SPEC CHECKSUMS:
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
+  prov_wallet_flutter: 45e67385653200775a644dd6d39ebad68d2f1394
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_macos: a64dc611287ed6cbe28fd1297898db1336975727
   sqflite: a5789cceda41d54d23f31d6de539d65bb14100ea
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
   url_launcher_macos: 597e05b8e514239626bcf4a850fcf9ef5c856ec3
 
 PODFILE CHECKSUM: a884f6dd3f7494f3892ee6c81feea3a3abbf9153

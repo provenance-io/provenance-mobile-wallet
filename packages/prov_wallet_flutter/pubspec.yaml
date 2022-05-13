@@ -23,3 +23,5 @@ flutter:
         pluginClass: ProvWalletFlutterPlugin
       ios:
         pluginClass: ProvWalletFlutterPlugin
+      macos:
+        pluginClass: ProvWalletFlutterPlugin

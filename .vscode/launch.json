@@ -32,12 +32,6 @@
             "request": "launch",
             "program": "lib/main.dart",
             "flutterMode": "debug",
-            "args": [
-                "--dart-define",
-                "CIPHER_SERVICE=memory",
-                "--dart-define",
-                "ENABLE_FIREBASE=false",
-            ]
         },
         {
             "name": "Debug - prod",
