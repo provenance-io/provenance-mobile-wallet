@@ -7,7 +7,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
   _FlowRootRoute({
     required WidgetBuilder builder,
-    required this.parentContext,
+    required this.parentNavigator,
     RouteSettings? settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
@@ -18,7 +18,7 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
           fullscreenDialog: fullscreenDialog,
         );
 
-  final BuildContext parentContext;
+  final NavigatorState parentNavigator;
 
   @override
   bool get canPop {
@@ -26,18 +26,20 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
       return true;
     }
 
-    final parentNavigator = Navigator.of(parentContext);
-
     return parentNavigator.canPop();
   }
 
   @override
-  Future<RoutePopDisposition> willPop() {
-    if (super.canPop) {
-      return super.willPop();
+  Future<RoutePopDisposition> willPop() async {
+    var disposition = RoutePopDisposition.bubble;
+    final willPop = await super.willPop();
+
+    if (willPop == RoutePopDisposition.bubble) {
+      parentNavigator.pop();
+      disposition = RoutePopDisposition.doNotPop;
     }
 
-    return Future.value(RoutePopDisposition.pop);
+    return disposition;
   }
 
   @override
@@ -47,7 +49,7 @@ class _FlowRootRoute<Y extends FlowBase> extends MaterialPageRoute {
     }
 
     super.didPop(result); // trigger root flow's dispose method.
-    Navigator.pop(parentContext, result);
+    parentNavigator.pop(result);
 
     return true;
   }
@@ -64,17 +66,24 @@ abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: _navigatorKey,
-      onGenerateRoute: (settings) {
-        return _FlowRootRoute<Z>(
-          parentContext: context,
-          settings: settings,
-          builder: (context) {
-            return createStartPage();
-          },
-        );
+    return WillPopScope(
+      onWillPop: () async {
+        final state = _navigatorKey.currentState!;
+
+        return !await state.maybePop();
       },
+      child: Navigator(
+        key: _navigatorKey,
+        onGenerateRoute: (settings) {
+          return _FlowRootRoute<Z>(
+            parentNavigator: Navigator.of(context),
+            settings: settings,
+            builder: (context) {
+              return createStartPage();
+            },
+          );
+        },
+      ),
     );
   }
 
