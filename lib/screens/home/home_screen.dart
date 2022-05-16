@@ -48,7 +48,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     RouterObserver.instance.routeObserver.unsubscribe(this);
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
@@ -95,7 +95,7 @@ class HomeScreenState extends State<HomeScreen>
     get.registerSingleton<HomeBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setCurrentTab);
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     super.initState();
   }
