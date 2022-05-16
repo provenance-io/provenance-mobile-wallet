@@ -692,12 +692,10 @@ packages:
   mobile_scanner:
     dependency: "direct main"
     description:
-      path: "."
-      ref: fe88e168d1055a528e582c688eb15d86b5f296bf
-      resolved-ref: fe88e168d1055a528e582c688eb15d86b5f296bf
-      url: "https://github.com/juliansteenbakker/mobile_scanner.git"
-    source: git
-    version: "1.0.0"
+      name: mobile_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   mockito:
     dependency: "direct dev"
     description:
