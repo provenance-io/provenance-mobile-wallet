@@ -103,6 +103,8 @@ PODS:
   - nanopb/encode (2.30908.0)
   - package_info_plus_macos (0.0.1):
     - FlutterMacOS
+  - path_provider_macos (0.0.1):
+    - FlutterMacOS
   - PromisesObjC (2.1.0)
   - prov_wallet_flutter (0.0.1):
     - FlutterMacOS
@@ -126,6 +128,7 @@ DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - mobile_scanner (from `Flutter/ephemeral/.symlinks/plugins/mobile_scanner/macos`)
   - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
+  - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
   - prov_wallet_flutter (from `Flutter/ephemeral/.symlinks/plugins/prov_wallet_flutter/macos`)
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/macos`)
@@ -166,6 +169,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/mobile_scanner/macos
   package_info_plus_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos
+  path_provider_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
   prov_wallet_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/prov_wallet_flutter/macos
   shared_preferences_macos:
@@ -196,6 +201,7 @@ SPEC CHECKSUMS:
   mobile_scanner: 35dc92ffdbd7934b0dbc411b1c731bc2ef23c2dc
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c
+  path_provider_macos: 3c0c3b4b0d4a76d2bf989a913c2de869c5641a19
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   prov_wallet_flutter: 45e67385653200775a644dd6d39ebad68d2f1394
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825

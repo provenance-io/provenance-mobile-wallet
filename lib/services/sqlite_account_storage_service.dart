@@ -75,6 +75,18 @@ class SqliteAccountStorageService {
 
   static Future<Database>? _db;
 
+  static Future<File> getDatabase() async {
+    final databasePath = await getDatabasesPath();
+    final path = p.join(databasePath, _name);
+
+    return File(path);
+  }
+
+  Future<void> close() async {
+    final db = await _getDb();
+    await db.close();
+  }
+
   Future<List<AccountDetails>> getAccounts() async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetAccounts);
@@ -261,13 +273,11 @@ class SqliteAccountStorageService {
   }
 
   static Future<Database> _initDb() async {
-    final databasePath = await getDatabasesPath();
-    final path = p.join(databasePath, _name);
-
-    await Directory(databasePath).create(recursive: true);
+    final database = await getDatabase();
+    await database.parent.create(recursive: true);
 
     final db = await openDatabase(
-      path,
+      database.path,
       version: _version,
       onCreate: _onCreate,
       onUpgrade: _onUpdate,

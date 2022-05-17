@@ -2,17 +2,17 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 
 class AccountStorageServiceImp implements AccountStorageService {
   AccountStorageServiceImp(
-    this._sqliteAccountStorageService,
+    this._serviceCore,
     this._cipherService,
   );
 
-  final SqliteAccountStorageService _sqliteAccountStorageService;
+  final AccountStorageServiceCore _serviceCore;
   final CipherService _cipherService;
 
   @override
@@ -37,7 +37,7 @@ class AccountStorageServiceImp implements AccountStorageService {
 
     final selectedChainId = ChainId.forCoin(selectedCoin);
 
-    final details = await _sqliteAccountStorageService.addAccount(
+    final details = await _serviceCore.addAccount(
       name: name,
       publicKeys: keyDatas,
       selectedChainId: selectedChainId,
@@ -56,7 +56,7 @@ class AccountStorageServiceImp implements AccountStorageService {
         );
 
         if (!success) {
-          await _sqliteAccountStorageService.removeAccount(id: details.id);
+          await _serviceCore.removeAccount(id: details.id);
 
           return null;
         }
@@ -68,17 +68,17 @@ class AccountStorageServiceImp implements AccountStorageService {
 
   @override
   Future<AccountDetails?> getSelectedAccount() {
-    return _sqliteAccountStorageService.getSelectedAccount();
+    return _serviceCore.getSelectedAccount();
   }
 
   @override
   Future<AccountDetails?> getAccount(String id) {
-    return _sqliteAccountStorageService.getAccount(id: id);
+    return _serviceCore.getAccount(id: id);
   }
 
   @override
   Future<List<AccountDetails>> getAccounts() {
-    return _sqliteAccountStorageService.getAccounts();
+    return _serviceCore.getAccounts();
   }
 
   @override
@@ -95,7 +95,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     var count = 0;
 
     if (success) {
-      count = await _sqliteAccountStorageService.removeAllAccounts();
+      count = await _serviceCore.removeAllAccounts();
     }
 
     return count != 0;
@@ -108,7 +108,7 @@ class AccountStorageServiceImp implements AccountStorageService {
       await _cipherService.removeKey(id: keyId);
     }
 
-    final count = await _sqliteAccountStorageService.removeAccount(id: id);
+    final count = await _serviceCore.removeAccount(id: id);
 
     return count != 0;
   }
@@ -118,7 +118,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     required String id,
     required String name,
   }) {
-    return _sqliteAccountStorageService.renameAccount(id: id, name: name);
+    return _serviceCore.renameAccount(id: id, name: name);
   }
 
   @override
@@ -128,7 +128,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }) async {
     final network = ChainId.forCoin(coin);
 
-    final details = await _sqliteAccountStorageService.setChainId(
+    final details = await _serviceCore.setChainId(
       id: id,
       chainId: network,
     );
@@ -138,7 +138,7 @@ class AccountStorageServiceImp implements AccountStorageService {
 
   @override
   Future<AccountDetails?> selectAccount({String? id}) {
-    return _sqliteAccountStorageService.selectAccount(id: id);
+    return _serviceCore.selectAccount(id: id);
   }
 
   @visibleForTesting

@@ -4,26 +4,26 @@ import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 
 import 'account_storage_service_imp_test.mocks.dart';
 
-@GenerateMocks([SqliteAccountStorageService, CipherService])
+@GenerateMocks([AccountStorageServiceCore, CipherService])
 main() {
-  MockSqliteAccountStorageService? _mockSqliteService;
+  MockAccountStorageServiceCore? _mockAccountStorageServiceCore;
   MockCipherService? _mockCipherService;
 
   AccountStorageServiceImp? _storageService;
 
   setUp(() {
-    _mockSqliteService = MockSqliteAccountStorageService();
+    _mockAccountStorageServiceCore = MockAccountStorageServiceCore();
     _mockCipherService = MockCipherService();
 
-    _storageService =
-        AccountStorageServiceImp(_mockSqliteService!, _mockCipherService!);
+    _storageService = AccountStorageServiceImp(
+        _mockAccountStorageServiceCore!, _mockCipherService!);
   });
 
   group("addWallet", () {
@@ -60,7 +60,7 @@ main() {
     });
 
     test('success', () async {
-      when(_mockSqliteService!.addAccount(
+      when(_mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -79,7 +79,7 @@ main() {
 
       expect(result, wallet);
 
-      verify(_mockSqliteService!.addAccount(
+      verify(_mockAccountStorageServiceCore!.addAccount(
         name: wallet.name,
         publicKeys: publicKeys,
         selectedChainId: ChainId.forCoin(selectedCoin!),
@@ -98,7 +98,7 @@ main() {
     testWidgets('add wallet failure', (tester) async {
       final exception = Exception("Error");
 
-      when(_mockSqliteService!.addAccount(
+      when(_mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -117,9 +117,9 @@ main() {
     });
 
     testWidgets('error while encrypting key', (tester) async {
-      when(_mockSqliteService!.removeAccount(id: anyNamed("id")))
+      when(_mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(0));
-      when(_mockSqliteService!.addAccount(
+      when(_mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -136,7 +136,7 @@ main() {
         selectedCoin: selectedCoin!,
       );
 
-      verify(_mockSqliteService!.removeAccount(id: id));
+      verify(_mockAccountStorageServiceCore!.removeAccount(id: id));
 
       expect(result, isNull);
     });
@@ -152,7 +152,7 @@ main() {
         coin: Coin.testNet,
       );
 
-      when(_mockSqliteService!.getSelectedAccount())
+      when(_mockAccountStorageServiceCore!.getSelectedAccount())
           .thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.getSelectedAccount();
@@ -170,12 +170,12 @@ main() {
         coin: Coin.testNet,
       );
 
-      when(_mockSqliteService!.getAccount(id: anyNamed("id")))
+      when(_mockAccountStorageServiceCore!.getAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.getAccount("walletId");
       expect(result, walletDetails);
-      verify(_mockSqliteService!.getAccount(id: "walletId"));
+      verify(_mockAccountStorageServiceCore!.getAccount(id: "walletId"));
     });
   });
 
@@ -198,7 +198,7 @@ main() {
         ),
       ];
 
-      when(_mockSqliteService!.getAccounts())
+      when(_mockAccountStorageServiceCore!.getAccounts())
           .thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.getAccounts();
@@ -221,7 +221,7 @@ main() {
       final privateKey = await _storageService!.loadKey(id, coin);
       expect(privateKey!.rawHex, PrivateKey.fromBip32(bip32Serialized).rawHex);
       verify(_mockCipherService!.decryptKey(id: keyId));
-      verifyNoMoreInteractions(_mockSqliteService);
+      verifyNoMoreInteractions(_mockAccountStorageServiceCore);
     });
   });
 
@@ -229,12 +229,12 @@ main() {
     testWidgets('success', (tester) async {
       when(_mockCipherService!.resetKeys())
           .thenAnswer((_) => Future.value(true));
-      when(_mockSqliteService!.removeAllAccounts())
+      when(_mockAccountStorageServiceCore!.removeAllAccounts())
           .thenAnswer((_) => Future.value(1));
       await _storageService!.removeAllAccounts();
 
       verify(_mockCipherService!.resetKeys());
-      verify(_mockSqliteService!.removeAllAccounts());
+      verify(_mockAccountStorageServiceCore!.removeAllAccounts());
     });
   });
 
@@ -244,7 +244,7 @@ main() {
     testWidgets('success', (tester) async {
       when(_mockCipherService!.removeKey(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(true));
-      when(_mockSqliteService!.removeAccount(id: anyNamed("id")))
+      when(_mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(1));
       await _storageService!.removeAccount(id);
 
@@ -253,14 +253,14 @@ main() {
         verify(_mockCipherService!.removeKey(id: keyId));
       }
 
-      verify(_mockSqliteService!.removeAccount(id: id));
+      verify(_mockAccountStorageServiceCore!.removeAccount(id: id));
     });
   });
 
   group("renameWallet", () {
     testWidgets('success', (tester) async {
       when(
-        _mockSqliteService!.renameAccount(
+        _mockAccountStorageServiceCore!.renameAccount(
           id: anyNamed("id"),
           name: anyNamed("name"),
         ),
@@ -268,7 +268,8 @@ main() {
 
       await _storageService!.renameAccount(id: "Id", name: "Name");
 
-      verify(_mockSqliteService!.renameAccount(id: "Id", name: "Name"));
+      verify(_mockAccountStorageServiceCore!
+          .renameAccount(id: "Id", name: "Name"));
     });
   });
 
@@ -282,20 +283,20 @@ main() {
         coin: Coin.testNet,
       );
       when(
-        _mockSqliteService!.selectAccount(
+        _mockAccountStorageServiceCore!.selectAccount(
           id: anyNamed("id"),
         ),
       ).thenAnswer((_) => Future.value(walletDetails));
 
       final result = await _storageService!.selectAccount(id: "Id");
 
-      verify(_mockSqliteService!.selectAccount(id: "Id"));
+      verify(_mockAccountStorageServiceCore!.selectAccount(id: "Id"));
       expect(result, walletDetails);
     });
 
     testWidgets('null', (tester) async {
       when(
-        _mockSqliteService!.selectAccount(
+        _mockAccountStorageServiceCore!.selectAccount(
           id: anyNamed("id"),
         ),
       ).thenAnswer((_) => Future.value(null));
