@@ -15,7 +15,6 @@ import 'package:provenance_wallet/services/key_value_service/key_value_service.d
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
-import 'package:searchfield/searchfield.dart';
 
 class RecoverPassphraseEntryScreen extends StatefulWidget {
   const RecoverPassphraseEntryScreen(

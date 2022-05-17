@@ -51,7 +51,6 @@ dependencies:
   rxdart: ^0.27.3
   shared_preferences: ^2.0.6
   sqflite: ^2.0.2
-  searchfield: ^0.6.4
   uni_links: ^0.5.1
   url_launcher: ^6.0.10
   uuid: ^3.0.4
