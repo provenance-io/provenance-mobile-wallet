@@ -156,8 +156,6 @@ class RecoverPassphraseEntryScreenState
               mainAxisSize: MainAxisSize.min,
               children: Iterable<int>.generate(24).toList().map(
                 (index) {
-                  final textController = _bloc.getControllerFromIndex(index);
-
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -178,10 +176,9 @@ class RecoverPassphraseEntryScreenState
                         key: RecoverPassphraseEntryScreen
                             .keyPassphraseWordTextField(index),
                         index: index,
-                        inputAction:
-                            (_bloc.textControllers[23] != textController)
-                                ? TextInputAction.next
-                                : TextInputAction.done,
+                        inputAction: (23 != index)
+                            ? TextInputAction.next
+                            : TextInputAction.done,
                       ),
                       index != 23
                           ? Container()

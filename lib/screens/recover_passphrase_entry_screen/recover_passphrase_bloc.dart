@@ -18,10 +18,6 @@ class RecoverPassphraseBloc extends Disposable {
     }
   }
 
-  TextEditingController? getControllerFromIndex(int index) {
-    return textControllers[index];
-  }
-
   void setFromIndex(int index, TextEditingController controller) {
     if (textControllers[index] == controller) {
       return;
