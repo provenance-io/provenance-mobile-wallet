@@ -27,6 +27,13 @@
             ]
         },
         {
+            "name": "Debug - macOS",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "debug",
+        },
+        {
             "name": "Debug - prod",
             "type": "dart",
             "request": "launch",

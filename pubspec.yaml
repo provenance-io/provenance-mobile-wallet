@@ -16,8 +16,8 @@ dependencies:
   decimal: ^2.1.0
   dio: ^4.0.0
   faker: ^2.0.0
-  firebase_core: ^1.16.0
-  firebase_crashlytics: ^2.7.2
+  firebase_core: ^1.17.0
+  firebase_crashlytics: ^2.8.0
   firebase_dynamic_links: ^4.2.2
   firebase_messaging: ^11.3.0
   firebase_remote_config: ^2.0.6
@@ -34,10 +34,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: 4.4.0
   logger: ^1.0.0
-  mobile_scanner:
-    git:
-      url: https://github.com/juliansteenbakker/mobile_scanner.git
-      ref: fe88e168d1055a528e582c688eb15d86b5f296bf
+  mobile_scanner: ^1.1.0
   package_info_plus: ^1.4.2
   path:
   pretty_json: ^2.0.0
