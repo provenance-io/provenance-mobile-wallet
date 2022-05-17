@@ -179,7 +179,7 @@ class RecoverPassphraseEntryScreenState
                             .keyPassphraseWordTextField(index),
                         index: index,
                         inputAction:
-                            (_bloc.textControllers.last != textController)
+                            (_bloc.textControllers[23] != textController)
                                 ? TextInputAction.next
                                 : TextInputAction.done,
                       ),
@@ -261,7 +261,7 @@ class RecoverPassphraseEntryScreenState
   }
 }
 
-class _TextFormField extends StatefulWidget {
+class _TextFormField extends StatelessWidget {
   const _TextFormField({
     Key? key,
     required this.index,
@@ -272,62 +272,52 @@ class _TextFormField extends StatefulWidget {
   final TextInputAction inputAction;
 
   @override
-  State<StatefulWidget> createState() => _TextFormFieldState();
-}
-
-class _TextFormFieldState extends State<_TextFormField> {
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = get<RecoverPassphraseBloc>();
-    final controller = bloc.getControllerFromIndex(widget.index);
-    final focusNode = bloc.getFocusNodeFromIndex(widget.index);
 
-    return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: StreamBuilder<List<String>>(
-        stream: bloc.getWordsForIndex(widget.index),
-        builder: (context, snapshot) {
-          var suggestions = snapshot.data ?? [];
+    return Autocomplete<String>(
+      displayStringForOption: (option) => option,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        return Mnemonic.searchFor(textEditingValue.text);
+      },
+      fieldViewBuilder: (context, controller, focusNode, func) {
+        bloc.setFromIndex(index, controller);
+        return TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          enableSuggestions: false,
+          keyboardType: TextInputType.name,
+          autocorrect: false,
+          controller: controller,
+          onChanged: (e) {
+            final test = Mnemonic.searchFor(e);
+            if (test.length == 1 && test.first == e) {
+              func();
+            }
+          },
+          onFieldSubmitted: (e) => func(),
+          focusNode: focusNode,
+          textInputAction: inputAction,
+          validator: (word) {
+            if (word == null || word.isEmpty) {
+              return Strings.required;
+            }
+            if (!Mnemonic.searchFor(word).any((element) => element == word)) {
+              return Strings.invalidWord;
+            }
 
-          return SearchField(
-            suggestions: suggestions
-                .map((e) => SearchFieldListItem(e, item: e))
-                .toList(),
-            controller: controller,
-            focusNode: focusNode,
-            onSuggestionTap: (e) {
-              setState(() {
-                controller.text = e.item as String;
-                bloc.clearWordsForIndex(widget.index);
-              });
-            },
-            validator: (word) {
-              if (word == null || word.isEmpty) {
-                return Strings.required;
-              }
-              if (!Mnemonic.searchFor(word).any((element) => element == word)) {
-                return Strings.invalidWord;
-              }
-
-              return null;
-            },
-            searchStyle: theme.textTheme.body,
-            searchInputDecoration: InputDecoration(
-              fillColor: Theme.of(context).colorScheme.neutral750,
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: theme.colorScheme.neutral250),
-              ),
+            return null;
+          },
+          style: Theme.of(context).textTheme.body,
+          decoration: InputDecoration(
+            fillColor: Theme.of(context).colorScheme.neutral750,
+            filled: true,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: theme.colorScheme.neutral250),
             ),
-            suggestionsDecoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.neutral750),
-            suggestionItemDecoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.neutral750),
-            textInputAction: widget.inputAction,
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,66 +1,43 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:rxdart/rxdart.dart';
 
 class RecoverPassphraseBloc extends Disposable {
-  RecoverPassphraseBloc() {
-    for (var i = 0; i < _wordsCount; i++) {
-      var word = TextEditingController();
-      _addListener(word, i);
-      textControllers.add(word);
-      focusNodes.add(FocusNode());
-      _stringLists.add(BehaviorSubject.seeded([]));
-    }
-  }
   static const _wordsCount = 24;
-  List<TextEditingController> textControllers = <TextEditingController>[];
-  List<FocusNode> focusNodes = <FocusNode>[];
+  Map<int, TextEditingController> textControllers = {};
   List<VoidCallback> callbacks = <VoidCallback>[];
-
-  final List<BehaviorSubject<List<String>>> _stringLists =
-      <BehaviorSubject<List<String>>>[];
 
   @override
   FutureOr onDispose() {
     for (var i = 0; i < _wordsCount; i++) {
       var controller = textControllers[i];
       var callback = callbacks[i];
-      _stringLists[i].close();
-      controller.removeListener(callback);
-      controller.dispose();
+      controller?.removeListener(callback);
+      controller?.dispose();
     }
   }
 
-  TextEditingController getControllerFromIndex(int index) {
+  TextEditingController? getControllerFromIndex(int index) {
     return textControllers[index];
   }
 
-  FocusNode getFocusNodeFromIndex(int index) {
-    return focusNodes[index];
-  }
-
-  Stream<List<String>> getWordsForIndex(int index) {
-    return _stringLists[index].stream;
-  }
-
-  void changeWordsForIndex(List<String> words, int index) {
-    clearWordsForIndex(index);
-    _stringLists[index].value = words;
-  }
-
-  void clearWordsForIndex(int index) {
-    _stringLists[index].value.clear();
+  void setFromIndex(int index, TextEditingController controller) {
+    if (textControllers[index] == controller) {
+      return;
+    } else {
+      textControllers[index] = controller;
+      _addListener(controller, index);
+    }
   }
 
   bool isMnemonicComplete() {
-    return textControllers.every((e) => e.text.isNotEmpty);
+    return textControllers.entries.length == 24 &&
+        textControllers.entries.every((e) => e.value.text.isNotEmpty);
   }
 
   List<String> getCompletedMnemonic() {
-    return textControllers.map((e) => e.text.trim()).toList();
+    return textControllers.entries.map((e) => e.value.text.trim()).toList();
   }
 
   void _addListener(TextEditingController controller, int index) {
@@ -74,18 +51,13 @@ class RecoverPassphraseBloc extends Disposable {
 
   _handleTextControllerTextChange(int index) {
     final controller = textControllers[index];
-    String pastedText = controller.text;
-    changeWordsForIndex(Mnemonic.searchFor(pastedText).toList(), index);
+    String pastedText = controller?.text ?? "";
     if (pastedText.isNotEmpty) {
-      //ist<String> parts = pastedText.split(' ');
       // ignore: unnecessary_string_escapes
       var mnemonic =
           RegExp(r'(?<=\d+|\b)([a-zA-Z]+)(?=\d+|\b)', multiLine: true);
       var parts =
           mnemonic.allMatches(pastedText).map((e) => e.group(1) ?? "").toList();
-      if (parts.length == 48) {
-        parts.removeWhere((element) => element.startsWith("[0-9]"));
-      }
       if (parts.length == 24) {
         _putPartsInText(parts);
       }
@@ -94,7 +66,7 @@ class RecoverPassphraseBloc extends Disposable {
 
   _putPartsInText(List<String> parts) {
     for (var i = 0; i < parts.length && i < textControllers.length; i++) {
-      textControllers[i].text = parts[i];
+      textControllers[i]?.text = parts[i];
     }
   }
 }
