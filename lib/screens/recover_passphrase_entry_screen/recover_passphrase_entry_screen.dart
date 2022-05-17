@@ -274,7 +274,36 @@ class _TextFormField extends StatelessWidget {
     final bloc = get<RecoverPassphraseBloc>();
 
     return Autocomplete<String>(
-      displayStringForOption: (option) => option,
+      optionsViewBuilder: (context, onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 10.0,
+            shape: Border.all(color: theme.colorScheme.neutral250),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200, maxWidth: 335),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final option = options.elementAt(index);
+                  return InkWell(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: Container(
+                      color: Theme.of(context).colorScheme.neutral700,
+                      padding: const EdgeInsets.all(16.0),
+                      child: PwText(option),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
       optionsBuilder: (TextEditingValue textEditingValue) {
         return Mnemonic.searchFor(textEditingValue.text);
       },
