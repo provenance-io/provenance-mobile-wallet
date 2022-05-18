@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
 class RecoverPassphraseBloc extends Disposable {
-  static const _wordsCount = 24;
+  final wordsCount = 24;
   Map<int, TextEditingController> textControllers = {};
   List<VoidCallback> callbacks = <VoidCallback>[];
 
   @override
   FutureOr onDispose() {
-    for (var i = 0; i < _wordsCount; i++) {
+    for (var i = 0; i < wordsCount; i++) {
       var controller = textControllers[i];
       var callback = callbacks[i];
       controller?.removeListener(callback);
