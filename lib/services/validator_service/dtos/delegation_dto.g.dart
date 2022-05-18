@@ -19,6 +19,7 @@ DelegationDto _$DelegationDtoFromJson(Map<String, dynamic> json) =>
           : BalanceDto.fromJson(json['initialBal'] as Map<String, dynamic>),
       block: json['block'] as int?,
       endTime: json['endTime'] as int?,
+      shares: json['shares'] as String?,
     );
 
 Map<String, dynamic> _$DelegationDtoToJson(DelegationDto instance) =>
@@ -30,4 +31,5 @@ Map<String, dynamic> _$DelegationDtoToJson(DelegationDto instance) =>
       'initialBal': instance.initialBal,
       'block': instance.block,
       'endTime': instance.endTime,
+      'shares': instance.shares,
     };

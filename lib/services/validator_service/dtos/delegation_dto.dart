@@ -13,6 +13,7 @@ class DelegationDto {
     this.initialBal,
     this.block,
     this.endTime,
+    this.shares,
   });
   final String? delegatorAddr;
   final String? validatorSrcAddr;
@@ -21,6 +22,7 @@ class DelegationDto {
   final BalanceDto? initialBal;
   final int? block;
   final int? endTime;
+  final String? shares;
 
   // ignore: member-ordering
   factory DelegationDto.fromJson(Map<String, dynamic> json) =>

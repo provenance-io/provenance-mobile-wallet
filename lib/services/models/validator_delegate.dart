@@ -14,6 +14,7 @@ class ValidatorDelegate {
         initialAmount = dto.initialBal?.amount,
         initialDenom = dto.initialBal?.denom,
         block = dto.block,
+        shares = dto.shares,
         endTime = dto.endTime != null
             ? DateTime.fromMillisecondsSinceEpoch(dto.endTime!)
             : null;
@@ -28,6 +29,7 @@ class ValidatorDelegate {
     this.initialDenom,
     this.block,
     this.endTime,
+    this.shares,
   });
   final String address;
   final String sourceAddress;
@@ -38,4 +40,5 @@ class ValidatorDelegate {
   final String? initialDenom;
   final int? block;
   final DateTime? endTime;
+  final String? shares;
 }
