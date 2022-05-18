@@ -28,7 +28,7 @@ class RecoverPassphraseBloc extends Disposable {
   }
 
   bool isMnemonicComplete() {
-    return textControllers.entries.length == 24 &&
+    return textControllers.entries.length == wordsCount &&
         textControllers.entries.every((e) => e.value.text.isNotEmpty);
   }
 
@@ -54,7 +54,7 @@ class RecoverPassphraseBloc extends Disposable {
           RegExp(r'(?<=\d+|\b)([a-zA-Z]+)(?=\d+|\b)', multiLine: true);
       var parts =
           mnemonic.allMatches(pastedText).map((e) => e.group(1) ?? "").toList();
-      if (parts.length == 24) {
+      if (parts.length == wordsCount) {
         _putPartsInText(parts);
       }
     }

@@ -154,7 +154,7 @@ class RecoverPassphraseEntryScreenState
             child: Column(
               key: RecoverPassphraseEntryScreen.wordList,
               mainAxisSize: MainAxisSize.min,
-              children: Iterable<int>.generate(24).toList().map(
+              children: Iterable<int>.generate(_bloc.wordsCount).toList().map(
                 (index) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -176,11 +176,11 @@ class RecoverPassphraseEntryScreenState
                         key: RecoverPassphraseEntryScreen
                             .keyPassphraseWordTextField(index),
                         index: index,
-                        inputAction: (23 != index)
+                        inputAction: (_bloc.wordsCount - 1 != index)
                             ? TextInputAction.next
                             : TextInputAction.done,
                       ),
-                      index != 23
+                      index != _bloc.wordsCount - 1
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.symmetric(
