@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/connection_details_modal.dart';
+import 'package:provenance_wallet/screens/home/explorer/explorer_screen.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
@@ -252,7 +253,7 @@ class _DashboardState extends State<Dashboard> {
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
                     onPressed: () {
-                      print("Take me to governance and delegation");
+                      Navigator.of(context).push(ExplorerScreen().route());
                     },
                   ),
                 ],
