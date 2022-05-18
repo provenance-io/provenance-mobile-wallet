@@ -7,7 +7,6 @@ import 'package:provenance_wallet/util/strings.dart';
 abstract class ValidatorService {
   Future<List<ProvenanceValidator>> getRecentValidators(
     Coin coin,
-    String provenanceAddress,
     int pageNumber,
     ValidatorStatus status,
   ) {

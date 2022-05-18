@@ -14,7 +14,6 @@ class DefaultValidatorService extends ValidatorService
   @override
   Future<List<ProvenanceValidator>> getRecentValidators(
     Coin coin,
-    String provenanceAddress,
     int pageNumber,
     ValidatorStatus status,
   ) async {
