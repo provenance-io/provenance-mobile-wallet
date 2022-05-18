@@ -404,4 +404,9 @@ class Strings {
   static const cipherUnknownError = 'Unknown error.';
   static const cipherUpgradeError = 'An error occured during while upgrading.';
   static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
+
+  // Explorer Screen
+  static const staking = "Staking";
+  static const proposals = "Proposals";
+  static const exploreProvenanceBlockchain = "Explore Provenance Blockchain";
 }
