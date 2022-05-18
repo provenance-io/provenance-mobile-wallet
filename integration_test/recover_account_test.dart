@@ -11,7 +11,7 @@ import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
-import 'package:provenance_wallet/screens/recover_passphrase_entry_screen.dart';
+import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
 
 import 'util/widget_tester_extension.dart';
 
