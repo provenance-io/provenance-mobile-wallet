@@ -408,5 +408,12 @@ class Strings {
   // Explorer Screen
   static const staking = "Staking";
   static const proposals = "Proposals";
-  static const exploreProvenanceBlockchain = "Explore Provenance Blockchain";
+
+  // Staking Tab
+  static const dropDownDelegate = "Delegate";
+  static const dropDownRedelegate = "Redelegate";
+  static const dropDownUndelegate = "Undelegate";
+  static const dropDownActive = "Active";
+  static const dropDownCandidate = "Candidate";
+  static const dropDownJailed = "Jailed";
 }
