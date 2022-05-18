@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -227,7 +228,7 @@ class _DashboardState extends State<Dashboard> {
             AccountPortfolio(
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
-            VerticalSpacer.xxLarge(),
+            VerticalSpacer.medium(),
             Padding(
               padding: EdgeInsets.only(
                 left: Spacing.xxLarge,
@@ -235,10 +236,24 @@ class _DashboardState extends State<Dashboard> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   PwText(
                     Strings.myAssets,
                     style: PwTextStyle.title,
+                  ),
+                  Expanded(child: Container()),
+                  PwButton(
+                    minimumWidth: 40,
+                    minimumHeight: 30,
+                    child: PwIcon.only(
+                      PwIcons.provenance,
+                      height: 20,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
+                    ),
+                    onPressed: () {
+                      print("Take me to governance and delegation");
+                    },
                   ),
                 ],
               ),
