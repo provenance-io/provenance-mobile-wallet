@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -53,10 +52,6 @@ class HomeScreenState extends State<ExplorerScreen>
     final double bottomPadding = (isTallScreen) ? 28 : 5;
 
     return Scaffold(
-      appBar: PwAppBar(
-        title: Strings.exploreProvenanceBlockchain,
-        leadingIcon: PwIcons.back,
-      ),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.neutral800,
         child: Column(
