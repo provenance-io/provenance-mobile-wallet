@@ -1,4 +1,5 @@
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
@@ -11,8 +12,12 @@ class DefaultValidatorService extends ValidatorService
       '/service-mobile-wallet/external/api/v1/validators/recent';
 
   @override
-  Future<List<ProvenanceValidator>> getRecentValidators(Coin coin,
-      String provenanceAddress, int pageNumber, String status) async {
+  Future<List<ProvenanceValidator>> getRecentValidators(
+    Coin coin,
+    String provenanceAddress,
+    int pageNumber,
+    ValidatorStatus status,
+  ) async {
     final client = await getClient(coin);
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
