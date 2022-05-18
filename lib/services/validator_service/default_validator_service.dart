@@ -2,7 +2,9 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/services/models/validator_delegate.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
+import 'package:provenance_wallet/services/validator_service/dtos/delegations_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/recent_validators_dto.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
@@ -40,6 +42,44 @@ class DefaultValidatorService extends ValidatorService
         validators.addAll(test);
 
         return validators;
+      },
+    );
+
+    notifyOnError(data);
+
+    return data.data ?? [];
+  }
+
+  @override
+  Future<List<ValidatorDelegate>> getDelegations(
+    Coin coin,
+    String provenanceAddress,
+    int pageNumber,
+    ValidatorType type,
+  ) async {
+    final client = await getClient(coin);
+    final data = await client.get(
+      // FIXME: Replace this URL with the service's URL
+      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/$type?page=$pageNumber&count=30',
+      converter: (json) {
+        if (json is String) {
+          return <ValidatorDelegate>[];
+        }
+
+        final List<ValidatorDelegate> delegates = [];
+
+        var dtos = DelegationsDto.fromJson(json);
+        var test = dtos.results?.map((t) {
+          return ValidatorDelegate(dto: t);
+        }).toList();
+
+        if (test == null) {
+          return <ValidatorDelegate>[];
+        }
+
+        delegates.addAll(test);
+
+        return delegates;
       },
     );
 
