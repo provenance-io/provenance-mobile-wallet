@@ -96,8 +96,12 @@ class HomeScreenState extends State<ExplorerScreen>
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: const [
-                  PwText(Strings.staking),
-                  PwText(Strings.proposals)
+                  Center(
+                    child: PwText(Strings.staking),
+                  ),
+                  Center(
+                    child: PwText(Strings.proposals),
+                  ),
                 ],
               ),
             ),
