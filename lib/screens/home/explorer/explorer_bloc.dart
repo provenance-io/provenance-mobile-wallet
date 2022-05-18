@@ -30,9 +30,9 @@ class StakingDetails {
 }
 
 enum ValidatorType {
-  delegate,
-  redelegate,
-  undelegate,
+  delegations,
+  redelegations,
+  unbonding,
 }
 
 enum ValidatorStatus {
@@ -57,11 +57,11 @@ extension ValidatorStatusStuff on ValidatorStatus {
 extension ValidatorTypeStuff on ValidatorType {
   String get dropDownTitle {
     switch (this) {
-      case ValidatorType.delegate:
+      case ValidatorType.delegations:
         return Strings.dropDownDelegate;
-      case ValidatorType.redelegate:
+      case ValidatorType.redelegations:
         return Strings.dropDownRedelegate;
-      case ValidatorType.undelegate:
+      case ValidatorType.unbonding:
         return Strings.dropDownUndelegate;
     }
   }
