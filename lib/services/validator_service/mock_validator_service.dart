@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/models/validator_delegate.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
@@ -30,6 +31,32 @@ class MockValidatorService extends ValidatorService {
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     return _getDelegates(type, provenanceAddress).toList();
+  }
+
+  @override
+  Future<List<Rewards>> getRewards(
+    Coin coin,
+    String provenanceAddress,
+  ) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return faker.randomGenerator.boolean() ? [_getRewards()] : [];
+  }
+
+  Rewards _getRewards() {
+    return Rewards.fake(Iterable.generate(2).map((e) => _getReward()).toList(),
+        faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength));
+  }
+
+  Reward _getReward() {
+    var amount = faker.randomGenerator.integer(9999999);
+    var tokenPrice = 0.00000008;
+    var total = amount * tokenPrice;
+    return Reward.fake(
+      amount.toString(),
+      'nhash',
+      tokenPrice.toString(),
+      total.toString(),
+    );
   }
 
   ValidatorDelegate _getDelegate(ValidatorType type, String address) {
