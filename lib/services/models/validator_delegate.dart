@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
 
 class ValidatorDelegate {
-  ValidatorDelegate(DelegationDto dto)
+  ValidatorDelegate({required DelegationDto dto})
       : assert(dto.delegatorAddr != null),
         assert(dto.validatorSrcAddr != null),
         assert(dto.amount?.amount != null),
