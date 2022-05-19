@@ -3,8 +3,19 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ExplorerBloc extends Disposable {
+  final _stakingDetails = BehaviorSubject.seeded(
+    StakingDetails(
+      address: "",
+      delegates: [],
+      validators: [],
+    ),
+  );
+
+  ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
+
   @override
   FutureOr onDispose() {
     // TODO: implement onDispose
@@ -16,16 +27,16 @@ class StakingDetails {
   StakingDetails({
     required this.delegates,
     required this.validators,
-    this.selectedType = Strings.dropDownDelegate,
-    this.selectedStatus = Strings.dropDownAllStatuses,
+    this.selectedType = ValidatorType.delegations,
+    this.selectedStatus = ValidatorStatus.active,
     required this.address,
   });
 
 // FIXME: delegates are a different type eventually
   List<ProvenanceValidator> delegates;
   List<ProvenanceValidator> validators;
-  String selectedType;
-  String selectedStatus;
+  ValidatorType selectedType;
+  ValidatorStatus selectedStatus;
   String address;
 }
 

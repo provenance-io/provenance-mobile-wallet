@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -17,14 +17,14 @@ class StakingTab extends StatefulWidget {
 
 class StakingTabState extends State<StakingTab> {
   final _scrollController = ScrollController();
-  late HomeBloc _bloc;
+  late ExplorerBloc _bloc;
 
   final textDivider = " • ";
 
   @override
   void initState() {
     super.initState();
-    _bloc = get<HomeBloc>();
+    _bloc = get<ExplorerBloc>();
     _scrollController.addListener(_onScrollEnd);
   }
 
@@ -41,12 +41,12 @@ class StakingTabState extends State<StakingTab> {
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
         bottom: false,
-        child: StreamBuilder<TransactionDetails>(
-          initialData: _bloc.transactionDetails.value,
-          stream: _bloc.transactionDetails,
+        child: StreamBuilder<StakingDetails>(
+          initialData: _bloc.stakingDetails.value,
+          stream: _bloc.stakingDetails,
           builder: (context, snapshot) {
-            final transactionDetails = snapshot.data;
-            if (transactionDetails == null) {
+            final stakingDetails = snapshot.data;
+            if (stakingDetails == null) {
               return Container();
             }
 
@@ -70,26 +70,32 @@ class StakingTabState extends State<StakingTab> {
                   child: Column(
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.neutral250,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.neutral250,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.medium,
-                        ),
-                        child: PwDropDown.fromStrings(
-                          initialValue: transactionDetails.selectedType,
-                          items: transactionDetails.types,
-                          onValueChanged: (item) {
-                            _bloc.filterTransactions(
-                              item,
-                              transactionDetails.selectedStatus,
-                            );
-                          },
-                        ),
-                      ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Spacing.medium,
+                          ),
+                          child: PwDropDown<ValidatorType>(
+                            initialValue: stakingDetails.selectedType,
+                            items: ValidatorType.values,
+                            isExpanded: true,
+                            onValueChanged: (item) {
+                              // Change delegates
+                            },
+                            builder: (item) => Row(
+                              children: [
+                                PwText(
+                                  item.dropDownTitle,
+                                  color: PwColor.neutralNeutral,
+                                  style: PwTextStyle.body,
+                                ),
+                              ],
+                            ),
+                          )),
                       VerticalSpacer.medium(),
                       Container(
                         decoration: BoxDecoration(
@@ -101,15 +107,22 @@ class StakingTabState extends State<StakingTab> {
                         padding: EdgeInsets.symmetric(
                           horizontal: Spacing.medium,
                         ),
-                        child: PwDropDown.fromStrings(
-                          initialValue: Strings.dropDownAllStatuses,
-                          items: transactionDetails.statuses,
+                        child: PwDropDown<ValidatorStatus>(
+                          initialValue: stakingDetails.selectedStatus,
+                          items: ValidatorStatus.values,
+                          isExpanded: true,
                           onValueChanged: (item) {
-                            _bloc.filterTransactions(
-                              transactionDetails.selectedType,
-                              item,
-                            );
+                            // Change Validators
                           },
+                          builder: (item) => Row(
+                            children: [
+                              PwText(
+                                item.dropDownTitle,
+                                color: PwColor.neutralNeutral,
+                                style: PwTextStyle.body,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -127,18 +140,17 @@ class StakingTabState extends State<StakingTab> {
                         controller: _scrollController,
                         itemBuilder: (context, index) {
                           final item =
-                              transactionDetails.filteredTransactions[index];
+                              stakingDetails.filteredTransactions[index];
 
                           return TransactionListItem(
-                            address: transactionDetails.address,
+                            address: stakingDetails.address,
                             item: item,
                           );
                         },
                         separatorBuilder: (context, index) {
                           return PwListDivider();
                         },
-                        itemCount:
-                            transactionDetails.filteredTransactions.length,
+                        itemCount: stakingDetails.filteredTransactions.length,
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                       ),
