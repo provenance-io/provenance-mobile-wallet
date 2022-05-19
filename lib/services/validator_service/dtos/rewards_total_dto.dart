@@ -11,8 +11,8 @@ class RewardsTotalDto {
     this.total,
   );
 
-  final List<RewardsDto> rewards;
-  final List<RewardDto> total;
+  final List<RewardsDto>? rewards;
+  final List<RewardDto>? total;
 
   // ignore: member-ordering
   factory RewardsTotalDto.fromJson(Map<String, dynamic> json) =>

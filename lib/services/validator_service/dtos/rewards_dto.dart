@@ -9,7 +9,7 @@ class RewardsDto {
     this.reward,
     this.validatorAddress,
   );
-  final List<RewardDto> reward;
+  final List<RewardDto>? reward;
   final String? validatorAddress;
 
   // ignore: member-ordering
