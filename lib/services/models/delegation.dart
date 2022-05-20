@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
 
-class ValidatorDelegate {
-  ValidatorDelegate({required DelegationDto dto})
+class Delegation {
+  Delegation({required DelegationDto dto})
       : assert(dto.delegatorAddr != null),
         assert(dto.validatorSrcAddr != null),
         assert(dto.amount?.amount != null),
@@ -19,7 +19,7 @@ class ValidatorDelegate {
             ? DateTime.fromMillisecondsSinceEpoch(dto.endTime!)
             : null;
 
-  ValidatorDelegate.fake({
+  Delegation.fake({
     required this.address,
     required this.sourceAddress,
     this.destinationAddress,

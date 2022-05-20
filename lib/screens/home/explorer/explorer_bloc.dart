@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,23 +28,23 @@ class StakingDetails {
   StakingDetails({
     required this.delegates,
     required this.validators,
-    this.selectedType = ValidatorType.delegations,
+    this.selectedState = DelegationState.bonded,
     this.selectedStatus = ValidatorStatus.active,
     required this.address,
   });
 
 // FIXME: delegates are a different type eventually
-  List<ProvenanceValidator> delegates;
-  List<ProvenanceValidator> validators;
-  ValidatorType selectedType;
-  ValidatorStatus selectedStatus;
-  String address;
+  final List<Delegation> delegates;
+  final List<ProvenanceValidator> validators;
+  final DelegationState selectedState;
+  final ValidatorStatus selectedStatus;
+  final String address;
 }
 
-enum ValidatorType {
-  delegations,
-  redelegations,
-  unbonding,
+enum DelegationState {
+  bonded,
+  redelegated,
+  unbonded,
 }
 
 enum ValidatorStatus {
@@ -52,7 +53,7 @@ enum ValidatorStatus {
   jailed,
 }
 
-extension ValidatorStatusStuff on ValidatorStatus {
+extension ValidatorStatusExtension on ValidatorStatus {
   String get dropDownTitle {
     switch (this) {
       case ValidatorStatus.active:
@@ -65,15 +66,26 @@ extension ValidatorStatusStuff on ValidatorStatus {
   }
 }
 
-extension ValidatorTypeStuff on ValidatorType {
+extension DelegationStateExtension on DelegationState {
   String get dropDownTitle {
     switch (this) {
-      case ValidatorType.delegations:
+      case DelegationState.bonded:
         return Strings.dropDownDelegate;
-      case ValidatorType.redelegations:
+      case DelegationState.redelegated:
         return Strings.dropDownRedelegate;
-      case ValidatorType.unbonding:
+      case DelegationState.unbonded:
         return Strings.dropDownUndelegate;
+    }
+  }
+
+  String get urlRoute {
+    switch (this) {
+      case DelegationState.bonded:
+        return 'delegations';
+      case DelegationState.redelegated:
+        return 'redelegations';
+      case DelegationState.unbonded:
+        return 'unbonding';
     }
   }
 }
