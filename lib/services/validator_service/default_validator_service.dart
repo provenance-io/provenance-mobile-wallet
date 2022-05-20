@@ -55,12 +55,12 @@ class DefaultValidatorService extends ValidatorService
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    DelegationState type,
+    DelegationState state,
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/$type?page=$pageNumber&count=30',
+      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/${state.urlRoute}?page=$pageNumber&count=30',
       converter: (json) {
         if (json is String) {
           return <Delegation>[];

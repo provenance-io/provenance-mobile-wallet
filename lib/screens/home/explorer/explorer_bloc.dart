@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -16,23 +17,23 @@ class StakingDetails {
   StakingDetails({
     required this.delegates,
     required this.validators,
-    this.selectedType = Strings.dropDownDelegate,
+    this.selectedState = Strings.dropDownDelegate,
     this.selectedStatus = Strings.dropDownAllStatuses,
     required this.address,
   });
 
 // FIXME: delegates are a different type eventually
-  final List<ProvenanceValidator> delegates;
+  final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
-  final String selectedType;
+  final String selectedState;
   final String selectedStatus;
   final String address;
 }
 
 enum DelegationState {
-  delegations,
-  redelegations,
-  unbonding,
+  bonded,
+  redelegated,
+  unbonded,
 }
 
 enum ValidatorStatus {
@@ -57,12 +58,23 @@ extension ValidatorStatusExtension on ValidatorStatus {
 extension DelegationStateExtension on DelegationState {
   String get dropDownTitle {
     switch (this) {
-      case DelegationState.delegations:
+      case DelegationState.bonded:
         return Strings.dropDownDelegate;
-      case DelegationState.redelegations:
+      case DelegationState.redelegated:
         return Strings.dropDownRedelegate;
-      case DelegationState.unbonding:
+      case DelegationState.unbonded:
         return Strings.dropDownUndelegate;
+    }
+  }
+
+  String get urlRoute {
+    switch (this) {
+      case DelegationState.bonded:
+        return 'delegations';
+      case DelegationState.redelegated:
+        return 'redelegations';
+      case DelegationState.unbonded:
+        return 'unbonding';
     }
   }
 }

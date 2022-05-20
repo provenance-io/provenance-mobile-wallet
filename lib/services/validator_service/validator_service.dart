@@ -17,7 +17,7 @@ abstract class ValidatorService {
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    DelegationState type,
+    DelegationState state,
   ) {
     throw Strings.notImplementedMessage;
   }

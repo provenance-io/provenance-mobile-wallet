@@ -26,25 +26,25 @@ class MockValidatorService extends ValidatorService {
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    DelegationState type,
+    DelegationState state,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
-    return _getDelegates(type, provenanceAddress).toList();
+    return _getDelegates(state, provenanceAddress).toList();
   }
 
-  Delegation _getDelegate(DelegationState type, String address) {
+  Delegation _getDelegate(DelegationState state, String address) {
     var sourceAddress =
         faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength);
     var amount = faker.randomGenerator.integer(9999999).toString();
-    switch (type) {
-      case DelegationState.delegations:
+    switch (state) {
+      case DelegationState.bonded:
         return Delegation.fake(
             address: address,
             sourceAddress: sourceAddress,
             amount: amount,
             denom: 'hash',
             shares: amount);
-      case DelegationState.redelegations:
+      case DelegationState.redelegated:
         return Delegation.fake(
           address: address,
           sourceAddress: sourceAddress,
@@ -58,7 +58,7 @@ class MockValidatorService extends ValidatorService {
           endTime: DateTime.now(),
           shares: amount,
         );
-      case DelegationState.unbonding:
+      case DelegationState.unbonded:
         return Delegation.fake(
           address: address,
           sourceAddress: sourceAddress,
@@ -74,9 +74,9 @@ class MockValidatorService extends ValidatorService {
     }
   }
 
-  Iterable<Delegation> _getDelegates(DelegationState type, String address,
+  Iterable<Delegation> _getDelegates(DelegationState state, String address,
       {int count = 4}) {
-    return Iterable.generate(count).map((e) => _getDelegate(type, address));
+    return Iterable.generate(count).map((e) => _getDelegate(state, address));
   }
 
   ProvenanceValidator _getValidator(ValidatorStatus status) {
