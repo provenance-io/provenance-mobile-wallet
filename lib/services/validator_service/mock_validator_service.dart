@@ -1,8 +1,8 @@
 import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
-import 'package:provenance_wallet/services/models/validator_delegate.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
 class MockValidatorService extends ValidatorService {
@@ -22,17 +22,17 @@ class MockValidatorService extends ValidatorService {
   }
 
   @override
-  Future<List<ValidatorDelegate>> getDelegations(
+  Future<List<Delegation>> getDelegations(
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    ValidatorType type,
+    DelegationState type,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     return _getDelegates(type, provenanceAddress).toList();
   }
 
-  ValidatorDelegate _getDelegate(ValidatorType type, String address) {
+  Delegation _getDelegate(DelegationState type, String address) {
     var sourceAddress =
         faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength);
     var amount = faker.randomGenerator.integer(9999999).toString();
@@ -74,7 +74,7 @@ class MockValidatorService extends ValidatorService {
     }
   }
 
-  Iterable<ValidatorDelegate> _getDelegates(ValidatorType type, String address,
+  Iterable<Delegation> _getDelegates(DelegationState type, String address,
       {int count = 4}) {
     return Iterable.generate(count).map((e) => _getDelegate(type, address));
   }

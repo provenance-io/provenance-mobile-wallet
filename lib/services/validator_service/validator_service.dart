@@ -1,7 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
-import 'package:provenance_wallet/services/models/validator_delegate.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class ValidatorService {
@@ -13,7 +13,7 @@ abstract class ValidatorService {
     throw Strings.notImplementedMessage;
   }
 
-  Future<List<ValidatorDelegate>> getDelegations(
+  Future<List<Delegation>> getDelegations(
     Coin coin,
     String provenanceAddress,
     int pageNumber,
