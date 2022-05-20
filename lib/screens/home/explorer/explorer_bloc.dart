@@ -41,7 +41,7 @@ enum ValidatorStatus {
   jailed,
 }
 
-extension ValidatorStatusStuff on ValidatorStatus {
+extension ValidatorStatusExtension on ValidatorStatus {
   String get dropDownTitle {
     switch (this) {
       case ValidatorStatus.active:
