@@ -179,6 +179,7 @@ class RecoverPassphraseEntryScreenState
                         inputAction: (_bloc.wordsCount - 1 != index)
                             ? TextInputAction.next
                             : TextInputAction.done,
+                        onFieldSubmitted: (_) => _submit(),
                       ),
                       index != _bloc.wordsCount - 1
                           ? Container()
@@ -193,48 +194,7 @@ class RecoverPassphraseEntryScreenState
                                   Strings.continueName,
                                   style: PwTextStyle.bodyBold,
                                 ),
-                                onPressed: () async {
-                                  if (_bloc.isMnemonicComplete()) {
-                                    final words = _bloc.getCompletedMnemonic();
-
-                                    if (widget.flowType ==
-                                        AccountAddImportType
-                                            .onBoardingRecover) {
-                                      Navigator.of(context).push(CreatePin(
-                                        widget.flowType,
-                                        accountName: widget.accountName,
-                                        currentStep: widget.currentStep + 1,
-                                        numberOfSteps: widget.numberOfSteps,
-                                        words: words,
-                                      ).route());
-                                    } else {
-                                      ModalLoadingRoute.showLoading(
-                                        "",
-                                        context,
-                                      );
-
-                                      final chainId =
-                                          await _keyValueService.getString(
-                                                PrefKey.defaultChainId,
-                                              ) ??
-                                              ChainId.defaultChainId;
-                                      final coin = ChainId.toCoin(chainId);
-
-                                      await get<AccountService>().addAccount(
-                                        phrase: words,
-                                        name: widget.accountName,
-                                        coin: coin,
-                                      );
-
-                                      ModalLoadingRoute.dismiss(context);
-
-                                      final steps = widget.currentStep;
-                                      for (var i = steps; i >= 1; i--) {
-                                        Navigator.pop(context);
-                                      }
-                                    }
-                                  }
-                                },
+                                onPressed: _submit,
                               ),
                             ),
                     ],
@@ -246,6 +206,46 @@ class RecoverPassphraseEntryScreenState
         ],
       ),
     );
+  }
+
+  Future<void> _submit() async {
+    if (_bloc.isMnemonicComplete()) {
+      final words = _bloc.getCompletedMnemonic();
+
+      if (widget.flowType == AccountAddImportType.onBoardingRecover) {
+        Navigator.of(context).push(CreatePin(
+          widget.flowType,
+          accountName: widget.accountName,
+          currentStep: widget.currentStep + 1,
+          numberOfSteps: widget.numberOfSteps,
+          words: words,
+        ).route());
+      } else {
+        ModalLoadingRoute.showLoading(
+          "",
+          context,
+        );
+
+        final chainId = await _keyValueService.getString(
+              PrefKey.defaultChainId,
+            ) ??
+            ChainId.defaultChainId;
+        final coin = ChainId.toCoin(chainId);
+
+        await get<AccountService>().addAccount(
+          phrase: words,
+          name: widget.accountName,
+          coin: coin,
+        );
+
+        ModalLoadingRoute.dismiss(context);
+
+        final steps = widget.currentStep;
+        for (var i = steps; i >= 1; i--) {
+          Navigator.pop(context);
+        }
+      }
+    }
   }
 
   void _toggleAdvancedUI() async {
@@ -263,10 +263,12 @@ class _TextFormField extends StatelessWidget {
     Key? key,
     required this.index,
     this.inputAction = TextInputAction.done,
+    this.onFieldSubmitted,
   }) : super(key: key);
 
   final int index;
   final TextInputAction inputAction;
+  final Function(String value)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -316,13 +318,7 @@ class _TextFormField extends StatelessWidget {
           keyboardType: TextInputType.name,
           autocorrect: false,
           controller: controller,
-          onChanged: (e) {
-            final test = Mnemonic.searchFor(e);
-            if (test.length == 1 && test.first == e) {
-              func();
-            }
-          },
-          onFieldSubmitted: (e) => func(),
+          onFieldSubmitted: onFieldSubmitted,
           focusNode: focusNode,
           textInputAction: inputAction,
           validator: (word) {
