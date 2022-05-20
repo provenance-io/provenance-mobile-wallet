@@ -22,11 +22,11 @@ class StakingDetails {
   });
 
 // FIXME: delegates are a different type eventually
-  List<ProvenanceValidator> delegates;
-  List<ProvenanceValidator> validators;
-  String selectedType;
-  String selectedStatus;
-  String address;
+  final List<ProvenanceValidator> delegates;
+  final List<ProvenanceValidator> validators;
+  final String selectedType;
+  final String selectedStatus;
+  final String address;
 }
 
 enum ValidatorType {
