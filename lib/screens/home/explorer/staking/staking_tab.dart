@@ -14,7 +14,6 @@ class StakingTab extends StatefulWidget {
 }
 
 class StakingTabState extends State<StakingTab> {
-  final _scrollController = ScrollController();
   late ExplorerBloc _bloc;
 
   final textDivider = " • ";
@@ -23,14 +22,6 @@ class StakingTabState extends State<StakingTab> {
   void initState() {
     super.initState();
     _bloc = get<ExplorerBloc>();
-    _scrollController.addListener(_onScrollEnd);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.removeListener(_onScrollEnd);
-    _scrollController.dispose();
   }
 
   @override
@@ -128,35 +119,7 @@ class StakingTabState extends State<StakingTab> {
                   ),
                 ),
                 VerticalSpacer.medium(),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      // Validators List
-                      StreamBuilder<bool>(
-                        initialData: _bloc.isLoadingValidators.value,
-                        stream: _bloc.isLoadingValidators,
-                        builder: (context, snapshot) {
-                          final isLoading = snapshot.data ?? false;
-                          if (isLoading) {
-                            return Positioned(
-                              bottom: 0,
-                              left: 0,
-                              child: SizedBox(
-                                height: 80,
-                                width: MediaQuery.of(context).size.width,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            );
-                          }
-
-                          return Container();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                // Validators list
               ],
             );
           },
