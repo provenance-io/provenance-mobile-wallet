@@ -310,6 +310,7 @@ class _TextFormField extends StatelessWidget {
       fieldViewBuilder: (context, controller, focusNode, func) {
         bloc.setFromIndex(index, controller);
         return TextFormField(
+          autofocus: index == 0,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           enableSuggestions: false,
           keyboardType: TextInputType.name,
