@@ -29,7 +29,7 @@ class StakingDetails {
   final String address;
 }
 
-enum ValidatorType {
+enum DelegationState {
   delegations,
   redelegations,
   unbonding,
@@ -54,14 +54,14 @@ extension ValidatorStatusStuff on ValidatorStatus {
   }
 }
 
-extension ValidatorTypeStuff on ValidatorType {
+extension DelegationStateExtension on DelegationState {
   String get dropDownTitle {
     switch (this) {
-      case ValidatorType.delegations:
+      case DelegationState.delegations:
         return Strings.dropDownDelegate;
-      case ValidatorType.redelegations:
+      case DelegationState.redelegations:
         return Strings.dropDownRedelegate;
-      case ValidatorType.unbonding:
+      case DelegationState.unbonding:
         return Strings.dropDownUndelegate;
     }
   }

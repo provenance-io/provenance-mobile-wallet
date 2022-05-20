@@ -55,7 +55,7 @@ class DefaultValidatorService extends ValidatorService
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    ValidatorType type,
+    DelegationState type,
   ) async {
     final client = await getClient(coin);
     final data = await client.get(

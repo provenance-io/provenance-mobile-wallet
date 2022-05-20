@@ -37,15 +37,15 @@ class MockValidatorService extends ValidatorService {
         faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength);
     var amount = faker.randomGenerator.integer(9999999).toString();
     switch (type) {
-      case ValidatorType.delegations:
-        return ValidatorDelegate.fake(
+      case DelegationState.delegations:
+        return Delegation.fake(
             address: address,
             sourceAddress: sourceAddress,
             amount: amount,
             denom: 'hash',
             shares: amount);
-      case ValidatorType.redelegations:
-        return ValidatorDelegate.fake(
+      case DelegationState.redelegations:
+        return Delegation.fake(
           address: address,
           sourceAddress: sourceAddress,
           amount: amount,
@@ -58,8 +58,8 @@ class MockValidatorService extends ValidatorService {
           endTime: DateTime.now(),
           shares: amount,
         );
-      case ValidatorType.unbonding:
-        return ValidatorDelegate.fake(
+      case DelegationState.unbonding:
+        return Delegation.fake(
           address: address,
           sourceAddress: sourceAddress,
           amount: amount,
