@@ -1,8 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
-import 'package:provenance_wallet/screens/home/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -79,9 +77,9 @@ class StakingTabState extends State<StakingTab> {
                           padding: EdgeInsets.symmetric(
                             horizontal: Spacing.medium,
                           ),
-                          child: PwDropDown<ValidatorType>(
-                            initialValue: stakingDetails.selectedType,
-                            items: ValidatorType.values,
+                          child: PwDropDown<DelegationState>(
+                            initialValue: stakingDetails.selectedState,
+                            items: DelegationState.values,
                             isExpanded: true,
                             onValueChanged: (item) {
                               // Change delegates
@@ -97,6 +95,7 @@ class StakingTabState extends State<StakingTab> {
                             ),
                           )),
                       VerticalSpacer.medium(),
+                      // TODO: delegates list here.
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -132,31 +131,10 @@ class StakingTabState extends State<StakingTab> {
                 Expanded(
                   child: Stack(
                     children: [
-                      ListView.separated(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
-                          vertical: 20,
-                        ),
-                        controller: _scrollController,
-                        itemBuilder: (context, index) {
-                          final item =
-                              stakingDetails.filteredTransactions[index];
-
-                          return TransactionListItem(
-                            address: stakingDetails.address,
-                            item: item,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return PwListDivider();
-                        },
-                        itemCount: stakingDetails.filteredTransactions.length,
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                      ),
+                      // Validators List
                       StreamBuilder<bool>(
-                        initialData: _bloc.isLoadingTransactions.value,
-                        stream: _bloc.isLoadingTransactions,
+                        initialData: _bloc.isLoadingValidators.value,
+                        stream: _bloc.isLoadingValidators,
                         builder: (context, snapshot) {
                           final isLoading = snapshot.data ?? false;
                           if (isLoading) {
@@ -185,13 +163,5 @@ class StakingTabState extends State<StakingTab> {
         ),
       ),
     );
-  }
-
-  void _onScrollEnd() {
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingTransactions.value) {
-      _bloc.loadAdditionalTransactions();
-    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ExplorerBloc extends Disposable {
+  final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _stakingDetails = BehaviorSubject.seeded(
     StakingDetails(
       address: "",
@@ -16,6 +17,7 @@ class ExplorerBloc extends Disposable {
   );
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
+  ValueStream<bool> get isLoadingValidators => _isLoadingValidators;
 
   @override
   FutureOr onDispose() {
