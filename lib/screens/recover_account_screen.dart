@@ -2,7 +2,6 @@ import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -36,65 +35,71 @@ class RecoverAccountScreen extends StatelessWidget {
           numberOfSteps ?? 1,
         ),
       ),
-      body: PwOnboardingScreen(
-        children: [
-          Expanded(
-            flex: 1,
-            child: SizedBox(),
-          ),
-          PwText(
-            Strings.recoverAccount.toUpperCase(),
-            style: PwTextStyle.headline2,
-            textAlign: TextAlign.center,
-          ),
-          VerticalSpacer.large(),
-          Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(),
+                ),
+                VerticalSpacer.large(),
+                PwText(
+                  Strings.recoverAccount.toUpperCase(),
+                  style: PwTextStyle.headline2,
+                  textAlign: TextAlign.center,
+                ),
+                VerticalSpacer.large(),
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: Spacing.xxLarge,
+                    left: Spacing.xxLarge,
+                  ),
+                  child: PwText(
+                    Strings.inTheFollowingStepsText,
+                    style: PwTextStyle.body,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                VerticalSpacer.xxLarge(),
+                Image.asset(
+                  Assets.imagePaths.recoverAccount,
+                  width: 180,
+                  height: 180,
+                  fit: BoxFit.contain,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: PwButton(
+                    child: PwText(
+                      Strings.continueName,
+                      key: RecoverAccountScreen.keyContinueButton,
+                      style: PwTextStyle.bodyBold,
+                      color: PwColor.neutralNeutral,
+                    ),
+                    onPressed: () {
+                      if (flowType == AccountAddImportType.onBoardingRecover ||
+                          flowType == AccountAddImportType.dashboardRecover) {
+                        Navigator.of(context).push(RecoverPassphraseEntryScreen(
+                          flowType,
+                          accountName,
+                          currentStep: currentStep + 1,
+                          numberOfSteps: numberOfSteps,
+                        ).route());
+                      }
+                    },
+                  ),
+                ),
+                VerticalSpacer.largeX4(),
+              ],
             ),
-            child: PwText(
-              Strings.inTheFollowingStepsText,
-              style: PwTextStyle.body,
-              textAlign: TextAlign.center,
-            ),
           ),
-          VerticalSpacer.xxLarge(),
-          Container(
-            width: 180,
-            alignment: Alignment.center,
-            child: Image.asset(
-              Assets.imagePaths.recoverAccount,
-              width: 180,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: SizedBox(),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: PwButton(
-              child: PwText(
-                Strings.continueName,
-                key: RecoverAccountScreen.keyContinueButton,
-                style: PwTextStyle.bodyBold,
-                color: PwColor.neutralNeutral,
-              ),
-              onPressed: () {
-                if (flowType == AccountAddImportType.onBoardingRecover ||
-                    flowType == AccountAddImportType.dashboardRecover) {
-                  Navigator.of(context).push(RecoverPassphraseEntryScreen(
-                    flowType,
-                    accountName,
-                    currentStep: currentStep + 1,
-                    numberOfSteps: numberOfSteps,
-                  ).route());
-                }
-              },
-            ),
-          ),
-          VerticalSpacer.largeX4(),
         ],
       ),
     );
