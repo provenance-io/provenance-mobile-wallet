@@ -77,6 +77,7 @@ class RecoverAccountScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwButton(
+                    autofocus: true,
                     child: PwText(
                       Strings.continueName,
                       key: RecoverAccountScreen.keyContinueButton,
