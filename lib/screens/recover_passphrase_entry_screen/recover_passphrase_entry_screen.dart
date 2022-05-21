@@ -54,6 +54,7 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
 
 class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _keyValueService = get<KeyValueService>();
   late final TimedCounter _tapCounter;
   late final RecoverPassphraseBloc _bloc;
@@ -146,61 +147,64 @@ class RecoverPassphraseEntryScreenState
               );
             },
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: Column(
-              key: RecoverPassphraseEntryScreen.wordList,
-              mainAxisSize: MainAxisSize.min,
-              children: Iterable<int>.generate(_bloc.wordsCount).toList().map(
-                (index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      VerticalSpacer.xxLarge(),
-                      SizedBox(
-                        height: 22,
-                        child: Row(
-                          children: [
-                            PwText(
-                              Strings.recoverPassphraseWord(index + 1),
-                            ),
-                          ],
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: Column(
+                key: RecoverPassphraseEntryScreen.wordList,
+                mainAxisSize: MainAxisSize.min,
+                children: Iterable<int>.generate(_bloc.wordsCount).toList().map(
+                  (index) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        VerticalSpacer.xxLarge(),
+                        SizedBox(
+                          height: 22,
+                          child: Row(
+                            children: [
+                              PwText(
+                                Strings.recoverPassphraseWord(index + 1),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      VerticalSpacer.small(),
-                      _TextFormField(
-                        key: RecoverPassphraseEntryScreen
-                            .keyPassphraseWordTextField(index),
-                        index: index,
-                        inputAction: (_bloc.wordsCount - 1 != index)
-                            ? TextInputAction.next
-                            : TextInputAction.done,
-                        onFieldSubmitted: (_) => _submit(),
-                      ),
-                      index != _bloc.wordsCount - 1
-                          ? Container()
-                          : Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: Spacing.largeX4,
-                              ),
-                              child: PwButton(
-                                key: RecoverPassphraseEntryScreen
-                                    .keyContinueButton,
-                                child: PwText(
-                                  Strings.continueName,
-                                  style: PwTextStyle.bodyBold,
+                        VerticalSpacer.small(),
+                        _TextFormField(
+                          key: RecoverPassphraseEntryScreen
+                              .keyPassphraseWordTextField(index),
+                          index: index,
+                          inputAction: (_bloc.wordsCount - 1 != index)
+                              ? TextInputAction.next
+                              : TextInputAction.done,
+                          onFieldSubmitted: (_) => _submit(),
+                        ),
+                        index != _bloc.wordsCount - 1
+                            ? Container()
+                            : Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: Spacing.largeX4,
                                 ),
-                                onPressed: _submit,
+                                child: PwButton(
+                                  key: RecoverPassphraseEntryScreen
+                                      .keyContinueButton,
+                                  child: PwText(
+                                    Strings.continueName,
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                  onPressed: _submit,
+                                ),
                               ),
-                            ),
-                    ],
-                  );
-                },
-              ).toList(),
+                      ],
+                    );
+                  },
+                ).toList(),
+              ),
             ),
           ),
         ],
@@ -209,7 +213,7 @@ class RecoverPassphraseEntryScreenState
   }
 
   Future<void> _submit() async {
-    if (_bloc.isMnemonicComplete()) {
+    if (_formKey.currentState?.validate() == true) {
       final words = _bloc.getCompletedMnemonic();
 
       if (widget.flowType == AccountAddImportType.onBoardingRecover) {
