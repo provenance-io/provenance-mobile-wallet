@@ -70,8 +70,8 @@ class DelegationListState extends State<DelegationList> {
                 );
               }),
           StreamBuilder<bool>(
-            initialData: _bloc.isLoadingDelegates.value,
-            stream: _bloc.isLoadingDelegates,
+            initialData: _bloc.isLoadingDelegations.value,
+            stream: _bloc.isLoadingDelegations,
             builder: (context, snapshot) {
               final isLoading = snapshot.data ?? false;
               if (isLoading) {
