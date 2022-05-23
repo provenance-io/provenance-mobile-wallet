@@ -217,6 +217,17 @@ extension ValidatorStatusExtension on ValidatorStatus {
         return Strings.dropDownJailed;
     }
   }
+
+  String get urlRoute {
+    switch (this) {
+      case ValidatorStatus.active:
+        return 'active';
+      case ValidatorStatus.candidate:
+        return 'candidate';
+      case ValidatorStatus.jailed:
+        return 'jailed';
+    }
+  }
 }
 
 extension DelegationStateExtension on DelegationState {
