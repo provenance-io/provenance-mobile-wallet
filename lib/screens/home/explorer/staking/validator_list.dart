@@ -62,7 +62,7 @@ class ValidatorListState extends State<ValidatorList> {
                   separatorBuilder: (context, index) {
                     return PwListDivider();
                   },
-                  itemCount: stakingDetails.delegates.length,
+                  itemCount: stakingDetails.validators.length,
                   shrinkWrap: true,
                   physics: AlwaysScrollableScrollPhysics(),
                 );

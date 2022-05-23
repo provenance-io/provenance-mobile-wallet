@@ -26,12 +26,10 @@ class ValidatorListItem extends StatelessWidget {
               SizedBox(
                 width: Spacing.largeX3,
                 height: Spacing.largeX3,
-                child: Image.network(
-                  item.imgUrl ?? "",
-                  errorBuilder: (context, error, stackTrace) {
-                    // TODO: Build 'image' based on validator's first initial
-                    return Container();
-                  },
+                child: CircleAvatar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundImage: NetworkImage(item.imgUrl ?? ""),
+                  child: PwText(item.moniker.substring(0, 1).toUpperCase()),
                 ),
               ),
               HorizontalSpacer.medium(),

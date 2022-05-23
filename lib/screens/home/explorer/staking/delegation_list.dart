@@ -49,6 +49,9 @@ class DelegationListState extends State<DelegationList> {
                   ),
                   controller: _scrollController,
                   itemBuilder: (context, index) {
+                    if (stakingDetails.delegates.isEmpty) {
+                      return Container();
+                    }
                     final item = stakingDetails.delegates[index];
                     final validator = stakingDetails.abbreviatedValidators
                         .where(

@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/validator_list.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -44,88 +45,81 @@ class StakingTabState extends State<StakingTab> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AppBar(
-                    primary: false,
-                    backgroundColor: Theme.of(context).colorScheme.neutral750,
-                    elevation: 0.0,
-                    title: PwText(
-                      Strings.transactionDetails,
-                      style: PwTextStyle.subhead,
-                    ),
-                    leading: Padding(
-                      padding: EdgeInsets.only(left: 21),
-                      child: IconButton(
-                        icon: PwIcon(
-                          PwIcons.close,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    )),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                  primary: false,
+                  backgroundColor: Theme.of(context).colorScheme.neutral750,
+                  elevation: 0.0,
+                  title: PwText(
+                    Strings.staking,
+                    style: PwTextStyle.subhead,
                   ),
-                  child: Column(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.neutral250,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Spacing.medium,
-                          ),
-                          child: PwDropDown<DelegationState>(
-                            initialValue: stakingDetails.selectedState,
-                            items: DelegationState.values,
-                            isExpanded: true,
-                            onValueChanged: (item) {
-                              // Change delegates
-                            },
-                            builder: (item) => Row(
-                              children: [
-                                PwText(
-                                  item.dropDownTitle,
-                                  color: PwColor.neutralNeutral,
-                                  style: PwTextStyle.body,
-                                ),
-                              ],
-                            ),
-                          )),
-                      VerticalSpacer.medium(),
-                      // TODO: delegates list here.
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.neutral250,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.medium,
-                        ),
-                        child: PwDropDown<ValidatorStatus>(
-                          initialValue: stakingDetails.selectedStatus,
-                          items: ValidatorStatus.values,
-                          isExpanded: true,
-                          onValueChanged: (item) {
-                            // Change Validators
-                          },
-                          builder: (item) => Row(
-                            children: [
-                              PwText(
-                                item.dropDownTitle,
-                                color: PwColor.neutralNeutral,
-                                style: PwTextStyle.body,
-                              ),
-                            ],
-                          ),
-                        ),
+                  leading: Padding(
+                    padding: EdgeInsets.only(left: 21),
+                    child: IconButton(
+                      icon: PwIcon(
+                        PwIcons.close,
                       ),
-                    ],
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.neutral250,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.medium,
+                  ),
+                  child: PwDropDown<DelegationState>(
+                    initialValue: stakingDetails.selectedState,
+                    items: DelegationState.values,
+                    isExpanded: true,
+                    onValueChanged: (item) {
+                      // Change delegates
+                    },
+                    builder: (item) => Row(
+                      children: [
+                        PwText(
+                          item.dropDownTitle,
+                          color: PwColor.neutralNeutral,
+                          style: PwTextStyle.body,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                VerticalSpacer.medium(),
+                DelegationList(),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.neutral250,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.medium,
+                  ),
+                  child: PwDropDown<ValidatorStatus>(
+                    initialValue: stakingDetails.selectedStatus,
+                    items: ValidatorStatus.values,
+                    isExpanded: true,
+                    onValueChanged: (item) {
+                      // Change Validators
+                    },
+                    builder: (item) => Row(
+                      children: [
+                        PwText(
+                          item.dropDownTitle,
+                          color: PwColor.neutralNeutral,
+                          style: PwTextStyle.body,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 VerticalSpacer.medium(),
