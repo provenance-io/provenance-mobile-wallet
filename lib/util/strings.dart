@@ -228,6 +228,8 @@ class Strings {
     return 'Network: $name';
   }
 
+  static const invalidWord = "Invalid word";
+
   static String recoverPassphraseWord(int number) {
     return 'Word $number';
   }

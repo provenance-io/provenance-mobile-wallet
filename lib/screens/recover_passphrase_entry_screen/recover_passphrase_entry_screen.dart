@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -8,6 +9,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dar
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -54,10 +56,7 @@ class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
   final _keyValueService = get<KeyValueService>();
   late final TimedCounter _tapCounter;
-
-  List<TextEditingController> textControllers = <TextEditingController>[];
-  List<FocusNode> focusNodes = <FocusNode>[];
-  List<VoidCallback> callbacks = <VoidCallback>[];
+  late final RecoverPassphraseBloc _bloc;
 
   @visibleForTesting
   static const toggleAdvancedUICount = 10;
@@ -65,30 +64,19 @@ class RecoverPassphraseEntryScreenState
   @override
   void initState() {
     super.initState();
+    _bloc = RecoverPassphraseBloc();
+    get.registerSingleton<RecoverPassphraseBloc>(_bloc);
 
     _tapCounter = TimedCounter(
       onSuccess: _toggleAdvancedUI,
       requiredCount: toggleAdvancedUICount,
     );
-
-    for (var i = 0; i < 24; i++) {
-      var word = TextEditingController();
-      _addListener(word);
-      textControllers.add(word);
-      focusNodes.add(FocusNode());
-    }
   }
 
   @override
   void dispose() {
+    get.unregister<RecoverPassphraseBloc>();
     _tapCounter.cancel();
-
-    for (var i = 0; i < textControllers.length; i++) {
-      var controller = textControllers[i];
-      var callback = callbacks[i];
-      controller.removeListener(callback);
-      controller.dispose();
-    }
     super.dispose();
   }
 
@@ -166,11 +154,8 @@ class RecoverPassphraseEntryScreenState
             child: Column(
               key: RecoverPassphraseEntryScreen.wordList,
               mainAxisSize: MainAxisSize.min,
-              children: textControllers.map(
-                (textController) {
-                  final index = textControllers.indexOf(textController);
-                  final focusNode = focusNodes[index];
-
+              children: Iterable<int>.generate(_bloc.wordsCount).toList().map(
+                (index) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -190,13 +175,12 @@ class RecoverPassphraseEntryScreenState
                       _TextFormField(
                         key: RecoverPassphraseEntryScreen
                             .keyPassphraseWordTextField(index),
-                        controller: textController,
-                        focusNode: focusNode,
-                        inputAction: (textControllers.last != textController)
+                        index: index,
+                        inputAction: (_bloc.wordsCount - 1 != index)
                             ? TextInputAction.next
                             : TextInputAction.done,
                       ),
-                      index != textControllers.length - 1
+                      index != _bloc.wordsCount - 1
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.symmetric(
@@ -210,11 +194,8 @@ class RecoverPassphraseEntryScreenState
                                   style: PwTextStyle.bodyBold,
                                 ),
                                 onPressed: () async {
-                                  if (textControllers
-                                      .every((e) => e.text.isNotEmpty)) {
-                                    final words = textControllers
-                                        .map((e) => e.text.trim())
-                                        .toList();
+                                  if (_bloc.isMnemonicComplete()) {
+                                    final words = _bloc.getCompletedMnemonic();
 
                                     if (widget.flowType ==
                                         AccountAddImportType
@@ -275,83 +256,94 @@ class RecoverPassphraseEntryScreenState
       !value,
     );
   }
-
-  void _addListener(TextEditingController controller) {
-    void listen() {
-      _handleTextControllerTextChange(controller);
-    }
-
-    controller.addListener(listen);
-    callbacks.add(listen);
-  }
-
-  _handleTextControllerTextChange(TextEditingController controller) {
-    String pastedText = controller.text;
-    if (pastedText.isNotEmpty) {
-      List<String> parts = pastedText.split(' ');
-      if (parts.length == 48) {
-        parts.removeWhere((element) => element.startsWith("[0-9]"));
-      }
-      if (parts.length == 24) {
-        _putPartsInText(parts);
-      }
-    }
-  }
-
-  _putPartsInText(List<String> parts) {
-    for (var i = 0; i < parts.length && i < textControllers.length; i++) {
-      textControllers[i].text = parts[i];
-    }
-  }
 }
 
 class _TextFormField extends StatelessWidget {
   const _TextFormField({
     Key? key,
-    this.keyboardType,
-    this.onChanged,
-    this.validator,
-    this.focusNode,
-    this.handlePaste,
-    this.controller,
+    required this.index,
     this.inputAction = TextInputAction.done,
   }) : super(key: key);
 
-  final TextInputType? keyboardType;
-  final ValueChanged<String>? onChanged;
-  final FormFieldValidator<String>? validator;
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
-  final Function? handlePaste;
+  final int index;
   final TextInputAction inputAction;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bloc = get<RecoverPassphraseBloc>();
 
-    return TextFormField(
-      keyboardType: keyboardType,
-      autocorrect: false,
-      controller: controller,
-      onChanged: onChanged,
-      focusNode: focusNode,
-      textInputAction: inputAction,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (word) {
-        if (word == null || word.isEmpty) {
-          return Strings.required;
-        }
-
-        return null;
+    return Autocomplete<String>(
+      optionsViewBuilder: (context, onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 10.0,
+            shape: Border.all(color: theme.colorScheme.neutral250),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200, maxWidth: 335),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final option = options.elementAt(index);
+                  return InkWell(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: Container(
+                      color: Theme.of(context).colorScheme.neutral700,
+                      padding: const EdgeInsets.all(16.0),
+                      child: PwText(option),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
       },
-      style: Theme.of(context).textTheme.body,
-      decoration: InputDecoration(
-        fillColor: Theme.of(context).colorScheme.neutral750,
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.neutral250),
-        ),
-      ),
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        return Mnemonic.searchFor(textEditingValue.text);
+      },
+      fieldViewBuilder: (context, controller, focusNode, func) {
+        bloc.setFromIndex(index, controller);
+        return TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          enableSuggestions: false,
+          keyboardType: TextInputType.name,
+          autocorrect: false,
+          controller: controller,
+          onChanged: (e) {
+            final test = Mnemonic.searchFor(e);
+            if (test.length == 1 && test.first == e) {
+              func();
+            }
+          },
+          onFieldSubmitted: (e) => func(),
+          focusNode: focusNode,
+          textInputAction: inputAction,
+          validator: (word) {
+            if (word == null || word.isEmpty) {
+              return Strings.required;
+            }
+            if (!Mnemonic.searchFor(word).any((element) => element == word)) {
+              return Strings.invalidWord;
+            }
+
+            return null;
+          },
+          style: Theme.of(context).textTheme.body,
+          decoration: InputDecoration(
+            fillColor: Theme.of(context).colorScheme.neutral750,
+            filled: true,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: theme.colorScheme.neutral250),
+            ),
+          ),
+        );
+      },
     );
   }
 }
