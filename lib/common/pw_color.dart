@@ -5,11 +5,13 @@ enum PwColor {
   error,
   secondary2,
   secondary250,
+  secondary350,
   neutral700,
   neutral550,
   neutral450,
   neutral250,
   neutral200,
+  neutral150,
   neutral50,
   neutralNeutral,
   notice350,
@@ -38,6 +40,8 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.secondaryContainer;
       case PwColor.secondary250:
         return theme.colorScheme.secondary250;
+      case PwColor.secondary350:
+        return theme.colorScheme.secondary350;
       case PwColor.neutral700:
         return theme.colorScheme.neutral700;
       case PwColor.neutral450:
@@ -48,6 +52,8 @@ mixin PwColorMixin on Widget {
         return theme.colorScheme.neutral250;
       case PwColor.neutral200:
         return theme.colorScheme.neutral200;
+      case PwColor.neutral150:
+        return theme.colorScheme.neutral150;
       case PwColor.neutral50:
         return theme.colorScheme.neutral50;
       case PwColor.neutralNeutral:

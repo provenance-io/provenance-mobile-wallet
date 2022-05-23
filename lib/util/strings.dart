@@ -162,6 +162,10 @@ class Strings {
 
   // Accounts Page
   static const accounts = 'Accounts';
+  static const accountKindSingle = 'Basic';
+  static const accountKindMulti = 'Multi-sig';
+  static const selectedAccountLabel = 'Selected Account';
+  static const accountStatusPending = 'Pending';
   static String numAssets(int numAssets) =>
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
