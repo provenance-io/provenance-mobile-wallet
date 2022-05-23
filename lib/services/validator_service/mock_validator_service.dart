@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
@@ -18,6 +19,37 @@ class MockValidatorService extends ValidatorService {
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     return _getValidators(status).toList();
+  }
+
+  @override
+  Future<List<AbbreviatedValidator>> getAbbreviatedValidators(
+    Coin coin,
+    int pageNumber,
+  ) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return _getAbbrVldrs().toList();
+  }
+
+  AbbreviatedValidator _getAbbrVldr() {
+    return AbbreviatedValidator.fake(
+      moniker: "validator-us-${faker.randomGenerator.element([
+            'north',
+            'east',
+            'west',
+            'south',
+            'central'
+          ])}${faker.randomGenerator.integer(9, min: 1)}-${faker.randomGenerator.integer(9)}",
+      address:
+          faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
+      commission: faker.randomGenerator.decimal().toString(),
+      imgUrl: faker.randomGenerator.boolean()
+          ? null
+          : faker.image.image(width: 60, height: 60, random: true),
+    );
+  }
+
+  Iterable<AbbreviatedValidator> _getAbbrVldrs({int count = 46}) {
+    return Iterable.generate(count).map((e) => _getAbbrVldr());
   }
 
   ProvenanceValidator _getValidator(String status) {
@@ -45,7 +77,7 @@ class MockValidatorService extends ValidatorService {
         hr24Change: faker.randomGenerator.integer(9999).toString(),
         imgUrl: faker.randomGenerator.boolean()
             ? null
-            : faker.image.image(width: 64, height: 64, random: true),
+            : faker.image.image(width: 60, height: 60, random: true),
         proposerPriority: faker.randomGenerator.integer(9999999));
   }
 
