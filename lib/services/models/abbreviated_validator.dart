@@ -5,10 +5,10 @@ class AbbreviatedValidator {
       : assert(dto.addressId != null),
         assert(dto.commission != null),
         assert(dto.moniker != null),
-        assert(double.tryParse(dto.commission!) != null),
+        assert(num.tryParse(dto.commission!) != null),
         moniker = dto.moniker!,
         address = dto.addressId!,
-        commission = '${double.tryParse(dto.commission!)! * 100}%',
+        commission = '${num.tryParse(dto.commission!)! * 100}%',
         imgUrl = dto.imgUrl;
 
   AbbreviatedValidator.fake({

@@ -154,7 +154,7 @@ class MockValidatorService extends ValidatorService {
         commission: faker.randomGenerator.decimal().toString(),
         delegators: faker.randomGenerator.integer(13, min: 1),
         status: status.toString(),
-        uptime: faker.randomGenerator.integer(100, min: 90),
+        uptime: faker.randomGenerator.decimal(scale: 100, min: 90),
         bondedTokensCount: faker.randomGenerator.integer(9999999).toString(),
         bondedTokensDenom: 'nhash',
         bondedTokensTotal: '$_tokenTotal',
