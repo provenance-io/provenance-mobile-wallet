@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
@@ -11,15 +12,18 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ExplorerBloc extends Disposable {
+  final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
   final _stakingDetails = BehaviorSubject.seeded(
     StakingDetails(
+      abbreviatedValidators: [],
       address: "",
       delegates: [],
       validators: [],
     ),
   );
+  final List<AbbreviatedValidator> _abbreviatedValidators = [];
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
   final _validatorService = get<ValidatorService>();
@@ -40,6 +44,38 @@ class ExplorerBloc extends Disposable {
     _validatorPages.close();
   }
 
+  Future<void> load({bool showLoading = true}) async {
+    if (showLoading) {
+      _isLoading.tryAdd(true);
+    }
+
+    try {
+      final account = _accountDetails;
+
+      var abbrValidators = <AbbreviatedValidator>[];
+
+      abbrValidators = await _validatorService.getAbbreviatedValidators(
+        account.coin,
+        1,
+      );
+
+      _abbreviatedValidators.addAll(abbrValidators);
+
+      _stakingDetails.tryAdd(
+        StakingDetails(
+          abbreviatedValidators: _abbreviatedValidators,
+          delegates: [],
+          validators: [],
+          address: account.address,
+        ),
+      );
+    } finally {
+      if (showLoading) {
+        _isLoading.tryAdd(false);
+      }
+    }
+  }
+
   Future<void> updateState(DelegationState state) async {
     final oldDetails = _stakingDetails.value;
 
@@ -57,6 +93,7 @@ class ExplorerBloc extends Disposable {
 
     _stakingDetails.tryAdd(
       StakingDetails(
+        abbreviatedValidators: _abbreviatedValidators,
         delegates: delegations,
         validators: oldDetails.validators,
         address: oldDetails.address,
@@ -99,6 +136,7 @@ class ExplorerBloc extends Disposable {
 
     _stakingDetails.tryAdd(
       StakingDetails(
+        abbreviatedValidators: _abbreviatedValidators,
         delegates: delegates,
         validators: oldDetails.validators,
         address: oldDetails.address,
@@ -125,6 +163,7 @@ class ExplorerBloc extends Disposable {
 
     _stakingDetails.tryAdd(
       StakingDetails(
+        abbreviatedValidators: _abbreviatedValidators,
         delegates: oldDetails.delegates,
         validators: validators,
         address: oldDetails.address,
@@ -139,6 +178,7 @@ class ExplorerBloc extends Disposable {
 
 class StakingDetails {
   StakingDetails({
+    required this.abbreviatedValidators,
     required this.delegates,
     required this.validators,
     this.selectedState = DelegationState.bonded,
@@ -146,7 +186,7 @@ class StakingDetails {
     required this.address,
   });
 
-// FIXME: delegates are a different type eventually
+  final List<AbbreviatedValidator> abbreviatedValidators;
   final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
   final DelegationState selectedState;

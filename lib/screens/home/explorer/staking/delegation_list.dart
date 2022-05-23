@@ -50,9 +50,9 @@ class DelegationListState extends State<DelegationList> {
                   controller: _scrollController,
                   itemBuilder: (context, index) {
                     final item = stakingDetails.delegates[index];
-                    final validator = stakingDetails.validators
+                    final validator = stakingDetails.abbreviatedValidators
                         .where(
-                          (element) => element.addressId == item.sourceAddress,
+                          (element) => element.address == item.sourceAddress,
                         )
                         .first;
 

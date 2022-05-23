@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/provenance_validator.dart';
 
 class DelegationListItem extends StatelessWidget {
   const DelegationListItem({
@@ -9,7 +9,7 @@ class DelegationListItem extends StatelessWidget {
     required this.item,
   }) : super(key: key);
 
-  final ProvenanceValidator validator;
+  final AbbreviatedValidator validator;
   final Delegation item;
   final textDivider = " • ";
   @override
