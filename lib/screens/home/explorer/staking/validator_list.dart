@@ -50,6 +50,9 @@ class ValidatorListState extends State<ValidatorList> {
                   ),
                   controller: _scrollController,
                   itemBuilder: (context, index) {
+                    if (stakingDetails.validators.isEmpty) {
+                      return Container();
+                    }
                     final item = stakingDetails.validators[index];
 
                     return ValidatorListItem(

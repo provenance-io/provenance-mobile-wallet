@@ -119,7 +119,7 @@ class StakingTabState extends State<StakingTab> {
                   ),
                 ),
                 VerticalSpacer.medium(),
-                // Validators list
+                ValidatorList(),
               ],
             );
           },
