@@ -48,12 +48,7 @@ class DelegationListItem extends StatelessWidget {
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      item.amount +
-                          item.denom +
-                          " delegated" +
-                          textDivider +
-                          validator.commission +
-                          " commission",
+                      item.displayDenom + " delegated",
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,
