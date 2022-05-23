@@ -29,6 +29,7 @@ class HomeScreenState extends State<ExplorerScreen>
     RouterObserver.instance.routeObserver.unsubscribe(this);
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
+    get.unregister<ExplorerBloc>();
 
     super.dispose();
   }
