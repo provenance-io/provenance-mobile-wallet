@@ -44,15 +44,24 @@ class StakingTabState extends State<StakingTab> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AppBar(
-                  primary: false,
-                  backgroundColor: Theme.of(context).colorScheme.neutral750,
-                  elevation: 0.0,
-                  title: PwText(
-                    Strings.transactionDetails,
-                    style: PwTextStyle.subhead,
-                  ),
-                  leading: Container(),
-                ),
+                    primary: false,
+                    backgroundColor: Theme.of(context).colorScheme.neutral750,
+                    elevation: 0.0,
+                    title: PwText(
+                      Strings.transactionDetails,
+                      style: PwTextStyle.subhead,
+                    ),
+                    leading: Padding(
+                      padding: EdgeInsets.only(left: 21),
+                      child: IconButton(
+                        icon: PwIcon(
+                          PwIcons.close,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    )),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: Spacing.xxLarge,
