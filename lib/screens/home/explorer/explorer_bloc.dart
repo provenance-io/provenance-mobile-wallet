@@ -61,11 +61,24 @@ class ExplorerBloc extends Disposable {
 
       _abbreviatedValidators.addAll(abbrValidators);
 
+      final delegations = await _validatorService.getDelegations(
+        _accountDetails.coin,
+        _accountDetails.address,
+        _delegationPages.value,
+        _stakingDetails.value.selectedState,
+      );
+
+      final validators = await _validatorService.getRecentValidators(
+        _accountDetails.coin,
+        _validatorPages.value,
+        _stakingDetails.value.selectedStatus,
+      );
+
       _stakingDetails.tryAdd(
         StakingDetails(
           abbreviatedValidators: _abbreviatedValidators,
-          delegates: [],
-          validators: [],
+          delegates: delegations,
+          validators: validators,
           address: account.address,
         ),
       );
