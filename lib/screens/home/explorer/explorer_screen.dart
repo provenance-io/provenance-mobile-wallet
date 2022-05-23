@@ -8,12 +8,12 @@ import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ExplorerScreen extends StatefulWidget {
-  ExplorerScreen({
+  const ExplorerScreen({
     Key? key,
     required this.accountDetails,
   }) : super(key: key);
 
-  AccountDetails accountDetails;
+  final AccountDetails accountDetails;
   @override
   State<StatefulWidget> createState() => HomeScreenState();
 }
