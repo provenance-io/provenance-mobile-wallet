@@ -116,6 +116,33 @@ class ExplorerBloc extends Disposable {
     );
   }
 
+  Future<void> updateStatus(ValidatorStatus status) async {
+    final oldDetails = _stakingDetails.value;
+
+    if (status == oldDetails.selectedStatus) {
+      return;
+    }
+
+    _validatorPages.value = 1;
+
+    final validators = await _validatorService.getRecentValidators(
+      _accountDetails.coin,
+      _validatorPages.value,
+      status,
+    );
+
+    _stakingDetails.tryAdd(
+      StakingDetails(
+        abbreviatedValidators: _abbreviatedValidators,
+        delegates: oldDetails.delegates,
+        validators: validators,
+        address: oldDetails.address,
+        selectedState: oldDetails.selectedState,
+        selectedStatus: status,
+      ),
+    );
+  }
+
   Future<List<T>> _loadMore<T>(
       List<T> oldList,
       BehaviorSubject<int> pages,
