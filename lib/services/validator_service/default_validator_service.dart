@@ -1,7 +1,10 @@
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
+import 'package:provenance_wallet/services/validator_service/dtos/delegations_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/recent_validators_dto.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
@@ -11,8 +14,11 @@ class DefaultValidatorService extends ValidatorService
       '/service-mobile-wallet/external/api/v1/validators/recent';
 
   @override
-  Future<List<ProvenanceValidator>> getRecentValidators(Coin coin,
-      String provenanceAddress, int pageNumber, String status) async {
+  Future<List<ProvenanceValidator>> getRecentValidators(
+    Coin coin,
+    int pageNumber,
+    ValidatorStatus status,
+  ) async {
     final client = await getClient(coin);
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
@@ -36,6 +42,44 @@ class DefaultValidatorService extends ValidatorService
         validators.addAll(test);
 
         return validators;
+      },
+    );
+
+    notifyOnError(data);
+
+    return data.data ?? [];
+  }
+
+  @override
+  Future<List<Delegation>> getDelegations(
+    Coin coin,
+    String provenanceAddress,
+    int pageNumber,
+    DelegationState state,
+  ) async {
+    final client = await getClient(coin);
+    final data = await client.get(
+      // FIXME: Replace this URL with the service's URL
+      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/${state.urlRoute}?page=$pageNumber&count=30',
+      converter: (json) {
+        if (json is String) {
+          return <Delegation>[];
+        }
+
+        final List<Delegation> delegates = [];
+
+        var dtos = DelegationsDto.fromJson(json);
+        var test = dtos.results?.map((t) {
+          return Delegation(dto: t);
+        }).toList();
+
+        if (test == null) {
+          return <Delegation>[];
+        }
+
+        delegates.addAll(test);
+
+        return delegates;
       },
     );
 

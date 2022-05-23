@@ -406,4 +406,16 @@ class Strings {
   static const cipherUnknownError = 'Unknown error.';
   static const cipherUpgradeError = 'An error occured during while upgrading.';
   static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
+
+  // Explorer Screen
+  static const staking = "Staking";
+  static const proposals = "Proposals";
+
+  // Staking Tab
+  static const dropDownDelegate = "Delegate";
+  static const dropDownRedelegate = "Redelegate";
+  static const dropDownUndelegate = "Undelegate";
+  static const dropDownActive = "Active";
+  static const dropDownCandidate = "Candidate";
+  static const dropDownJailed = "Jailed";
 }
