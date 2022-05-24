@@ -420,4 +420,8 @@ class Strings {
   static const dropDownActive = "Active";
   static const dropDownCandidate = "Candidate";
   static const dropDownJailed = "Jailed";
+  static String endTimeFormatted(String formattedTime) =>
+      "Ended: $formattedTime";
+  static String displayDenomFormatted(String displayDenom) =>
+      "$displayDenom delegated";
 }

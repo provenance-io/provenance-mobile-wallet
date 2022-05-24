@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DelegationListItem extends StatelessWidget {
   const DelegationListItem({
@@ -11,7 +12,6 @@ class DelegationListItem extends StatelessWidget {
 
   final AbbreviatedValidator validator;
   final Delegation item;
-  final textDivider = " • ";
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -48,7 +48,9 @@ class DelegationListItem extends StatelessWidget {
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      item.displayDenom + " delegated",
+                      item.endTime != null
+                          ? Strings.endTimeFormatted(item.formattedTime)
+                          : Strings.displayDenomFormatted(item.displayDenom),
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,

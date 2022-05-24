@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
 
 class Delegation {
@@ -46,5 +47,11 @@ class Delegation {
   String get displayDenom {
     // TODO: Consolidate hash conversion somewhere?
     return "${(Decimal.parse(amount) / Decimal.fromInt(10).pow(9)).toDecimal(scaleOnInfinitePrecision: 9).toString()} hash";
+  }
+
+  String get formattedTime {
+    return endTime != null
+        ? DateFormat.yMMMd('en_US').add_Hms().format(endTime!)
+        : "";
   }
 }
