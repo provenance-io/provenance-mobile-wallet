@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking/staking_details_screen.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 
 class ValidatorListItem extends StatelessWidget {
@@ -14,7 +15,11 @@ class ValidatorListItem extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        // Navigate to delegate screen
+        Navigator.of(context).push(
+          StakingDetailsScreen(
+            validatorAddress: item.addressId,
+          ).route(),
+        );
       },
       child: Padding(
         padding: EdgeInsets.zero,
