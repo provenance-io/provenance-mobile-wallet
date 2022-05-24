@@ -1,6 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
+import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
@@ -9,6 +10,7 @@ import 'package:provenance_wallet/services/notification/client_notification_mixi
 import 'package:provenance_wallet/services/validator_service/dtos/abbreviated_validators_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/delegations_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/recent_validators_dto.dart';
+import 'package:provenance_wallet/services/validator_service/dtos/redelegations_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/rewards_total_dto.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 
@@ -98,6 +100,29 @@ class DefaultValidatorService extends ValidatorService
     DelegationState state,
   ) async {
     final client = await getClient(coin);
+    if (DelegationState.bonded == state) {
+      return _getDelegations(
+        client,
+        provenanceAddress,
+        pageNumber,
+        state,
+      );
+    } else {
+      return _getFormerDelegations(
+        client,
+        provenanceAddress,
+        pageNumber,
+        state,
+      );
+    }
+  }
+
+  Future<List<Delegation>> _getDelegations(
+    HttpClient client,
+    String provenanceAddress,
+    int pageNumber,
+    DelegationState state,
+  ) async {
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
       'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/${state.urlRoute}?page=$pageNumber&count=30',
@@ -110,6 +135,42 @@ class DefaultValidatorService extends ValidatorService
 
         var dtos = DelegationsDto.fromJson(json);
         var test = dtos.results?.map((t) {
+          return Delegation(dto: t);
+        }).toList();
+
+        if (test == null) {
+          return <Delegation>[];
+        }
+
+        delegates.addAll(test);
+
+        return delegates;
+      },
+    );
+
+    notifyOnError(data);
+
+    return data.data ?? [];
+  }
+
+  Future<List<Delegation>> _getFormerDelegations(
+    HttpClient client,
+    String provenanceAddress,
+    int pageNumber,
+    DelegationState state,
+  ) async {
+    final data = await client.get(
+      // FIXME: Replace this URL with the service's URL
+      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/${state.urlRoute}?page=$pageNumber&count=30',
+      converter: (json) {
+        if (json is String) {
+          return <Delegation>[];
+        }
+
+        final List<Delegation> delegates = [];
+
+        var dtos = RedelegationsDto.fromJson(json);
+        var test = dtos.records?.map((t) {
           return Delegation(dto: t);
         }).toList();
 
