@@ -1,35 +1,28 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePassphraseScreen extends StatelessWidget {
-  const CreatePassphraseScreen(
-    this.flowType,
-    this.accountName, {
-    this.currentStep,
-    this.numberOfSteps,
+  const CreatePassphraseScreen({
     Key? key,
   }) : super(key: key);
 
-  final AccountAddImportType flowType;
-  final String accountName;
-  final int? currentStep;
-  final int? numberOfSteps;
-
   @override
   Widget build(BuildContext context) {
+    final bloc = get<AddAccountFlowBloc>();
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.createPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          currentStep ?? 0,
-          numberOfSteps ?? 1,
+          bloc.getCurrentStep(AddAccountScreen.createPassphrase),
+          bloc.totalSteps,
         ),
       ),
       body: PwOnboardingScreen(
@@ -102,15 +95,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () {
-                if (flowType == AccountAddImportType.onBoardingAdd ||
-                    flowType == AccountAddImportType.dashboardAdd) {
-                  Navigator.of(context).push(RecoveryWordsScreen(
-                    flowType,
-                    accountName,
-                    currentStep: currentStep,
-                    numberOfSteps: numberOfSteps,
-                  ).route());
-                }
+                bloc.submitCreatePassphrase();
               },
             ),
           ),

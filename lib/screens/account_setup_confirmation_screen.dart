@@ -1,7 +1,9 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountSetupConfirmationScreen extends StatelessWidget {
@@ -72,9 +74,8 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                           style: PwTextStyle.subhead,
                           color: PwColor.neutralNeutral,
                         ),
-                        onPressed: () async {
-                          Navigator.popUntil(context, ModalRoute.withName("/"));
-                        },
+                        onPressed: get<AddAccountFlowBloc>()
+                            .submitAccountSetupConfirmation,
                       ),
                     ),
                     VerticalSpacer.xxLarge(),

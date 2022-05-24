@@ -69,6 +69,7 @@ class PwButton extends StatelessWidget {
     required this.child,
     this.enabled = true,
     this.autofocus = false,
+    this.focusNode,
     required this.onPressed,
     this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
@@ -99,6 +100,8 @@ class PwButton extends StatelessWidget {
 
   final bool autofocus;
 
+  final FocusNode? focusNode;
+
   /// The callback to invoke when the button is pressed.
   final VoidCallback onPressed;
 
@@ -115,6 +118,7 @@ class PwButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       autofocus: autofocus,
+      focusNode: focusNode,
       style: _buttonStyle(context),
       onPressed: enabled ? onPressed : null,
       child: child,
@@ -129,9 +133,15 @@ class PwButton extends StatelessWidget {
         return theme.colorScheme.neutralNeutral;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return showAlternate
-            ? Colors.transparent
-            : theme.colorScheme.primary550;
+        if (showAlternate) {
+          return Colors.transparent;
+        }
+
+        final color = theme.colorScheme.primary550;
+
+        return states.contains(MaterialState.disabled)
+            ? color.withOpacity(.5)
+            : color;
       }),
       side: MaterialStateProperty.resolveWith((states) {
         return showAlternate
@@ -152,19 +162,20 @@ class PwTextButton extends StatelessWidget {
   const PwTextButton({
     Key? key,
     required this.child,
-    required this.onPressed,
+    this.onPressed,
     this.minimumSize = const Size(
       double.maxFinite,
       50,
     ),
     this.shrinkWrap = false,
     this.backgroundColor,
+    this.focusNode,
   }) : super(key: key);
 
   const PwTextButton.shrinkWrap({
     Key? key,
     required Widget child,
-    required VoidCallback onPressed,
+    VoidCallback? onPressed,
   }) : this(
           key: key,
           child: child,
@@ -174,8 +185,8 @@ class PwTextButton extends StatelessWidget {
 
   factory PwTextButton.primaryAction({
     required BuildContext context,
-    required VoidCallback onPressed,
     required String text,
+    VoidCallback? onPressed,
     Key? key,
   }) {
     return PwTextButton(
@@ -191,8 +202,8 @@ class PwTextButton extends StatelessWidget {
 
   factory PwTextButton.secondaryAction({
     required BuildContext context,
-    required VoidCallback onPressed,
     required String text,
+    VoidCallback? onPressed,
     Key? key,
   }) {
     return PwTextButton(
@@ -210,7 +221,7 @@ class PwTextButton extends StatelessWidget {
   final Widget child;
 
   /// The callback to invoke when the button is pressed.
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Mininum size unless [shrinkWrap] is true
   final Size minimumSize;
@@ -221,6 +232,8 @@ class PwTextButton extends StatelessWidget {
 
   final Color? backgroundColor;
 
+  final FocusNode? focusNode;
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -230,6 +243,7 @@ class PwTextButton extends StatelessWidget {
         padding: shrinkWrap ? EdgeInsets.zero : null,
         tapTargetSize: shrinkWrap ? MaterialTapTargetSize.shrinkWrap : null,
       ),
+      focusNode: focusNode,
       onPressed: onPressed,
       child: child,
     );

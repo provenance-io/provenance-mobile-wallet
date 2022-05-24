@@ -67,7 +67,7 @@ class Strings {
       'It appears as though no network is connected.';
 
   // Landing Page
-  static const createAccount = 'Create Account';
+  static const addAccount = 'Add Account';
   static const recoverAccount = 'Recover Account';
   static const lockScreenRequired =
       'Please enable the device screen lock in security settings';
@@ -138,6 +138,7 @@ class Strings {
   static const profileDeveloperServiceMocks = 'Service Mocks';
   static const profileDeveloperConnectLabel = 'Connect';
   static const profileDeveloperConnectInvalidAddress = 'Invalid address';
+  static const profileDeveloperEnableMultiSig = 'Enable Multi-Sig';
   static const profileShowAdvancedUI = 'Show Advanced UI';
   static const profileMenuUseMainnet = 'Use Mainnet';
   static const profileMenuUseTestnet = 'Use Testnet';
@@ -178,6 +179,34 @@ class Strings {
   static const yes = 'Yes';
   static const copyAccountAddress = 'Copy Account Address';
   static const addressCopied = 'Address copied';
+
+  // Account Type
+  static const accountTypeTitle = 'Choose Account Type';
+  static const accountTypeOptionBasicName = 'Basic Account';
+  static const accountTypeOptionBasicDesc = 'Standard, single-user account';
+  static const accountTypeOptionImportName = 'Import/Recover Account';
+  static const accountTypeOptionImportDesc = 'Import existing account';
+  static const accountTypeOptionMultiName = 'Multi-Sig Account';
+  static const accountTypeOptionMultiDesc =
+      'Account shared by two or more users';
+
+  // Multi-Sig Create or Join
+  static const accountTypeMultiSigTitle = 'Multi-Signature Account';
+  static const accountTypeMultiSigDesc =
+      'A multi-signature account requires two or more private keys to sign and send a transaction.\n\nA multi-signature account helps to get rid of the security concerns that come with a single private key mechanism, and reduces the dependency on one person.';
+  static const accountTypeMultiSigCreateName = 'Create New';
+  static const accountTypeMultiSigCreateDesc =
+      'Account shared by two or more users';
+  static const accountTypeMultiSigJoinName = 'Join Multi-Signature Account';
+  static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
+
+  // Multi-Sig Connect
+  static const multiSigConnectTitle = 'Connect to Individual Account';
+  static const multiSigConnectDesc =
+      "You are creating a new multi-signature account. Select which account you’d like to join with.";
+  static const multiSigConnectSelectionLabel = 'Select Account';
+  static const multiSigConnectNextButton = 'Next';
+  static const multiSigConnectCreateButton = 'Create New Account';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';
