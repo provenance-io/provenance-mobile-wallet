@@ -39,9 +39,12 @@ class ExplorerBloc extends Disposable {
 
   @override
   FutureOr onDispose() {
+    _isLoading.close();
     _isLoadingValidators.close();
+    _isLoadingDelegations.close();
     _stakingDetails.close();
     _validatorPages.close();
+    _delegationPages.close();
   }
 
   Future<void> load({bool showLoading = true}) async {
