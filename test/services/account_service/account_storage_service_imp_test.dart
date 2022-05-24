@@ -5,10 +5,10 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 
 import 'account_storage_service_imp_test.mocks.dart';
 
@@ -47,25 +47,25 @@ final details2 = AccountDetails(
   coin: selectedPrivateKey.coin,
 );
 
-@GenerateMocks([SqliteAccountStorageService, CipherService])
+@GenerateMocks([AccountStorageServiceCore, CipherService])
 main() {
-  MockSqliteAccountStorageService? mockSqliteAccountStorageService;
+  MockAccountStorageServiceCore? mockAccountStorageServiceCore;
   MockCipherService? mockCipherService;
   AccountStorageServiceImp? accountStorageService;
 
   setUp(() {
     mockCipherService = MockCipherService();
-    mockSqliteAccountStorageService = MockSqliteAccountStorageService();
+    mockAccountStorageServiceCore = MockAccountStorageServiceCore();
 
     accountStorageService = AccountStorageServiceImp(
-      mockSqliteAccountStorageService!,
+      mockAccountStorageServiceCore!,
       mockCipherService!,
     );
   });
 
   group("addWallet", () {
     setUp(() {
-      when(mockSqliteAccountStorageService!.addAccount(
+      when(mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -94,7 +94,7 @@ main() {
         selectedCoin: selectedPrivateKey.coin,
       );
 
-      verify(mockSqliteAccountStorageService!.addAccount(
+      verify(mockAccountStorageServiceCore!.addAccount(
         name: "New Name",
         publicKeys: publicKeys,
         selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
@@ -114,10 +114,10 @@ main() {
     });
 
     test("no details found", () async {
-      when(mockSqliteAccountStorageService!.removeAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(12));
 
-      when(mockSqliteAccountStorageService!.addAccount(
+      when(mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -132,16 +132,16 @@ main() {
       expect(result, null);
       verifyNoMoreInteractions(mockCipherService!);
 
-      verify(mockSqliteAccountStorageService!.addAccount(
+      verify(mockAccountStorageServiceCore!.addAccount(
         name: "New Name",
         publicKeys: publicKeys,
         selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
       ));
-      verifyNoMoreInteractions(mockSqliteAccountStorageService!);
+      verifyNoMoreInteractions(mockAccountStorageServiceCore!);
     });
 
     test("error encrypting the key", () async {
-      when(mockSqliteAccountStorageService!.removeAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(12));
 
       when(mockCipherService!.encryptKey(
@@ -156,13 +156,13 @@ main() {
       );
 
       expect(result, null);
-      verify(mockSqliteAccountStorageService!.removeAccount(id: details.id));
+      verify(mockAccountStorageServiceCore!.removeAccount(id: details.id));
     });
 
     test('add wallet error', () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.addAccount(
+      when(mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -199,7 +199,7 @@ main() {
 
   group("getSelectedWallet", () {
     test("results", () async {
-      when(mockSqliteAccountStorageService!.getSelectedAccount())
+      when(mockAccountStorageServiceCore!.getSelectedAccount())
           .thenAnswer((_) => Future.value(details));
       expect(details, await accountStorageService!.getSelectedAccount());
     });
@@ -207,7 +207,7 @@ main() {
     test("error", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.getSelectedAccount())
+      when(mockAccountStorageServiceCore!.getSelectedAccount())
           .thenAnswer((_) => Future.error(exception));
       expect(
         () => accountStorageService!.getSelectedAccount(),
@@ -218,16 +218,16 @@ main() {
 
   group("getWallet", () {
     test("results", () async {
-      when(mockSqliteAccountStorageService!.getAccount(id: anyNamed('id')))
+      when(mockAccountStorageServiceCore!.getAccount(id: anyNamed('id')))
           .thenAnswer((_) => Future.value(details));
       expect(details, await accountStorageService!.getAccount("AB"));
-      verify(mockSqliteAccountStorageService!.getAccount(id: "AB"));
+      verify(mockAccountStorageServiceCore!.getAccount(id: "AB"));
     });
 
     test("error", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.getAccount(id: anyNamed('id')))
+      when(mockAccountStorageServiceCore!.getAccount(id: anyNamed('id')))
           .thenAnswer((_) => Future.error(exception));
       expect(
         () => accountStorageService!.getAccount('AB'),
@@ -238,16 +238,16 @@ main() {
 
   group("getWallets", () {
     test("results", () async {
-      when(mockSqliteAccountStorageService!.getAccounts())
+      when(mockAccountStorageServiceCore!.getAccounts())
           .thenAnswer((_) => Future.value([details, details2]));
       expect([details, details2], await accountStorageService!.getAccounts());
-      verify(mockSqliteAccountStorageService!.getAccounts());
+      verify(mockAccountStorageServiceCore!.getAccounts());
     });
 
     test("error", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.getAccounts())
+      when(mockAccountStorageServiceCore!.getAccounts())
           .thenAnswer((_) => Future.error(exception));
       expect(
         () => accountStorageService!.getAccounts(),
@@ -299,7 +299,7 @@ main() {
         (_) => Future.value(true),
       );
 
-      when(mockSqliteAccountStorageService!.removeAllAccounts())
+      when(mockAccountStorageServiceCore!.removeAllAccounts())
           .thenAnswer((_) => Future.value(4));
     });
 
@@ -311,7 +311,7 @@ main() {
     test("function calls", () async {
       await accountStorageService!.removeAllAccounts();
       verify(mockCipherService!.resetKeys());
-      verify(mockSqliteAccountStorageService!.removeAllAccounts());
+      verify(mockAccountStorageServiceCore!.removeAllAccounts());
     });
 
     test("error during cipher reset", () async {
@@ -329,7 +329,7 @@ main() {
     test("error during remove wallets", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.removeAllAccounts())
+      when(mockAccountStorageServiceCore!.removeAllAccounts())
           .thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -345,7 +345,7 @@ main() {
         (_) => Future.value(true),
       );
 
-      when(mockSqliteAccountStorageService!.removeAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(4));
     });
 
@@ -366,7 +366,7 @@ main() {
 
         verify(mockCipherService!.removeKey(id: keyId));
       }
-      verify(mockSqliteAccountStorageService!.removeAccount(id: "AB"));
+      verify(mockAccountStorageServiceCore!.removeAccount(id: "AB"));
     });
 
     test("error during cipher reset", () async {
@@ -384,7 +384,7 @@ main() {
     test("error during remove wallets", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.removeAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -396,7 +396,7 @@ main() {
 
   group("renameWallet", () {
     test("results", () async {
-      when(mockSqliteAccountStorageService!
+      when(mockAccountStorageServiceCore!
               .renameAccount(id: anyNamed("id"), name: anyNamed("name")))
           .thenAnswer((realInvocation) => Future.value(details));
 
@@ -407,20 +407,20 @@ main() {
     });
 
     test("function calls", () async {
-      when(mockSqliteAccountStorageService!
+      when(mockAccountStorageServiceCore!
               .renameAccount(id: anyNamed("id"), name: anyNamed("name")))
           .thenAnswer((realInvocation) => Future.value(details));
 
       await accountStorageService!.renameAccount(id: "AB", name: "NewName");
 
-      verify(mockSqliteAccountStorageService!
+      verify(mockAccountStorageServiceCore!
           .renameAccount(id: "AB", name: "NewName"));
     });
 
     test("error during cipher reset", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!
+      when(mockAccountStorageServiceCore!
               .renameAccount(id: anyNamed("id"), name: anyNamed("name")))
           .thenAnswer((_) => Future.error(exception));
 
@@ -433,7 +433,7 @@ main() {
 
   group("selectWallet", () {
     setUp(() {
-      when(mockSqliteAccountStorageService!.selectAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.selectAccount(id: anyNamed("id")))
           .thenAnswer(
         (_) => Future.value(details),
       );
@@ -446,13 +446,13 @@ main() {
 
     test("function calls", () async {
       await accountStorageService!.selectAccount(id: "AB");
-      verify(mockSqliteAccountStorageService!.selectAccount(id: "AB"));
+      verify(mockAccountStorageServiceCore!.selectAccount(id: "AB"));
     });
 
     test("error during cipher reset", () async {
       final exception = Exception("A");
 
-      when(mockSqliteAccountStorageService!.selectAccount(id: anyNamed("id")))
+      when(mockAccountStorageServiceCore!.selectAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
