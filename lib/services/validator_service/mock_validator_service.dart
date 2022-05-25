@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
+import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
@@ -72,13 +73,41 @@ class MockValidatorService extends ValidatorService {
   @override
   Future<DetailedValidator> getDetailedValidator(
     Coin coin,
-    String provenanceAddress,
+    String validatorAddress,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
-    return _getDetailedValidator(provenanceAddress);
+    return _getDetailedValidator(validatorAddress);
   }
 
-  DetailedValidator _getDetailedValidator(String provenanceAddress) {
+  @override
+  Future<Commission> getValidatorCommission(
+    Coin coin,
+    String validatorAddress,
+  ) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return _getValidatorCommission();
+  }
+
+  Commission _getValidatorCommission() {
+    return Commission.fake(
+        bondedTokensCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        bondedTokensDenom: 'nhash',
+        selfBondedCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        selfBondedDenom: 'nhash',
+        delegatorBondedCount:
+            faker.randomGenerator.fromCharSet('0123456789', 20),
+        delegatorBondedDenom: 'nhash',
+        delegatorCount: faker.randomGenerator.integer(20, min: 2),
+        totalShares: faker.randomGenerator.fromCharSet('0123456789', 20),
+        commissionRewardsAmount:
+            faker.randomGenerator.fromCharSet('0123456789', 20),
+        commissionRewardsDenom: 'nhash',
+        commissionRate: faker.randomGenerator.decimal().toString(),
+        commissionMaxRate: faker.randomGenerator.decimal().toString(),
+        commissionMaxChangeRate: faker.randomGenerator.decimal().toString());
+  }
+
+  DetailedValidator _getDetailedValidator(String validatorAddress) {
     return DetailedValidator.fake(
       blockCount: 0,
       blockTotal: faker.randomGenerator.integer(9999, min: 1),
@@ -89,7 +118,7 @@ class MockValidatorService extends ValidatorService {
           faker.randomGenerator.boolean() ? "" : faker.company.position(),
       identity: "",
       moniker: _getMoniker(),
-      operatorAddress: provenanceAddress,
+      operatorAddress: validatorAddress,
       ownerAddress:
           faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
       siteUrl: "",
