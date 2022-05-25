@@ -2,6 +2,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -34,6 +35,13 @@ abstract class ValidatorService {
   Future<List<AbbreviatedValidator>> getAbbreviatedValidators(
     Coin coin,
     int pageNumber,
+  ) {
+    throw Strings.notImplementedMessage;
+  }
+
+  Future<DetailedValidator> getDetailedValidator(
+    Coin coin,
+    String provenanceAddress,
   ) {
     throw Strings.notImplementedMessage;
   }
