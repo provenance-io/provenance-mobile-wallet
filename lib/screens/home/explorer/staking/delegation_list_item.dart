@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking/staking_details_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/util/strings.dart';
