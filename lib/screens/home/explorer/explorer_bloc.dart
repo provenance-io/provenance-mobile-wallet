@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -11,7 +11,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ExplorerBloc extends Disposable {
+class ExplorerBloc extends PwPagingCache {
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
@@ -31,7 +31,8 @@ class ExplorerBloc extends Disposable {
 
   ExplorerBloc({
     required AccountDetails accountDetails,
-  }) : _accountDetails = accountDetails;
+  })  : _accountDetails = accountDetails,
+        super(30);
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
   ValueStream<bool> get isLoading => _isLoading;
@@ -157,28 +158,10 @@ class ExplorerBloc extends Disposable {
     }
   }
 
-  Future<List<T>> _loadMore<T>(
-      List<T> oldList,
-      BehaviorSubject<int> pages,
-      BehaviorSubject<bool> isLoading,
-      Future<List<T>> Function() function) async {
-    if (pages.value * 30 > oldList.length) {
-      return oldList;
-    }
-    pages.value++;
-    isLoading.value = true;
-    final newList = await function();
-
-    if (newList.isNotEmpty) {
-      oldList.addAll(newList);
-    }
-    return oldList;
-  }
-
   Future<void> loadAdditionalDelegates() async {
     var oldDetails = _stakingDetails.value;
 
-    final delegates = await _loadMore(
+    final delegates = await loadMore(
         oldDetails.delegates,
         _delegationPages,
         _isLoadingDelegations,
@@ -205,7 +188,7 @@ class ExplorerBloc extends Disposable {
   Future<void> loadAdditionalValidators() async {
     var oldDetails = _stakingDetails.value;
 
-    final validators = await _loadMore(
+    final validators = await loadMore(
         oldDetails.validators,
         _validatorPages,
         _isLoadingValidators,
