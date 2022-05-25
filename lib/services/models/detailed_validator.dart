@@ -82,4 +82,10 @@ class DetailedValidator {
         ? DateFormat.yMMMd('en_US').add_Hms().format(jailedUntil!)
         : "";
   }
+
+  String get formattedVotingPower {
+    return votingPowerCount != null && votingPowerCount != null
+        ? "${((votingPowerCount! / votingPowerTotal!) * 100).toStringAsFixed(2)}%"
+        : "";
+  }
 }
