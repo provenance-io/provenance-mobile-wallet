@@ -37,6 +37,7 @@ dependencies:
   mobile_scanner: ^1.1.0
   package_info_plus: ^1.4.2
   path:
+  path_provider: ^2.0.10
   pretty_json: ^2.0.0
   prov_wallet_flutter:
     path: packages/prov_wallet_flutter
@@ -46,6 +47,8 @@ dependencies:
       ref: develop
   qr_flutter: ^4.0.0
   rxdart: ^0.27.3
+  sembast: ^3.2.0
+  sembast_web: ^2.0.1+1
   shared_preferences: ^2.0.6
   sqflite: ^2.0.2
   uni_links: ^0.5.1
