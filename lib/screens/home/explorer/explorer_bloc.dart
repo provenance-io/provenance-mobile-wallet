@@ -12,6 +12,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ExplorerBloc extends Disposable {
+  static const _itemCount = 30;
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
@@ -34,14 +35,18 @@ class ExplorerBloc extends Disposable {
   }) : _accountDetails = accountDetails;
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
+  ValueStream<bool> get isLoading => _isLoading;
   ValueStream<bool> get isLoadingValidators => _isLoadingValidators;
   ValueStream<bool> get isLoadingDelegations => _isLoadingDelegations;
 
   @override
   FutureOr onDispose() {
+    _isLoading.close();
     _isLoadingValidators.close();
+    _isLoadingDelegations.close();
     _stakingDetails.close();
     _validatorPages.close();
+    _delegationPages.close();
   }
 
   Future<void> load({bool showLoading = true}) async {
@@ -96,24 +101,29 @@ class ExplorerBloc extends Disposable {
       return;
     }
 
+    _isLoading.tryAdd(true);
+
     _delegationPages.value = 1;
+    try {
+      final delegations = await _validatorService.getDelegations(
+          _accountDetails.coin,
+          _accountDetails.address,
+          _delegationPages.value,
+          state);
 
-    final delegations = await _validatorService.getDelegations(
-        _accountDetails.coin,
-        _accountDetails.address,
-        _delegationPages.value,
-        state);
-
-    _stakingDetails.tryAdd(
-      StakingDetails(
-        abbreviatedValidators: _abbreviatedValidators,
-        delegates: delegations,
-        validators: oldDetails.validators,
-        address: oldDetails.address,
-        selectedState: state,
-        selectedStatus: oldDetails.selectedStatus,
-      ),
-    );
+      _stakingDetails.tryAdd(
+        StakingDetails(
+          abbreviatedValidators: _abbreviatedValidators,
+          delegates: delegations,
+          validators: oldDetails.validators,
+          address: oldDetails.address,
+          selectedState: state,
+          selectedStatus: oldDetails.selectedStatus,
+        ),
+      );
+    } finally {
+      _isLoading.tryAdd(false);
+    }
   }
 
   Future<void> updateStatus(ValidatorStatus status) async {
@@ -123,24 +133,29 @@ class ExplorerBloc extends Disposable {
       return;
     }
 
+    _isLoading.tryAdd(true);
+
     _validatorPages.value = 1;
+    try {
+      final validators = await _validatorService.getRecentValidators(
+        _accountDetails.coin,
+        _validatorPages.value,
+        status,
+      );
 
-    final validators = await _validatorService.getRecentValidators(
-      _accountDetails.coin,
-      _validatorPages.value,
-      status,
-    );
-
-    _stakingDetails.tryAdd(
-      StakingDetails(
-        abbreviatedValidators: _abbreviatedValidators,
-        delegates: oldDetails.delegates,
-        validators: validators,
-        address: oldDetails.address,
-        selectedState: oldDetails.selectedState,
-        selectedStatus: status,
-      ),
-    );
+      _stakingDetails.tryAdd(
+        StakingDetails(
+          abbreviatedValidators: _abbreviatedValidators,
+          delegates: oldDetails.delegates,
+          validators: validators,
+          address: oldDetails.address,
+          selectedState: oldDetails.selectedState,
+          selectedStatus: status,
+        ),
+      );
+    } finally {
+      _isLoading.tryAdd(false);
+    }
   }
 
   Future<List<T>> _loadMore<T>(
@@ -148,7 +163,7 @@ class ExplorerBloc extends Disposable {
       BehaviorSubject<int> pages,
       BehaviorSubject<bool> isLoading,
       Future<List<T>> Function() function) async {
-    if (pages.value * 30 > oldList.length) {
+    if (pages.value * _itemCount > oldList.length) {
       return oldList;
     }
     pages.value++;
