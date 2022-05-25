@@ -31,7 +31,7 @@ class RecentValidatorDto {
   final String? status;
   final String? imgUrl;
   final String? hr24Change;
-  final int? uptime;
+  final double? uptime;
 
   // ignore: member-ordering
   factory RecentValidatorDto.fromJson(Map<String, dynamic> json) =>

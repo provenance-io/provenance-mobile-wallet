@@ -252,8 +252,12 @@ class _DashboardState extends State<Dashboard> {
                       height: 20,
                       color: Theme.of(context).colorScheme.neutralNeutral,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(ExplorerScreen().route());
+                    onPressed: () async {
+                      final account =
+                          await get<AccountService>().getSelectedAccount();
+                      Navigator.of(context).push(ExplorerScreen(
+                        accountDetails: account!,
+                      ).route());
                     },
                   ),
                 ],

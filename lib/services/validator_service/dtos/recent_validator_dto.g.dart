@@ -25,7 +25,7 @@ RecentValidatorDto _$RecentValidatorDtoFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String?,
       imgUrl: json['imgUrl'] as String?,
       hr24Change: json['hr24Change'] as String?,
-      uptime: json['uptime'] as int?,
+      uptime: (json['uptime'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$RecentValidatorDtoToJson(RecentValidatorDto instance) =>

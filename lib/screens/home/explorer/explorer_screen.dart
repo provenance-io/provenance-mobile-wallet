@@ -1,13 +1,19 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
+import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ExplorerScreen extends StatefulWidget {
   const ExplorerScreen({
     Key? key,
+    required this.accountDetails,
   }) : super(key: key);
 
+  final AccountDetails accountDetails;
   @override
   State<StatefulWidget> createState() => HomeScreenState();
 }
@@ -23,6 +29,7 @@ class HomeScreenState extends State<ExplorerScreen>
     RouterObserver.instance.routeObserver.unsubscribe(this);
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
+    get.unregister<ExplorerBloc>();
 
     super.dispose();
   }
@@ -39,6 +46,9 @@ class HomeScreenState extends State<ExplorerScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance.addObserver(this);
+    final bloc = ExplorerBloc(accountDetails: widget.accountDetails);
+    get.registerSingleton<ExplorerBloc>(bloc);
+    bloc.load();
 
     super.initState();
   }
@@ -91,9 +101,7 @@ class HomeScreenState extends State<ExplorerScreen>
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: const [
-                  Center(
-                    child: PwText(Strings.staking),
-                  ),
+                  StakingTab(),
                   Center(
                     child: PwText(Strings.proposals),
                   ),

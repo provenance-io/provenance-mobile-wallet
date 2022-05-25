@@ -7,13 +7,15 @@ class ProvenanceValidator {
         assert(dto.addressId != null),
         assert(dto.consensusAddress != null),
         assert(dto.commission != null),
+        assert(num.tryParse(dto.commission!) != null),
         assert(dto.delegators != null),
         assert(dto.status != null),
         assert(dto.uptime != null),
         moniker = dto.moniker!,
         addressId = dto.addressId!,
         consensusAddress = dto.consensusAddress!,
-        commission = dto.commission!,
+        commission =
+            '${(num.tryParse(dto.commission!)! * 100).toStringAsFixed(0)}%',
         delegators = dto.delegators!,
         status = dto.status!,
         uptime = dto.uptime!,
@@ -58,5 +60,5 @@ class ProvenanceValidator {
   final String status;
   final String? imgUrl;
   final String? hr24Change;
-  final int uptime;
+  final double uptime;
 }
