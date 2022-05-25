@@ -12,6 +12,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ExplorerBloc extends Disposable {
+  static const _itemCount = 30;
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
@@ -162,7 +163,7 @@ class ExplorerBloc extends Disposable {
       BehaviorSubject<int> pages,
       BehaviorSubject<bool> isLoading,
       Future<List<T>> Function() function) async {
-    if (pages.value * 30 > oldList.length) {
+    if (pages.value * _itemCount > oldList.length) {
       return oldList;
     }
     pages.value++;
