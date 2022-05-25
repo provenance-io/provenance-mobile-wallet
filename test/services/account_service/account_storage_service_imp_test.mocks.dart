@@ -8,11 +8,11 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i8;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
 import 'package:prov_wallet_flutter/src/cipher_service_error.dart' as _i7;
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
+    as _i2;
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart'
     as _i5;
 import 'package:provenance_wallet/services/models/account_details.dart' as _i4;
-import 'package:provenance_wallet/services/sqlite_account_storage_service.dart'
-    as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -24,15 +24,41 @@ import 'package:provenance_wallet/services/sqlite_account_storage_service.dart'
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-/// A class which mocks [SqliteAccountStorageService].
+/// A class which mocks [AccountStorageServiceCore].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSqliteAccountStorageService extends _i1.Mock
-    implements _i2.SqliteAccountStorageService {
-  MockSqliteAccountStorageService() {
+class MockAccountStorageServiceCore extends _i1.Mock
+    implements _i2.AccountStorageServiceCore {
+  MockAccountStorageServiceCore() {
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  _i3.Future<int> getVersion() =>
+      (super.noSuchMethod(Invocation.method(#getVersion, []),
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
+  @override
+  _i3.Future<_i4.AccountDetails?> addAccount(
+          {String? name,
+          List<_i5.PublicKeyData>? publicKeys,
+          String? selectedChainId,
+          _i2.AccountKind? kind = _i2.AccountKind.single,
+          _i2.AccountStatus? status = _i2.AccountStatus.ready}) =>
+      (super.noSuchMethod(
+              Invocation.method(#addAccount, [], {
+                #name: name,
+                #publicKeys: publicKeys,
+                #selectedChainId: selectedChainId,
+                #kind: kind,
+                #status: status
+              }),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
+  @override
+  _i3.Future<_i4.AccountDetails?> getAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#getAccount, [], {#id: id}),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
   @override
   _i3.Future<List<_i4.AccountDetails>> getAccounts() => (super.noSuchMethod(
           Invocation.method(#getAccounts, []),
@@ -40,43 +66,8 @@ class MockSqliteAccountStorageService extends _i1.Mock
               Future<List<_i4.AccountDetails>>.value(<_i4.AccountDetails>[]))
       as _i3.Future<List<_i4.AccountDetails>>);
   @override
-  _i3.Future<_i4.AccountDetails?> getAccount({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#getAccount, [], {#id: id}),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
   _i3.Future<_i4.AccountDetails?> getSelectedAccount() =>
       (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
-  _i3.Future<_i4.AccountDetails?> selectAccount({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
-  _i3.Future<_i4.AccountDetails?> renameAccount({String? id, String? name}) =>
-      (super.noSuchMethod(
-              Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
-  _i3.Future<_i4.AccountDetails?> setChainId({String? id, String? chainId}) =>
-      (super.noSuchMethod(
-              Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
-  _i3.Future<_i4.AccountDetails?> addAccount(
-          {String? name,
-          List<_i5.PublicKeyData>? publicKeys,
-          String? selectedChainId}) =>
-      (super.noSuchMethod(
-              Invocation.method(#addAccount, [], {
-                #name: name,
-                #publicKeys: publicKeys,
-                #selectedChainId: selectedChainId
-              }),
               returnValue: Future<_i4.AccountDetails?>.value())
           as _i3.Future<_i4.AccountDetails?>);
   @override
@@ -87,6 +78,30 @@ class MockSqliteAccountStorageService extends _i1.Mock
   _i3.Future<int> removeAllAccounts() =>
       (super.noSuchMethod(Invocation.method(#removeAllAccounts, []),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
+  @override
+  _i3.Future<_i4.AccountDetails?> renameAccount({String? id, String? name}) =>
+      (super.noSuchMethod(
+              Invocation.method(#renameAccount, [], {#id: id, #name: name}),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
+  @override
+  _i3.Future<_i4.AccountDetails?> selectAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
+  @override
+  _i3.Future<_i4.AccountDetails?> setChainId({String? id, String? chainId}) =>
+      (super.noSuchMethod(
+              Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
+  @override
+  _i3.Future<_i4.AccountDetails?> setStatus(
+          {String? id, _i2.AccountStatus? status}) =>
+      (super.noSuchMethod(
+              Invocation.method(#setStatus, [], {#id: id, #status: status}),
+              returnValue: Future<_i4.AccountDetails?>.value())
+          as _i3.Future<_i4.AccountDetails?>);
 }
 
 /// A class which mocks [CipherService].

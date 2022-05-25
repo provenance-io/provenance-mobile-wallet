@@ -1,4 +1,4 @@
 enum AccountStorageServiceKind {
-  sqlite,
+  sembast,
   memory,
 }
