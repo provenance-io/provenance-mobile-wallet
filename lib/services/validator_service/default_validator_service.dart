@@ -30,7 +30,7 @@ class DefaultValidatorService extends ValidatorService
     final client = await getClient(coin);
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/validators/recent?page=$pageNumber&count=30&status=${status.urlRoute}',
+      'https://service-explorer.test.provenance.io/api/v2/validators/recent?page=$pageNumber&count=30&status=${status.name}',
       converter: (json) {
         if (json is String) {
           return <ProvenanceValidator>[];
