@@ -62,6 +62,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                           style: PwTextStyle.bodyBold,
                         ),
                         VerticalSpacer.large(),
+                        // Description, might be empty string.
                         PwText(
                           "Figure's primary testnet validator",
                           style: PwTextStyle.body,
