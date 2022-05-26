@@ -15,7 +15,7 @@ import 'package:rxdart/rxdart.dart';
 
 class StakingDetailsBloc extends Disposable {
   final _validatorDetails =
-      BehaviorSubject.seeded(DetailedValidatorDetails(null, null));
+      BehaviorSubject.seeded(DetailedValidatorDetails(null, null, null));
   final _isLoading = BehaviorSubject.seeded(false);
   final String _validatorAddress;
   final AccountDetails _accountDetails;
@@ -50,6 +50,7 @@ class StakingDetailsBloc extends Disposable {
       _validatorDetails.tryAdd(DetailedValidatorDetails(
         validator,
         commission,
+        _selectedDelegation,
       ));
     } finally {
       _isLoading.tryAdd(false);
@@ -87,8 +88,10 @@ class DetailedValidatorDetails {
   DetailedValidatorDetails(
     this.validator,
     this.commission,
+    this.delegation,
   );
 
+  final Delegation? delegation;
   final DetailedValidator? validator;
   final Commission? commission;
 }

@@ -28,10 +28,10 @@ class ValidatorListItem extends StatelessWidget {
             DelegationState.bonded == stakingDetails.selectedState);
         Navigator.of(context).push(
           StakingDetailsScreen(
-                  validatorAddress: item.addressId,
-                  details: account,
-                  selectedDelegation: delegation)
-              .route(),
+            validatorAddress: item.addressId,
+            details: account,
+            selectedDelegation: delegation,
+          ).route(),
         );
       },
       child: Padding(

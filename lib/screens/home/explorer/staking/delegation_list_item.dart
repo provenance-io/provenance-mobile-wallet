@@ -32,10 +32,10 @@ class DelegationListItem extends StatelessWidget {
                 : null;
         Navigator.of(context).push(
           StakingDetailsScreen(
-                  validatorAddress: validator.address,
-                  details: account,
-                  selectedDelegation: delegation)
-              .route(),
+            validatorAddress: validator.address,
+            details: account,
+            selectedDelegation: delegation,
+          ).route(),
         );
       },
       child: Padding(

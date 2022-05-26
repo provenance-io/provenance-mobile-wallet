@@ -17,7 +17,7 @@ class StakingDetailsScreen extends StatefulWidget {
     Key? key,
     required this.validatorAddress,
     required this.details,
-    this.selectedDelegation,
+    required this.selectedDelegation,
   }) : super(key: key);
 
   final String validatorAddress;
