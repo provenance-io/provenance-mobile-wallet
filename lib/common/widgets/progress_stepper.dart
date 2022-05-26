@@ -5,7 +5,7 @@ const _kProgressStepperSize = 3.0;
 class ProgressStepper extends StatelessWidget implements PreferredSizeWidget {
   const ProgressStepper(
     this.currentStep,
-    this.numberOfSteps, {
+    this.totalSteps, {
     Key? key,
     this.padding = const EdgeInsets.only(
       left: 20,
@@ -14,7 +14,7 @@ class ProgressStepper extends StatelessWidget implements PreferredSizeWidget {
     ),
   }) : super(key: key);
 
-  final int numberOfSteps;
+  final int totalSteps;
   final int currentStep;
   final EdgeInsets padding;
 
@@ -38,7 +38,7 @@ class ProgressStepper extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           FractionallySizedBox(
-            widthFactor: currentStep / numberOfSteps,
+            widthFactor: currentStep / totalSteps,
             child: Container(
               height: 3,
               decoration: BoxDecoration(

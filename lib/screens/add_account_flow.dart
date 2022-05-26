@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/account_type_screen.dart';
@@ -8,8 +8,9 @@ import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/backup_complete_screen.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_account_name_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_confirm_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_create_or_join_screen.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
@@ -23,20 +24,25 @@ abstract class AddAccountFlowNavigator {
   AddAccountFlowNavigator._();
 
   void showAccountType();
-  void showAccountName();
-  void showRecoverAccount();
-  void showCreatePassphrase();
-  void showRecoveryWords();
-  void showRecoveryWordsConfirm();
-  void showBackupComplete();
-  void showCreatePin();
-  void showConfirmPin();
-  void showEnableFaceId();
+  void showAccountName(int currentStep, int totalSteps);
+  void showRecoverAccount(int currentStep, int totalSteps);
+  void showCreatePassphrase(int currentStep, int totalSteps);
+  void showRecoveryWords(int currentStep, int totalSteps);
+  void showRecoveryWordsConfirm(int currentStep, int totalSteps);
+  void showBackupComplete(int currentStep, int totalSteps);
+  void showCreatePin(int currentStep, int totalSteps);
+  void showConfirmPin(int currentStep, int totalSteps);
+  void showEnableFaceId(int currentStep, int totalSteps);
   void showAccountSetupConfirmation();
-  void showRecoverPassphraseEntry();
+  void showRecoverPassphraseEntry(int currentStep, int totalSteps);
   void showMultiSigCreateOrJoin();
-  void showMultiSigConnect();
-  void showMultiSigAccountName();
+  void showMultiSigConnect(int currentStep, int totalSteps);
+  void showMultiSigAccountName(int currentStep, int totalSteps);
+  void showMultiSigCosigners(FieldMode mode,
+      [int? currentStep, int? totalSteps]);
+  void showMultiSigSignatures(FieldMode mode,
+      [int? currentStep, int? totalSteps]);
+  void showMultiSigConfirm(int currentStep, int totalSteps);
   void endFlow();
 }
 
@@ -54,15 +60,19 @@ class AddAccountFlow extends FlowBase {
 
 class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
     implements AddAccountFlowNavigator {
+  late final AddAccountFlowBloc _bloc;
+
   @override
   void initState() {
     super.initState();
 
+    _bloc = AddAccountFlowBloc(
+      navigator: this,
+      origin: widget.origin,
+    );
+
     get.registerSingleton(
-      AddAccountFlowBloc(
-        navigator: this,
-        origin: widget.origin,
-      ),
+      _bloc,
     );
   }
 
@@ -77,18 +87,35 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   Widget createStartPage() => AccountTypeScreen();
 
   @override
-  void showAccountName() {
-    showPage((context) => AccountNameScreen());
+  void showAccountName(int currentStep, int totalSteps) {
+    showPage(
+      (context) => AccountNameScreen.single(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+        mode: FieldMode.initial,
+        leadingIcon: PwIcons.close,
+      ),
+    );
   }
 
   @override
-  void showCreatePassphrase() {
-    showPage((context) => CreatePassphraseScreen());
+  void showCreatePassphrase(int currentStep, int totalSteps) {
+    showPage(
+      (context) => CreatePassphraseScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showRecoverAccount() {
-    showPage((context) => RecoverAccountScreen());
+  void showRecoverAccount(int currentStep, int totalSteps) {
+    showPage(
+      (context) => RecoverAccountScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
@@ -102,33 +129,63 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  void showRecoveryWords() {
-    showPage((context) => RecoveryWordsScreen());
+  void showRecoveryWords(int currentStep, int totalSteps) {
+    showPage(
+      (context) => RecoveryWordsScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showRecoveryWordsConfirm() {
-    showPage((context) => RecoveryWordsConfirmScreen());
+  void showRecoveryWordsConfirm(int currentStep, int totalSteps) {
+    showPage(
+      (context) => RecoveryWordsConfirmScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showBackupComplete() {
-    showPage((context) => BackupCompleteScreen());
+  void showBackupComplete(int currentStep, int totalSteps) {
+    showPage(
+      (context) => BackupCompleteScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showCreatePin() {
-    showPage((context) => CreatePin());
+  void showCreatePin(int currentStep, int totalSteps) {
+    showPage(
+      (context) => CreatePin(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showConfirmPin() {
-    showPage((context) => ConfirmPin());
+  void showConfirmPin(int currentStep, int totalSteps) {
+    showPage(
+      (context) => ConfirmPin(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showEnableFaceId() {
-    showPage((context) => EnableFaceIdScreen());
+  void showEnableFaceId(int currentStep, int totalSteps) {
+    showPage(
+      (context) => EnableFaceIdScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
@@ -137,13 +194,25 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  void showRecoverPassphraseEntry() {
-    showPage((context) => RecoverPassphraseEntryScreen());
+  void showRecoverPassphraseEntry(int currentStep, int totalSteps) {
+    showPage(
+      (context) => RecoverPassphraseEntryScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 
   @override
-  void showMultiSigAccountName() {
-    showPage((context) => MultiSigAccountNameScreen());
+  void showMultiSigAccountName(int currentStep, int totalSteps) {
+    showPage(
+      (context) => AccountNameScreen.multi(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+        mode: FieldMode.initial,
+        leadingIcon: PwIcons.back,
+      ),
+    );
   }
 
   @override
@@ -152,7 +221,46 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  void showMultiSigConnect() {
-    showPage((context) => MultiSigConnectScreen());
+  void showMultiSigConnect(int currentStep, int totalSteps) {
+    showPage(
+      (context) => MultiSigConnectScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
+  }
+
+  @override
+  void showMultiSigCosigners(FieldMode mode,
+      [int? currentStep, int? totalSteps]) {
+    showPage(
+      (context) => MultiSigCountScreen.cosigners(
+        mode: mode,
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
+  }
+
+  @override
+  void showMultiSigSignatures(FieldMode mode,
+      [int? currentStep, int? totalSteps]) {
+    showPage(
+      (context) => MultiSigCountScreen.signatures(
+        mode: mode,
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
+  }
+
+  @override
+  void showMultiSigConfirm(int currentStep, int totalSteps) {
+    showPage(
+      (context) => MultiSigConfirmScreen(
+        currentStep: currentStep,
+        totalSteps: totalSteps,
+      ),
+    );
   }
 }

@@ -3,12 +3,20 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AccountNameScreen extends StatefulWidget {
   const AccountNameScreen({
+    required this.mode,
+    required this.message,
+    required this.leadingIcon,
+    required this.name,
+    required this.submit,
+    required this.popOnSubmit,
+    this.currentStep,
+    this.totalSteps,
     Key? key,
   }) : super(key: key);
 
@@ -17,14 +25,78 @@ class AccountNameScreen extends StatefulWidget {
   static final keyContinueButton =
       ValueKey('$AccountNameScreen.continue_button');
 
+  factory AccountNameScreen.single({
+    required FieldMode mode,
+    required String leadingIcon,
+    int? currentStep,
+    int? totalSteps,
+    Key? key,
+  }) {
+    final bloc = get<AddAccountFlowBloc>();
+
+    return AccountNameScreen(
+      mode: mode,
+      leadingIcon: leadingIcon,
+      message: Strings.accountNameMessage,
+      name: bloc.name,
+      submit: bloc.submitAccountName,
+      popOnSubmit: false,
+      currentStep: currentStep,
+      totalSteps: totalSteps,
+    );
+  }
+
+  factory AccountNameScreen.multi({
+    required FieldMode mode,
+    required String leadingIcon,
+    int? currentStep,
+    int? totalSteps,
+    Key? key,
+  }) {
+    final bloc = get<AddAccountFlowBloc>();
+
+    bool pop;
+    void Function(String name) submit;
+
+    switch (mode) {
+      case FieldMode.initial:
+        pop = false;
+        submit = bloc.submitMultiSigAccountName;
+        break;
+      case FieldMode.edit:
+        pop = true;
+        submit = bloc.setMultiSigName;
+        break;
+    }
+
+    return AccountNameScreen(
+      mode: mode,
+      leadingIcon: leadingIcon,
+      message: Strings.accountNameMultiSigMessage,
+      name: bloc.multiSigName,
+      submit: submit,
+      popOnSubmit: pop,
+      currentStep: currentStep,
+      totalSteps: totalSteps,
+    );
+  }
+
+  final int? currentStep;
+  final int? totalSteps;
+  final FieldMode mode;
+  final String leadingIcon;
+  final String message;
+  final ValueStream<String> name;
+  final void Function(String name) submit;
+  final bool popOnSubmit;
+
   @override
   State<AccountNameScreen> createState() => _AccountNameScreenState();
 }
 
 class _AccountNameScreenState extends State<AccountNameScreen> {
-  static const _screen = AddAccountScreen.accountName;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _bloc = get<AddAccountFlowBloc>();
+  final _subscriptions = CompositeSubscription();
 
   late final TextEditingController _textEditingController;
 
@@ -33,10 +105,14 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
     super.initState();
 
     _textEditingController = TextEditingController();
+    widget.name.listen((e) {
+      _textEditingController.text = e;
+    }).addTo(_subscriptions);
   }
 
   @override
   void dispose() {
+    _subscriptions.dispose();
     _textEditingController.dispose();
 
     super.dispose();
@@ -44,15 +120,27 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String buttonLabel;
+
+    switch (widget.mode) {
+      case FieldMode.initial:
+        buttonLabel = Strings.continueName;
+        break;
+      case FieldMode.edit:
+        buttonLabel = Strings.multiSigSaveButton;
+        break;
+    }
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
-        leadingIcon:
-            _bloc.origin == AddAccountOrigin.accounts ? PwIcons.back : null,
-        bottom: ProgressStepper(
-          _bloc.getCurrentStep(_screen),
-          _bloc.totalSteps,
-        ),
+        leadingIcon: widget.leadingIcon,
+        bottom: (widget.currentStep != null && widget.totalSteps != null)
+            ? ProgressStepper(
+                widget.currentStep!,
+                widget.totalSteps!,
+              )
+            : null,
       ),
       body: Form(
         key: _formKey,
@@ -63,19 +151,11 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
               children: [
                 VerticalSpacer.largeX3(),
                 Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: PwText(
-                    Strings.nameYourAccountText,
-                    style: PwTextStyle.body,
-                    textAlign: TextAlign.center,
-                    color: PwColor.neutralNeutral,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.xxLarge,
                   ),
-                ),
-                VerticalSpacer.small(),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwText(
-                    Strings.infoIsStoredLocallyText,
+                    widget.message,
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
                     color: PwColor.neutralNeutral,
@@ -84,8 +164,8 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                 VerticalSpacer.xxLarge(),
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
+                    left: Spacing.xxLarge,
+                    right: Spacing.xxLarge,
                     bottom: Spacing.small,
                   ),
                   child: PwTextFormField(
@@ -109,7 +189,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwButton(
                     child: PwText(
-                      Strings.continueName,
+                      buttonLabel,
                       key: AccountNameScreen.keyContinueButton,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
@@ -128,7 +208,11 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() == true) {
-      get<AddAccountFlowBloc>().submitAccountName(_textEditingController.text);
+      widget.submit(_textEditingController.text);
+
+      if (widget.popOnSubmit) {
+        Navigator.of(context).pop();
+      }
     }
   }
 }

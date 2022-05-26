@@ -8,10 +8,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class EnableFaceIdScreen extends StatelessWidget {
   EnableFaceIdScreen({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
-  static const _screen = AddAccountScreen.enableFaceId;
+  final int currentStep;
+  final int totalSteps;
 
   final _bloc = get<AddAccountFlowBloc>();
 
@@ -77,8 +80,8 @@ class EnableFaceIdScreen extends StatelessWidget {
         title: header,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _bloc.getCurrentStep(_screen),
-          _bloc.totalSteps,
+          currentStep,
+          totalSteps,
         ),
       ),
       body: Container(

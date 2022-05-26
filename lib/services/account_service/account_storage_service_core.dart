@@ -1,11 +1,6 @@
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
-enum AccountStatus {
-  pending,
-  ready,
-}
-
 enum AccountKind {
   single,
   multi,
@@ -21,7 +16,6 @@ abstract class AccountStorageServiceCore {
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
     AccountKind kind = AccountKind.single,
-    AccountStatus status = AccountStatus.ready,
   });
 
   Future<AccountDetails?> getAccount({required String id});
@@ -48,10 +42,5 @@ abstract class AccountStorageServiceCore {
   Future<AccountDetails?> setChainId({
     required String id,
     required String chainId,
-  });
-
-  Future<AccountDetails?> setStatus({
-    required String id,
-    required AccountStatus status,
   });
 }

@@ -5,21 +5,26 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigConnectScreen extends StatefulWidget {
   const MultiSigConnectScreen({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   State<MultiSigConnectScreen> createState() => _MultiSigConnectScreenState();
 }
 
 class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
-  static const _screen = AddAccountScreen.multiSigConnect;
   static const _defaultValue = AccountDetails(
     id: '',
     address: '',
@@ -61,8 +66,8 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
         title: Strings.multiSigConnectTitle,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _bloc.getCurrentStep(_screen),
-          _bloc.totalSteps,
+          widget.currentStep,
+          widget.totalSteps,
         ),
       ),
       body: Container(
@@ -130,7 +135,8 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                             final data = snapshot.data;
 
                             if (data != null) {
-                              accounts.addAll(data);
+                              accounts.addAll(data.where((e) =>
+                                  e.kind == AccountKind.single && e.isReady));
                             }
 
                             return PwDropDown<AccountDetails>(
@@ -173,7 +179,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                       focusNode: _focusNext,
                       enabled: _value != _defaultValue,
                       child: PwText(
-                        Strings.multiSigConnectNextButton,
+                        Strings.multiSigNextButton,
                         key: _keyNextButton,
                         style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,

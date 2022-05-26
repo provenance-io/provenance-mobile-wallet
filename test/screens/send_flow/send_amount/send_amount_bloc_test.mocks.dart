@@ -13,15 +13,17 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
     as _i6;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
+    as _i11;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i11;
+    as _i12;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account_details.dart' as _i9;
-import 'package:provenance_wallet/services/models/price.dart' as _i13;
+import 'package:provenance_wallet/services/models/price.dart' as _i14;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i12;
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -116,6 +118,14 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue: Future<_i9.AccountDetails?>.value())
           as _i7.Future<_i9.AccountDetails?>);
   @override
+  _i7.Future<_i9.AccountDetails?> addPendingAccount(
+          {String? name, _i11.AccountKind? kind, _i10.Coin? coin}) =>
+      (super.noSuchMethod(
+              Invocation.method(#addPendingAccount, [],
+                  {#name: name, #kind: kind, #coin: coin}),
+              returnValue: Future<_i9.AccountDetails?>.value())
+          as _i7.Future<_i9.AccountDetails?>);
+  @override
   _i7.Future<_i9.AccountDetails?> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
               returnValue: Future<_i9.AccountDetails?>.value())
@@ -141,16 +151,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i11.TransactionHandler {
+    implements _i12.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Stream<_i11.TransactionResponse> get transaction =>
+  _i7.Stream<_i12.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i11.TransactionResponse>.empty())
-          as _i7.Stream<_i11.TransactionResponse>);
+              returnValue: Stream<_i12.TransactionResponse>.empty())
+          as _i7.Stream<_i12.TransactionResponse>);
   @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
           _i4.TxBody? txBody, _i10.PublicKey? publicKey) =>
@@ -173,18 +183,18 @@ class MockTransactionHandler extends _i1.Mock
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i12.PriceService {
+class MockPriceService extends _i1.Mock implements _i13.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i13.Price>> getAssetPrices(
+  _i7.Future<List<_i14.Price>> getAssetPrices(
           _i10.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
-          as _i7.Future<List<_i13.Price>>);
+              returnValue: Future<List<_i14.Price>>.value(<_i14.Price>[]))
+          as _i7.Future<List<_i14.Price>>);
   @override
   _i7.Future<_i5.HttpClient> getClient(_i10.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),
