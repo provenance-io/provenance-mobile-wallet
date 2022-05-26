@@ -41,10 +41,13 @@ extension StringExtension on String {
         : this;
   }
 
-  String nhashToHash() {
-    return (Decimal.parse(this) / Decimal.fromInt(10).pow(9))
-        .toDecimal(scaleOnInfinitePrecision: 9)
-        .toStringAsFixed(7);
+  String nhashToHash({int? fractionDigits}) {
+    final decimal = (Decimal.parse(this) / Decimal.fromInt(10).pow(9))
+        .toDecimal(scaleOnInfinitePrecision: 9);
+    if (fractionDigits != null) {
+      return decimal.toStringAsFixed(fractionDigits);
+    }
+    return decimal.toString();
   }
 
   String formatNumber() {

@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StakingDetailsScreen extends StatefulWidget {
   const StakingDetailsScreen({
@@ -115,7 +116,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             PwText(
-                              validator.status.name,
+                              validator.status.name.capitalize(),
                               style: PwTextStyle.body,
                               color: _bloc.getColor(validator.status),
                             ),
@@ -258,7 +259,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Commission Rate",
                         endChild: PwText(
-                          "100%",
+                          commission.commissionRate,
                         ),
                       ),
                       PwListDivider(
@@ -267,7 +268,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Delegators",
                         endChild: PwText(
-                          "19",
+                          commission.delegatorCount.toString(),
                         ),
                       ),
                       PwListDivider(
@@ -276,7 +277,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Rewards",
                         endChild: PwText(
-                          "1,353,929.9699911 hash",
+                          commission.formattedRewards,
                         ),
                       ),
                       PwListDivider(
@@ -285,7 +286,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Max Change Rate",
                         endChild: PwText(
-                          "100%",
+                          commission.commissionMaxChangeRate,
                         ),
                       ),
                       PwListDivider(
@@ -294,7 +295,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Bonded",
                         endChild: PwText(
-                          "1,460,504,261.0999963 hash",
+                          commission.formattedBondedTokens,
                         ),
                       ),
                       PwListDivider(
@@ -303,7 +304,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Total Shares",
                         endChild: PwText(
-                          "1,460,504,261,099,996,400",
+                          commission.formattedTotalShares,
                         ),
                       ),
                       PwListDivider(
@@ -312,11 +313,34 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       DetailsItem(
                         title: "Commission Rate Range",
                         endChild: PwText(
-                          "0 ~ 100 %",
+                          "0 ~ ${commission.commissionMaxRate}",
                         ),
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
+                      ),
+                      DetailsItem(
+                        title: "Validator Transactions",
+                        endChild: GestureDetector(
+                          onTap: () async {
+                            String url = _bloc.getProvUrl();
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: PwIcon(
+                              PwIcons.newWindow,
+                              color:
+                                  Theme.of(context).colorScheme.neutralNeutral,
+                              size: 20,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   );

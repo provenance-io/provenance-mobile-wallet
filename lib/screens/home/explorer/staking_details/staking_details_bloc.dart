@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_color.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
@@ -63,6 +64,15 @@ class StakingDetailsBloc extends Disposable {
         return PwColor.notice800;
       case ValidatorStatus.jailed:
         return PwColor.error;
+    }
+  }
+
+  String getProvUrl() {
+    switch (_accountDetails.coin) {
+      case Coin.testNet:
+        return 'https://explorer.test.provenance.io/validator/$_validatorAddress';
+      case Coin.mainNet:
+        return 'https://explorer.provenance.io/validator/$_validatorAddress';
     }
   }
 }

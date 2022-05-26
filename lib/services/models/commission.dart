@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/validator_service/dtos/commission_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Commission {
   Commission({required CommissionDto dto})
@@ -56,4 +57,19 @@ class Commission {
   final String commissionRate;
   final String commissionMaxRate;
   final String commissionMaxChangeRate;
+
+  String get formattedTotalShares {
+    return totalShares.split('.')[0].formatNumber();
+  }
+
+  String get formattedBondedTokens {
+    var tokens = bondedTokensCount.nhashToHash(fractionDigits: 7).split('.');
+    return '${tokens[0].formatNumber()}.${tokens[1]} hash';
+  }
+
+  String get formattedRewards {
+    var rewards =
+        commissionRewardsAmount.nhashToHash(fractionDigits: 7).split('.');
+    return '${rewards[0].formatNumber()}.${rewards[1]} hash';
+  }
 }
