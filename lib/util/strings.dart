@@ -1,5 +1,7 @@
 // ignore_for_file: member-ordering
 
+import 'package:decimal/decimal.dart';
+
 extension StringExtension on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${substring(1)}';
@@ -37,6 +39,12 @@ extension StringExtension on String {
     return length > left + dots.length + right
         ? '${substring(0, left)}$dots${substring(length - right)}'
         : this;
+  }
+
+  String convertToHash() {
+    return (Decimal.parse(this) / Decimal.fromInt(10).pow(9))
+        .toDecimal(scaleOnInfinitePrecision: 9)
+        .toString();
   }
 }
 
