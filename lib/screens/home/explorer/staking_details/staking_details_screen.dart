@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StakingDetailsScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PwAppBar(
-          title: "Validator Details",
+          title: Strings.stakingDetailsValidatorDetails,
           leadingIcon: PwIcons.back,
         ),
         body: Stack(
@@ -124,7 +125,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                             Flexible(
                               child: PwButton(
                                 child: PwText(
-                                  "Delegate",
+                                  Strings.stakingDetailsButtonDelegate,
                                   style: PwTextStyle.body,
                                 ),
                                 onPressed: () {
@@ -139,32 +140,34 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItemCopy(
-                        displayTitle: "Operator Address",
+                        displayTitle: Strings.stakingDetailsOperatorAddress,
                         dataToCopy: validator.operatorAddress,
-                        snackBarTitle: "Operator Address Copied",
+                        snackBarTitle:
+                            Strings.stakingDetailsOperatorAddressCopied,
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
                       ),
                       DetailsItemCopy(
-                        displayTitle: "Owner Address",
+                        displayTitle: Strings.stakingDetailsOwnerAddress,
                         dataToCopy: validator.ownerAddress,
-                        snackBarTitle: "Owner Address Copied",
+                        snackBarTitle: Strings.stakingDetailsOwnerAddressCopied,
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
                       ),
                       DetailsItemCopy(
-                        displayTitle: "Withdraw Address",
+                        displayTitle: Strings.stakingDetailsWithdrawAddress,
                         dataToCopy: validator.withdrawalAddress,
-                        snackBarTitle: "Withdraw Address Copied",
+                        snackBarTitle:
+                            Strings.stakingDetailsWithdrawAddressCopied,
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
                       ),
                       if (ValidatorStatus.jailed == validator.status)
                         DetailsItem(
-                          title: "Unbonding Height",
+                          title: Strings.stakingDetailsUnbondingHeight,
                           endChild: PwText(
                             (validator.unbondingHeight ?? 0).toString(),
                             style: PwTextStyle.body,
@@ -177,7 +180,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       if (validator.formattedVotingPower.isNotEmpty &&
                           ValidatorStatus.jailed != validator.status)
                         DetailsItem(
-                          title: "Voting Power",
+                          title: Strings.stakingDetailsVotingPower,
                           endChild: PwText(
                             validator.formattedVotingPower,
                             style: PwTextStyle.body,
@@ -190,7 +193,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         ),
                       if (ValidatorStatus.jailed != validator.status)
                         DetailsItem(
-                          title: "Uptime",
+                          title: Strings.stakingDetailsUptime,
                           endChild: PwText(
                             "${validator.uptime}%",
                             style: PwTextStyle.body,
@@ -202,7 +205,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         ),
                       if (ValidatorStatus.jailed != validator.status)
                         DetailsItem(
-                          title: "Missed Blocks",
+                          title: Strings.stakingDetailsMissedBlocks,
                           endChild: PwText(
                             "${validator.blockCount} in ${validator.blockTotal}",
                             style: PwTextStyle.body,
@@ -214,7 +217,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         ),
                       if (ValidatorStatus.jailed != validator.status)
                         DetailsItem(
-                          title: "Bond Height",
+                          title: Strings.stakingDetailsBondHeight,
                           endChild: PwText(
                             validator.bondHeight.toString(),
                           ),
@@ -224,16 +227,17 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                           indent: Spacing.largeX3,
                         ),
                       DetailsItemCopy(
-                        displayTitle: "Consensus Pubkey",
+                        displayTitle: Strings.stakingDetailsConsensusPubkey,
                         dataToCopy: validator.consensusPubKey,
-                        snackBarTitle: "Consensus Pubkey Copied",
+                        snackBarTitle:
+                            Strings.stakingDetailsConsensusPubkeyCopied,
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
                       ),
                       if (ValidatorStatus.jailed == validator.status)
                         DetailsItem(
-                          title: "Jailed Until",
+                          title: Strings.stakingDetailsJailedUntil,
                           endChild: PwText(
                             validator.formattedJailedUntil,
                             style: PwTextStyle.body,
@@ -249,7 +253,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                           vertical: Spacing.xLarge,
                         ),
                         child: PwText(
-                          "Commission Info",
+                          Strings.stakingDetailsCommissionInfo,
                           style: PwTextStyle.title,
                         ),
                       ),
@@ -257,7 +261,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Commission Rate",
+                        title: Strings.stakingDetailsCommissionRate,
                         endChild: PwText(
                           commission.commissionRate,
                         ),
@@ -266,7 +270,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Delegators",
+                        title: Strings.stakingDetailsDelegators,
                         endChild: PwText(
                           commission.delegatorCount.toString(),
                         ),
@@ -275,7 +279,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Rewards",
+                        title: Strings.stakingDetailsRewards,
                         endChild: PwText(
                           commission.formattedRewards,
                         ),
@@ -284,7 +288,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Max Change Rate",
+                        title: Strings.stakingDetailsMaxChangeRate,
                         endChild: PwText(
                           commission.commissionMaxChangeRate,
                         ),
@@ -293,7 +297,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Bonded",
+                        title: Strings.stakingDetailsBonded,
                         endChild: PwText(
                           commission.formattedBondedTokens,
                         ),
@@ -302,7 +306,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Total Shares",
+                        title: Strings.stakingDetailsTotalShares,
                         endChild: PwText(
                           commission.formattedTotalShares,
                         ),
@@ -311,7 +315,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Commission Rate Range",
+                        title: Strings.stakingDetailsCommissionRateRange,
                         endChild: PwText(
                           "0 ~ ${commission.commissionMaxRate}",
                         ),
@@ -320,7 +324,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         indent: Spacing.largeX3,
                       ),
                       DetailsItem(
-                        title: "Validator Transactions",
+                        title: Strings.stakingDetailsValidatorTransactions,
                         endChild: GestureDetector(
                           onTap: () async {
                             String url = _bloc.getProvUrl();

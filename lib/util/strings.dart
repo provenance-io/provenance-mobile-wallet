@@ -442,4 +442,31 @@ class Strings {
       "Ended: $formattedTime";
   static String displayDenomFormatted(String displayDenom) =>
       "$displayDenom delegated";
+
+  // Staking Details
+  static const stakingDetailsValidatorDetails = "Validator Details";
+  static const stakingDetailsButtonDelegate = "Delegate";
+  static const stakingDetailsOperatorAddress = "Operator Address";
+  static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
+  static const stakingDetailsOwnerAddress = "Owner Address";
+  static const stakingDetailsOwnerAddressCopied = "Owner Address Copied";
+  static const stakingDetailsWithdrawAddress = "Withdraw Address";
+  static const stakingDetailsWithdrawAddressCopied = "Withdraw Address Copied";
+  static const stakingDetailsUnbondingHeight = "Unbonding Height";
+  static const stakingDetailsVotingPower = "Voting Power";
+  static const stakingDetailsUptime = "Uptime";
+  static const stakingDetailsMissedBlocks = "Missed Blocks";
+  static const stakingDetailsBondHeight = "Bond Height";
+  static const stakingDetailsConsensusPubkey = "Consensus Pubkey";
+  static const stakingDetailsConsensusPubkeyCopied = "Consensus Pubkey Copied";
+  static const stakingDetailsJailedUntil = "Jailed Until";
+  static const stakingDetailsCommissionInfo = "Commission Info";
+  static const stakingDetailsCommissionRate = "Commission Rate";
+  static const stakingDetailsDelegators = "Delegators";
+  static const stakingDetailsRewards = "Rewards";
+  static const stakingDetailsMaxChangeRate = "Max Change Rate";
+  static const stakingDetailsBonded = "Bonded";
+  static const stakingDetailsTotalShares = "Total Shares";
+  static const stakingDetailsCommissionRateRange = "Commission Rate Range";
+  static const stakingDetailsValidatorTransactions = "Validator Transactions";
 }
