@@ -27,11 +27,6 @@ class RecoverPassphraseBloc extends Disposable {
     }
   }
 
-  bool isMnemonicComplete() {
-    return textControllers.entries.length == wordsCount &&
-        textControllers.entries.every((e) => e.value.text.isNotEmpty);
-  }
-
   List<String> getCompletedMnemonic() {
     return textControllers.entries.map((e) => e.value.text.trim()).toList();
   }

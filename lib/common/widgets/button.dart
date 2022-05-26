@@ -68,6 +68,7 @@ class PwButton extends StatelessWidget {
     Key? key,
     required this.child,
     this.enabled = true,
+    this.autofocus = false,
     required this.onPressed,
     this.showAlternate = false,
     this.minimumWidth = double.maxFinite,
@@ -96,6 +97,8 @@ class PwButton extends StatelessWidget {
   /// Explicit value instead of setting null to [onPressed]
   final bool enabled;
 
+  final bool autofocus;
+
   /// The callback to invoke when the button is pressed.
   final VoidCallback onPressed;
 
@@ -111,6 +114,7 @@ class PwButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      autofocus: autofocus,
       style: _buttonStyle(context),
       onPressed: enabled ? onPressed : null,
       child: child,

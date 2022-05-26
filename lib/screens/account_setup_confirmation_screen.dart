@@ -66,6 +66,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
                         key: keyContinueButton,
+                        autofocus: true,
                         child: PwText(
                           Strings.continueName,
                           style: PwTextStyle.subhead,
