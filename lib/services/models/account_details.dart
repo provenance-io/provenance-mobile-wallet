@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 
 class AccountDetails with Diagnosticable {
-  AccountDetails({
+  const AccountDetails({
     required this.id,
     required this.address,
     required this.name,

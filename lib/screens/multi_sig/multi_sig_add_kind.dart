@@ -1,0 +1,4 @@
+enum MultiSigAddKind {
+  create,
+  join,
+}

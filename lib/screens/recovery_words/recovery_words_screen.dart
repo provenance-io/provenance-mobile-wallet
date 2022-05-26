@@ -1,28 +1,19 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words/words_table.dart';
-import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsScreen extends StatefulWidget {
-  const RecoveryWordsScreen(
-    this.flowType,
-    this.accountName, {
-    this.currentStep,
-    this.numberOfSteps,
+  const RecoveryWordsScreen({
     Key? key,
   }) : super(key: key);
-
-  final int? currentStep;
-  final int? numberOfSteps;
-  final String accountName;
-  final AccountAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +23,7 @@ class RecoveryWordsScreen extends StatefulWidget {
 
 class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _bloc = get<AddAccountFlowBloc>();
 
   List<String> words = [];
 
@@ -53,8 +45,8 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
         title: Strings.recoveryPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          widget.currentStep ?? 0,
-          widget.numberOfSteps ?? 1,
+          _bloc.getCurrentStep(AddAccountScreen.recoveryWords),
+          _bloc.totalSteps,
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
@@ -145,13 +137,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () {
-                Navigator.of(context).push(RecoveryWordsConfirmScreen(
-                  widget.flowType,
-                  accountName: widget.accountName,
-                  words: words,
-                  currentStep: widget.currentStep ?? 0,
-                  numberOfSteps: widget.numberOfSteps ?? 0,
-                ).route());
+                _bloc.submitRecoveryWords(words);
               },
             ),
           ),

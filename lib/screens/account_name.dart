@@ -1,36 +1,30 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
-import 'package:provenance_wallet/screens/recover_account_screen.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
+import 'package:provenance_wallet/screens/add_account_origin.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountName extends StatefulWidget {
-  const AccountName(
-    this.flowType, {
+  const AccountName({
     Key? key,
-    this.words,
-    required this.currentStep,
-    this.numberOfSteps,
   }) : super(key: key);
 
   static final keyNameTextField = ValueKey('$AccountName.name_text_field');
   static final keyContinueButton = ValueKey('$AccountName.continue_button');
-
-  final List<String>? words;
-  final int currentStep;
-  final int? numberOfSteps;
-  final AccountAddImportType flowType;
 
   @override
   State<AccountName> createState() => _AccountNameState();
 }
 
 class _AccountNameState extends State<AccountName> {
+  static const _screen = AddAccountScreen.accountName;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _bloc = get<AddAccountFlowBloc>();
+
   late final TextEditingController _textEditingController;
 
   @override
@@ -52,13 +46,11 @@ class _AccountNameState extends State<AccountName> {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
-        leadingIcon: widget.flowType == AccountAddImportType.dashboardAdd ||
-                widget.flowType == AccountAddImportType.dashboardRecover
-            ? PwIcons.back
-            : null,
+        leadingIcon:
+            _bloc.origin == AddAccountOrigin.accounts ? PwIcons.back : null,
         bottom: ProgressStepper(
-          widget.currentStep,
-          widget.numberOfSteps ?? 1,
+          _bloc.getCurrentStep(_screen),
+          _bloc.totalSteps,
         ),
       ),
       body: Form(
@@ -117,9 +109,7 @@ class _AccountNameState extends State<AccountName> {
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),
-                onPressed: () {
-                  _submit();
-                },
+                onPressed: _submit,
               ),
             ),
             VerticalSpacer.large(),
@@ -131,27 +121,7 @@ class _AccountNameState extends State<AccountName> {
 
   void _submit() {
     if (_formKey.currentState?.validate() == true) {
-      if (widget.flowType == AccountAddImportType.onBoardingRecover ||
-          widget.flowType == AccountAddImportType.dashboardRecover) {
-        Navigator.of(context).push(
-          RecoverAccountScreen(
-            widget.flowType,
-            _textEditingController.text,
-            currentStep: widget.currentStep + 1,
-            numberOfSteps: widget.numberOfSteps,
-          ).route(),
-        );
-      } else if (widget.flowType == AccountAddImportType.onBoardingAdd ||
-          widget.flowType == AccountAddImportType.dashboardAdd) {
-        Navigator.of(context).push(
-          CreatePassphraseScreen(
-            widget.flowType,
-            _textEditingController.text,
-            currentStep: widget.currentStep + 1,
-            numberOfSteps: widget.numberOfSteps,
-          ).route(),
-        );
-      }
+      get<AddAccountFlowBloc>().submitAccountName(_textEditingController.text);
     }
   }
 }

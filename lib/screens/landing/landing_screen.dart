@@ -1,8 +1,8 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/screens/account_name.dart';
+import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_fundamentals_slide.dart';
@@ -96,34 +96,36 @@ class _LandingScreenState extends State<LandingScreen> {
                   var hasAccount = status != AuthStatus.noAccount;
 
                   return PwPrimaryButton.fromString(
-                    text: hasAccount
-                        ? Strings.continueName
-                        : Strings.createAccount,
+                    text:
+                        hasAccount ? Strings.continueName : Strings.addAccount,
                     onPressed: () {
                       if (hasAccount) {
                         _bloc.doAuth(context);
                       } else {
-                        Navigator.of(context).push(AccountName(
-                          AccountAddImportType.onBoardingAdd,
-                          currentStep: 1,
-                          numberOfSteps: 4,
-                        ).route());
+                        Navigator.of(context).push(
+                          AddAccountFlow(
+                            origin: AddAccountOrigin.landing,
+                          ).route(),
+                        );
                       }
                     },
                   );
                 },
               ),
             ),
-            VerticalSpacer.large(),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: StreamBuilder<AuthStatus>(
-                initialData: authHelper.status.value,
-                stream: authHelper.status,
-                builder: (context, snapshot) {
-                  final status = snapshot.data;
-                  if (status == AuthStatus.noLockScreen) {
-                    return PwPrimaryButton.fromString(
+            StreamBuilder<AuthStatus>(
+              initialData: authHelper.status.value,
+              stream: authHelper.status,
+              builder: (context, snapshot) {
+                final status = snapshot.data;
+                if (status == AuthStatus.noLockScreen) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                      top: Spacing.large,
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: PwPrimaryButton.fromString(
                       text: Strings.refresh,
                       onPressed: () async {
                         ModalLoadingRoute.showLoading('', context);
@@ -131,26 +133,12 @@ class _LandingScreenState extends State<LandingScreen> {
                         await Future.delayed(Duration(milliseconds: 500));
                         ModalLoadingRoute.dismiss(context);
                       },
-                    );
-                  }
-
-                  return PwTextButton(
-                    key: LandingScreen.keyRecoverAccountButton,
-                    child: PwText(
-                      Strings.recoverAccount,
-                      style: PwTextStyle.body,
-                      color: PwColor.neutralNeutral,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(AccountName(
-                        AccountAddImportType.onBoardingRecover,
-                        currentStep: 1,
-                        numberOfSteps: 4,
-                      ).route());
-                    },
                   );
-                },
-              ),
+                }
+
+                return Container();
+              },
             ),
             VerticalSpacer.largeX4(),
           ],

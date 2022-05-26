@@ -1,9 +1,9 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/account_name.dart';
+import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -115,36 +115,17 @@ class AccountsScreenState extends State<AccountsScreen> {
               right: Spacing.large,
             ),
             child: PwOutlinedButton(
-              Strings.createAccount,
+              Strings.addAccount,
               onPressed: () {
-                Navigator.of(context).push(AccountName(
-                  AccountAddImportType.dashboardAdd,
-                  currentStep: 1,
-                  numberOfSteps: 2,
-                ).route());
+                Navigator.of(context).push(
+                  AddAccountFlow(
+                    origin: AddAccountOrigin.accounts,
+                  ).route(),
+                );
               },
             ),
           ),
-          VerticalSpacer.large(),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.large,
-            ),
-            child: PwTextButton(
-              child: PwText(
-                Strings.recoverAccount,
-                style: PwTextStyle.body,
-                color: PwColor.neutralNeutral,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(AccountName(
-                  AccountAddImportType.dashboardRecover,
-                  currentStep: 1,
-                  numberOfSteps: 2,
-                ).route());
-              },
-            ),
-          ),
+          VerticalSpacer.largeX3(),
         ],
       ),
     );

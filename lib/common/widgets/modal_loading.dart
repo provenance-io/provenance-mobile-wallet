@@ -95,7 +95,7 @@ class ModalLoadingRoute extends PopupRoute {
   static dismiss(BuildContext context) {
     try {
       if (instance != null) {
-        Navigator.of(context).removeRoute(instance!);
+        Navigator.of(context, rootNavigator: true).removeRoute(instance!);
       }
     } catch (e) {
       // Nothing to do here.
@@ -113,10 +113,7 @@ class ModalLoadingRoute extends PopupRoute {
     } else {
       instance =
           ModalLoadingRoute(loadingMessage: message, theme: Theme.of(context));
-      Navigator.push(
-        context,
-        instance!,
-      );
+      Navigator.of(context, rootNavigator: true).push(instance!);
     }
   }
 
