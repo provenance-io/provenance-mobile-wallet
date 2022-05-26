@@ -23,9 +23,10 @@ class Commission {
         totalShares = dto.totalShares!,
         commissionRewardsAmount = dto.commissionRewards!.amount!,
         commissionRewardsDenom = dto.commissionRewards!.denom!,
-        commissionRate = dto.commissionRate!.rate!,
-        commissionMaxRate = dto.commissionRate!.maxRate!,
-        commissionMaxChangeRate = dto.commissionRate!.maxChangeRate!;
+        commissionRate = "${num.parse(dto.commissionRate!.rate!) * 100}%",
+        commissionMaxRate = "${num.parse(dto.commissionRate!.maxRate!) * 100}%",
+        commissionMaxChangeRate =
+            "${num.parse(dto.commissionRate!.maxChangeRate!) * 100}%";
 
   Commission.fake({
     required this.bondedTokensCount,
