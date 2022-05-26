@@ -7,6 +7,7 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -18,9 +19,14 @@ class StakingDetailsBloc extends Disposable {
   final _isLoading = BehaviorSubject.seeded(false);
   final String _validatorAddress;
   final AccountDetails _accountDetails;
+  final Delegation? _selectedDelegation;
   final _validatorService = get<ValidatorService>();
 
-  StakingDetailsBloc(this._validatorAddress, this._accountDetails);
+  StakingDetailsBloc(
+    this._validatorAddress,
+    this._accountDetails,
+    this._selectedDelegation,
+  );
 
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<DetailedValidatorDetails> get validatorDetails =>

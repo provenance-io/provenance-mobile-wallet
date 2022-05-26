@@ -7,6 +7,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_details/details_
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,10 +17,12 @@ class StakingDetailsScreen extends StatefulWidget {
     Key? key,
     required this.validatorAddress,
     required this.details,
+    this.selectedDelegation,
   }) : super(key: key);
 
   final String validatorAddress;
   final AccountDetails details;
+  final Delegation? selectedDelegation;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
@@ -30,7 +33,11 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
 
   @override
   void initState() {
-    _bloc = StakingDetailsBloc(widget.validatorAddress, widget.details);
+    _bloc = StakingDetailsBloc(
+      widget.validatorAddress,
+      widget.details,
+      widget.selectedDelegation,
+    );
     _bloc.load();
     get.registerSingleton<StakingDetailsBloc>(_bloc);
     super.initState();
