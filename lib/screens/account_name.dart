@@ -1,4 +1,3 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
@@ -9,16 +8,14 @@ import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class AccountName extends HookWidget {
-  AccountName(
+class AccountName extends StatefulWidget {
+  const AccountName(
     this.flowType, {
     Key? key,
     this.words,
     required this.currentStep,
     this.numberOfSteps,
   }) : super(key: key);
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   static final keyNameTextField = ValueKey('$AccountName.name_text_field');
   static final keyContinueButton = ValueKey('$AccountName.continue_button');
@@ -29,19 +26,39 @@ class AccountName extends HookWidget {
   final AccountAddImportType flowType;
 
   @override
-  Widget build(BuildContext context) {
-    final accountNameProvider = useTextEditingController();
+  State<AccountName> createState() => _AccountNameState();
+}
 
+class _AccountNameState extends State<AccountName> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _textEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.nameYourAccount,
-        leadingIcon: flowType == AccountAddImportType.dashboardAdd ||
-                flowType == AccountAddImportType.dashboardRecover
+        leadingIcon: widget.flowType == AccountAddImportType.dashboardAdd ||
+                widget.flowType == AccountAddImportType.dashboardRecover
             ? PwIcons.back
             : null,
         bottom: ProgressStepper(
-          currentStep,
-          numberOfSteps ?? 1,
+          widget.currentStep,
+          widget.numberOfSteps ?? 1,
         ),
       ),
       body: Form(
@@ -76,7 +93,7 @@ class AccountName extends HookWidget {
                 bottom: Spacing.small,
               ),
               child: PwTextFormField(
-                key: keyNameTextField,
+                key: AccountName.keyNameTextField,
                 label: Strings.accountName,
                 autofocus: true,
                 validator: (value) {
@@ -84,7 +101,8 @@ class AccountName extends HookWidget {
                       ? Strings.required
                       : null;
                 },
-                controller: accountNameProvider,
+                controller: _textEditingController,
+                onFieldSubmitted: (_) => _submit(),
               ),
             ),
             Expanded(
@@ -100,29 +118,7 @@ class AccountName extends HookWidget {
                   color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
-                    if (flowType == AccountAddImportType.onBoardingRecover ||
-                        flowType == AccountAddImportType.dashboardRecover) {
-                      Navigator.of(context).push(
-                        RecoverAccountScreen(
-                          flowType,
-                          accountNameProvider.text,
-                          currentStep: currentStep + 1,
-                          numberOfSteps: numberOfSteps,
-                        ).route(),
-                      );
-                    } else if (flowType == AccountAddImportType.onBoardingAdd ||
-                        flowType == AccountAddImportType.dashboardAdd) {
-                      Navigator.of(context).push(
-                        CreatePassphraseScreen(
-                          flowType,
-                          accountNameProvider.text,
-                          currentStep: currentStep + 1,
-                          numberOfSteps: numberOfSteps,
-                        ).route(),
-                      );
-                    }
-                  }
+                  _submit();
                 },
               ),
             ),
@@ -131,5 +127,31 @@ class AccountName extends HookWidget {
         ),
       ),
     );
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() == true) {
+      if (widget.flowType == AccountAddImportType.onBoardingRecover ||
+          widget.flowType == AccountAddImportType.dashboardRecover) {
+        Navigator.of(context).push(
+          RecoverAccountScreen(
+            widget.flowType,
+            _textEditingController.text,
+            currentStep: widget.currentStep + 1,
+            numberOfSteps: widget.numberOfSteps,
+          ).route(),
+        );
+      } else if (widget.flowType == AccountAddImportType.onBoardingAdd ||
+          widget.flowType == AccountAddImportType.dashboardAdd) {
+        Navigator.of(context).push(
+          CreatePassphraseScreen(
+            widget.flowType,
+            _textEditingController.text,
+            currentStep: widget.currentStep + 1,
+            numberOfSteps: widget.numberOfSteps,
+          ).route(),
+        );
+      }
+    }
   }
 }
