@@ -23,7 +23,7 @@ class _PwCheckBoxState extends State<PwCheckBox> {
       child: Center(
         child: PwIcon(
           PwIcons.check,
-          //size: 8,
+          size: 12,
           color: _selected
               ? Theme.of(context).colorScheme.neutralNeutral
               : Colors.transparent,
@@ -61,10 +61,13 @@ class _PwCheckBoxState extends State<PwCheckBox> {
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         return _selected ? theme.colorScheme.primary500 : Colors.transparent;
       }),
+      padding: MaterialStateProperty.all(
+        EdgeInsets.zero,
+      ),
       minimumSize: MaterialStateProperty.all(
         Size(
-          20,
-          20,
+          32,
+          32,
         ),
       ),
     );

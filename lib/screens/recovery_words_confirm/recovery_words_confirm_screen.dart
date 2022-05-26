@@ -85,9 +85,8 @@ class RecoveryWordsConfirmScreenState
             WordSelector(index: 3),
             VerticalSpacer.largeX3(),
             Padding(
-              padding: EdgeInsets.only(
-                right: Spacing.xxLarge,
-                left: 20,
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.xxLarge,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,13 +98,11 @@ class RecoveryWordsConfirmScreenState
                       });
                     },
                   ),
+                  HorizontalSpacer.large(),
                   Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: PwText(
-                        Strings.iAmResponsibleForMyAccountText,
-                        style: PwTextStyle.body,
-                      ),
+                    child: PwText(
+                      Strings.iAmResponsibleForMyAccountText,
+                      style: PwTextStyle.body,
                     ),
                   ),
                 ],
