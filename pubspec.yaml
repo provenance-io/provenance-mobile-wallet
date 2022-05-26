@@ -34,7 +34,10 @@ dependencies:
   intl: ^0.17.0
   json_annotation: 4.4.0
   logger: ^1.0.0
-  mobile_scanner: ^1.1.0
+  mobile_scanner:
+    git:
+      url: https://github.com/smsimone/mobile_scanner.git
+      ref: b4c0309a7d8bcf66020058b4e5eb9ff68c44f42d
   package_info_plus: ^1.4.2
   path:
   path_provider: ^2.0.10

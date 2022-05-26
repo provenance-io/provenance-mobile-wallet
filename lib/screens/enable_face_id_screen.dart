@@ -150,6 +150,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
                         key: keyEnableButton,
+                        autofocus: true,
                         child: PwText(
                           Strings.enable,
                           style: PwTextStyle.bodyBold,
