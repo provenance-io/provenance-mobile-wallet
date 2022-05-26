@@ -2,7 +2,9 @@ import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
+import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
@@ -34,13 +36,7 @@ class MockValidatorService extends ValidatorService {
 
   AbbreviatedValidator _getAbbrVldr() {
     return AbbreviatedValidator.fake(
-      moniker: "validator-us-${faker.randomGenerator.element([
-            'north',
-            'east',
-            'west',
-            'south',
-            'central'
-          ])}${faker.randomGenerator.integer(9, min: 1)}-${faker.randomGenerator.integer(9)}",
+      moniker: _getMoniker(),
       address:
           faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
       commission: faker.randomGenerator.decimal().toString(),
@@ -72,6 +68,72 @@ class MockValidatorService extends ValidatorService {
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     return faker.randomGenerator.boolean() ? [_getRewards()] : [];
+  }
+
+  @override
+  Future<DetailedValidator> getDetailedValidator(
+    Coin coin,
+    String validatorAddress,
+  ) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return _getDetailedValidator(validatorAddress);
+  }
+
+  @override
+  Future<Commission> getValidatorCommission(
+    Coin coin,
+    String validatorAddress,
+  ) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return _getValidatorCommission();
+  }
+
+  Commission _getValidatorCommission() {
+    return Commission.fake(
+        bondedTokensCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        bondedTokensDenom: 'nhash',
+        selfBondedCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        selfBondedDenom: 'nhash',
+        delegatorBondedCount:
+            faker.randomGenerator.fromCharSet('0123456789', 20),
+        delegatorBondedDenom: 'nhash',
+        delegatorCount: faker.randomGenerator.integer(20, min: 2),
+        totalShares: faker.randomGenerator.fromCharSet('0123456789', 20),
+        commissionRewardsAmount:
+            faker.randomGenerator.fromCharSet('0123456789', 20),
+        commissionRewardsDenom: 'nhash',
+        commissionRate: faker.randomGenerator.decimal().toString(),
+        commissionMaxRate: faker.randomGenerator.decimal().toString(),
+        commissionMaxChangeRate: faker.randomGenerator.decimal().toString());
+  }
+
+  DetailedValidator _getDetailedValidator(String validatorAddress) {
+    return DetailedValidator.fake(
+      blockCount: 0,
+      blockTotal: faker.randomGenerator.integer(9999, min: 1),
+      bondHeight: faker.randomGenerator.integer(999999, min: 20000),
+      consensusPubKey:
+          faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
+      description:
+          faker.randomGenerator.boolean() ? "" : faker.company.position(),
+      identity: "",
+      moniker: _getMoniker(),
+      operatorAddress: validatorAddress,
+      ownerAddress:
+          faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
+      siteUrl: "",
+      status: faker.randomGenerator.element(ValidatorStatus.values),
+      uptime: faker.randomGenerator.decimal(scale: 100, min: 90),
+      withdrawalAddress:
+          faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
+      jailedUntil: DateTime.now(),
+      unbondingHeight: faker.randomGenerator.integer(999999, min: 20000),
+      imgUrl: faker.randomGenerator.boolean()
+          ? null
+          : faker.image.image(width: 60, height: 60, random: true),
+      votingPowerCount: faker.randomGenerator.integer(4, min: 1),
+      votingPowerTotal: faker.randomGenerator.integer(10, min: 5),
+    );
   }
 
   Rewards _getRewards() {
@@ -140,13 +202,7 @@ class MockValidatorService extends ValidatorService {
 
   ProvenanceValidator _getValidator(ValidatorStatus status) {
     return ProvenanceValidator.fake(
-        moniker: "validator-us-${faker.randomGenerator.element([
-              'north',
-              'east',
-              'west',
-              'south',
-              'central'
-            ])}${faker.randomGenerator.integer(9, min: 1)}-${faker.randomGenerator.integer(9)}",
+        moniker: _getMoniker(),
         addressId:
             faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
         consensusAddress:
@@ -170,5 +226,15 @@ class MockValidatorService extends ValidatorService {
   Iterable<ProvenanceValidator> _getValidators(ValidatorStatus status,
       {int count = 11}) {
     return Iterable.generate(count).map((e) => _getValidator(status));
+  }
+
+  String _getMoniker() {
+    return "validator-us-${faker.randomGenerator.element([
+          'north',
+          'east',
+          'west',
+          'south',
+          'central'
+        ])}${faker.randomGenerator.integer(9, min: 1)}-${faker.randomGenerator.integer(9)}";
   }
 }

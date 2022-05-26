@@ -1,5 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 class ValidatorListItem extends StatelessWidget {
   const ValidatorListItem({
@@ -13,8 +16,17 @@ class ValidatorListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        // Navigate to delegate screen
+      onTap: () async {
+        final account = await get<AccountService>().getSelectedAccount();
+        if (account == null) {
+          return;
+        }
+        Navigator.of(context).push(
+          StakingDetailsScreen(
+            validatorAddress: item.addressId,
+            details: account,
+          ).route(),
+        );
       },
       child: Padding(
         padding: EdgeInsets.zero,

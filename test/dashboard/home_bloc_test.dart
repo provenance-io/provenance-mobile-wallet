@@ -9,6 +9,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -26,7 +27,6 @@ import 'package:provenance_wallet/services/transaction_service/transaction_servi
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 
-import '../../lib/services/account_service/memory_account_storage_service.dart';
 import 'home_bloc_test.mocks.dart';
 import 'home_mocks.dart';
 

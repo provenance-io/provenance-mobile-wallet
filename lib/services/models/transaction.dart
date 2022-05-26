@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -58,7 +57,6 @@ class Transaction {
   }
 
   String get displayFee {
-    // TODO: Consolidate hash conversion somewhere?
-    return "${(Decimal.parse(feeAmount) / Decimal.fromInt(10).pow(9)).toDecimal(scaleOnInfinitePrecision: 9).toString()} Hash";
+    return "${feeAmount.nhashToHash()} hash";
   }
 }

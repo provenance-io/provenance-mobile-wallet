@@ -1,6 +1,6 @@
-import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Delegation {
   Delegation({required DelegationDto dto})
@@ -45,8 +45,7 @@ class Delegation {
   final String? shares;
 
   String get displayDenom {
-    // TODO: Consolidate hash conversion somewhere?
-    return "${(Decimal.parse(amount) / Decimal.fromInt(10).pow(9)).toDecimal(scaleOnInfinitePrecision: 9).toString()} hash";
+    return "${amount.nhashToHash()} hash";
   }
 
   String get formattedTime {
