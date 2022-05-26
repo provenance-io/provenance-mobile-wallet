@@ -8,19 +8,21 @@ import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class AccountName extends StatefulWidget {
-  const AccountName({
+class AccountNameScreen extends StatefulWidget {
+  const AccountNameScreen({
     Key? key,
   }) : super(key: key);
 
-  static final keyNameTextField = ValueKey('$AccountName.name_text_field');
-  static final keyContinueButton = ValueKey('$AccountName.continue_button');
+  static final keyNameTextField =
+      ValueKey('$AccountNameScreen.name_text_field');
+  static final keyContinueButton =
+      ValueKey('$AccountNameScreen.continue_button');
 
   @override
-  State<AccountName> createState() => _AccountNameState();
+  State<AccountNameScreen> createState() => _AccountNameScreenState();
 }
 
-class _AccountNameState extends State<AccountName> {
+class _AccountNameScreenState extends State<AccountNameScreen> {
   static const _screen = AddAccountScreen.accountName;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _bloc = get<AddAccountFlowBloc>();
@@ -85,7 +87,7 @@ class _AccountNameState extends State<AccountName> {
                 bottom: Spacing.small,
               ),
               child: PwTextFormField(
-                key: AccountName.keyNameTextField,
+                key: AccountNameScreen.keyNameTextField,
                 label: Strings.accountName,
                 autofocus: true,
                 validator: (value) {
@@ -105,7 +107,7 @@ class _AccountNameState extends State<AccountName> {
               child: PwButton(
                 child: PwText(
                   Strings.continueName,
-                  key: AccountName.keyContinueButton,
+                  key: AccountNameScreen.keyContinueButton,
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),

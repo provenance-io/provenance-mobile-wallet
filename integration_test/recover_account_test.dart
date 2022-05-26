@@ -4,7 +4,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
-import 'package:provenance_wallet/screens/account_name.dart';
+import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
@@ -32,17 +32,17 @@ void main() {
       );
 
       await tester.tapKeyAndSettle(
-        AccountName.keyNameTextField,
+        AccountNameScreen.keyNameTextField,
       );
 
       const accountName = 'one';
       await tester.enterTextAndSettle(
-        AccountName.keyNameTextField,
+        AccountNameScreen.keyNameTextField,
         accountName,
       );
 
       await tester.tapKeyAndSettle(
-        AccountName.keyContinueButton,
+        AccountNameScreen.keyContinueButton,
       );
 
       await tester.tapKeyAndSettle(

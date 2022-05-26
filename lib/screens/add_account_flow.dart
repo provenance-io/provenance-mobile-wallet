@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
-import 'package:provenance_wallet/screens/account_name.dart';
+import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
@@ -78,7 +78,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
 
   @override
   void showAccountName() {
-    showPage((context) => AccountName());
+    showPage((context) => AccountNameScreen());
   }
 
   @override
