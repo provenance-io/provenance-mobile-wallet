@@ -46,6 +46,13 @@ extension StringExtension on String {
         .toDecimal(scaleOnInfinitePrecision: 9)
         .toString();
   }
+
+  String formatNumber() {
+    return replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
+  }
 }
 
 class Strings {
