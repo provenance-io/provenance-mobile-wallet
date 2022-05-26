@@ -41,7 +41,7 @@ extension StringExtension on String {
         : this;
   }
 
-  String convertToHash() {
+  String nhashToHash() {
     return (Decimal.parse(this) / Decimal.fromInt(10).pow(9))
         .toDecimal(scaleOnInfinitePrecision: 9)
         .toString();

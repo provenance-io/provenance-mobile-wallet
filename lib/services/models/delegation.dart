@@ -45,7 +45,7 @@ class Delegation {
   final String? shares;
 
   String get displayDenom {
-    return "${amount.convertToHash()} hash";
+    return "${amount.nhashToHash()} hash";
   }
 
   String get formattedTime {

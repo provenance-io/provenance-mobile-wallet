@@ -57,6 +57,6 @@ class Transaction {
   }
 
   String get displayFee {
-    return "${feeAmount.convertToHash()} hash";
+    return "${feeAmount.nhashToHash()} hash";
   }
 }
