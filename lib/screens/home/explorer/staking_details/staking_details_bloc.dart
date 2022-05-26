@@ -61,7 +61,7 @@ class StakingDetailsBloc extends Disposable {
       case ValidatorStatus.active:
         return PwColor.primaryP500;
       case ValidatorStatus.candidate:
-        return PwColor.notice800;
+        return PwColor.secondary2;
       case ValidatorStatus.jailed:
         return PwColor.error;
     }
