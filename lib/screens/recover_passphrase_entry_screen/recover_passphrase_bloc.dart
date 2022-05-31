@@ -14,7 +14,6 @@ class RecoverPassphraseBloc extends Disposable {
       var controller = textControllers[i];
       var callback = callbacks[i];
       controller?.removeListener(callback);
-      controller?.dispose();
     }
   }
 

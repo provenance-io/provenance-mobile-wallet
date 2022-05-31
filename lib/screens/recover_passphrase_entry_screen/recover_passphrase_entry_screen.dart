@@ -1,34 +1,22 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_bloc.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
 
 class RecoverPassphraseEntryScreen extends StatefulWidget {
-  const RecoverPassphraseEntryScreen(
-    this.flowType,
-    this.accountName, {
+  const RecoverPassphraseEntryScreen({
     Key? key,
-    required this.currentStep,
-    this.numberOfSteps,
   }) : super(key: key);
-
-  final int currentStep;
-  final int? numberOfSteps;
-  final String accountName;
-  final AccountAddImportType flowType;
 
   static final keyContinueButton =
       ValueKey('$RecoverPassphraseEntryScreen.continue_button');
@@ -56,6 +44,7 @@ class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _keyValueService = get<KeyValueService>();
+  final _addAccountBloc = get<AddAccountFlowBloc>();
   late final TimedCounter _tapCounter;
   late final RecoverPassphraseBloc _bloc;
 
@@ -96,8 +85,9 @@ class RecoverPassphraseEntryScreenState
           title: Strings.enterRecoveryPassphrase,
           leadingIcon: PwIcons.back,
           bottom: ProgressStepper(
-            widget.currentStep,
-            widget.numberOfSteps ?? 1,
+            _addAccountBloc
+                .getCurrentStep(AddAccountScreen.recoverPassphraseEntry),
+            _addAccountBloc.totalSteps,
           ),
         ),
       ),
@@ -216,39 +206,7 @@ class RecoverPassphraseEntryScreenState
     if (_formKey.currentState?.validate() == true) {
       final words = _bloc.getCompletedMnemonic();
 
-      if (widget.flowType == AccountAddImportType.onBoardingRecover) {
-        Navigator.of(context).push(CreatePin(
-          widget.flowType,
-          accountName: widget.accountName,
-          currentStep: widget.currentStep + 1,
-          numberOfSteps: widget.numberOfSteps,
-          words: words,
-        ).route());
-      } else {
-        ModalLoadingRoute.showLoading(
-          "",
-          context,
-        );
-
-        final chainId = await _keyValueService.getString(
-              PrefKey.defaultChainId,
-            ) ??
-            ChainId.defaultChainId;
-        final coin = ChainId.toCoin(chainId);
-
-        await get<AccountService>().addAccount(
-          phrase: words,
-          name: widget.accountName,
-          coin: coin,
-        );
-
-        ModalLoadingRoute.dismiss(context);
-
-        final steps = widget.currentStep;
-        for (var i = steps; i >= 1; i--) {
-          Navigator.pop(context);
-        }
-      }
+      await _addAccountBloc.submitRecoverPassphraseEntry(context, words);
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -71,26 +72,77 @@ class _AccountItemState extends State<AccountItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 textDirection: TextDirection.ltr,
                 children: [
-                  PwText(
-                    _account.name,
-                    style: PwTextStyle.bodyBold,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
+                  Row(
+                    children: [
+                      PwText(
+                        _account.name,
+                        style: PwTextStyle.bodyBold,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: Spacing.large,
+                        ),
+                        child: Chip(
+                          label: PwText(
+                            _accountKindName(_account.kind),
+                            style: PwTextStyle.footnote,
+                            color: isSelected
+                                ? PwColor.secondary350
+                                : PwColor.neutral250,
+                          ),
+                          backgroundColor: isSelected
+                              ? Theme.of(context).colorScheme.secondary700
+                              : Theme.of(context).colorScheme.neutral600,
+                        ),
+                      ),
+                    ],
                   ),
-                  FutureBuilder<int?>(
-                    future: get<AccountsBloc>().getAssetCount(_account),
-                    builder: (context, snapshot) {
-                      final numAssets = snapshot.data;
+                  if (_account.status == AccountStatus.ready)
+                    FutureBuilder<int?>(
+                      future: get<AccountsBloc>().getAssetCount(_account),
+                      builder: (context, snapshot) {
+                        final numAssets = snapshot.data;
 
-                      return PwText(
-                        numAssets != null ? Strings.numAssets(numAssets) : '',
-                        style: PwTextStyle.bodySmall,
-                      );
-                    },
-                  ),
-                  PwText(
-                    _account.coin.displayName,
-                    style: PwTextStyle.bodySmall,
+                        var text = '';
+                        if (isSelected) {
+                          text += Strings.selectedAccountLabel;
+                          text += ' • ';
+                        }
+
+                        if (numAssets != null) {
+                          text += Strings.numAssets(numAssets);
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.only(
+                            top: 4,
+                          ),
+                          child: PwText(
+                            text,
+                            style: PwTextStyle.bodySmall,
+                            color: PwColor.neutralNeutral,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                          ),
+                        );
+                      },
+                    ),
+                  if (_account.status == AccountStatus.pending)
+                    PwText(
+                      Strings.accountStatusPending,
+                      style: PwTextStyle.bodySmall,
+                      color: PwColor.neutralNeutral,
+                    ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 4,
+                    ),
+                    child: PwText(
+                      _account.coin.displayName,
+                      style: PwTextStyle.bodySmall,
+                    ),
                   ),
                 ],
               ),
@@ -118,6 +170,20 @@ class _AccountItemState extends State<AccountItem> {
         ],
       ),
     );
+  }
+
+  String _accountKindName(AccountKind kind) {
+    String name;
+    switch (kind) {
+      case AccountKind.single:
+        name = Strings.accountKindSingle;
+        break;
+      case AccountKind.multi:
+        name = Strings.accountKindMulti;
+        break;
+    }
+
+    return name;
   }
 
   Future<void> _showMenu(

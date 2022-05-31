@@ -1,38 +1,19 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class EnableFaceIdScreen extends StatelessWidget {
   EnableFaceIdScreen({
     Key? key,
-    required this.words,
-    required this.biometryType,
-    this.accountName,
-    this.code,
-    this.currentStep,
-    this.numberOfSteps,
-    this.flowType = AccountAddImportType.onBoardingAdd,
   }) : super(key: key);
 
-  final List<String> words;
-  final String? accountName;
-  final List<int>? code;
-  final int? currentStep;
-  final int? numberOfSteps;
-  final AccountAddImportType flowType;
-  final BiometryType biometryType;
-  final authHelper = get<LocalAuthHelper>();
+  static const _screen = AddAccountScreen.enableFaceId;
+
+  final _bloc = get<AddAccountFlowBloc>();
 
   static final keyEnableButton = ValueKey('$EnableFaceIdScreen.enable_button');
   static final keySkipButton = ValueKey('$EnableFaceIdScreen.skip_button');
@@ -44,7 +25,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     String message;
     String icon;
 
-    switch (biometryType) {
+    switch (_bloc.biometryType) {
       case BiometryType.faceId:
         header = Strings.faceId;
         title = Strings.useFaceIdTitle;
@@ -67,7 +48,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     }
 
     Widget skipButton;
-    skipButton = biometryType == BiometryType.none
+    skipButton = _bloc.biometryType == BiometryType.none
         ? PwTextButton.primaryAction(
             key: keySkipButton,
             context: context,
@@ -96,8 +77,8 @@ class EnableFaceIdScreen extends StatelessWidget {
         title: header,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          currentStep ?? 0,
-          numberOfSteps ?? 1,
+          _bloc.getCurrentStep(_screen),
+          _bloc.totalSteps,
         ),
       ),
       body: Container(
@@ -145,7 +126,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  if (biometryType != BiometryType.none)
+                  if (_bloc.biometryType != BiometryType.none)
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
@@ -183,37 +164,9 @@ class EnableFaceIdScreen extends StatelessWidget {
     BuildContext context, {
     required bool useBiometry,
   }) async {
-    ModalLoadingRoute.showLoading(
-      "",
-      context,
+    await _bloc.submitEnableFaceId(
+      context: context,
+      useBiometry: useBiometry,
     );
-
-    AccountDetails? details;
-
-    final enrolled = await authHelper.enroll(
-      code?.join() ?? '',
-      accountName ?? '',
-      useBiometry,
-      context,
-    );
-
-    if (enrolled) {
-      final chainId =
-          await get<KeyValueService>().getString(PrefKey.defaultChainId) ??
-              ChainId.defaultChainId;
-      final coin = ChainId.toCoin(chainId);
-      details = await get<AccountService>().addAccount(
-        phrase: words,
-        name: accountName ?? '',
-        coin: coin,
-      );
-    }
-
-    ModalLoadingRoute.dismiss(context);
-
-    if (details != null) {
-      await Navigator.of(context)
-          .push(AccountSetupConfirmationScreen().route());
-    }
   }
 }

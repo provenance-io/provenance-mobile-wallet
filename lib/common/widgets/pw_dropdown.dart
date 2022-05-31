@@ -8,6 +8,8 @@ class PwDropDown<X> extends StatefulWidget {
     required this.builder,
     this.onValueChanged,
     this.isExpanded = false,
+    this.autofocus = false,
+    this.focusNode,
     this.itemHeight = kMinInteractiveDimension,
     this.dropdownColor,
   }) : super(key: key);
@@ -17,6 +19,8 @@ class PwDropDown<X> extends StatefulWidget {
   final Widget Function(X item) builder;
   final void Function(X item)? onValueChanged;
   final bool isExpanded;
+  final bool autofocus;
+  final FocusNode? focusNode;
   final double? itemHeight;
   final Color? dropdownColor;
 
@@ -61,6 +65,8 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
   Widget build(BuildContext context) {
     return DropdownButton<X>(
       isExpanded: widget.isExpanded,
+      autofocus: widget.autofocus,
+      focusNode: widget.focusNode,
       itemHeight: widget.itemHeight,
       dropdownColor:
           widget.dropdownColor ?? Theme.of(context).colorScheme.neutral750,

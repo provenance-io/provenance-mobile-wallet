@@ -1,30 +1,18 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_check_box.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/screens/backup_complete_screen.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
-  const RecoveryWordsConfirmScreen(
-    this.flowType, {
-    required this.words,
-    this.accountName,
-    this.currentStep,
-    this.numberOfSteps,
+  const RecoveryWordsConfirmScreen({
     Key? key,
   }) : super(key: key);
-
-  final List<String> words;
-  final int? currentStep;
-  final int? numberOfSteps;
-  final String? accountName;
-  final AccountAddImportType flowType;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,13 +22,14 @@ class RecoveryWordsConfirmScreen extends StatefulWidget {
 
 class RecoveryWordsConfirmScreenState
     extends State<RecoveryWordsConfirmScreen> {
+  final _addAccountBloc = get<AddAccountFlowBloc>();
   bool _isResponsible = false;
   String _error = "";
 
   @override
   void initState() {
     get.registerSingleton<RecoveryWordsBloc>(RecoveryWordsBloc());
-    get<RecoveryWordsBloc>().setup(widget.words);
+    get<RecoveryWordsBloc>().setup(_addAccountBloc.words);
     super.initState();
   }
 
@@ -63,8 +52,8 @@ class RecoveryWordsConfirmScreenState
         title: Strings.verifyPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          widget.currentStep ?? 0,
-          widget.numberOfSteps ?? 1,
+          _addAccountBloc.getCurrentStep(AddAccountScreen.recoveryWordsConfirm),
+          _addAccountBloc.totalSteps,
         ),
       ),
       body: Container(
@@ -96,9 +85,8 @@ class RecoveryWordsConfirmScreenState
             WordSelector(index: 3),
             VerticalSpacer.largeX3(),
             Padding(
-              padding: EdgeInsets.only(
-                right: Spacing.xxLarge,
-                left: 20,
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.xxLarge,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,13 +98,11 @@ class RecoveryWordsConfirmScreenState
                       });
                     },
                   ),
+                  HorizontalSpacer.large(),
                   Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: PwText(
-                        Strings.iAmResponsibleForMyAccountText,
-                        style: PwTextStyle.body,
-                      ),
+                    child: PwText(
+                      Strings.iAmResponsibleForMyAccountText,
+                      style: PwTextStyle.body,
                     ),
                   ),
                 ],
@@ -160,13 +146,8 @@ class RecoveryWordsConfirmScreenState
     } else if (!_isResponsible) {
       setError(Strings.youMustAgreeToThePassphraseTerms);
     } else {
-      Navigator.of(context).push(BackupCompleteScreen(
-        widget.flowType,
-        words: widget.words,
-        accountName: widget.accountName,
-        currentStep: (widget.currentStep ?? 0) + 1,
-        numberOfSteps: widget.numberOfSteps,
-      ).route());
+      _addAccountBloc.submitRecoveryWordsConfirm();
+
       setError("");
     }
   }

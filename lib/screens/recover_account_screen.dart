@@ -1,27 +1,20 @@
-import 'package:provenance_wallet/common/enum/account_add_import_type.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
+import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoverAccountScreen extends StatelessWidget {
-  const RecoverAccountScreen(
-    this.flowType,
-    this.accountName, {
+  RecoverAccountScreen({
     Key? key,
-    required this.currentStep,
-    this.numberOfSteps,
   }) : super(key: key);
 
   static final keyContinueButton =
       ValueKey('$RecoverAccountScreen.continue_button');
 
-  final AccountAddImportType flowType;
-  final String accountName;
-  final int currentStep;
-  final int? numberOfSteps;
+  final _bloc = get<AddAccountFlowBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +24,8 @@ class RecoverAccountScreen extends StatelessWidget {
         title: Strings.recoverAccount,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          currentStep,
-          numberOfSteps ?? 1,
+          _bloc.getCurrentStep(AddAccountScreen.recoverAccount),
+          _bloc.totalSteps,
         ),
       ),
       body: CustomScrollView(
@@ -85,15 +78,7 @@ class RecoverAccountScreen extends StatelessWidget {
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: () {
-                      if (flowType == AccountAddImportType.onBoardingRecover ||
-                          flowType == AccountAddImportType.dashboardRecover) {
-                        Navigator.of(context).push(RecoverPassphraseEntryScreen(
-                          flowType,
-                          accountName,
-                          currentStep: currentStep + 1,
-                          numberOfSteps: numberOfSteps,
-                        ).route());
-                      }
+                      _bloc.submitRecoverAccount();
                     },
                   ),
                 ),
