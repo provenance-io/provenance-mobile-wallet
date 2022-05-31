@@ -5,7 +5,10 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/details_item_copy.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -66,6 +69,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                 builder: (context, snapshot) {
                   final validator = snapshot.data?.validator;
                   final commission = snapshot.data?.commission;
+                  final delegation = snapshot.data?.delegation;
                   if (validator == null || commission == null) {
                     return Container();
                   }
@@ -135,8 +139,18 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                                   Strings.stakingDetailsButtonDelegate,
                                   style: PwTextStyle.body,
                                 ),
-                                onPressed: () {
-                                  // TODO: Delegate modal here.
+                                onPressed: () async {
+                                  final account = await get<AccountService>()
+                                      .getSelectedAccount();
+                                  Navigator.of(context).push(StakingModal(
+                                    validator: validator,
+                                    delegation: delegation,
+                                    commission: commission,
+                                    validatorAddress: validator.operatorAddress,
+                                    accountDetails: account!,
+                                    transactionHandler:
+                                        get<TransactionHandler>(),
+                                  ).route());
                                 },
                               ),
                             ),

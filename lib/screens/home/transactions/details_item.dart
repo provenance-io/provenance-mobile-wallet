@@ -8,6 +8,7 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required this.endChild,
+    this.headerStyle = PwTextStyle.body,
   }) : super(key: key);
 
   DetailsItem.fromStrings({
@@ -15,6 +16,7 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required String value,
+    this.headerStyle = PwTextStyle.body,
   }) : super(key: key) {
     endChild = PwText(
       value,
@@ -25,6 +27,7 @@ class DetailsItem extends StatelessWidget {
   final String title;
   late final Widget endChild;
   final EdgeInsets? padding;
+  final PwTextStyle headerStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class DetailsItem extends StatelessWidget {
         children: [
           PwText(
             title,
-            style: PwTextStyle.body,
+            style: headerStyle,
           ),
           Expanded(child: Container()),
           endChild,

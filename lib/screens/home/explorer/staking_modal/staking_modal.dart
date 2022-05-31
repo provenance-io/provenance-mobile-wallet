@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_initial.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -74,6 +75,7 @@ class _StakingModalState extends State<StakingModal> {
               title: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
@@ -83,10 +85,12 @@ class _StakingModalState extends State<StakingModal> {
                             .substring(0, 1)
                             .toUpperCase()),
                       ),
+                      HorizontalSpacer.large(),
                       PwText(details.validator.moniker)
                     ],
                   ),
-                  PwText("Commission ${details.commission.commissionRate}")
+                  HorizontalSpacer.large(),
+                  PwText("Commission - ${details.commission.commissionRate}")
                 ],
               ),
               leading: Padding(
@@ -96,44 +100,12 @@ class _StakingModalState extends State<StakingModal> {
                     PwIcons.close,
                   ),
                   onPressed: () {
-                    //
                     Navigator.of(context).pop();
                   },
                 ),
               ),
             ),
-            body: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: Spacing.largeX3,
-                        height: Spacing.largeX3,
-                        child: CircleAvatar(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundImage:
-                              NetworkImage(details.validator.imgUrl ?? ""),
-                          child: PwText(details.validator.moniker
-                              .substring(0, 1)
-                              .toUpperCase()),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      children: [],
-                    )),
-                VerticalSpacer.largeX4(),
-              ],
-            ),
+            body: StakingInitial(),
           );
         });
   }

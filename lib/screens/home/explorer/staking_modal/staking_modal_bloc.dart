@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -13,6 +14,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingModalBloc extends Disposable {
@@ -66,6 +68,18 @@ class StakingModalBloc extends Disposable {
         delegatorAddress: _accountDetails.address,
         validatorAddress: _validatorAddress,
       ).toAny(),
+    );
+  }
+
+  void updateSelectedModal(SelectedModalType selected) {
+    final oldDetails = _stakingModalDetails.value;
+    _stakingModalDetails.tryAdd(
+      StakingModalDetails(
+        oldDetails.validator,
+        oldDetails.commission,
+        oldDetails.delegation,
+        selected,
+      ),
     );
   }
 
@@ -163,6 +177,21 @@ enum SelectedModalType {
   initial,
   delegate,
   claimRewards,
-  unDelegate,
-  reDelegate,
+  undelegate,
+  redelegate,
+}
+
+extension SelectedModalTypeExtension on SelectedModalType {
+  String get dropDownTitle {
+    switch (this) {
+      case SelectedModalType.initial:
+        return "Back";
+      case SelectedModalType.delegate:
+      case SelectedModalType.redelegate:
+      case SelectedModalType.undelegate:
+        return name.capitalize();
+      case SelectedModalType.claimRewards:
+        return "Claim Rewards";
+    }
+  }
 }
