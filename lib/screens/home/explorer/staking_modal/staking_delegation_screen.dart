@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_management.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_delegate.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
@@ -8,7 +8,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class StakingModalScreen extends StatefulWidget {
+class StakingDelegationScreen extends StatefulWidget {
   final Delegation? delegation;
 
   final DetailedValidator validator;
@@ -18,7 +18,7 @@ class StakingModalScreen extends StatefulWidget {
   final AccountDetails accountDetails;
   final TransactionHandler transactionHandler;
 
-  const StakingModalScreen({
+  const StakingDelegationScreen({
     Key? key,
     this.delegation,
     required this.validator,
@@ -29,15 +29,16 @@ class StakingModalScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StakingModalScreen> createState() => _StakingModalScreenState();
+  State<StakingDelegationScreen> createState() =>
+      _StakingDelegationScreenState();
 }
 
-class _StakingModalScreenState extends State<StakingModalScreen> {
-  late final StakingModalBloc _bloc;
+class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
+  late final StakingDelegationBloc _bloc;
 
   @override
   void initState() {
-    _bloc = StakingModalBloc(
+    _bloc = StakingDelegationBloc(
       widget.delegation,
       widget.validator,
       widget.commission,
@@ -45,19 +46,20 @@ class _StakingModalScreenState extends State<StakingModalScreen> {
       widget.accountDetails,
       widget.transactionHandler,
     );
-    get.registerSingleton<StakingModalBloc>(_bloc);
+    get.registerSingleton<StakingDelegationBloc>(_bloc);
+    _bloc.load();
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<StakingModalBloc>();
+    get.unregister<StakingDelegationBloc>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<StakingModalDetails>(
+    return StreamBuilder<StakingDelegationDetails>(
         initialData: _bloc.stakingModalDetails.value,
         stream: _bloc.stakingModalDetails,
         builder: (context, snapshot) {
@@ -105,7 +107,7 @@ class _StakingModalScreenState extends State<StakingModalScreen> {
                 ),
               ),
             ),
-            body: StakingManagement(),
+            body: StakingDelegate(),
           );
         });
   }

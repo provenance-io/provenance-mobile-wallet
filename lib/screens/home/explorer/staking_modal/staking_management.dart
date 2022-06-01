@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -14,9 +14,9 @@ class StakingManagement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingModalBloc>();
+    final bloc = get<StakingDelegationBloc>();
 
-    return StreamBuilder<StakingModalDetails>(
+    return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingModalDetails.value,
       stream: bloc.stakingModalDetails,
       builder: (context, snapshot) {
@@ -66,12 +66,12 @@ class StakingManagement extends StatelessWidget {
                 children: [
                   Flexible(
                     fit: FlexFit.tight,
-                    child: PwDropDown<SelectedModalType>(
-                      initialValue: SelectedModalType.undelegate,
+                    child: PwDropDown<SelectedDelegationType>(
+                      initialValue: SelectedDelegationType.undelegate,
                       items: const [
-                        SelectedModalType.undelegate,
-                        SelectedModalType.redelegate,
-                        SelectedModalType.claimRewards,
+                        SelectedDelegationType.undelegate,
+                        SelectedDelegationType.redelegate,
+                        SelectedDelegationType.claimRewards,
                       ],
                       key: key,
                       icon: Container(
@@ -128,10 +128,10 @@ class StakingManagement extends StatelessWidget {
                   Flexible(
                       child: PwButton(
                     onPressed: () {
-                      bloc.updateSelectedModal(SelectedModalType.initial);
+                      bloc.updateSelectedModal(SelectedDelegationType.initial);
                     },
                     child: PwText(
-                      SelectedModalType.delegate.dropDownTitle,
+                      SelectedDelegationType.delegate.dropDownTitle,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       color: PwColor.neutralNeutral,

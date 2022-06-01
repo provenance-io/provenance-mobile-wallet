@@ -8,7 +8,9 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -17,10 +19,10 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
-class StakingModalBloc extends Disposable {
-  final BehaviorSubject<StakingModalDetails> _stakingModalDetails;
+class StakingDelegationBloc extends Disposable {
+  final BehaviorSubject<StakingDelegationDetails> _stakingModalDetails;
   final _isLoading = BehaviorSubject.seeded(false);
-  StakingModalBloc(
+  StakingDelegationBloc(
     final Delegation? delegation,
     final DetailedValidator validator,
     final Commission commission,
@@ -28,13 +30,14 @@ class StakingModalBloc extends Disposable {
     this._accountDetails,
     this._transactionHandler,
   ) : _stakingModalDetails = BehaviorSubject.seeded(
-          StakingModalDetails(
+          StakingDelegationDetails(
             validator,
             commission,
             delegation,
             delegation != null
-                ? SelectedModalType.initial
-                : SelectedModalType.delegate,
+                ? SelectedDelegationType.initial
+                : SelectedDelegationType.delegate,
+            null,
           ),
         );
 
@@ -42,13 +45,34 @@ class StakingModalBloc extends Disposable {
   final AccountDetails _accountDetails;
   final TransactionHandler _transactionHandler;
   ValueStream<bool> get isLoading => _isLoading;
-  ValueStream<StakingModalDetails> get stakingModalDetails =>
+  ValueStream<StakingDelegationDetails> get stakingModalDetails =>
       _stakingModalDetails;
 
   @override
   FutureOr onDispose() {
     _isLoading.close();
     _stakingModalDetails.close();
+  }
+
+  Future<void> load() async {
+    _isLoading.tryAdd(true);
+    try {
+      final asset = (await get<AssetService>()
+              .getAssets(_accountDetails.coin, _accountDetails.address))
+          .firstWhere((element) => element.denom == 'nhash');
+      final oldDetails = _stakingModalDetails.value;
+      _stakingModalDetails.tryAdd(
+        StakingDelegationDetails(
+          oldDetails.validator,
+          oldDetails.commission,
+          oldDetails.delegation,
+          oldDetails.selectedModalType,
+          asset,
+        ),
+      );
+    } finally {
+      _isLoading.tryAdd(false);
+    }
   }
 
   Future<void> doDelegate(
@@ -71,14 +95,15 @@ class StakingModalBloc extends Disposable {
     );
   }
 
-  void updateSelectedModal(SelectedModalType selected) {
+  void updateSelectedModal(SelectedDelegationType selected) {
     final oldDetails = _stakingModalDetails.value;
     _stakingModalDetails.tryAdd(
-      StakingModalDetails(
+      StakingDelegationDetails(
         oldDetails.validator,
         oldDetails.commission,
         oldDetails.delegation,
         selected,
+        oldDetails.asset,
       ),
     );
   }
@@ -159,21 +184,23 @@ class StakingModalBloc extends Disposable {
   }
 }
 
-class StakingModalDetails {
-  StakingModalDetails(
+class StakingDelegationDetails {
+  StakingDelegationDetails(
     this.validator,
     this.commission,
     this.delegation,
     this.selectedModalType,
+    this.asset,
   );
 
   final Delegation? delegation;
   final DetailedValidator validator;
   final Commission commission;
-  final SelectedModalType selectedModalType;
+  final SelectedDelegationType selectedModalType;
+  final Asset? asset;
 }
 
-enum SelectedModalType {
+enum SelectedDelegationType {
   initial,
   delegate,
   claimRewards,
@@ -181,16 +208,16 @@ enum SelectedModalType {
   redelegate,
 }
 
-extension SelectedModalTypeExtension on SelectedModalType {
+extension SelectedModalTypeExtension on SelectedDelegationType {
   String get dropDownTitle {
     switch (this) {
-      case SelectedModalType.initial:
+      case SelectedDelegationType.initial:
         return "Back";
-      case SelectedModalType.delegate:
-      case SelectedModalType.redelegate:
-      case SelectedModalType.undelegate:
+      case SelectedDelegationType.delegate:
+      case SelectedDelegationType.redelegate:
+      case SelectedDelegationType.undelegate:
         return name.capitalize();
-      case SelectedModalType.claimRewards:
+      case SelectedDelegationType.claimRewards:
         return "Claim Rewards";
     }
   }
