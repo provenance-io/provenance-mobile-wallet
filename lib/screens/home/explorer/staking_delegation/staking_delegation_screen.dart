@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_delegate.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegate.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
