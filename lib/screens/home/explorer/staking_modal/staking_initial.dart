@@ -20,69 +20,119 @@ class StakingInitial extends StatelessWidget {
       stream: bloc.stakingModalDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
-        final delegation = snapshot.data?.delegation;
         if (details == null) {
           return Container();
         }
         return ListView(
           children: [
-            PwText(
-              "Description",
-              style: PwTextStyle.bodyBold,
-            ),
-            PwText(
-              details.validator.description,
-              style: PwTextStyle.body,
+            DetailsItem(
+              title: "Description",
+              endChild: Flexible(
+                child: PwText(
+                  details.validator.description,
+                  overflow: TextOverflow.ellipsis,
+                  style: PwTextStyle.body,
+                ),
+              ),
             ),
             PwListDivider(
               indent: Spacing.largeX3,
             ),
             DetailsItem(
               title: "My Delegation",
-              headerStyle: PwTextStyle.bodyBold,
-              endChild: PwText(
-                '${delegation?.displayDenom ?? "0 hash"} ',
-                style: PwTextStyle.body,
+              endChild: Flexible(
+                child: PwText(
+                  details.delegation?.displayDenom ?? "0 hash",
+                  overflow: TextOverflow.ellipsis,
+                  style: PwTextStyle.body,
+                ),
               ),
             ),
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            Row(
-              children: [
-                PwDropDown<SelectedModalType>(
-                  initialValue: SelectedModalType.undelegate,
-                  items: const [
-                    SelectedModalType.undelegate,
-                    SelectedModalType.redelegate,
-                    SelectedModalType.claimRewards,
-                  ],
-                  key: key,
-                  isExpanded: true,
-                  onValueChanged: (item) => bloc.updateSelectedModal(item),
-                  builder: (item) => PwButton(
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.largeX3,
+                vertical: Spacing.xLarge,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: PwDropDown<SelectedModalType>(
+                      initialValue: SelectedModalType.undelegate,
+                      items: const [
+                        SelectedModalType.undelegate,
+                        SelectedModalType.redelegate,
+                        SelectedModalType.claimRewards,
+                      ],
+                      key: key,
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).colorScheme.primary550,
+                              spreadRadius: 8,
+                            )
+                          ],
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(5),
+                            topRight: Radius.circular(5),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10.5),
+                          child: PwIcon(
+                            PwIcons.chevron,
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                          ),
+                        ),
+                      ),
+                      isExpanded: true,
+                      onValueChanged: (item) => bloc.updateSelectedModal(item),
+                      builder: (item) => Container(
+                        height: 42,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).colorScheme.primary550,
+                            )
+                          ],
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            PwText(
+                              item.dropDownTitle,
+                              overflow: TextOverflow.ellipsis,
+                              color: PwColor.neutralNeutral,
+                              style: PwTextStyle.body,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  HorizontalSpacer.large(),
+                  Flexible(
+                      child: PwButton(
                     onPressed: () {
-                      bloc.updateSelectedModal(item);
+                      bloc.updateSelectedModal(SelectedModalType.initial);
                     },
                     child: PwText(
-                      item.dropDownTitle,
+                      SelectedModalType.delegate.dropDownTitle,
+                      overflow: TextOverflow.ellipsis,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
-                  ),
-                ),
-                PwButton(
-                  onPressed: () {
-                    bloc.updateSelectedModal(SelectedModalType.initial);
-                  },
-                  child: PwText(
-                    SelectedModalType.delegate.dropDownTitle,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
-                )
-              ],
-            )
+                  ))
+                ],
+              ),
+            ),
           ],
         );
       },
