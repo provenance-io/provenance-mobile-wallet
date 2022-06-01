@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:sqflite/sqflite.dart';

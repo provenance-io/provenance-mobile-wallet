@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:sembast/sembast_memory.dart';
 
