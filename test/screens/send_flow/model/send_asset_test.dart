@@ -41,32 +41,4 @@ void main() {
     expect(copy.exponent, asset.exponent);
     expect(copy.fiatValue, asset.fiatValue);
   });
-
-  group("MultiSendAsset", () {
-    test("displayAmount", () {
-      final asset = MultiSendAsset(100, [
-        SendAsset(
-          "Hash",
-          9,
-          "nhash",
-          Decimal.fromInt(20000),
-          0,
-        ),
-        SendAsset(
-          "Usd",
-          2,
-          "usd",
-          Decimal.fromInt(20000),
-          0,
-        ),
-        SendAsset(
-          "Hash",
-          9,
-          "nhash",
-          Decimal.fromInt(200),
-          0,
-        ),
-      ]);
-    });
-  });
 }
