@@ -8,7 +8,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class StakingModal extends StatefulWidget {
+class StakingModalScreen extends StatefulWidget {
   final Delegation? delegation;
 
   final DetailedValidator validator;
@@ -18,7 +18,7 @@ class StakingModal extends StatefulWidget {
   final AccountDetails accountDetails;
   final TransactionHandler transactionHandler;
 
-  const StakingModal({
+  const StakingModalScreen({
     Key? key,
     this.delegation,
     required this.validator,
@@ -29,10 +29,10 @@ class StakingModal extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StakingModal> createState() => _StakingModalState();
+  State<StakingModalScreen> createState() => _StakingModalScreenState();
 }
 
-class _StakingModalState extends State<StakingModal> {
+class _StakingModalScreenState extends State<StakingModalScreen> {
   late final StakingModalBloc _bloc;
 
   @override

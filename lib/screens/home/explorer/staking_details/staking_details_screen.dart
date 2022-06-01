@@ -5,7 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/details_item_copy.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_screen.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -142,7 +142,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                                 onPressed: () async {
                                   final account = await get<AccountService>()
                                       .getSelectedAccount();
-                                  Navigator.of(context).push(StakingModal(
+                                  Navigator.of(context).push(StakingModalScreen(
                                     validator: validator,
                                     delegation: delegation,
                                     commission: commission,
