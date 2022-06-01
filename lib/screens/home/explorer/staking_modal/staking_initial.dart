@@ -31,7 +31,8 @@ class StakingInitial extends StatelessWidget {
               endChild: Flexible(
                 child: PwText(
                   details.validator.description,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   style: PwTextStyle.body,
                 ),
               ),
@@ -45,7 +46,8 @@ class StakingInitial extends StatelessWidget {
                 child: PwText(
                   details.delegation?.displayDenom ??
                       Strings.stakingInitialNoHash,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   style: PwTextStyle.body,
                 ),
               ),
@@ -108,11 +110,14 @@ class StakingInitial extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            PwText(
-                              item.dropDownTitle,
-                              overflow: TextOverflow.ellipsis,
-                              color: PwColor.neutralNeutral,
-                              style: PwTextStyle.body,
+                            Flexible(
+                              child: PwText(
+                                item.dropDownTitle,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                color: PwColor.neutralNeutral,
+                                style: PwTextStyle.body,
+                              ),
                             ),
                           ],
                         ),
@@ -127,7 +132,8 @@ class StakingInitial extends StatelessWidget {
                     },
                     child: PwText(
                       SelectedModalType.delegate.dropDownTitle,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
