@@ -503,8 +503,8 @@ class Strings {
   static const stakingDetailsCommissionRateRange = "Commission Rate Range";
   static const stakingDetailsValidatorTransactions = "Validator Transactions";
 
-  // Staking Initial
-  static const stakingInitialDescription = "Description";
-  static const stakingInitialMyDelegation = "My Delegation";
-  static const stakingInitialNoHash = "0 hash";
+  // Staking Management
+  static const stakingManagementDescription = "Description";
+  static const stakingManagementMyDelegation = "My Delegation";
+  static const stakingManagementNoHash = "0 hash";
 }

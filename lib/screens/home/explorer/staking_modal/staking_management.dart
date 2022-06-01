@@ -7,8 +7,8 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class StakingInitial extends StatelessWidget {
-  const StakingInitial({
+class StakingManagement extends StatelessWidget {
+  const StakingManagement({
     Key? key,
   }) : super(key: key);
 
@@ -27,7 +27,7 @@ class StakingInitial extends StatelessWidget {
         return ListView(
           children: [
             DetailsItem(
-              title: Strings.stakingInitialDescription,
+              title: Strings.stakingManagementDescription,
               endChild: Flexible(
                 child: PwText(
                   details.validator.description,
@@ -41,11 +41,11 @@ class StakingInitial extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.stakingInitialMyDelegation,
+              title: Strings.stakingManagementMyDelegation,
               endChild: Flexible(
                 child: PwText(
                   details.delegation?.displayDenom ??
-                      Strings.stakingInitialNoHash,
+                      Strings.stakingManagementNoHash,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   style: PwTextStyle.body,

@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_initial.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_management.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -105,7 +105,7 @@ class _StakingModalScreenState extends State<StakingModalScreen> {
                 ),
               ),
             ),
-            body: StakingInitial(),
+            body: StakingManagement(),
           );
         });
   }
