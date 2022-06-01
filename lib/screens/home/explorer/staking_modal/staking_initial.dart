@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class StakingInitial extends StatelessWidget {
   const StakingInitial({
@@ -26,7 +27,7 @@ class StakingInitial extends StatelessWidget {
         return ListView(
           children: [
             DetailsItem(
-              title: "Description",
+              title: Strings.stakingInitialDescription,
               endChild: Flexible(
                 child: PwText(
                   details.validator.description,
@@ -39,10 +40,11 @@ class StakingInitial extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "My Delegation",
+              title: Strings.stakingInitialMyDelegation,
               endChild: Flexible(
                 child: PwText(
-                  details.delegation?.displayDenom ?? "0 hash",
+                  details.delegation?.displayDenom ??
+                      Strings.stakingInitialNoHash,
                   overflow: TextOverflow.ellipsis,
                   style: PwTextStyle.body,
                 ),
