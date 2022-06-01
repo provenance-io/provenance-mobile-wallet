@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
@@ -17,6 +18,7 @@ class StakingDelegationScreen extends StatefulWidget {
   final String validatorAddress;
   final AccountDetails accountDetails;
   final TransactionHandler transactionHandler;
+  final StakingFlowBlocNavigator navigator;
 
   const StakingDelegationScreen({
     Key? key,
@@ -26,6 +28,7 @@ class StakingDelegationScreen extends StatefulWidget {
     required this.validatorAddress,
     required this.accountDetails,
     required this.transactionHandler,
+    required this.navigator,
   }) : super(key: key);
 
   @override
@@ -99,7 +102,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 padding: EdgeInsets.only(left: 21),
                 child: IconButton(
                   icon: PwIcon(
-                    PwIcons.close,
+                    PwIcons.back,
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
