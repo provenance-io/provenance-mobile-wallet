@@ -4,8 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 
-class StakingConfirmScreen extends StatefulWidget {
-  const StakingConfirmScreen({
+class StakingConfirmBase extends StatefulWidget {
+  const StakingConfirmBase({
     Key? key,
     required this.appBarTitle,
     required this.onDataClick,
@@ -14,15 +14,15 @@ class StakingConfirmScreen extends StatefulWidget {
   }) : super(key: key);
 
   final String appBarTitle;
-  final Function onDataClick;
+  final VoidCallback onDataClick;
   final Function(num) onTransactionSign;
   final List<Widget> children;
 
   @override
-  State<StatefulWidget> createState() => _StakingConfirmScreenState();
+  State<StatefulWidget> createState() => _StakingConfirmBaseState();
 }
 
-class _StakingConfirmScreenState extends State<StakingConfirmScreen> {
+class _StakingConfirmBaseState extends State<StakingConfirmBase> {
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
