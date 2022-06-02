@@ -100,14 +100,31 @@ class StakingDelegationBloc extends Disposable {
   }
 
   void updateSelectedModal(SelectedDelegationType selected) {
-    final oldDetails = _stakingModalDetails.value;
-    _stakingModalDetails.tryAdd(
+    final oldDetails = _stakingDelegationDetails.value;
+    _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
         oldDetails.validator,
         oldDetails.commission,
         oldDetails.delegation,
         selected,
         oldDetails.asset,
+        oldDetails.hashDelegated,
+        oldDetails.accountDetails,
+      ),
+    );
+  }
+
+  void updateHashDelegated(num hashDelegated) {
+    final oldDetails = _stakingDelegationDetails.value;
+    _stakingDelegationDetails.tryAdd(
+      StakingDelegationDetails(
+        oldDetails.validator,
+        oldDetails.commission,
+        oldDetails.delegation,
+        oldDetails.selectedModalType,
+        oldDetails.asset,
+        hashDelegated,
+        oldDetails.accountDetails,
       ),
     );
   }
