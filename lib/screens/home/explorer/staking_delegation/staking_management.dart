@@ -17,8 +17,8 @@ class StakingManagement extends StatelessWidget {
     final bloc = get<StakingDelegationBloc>();
 
     return StreamBuilder<StakingDelegationDetails>(
-      initialData: bloc.stakingModalDetails.value,
-      stream: bloc.stakingModalDetails,
+      initialData: bloc.stakingDelegationDetails.value,
+      stream: bloc.stakingDelegationDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null) {

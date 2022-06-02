@@ -20,7 +20,7 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingDelegationBloc extends Disposable {
-  final BehaviorSubject<StakingDelegationDetails> _stakingModalDetails;
+  final BehaviorSubject<StakingDelegationDetails> _stakingDelegationDetails;
   final _isLoading = BehaviorSubject.seeded(false);
   StakingDelegationBloc(
     final Delegation? delegation,
@@ -29,7 +29,7 @@ class StakingDelegationBloc extends Disposable {
     this._validatorAddress,
     this._accountDetails,
     this._transactionHandler,
-  ) : _stakingModalDetails = BehaviorSubject.seeded(
+  ) : _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
             validator,
             commission,
@@ -38,6 +38,8 @@ class StakingDelegationBloc extends Disposable {
                 ? SelectedDelegationType.initial
                 : SelectedDelegationType.delegate,
             null,
+            0,
+            _accountDetails,
           ),
         );
 
@@ -45,13 +47,13 @@ class StakingDelegationBloc extends Disposable {
   final AccountDetails _accountDetails;
   final TransactionHandler _transactionHandler;
   ValueStream<bool> get isLoading => _isLoading;
-  ValueStream<StakingDelegationDetails> get stakingModalDetails =>
-      _stakingModalDetails;
+  ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
+      _stakingDelegationDetails;
 
   @override
   FutureOr onDispose() {
     _isLoading.close();
-    _stakingModalDetails.close();
+    _stakingDelegationDetails.close();
   }
 
   Future<void> load() async {
@@ -60,14 +62,16 @@ class StakingDelegationBloc extends Disposable {
       final asset = (await get<AssetService>()
               .getAssets(_accountDetails.coin, _accountDetails.address))
           .firstWhere((element) => element.denom == 'nhash');
-      final oldDetails = _stakingModalDetails.value;
-      _stakingModalDetails.tryAdd(
+      final oldDetails = _stakingDelegationDetails.value;
+      _stakingDelegationDetails.tryAdd(
         StakingDelegationDetails(
           oldDetails.validator,
           oldDetails.commission,
           oldDetails.delegation,
           oldDetails.selectedModalType,
           asset,
+          oldDetails.hashDelegated,
+          oldDetails.accountDetails,
         ),
       );
     } finally {
@@ -191,6 +195,8 @@ class StakingDelegationDetails {
     this.delegation,
     this.selectedModalType,
     this.asset,
+    this.hashDelegated,
+    this.accountDetails,
   );
 
   final Delegation? delegation;
@@ -198,6 +204,22 @@ class StakingDelegationDetails {
   final Commission commission;
   final SelectedDelegationType selectedModalType;
   final Asset? asset;
+  final num hashDelegated;
+  final AccountDetails accountDetails;
+
+  bool get hashInsufficient {
+    if (0 == hashDelegated) {
+      return false;
+    }
+    final remainingHash =
+        num.tryParse(asset?.amount.nhashToHash(fractionDigits: 7) ?? "");
+
+    if (null == remainingHash) {
+      return true;
+    }
+
+    return hashDelegated > remainingHash;
+  }
 }
 
 enum SelectedDelegationType {
