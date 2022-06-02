@@ -20,11 +20,7 @@ abstract class StakingFlowBlocNavigator {
 
   Future<void> showReviewTransaction();
 
-  Future<void> showTransactionData(
-    SelectedDelegationType type,
-    StakingDelegationDetails details,
-    AbbreviatedValidator? validator,
-  );
+  Future<void> showTransactionData(String data);
 
   Future<void> showFinishedTransaction();
 }
@@ -78,11 +74,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
 // TODO: have the caller make the string.
   @override
-  Future<void> showTransactionData(
-    SelectedDelegationType type,
-    StakingDelegationDetails details,
-    AbbreviatedValidator? validator,
-  ) async {
+  Future<void> showTransactionData(String data) async {
     String data;
     switch (type) {
       case SelectedDelegationType.initial:
