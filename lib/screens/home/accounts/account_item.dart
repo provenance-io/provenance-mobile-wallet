@@ -8,6 +8,7 @@ import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -57,8 +58,30 @@ class _AccountItemState extends State<AccountItem> {
 
     final isSelected = _account.id == accountService.events.selected.value?.id;
 
-    return Container(
-      color: isSelected ? colorScheme.secondary650 : colorScheme.neutral700,
+    return TextButton(
+      onPressed: () {
+        if (_account.kind == AccountKind.multi && _account.isNotReady) {
+          Navigator.of(context).push(
+            MultiSigCreationStatus().route(
+              fullScreenDialog: true,
+            ),
+          );
+        }
+      },
+      style: ButtonStyle(
+        shape: MaterialStateProperty.resolveWith(
+          (states) => RoundedRectangleBorder(),
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith(
+          (states) {
+            return isSelected
+                ? colorScheme.secondary650
+                : colorScheme.neutral700;
+          },
+        ),
+        elevation: MaterialStateProperty.all(0),
+        padding: MaterialStateProperty.all(EdgeInsets.zero),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -78,6 +101,7 @@ class _AccountItemState extends State<AccountItem> {
                         _account.name,
                         style: PwTextStyle.bodyBold,
                         overflow: TextOverflow.fade,
+                        color: PwColor.neutralNeutral,
                         softWrap: false,
                       ),
                       Container(

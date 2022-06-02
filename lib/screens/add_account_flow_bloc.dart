@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:rxdart/rxdart.dart';
@@ -36,6 +37,7 @@ enum AddAccountScreen {
   multiSigCosigners,
   multiSigSignatures,
   multiSigConfirm,
+  multiSigCreationStatus,
 }
 
 const _flowCreateSingle = [
@@ -73,6 +75,7 @@ const _flowMultiSigCreate = [
   AddAccountScreen.multiSigCosigners,
   AddAccountScreen.multiSigSignatures,
   AddAccountScreen.multiSigConfirm,
+  AddAccountScreen.multiSigCreationStatus,
 ];
 
 const _flowRecover = [
@@ -275,6 +278,9 @@ class AddAccountFlowBloc implements Disposable {
       case AddAccountScreen.multiSigConfirm:
         _navigator.showMultiSigConfirm(currentStep, totalSteps);
         break;
+      case AddAccountScreen.multiSigCreationStatus:
+        _navigator.showMultiSigCreationStatus();
+        break;
     }
   }
 
@@ -471,6 +477,12 @@ class AddAccountFlowBloc implements Disposable {
     ModalLoadingRoute.showLoading('', context);
 
     final coin = await _defaultCoin();
+
+    final id = await get<MultiSigService>().register(
+      cosignerCount: _multiSigCosignerCount.value.value,
+    );
+
+    // TODO-ROY: need to store id so we can get the invite details
 
     await _accountService.addPendingAccount(
       name: _multiSigName.value,

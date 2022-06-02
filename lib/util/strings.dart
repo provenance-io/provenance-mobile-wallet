@@ -232,6 +232,16 @@ class Strings {
   static const multiSigConfirmCosignersLabel = 'Total number of co-signers';
   static const multiSigConfirmSignaturesLabel = 'Signatures required';
 
+  // Multi-Sig Creation Status
+  static const multiSigCreationStatusTitle = 'Multi-Sig Account Invitation';
+  static const multiSigCreationStatusMessage = "Here’s how it works:";
+  static const multiSigCreationStatusDescription =
+      'Share the QR code or invitation link with the co-signers joining this account. Each co-signer has to create their own recovery phrase once everyone accepts invitation.\n\nTo recover funds stored in a multi-sig account, you need the recovery phrase from each co-signer.';
+  static const multiSigCreationStatusListHeading = 'Wallet Creation Status:';
+  static const multiSigCreationStatusPending = 'Invitation Pending';
+  static const multiSigCreationStatusActionRequired = 'Action Required';
+  static const multiSigCreationStatusSelf = 'Self';
+
   // Account Name
   static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
