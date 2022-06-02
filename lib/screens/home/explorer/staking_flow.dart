@@ -1,12 +1,15 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/util/extensions/num_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class StakingFlowBlocNavigator {
@@ -16,6 +19,12 @@ abstract class StakingFlowBlocNavigator {
   );
 
   Future<void> showReviewTransaction();
+
+  Future<void> showTransactionData(
+    SelectedDelegationType type,
+    StakingDelegationDetails details,
+    AbbreviatedValidator? validator,
+  );
 
   Future<void> showFinishedTransaction();
 }
@@ -66,6 +75,54 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   Future<void> showReviewTransaction() async {}
+
+// TODO: have the caller make the string.
+  @override
+  Future<void> showTransactionData(
+    SelectedDelegationType type,
+    StakingDelegationDetails details,
+    AbbreviatedValidator? validator,
+  ) async {
+    String data;
+    switch (type) {
+      case SelectedDelegationType.initial:
+        return;
+      case SelectedDelegationType.undelegate:
+      case SelectedDelegationType.delegate:
+        data = '''
+{
+  "delegatorAddress": "${widget.details.address}",
+  "validatorAddress": "${widget.validatorAddress}",
+  "amount": {
+    "denom": "nhash",
+    "amount": "${details.hashDelegated.nhashFromHash()}"
+  }
+}
+''';
+        break;
+      case SelectedDelegationType.claimRewards:
+        data = '''
+{
+  "delegatorAddress": "${widget.details.address}",
+  "validatorAddress": "${widget.validatorAddress}",
+}
+''';
+        break;
+      case SelectedDelegationType.redelegate:
+        data = '''
+{
+  "delegatorAddress": "${widget.details.address}",
+  "validatorSrcAddress": "${widget.validatorAddress}",
+  "validatorDstAddress": "${validator!.address}",
+  "amount": {
+    "denom": "nhash",
+    "amount": "${details.hashDelegated.nhashFromHash()}"
+  }
+}
+''';
+        break;
+    }
+  }
 
   @override
   Future<void> showFinishedTransaction() async {}
