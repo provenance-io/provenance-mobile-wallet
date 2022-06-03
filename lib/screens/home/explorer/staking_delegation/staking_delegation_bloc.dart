@@ -1,21 +1,13 @@
 import 'dart:async';
 
-import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_staking.dart' as staking;
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -25,14 +17,13 @@ class StakingDelegationBloc extends Disposable {
   StakingDelegationBloc(
     final Delegation? delegation,
     final DetailedValidator validator,
-    final Commission commission,
+    final String commissionRate,
     this._validatorAddress,
     this._accountDetails,
-    this._transactionHandler,
   ) : _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
             validator,
-            commission,
+            commissionRate,
             delegation,
             delegation != null
                 ? SelectedDelegationType.initial
@@ -45,7 +36,6 @@ class StakingDelegationBloc extends Disposable {
 
   final String _validatorAddress;
   final AccountDetails _accountDetails;
-  final TransactionHandler _transactionHandler;
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
       _stakingDelegationDetails;
@@ -66,7 +56,7 @@ class StakingDelegationBloc extends Disposable {
       _stakingDelegationDetails.tryAdd(
         StakingDelegationDetails(
           oldDetails.validator,
-          oldDetails.commission,
+          oldDetails.commissionRate,
           oldDetails.delegation,
           oldDetails.selectedModalType,
           asset,
@@ -79,32 +69,12 @@ class StakingDelegationBloc extends Disposable {
     }
   }
 
-  Future<void> doDelegate(
-    num amount,
-    double gasEstimate,
-    String denom,
-  ) async {
-    await _sendMessage(
-      amount,
-      gasEstimate,
-      denom,
-      staking.MsgDelegate(
-        amount: proto.Coin(
-          denom: denom,
-          amount: amount.toString(),
-        ),
-        delegatorAddress: _accountDetails.address,
-        validatorAddress: _validatorAddress,
-      ).toAny(),
-    );
-  }
-
   void updateSelectedModal(SelectedDelegationType selected) {
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
         oldDetails.validator,
-        oldDetails.commission,
+        oldDetails.commissionRate,
         oldDetails.delegation,
         selected,
         oldDetails.asset,
@@ -119,7 +89,7 @@ class StakingDelegationBloc extends Disposable {
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
         oldDetails.validator,
-        oldDetails.commission,
+        oldDetails.commissionRate,
         oldDetails.delegation,
         oldDetails.selectedModalType,
         oldDetails.asset,
@@ -127,81 +97,6 @@ class StakingDelegationBloc extends Disposable {
         oldDetails.accountDetails,
       ),
     );
-  }
-
-  Future<void> doUndelegate(
-    num amount,
-    double gasEstimate,
-    String denom,
-  ) async {
-    await _sendMessage(
-      amount,
-      gasEstimate,
-      denom,
-      staking.MsgUndelegate(
-        amount: proto.Coin(
-          denom: denom,
-          amount: amount.toString(),
-        ),
-        delegatorAddress: _accountDetails.address,
-        validatorAddress: _validatorAddress,
-      ).toAny(),
-    );
-  }
-
-  Future<void> doRedelegate(
-    num amount,
-    double gasEstimate,
-    String denom,
-    String destinationAddress,
-  ) async {
-    await _sendMessage(
-      amount,
-      gasEstimate,
-      denom,
-      staking.MsgBeginRedelegate(
-              amount: proto.Coin(
-                denom: denom,
-                amount: amount.toString(),
-              ),
-              delegatorAddress: _accountDetails.address,
-              validatorDstAddress: destinationAddress,
-              validatorSrcAddress: _validatorAddress)
-          .toAny(),
-    );
-  }
-
-  Future<void> _sendMessage(
-    num amount,
-    double gasEstimate,
-    String denom,
-    proto.Any message,
-  ) async {
-    final body = proto.TxBody(
-      messages: [
-        message,
-      ],
-    );
-
-    final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
-    final adjustedEstimate = int.parse(
-        (Decimal.parse(gasEstimate.toString()) * Decimal.fromInt(10).pow(9))
-            .toString());
-
-    AccountGasEstimate estimate = AccountGasEstimate(
-      adjustedEstimate,
-      null,
-      null,
-      [],
-    );
-
-    final response = await _transactionHandler.executeTransaction(
-      body,
-      privateKey!,
-      estimate,
-    );
-
-    log(response.asJsonString());
   }
 }
 

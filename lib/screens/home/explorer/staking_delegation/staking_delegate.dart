@@ -157,7 +157,6 @@ class _StakingDelegateState extends State<StakingDelegate> {
                           return;
                         }
                         print("press registered");
-                        bloc.doDelegate(details.hashDelegated, 1.25, 'nhash');
                         //bloc.updateSelectedModal(SelectedModalType.initial);
                       },
                       child: PwText(
