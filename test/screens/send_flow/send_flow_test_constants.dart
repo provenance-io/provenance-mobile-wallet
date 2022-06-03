@@ -3,11 +3,13 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
+final publicKey = PrivateKey.fromSeed(
+  Mnemonic.createSeed(['one']),
+  Coin.testNet,
+).defaultKey().publicKey;
+
 final walletDetails = AccountDetails(
-  address: "tp1g5ugfegkl5gmn049n5a9hgjn3ged0ekp8f2fwx",
-  coin: Coin.testNet,
-  publicKey:
-      "02da92ecc44eef3299e00cdf8f4768d5b606bf8242ff5277e6f07aadd935257a37",
+  publicKey: publicKey,
   id: "1",
   name: "Wallet1",
 );

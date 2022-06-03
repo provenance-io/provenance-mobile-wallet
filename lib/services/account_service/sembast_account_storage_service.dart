@@ -1,4 +1,6 @@
+import 'package:convert/convert.dart' as convert;
 import 'package:path/path.dart' as p;
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
@@ -100,7 +102,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       name: name,
       publicKeys: publicKeys
           .map((e) => v1.SembastPublicKeyModel(
-                address: e.address,
                 hex: e.hex,
                 chainId: e.chainId,
               ))
@@ -248,22 +249,23 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     final model = v1.SembastAccountModel.fromRecord(value);
     final chainId = model.selectedChainId;
 
-    var address = '';
     var hex = '';
 
     if (model.publicKeys.isNotEmpty) {
       final selectedKey = model.publicKeys
           .firstWhere((e) => e.chainId == model.selectedChainId);
-      address = selectedKey.address;
+
       hex = selectedKey.hex;
     }
+
+    final coin = ChainId.toCoin(chainId);
+    final publicKey =
+        PublicKey.fromCompressPublicHex(convert.hex.decoder.convert(hex), coin);
 
     return AccountDetails(
       id: id,
       name: model.name,
-      address: address,
-      publicKey: hex,
-      coin: ChainId.toCoin(chainId),
+      publicKey: publicKey,
       kind: _fromKindV1(model.kind),
     );
   }

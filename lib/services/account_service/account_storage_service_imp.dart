@@ -24,11 +24,10 @@ class AccountStorageServiceImp implements AccountStorageService {
     final keyDatas = <PublicKeyData>[];
     for (var privateKey in privateKeys) {
       final publicKey = privateKey.defaultKey().publicKey;
-      final address = publicKey.address;
+
       final hex = publicKey.compressedPublicKeyHex;
       final network = ChainId.forCoin(publicKey.coin);
       final data = PublicKeyData(
-        address: address,
         hex: hex,
         chainId: network,
       );
@@ -69,14 +68,13 @@ class AccountStorageServiceImp implements AccountStorageService {
   @override
   Future<AccountDetails?> addPendingAccount({
     required String name,
-    required AccountKind kind,
     required Coin coin,
   }) async {
     final details = await _serviceCore.addAccount(
       name: name,
       publicKeys: [],
       selectedChainId: ChainId.forCoin(coin),
-      kind: kind,
+      kind: AccountKind.multi,
     );
 
     return details;

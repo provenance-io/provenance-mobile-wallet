@@ -1,3 +1,4 @@
+import 'package:convert/convert.dart' as convert;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -18,6 +19,28 @@ main() {
 
   AccountStorageServiceImp? _storageService;
 
+  PublicKey keyFromHex(String hex, Coin coin) {
+    return PublicKey.fromCompressPublicHex(
+        convert.hex.decoder.convert(hex), coin);
+  }
+
+  final accounts = [
+    AccountDetails(
+      id: "id1",
+      name: "Name1",
+      publicKey: PrivateKey.fromSeed(Mnemonic.createSeed(['id1']), Coin.testNet)
+          .defaultKey()
+          .publicKey,
+    ),
+    AccountDetails(
+      id: "id2",
+      name: "Name2",
+      publicKey: PrivateKey.fromSeed(Mnemonic.createSeed(['id2']), Coin.testNet)
+          .defaultKey()
+          .publicKey,
+    ),
+  ];
+
   setUp(() {
     _mockAccountStorageServiceCore = MockAccountStorageServiceCore();
     _mockCipherService = MockCipherService();
@@ -31,13 +54,18 @@ main() {
     Coin? selectedCoin;
     final publicKeys = <PublicKeyData>[];
     const id = "TestId";
-    final wallet = AccountDetails(
-      id: id,
-      address: 'address',
-      name: 'Test Wallet',
-      publicKey: "",
-      coin: Coin.testNet,
-    );
+
+    AccountDetails firstAccount() {
+      final data = publicKeys.first;
+      final coin = ChainId.toCoin(data.chainId);
+      final publicKey = keyFromHex(data.hex, coin);
+
+      return AccountDetails(
+        id: id,
+        name: 'Test Wallet',
+        publicKey: publicKey,
+      );
+    }
 
     setUp(() {
       final seed = Mnemonic.createSeed(['test']);
@@ -51,7 +79,6 @@ main() {
       for (final privateKey in privateKeys!) {
         final publicKey = privateKey.defaultKey().publicKey;
         final publicKeyData = PublicKeyData(
-          address: publicKey.address,
           hex: publicKey.compressedPublicKeyHex,
           chainId: ChainId.forCoin(privateKey.coin),
         );
@@ -60,11 +87,13 @@ main() {
     });
 
     test('success', () async {
+      final account = firstAccount();
+
       when(_mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
-      )).thenAnswer((_) => Future.value(wallet));
+      )).thenAnswer((_) => Future.value(account));
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -72,15 +101,15 @@ main() {
       )).thenAnswer((_) => Future.value(true));
 
       final result = await _storageService!.addAccount(
-        name: wallet.name,
+        name: account.name,
         privateKeys: privateKeys!,
         selectedCoin: selectedCoin!,
       );
 
-      expect(result, wallet);
+      expect(result, account);
 
       verify(_mockAccountStorageServiceCore!.addAccount(
-        name: wallet.name,
+        name: account.name,
         publicKeys: publicKeys,
         selectedChainId: ChainId.forCoin(selectedCoin!),
       ));
@@ -117,13 +146,15 @@ main() {
     });
 
     testWidgets('error while encrypting key', (tester) async {
+      final account = firstAccount();
+
       when(_mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(0));
       when(_mockAccountStorageServiceCore!.addAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
-      )).thenAnswer((_) => Future.value(wallet));
+      )).thenAnswer((_) => Future.value(account));
 
       when(_mockCipherService!.encryptKey(
         id: anyNamed("id"),
@@ -144,13 +175,7 @@ main() {
 
   group("getSelectedWallet", () {
     test("success", () async {
-      final walletDetails = AccountDetails(
-        id: "id1",
-        address: "Address1",
-        name: "Name1",
-        publicKey: "PubKey",
-        coin: Coin.testNet,
-      );
+      final walletDetails = accounts.first;
 
       when(_mockAccountStorageServiceCore!.getSelectedAccount())
           .thenAnswer((_) => Future.value(walletDetails));
@@ -162,13 +187,7 @@ main() {
 
   group("getWallet", () {
     test("success", () async {
-      final walletDetails = AccountDetails(
-        id: "id1",
-        address: "Address1",
-        name: "Name1",
-        publicKey: "PubKey",
-        coin: Coin.testNet,
-      );
+      final walletDetails = accounts.first;
 
       when(_mockAccountStorageServiceCore!.getAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(walletDetails));
@@ -181,28 +200,11 @@ main() {
 
   group("getWallets", () {
     test("success", () async {
-      final walletDetails = [
-        AccountDetails(
-          id: "id1",
-          address: "Address1",
-          name: "Name1",
-          publicKey: "PubKey",
-          coin: Coin.testNet,
-        ),
-        AccountDetails(
-          id: "id2",
-          address: "Address2",
-          name: "Name2",
-          publicKey: "PubKey",
-          coin: Coin.testNet,
-        ),
-      ];
-
       when(_mockAccountStorageServiceCore!.getAccounts())
-          .thenAnswer((_) => Future.value(walletDetails));
+          .thenAnswer((_) => Future.value(accounts));
 
       final result = await _storageService!.getAccounts();
-      expect(result, walletDetails);
+      expect(result, accounts);
     });
   });
 
@@ -275,13 +277,8 @@ main() {
 
   group("selectWallet", () {
     testWidgets('success', (tester) async {
-      final walletDetails = AccountDetails(
-        id: "Id",
-        address: "Address",
-        name: "Name",
-        publicKey: "PubKey",
-        coin: Coin.testNet,
-      );
+      final walletDetails = accounts.first;
+
       when(
         _mockAccountStorageServiceCore!.selectAccount(
           id: anyNamed("id"),

@@ -18,13 +18,15 @@ final get = GetIt.instance;
 
 const receivingAddress = "ReceivingAddress";
 
+final publicKey = PrivateKey.fromSeed(
+  Mnemonic.createSeed(['one']),
+  Coin.testNet,
+).defaultKey().publicKey;
+
 final accountDetails = AccountDetails(
   id: "Id",
-  address: "Address",
   name: "Name",
-  publicKey:
-      "02da92ecc44eef3299e00cdf8f4768d5b606bf8242ff5277e6f07aadd935257a37",
-  coin: Coin.testNet,
+  publicKey: publicKey,
 );
 
 @GenerateMocks([

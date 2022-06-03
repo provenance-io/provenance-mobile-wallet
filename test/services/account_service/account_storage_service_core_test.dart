@@ -148,7 +148,6 @@ class _AccountData {
 _expectAccountMatches(_AccountData data, AccountDetails? account) {
   expect(account, isNotNull);
   expect(account!.name, data.name);
-  expect(account.address, data.selectedKey.address);
   expect(account.publicKey, data.selectedKey.hex);
   expect(account.coin, ChainId.toCoin(data.selectedKey.chainId));
   expect(account.kind, data.kind);
@@ -194,12 +193,10 @@ Future<List<_AccountData>> _initAccounts({
 
 List<PublicKeyData> _createPublicKeyDatas() => [
       PublicKeyData(
-        address: 'addr-1',
         hex: 'hex-1',
         chainId: ChainId.mainNet,
       ),
       PublicKeyData(
-        address: 'addr-2',
         hex: 'hex-2',
         chainId: ChainId.testNet,
       ),

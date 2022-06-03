@@ -1,22 +1,18 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
 class PublicKeyData {
   PublicKeyData({
-    required this.address,
     required this.hex,
     required this.chainId,
   });
 
-  final String address;
   final String hex;
   final String chainId;
 
   @override
   int get hashCode => hashValues(
-        address,
         hex,
         chainId,
       );
@@ -24,7 +20,6 @@ class PublicKeyData {
   @override
   bool operator ==(Object other) {
     return other is PublicKeyData &&
-        other.address == address &&
         other.hex == hex &&
         other.chainId == chainId;
   }
@@ -56,7 +51,6 @@ abstract class AccountStorageService {
 
   Future<AccountDetails?> addPendingAccount({
     required String name,
-    required AccountKind kind,
     required Coin coin,
   });
 

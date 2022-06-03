@@ -89,13 +89,13 @@ List<MemoryStorageData> createDatas(int count, Coin selectedCoin) {
     final selectedIndex = privateKeys.indexWhere((e) => e.coin == selectedCoin);
     assert(selectedIndex != -1, 'Unknown selected coin');
 
+    final publicKey = privateKeys[selectedIndex].defaultKey().publicKey;
+
     final data = MemoryStorageData(
       AccountDetails(
         id: str,
-        address: str,
         name: str,
-        publicKey: str,
-        coin: selectedCoin,
+        publicKey: publicKey,
       ),
       privateKeys,
       selectedIndex,

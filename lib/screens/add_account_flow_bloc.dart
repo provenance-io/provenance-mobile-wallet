@@ -9,7 +9,6 @@ import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
@@ -486,7 +485,6 @@ class AddAccountFlowBloc implements Disposable {
 
     await _accountService.addPendingAccount(
       name: _multiSigName.value,
-      kind: AccountKind.multi,
       coin: coin,
     );
 

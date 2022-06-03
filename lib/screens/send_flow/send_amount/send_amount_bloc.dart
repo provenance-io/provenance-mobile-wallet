@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:convert/convert.dart' as convert;
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
-import 'package:provenance_dart/wallet.dart' as account;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -52,7 +50,7 @@ class SendAmountBloc extends Disposable {
     final body = TxBody(
       messages: [
         MsgSend(
-          fromAddress: accountDetails.address,
+          fromAddress: accountDetails.publicKey.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -64,10 +62,7 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final publicKey = account.PublicKey.fromCompressPublicHex(
-      convert.hex.decoder.convert(accountDetails.publicKey),
-      accountDetails.coin,
-    );
+    final publicKey = accountDetails.publicKey;
 
     get<TransactionHandler>()
         .estimateGas(body, publicKey)
@@ -75,11 +70,11 @@ class SendAmountBloc extends Disposable {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();
-        final priceLookup = await _priceService
-            .getAssetPrices(accountDetails.coin, denoms)
-            .then(
-              (prices) => {for (var price in prices) price.denomination: price},
-            );
+        final priceLookup =
+            await _priceService.getAssetPrices(publicKey.coin, denoms).then(
+                  (prices) =>
+                      {for (var price in prices) price.denomination: price},
+                );
 
         for (var fee in estimate.feeCalculated!) {
           final price = priceLookup[fee.denom]?.usdPrice ?? 0;

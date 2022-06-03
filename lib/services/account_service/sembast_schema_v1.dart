@@ -10,24 +10,20 @@ enum SembastAccountKind {
 
 class SembastPublicKeyModel {
   SembastPublicKeyModel({
-    required this.address,
     required this.hex,
     required this.chainId,
   });
 
-  final String address;
   final String hex;
   final String chainId;
 
   Map<String, dynamic> toRecord() => {
-        'address': address,
         'hex': hex,
         'chainId': chainId,
       };
 
   factory SembastPublicKeyModel.fromRecord(Map<String, dynamic> rec) {
     return SembastPublicKeyModel(
-      address: rec['address'] as String,
       hex: rec['hex'] as String,
       chainId: rec['chainId'] as String,
     );
@@ -80,6 +76,5 @@ class SembastAccountModel {
         publicKeys: publicKeys ?? this.publicKeys,
         selectedChainId: selectedChainId ?? this.selectedChainId,
         kind: kind ?? this.kind,
-        status: status ?? this.status,
       );
 }

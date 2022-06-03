@@ -4,12 +4,15 @@ import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart
 import 'package:provenance_wallet/services/models/account_details.dart';
 
 main() {
+  final publicKey = PrivateKey.fromSeed(
+    Mnemonic.createSeed(['one']),
+    Coin.testNet,
+  ).defaultKey().publicKey;
+
   final walletDetails = AccountDetails(
     id: "123",
-    address: "Address",
     name: "Name",
-    publicKey: "abc123",
-    coin: Coin.testNet,
+    publicKey: publicKey,
   );
 
   ReceiveBloc? bloc;

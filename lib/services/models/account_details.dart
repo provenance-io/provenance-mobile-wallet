@@ -6,31 +6,24 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 class AccountDetails with Diagnosticable {
   const AccountDetails({
     required this.id,
-    required this.address,
     required this.name,
     required this.publicKey,
-    required this.coin,
     this.kind = AccountKind.single,
   });
 
+  String get address => publicKey.address;
+  Coin get coin => publicKey.coin;
+
   final String id;
-  final String address;
   final String name;
-  final String publicKey;
-  final Coin coin;
+  final PublicKey publicKey;
   final AccountKind kind;
-
-  bool get isReady => address.isNotEmpty && publicKey.isNotEmpty;
-
-  bool get isNotReady => address.isEmpty || publicKey.isEmpty;
 
   @override
   int get hashCode => hashValues(
         id,
-        address,
         name,
-        publicKey,
-        coin,
+        publicKey.address,
         kind,
       );
 
@@ -38,10 +31,8 @@ class AccountDetails with Diagnosticable {
   bool operator ==(Object other) {
     return other is AccountDetails &&
         other.id == id &&
-        other.address == address &&
         other.name == name &&
-        other.publicKey == publicKey &&
-        other.coin == coin &&
+        other.publicKey.address == publicKey.address &&
         other.kind == kind;
   }
 
@@ -50,7 +41,7 @@ class AccountDetails with Diagnosticable {
     super.debugFillProperties(properties);
 
     properties.add(StringProperty('id', id));
-    properties.add(StringProperty('address', address));
+    properties.add(StringProperty('address', publicKey.address));
     properties.add(StringProperty('name', name));
     properties.add(EnumProperty('kind', kind));
   }

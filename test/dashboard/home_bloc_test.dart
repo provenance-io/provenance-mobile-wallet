@@ -264,6 +264,9 @@ class TestState {
 
     for (var i = 0; i <= maxWalletId; i++) {
       final id = i.toString();
+      final seed = Mnemonic.createSeed([i.toString()]);
+      final privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
+      final publicKey = privateKey.defaultKey().publicKey;
 
       final asset = Asset.fake(
         denom: id,
@@ -309,10 +312,8 @@ class TestState {
         MemoryStorageData(
           AccountDetails(
             id: id,
-            address: id,
             name: id,
-            publicKey: id,
-            coin: Coin.testNet,
+            publicKey: publicKey,
           ),
           [
             PrivateKey.fromSeed(

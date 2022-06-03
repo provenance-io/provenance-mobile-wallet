@@ -4,8 +4,6 @@ import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -19,32 +17,20 @@ final privateKeys = [
   PrivateKey.fromSeed(seed, Coin.mainNet),
   PrivateKey.fromSeed(seed, Coin.testNet),
 ];
-final publicKeys = privateKeys.map((e) {
-  final publicKey = e.defaultKey().publicKey;
-
-  return PublicKeyData(
-    address: publicKey.address,
-    hex: publicKey.compressedPublicKeyHex,
-    chainId: publicKey.coin.chainId,
-  );
-}).toList();
+final publicKeys = privateKeys.map((e) => e.defaultKey().publicKey).toList();
 
 final selectedPrivateKey = privateKeys.first;
 final selectedPublicKey = publicKeys.first;
 
 final details = AccountDetails(
   id: "1",
-  address: "Addr",
   name: "Account1",
-  publicKey: selectedPublicKey.hex,
-  coin: selectedPrivateKey.coin,
+  publicKey: selectedPublicKey,
 );
 final details2 = AccountDetails(
   id: "2",
-  address: "Add2",
   name: "Account2",
-  publicKey: selectedPublicKey.hex,
-  coin: selectedPrivateKey.coin,
+  publicKey: selectedPublicKey,
 );
 
 @GenerateMocks([AccountStorageServiceCore, CipherService])

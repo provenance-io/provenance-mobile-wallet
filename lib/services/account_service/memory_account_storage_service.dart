@@ -1,6 +1,5 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,9 +49,7 @@ class MemoryAccountStorageService implements AccountStorageService {
     final details = AccountDetails(
       id: id,
       name: name,
-      address: selectedPublicKey.address,
-      publicKey: selectedPublicKey.compressedPublicKeyHex,
-      coin: selectedPrivateKey.coin,
+      publicKey: selectedPublicKey,
     );
 
     _datas.add(MemoryStorageData(
@@ -67,17 +64,18 @@ class MemoryAccountStorageService implements AccountStorageService {
   @override
   Future<AccountDetails?> addPendingAccount({
     required String name,
-    required AccountKind kind,
     required Coin coin,
   }) async {
     final id = Uuid().v1().toString();
+    final publicKey = PrivateKey.fromSeed(
+      Mnemonic.createSeed([id]),
+      Coin.testNet,
+    ).defaultKey().publicKey;
 
     final details = AccountDetails(
       id: id,
       name: name,
-      address: '',
-      publicKey: '',
-      coin: coin,
+      publicKey: publicKey,
     );
 
     _datas.add(
@@ -160,10 +158,8 @@ class MemoryAccountStorageService implements AccountStorageService {
       final old = _datas[index];
       final renamed = AccountDetails(
         id: old.details.id,
-        address: old.details.address,
         name: name,
         publicKey: old.details.publicKey,
-        coin: old.details.coin,
       );
       _datas[index] = MemoryStorageData(
         renamed,
@@ -191,10 +187,8 @@ class MemoryAccountStorageService implements AccountStorageService {
       if (keyIndex != -1) {
         final updated = AccountDetails(
           id: old.details.id,
-          address: old.details.address,
           name: old.details.name,
           publicKey: old.details.publicKey,
-          coin: coin,
         );
         _datas[index] = MemoryStorageData(
           updated,

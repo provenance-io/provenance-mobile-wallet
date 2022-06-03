@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:convert/convert.dart' as convert;
 import 'package:path/path.dart' as p;
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -224,7 +226,6 @@ class SqliteAccountStorageService {
         if (!chainIds.contains(chainId)) {
           final publicKeyId = await txn.insert('PublicKey', {
             'WalletId': accountId,
-            'Address': publicKey.address,
             'Hex': publicKey.hex,
             'ChainId': chainId,
           });
@@ -326,17 +327,15 @@ class SqliteAccountStorageService {
   static AccountDetails _mapAccount(Map<String, Object?> result) {
     final id = result['Id'] as int;
     final name = result['Name'] as String;
-    final address = result['Address'] as String;
-    final publicKey = result['Hex'] as String;
+    final hex = result['Hex'] as String;
     final chainId = result['ChainId'] as String;
     final coin = ChainId.toCoin(chainId);
 
     return AccountDetails(
       id: id.toString(),
-      address: address,
       name: name,
-      publicKey: publicKey,
-      coin: coin,
+      publicKey: PublicKey.fromCompressPublicHex(
+          convert.hex.decoder.convert(hex), coin),
     );
   }
 }
