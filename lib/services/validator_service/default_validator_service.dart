@@ -1,5 +1,5 @@
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';

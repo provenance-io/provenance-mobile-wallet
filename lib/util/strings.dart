@@ -479,6 +479,7 @@ class Strings {
   // Staking Details
   static const stakingDetailsValidatorDetails = "Validator Details";
   static const stakingDetailsButtonDelegate = "Delegate";
+  static const stakingDetailsButtonManage = "Manage";
   static const stakingDetailsOperatorAddress = "Operator Address";
   static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
   static const stakingDetailsOwnerAddress = "Owner Address";
@@ -503,8 +504,32 @@ class Strings {
   static const stakingDetailsCommissionRateRange = "Commission Rate Range";
   static const stakingDetailsValidatorTransactions = "Validator Transactions";
 
-  // Staking Initial
-  static const stakingInitialDescription = "Description";
-  static const stakingInitialMyDelegation = "My Delegation";
-  static const stakingInitialNoHash = "0 hash";
+  // Staking Management
+  static const stakingManagementDescription = "Description";
+  static const stakingManagementMyDelegation = "My Delegation";
+  static const stakingManagementNoHash = "0 hash";
+
+  // Staking Confirm
+  static const stakingConfirmDelegatorAddress = "Delegator Address";
+  static const stakingConfirmValidatorAddress = "Validator Address";
+  static const stakingConfirmDenom = "Denom";
+  static const stakingConfirmAmount = "Amount";
+  static const stakingConfirmHash = "hash";
+  static const stakingConfirmData = "Data";
+  static const stakingConfirmGasAdjustment = "Gas Adjustment (default: 1.25)";
+  static const stakingConfirmBack = "Back";
+  static const stakingConfirmSign = "Sign";
+
+  // Staking delegate
+  static const stakingDelegateWarningAccountLockTitle =
+      "Warning: Account will lock";
+  static const stakingDelegateWarningAccountLockMessage =
+      "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.";
+  static const stakingDelegateWarningFundsLockTitle =
+      "Staking will lock your funds for 21+ days";
+  static const stakingDelegateWarningFundsLockMessage =
+      "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
+  static const stakingDelegateAvailableBalance = "Available Balance";
+  static const stakingDelegateAmountToDelegate = "Amount to Delegate";
+  static const stakingDelegateConfirmHash = "hash";
 }

@@ -1,22 +1,22 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class StakingButtons extends StatelessWidget {
   const StakingButtons({
     Key? key,
-    required SelectedModalType initialValue,
+    required SelectedDelegationType initialValue,
     required Function onActivation,
   })  : _activationValue = initialValue,
         _onActivation = onActivation,
         super(key: key);
-  final SelectedModalType _activationValue;
+  final SelectedDelegationType _activationValue;
   final Function _onActivation;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingModalBloc>();
+    final bloc = get<StakingDelegationBloc>();
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Spacing.largeX3,
@@ -29,10 +29,10 @@ class StakingButtons extends StatelessWidget {
           Flexible(
             child: PwButton(
               onPressed: () {
-                bloc.updateSelectedModal(SelectedModalType.initial);
+                bloc.updateSelectedModal(SelectedDelegationType.initial);
               },
               child: PwText(
-                SelectedModalType.delegate.dropDownTitle,
+                SelectedDelegationType.delegate.dropDownTitle,
                 overflow: TextOverflow.ellipsis,
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.body,

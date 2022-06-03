@@ -2,13 +2,11 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/details_item_copy.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -21,11 +19,13 @@ class StakingDetailsScreen extends StatefulWidget {
     required this.validatorAddress,
     required this.details,
     required this.selectedDelegation,
+    required this.navigator,
   }) : super(key: key);
 
   final String validatorAddress;
   final AccountDetails details;
   final Delegation? selectedDelegation;
+  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
@@ -58,6 +58,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
         appBar: PwAppBar(
           title: Strings.stakingDetailsValidatorDetails,
           leadingIcon: PwIcons.back,
+          leadingIconOnPress: () => widget.navigator.goBack(),
         ),
         body: Stack(
           children: [
@@ -69,7 +70,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                 builder: (context, snapshot) {
                   final validator = snapshot.data?.validator;
                   final commission = snapshot.data?.commission;
-                  final delegation = snapshot.data?.delegation;
+                  final delegate = snapshot.data?.delegation;
                   if (validator == null || commission == null) {
                     return Container();
                   }
@@ -136,21 +137,16 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                             Flexible(
                               child: PwButton(
                                 child: PwText(
-                                  Strings.stakingDetailsButtonDelegate,
+                                  delegate == null
+                                      ? Strings.stakingDetailsButtonDelegate
+                                      : Strings.stakingDetailsButtonManage,
                                   style: PwTextStyle.body,
                                 ),
                                 onPressed: () async {
-                                  final account = await get<AccountService>()
-                                      .getSelectedAccount();
-                                  Navigator.of(context).push(StakingModalScreen(
-                                    validator: validator,
-                                    delegation: delegation,
-                                    commission: commission,
-                                    validatorAddress: validator.operatorAddress,
-                                    accountDetails: account!,
-                                    transactionHandler:
-                                        get<TransactionHandler>(),
-                                  ).route());
+                                  widget.navigator.showDelegationManagement(
+                                    validator,
+                                    commission,
+                                  );
                                 },
                               ),
                             ),

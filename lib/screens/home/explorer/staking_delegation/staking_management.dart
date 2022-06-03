@@ -2,23 +2,23 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_modal/staking_modal_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class StakingInitial extends StatelessWidget {
-  const StakingInitial({
+class StakingManagement extends StatelessWidget {
+  const StakingManagement({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingModalBloc>();
+    final bloc = get<StakingDelegationBloc>();
 
-    return StreamBuilder<StakingModalDetails>(
-      initialData: bloc.stakingModalDetails.value,
-      stream: bloc.stakingModalDetails,
+    return StreamBuilder<StakingDelegationDetails>(
+      initialData: bloc.stakingDelegationDetails.value,
+      stream: bloc.stakingDelegationDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null) {
@@ -27,7 +27,7 @@ class StakingInitial extends StatelessWidget {
         return ListView(
           children: [
             DetailsItem(
-              title: Strings.stakingInitialDescription,
+              title: Strings.stakingManagementDescription,
               endChild: Flexible(
                 child: PwText(
                   details.validator.description,
@@ -41,11 +41,11 @@ class StakingInitial extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.stakingInitialMyDelegation,
+              title: Strings.stakingManagementMyDelegation,
               endChild: Flexible(
                 child: PwText(
                   details.delegation?.displayDenom ??
-                      Strings.stakingInitialNoHash,
+                      Strings.stakingManagementNoHash,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   style: PwTextStyle.body,
@@ -66,12 +66,12 @@ class StakingInitial extends StatelessWidget {
                 children: [
                   Flexible(
                     fit: FlexFit.tight,
-                    child: PwDropDown<SelectedModalType>(
-                      initialValue: SelectedModalType.undelegate,
+                    child: PwDropDown<SelectedDelegationType>(
+                      initialValue: SelectedDelegationType.undelegate,
                       items: const [
-                        SelectedModalType.undelegate,
-                        SelectedModalType.redelegate,
-                        SelectedModalType.claimRewards,
+                        SelectedDelegationType.undelegate,
+                        SelectedDelegationType.redelegate,
+                        SelectedDelegationType.claimRewards,
                       ],
                       key: key,
                       icon: Container(
@@ -128,10 +128,10 @@ class StakingInitial extends StatelessWidget {
                   Flexible(
                       child: PwButton(
                     onPressed: () {
-                      bloc.updateSelectedModal(SelectedModalType.initial);
+                      bloc.updateSelectedModal(SelectedDelegationType.initial);
                     },
                     child: PwText(
-                      SelectedModalType.delegate.dropDownTitle,
+                      SelectedDelegationType.delegate.dropDownTitle,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       color: PwColor.neutralNeutral,
