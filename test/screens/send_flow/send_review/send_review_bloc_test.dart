@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -23,7 +23,7 @@ final publicKey = PrivateKey.fromSeed(
   Coin.testNet,
 ).defaultKey().publicKey;
 
-final accountDetails = AccountDetails(
+final accountDetails = BasicAccount(
   id: "Id",
   name: "Name",
   publicKey: publicKey,

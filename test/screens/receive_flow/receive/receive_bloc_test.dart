@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 main() {
   final publicKey = PrivateKey.fromSeed(
@@ -9,7 +9,7 @@ main() {
     Coin.testNet,
   ).defaultKey().publicKey;
 
-  final walletDetails = AccountDetails(
+  final walletDetails = BasicAccount(
     id: "123",
     name: "Name",
     publicKey: publicKey,

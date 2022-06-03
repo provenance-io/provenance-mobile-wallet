@@ -1,14 +1,14 @@
 import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 final publicKey = PrivateKey.fromSeed(
   Mnemonic.createSeed(['one']),
   Coin.testNet,
 ).defaultKey().publicKey;
 
-final walletDetails = AccountDetails(
+final walletDetails = BasicAccount(
   publicKey: publicKey,
   id: "1",
   name: "Wallet1",

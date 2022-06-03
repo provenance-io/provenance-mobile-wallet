@@ -10,6 +10,7 @@ class PwTextFormField extends StatelessWidget {
     this.validator,
     this.controller,
     this.autofocus = false,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.hint,
   }) : super(key: key);
 
@@ -21,6 +22,7 @@ class PwTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final bool autofocus;
   final String? hint;
+  final AutovalidateMode autovalidateMode;
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +38,6 @@ class PwTextFormField extends StatelessWidget {
         VerticalSpacer.small(),
         Container(
           decoration: BoxDecoration(
-            boxShadow: autofocus
-                ? [
-                    BoxShadow(
-                      color: theme.colorScheme.neutral550,
-                      spreadRadius: 6,
-                    ),
-                  ]
-                : [],
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: TextFormField(
@@ -55,7 +49,7 @@ class PwTextFormField extends StatelessWidget {
             controller: controller,
             onChanged: onChanged,
             onFieldSubmitted: onFieldSubmitted,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: autovalidateMode,
             validator: validator,
             decoration: InputDecoration(
               hintText: hint ?? label,

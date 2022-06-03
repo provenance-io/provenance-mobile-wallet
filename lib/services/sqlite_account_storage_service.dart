@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -89,7 +89,7 @@ class SqliteAccountStorageService {
     await db.close();
   }
 
-  Future<List<AccountDetails>> getAccounts() async {
+  Future<List<TransactableAccount>> getAccounts() async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetAccounts);
     final details = results.map(_mapAccount).toList();
@@ -97,11 +97,11 @@ class SqliteAccountStorageService {
     return details;
   }
 
-  Future<AccountDetails?> getAccount({required String id}) async {
+  Future<TransactableAccount?> getAccount({required String id}) async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetAccount, [id]);
 
-    AccountDetails? account;
+    TransactableAccount? account;
     if (results.isNotEmpty) {
       account = _mapAccount(results[0]);
     }
@@ -109,11 +109,11 @@ class SqliteAccountStorageService {
     return account;
   }
 
-  Future<AccountDetails?> getSelectedAccount() async {
+  Future<TransactableAccount?> getSelectedAccount() async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetSelectedAccount);
 
-    AccountDetails? account;
+    TransactableAccount? account;
     if (results.isNotEmpty) {
       account = _mapAccount(results[0]);
     }
@@ -121,7 +121,7 @@ class SqliteAccountStorageService {
     return account;
   }
 
-  Future<AccountDetails?> selectAccount({String? id}) async {
+  Future<TransactableAccount?> selectAccount({String? id}) async {
     final db = await _getDb();
 
     if (id == null) {
@@ -136,7 +136,7 @@ class SqliteAccountStorageService {
     return getSelectedAccount();
   }
 
-  Future<AccountDetails?> renameAccount({
+  Future<TransactableAccount?> renameAccount({
     required String id,
     required String name,
   }) async {
@@ -146,7 +146,7 @@ class SqliteAccountStorageService {
     return await getAccount(id: id);
   }
 
-  Future<AccountDetails?> setChainId({
+  Future<TransactableAccount?> setChainId({
     required String id,
     required String chainId,
   }) async {
@@ -164,7 +164,7 @@ class SqliteAccountStorageService {
       publicKeyId = selectResults.first['Id'] as int;
     }
 
-    AccountDetails? details;
+    TransactableAccount? details;
 
     if (publicKeyId != null) {
       final updateArgs = [
@@ -185,7 +185,7 @@ class SqliteAccountStorageService {
     return details;
   }
 
-  Future<AccountDetails?> addAccount({
+  Future<TransactableAccount?> addAccount({
     required String name,
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
@@ -245,7 +245,7 @@ class SqliteAccountStorageService {
       }
     });
 
-    AccountDetails? details;
+    TransactableAccount? details;
     if (accountId != null) {
       details = await getAccount(id: accountId.toString());
     }
@@ -324,14 +324,14 @@ class SqliteAccountStorageService {
     batch.execute('DROP TABLE IF EXISTS Config');
   }
 
-  static AccountDetails _mapAccount(Map<String, Object?> result) {
+  static TransactableAccount _mapAccount(Map<String, Object?> result) {
     final id = result['Id'] as int;
     final name = result['Name'] as String;
     final hex = result['Hex'] as String;
     final chainId = result['ChainId'] as String;
     final coin = ChainId.toCoin(chainId);
 
-    return AccountDetails(
+    return BasicAccount(
       id: id.toString(),
       name: name,
       publicKey: PublicKey.fromCompressPublicHex(

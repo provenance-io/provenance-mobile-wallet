@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef WalletConnectionProvider = WalletConnection Function(
@@ -15,15 +15,15 @@ typedef WalletConnectionProvider = WalletConnection Function(
 class AccountServiceEvents {
   final _subscriptions = CompositeSubscription();
 
-  final _added = PublishSubject<AccountDetails>();
-  final _removed = PublishSubject<List<AccountDetails>>();
-  final _updated = PublishSubject<AccountDetails>();
-  final _selected = BehaviorSubject<AccountDetails?>.seeded(null);
+  final _added = PublishSubject<Account>();
+  final _removed = PublishSubject<List<Account>>();
+  final _updated = PublishSubject<TransactableAccount>();
+  final _selected = BehaviorSubject<TransactableAccount?>.seeded(null);
 
-  Stream<AccountDetails> get added => _added;
-  Stream<List<AccountDetails>> get removed => _removed;
-  Stream<AccountDetails> get updated => _updated;
-  ValueStream<AccountDetails?> get selected => _selected;
+  Stream<Account> get added => _added;
+  Stream<List<Account>> get removed => _removed;
+  Stream<TransactableAccount> get updated => _updated;
+  ValueStream<TransactableAccount?> get selected => _selected;
 
   void clear() {
     _subscriptions.clear();
@@ -55,21 +55,26 @@ class AccountService implements Disposable {
 
   final events = AccountServiceEvents();
 
-  Future<void> init() async {
-    final selected = await getSelectedAccount();
-    if (selected == null) {
-      selectAccount();
-    } else {
-      events._selected.add(selected);
-    }
-  }
-
   @override
   FutureOr onDispose() {
     events.dispose();
   }
 
-  Future<AccountDetails?> selectAccount({String? id}) async {
+  Future<Account?> getAccount(
+    String id,
+  ) async {
+    return _storage.getAccount(id);
+  }
+
+  Future<TransactableAccount?> selectFirstAccount() async {
+    final id = (await _storage.getAccounts())
+        .firstWhereOrNull((e) => e is TransactableAccount)
+        ?.id;
+
+    return await selectAccount(id: id);
+  }
+
+  Future<TransactableAccount?> selectAccount({String? id}) async {
     final details = await _storage.selectAccount(id: id);
 
     events._selected.add(details);
@@ -77,11 +82,18 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<AccountDetails?> getSelectedAccount() => _storage.getSelectedAccount();
+  Future<TransactableAccount?> getSelectedAccount() =>
+      _storage.getSelectedAccount();
 
-  Future<List<AccountDetails>> getAccounts() => _storage.getAccounts();
+  Future<List<Account>> getAccounts() async {
+    final accounts = await _storage.getAccounts();
 
-  Future<AccountDetails?> renameAccount({
+    return accounts;
+  }
+
+  Future<List<BasicAccount>> getBasicAccounts() => _storage.getBasicAccounts();
+
+  Future<TransactableAccount?> renameAccount({
     required String id,
     required String name,
   }) async {
@@ -100,7 +112,7 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<AccountDetails?> setAccountCoin({
+  Future<TransactableAccount?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -119,7 +131,7 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<AccountDetails?> addAccount({
+  Future<TransactableAccount?> addAccount({
     required List<String> phrase,
     required String name,
     required Coin coin,
@@ -138,7 +150,7 @@ class AccountService implements Disposable {
 
     if (details != null) {
       events._added.add(details);
-      if (events.selected.value == null && details.isReady) {
+      if (events.selected.valueOrNull == null) {
         selectAccount(id: details.id);
       }
     }
@@ -146,18 +158,20 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<AccountDetails?> addPendingAccount({
+  Future<MultiAccount?> addMultiAccount({
     required String name,
+    required List<PublicKeyData> publicKeys,
     required Coin coin,
   }) async {
-    final details = await _storage.addPendingAccount(
+    final details = await _storage.addMultiAccount(
       name: name,
-      coin: coin,
+      publicKeys: publicKeys,
+      selectedCoin: coin,
     );
 
     if (details != null) {
       events._added.add(details);
-      if (events.selected.value == null && details.isReady) {
+      if (events.selected.value == null) {
         selectAccount(id: details.id);
       }
     }
@@ -165,28 +179,50 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<AccountDetails?> removeAccount({required String id}) async {
-    var details = await _storage.getAccount(id);
-    if (details != null) {
+  Future<PendingMultiAccount?> addPendingMultiAccount({
+    required String name,
+    required String remoteId,
+    required String linkedAccountId,
+    required int cosignerCount,
+    required int signaturesRequired,
+  }) async {
+    final account = await _storage.addPendingMultiAccount(
+      name: name,
+      remoteId: remoteId,
+      linkedAccountId: linkedAccountId,
+      cosignerCount: cosignerCount,
+      signaturesRequired: signaturesRequired,
+    );
+
+    if (account != null) {
+      events._added.add(account);
+    }
+
+    return account;
+  }
+
+  Future<Account?> removeAccount({required String id}) async {
+    var account = await _storage.getAccount(id);
+    if (account != null) {
       final success = await _storage.removeAccount(id);
       if (success) {
-        events._removed.add([details]);
+        events._removed.add([account]);
         if (events.selected.value?.id == id) {
           final accounts = await getAccounts();
-          final first = accounts.firstWhereOrNull((e) => e.isReady);
+          final first = accounts.firstOrNull;
           if (first != null) {
             await selectAccount(id: first.id);
           }
         }
       } else {
-        details = null;
+        account = null;
       }
     }
 
-    return details;
+    return account;
   }
 
-  Future<List<AccountDetails>> resetAccounts() async {
+  Future<List<Account>> resetAccounts() async {
     final accounts = await _storage.getAccounts();
 
     final success = await _storage.removeAllAccounts();

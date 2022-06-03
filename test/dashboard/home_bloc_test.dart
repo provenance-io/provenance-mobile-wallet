@@ -8,8 +8,9 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -17,7 +18,6 @@ import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -26,6 +26,7 @@ import 'package:provenance_wallet/services/remote_notification/remote_notificati
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:sembast/sembast_memory.dart';
 
 import 'home_bloc_test.mocks.dart';
 import 'home_mocks.dart';
@@ -36,6 +37,7 @@ const walletConnectAddress =
 @GenerateMocks([RemoteNotificationService])
 void main() {
   tearDown(() async {
+    await get<SembastAccountStorageService>().deleteDatabase();
     await get.reset(dispose: true);
   });
 
@@ -49,12 +51,14 @@ void main() {
       final bloc = state.bloc;
       final walletService = state.walletService;
 
-      expect(walletService.events.selected.value?.id, '0');
+      await pumpEventQueue();
+
+      expect(walletService.events.selected.value?.id, state.accountIds[0]);
       expect(bloc.assetList.value!.first.amount, '0');
     },
   );
 
-  test('Add first wallet selects wallet', () async {
+  test('Given empty account service, no account is selected', () async {
     const maxWalletId = -1; // No initial wallets
 
     final state = await TestState.create(
@@ -63,14 +67,15 @@ void main() {
 
     final walletService = state.walletService;
 
-    expect(await walletService.events.selected.first, isNull);
+    await pumpEventQueue();
+
+    expect(walletService.events.selected.value, isNull);
   });
 
   test(
     'Select wallet loads assets and transactions',
     () async {
       const maxWalletId = 1;
-      final maxWalletIdStr = maxWalletId.toString();
 
       final state = await TestState.create(
         maxWalletId: maxWalletId,
@@ -79,12 +84,13 @@ void main() {
       final bloc = state.bloc;
       final walletService = state.walletService;
 
-      await bloc.selectAccount(id: maxWalletId.toString());
+      await bloc.selectAccount(id: state.accountIds[maxWalletId]);
 
       await pumpEventQueue();
 
-      expect((await walletService.events.selected.first)!.id, maxWalletIdStr);
-      expect(bloc.assetList.value!.first.amount, maxWalletIdStr);
+      expect(walletService.events.selected.value!.id,
+          state.accountIds[maxWalletId]);
+      expect(bloc.assetList.value!.first.amount, maxWalletId.toString());
     },
   );
 
@@ -102,7 +108,8 @@ void main() {
 
     await pumpEventQueue();
 
-    expect((await walletService.events.selected.first)!.name, newName);
+    expect(
+        (await walletService.events.selected.first)!.id, state.accountIds[0]);
   });
 
   test('Remove selected wallet updates selected wallet', () async {
@@ -112,11 +119,11 @@ void main() {
 
     final walletService = state.walletService;
 
-    await state.walletService.removeAccount(id: '0');
+    await state.walletService.removeAccount(id: state.accountIds[0]);
 
     await pumpEventQueue();
 
-    expect((await walletService.events.selected.first)!.id, '1');
+    expect(walletService.events.selected.value!.id, state.accountIds[1]);
   });
 
   test('Remove non-selected wallet does not update selected wallet', () async {
@@ -127,12 +134,12 @@ void main() {
     final bloc = state.bloc;
     final walletService = state.walletService;
 
-    await bloc.selectAccount(id: '0');
-    await walletService.removeAccount(id: '1');
+    await bloc.selectAccount(id: state.accountIds[0]);
+    await walletService.removeAccount(id: state.accountIds[1]);
 
     await pumpEventQueue();
 
-    expect((await walletService.events.selected.first)!.id, '0');
+    expect(walletService.events.selected.value!.id, state.accountIds[0]);
   });
 
   test('Reset wallets removes selected wallet', () async {
@@ -162,7 +169,7 @@ void main() {
       details = e;
     });
 
-    await bloc.connectSession('0', walletConnectAddress);
+    await bloc.connectSession(state.accountIds[0], walletConnectAddress);
 
     await pumpEventQueue();
 
@@ -207,6 +214,7 @@ void main() {
 
 class TestState {
   TestState._(
+    this.accountIds,
     this.assetService,
     this.transactionService,
     this.deepLinkService,
@@ -214,6 +222,7 @@ class TestState {
     this.bloc,
   );
 
+  final List<String> accountIds;
   final AssetService assetService;
   final TransactionService transactionService;
   final DeepLinkService deepLinkService;
@@ -256,8 +265,21 @@ class TestState {
 
     await get.reset(dispose: true);
 
-    final storageDatas = <MemoryStorageData>[];
+    final cipherService = MemoryCipherService();
+    get.registerSingleton<CipherService>(cipherService);
+    final serviceCore = SembastAccountStorageService(
+      factory: databaseFactoryMemory,
+      directory: sembastInMemoryDatabasePath,
+    );
+    get.registerSingleton(serviceCore);
+    final accountService = AccountService(
+      storage: AccountStorageServiceImp(
+        serviceCore,
+        cipherService,
+      ),
+    );
 
+    final accountIds = <String>[];
     final assets = <String, List<Asset>>{};
     final transactions = <String, List<Transaction>>{};
     final sendTransactions = <String, List<SendTransaction>>{};
@@ -265,8 +287,23 @@ class TestState {
     for (var i = 0; i <= maxWalletId; i++) {
       final id = i.toString();
       final seed = Mnemonic.createSeed([i.toString()]);
-      final privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
+      final privateKey = PrivateKey.fromSeed(seed, Coin.mainNet);
       final publicKey = privateKey.defaultKey().publicKey;
+
+      final account = await accountService.addAccount(
+        phrase: [i.toString()],
+        name: id,
+        coin: Coin.mainNet,
+      );
+
+      accountIds.add(account!.id);
+
+      cipherService.encryptKey(
+        id: account.id,
+        privateKey: privateKey.serialize(
+          publicKeyOnly: false,
+        ),
+      );
 
       final asset = Asset.fake(
         denom: id,
@@ -304,42 +341,19 @@ class TestState {
         exponent: i,
       );
 
-      assets[id] = [asset];
+      assets[publicKey.address] = [asset];
       transactions[id] = [transaction];
       sendTransactions[id] = [sendTransaction];
-
-      storageDatas.add(
-        MemoryStorageData(
-          AccountDetails(
-            id: id,
-            name: id,
-            publicKey: publicKey,
-          ),
-          [
-            PrivateKey.fromSeed(
-              Mnemonic.createSeed([id]),
-              Coin.mainNet,
-            ),
-            PrivateKey.fromSeed(
-              Mnemonic.createSeed([id]),
-              Coin.testNet,
-            ),
-          ],
-          0,
-        ),
-      );
     }
+
+    await accountService.selectFirstAccount();
 
     final mockRemoteNotificationService = MockRemoteNotificationService();
     final deepLinkService = MockDeepLinkService();
     final assetService = MockAssetService(assets);
     final transactionService =
         MockTransactionService(sendTransactions, transactions);
-    final walletService = AccountService(
-      storage: MemoryAccountStorageService(
-        datas: storageDatas,
-      ),
-    )..init();
+
     final keyValueService = DefaultKeyValueService(
       store: MemoryKeyValueStore(),
     );
@@ -347,9 +361,7 @@ class TestState {
       return MockWalletConnection(address);
     }
 
-    final cipherService = MockCipherService();
-    get.registerSingleton<CipherService>(cipherService);
-    get.registerSingleton<AccountService>(walletService);
+    get.registerSingleton<AccountService>(accountService);
 
     final authHelper = LocalAuthHelper();
 
@@ -371,10 +383,11 @@ class TestState {
     await pumpEventQueue();
 
     return TestState._(
+      accountIds,
       assetService,
       transactionService,
       deepLinkService,
-      walletService,
+      accountService,
       bloc,
     );
   }

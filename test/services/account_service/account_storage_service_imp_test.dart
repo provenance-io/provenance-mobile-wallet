@@ -4,9 +4,10 @@ import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 import 'account_storage_service_imp_test.mocks.dart';
 
@@ -22,12 +23,12 @@ final publicKeys = privateKeys.map((e) => e.defaultKey().publicKey).toList();
 final selectedPrivateKey = privateKeys.first;
 final selectedPublicKey = publicKeys.first;
 
-final details = AccountDetails(
+final details = BasicAccount(
   id: "1",
   name: "Account1",
   publicKey: selectedPublicKey,
 );
-final details2 = AccountDetails(
+final details2 = BasicAccount(
   id: "2",
   name: "Account2",
   publicKey: selectedPublicKey,
@@ -82,7 +83,11 @@ main() {
 
       verify(mockAccountStorageServiceCore!.addAccount(
         name: "New Name",
-        publicKeys: publicKeys,
+        publicKeys: publicKeys
+            .map((e) => PublicKeyData(
+                hex: e.compressedPublicKeyHex,
+                chainId: ChainId.forCoin(e.coin)))
+            .toList(),
         selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
       ));
 
@@ -120,7 +125,11 @@ main() {
 
       verify(mockAccountStorageServiceCore!.addAccount(
         name: "New Name",
-        publicKeys: publicKeys,
+        publicKeys: publicKeys
+            .map((e) => PublicKeyData(
+                hex: e.compressedPublicKeyHex,
+                chainId: ChainId.forCoin(e.coin)))
+            .toList(),
         selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
       ));
       verifyNoMoreInteractions(mockAccountStorageServiceCore!);
@@ -224,19 +233,20 @@ main() {
 
   group("getWallets", () {
     test("results", () async {
-      when(mockAccountStorageServiceCore!.getAccounts())
+      when(mockAccountStorageServiceCore!.getBasicAccounts())
           .thenAnswer((_) => Future.value([details, details2]));
-      expect([details, details2], await accountStorageService!.getAccounts());
-      verify(mockAccountStorageServiceCore!.getAccounts());
+      expect(
+          [details, details2], await accountStorageService!.getBasicAccounts());
+      verify(mockAccountStorageServiceCore!.getBasicAccounts());
     });
 
     test("error", () async {
       final exception = Exception("A");
 
-      when(mockAccountStorageServiceCore!.getAccounts())
+      when(mockAccountStorageServiceCore!.getBasicAccounts())
           .thenAnswer((_) => Future.error(exception));
       expect(
-        () => accountStorageService!.getAccounts(),
+        () => accountStorageService!.getBasicAccounts(),
         throwsA(exception),
       );
     });

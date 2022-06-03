@@ -6,7 +6,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -40,7 +40,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
-  final AccountDetails accountDetails;
+  final TransactableAccount accountDetails;
   final SendAsset asset;
   final String receivingAddress;
 

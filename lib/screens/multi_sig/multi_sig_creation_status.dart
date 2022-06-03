@@ -1,17 +1,28 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigCreationStatus extends StatefulWidget {
-  const MultiSigCreationStatus({Key? key}) : super(key: key);
+  const MultiSigCreationStatus({
+    required this.accountId,
+    Key? key,
+  }) : super(key: key);
+
+  final String accountId;
 
   @override
   State<MultiSigCreationStatus> createState() => _MultiSigCreationStatusState();
 }
 
 class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
+  final _accountService = get<AccountService>();
+
   @override
   Widget build(BuildContext context) {
     final divider = Divider(
@@ -69,13 +80,33 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                     textAlign: TextAlign.left,
                   ),
                   VerticalSpacer.large(),
-                  divider,
-                  _CoSigner(
-                    checked: true,
-                  ),
-                  divider,
-                  _CoSigner(
-                    checked: false,
+                  FutureBuilder<List<CosignerData>>(
+                    initialData: const [],
+                    future: _getCosigners(),
+                    builder: (context, snapshot) {
+                      final cosigners = snapshot.data!;
+
+                      final widgets = <Widget>[];
+                      for (var i = 0; i < cosigners.length; i++) {
+                        final cosigner = cosigners[i];
+
+                        final description = cosigner.isSelf
+                            ? Strings.multiSigInviteCosignerSelf
+                            : null;
+
+                        widgets.add(divider);
+                        widgets.add(
+                          _CoSigner(
+                            number: i + 1,
+                            checked: cosigner.isSelf,
+                            description: description,
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: widgets,
+                      );
+                    },
                   ),
                   Expanded(
                     child: SizedBox(),
@@ -88,7 +119,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: () {
-                      //
+                      Navigator.of(context).pop();
                     },
                   ),
                   VerticalSpacer.largeX4(),
@@ -100,26 +131,76 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
       ),
     );
   }
+
+  Future<List<CosignerData>> _getCosigners() async {
+    final cosigners = <CosignerData>[];
+
+    final account = await _accountService.getAccount(widget.accountId)
+        as PendingMultiAccount?;
+
+    if (account != null) {
+      final linkedAccount = await _accountService
+          .getAccount(account.linkedAccountId) as BasicAccount;
+      final self = CosignerData(
+        isSelf: true,
+        name: linkedAccount.name,
+        address: linkedAccount.publicKey.address,
+      );
+
+      cosigners.add(self);
+
+      final cosignerCount = account.cosignerCount;
+      for (var i = 1; i < cosignerCount; i++) {
+        cosigners.add(
+          CosignerData(
+            isSelf: false,
+          ),
+        );
+      }
+    }
+
+    return cosigners;
+  }
+}
+
+class CosignerData {
+  CosignerData({
+    required this.isSelf,
+    this.name,
+    this.address,
+  });
+
+  final bool isSelf;
+  final String? name;
+  final String? address;
 }
 
 class _CoSigner extends StatelessWidget {
   const _CoSigner({
+    required this.number,
     required this.checked,
+    this.description,
     Key? key,
   }) : super(key: key);
 
   final bool checked;
+  final int number;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        //
-      },
+      onPressed: checked
+          ? null
+          : () {
+              Navigator.of(context).push(
+                MultiSigInviteScreen(
+                  number: number,
+                  url: 'https://provenance.io',
+                ).route(),
+              );
+            },
       style: ButtonStyle(
-        // shape: MaterialStateProperty.resolveWith(
-        //   (states) => RoundedRectangleBorder(),
-        // ),
         backgroundColor: MaterialStateProperty.all(
           Colors.transparent,
         ),
@@ -137,38 +218,39 @@ class _CoSigner extends StatelessWidget {
             color: checked
                 ? Color(0XFF28CEA8)
                 : Theme.of(context).colorScheme.notice350,
-            // color: Theme.of(context).colorScheme.secondary400,
           ),
           HorizontalSpacer.large(),
           Expanded(
             child: Column(
               textDirection: TextDirection.ltr,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 PwText(
-                  'Co-signer #1',
+                  Strings.multiSigInviteCosignerPrefix + number.toString(),
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),
-                VerticalSpacer.small(),
-                PwText(
-                  'Self',
-                  style: PwTextStyle.footnote,
-                  color: PwColor.neutral200,
-                ),
+                if (description != null) VerticalSpacer.small(),
+                if (description != null)
+                  PwText(
+                    description!,
+                    style: PwTextStyle.footnote,
+                    color: PwColor.neutral200,
+                  ),
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 20,
+          if (!checked)
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: PwIcon(
+                PwIcons.caret,
+                color: Theme.of(context).colorScheme.neutralNeutral,
+                size: 12,
+              ),
             ),
-            child: PwIcon(
-              PwIcons.caret,
-              color: Theme.of(context).colorScheme.neutralNeutral,
-              size: 12,
-            ),
-          ),
         ],
       ),
     );

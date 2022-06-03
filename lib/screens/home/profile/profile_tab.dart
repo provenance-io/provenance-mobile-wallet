@@ -15,7 +15,7 @@ import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
@@ -111,7 +111,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   );
                 },
               ),
-              StreamBuilder<AccountDetails?>(
+              StreamBuilder<TransactableAccount?>(
                 stream: get<AccountService>().events.selected,
                 initialData: null,
                 builder: (context, snapshot) {

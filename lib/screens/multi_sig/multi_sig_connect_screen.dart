@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -33,7 +33,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   final _accountService = get<AccountService>();
 
   late final FocusNode _focusNext;
-  Future<List<AccountDetails>>? _load;
+  Future<List<BasicAccount>>? _load;
 
   var _value = _defaultValue;
   var _boxHasFocus = false;
@@ -43,7 +43,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
     super.initState();
 
     _focusNext = FocusNode(debugLabel: 'Next button');
-    _load ??= _accountService.getAccounts();
+    _load ??= _accountService.getBasicAccounts();
   }
 
   @override
@@ -119,7 +119,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
-                      child: FutureBuilder<List<AccountDetails>>(
+                      child: FutureBuilder<List<TransactableAccount>>(
                           future: _load,
                           builder: (context, snapshot) {
                             final accounts = [
@@ -225,7 +225,7 @@ class _Item {
   });
 
   final String name;
-  final AccountDetails? account;
+  final TransactableAccount? account;
 
   @override
   int get hashCode => hashValues(name, account);

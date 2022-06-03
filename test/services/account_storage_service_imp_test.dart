@@ -8,7 +8,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 import 'account_storage_service_imp_test.mocks.dart';
 
@@ -25,14 +25,14 @@ main() {
   }
 
   final accounts = [
-    AccountDetails(
+    BasicAccount(
       id: "id1",
       name: "Name1",
       publicKey: PrivateKey.fromSeed(Mnemonic.createSeed(['id1']), Coin.testNet)
           .defaultKey()
           .publicKey,
     ),
-    AccountDetails(
+    BasicAccount(
       id: "id2",
       name: "Name2",
       publicKey: PrivateKey.fromSeed(Mnemonic.createSeed(['id2']), Coin.testNet)
@@ -55,12 +55,12 @@ main() {
     final publicKeys = <PublicKeyData>[];
     const id = "TestId";
 
-    AccountDetails firstAccount() {
+    BasicAccount firstAccount() {
       final data = publicKeys.first;
       final coin = ChainId.toCoin(data.chainId);
       final publicKey = keyFromHex(data.hex, coin);
 
-      return AccountDetails(
+      return BasicAccount(
         id: id,
         name: 'Test Wallet',
         publicKey: publicKey,
@@ -200,10 +200,10 @@ main() {
 
   group("getWallets", () {
     test("success", () async {
-      when(_mockAccountStorageServiceCore!.getAccounts())
+      when(_mockAccountStorageServiceCore!.getBasicAccounts())
           .thenAnswer((_) => Future.value(accounts));
 
-      final result = await _storageService!.getAccounts();
+      final result = await _storageService!.getBasicAccounts();
       expect(result, accounts);
     });
   });
