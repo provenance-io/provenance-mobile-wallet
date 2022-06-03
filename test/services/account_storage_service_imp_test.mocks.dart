@@ -42,15 +42,13 @@ class MockAccountStorageServiceCore extends _i1.Mock
           {String? name,
           List<_i5.PublicKeyData>? publicKeys,
           String? selectedChainId,
-          _i2.AccountKind? kind = _i2.AccountKind.single,
-          _i2.AccountStatus? status = _i2.AccountStatus.ready}) =>
+          _i2.AccountKind? kind = _i2.AccountKind.single}) =>
       (super.noSuchMethod(
               Invocation.method(#addAccount, [], {
                 #name: name,
                 #publicKeys: publicKeys,
                 #selectedChainId: selectedChainId,
-                #kind: kind,
-                #status: status
+                #kind: kind
               }),
               returnValue: Future<_i4.AccountDetails?>.value())
           as _i3.Future<_i4.AccountDetails?>);
@@ -93,13 +91,6 @@ class MockAccountStorageServiceCore extends _i1.Mock
   _i3.Future<_i4.AccountDetails?> setChainId({String? id, String? chainId}) =>
       (super.noSuchMethod(
               Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
-              returnValue: Future<_i4.AccountDetails?>.value())
-          as _i3.Future<_i4.AccountDetails?>);
-  @override
-  _i3.Future<_i4.AccountDetails?> setStatus(
-          {String? id, _i2.AccountStatus? status}) =>
-      (super.noSuchMethod(
-              Invocation.method(#setStatus, [], {#id: id, #status: status}),
               returnValue: Future<_i4.AccountDetails?>.value())
           as _i3.Future<_i4.AccountDetails?>);
 }

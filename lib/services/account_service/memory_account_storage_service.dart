@@ -1,4 +1,5 @@
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:uuid/uuid.dart';
@@ -59,6 +60,33 @@ class MemoryAccountStorageService implements AccountStorageService {
       privateKeys,
       selectedKeyIndex,
     ));
+
+    return details;
+  }
+
+  @override
+  Future<AccountDetails?> addPendingAccount({
+    required String name,
+    required AccountKind kind,
+    required Coin coin,
+  }) async {
+    final id = Uuid().v1().toString();
+
+    final details = AccountDetails(
+      id: id,
+      name: name,
+      address: '',
+      publicKey: '',
+      coin: coin,
+    );
+
+    _datas.add(
+      MemoryStorageData(
+        details,
+        [],
+        -1,
+      ),
+    );
 
     return details;
   }

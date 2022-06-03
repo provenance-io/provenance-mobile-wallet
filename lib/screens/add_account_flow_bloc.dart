@@ -1,4 +1,6 @@
+import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/enum/account_add_kind.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -7,10 +9,12 @@ import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:rxdart/rxdart.dart';
 
 enum AddAccountScreen {
   accountType,
@@ -29,6 +33,9 @@ enum AddAccountScreen {
   multiSigCreateOrJoin,
   multiSigConnect,
   multiSigAccountName,
+  multiSigCosigners,
+  multiSigSignatures,
+  multiSigConfirm,
 }
 
 const _flowCreateSingle = [
@@ -62,6 +69,10 @@ const _flowMultiSigCreateOrJoin = [
 const _flowMultiSigCreate = [
   AddAccountScreen.multiSigCreateOrJoin,
   AddAccountScreen.multiSigConnect,
+  AddAccountScreen.multiSigAccountName,
+  AddAccountScreen.multiSigCosigners,
+  AddAccountScreen.multiSigSignatures,
+  AddAccountScreen.multiSigConfirm,
 ];
 
 const _flowRecover = [
@@ -82,7 +93,7 @@ const _flowRecoverInitial = [
   AddAccountScreen.accountSetupConfirmation,
 ];
 
-class AddAccountFlowBloc {
+class AddAccountFlowBloc implements Disposable {
   AddAccountFlowBloc({
     required AddAccountFlowNavigator navigator,
     required AddAccountOrigin origin,
@@ -91,13 +102,34 @@ class AddAccountFlowBloc {
 
   final AddAccountFlowNavigator _navigator;
   final AddAccountOrigin _origin;
+  final _accountService = get<AccountService>();
+  final _keyValueService = get<KeyValueService>();
+
+  final _name = BehaviorSubject<String>();
+  final _multiSigName = BehaviorSubject<String>();
+  final _multiSigCosignerCount = BehaviorSubject.seeded(
+    Count(
+      value: 1,
+      min: 1,
+      max: 10,
+    ),
+  );
+  final _multiSigSignatureCount = BehaviorSubject.seeded(
+    Count(
+      value: 1,
+      min: 1,
+      max: 1,
+    ),
+  );
+
+  ValueStream<String> get name => _name;
+  ValueStream<String> get multiSigName => _multiSigName;
+  ValueStream<Count> get multiSigCosignerCount => _multiSigCosignerCount;
+  ValueStream<Count> get multiSigSignatureCount => _multiSigSignatureCount;
 
   BiometryType get biometryType => _biometryType!;
-  int get totalSteps => _flow.length - 1;
 
-  String get name => _name!;
   AccountAddKind get addKind => _addKind!;
-  AddAccountOrigin get origin => _origin;
   List<String> get words => _words;
   List<int> get pin => _pin;
 
@@ -106,78 +138,142 @@ class AddAccountFlowBloc {
   var _flow = <AddAccountScreen>[];
 
   AccountAddKind? _addKind;
-  String? _name;
+
   BiometryType? _biometryType;
   AccountDetails? _multiSigIndividualAccount;
 
-  int getCurrentStep(AddAccountScreen current) {
-    final index = _flow.indexOf(current);
-    if (index == -1) {
-      throw "Flow doesn't contain screen: $current";
+  @override
+  void onDispose() {
+    _name.close();
+    _multiSigName.close();
+    _multiSigCosignerCount.close();
+    _multiSigSignatureCount.close();
+  }
+
+  void setMultiSigName(String name) {
+    _multiSigName.value = name;
+  }
+
+  void setCosignerCount(int count) {
+    int? min;
+    int? max;
+
+    final current = _multiSigCosignerCount.value;
+    min = current.min;
+    max = current.max;
+
+    _multiSigCosignerCount.value = Count(
+      value: count,
+      min: min,
+      max: max,
+    );
+
+    final signatures = _multiSigSignatureCount.value;
+    var signaturesValue = signatures.value;
+    if (signaturesValue > count) {
+      signaturesValue = count;
     }
 
-    return index;
+    _multiSigSignatureCount.value = Count(
+      value: signaturesValue,
+      min: signatures.min,
+      max: count,
+    );
+  }
+
+  void setSignatureCount(int count) {
+    int? min;
+    int? max;
+
+    final current = _multiSigSignatureCount.value;
+    min = current.min;
+    max = current.max;
+
+    _multiSigSignatureCount.value = Count(
+      value: count,
+      min: min,
+      max: max,
+    );
   }
 
   void _showNext(AddAccountScreen current) {
     final index = _flow.indexOf(current);
     if (index == -1) {
-      throw "Flow doesn't contain screen: $current";
+      throw "Flow doesn't contain screen: $current. $_flow";
     }
     final nextIndex = index + 1;
     if (_flow.length > nextIndex) {
-      _showScreen(_flow[nextIndex]);
+      _showScreen(
+        screen: _flow[nextIndex],
+        currentStep: nextIndex,
+        totalSteps: _flow.length - 1,
+      );
     } else {
       _navigator.endFlow();
     }
   }
 
-  void _showScreen(AddAccountScreen screen) {
+  void _showScreen({
+    required AddAccountScreen screen,
+    required int currentStep,
+    required int totalSteps,
+  }) {
     switch (screen) {
       case AddAccountScreen.accountType:
         _navigator.showAccountType();
         break;
       case AddAccountScreen.accountName:
-        _navigator.showAccountName();
+        _navigator.showAccountName(currentStep, totalSteps);
         break;
       case AddAccountScreen.recoverAccount:
-        _navigator.showRecoverAccount();
+        _navigator.showRecoverAccount(currentStep, totalSteps);
         break;
       case AddAccountScreen.createPassphrase:
-        _navigator.showCreatePassphrase();
+        _navigator.showCreatePassphrase(currentStep, totalSteps);
         break;
       case AddAccountScreen.recoveryWords:
-        _navigator.showRecoveryWords();
+        _navigator.showRecoveryWords(currentStep, totalSteps);
         break;
       case AddAccountScreen.recoveryWordsConfirm:
-        _navigator.showRecoveryWordsConfirm();
+        _navigator.showRecoveryWordsConfirm(currentStep, totalSteps);
         break;
       case AddAccountScreen.backupComplete:
-        _navigator.showBackupComplete();
+        _navigator.showBackupComplete(currentStep, totalSteps);
         break;
       case AddAccountScreen.createPin:
-        _navigator.showCreatePin();
+        _navigator.showCreatePin(currentStep, totalSteps);
         break;
       case AddAccountScreen.confirmPin:
-        _navigator.showConfirmPin();
+        _navigator.showConfirmPin(currentStep, totalSteps);
         break;
       case AddAccountScreen.enableFaceId:
-        _navigator.showEnableFaceId();
+        _navigator.showEnableFaceId(currentStep, totalSteps);
         break;
       case AddAccountScreen.accountSetupConfirmation:
         _navigator.showAccountSetupConfirmation();
         break;
       case AddAccountScreen.recoverPassphraseEntry:
-        _navigator.showRecoverPassphraseEntry();
+        _navigator.showRecoverPassphraseEntry(currentStep, totalSteps);
         break;
       case AddAccountScreen.multiSigCreateOrJoin:
         _navigator.showMultiSigCreateOrJoin();
         break;
       case AddAccountScreen.multiSigConnect:
-        _navigator.showMultiSigConnect();
+        _navigator.showMultiSigConnect(currentStep, totalSteps);
         break;
       case AddAccountScreen.multiSigAccountName:
-        _navigator.showMultiSigAccountName();
+        _navigator.showMultiSigAccountName(currentStep, totalSteps);
+        break;
+      case AddAccountScreen.multiSigCosigners:
+        _navigator.showMultiSigCosigners(
+            FieldMode.initial, currentStep, totalSteps);
+        break;
+      case AddAccountScreen.multiSigSignatures:
+        _navigator.showMultiSigSignatures(
+            FieldMode.initial, currentStep, totalSteps);
+        break;
+      case AddAccountScreen.multiSigConfirm:
+        _navigator.showMultiSigConfirm(currentStep, totalSteps);
         break;
     }
   }
@@ -213,7 +309,7 @@ class AddAccountFlowBloc {
   }
 
   void submitAccountName(String name) {
-    _name = name;
+    _name.value = name;
 
     _showNext(AddAccountScreen.accountName);
   }
@@ -239,14 +335,11 @@ class AddAccountFlowBloc {
         context,
       );
 
-      final chainId =
-          await get<KeyValueService>().getString(PrefKey.defaultChainId) ??
-              ChainId.defaultChainId;
-      final coin = ChainId.toCoin(chainId);
+      final coin = await _defaultCoin();
 
       await get<AccountService>().addAccount(
         phrase: words,
-        name: name,
+        name: name.value,
         coin: coin,
       );
 
@@ -281,19 +374,16 @@ class AddAccountFlowBloc {
 
     final enrolled = await get<LocalAuthHelper>().enroll(
       _pin.join(),
-      name,
+      name.value,
       useBiometry,
       context,
     );
 
     if (enrolled) {
-      final chainId =
-          await get<KeyValueService>().getString(PrefKey.defaultChainId) ??
-              ChainId.defaultChainId;
-      final coin = ChainId.toCoin(chainId);
+      final coin = await _defaultCoin();
       details = await get<AccountService>().addAccount(
         phrase: words,
-        name: name,
+        name: name.value,
         coin: coin,
       );
     }
@@ -317,15 +407,11 @@ class AddAccountFlowBloc {
         context,
       );
 
-      final chainId = await get<KeyValueService>().getString(
-            PrefKey.defaultChainId,
-          ) ??
-          ChainId.defaultChainId;
-      final coin = ChainId.toCoin(chainId);
+      final coin = await _defaultCoin();
 
       await get<AccountService>().addAccount(
         phrase: words,
-        name: name,
+        name: name.value,
         coin: coin,
       );
 
@@ -362,4 +448,63 @@ class AddAccountFlowBloc {
 
     _showNext(AddAccountScreen.multiSigConnect);
   }
+
+  void submitMultiSigAccountName(String name) {
+    _multiSigName.value = name;
+
+    _showNext(AddAccountScreen.multiSigAccountName);
+  }
+
+  void submitMultiSigCosigners(int count) {
+    setCosignerCount(count);
+
+    _showNext(AddAccountScreen.multiSigCosigners);
+  }
+
+  void submitMultiSigSignatures(int count) {
+    setSignatureCount(count);
+
+    _showNext(AddAccountScreen.multiSigSignatures);
+  }
+
+  Future<void> submitMultiSigConfirm(BuildContext context) async {
+    ModalLoadingRoute.showLoading('', context);
+
+    final coin = await _defaultCoin();
+
+    await _accountService.addPendingAccount(
+      name: _multiSigName.value,
+      kind: AccountKind.multi,
+      coin: coin,
+    );
+
+    ModalLoadingRoute.dismiss(context);
+
+    _showNext(AddAccountScreen.multiSigConfirm);
+  }
+
+  Future<Coin> _defaultCoin() async {
+    final chainId = await _keyValueService.getString(PrefKey.defaultChainId) ??
+        ChainId.defaultChainId;
+    final coin = ChainId.toCoin(chainId);
+
+    return coin;
+  }
+}
+
+enum FieldMode {
+  initial,
+  edit,
+}
+
+class Count {
+  Count({
+    required this.value,
+    this.min,
+    this.max,
+  });
+
+  final int value;
+  final int? min;
+  final int? max;
 }

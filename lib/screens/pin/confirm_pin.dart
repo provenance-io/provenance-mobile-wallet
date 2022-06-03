@@ -10,8 +10,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
   const ConfirmPin({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {
@@ -29,8 +34,8 @@ class ConfirmPinState extends State<ConfirmPin> {
         title: Strings.verifyPinCode,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _bloc.getCurrentStep(AddAccountScreen.confirmPin),
-          _bloc.totalSteps,
+          widget.currentStep,
+          widget.totalSteps,
         ),
       ),
       body: Container(

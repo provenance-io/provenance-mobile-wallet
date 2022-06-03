@@ -1,5 +1,6 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
 class PublicKeyData {
@@ -51,6 +52,12 @@ abstract class AccountStorageService {
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
+  });
+
+  Future<AccountDetails?> addPendingAccount({
+    required String name,
+    required AccountKind kind,
+    required Coin coin,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);

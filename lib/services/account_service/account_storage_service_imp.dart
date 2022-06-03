@@ -67,6 +67,22 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
+  Future<AccountDetails?> addPendingAccount({
+    required String name,
+    required AccountKind kind,
+    required Coin coin,
+  }) async {
+    final details = await _serviceCore.addAccount(
+      name: name,
+      publicKeys: [],
+      selectedChainId: ChainId.forCoin(coin),
+      kind: kind,
+    );
+
+    return details;
+  }
+
+  @override
   Future<AccountDetails?> getSelectedAccount() {
     return _serviceCore.getSelectedAccount();
   }

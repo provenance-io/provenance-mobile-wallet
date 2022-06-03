@@ -311,7 +311,7 @@ class TestState {
             id: id,
             address: id,
             name: id,
-            publicKey: "",
+            publicKey: id,
             coin: Coin.testNet,
           ),
           [
