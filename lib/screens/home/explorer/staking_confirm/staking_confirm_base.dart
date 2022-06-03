@@ -100,7 +100,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     child: Form(
                       key: _formKey,
                       child: StakingTextFormField(
-                        hint: 'hash',
+                        hint: Strings.stakingConfirmHash,
                         textEditingController: _textEditingController,
                         submit: () {},
                       ),
