@@ -8,8 +8,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePin extends StatefulHookWidget {
   const CreatePin({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {
@@ -27,8 +32,8 @@ class CreatePinState extends State<CreatePin> {
         title: Strings.setPinCode,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _bloc.getCurrentStep(AddAccountScreen.createPin),
-          _bloc.totalSteps,
+          widget.currentStep,
+          widget.totalSteps,
         ),
       ),
       body: Container(

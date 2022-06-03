@@ -94,7 +94,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
     AccountKind kind = AccountKind.single,
-    AccountStatus status = AccountStatus.ready,
   }) async {
     final db = await _db;
     final model = v1.AccountModel(
@@ -108,7 +107,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           .toList(),
       selectedChainId: selectedChainId,
       kind: _toKindV1(kind),
-      status: _toStatusV1(status),
     );
     final id = await _accounts.add(
       db,
@@ -246,47 +244,27 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     return details;
   }
 
-  @override
-  Future<AccountDetails?> setStatus({
-    required String id,
-    required AccountStatus status,
-  }) async {
-    final db = await _db;
-
-    AccountDetails? details;
-
-    final accountRec = _accounts.record(id);
-    final accountValue = await accountRec.get(db);
-    if (accountValue != null) {
-      final accountModel = v1.AccountModel.fromRecord(accountValue);
-      final updatedAccountModel = accountModel.copyWith(
-        status: _toStatusV1(status),
-      );
-      final updatedAccountValue = await accountRec.update(
-        db,
-        updatedAccountModel.toRecord(),
-      );
-      if (updatedAccountValue != null) {
-        details = _toDetails(id, updatedAccountValue);
-      }
-    }
-
-    return details;
-  }
-
   AccountDetails _toDetails(String id, Map<String, Object?> value) {
     final model = v1.AccountModel.fromRecord(value);
-    final selectedKey =
-        model.publicKeys.firstWhere((e) => e.chainId == model.selectedChainId);
+    final chainId = model.selectedChainId;
+
+    var address = '';
+    var hex = '';
+
+    if (model.publicKeys.isNotEmpty) {
+      final selectedKey = model.publicKeys
+          .firstWhere((e) => e.chainId == model.selectedChainId);
+      address = selectedKey.address;
+      hex = selectedKey.hex;
+    }
 
     return AccountDetails(
       id: id,
       name: model.name,
-      address: selectedKey.address,
-      publicKey: selectedKey.hex,
-      coin: ChainId.toCoin(selectedKey.chainId),
+      address: address,
+      publicKey: hex,
+      coin: ChainId.toCoin(chainId),
       kind: _fromKindV1(model.kind),
-      status: _fromStatusV1(model.status),
     );
   }
 
@@ -294,15 +272,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     return v1.AccountKind.values.byName(kind.name);
   }
 
-  v1.AccountStatus _toStatusV1(AccountStatus status) {
-    return v1.AccountStatus.values.byName(status.name);
-  }
-
   AccountKind _fromKindV1(v1.AccountKind kind) {
     return AccountKind.values.byName(kind.name);
-  }
-
-  AccountStatus _fromStatusV1(v1.AccountStatus status) {
-    return AccountStatus.values.byName(status.name);
   }
 }

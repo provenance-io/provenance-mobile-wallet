@@ -9,8 +9,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePassphraseScreen extends StatelessWidget {
   const CreatePassphraseScreen({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +26,8 @@ class CreatePassphraseScreen extends StatelessWidget {
         title: Strings.createPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          bloc.getCurrentStep(AddAccountScreen.createPassphrase),
-          bloc.totalSteps,
+          currentStep,
+          totalSteps,
         ),
       ),
       body: PwOnboardingScreen(

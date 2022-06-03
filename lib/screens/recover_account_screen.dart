@@ -9,10 +9,15 @@ import 'package:provenance_wallet/util/strings.dart';
 class RecoverAccountScreen extends StatelessWidget {
   RecoverAccountScreen({
     Key? key,
+    required this.currentStep,
+    required this.totalSteps,
   }) : super(key: key);
 
   static final keyContinueButton =
       ValueKey('$RecoverAccountScreen.continue_button');
+
+  final int currentStep;
+  final int totalSteps;
 
   final _bloc = get<AddAccountFlowBloc>();
 
@@ -24,8 +29,8 @@ class RecoverAccountScreen extends StatelessWidget {
         title: Strings.recoverAccount,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _bloc.getCurrentStep(AddAccountScreen.recoverAccount),
-          _bloc.totalSteps,
+          currentStep,
+          totalSteps,
         ),
       ),
       body: CustomScrollView(

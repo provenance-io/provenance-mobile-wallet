@@ -208,6 +208,10 @@ class Strings {
   static const accountTypeOptionMultiDesc =
       'Account shared by two or more users';
 
+  // Multi-Sig
+  static const multiSigNextButton = 'Next';
+  static const multiSigSaveButton = 'Save';
+
   // Multi-Sig Create or Join
   static const accountTypeMultiSigTitle = 'Multi-Signature Account';
   static const accountTypeMultiSigDesc =
@@ -223,16 +227,36 @@ class Strings {
   static const multiSigConnectDesc =
       "You are creating a new multi-signature account. Select which account you’d like to join with.";
   static const multiSigConnectSelectionLabel = 'Select Account';
-  static const multiSigConnectNextButton = 'Next';
   static const multiSigConnectCreateButton = 'Create New Account';
+
+  // Multi-Sig Cosigners
+  static const multiSigCosignersTitle = 'Set Number of Co-Signers';
+  static const multiSigCosignersMessage = 'Set the number of co-signers';
+  static const multiSigCosignersDescription =
+      'All co-signers will have access to this wallet. You may have a maximum of 10 co-signers including yourself.';
+
+  // Multi-Sig Signatures
+  static const multiSigSignaturesTitle = 'Set Number of Signatures';
+  static const multiSigSignaturesMessage =
+      'Set the minimum signatures required';
+  static const multiSigSignaturesDescription =
+      'This will be the number of signatures required to authorize a transaction.';
+
+  // Multi-Sig Confirm
+  static const multiSigConfirmTitle = 'Confirm Account';
+  static const multiSigConfirmMessage =
+      'Please confirm the information below. You cannot alter the information after account creation is complete.';
+  static const multiSigConfirmAccountNameLabel = 'Account Name';
+  static const multiSigConfirmCosignersLabel = 'Total number of co-signers';
+  static const multiSigConfirmSignaturesLabel = 'Signatures required';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
-  static const nameYourAccountText =
-      'Name your account to easily identify it while using the Provenance Blockchain Wallet.';
-  static const infoIsStoredLocallyText =
-      "These names are stored locally, and can only be seen by you.";
+  static const accountNameMessage =
+      'Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThese names are stored locally, and can only be seen by you.';
+  static const accountNameMultiSigMessage =
+      'Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThis name will be shared with co-signers.';
   static const continueName = 'Continue';
 
   // Confirm Pin

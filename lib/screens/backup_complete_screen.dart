@@ -9,8 +9,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class BackupCompleteScreen extends StatelessWidget {
   const BackupCompleteScreen({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +26,8 @@ class BackupCompleteScreen extends StatelessWidget {
         title: Strings.backupComplete,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          bloc.getCurrentStep(AddAccountScreen.backupComplete),
-          bloc.totalSteps,
+          currentStep,
+          totalSteps,
         ),
       ),
       body: PwOnboardingScreen(

@@ -11,8 +11,13 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   const RecoveryWordsConfirmScreen({
+    required this.currentStep,
+    required this.totalSteps,
     Key? key,
   }) : super(key: key);
+
+  final int currentStep;
+  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {
@@ -52,8 +57,8 @@ class RecoveryWordsConfirmScreenState
         title: Strings.verifyPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
-          _addAccountBloc.getCurrentStep(AddAccountScreen.recoveryWordsConfirm),
-          _addAccountBloc.totalSteps,
+          widget.currentStep,
+          widget.totalSteps,
         ),
       ),
       body: Container(

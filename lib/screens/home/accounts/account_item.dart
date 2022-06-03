@@ -99,7 +99,7 @@ class _AccountItemState extends State<AccountItem> {
                       ),
                     ],
                   ),
-                  if (_account.status == AccountStatus.ready)
+                  if (_account.isReady)
                     FutureBuilder<int?>(
                       future: get<AccountsBloc>().getAssetCount(_account),
                       builder: (context, snapshot) {
@@ -129,7 +129,7 @@ class _AccountItemState extends State<AccountItem> {
                         );
                       },
                     ),
-                  if (_account.status == AccountStatus.pending)
+                  if (_account.isNotReady)
                     PwText(
                       Strings.accountStatusPending,
                       style: PwTextStyle.bodySmall,
@@ -220,8 +220,8 @@ class _AccountItemState extends State<AccountItem> {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
-            if (!isSelected) PwListDivider(),
-            if (!isSelected)
+            if (!isSelected && item.isReady) PwListDivider(),
+            if (!isSelected && item.isReady)
               PwGreyButton(
                 text: Strings.select,
                 onPressed: () {

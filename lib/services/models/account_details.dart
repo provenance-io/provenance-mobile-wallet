@@ -11,7 +11,6 @@ class AccountDetails with Diagnosticable {
     required this.publicKey,
     required this.coin,
     this.kind = AccountKind.single,
-    this.status = AccountStatus.ready,
   });
 
   final String id;
@@ -20,7 +19,10 @@ class AccountDetails with Diagnosticable {
   final String publicKey;
   final Coin coin;
   final AccountKind kind;
-  final AccountStatus status;
+
+  bool get isReady => address.isNotEmpty && publicKey.isNotEmpty;
+
+  bool get isNotReady => address.isEmpty || publicKey.isEmpty;
 
   @override
   int get hashCode => hashValues(
@@ -30,7 +32,6 @@ class AccountDetails with Diagnosticable {
         publicKey,
         coin,
         kind,
-        status,
       );
 
   @override
@@ -41,8 +42,7 @@ class AccountDetails with Diagnosticable {
         other.name == name &&
         other.publicKey == publicKey &&
         other.coin == coin &&
-        other.kind == kind &&
-        other.status == status;
+        other.kind == kind;
   }
 
   @override
@@ -53,6 +53,5 @@ class AccountDetails with Diagnosticable {
     properties.add(StringProperty('address', address));
     properties.add(StringProperty('name', name));
     properties.add(EnumProperty('kind', kind));
-    properties.add(EnumProperty('status', status));
   }
 }

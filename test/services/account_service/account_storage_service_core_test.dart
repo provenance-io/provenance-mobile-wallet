@@ -123,26 +123,6 @@ void main() {
     expect(account, isNotNull);
     expect(account!.coin, newCoin);
   });
-
-  test('Given service with accounts, on set status, account is updated',
-      () async {
-    final datas = await _initAccounts(count: 2);
-    final second = datas[1];
-
-    final status = second.status;
-    final newStatus = AccountStatus.values.firstWhere((e) => e != status);
-
-    var account = await service.setStatus(
-      id: second.id,
-      status: newStatus,
-    );
-    expect(account, isNotNull);
-    expect(account!.status, newStatus);
-
-    account = await service.getAccount(id: second.id);
-    expect(account, isNotNull);
-    expect(account!.status, newStatus);
-  });
 }
 
 class _AccountData {
@@ -152,7 +132,6 @@ class _AccountData {
     required String selectedChainId,
     required this.publicKeyDatas,
     required this.kind,
-    required this.status,
   }) {
     selectedKey =
         publicKeyDatas.firstWhere((e) => e.chainId == selectedChainId);
@@ -163,7 +142,6 @@ class _AccountData {
 
   final List<PublicKeyData> publicKeyDatas;
   final AccountKind kind;
-  final AccountStatus status;
   late final PublicKeyData selectedKey;
 }
 
@@ -174,7 +152,6 @@ _expectAccountMatches(_AccountData data, AccountDetails? account) {
   expect(account.publicKey, data.selectedKey.hex);
   expect(account.coin, ChainId.toCoin(data.selectedKey.chainId));
   expect(account.kind, data.kind);
-  expect(account.status, data.status);
 }
 
 Future<_AccountData> _initAccount() async {
@@ -193,14 +170,12 @@ Future<List<_AccountData>> _initAccounts({
     const selectedChainId = ChainId.mainNet;
     final publicKeyDatas = _createPublicKeyDatas();
     const kind = AccountKind.multi;
-    const status = AccountStatus.pending;
 
     final details = await service.addAccount(
       name: name,
       publicKeys: publicKeyDatas,
       selectedChainId: selectedChainId,
       kind: kind,
-      status: status,
     );
 
     datas.add(
@@ -210,7 +185,6 @@ Future<List<_AccountData>> _initAccounts({
         selectedChainId: selectedChainId,
         publicKeyDatas: publicKeyDatas,
         kind: kind,
-        status: status,
       ),
     );
   }
