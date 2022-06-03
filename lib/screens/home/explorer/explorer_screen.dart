@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -29,7 +29,7 @@ class HomeScreenState extends State<ExplorerScreen>
     RouterObserver.instance.routeObserver.unsubscribe(this);
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
-    get.unregister<ExplorerBloc>();
+    get.unregister<StakingFlowBloc>();
 
     super.dispose();
   }
@@ -46,8 +46,8 @@ class HomeScreenState extends State<ExplorerScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance.addObserver(this);
-    final bloc = ExplorerBloc(accountDetails: widget.accountDetails);
-    get.registerSingleton<ExplorerBloc>(bloc);
+    final bloc = StakingFlowBloc(accountDetails: widget.accountDetails);
+    get.registerSingleton<StakingFlowBloc>(bloc);
     bloc.load();
 
     super.initState();

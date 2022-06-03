@@ -11,7 +11,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ExplorerBloc extends PwPagingCache {
+class StakingFlowBloc extends PwPagingCache {
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
@@ -29,7 +29,7 @@ class ExplorerBloc extends PwPagingCache {
   final _validatorService = get<ValidatorService>();
   final AccountDetails _accountDetails;
 
-  ExplorerBloc({
+  StakingFlowBloc({
     required AccountDetails accountDetails,
   })  : _accountDetails = accountDetails,
         super(30);

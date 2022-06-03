@@ -1,8 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/validator_list.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -16,14 +16,14 @@ class StakingTab extends StatefulWidget {
 }
 
 class StakingTabState extends State<StakingTab> {
-  late ExplorerBloc _bloc;
+  late StakingFlowBloc _bloc;
 
   final textDivider = " • ";
 
   @override
   void initState() {
     super.initState();
-    _bloc = get<ExplorerBloc>();
+    _bloc = get<StakingFlowBloc>();
   }
 
   @override

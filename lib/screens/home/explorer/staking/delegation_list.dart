@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/delegation_list_item.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class DelegationList extends StatefulWidget {
@@ -13,7 +13,7 @@ class DelegationList extends StatefulWidget {
 }
 
 class DelegationListState extends State<DelegationList> {
-  final ExplorerBloc _bloc = get<ExplorerBloc>();
+  final StakingFlowBloc _bloc = get<StakingFlowBloc>();
   final _scrollController = ScrollController();
 
   @override
