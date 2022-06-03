@@ -4,14 +4,18 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingDelegate extends StatefulWidget {
-  const StakingDelegate({
+  StakingDelegate({
     Key? key,
+    required this.navigator,
   }) : super(key: key);
+
+  StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => _StakingDelegateState();
@@ -154,8 +158,9 @@ class _StakingDelegateState extends State<StakingDelegate> {
                             details.hashDelegated.isNegative) {
                           return;
                         }
-                        print("press registered");
-                        //bloc.updateSelectedModal(SelectedModalType.initial);
+                        widget.navigator.showReviewTransaction(
+                          details.selectedDelegationType,
+                        );
                       },
                       child: PwText(
                         SelectedDelegationType.delegate.dropDownTitle,
