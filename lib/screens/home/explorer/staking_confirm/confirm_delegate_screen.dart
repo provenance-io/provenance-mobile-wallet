@@ -29,22 +29,20 @@ class ConfirmDelegateScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedModalType.dropDownTitle,
           onDataClick: () {
-            final data = '''
-{
+            final data = '''{
   "delegatorAddress": "${details.accountDetails.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
   "amount": {
     "denom": "nhash",
     "amount": "${details.hashDelegated.nhashFromHash()}"
   }
-}
-''';
+}''';
             navigator.showTransactionData(data);
           },
           onTransactionSign: (gasEstimated) {},
           children: [
             DetailsItem(
-              title: "Delegator Address",
+              title: Strings.stakingConfirmDelegatorAddress,
               endChild: Flexible(
                 child: PwText(
                   details.accountDetails.address.abbreviateAddress(),
@@ -58,7 +56,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Validator Address",
+              title: Strings.stakingConfirmValidatorAddress,
               endChild: Flexible(
                 child: PwText(
                   details.validator.operatorAddress.abbreviateAddress(),
@@ -72,10 +70,10 @@ class ConfirmDelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Denom",
+              title: Strings.stakingConfirmDenom,
               endChild: Flexible(
                 child: PwText(
-                  details.asset?.denom ?? 'hash',
+                  details.asset?.denom ?? Strings.stakingConfirmHash,
                   overflow: TextOverflow.ellipsis,
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.body,
@@ -86,7 +84,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Amount",
+              title: Strings.stakingConfirmAmount,
               endChild: Flexible(
                 child: PwText(
                   details.hashDelegated.nhashFromHash(),

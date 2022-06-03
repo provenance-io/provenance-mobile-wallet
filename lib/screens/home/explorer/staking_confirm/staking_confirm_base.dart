@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class StakingConfirmBase extends StatefulWidget {
   const StakingConfirmBase({
@@ -69,7 +70,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                 widget.onDataClick();
               },
               child: PwText(
-                "Data",
+                Strings.stakingConfirmData,
                 style: PwTextStyle.body,
               ),
             ),
@@ -84,7 +85,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             indent: Spacing.largeX3,
           ),
           DetailsItem(
-            title: "Gas Adjustment (default: 1.25)",
+            title: Strings.stakingConfirmGasAdjustment,
             endChild: Flexible(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -121,7 +122,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                       Navigator.of(context).pop();
                     },
                     child: PwText(
-                      "Back",
+                      Strings.stakingConfirmBack,
                       overflow: TextOverflow.ellipsis,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
@@ -137,7 +138,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                       widget.onTransactionSign(updatedGas);
                     },
                     child: PwText(
-                      "Sign",
+                      Strings.stakingConfirmSign,
                       overflow: TextOverflow.ellipsis,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,

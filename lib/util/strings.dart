@@ -507,4 +507,15 @@ class Strings {
   static const stakingManagementDescription = "Description";
   static const stakingManagementMyDelegation = "My Delegation";
   static const stakingManagementNoHash = "0 hash";
+
+  // Staking Confirm
+  static const stakingConfirmDelegatorAddress = "Delegator Address";
+  static const stakingConfirmValidatorAddress = "Validator Address";
+  static const stakingConfirmDenom = "Denom";
+  static const stakingConfirmAmount = "Amount";
+  static const stakingConfirmHash = "hash";
+  static const stakingConfirmData = "Data";
+  static const stakingConfirmGasAdjustment = "Gas Adjustment (default: 1.25)";
+  static const stakingConfirmBack = "Back";
+  static const stakingConfirmSign = "Sign";
 }
