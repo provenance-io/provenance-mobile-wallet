@@ -30,18 +30,18 @@ class _StakingDelegateState extends State<StakingDelegate> {
     super.initState();
 
     _textEditingController = TextEditingController();
-    _textEditingController.addListener(listen);
+    _textEditingController.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
-    _textEditingController.removeListener(listen);
+    _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
 
     super.dispose();
   }
 
-  void listen() {
+  void _onTextChanged() {
     String text = _textEditingController.text;
     if (text.isEmpty) {
       return;
