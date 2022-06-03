@@ -12,7 +12,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
   const ConfirmDelegateScreen({Key? key, required this.navigator})
       : super(key: key);
 
-  final StakingFlowBlocNavigator navigator;
+  final StakingFlowNavigator navigator;
 
   @override
   Widget build(BuildContext context) {

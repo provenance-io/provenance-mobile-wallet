@@ -18,7 +18,7 @@ class StakingDelegationScreen extends StatefulWidget {
   final String validatorAddress;
   final AccountDetails accountDetails;
   final TransactionHandler transactionHandler;
-  final StakingFlowBlocNavigator navigator;
+  final StakingFlowNavigator navigator;
 
   const StakingDelegationScreen({
     Key? key,

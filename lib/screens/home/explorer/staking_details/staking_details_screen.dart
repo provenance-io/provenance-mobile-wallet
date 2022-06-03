@@ -25,7 +25,7 @@ class StakingDetailsScreen extends StatefulWidget {
   final String validatorAddress;
   final AccountDetails details;
   final Delegation? selectedDelegation;
-  final StakingFlowBlocNavigator navigator;
+  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
@@ -58,6 +58,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
         appBar: PwAppBar(
           title: Strings.stakingDetailsValidatorDetails,
           leadingIcon: PwIcons.back,
+          leadingIconOnPress: () => widget.navigator.goBack(),
         ),
         body: Stack(
           children: [

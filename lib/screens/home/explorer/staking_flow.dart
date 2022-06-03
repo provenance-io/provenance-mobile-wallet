@@ -1,21 +1,24 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_delegate_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_redelegate_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
-import 'package:provenance_wallet/util/get.dart';
 
-abstract class StakingFlowBlocNavigator {
+abstract class StakingFlowNavigator {
+  void goBack();
+
   Future<void> showDelegationManagement(
     DetailedValidator validator,
     Commission commission,
   );
 
-  Future<void> showReviewTransaction();
+  Future<void> showReviewTransaction(SelectedDelegationType type);
 
   Future<void> showTransactionData(String data);
 
@@ -39,7 +42,12 @@ class StakingFlow extends FlowBase {
 }
 
 class StakingFlowState extends FlowBaseState<StakingFlow>
-    implements StakingFlowBlocNavigator {
+    implements StakingFlowNavigator {
+  @override
+  void goBack() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget createStartPage() => StakingDetailsScreen(
         validatorAddress: widget.validatorAddress,
@@ -58,8 +66,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         delegation: widget.selectedDelegation,
         validator: validator,
         accountDetails: widget.details,
-        commission: commission,
-        transactionHandler: get<TransactionHandler>(),
+        commissionRate: commission.commissionRate,
         validatorAddress: widget.validatorAddress,
         navigator: this,
       ),
@@ -67,7 +74,33 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showReviewTransaction() async {}
+  Future<void> showReviewTransaction(SelectedDelegationType type) async {
+    Widget widget;
+    switch (type) {
+      case SelectedDelegationType.initial:
+        return;
+      case SelectedDelegationType.undelegate:
+      case SelectedDelegationType.delegate:
+        widget = ConfirmDelegateScreen(
+          navigator: this,
+        );
+        break;
+      case SelectedDelegationType.claimRewards:
+        // FIXME: use correct view.
+        widget = ConfirmRedelegateScreen(
+          navigator: this,
+        );
+        break;
+      case SelectedDelegationType.redelegate:
+        widget = ConfirmRedelegateScreen(
+          navigator: this,
+        );
+        break;
+    }
+    showPage(
+      (context) => widget,
+    );
+  }
 
 // TODO: have the caller make the string.
   @override
