@@ -13,8 +13,6 @@ import 'package:rxdart/rxdart.dart';
 
 // FIXME: Not used/registered yet.
 class StakingRedelegationBloc extends Disposable {
-  final BehaviorSubject<StakingDelegationDetails> _stakingDelegationDetails;
-  final _isLoading = BehaviorSubject.seeded(false);
   StakingRedelegationBloc(
     final Delegation? delegation,
     final DetailedValidator validator,
@@ -34,6 +32,8 @@ class StakingRedelegationBloc extends Disposable {
           ),
         );
 
+  final BehaviorSubject<StakingDelegationDetails> _stakingDelegationDetails;
+  final _isLoading = BehaviorSubject.seeded(false);
   final AccountDetails _accountDetails;
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
