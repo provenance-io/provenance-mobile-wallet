@@ -129,7 +129,8 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     },
                     child: PwText(
                       Strings.stakingConfirmBack,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
@@ -145,7 +146,8 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     },
                     child: PwText(
                       Strings.stakingConfirmSign,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
