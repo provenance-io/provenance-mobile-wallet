@@ -131,7 +131,7 @@ class _StakingDelegateState extends State<StakingDelegate> {
                     Flexible(
                       child: PwButton(
                         onPressed: () {
-                          bloc.updateSelectedModal(
+                          bloc.updateSelectedDelegationType(
                               SelectedDelegationType.initial);
                         },
                         child: PwText(

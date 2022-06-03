@@ -96,7 +96,8 @@ class StakingManagement extends StatelessWidget {
                         ),
                       ),
                       isExpanded: true,
-                      onValueChanged: (item) => bloc.updateSelectedModal(item),
+                      onValueChanged: (item) =>
+                          bloc.updateSelectedDelegationType(item),
                       builder: (item) => Container(
                         height: 42,
                         decoration: BoxDecoration(
@@ -128,7 +129,9 @@ class StakingManagement extends StatelessWidget {
                   Flexible(
                       child: PwButton(
                     onPressed: () {
-                      bloc.updateSelectedModal(SelectedDelegationType.initial);
+                      bloc.updateSelectedDelegationType(
+                        SelectedDelegationType.delegate,
+                      );
                     },
                     child: PwText(
                       SelectedDelegationType.delegate.dropDownTitle,

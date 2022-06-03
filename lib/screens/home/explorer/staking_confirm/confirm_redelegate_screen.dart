@@ -27,7 +27,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           return Container();
         }
         return StakingConfirmBase(
-          appBarTitle: details.selectedModalType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''
 {

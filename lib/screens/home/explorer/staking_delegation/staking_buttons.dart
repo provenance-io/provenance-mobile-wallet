@@ -29,7 +29,8 @@ class StakingButtons extends StatelessWidget {
           Flexible(
             child: PwButton(
               onPressed: () {
-                bloc.updateSelectedModal(SelectedDelegationType.initial);
+                bloc.updateSelectedDelegationType(
+                    SelectedDelegationType.initial);
               },
               child: PwText(
                 SelectedDelegationType.delegate.dropDownTitle,
