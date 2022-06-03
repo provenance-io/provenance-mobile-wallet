@@ -10,12 +10,12 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingDelegate extends StatefulWidget {
-  StakingDelegate({
+  const StakingDelegate({
     Key? key,
     required this.navigator,
   }) : super(key: key);
 
-  StakingFlowNavigator navigator;
+  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => _StakingDelegateState();
@@ -107,20 +107,24 @@ class _StakingDelegateState extends State<StakingDelegate> {
             DetailsItem(
               title: Strings.stakingDelegateAmountToDelegate,
               endChild: Flexible(
-                  child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                      child: Form(
-                    key: _formKey,
-                    child: StakingTextFormField(
-                      hint: Strings.stakingDelegateConfirmHash,
-                      submit: _submit,
-                      textEditingController: _textEditingController,
-                    ),
-                  )),
-                ],
-              )),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                        child: Form(
+                      key: _formKey,
+                      child: StakingTextFormField(
+                        hint: Strings.stakingDelegateConfirmHash,
+                        submit: _submit,
+                        textEditingController: _textEditingController,
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -136,7 +140,8 @@ class _StakingDelegateState extends State<StakingDelegate> {
                       child: PwButton(
                         onPressed: () {
                           bloc.updateSelectedDelegationType(
-                              SelectedDelegationType.initial);
+                            SelectedDelegationType.initial,
+                          );
                         },
                         child: PwText(
                           SelectedDelegationType.initial.dropDownTitle,

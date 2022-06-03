@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_management.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -122,8 +123,11 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
         // TODO: Handle this case.
         return Container();
       case SelectedDelegationType.redelegate:
-        // TODO: Handle this case.
-        return Container();
+        return StakingRedelegate(
+          navigator: widget.navigator,
+          accountDetails: widget.accountDetails,
+          delegation: widget.delegation!,
+        );
     }
   }
 }
