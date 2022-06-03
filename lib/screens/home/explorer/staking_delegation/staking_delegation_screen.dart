@@ -4,7 +4,6 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
-import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -14,7 +13,7 @@ class StakingDelegationScreen extends StatefulWidget {
 
   final DetailedValidator validator;
 
-  final Commission commission;
+  final String commissionRate;
   final String validatorAddress;
   final AccountDetails accountDetails;
   final TransactionHandler transactionHandler;
@@ -24,7 +23,7 @@ class StakingDelegationScreen extends StatefulWidget {
     Key? key,
     this.delegation,
     required this.validator,
-    required this.commission,
+    required this.commissionRate,
     required this.validatorAddress,
     required this.accountDetails,
     required this.transactionHandler,
@@ -44,7 +43,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     _bloc = StakingDelegationBloc(
       widget.delegation,
       widget.validator,
-      widget.commission,
+      widget.commissionRate,
       widget.validatorAddress,
       widget.accountDetails,
       widget.transactionHandler,
@@ -95,7 +94,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                     ],
                   ),
                   HorizontalSpacer.large(),
-                  PwText("Commission - ${details.commission.commissionRate}")
+                  PwText("Commission - ${details.commissionRate}")
                 ],
               ),
               leading: Padding(

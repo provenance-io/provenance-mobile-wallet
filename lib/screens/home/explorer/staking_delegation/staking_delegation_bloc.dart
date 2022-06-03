@@ -208,7 +208,7 @@ class StakingDelegationBloc extends Disposable {
 class StakingDelegationDetails {
   StakingDelegationDetails(
     this.validator,
-    this.commission,
+    this.commissionRate,
     this.delegation,
     this.selectedModalType,
     this.asset,
@@ -218,7 +218,7 @@ class StakingDelegationDetails {
 
   final Delegation? delegation;
   final DetailedValidator validator;
-  final Commission commission;
+  final String commissionRate;
   final SelectedDelegationType selectedModalType;
   final Asset? asset;
   final num hashDelegated;
