@@ -479,6 +479,7 @@ class Strings {
   // Staking Details
   static const stakingDetailsValidatorDetails = "Validator Details";
   static const stakingDetailsButtonDelegate = "Delegate";
+  static const stakingDetailsButtonManage = "Manage";
   static const stakingDetailsOperatorAddress = "Operator Address";
   static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
   static const stakingDetailsOwnerAddress = "Owner Address";

@@ -70,6 +70,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                 builder: (context, snapshot) {
                   final validator = snapshot.data?.validator;
                   final commission = snapshot.data?.commission;
+                  final delegate = snapshot.data?.delegation;
                   if (validator == null || commission == null) {
                     return Container();
                   }
@@ -136,7 +137,9 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                             Flexible(
                               child: PwButton(
                                 child: PwText(
-                                  Strings.stakingDetailsButtonDelegate,
+                                  delegate == null
+                                      ? Strings.stakingDetailsButtonDelegate
+                                      : Strings.stakingDetailsButtonManage,
                                   style: PwTextStyle.body,
                                 ),
                                 onPressed: () async {
