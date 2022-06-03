@@ -63,15 +63,13 @@ class _StakingDelegateState extends State<StakingDelegate> {
           children: [
             if (details.hashInsufficient)
               WarningSection(
-                title: "Warning: Account will lock",
-                message:
-                    "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.",
+                title: Strings.stakingDelegateWarningAccountLockTitle,
+                message: Strings.stakingDelegateWarningAccountLockMessage,
                 background: Theme.of(context).colorScheme.error,
               ),
             WarningSection(
-              title: "Staking will lock your funds for 21+ days",
-              message:
-                  "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.",
+              title: Strings.stakingDelegateWarningFundsLockTitle,
+              message: Strings.stakingDelegateWarningFundsLockMessage,
             ),
             DetailsItem(
               title: Strings.stakingManagementMyDelegation,
@@ -89,10 +87,10 @@ class _StakingDelegateState extends State<StakingDelegate> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Available Balance",
+              title: Strings.stakingDelegateAvailableBalance,
               endChild: Flexible(
                 child: PwText(
-                  '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} hash',
+                  '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   style: PwTextStyle.body,
@@ -103,7 +101,7 @@ class _StakingDelegateState extends State<StakingDelegate> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Amount to Delegate",
+              title: Strings.stakingDelegateAmountToDelegate,
               endChild: Flexible(
                   child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -112,7 +110,7 @@ class _StakingDelegateState extends State<StakingDelegate> {
                       child: Form(
                     key: _formKey,
                     child: StakingTextFormField(
-                      hint: 'hash',
+                      hint: Strings.stakingDelegateConfirmHash,
                       submit: _submit,
                       textEditingController: _textEditingController,
                     ),

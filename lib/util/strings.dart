@@ -518,4 +518,17 @@ class Strings {
   static const stakingConfirmGasAdjustment = "Gas Adjustment (default: 1.25)";
   static const stakingConfirmBack = "Back";
   static const stakingConfirmSign = "Sign";
+
+  // Staking delegate
+  static const stakingDelegateWarningAccountLockTitle =
+      "Warning: Account will lock";
+  static const stakingDelegateWarningAccountLockMessage =
+      "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.";
+  static const stakingDelegateWarningFundsLockTitle =
+      "Staking will lock your funds for 21+ days";
+  static const stakingDelegateWarningFundsLockMessage =
+      "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
+  static const stakingDelegateAvailableBalance = "Available Balance";
+  static const stakingDelegateAmountToDelegate = "Amount to Delegate";
+  static const stakingDelegateConfirmHash = "hash";
 }
