@@ -67,7 +67,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         validator: validator,
         accountDetails: widget.details,
         commissionRate: commission.commissionRate,
-        validatorAddress: widget.validatorAddress,
         navigator: this,
       ),
     );

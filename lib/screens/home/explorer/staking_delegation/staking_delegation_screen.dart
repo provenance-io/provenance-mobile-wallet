@@ -13,7 +13,6 @@ class StakingDelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final String commissionRate;
-  final String validatorAddress;
   final AccountDetails accountDetails;
   final StakingFlowNavigator navigator;
 
@@ -22,7 +21,6 @@ class StakingDelegationScreen extends StatefulWidget {
     this.delegation,
     required this.validator,
     required this.commissionRate,
-    required this.validatorAddress,
     required this.accountDetails,
     required this.navigator,
   }) : super(key: key);
@@ -41,7 +39,6 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
       widget.delegation,
       widget.validator,
       widget.commissionRate,
-      widget.validatorAddress,
       widget.accountDetails,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
