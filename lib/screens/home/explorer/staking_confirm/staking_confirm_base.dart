@@ -53,19 +53,25 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
         ),
         leading: Padding(
           padding: EdgeInsets.only(left: 21),
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
+          child: Flexible(
+            child: IconButton(
+              icon: PwIcon(
+                PwIcons.back,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(left: 21),
+            padding: EdgeInsets.only(right: 21),
             child: PwTextButton(
+              minimumSize: Size(
+                80,
+                50,
+              ),
               onPressed: () {
                 widget.onDataClick();
               },
