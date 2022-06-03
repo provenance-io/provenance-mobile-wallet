@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -61,115 +62,16 @@ class _StakingDelegateState extends State<StakingDelegate> {
         return ListView(
           children: [
             if (details.hashInsufficient)
-              Container(
-                margin: EdgeInsets.only(
-                  top: Spacing.large,
-                  bottom: Spacing.large,
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: Spacing.large,
-                  horizontal: Spacing.xxLarge,
-                ),
-                color: Theme.of(context).colorScheme.error,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                        right: Spacing.large,
-                      ),
-                      child: PwIcon(
-                        PwIcons.warn,
-                        color: Theme.of(context).colorScheme.neutral800,
-                        size: 24,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        textDirection: TextDirection.ltr,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              PwText(
-                                "Warning: Account will lock",
-                                style: PwTextStyle.subhead,
-                                color: PwColor.notice800,
-                                textAlign: TextAlign.left,
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: Spacing.xSmall,
-                            ),
-                            child: PwText(
-                              "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.",
-                              textAlign: TextAlign.left,
-                              style: PwTextStyle.body,
-                              color: PwColor.notice800,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              WarningSection(
+                title: "Warning: Account will lock",
+                message:
+                    "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.",
+                background: Theme.of(context).colorScheme.error,
               ),
-            Container(
-              margin: EdgeInsets.only(
-                top: Spacing.large,
-                bottom: Spacing.large,
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: Spacing.large,
-                horizontal: Spacing.xxLarge,
-              ),
-              color: Theme.of(context).colorScheme.notice350,
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      right: Spacing.large,
-                    ),
-                    child: PwIcon(
-                      PwIcons.warn,
-                      color: Theme.of(context).colorScheme.neutral800,
-                      size: 24,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      textDirection: TextDirection.ltr,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            PwText(
-                              "Staking will lock your funds for 21+ days",
-                              style: PwTextStyle.subhead,
-                              color: PwColor.notice800,
-                              textAlign: TextAlign.left,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: Spacing.xSmall,
-                          ),
-                          child: PwText(
-                            "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.",
-                            textAlign: TextAlign.left,
-                            style: PwTextStyle.body,
-                            color: PwColor.notice800,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            WarningSection(
+              title: "Staking will lock your funds for 21+ days",
+              message:
+                  "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.",
             ),
             DetailsItem(
               title: Strings.stakingManagementMyDelegation,
