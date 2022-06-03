@@ -144,13 +144,13 @@ extension SelectedDelegationTypeExtension on SelectedDelegationType {
   String get dropDownTitle {
     switch (this) {
       case SelectedDelegationType.initial:
-        return "Back";
+        return Strings.stakingDelegationBlocBack;
       case SelectedDelegationType.delegate:
       case SelectedDelegationType.redelegate:
       case SelectedDelegationType.undelegate:
         return name.capitalize();
       case SelectedDelegationType.claimRewards:
-        return "Claim Rewards";
+        return Strings.stakingDelegationBlocClaimRewards;
     }
   }
 }
