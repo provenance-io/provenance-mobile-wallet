@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -79,6 +80,21 @@ class StakingConfirmBloc extends Disposable {
               validatorDstAddress: destinationAddress,
               validatorSrcAddress: _validatorAddress)
           .toAny(),
+    );
+  }
+
+  Future<void> claimRewards(
+    double gasEstimate,
+    String denom,
+    String destinationAddress,
+  ) async {
+    await _sendMessage(
+      gasEstimate,
+      denom,
+      MsgWithdrawDelegatorReward(
+        delegatorAddress: _accountDetails.address,
+        validatorAddress: _validatorAddress,
+      ).toAny(),
     );
   }
 
