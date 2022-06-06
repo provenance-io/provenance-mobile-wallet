@@ -57,55 +57,36 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<StakingDelegationDetails>(
-        initialData: _bloc.stakingDelegationDetails.value,
-        stream: _bloc.stakingDelegationDetails,
-        builder: (context, snapshot) {
-          final details = snapshot.data;
+      initialData: _bloc.stakingDelegationDetails.value,
+      stream: _bloc.stakingDelegationDetails,
+      builder: (context, snapshot) {
+        final details = snapshot.data;
 
-          if (null == details) {
-            return Container();
-          }
+        if (null == details) {
+          return Container();
+        }
 
-          return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.neutral750,
-                elevation: 0.0,
-                centerTitle: true,
-                title: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundImage:
-                              NetworkImage(details.validator.imgUrl ?? ""),
-                          child: PwText(details.validator.moniker
-                              .substring(0, 1)
-                              .toUpperCase()),
-                        ),
-                        HorizontalSpacer.large(),
-                        PwText(details.validator.moniker)
-                      ],
-                    ),
-                    HorizontalSpacer.large(),
-                    PwText("Commission - ${details.commissionRate}")
-                  ],
-                ),
-                leading: Padding(
-                  padding: EdgeInsets.only(left: 21),
-                  child: IconButton(
-                    icon: PwIcon(
-                      PwIcons.back,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+        return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.neutral750,
+              elevation: 0.0,
+              centerTitle: true,
+              title: PwText(details.validator.moniker),
+              leading: Padding(
+                padding: EdgeInsets.only(left: 21),
+                child: IconButton(
+                  icon: PwIcon(
+                    PwIcons.back,
                   ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
-              body: _getBody(details.selectedDelegationType));
-        });
+            ),
+            body: _getBody(details.selectedDelegationType));
+      },
+    );
   }
 
   Widget _getBody(SelectedDelegationType type) {
