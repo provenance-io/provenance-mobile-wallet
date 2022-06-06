@@ -532,7 +532,9 @@ class Strings {
   static const stakingDelegateAvailableBalance = "Available Balance";
   static const stakingDelegateAmountToDelegate = "Amount to Delegate";
   static const stakingDelegateConfirmHash = "hash";
-  static const stakingDelegateAvailableForRedelegation =
+
+  // Staking Redelegate
+  static const stakingRedelegateAvailableForRedelegation =
       "Available for redelegation";
 
   // Staking Delegation Bloc
