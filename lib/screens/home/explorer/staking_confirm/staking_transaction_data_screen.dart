@@ -18,7 +18,6 @@ class StakingTransactionDataScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: Strings.stakingConfirmData,
         leadingIcon: PwIcons.back,
-        //leadingIconOnPress: () => navigator.goBack(),
       ),
       body: Stack(
         children: [
