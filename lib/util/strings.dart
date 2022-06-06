@@ -537,6 +537,18 @@ class Strings {
   static const stakingRedelegateAvailableForRedelegation =
       "Available for redelegation";
 
+  // Staking Undelegate
+  static const stakingUndelegateWarningUnbondingPeriodTitle =
+      "Once the unbonding period begins you will:";
+  static const stakingUndelegateWarningUnbondingPeriodMessage =
+      "-not receive staking reward\n-not be able to cancel the unbonding\n-need to wait 21 days for the amount to be liquid";
+  static const stakingUndelegateWarningSwitchValidatorsTitle =
+      "Trying to switch validators?";
+  static const stakingUndelegateWarningSwitchValidatorsMessage =
+      "Use the 'Redelegate' feature to instantly stake your assets to another validator.";
+  static const stakingUndelegateAvailableForUndelegation =
+      "Available for undelegation";
+
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
   static const stakingDelegationBlocClaimRewards = "Claim Rewards";
