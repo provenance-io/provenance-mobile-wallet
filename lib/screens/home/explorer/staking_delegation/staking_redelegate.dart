@@ -189,7 +189,9 @@ class _StakingRedelegateState extends State<StakingRedelegate> {
                   Flexible(
                     child: PwButton(
                       enabled: _formKey.currentState?.validate() == true &&
-                          details.hashRedelegated > 0,
+                          details.hashRedelegated > 0 &&
+                          details.hashRedelegated <=
+                              details.delegation.hashAmount,
                       onPressed: () {
                         if (_formKey.currentState?.validate() == false ||
                             0 == details.hashRedelegated ||

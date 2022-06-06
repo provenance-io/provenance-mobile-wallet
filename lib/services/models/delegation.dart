@@ -48,6 +48,10 @@ class Delegation {
     return "${amount.nhashToHash()} hash";
   }
 
+  int get hashAmount {
+    return int.tryParse(amount.nhashToHash()) ?? 0;
+  }
+
   String get formattedTime {
     return endTime != null
         ? DateFormat.yMMMd('en_US').add_Hms().format(endTime!)
