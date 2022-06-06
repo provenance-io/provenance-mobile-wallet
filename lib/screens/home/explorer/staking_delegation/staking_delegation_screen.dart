@@ -99,8 +99,10 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
           navigator: widget.navigator,
         );
       case SelectedDelegationType.claimRewards:
-        // TODO: Handle this case.
-        return Container();
+        widget.navigator.showReviewTransaction(type);
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       case SelectedDelegationType.undelegate:
         return StakingUndelegate(
           navigator: widget.navigator,
