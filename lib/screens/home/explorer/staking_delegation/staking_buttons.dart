@@ -29,11 +29,13 @@ class StakingButtons extends StatelessWidget {
           Flexible(
             child: PwButton(
               onPressed: () {
-                bloc.updateSelectedModal(SelectedDelegationType.initial);
+                bloc.updateSelectedDelegationType(
+                    SelectedDelegationType.initial);
               },
               child: PwText(
                 SelectedDelegationType.delegate.dropDownTitle,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.fade,
+                softWrap: false,
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.body,
               ),
@@ -45,7 +47,8 @@ class StakingButtons extends StatelessWidget {
               onPressed: () => _onActivation(),
               child: PwText(
                 _activationValue.dropDownTitle,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.fade,
+                softWrap: false,
                 color: PwColor.neutralNeutral,
                 style: PwTextStyle.body,
               ),

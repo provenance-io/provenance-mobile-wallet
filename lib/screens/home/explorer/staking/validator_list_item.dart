@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -23,16 +24,19 @@ class ValidatorListItem extends StatelessWidget {
           return;
         }
         final stakingDetails = get<StakingFlowBloc>().stakingDetails.value;
-        final delegation = stakingDetails.delegates.firstWhere((element) =>
-            element.sourceAddress == item.addressId &&
-            DelegationState.bonded == stakingDetails.selectedState);
-        Navigator.of(context).push(
-          StakingFlow(
-            item.addressId,
-            account,
-            delegation,
-          ).route(),
-        );
+        Delegation? delegation;
+        try {
+          delegation = stakingDetails.delegates
+              .firstWhere((element) => element.sourceAddress == item.addressId);
+        } finally {
+          Navigator.of(context).push(
+            StakingFlow(
+              item.addressId,
+              account,
+              delegation,
+            ).route(),
+          );
+        }
       },
       child: Padding(
         padding: EdgeInsets.zero,

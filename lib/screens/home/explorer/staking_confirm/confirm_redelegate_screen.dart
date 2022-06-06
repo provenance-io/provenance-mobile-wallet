@@ -27,7 +27,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           return Container();
         }
         return StakingConfirmBase(
-          appBarTitle: details.selectedModalType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''
 {
@@ -49,7 +49,8 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               endChild: Flexible(
                 child: PwText(
                   details.accountDetails.address.abbreviateAddress(),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.body,
                 ),
@@ -63,7 +64,8 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               endChild: Flexible(
                 child: PwText(
                   details.validator.operatorAddress.abbreviateAddress(),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.body,
                 ),
@@ -77,7 +79,8 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               endChild: Flexible(
                 child: PwText(
                   details.asset?.denom ?? Strings.stakingConfirmHash,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.body,
                 ),
@@ -91,7 +94,8 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               endChild: Flexible(
                 child: PwText(
                   details.hashDelegated.nhashFromHash(),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   color: PwColor.neutralNeutral,
                   style: PwTextStyle.body,
                 ),

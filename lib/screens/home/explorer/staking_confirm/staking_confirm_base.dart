@@ -53,19 +53,25 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
         ),
         leading: Padding(
           padding: EdgeInsets.only(left: 21),
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
+          child: Flexible(
+            child: IconButton(
+              icon: PwIcon(
+                PwIcons.back,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(left: 21),
+            padding: EdgeInsets.only(right: 21),
             child: PwTextButton(
+              minimumSize: Size(
+                80,
+                50,
+              ),
               onPressed: () {
                 widget.onDataClick();
               },
@@ -94,7 +100,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     child: Form(
                       key: _formKey,
                       child: StakingTextFormField(
-                        hint: 'hash',
+                        hint: Strings.stakingConfirmHash,
                         textEditingController: _textEditingController,
                         submit: () {},
                       ),
@@ -123,7 +129,8 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     },
                     child: PwText(
                       Strings.stakingConfirmBack,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
@@ -139,7 +146,8 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                     },
                     child: PwText(
                       Strings.stakingConfirmSign,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),

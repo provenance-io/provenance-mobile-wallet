@@ -18,7 +18,6 @@ class StakingDelegationBloc extends Disposable {
     final Delegation? delegation,
     final DetailedValidator validator,
     final String commissionRate,
-    this._validatorAddress,
     this._accountDetails,
   ) : _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
@@ -34,7 +33,6 @@ class StakingDelegationBloc extends Disposable {
           ),
         );
 
-  final String _validatorAddress;
   final AccountDetails _accountDetails;
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
@@ -58,7 +56,7 @@ class StakingDelegationBloc extends Disposable {
           oldDetails.validator,
           oldDetails.commissionRate,
           oldDetails.delegation,
-          oldDetails.selectedModalType,
+          oldDetails.selectedDelegationType,
           asset,
           oldDetails.hashDelegated,
           oldDetails.accountDetails,
@@ -69,7 +67,7 @@ class StakingDelegationBloc extends Disposable {
     }
   }
 
-  void updateSelectedModal(SelectedDelegationType selected) {
+  void updateSelectedDelegationType(SelectedDelegationType selected) {
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -91,7 +89,7 @@ class StakingDelegationBloc extends Disposable {
         oldDetails.validator,
         oldDetails.commissionRate,
         oldDetails.delegation,
-        oldDetails.selectedModalType,
+        oldDetails.selectedDelegationType,
         oldDetails.asset,
         hashDelegated,
         oldDetails.accountDetails,
@@ -105,7 +103,7 @@ class StakingDelegationDetails {
     this.validator,
     this.commissionRate,
     this.delegation,
-    this.selectedModalType,
+    this.selectedDelegationType,
     this.asset,
     this.hashDelegated,
     this.accountDetails,
@@ -114,7 +112,7 @@ class StakingDelegationDetails {
   final Delegation? delegation;
   final DetailedValidator validator;
   final String commissionRate;
-  final SelectedDelegationType selectedModalType;
+  final SelectedDelegationType selectedDelegationType;
   final Asset? asset;
   final num hashDelegated;
   final AccountDetails accountDetails;
@@ -142,17 +140,17 @@ enum SelectedDelegationType {
   redelegate,
 }
 
-extension SelectedModalTypeExtension on SelectedDelegationType {
+extension SelectedDelegationTypeExtension on SelectedDelegationType {
   String get dropDownTitle {
     switch (this) {
       case SelectedDelegationType.initial:
-        return "Back";
+        return Strings.stakingDelegationBlocBack;
       case SelectedDelegationType.delegate:
       case SelectedDelegationType.redelegate:
       case SelectedDelegationType.undelegate:
         return name.capitalize();
       case SelectedDelegationType.claimRewards:
-        return "Claim Rewards";
+        return Strings.stakingDelegationBlocClaimRewards;
     }
   }
 }

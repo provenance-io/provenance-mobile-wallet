@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -11,7 +12,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class StakingDelegate extends StatefulWidget {
   const StakingDelegate({
     Key? key,
+    required this.navigator,
   }) : super(key: key);
+
+  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => _StakingDelegateState();
@@ -26,18 +30,18 @@ class _StakingDelegateState extends State<StakingDelegate> {
     super.initState();
 
     _textEditingController = TextEditingController();
-    _textEditingController.addListener(listen);
+    _textEditingController.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
-    _textEditingController.removeListener(listen);
+    _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
 
     super.dispose();
   }
 
-  void listen() {
+  void _onTextChanged() {
     String text = _textEditingController.text;
     if (text.isEmpty) {
       return;
@@ -103,20 +107,24 @@ class _StakingDelegateState extends State<StakingDelegate> {
             DetailsItem(
               title: Strings.stakingDelegateAmountToDelegate,
               endChild: Flexible(
-                  child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                      child: Form(
-                    key: _formKey,
-                    child: StakingTextFormField(
-                      hint: Strings.stakingDelegateConfirmHash,
-                      submit: _submit,
-                      textEditingController: _textEditingController,
-                    ),
-                  )),
-                ],
-              )),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                        child: Form(
+                      key: _formKey,
+                      child: StakingTextFormField(
+                        hint: Strings.stakingDelegateConfirmHash,
+                        submit: _submit,
+                        textEditingController: _textEditingController,
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -131,8 +139,9 @@ class _StakingDelegateState extends State<StakingDelegate> {
                     Flexible(
                       child: PwButton(
                         onPressed: () {
-                          bloc.updateSelectedModal(
-                              SelectedDelegationType.initial);
+                          bloc.updateSelectedDelegationType(
+                            SelectedDelegationType.initial,
+                          );
                         },
                         child: PwText(
                           SelectedDelegationType.initial.dropDownTitle,
@@ -154,8 +163,9 @@ class _StakingDelegateState extends State<StakingDelegate> {
                             details.hashDelegated.isNegative) {
                           return;
                         }
-                        print("press registered");
-                        //bloc.updateSelectedModal(SelectedModalType.initial);
+                        widget.navigator.showReviewTransaction(
+                          details.selectedDelegationType,
+                        );
                       },
                       child: PwText(
                         SelectedDelegationType.delegate.dropDownTitle,
