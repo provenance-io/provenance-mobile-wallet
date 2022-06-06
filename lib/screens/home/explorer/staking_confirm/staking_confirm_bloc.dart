@@ -29,7 +29,6 @@ class StakingConfirmBloc extends Disposable {
     String denom,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgDelegate(
@@ -49,7 +48,6 @@ class StakingConfirmBloc extends Disposable {
     String denom,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgUndelegate(
@@ -70,7 +68,6 @@ class StakingConfirmBloc extends Disposable {
     String destinationAddress,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgBeginRedelegate(
@@ -91,7 +88,6 @@ class StakingConfirmBloc extends Disposable {
   }
 
   Future<void> _sendMessage(
-    num amount,
     double gasEstimate,
     String denom,
     proto.Any message,
