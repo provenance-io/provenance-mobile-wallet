@@ -4,13 +4,13 @@ import 'package:provenance_wallet/util/strings.dart';
 class StakingTextFormField extends StatelessWidget {
   final String hint;
   final TextEditingController textEditingController;
-  final Function submit;
+  final Function? submit;
 
   const StakingTextFormField({
     Key? key,
     required this.hint,
     required this.textEditingController,
-    required this.submit,
+    this.submit,
   }) : super(key: key);
 
   @override
@@ -21,7 +21,11 @@ class StakingTextFormField extends StatelessWidget {
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       autocorrect: false,
       controller: textEditingController,
-      onFieldSubmitted: (_) => submit(),
+      onFieldSubmitted: (_) {
+        if (submit != null) {
+          submit!();
+        }
+      },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.isEmpty) {
