@@ -42,56 +42,64 @@ class ValidatorListItem extends StatelessWidget {
           }
         }
       },
-      child: Padding(
-        padding: EdgeInsets.zero,
-        child: Container(
-          padding: EdgeInsets.all(20),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: Spacing.largeX3,
-                height: Spacing.largeX3,
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundImage: NetworkImage(item.imgUrl ?? ""),
-                  child: PwText(item.moniker.substring(0, 1).toUpperCase()),
-                ),
-              ),
-              HorizontalSpacer.medium(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+          child: Padding(
+            padding: EdgeInsets.zero,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  PwText(
-                    item.moniker,
-                    style: PwTextStyle.bodyBold,
-                  ),
-                  VerticalSpacer.xSmall(),
                   SizedBox(
-                    width: 180,
-                    child: PwText(
-                      '${item.delegators} delegators$textDivider${item.commission} commission',
-                      color: PwColor.neutral200,
-                      style: PwTextStyle.footnote,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
+                    width: Spacing.largeX3,
+                    height: Spacing.largeX3,
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundImage: NetworkImage(item.imgUrl ?? ""),
+                      child: PwText(item.moniker.substring(0, 1).toUpperCase()),
+                    ),
+                  ),
+                  HorizontalSpacer.medium(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PwText(
+                        item.moniker,
+                        style: PwTextStyle.bodyBold,
+                      ),
+                      VerticalSpacer.xSmall(),
+                      SizedBox(
+                        width: 180,
+                        child: PwText(
+                          '${item.delegators} delegators$textDivider${item.commission} commission',
+                          color: item.status == ValidatorStatus.active
+                              ? PwColor.neutral200
+                              : PwColor.neutralNeutral,
+                          style: PwTextStyle.footnote,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(child: Container()),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: PwIcon(
+                      PwIcons.caret,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
+                      size: 12.0,
                     ),
                   ),
                 ],
               ),
-              Expanded(child: Container()),
-              Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: PwIcon(
-                  PwIcons.caret,
-                  color: Theme.of(context).colorScheme.neutralNeutral,
-                  size: 12.0,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+          color: item.status == ValidatorStatus.candidate
+              ? Theme.of(context).colorScheme.neutral500
+              : item.status == ValidatorStatus.jailed
+                  ? Theme.of(context).colorScheme.errorContainer
+                  : Colors.transparent),
     );
   }
 }

@@ -92,10 +92,10 @@ class StakingFlowBloc extends PwPagingCache {
     }
   }
 
-  Future<void> updateState(DelegationState state) async {
+  Future<void> updateSort(ValidatorSortingState selectedSort) async {
     final oldDetails = _stakingDetails.value;
 
-    if (state == oldDetails.selectedState) {
+    if (selectedSort == oldDetails.selectedSort) {
       return;
     }
 
@@ -107,8 +107,9 @@ class StakingFlowBloc extends PwPagingCache {
         StakingDetails(
           abbreviatedValidators: _abbreviatedValidators,
           delegates: oldDetails.delegates,
-          validators: validators,
+          validators: selectedSort.sort(oldDetails.validators),
           address: oldDetails.address,
+          selectedSort: selectedSort,
         ),
       );
     } finally {
@@ -132,6 +133,7 @@ class StakingFlowBloc extends PwPagingCache {
         delegates: delegates,
         validators: oldDetails.validators,
         address: oldDetails.address,
+        selectedSort: oldDetails.selectedSort,
       ),
     );
 
@@ -154,8 +156,9 @@ class StakingFlowBloc extends PwPagingCache {
       StakingDetails(
         abbreviatedValidators: _abbreviatedValidators,
         delegates: oldDetails.delegates,
-        validators: validators,
+        validators: oldDetails.selectedSort.sort(validators),
         address: oldDetails.address,
+        selectedSort: oldDetails.selectedSort,
       ),
     );
 
@@ -168,15 +171,22 @@ class StakingDetails {
     required this.abbreviatedValidators,
     required this.delegates,
     required this.validators,
+    this.selectedSort = ValidatorSortingState.votingPower,
     required this.address,
   });
 
   final List<AbbreviatedValidator> abbreviatedValidators;
   final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
+  final ValidatorSortingState selectedSort;
   final String address;
 }
 
+enum ValidatorSortingState {
+  votingPower,
+  delegators,
+  commission,
+  alphabetically,
 }
 
 enum ValidatorStatus {
@@ -185,12 +195,35 @@ enum ValidatorStatus {
   jailed,
 }
 
+extension ValidatorSortingStateExtension on ValidatorSortingState {
   String get dropDownTitle {
     switch (this) {
+      case ValidatorSortingState.votingPower:
+        return Strings.dropDownVotingPower;
+      case ValidatorSortingState.delegators:
+      case ValidatorSortingState.commission:
+        return name.capitalize();
+      case ValidatorSortingState.alphabetically:
+        return Strings.dropDownAlphabetically;
     }
   }
 
+  List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
     switch (this) {
+      case ValidatorSortingState.votingPower:
+        validators.sort((a, b) => a.votingPower.compareTo(b.votingPower));
+        break;
+      case ValidatorSortingState.delegators:
+        validators.sort((a, b) => a.delegators.compareTo(b.delegators));
+        break;
+      case ValidatorSortingState.commission:
+        validators.sort((a, b) => a.rawCommission.compareTo(b.rawCommission));
+        break;
+      case ValidatorSortingState.alphabetically:
+        return validators
+          ..sort((a, b) =>
+              a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase()));
     }
+    return validators.reversed.toList();
   }
 }
