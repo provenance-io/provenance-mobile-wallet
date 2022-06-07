@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -10,7 +11,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class StakingManagement extends StatelessWidget {
   const StakingManagement({
     Key? key,
+    required this.navigator,
   }) : super(key: key);
+
+  final StakingFlowNavigator navigator;
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +100,12 @@ class StakingManagement extends StatelessWidget {
                         ),
                       ),
                       isExpanded: true,
-                      onValueChanged: (item) =>
-                          bloc.updateSelectedDelegationType(item),
+                      onValueChanged: (item) {
+                        bloc.updateSelectedDelegationType(item);
+                        if (item == SelectedDelegationType.claimRewards) {
+                          navigator.showReviewTransaction(item);
+                        }
+                      },
                       builder: (item) => Container(
                         height: 42,
                         decoration: BoxDecoration(

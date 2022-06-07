@@ -92,16 +92,14 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
 
   Widget _getBody(SelectedDelegationType type) {
     switch (type) {
+      case SelectedDelegationType.claimRewards:
       case SelectedDelegationType.initial:
-        return StakingManagement();
+        return StakingManagement(
+          navigator: widget.navigator,
+        );
       case SelectedDelegationType.delegate:
         return StakingDelegate(
           navigator: widget.navigator,
-        );
-      case SelectedDelegationType.claimRewards:
-        widget.navigator.showReviewTransaction(type);
-        return Center(
-          child: CircularProgressIndicator(),
         );
       case SelectedDelegationType.undelegate:
         return StakingUndelegate(
