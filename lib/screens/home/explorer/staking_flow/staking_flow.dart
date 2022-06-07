@@ -47,11 +47,6 @@ class StakingFlow extends FlowBase {
 class StakingFlowState extends FlowBaseState<StakingFlow>
     implements StakingFlowNavigator {
   @override
-  void goBack() {
-    Navigator.of(context).pop();
-  }
-
-  @override
   Widget createStartPage() => StakingDetailsScreen(
         validatorAddress: widget.validatorAddress,
         details: widget.details,
