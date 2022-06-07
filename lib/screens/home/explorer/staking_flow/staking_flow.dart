@@ -119,6 +119,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   void onComplete() {
-    completeFlow(null);
+    completeFlow(true);
   }
 }

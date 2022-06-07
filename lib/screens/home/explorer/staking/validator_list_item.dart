@@ -30,14 +30,16 @@ class ValidatorListItem extends StatelessWidget {
           delegation = stakingDetails.delegates
               .firstWhere((element) => element.sourceAddress == item.addressId);
         } finally {
-          await Navigator.of(context).push(
+          final response = await Navigator.of(context).push(
             StakingFlow(
               item.addressId,
               account,
               delegation,
             ).route(),
           );
-          await bloc.load();
+          if (response == true) {
+            await bloc.load();
+          }
         }
       },
       child: Padding(
