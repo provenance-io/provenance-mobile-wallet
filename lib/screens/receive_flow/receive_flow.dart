@@ -24,7 +24,6 @@ class ReceiveFlowState extends FlowBaseState<ReceiveFlow>
     super.initState();
     get.registerLazySingleton<ReceiveBloc>(() => ReceiveBloc(
           widget._accountDetails,
-          this,
         ));
   }
 

@@ -1,9 +1,9 @@
 import 'package:path/path.dart' as p;
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_schema_v1.dart'
     as v1;
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/sembast_import_export.dart' as ie;
@@ -96,10 +96,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     AccountKind kind = AccountKind.single,
   }) async {
     final db = await _db;
-    final model = v1.AccountModel(
+    final model = v1.SembastAccountModel(
       name: name,
       publicKeys: publicKeys
-          .map((e) => v1.PublicKeyModel(
+          .map((e) => v1.SembastPublicKeyModel(
                 address: e.address,
                 hex: e.hex,
                 chainId: e.chainId,
@@ -184,7 +184,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     Map<String, Object?>? updated;
 
     if (rec != null) {
-      final old = v1.AccountModel.fromRecord(rec);
+      final old = v1.SembastAccountModel.fromRecord(rec);
       updated = await ref.update(db, old.copyWith(name: name).toRecord());
     }
 
@@ -228,7 +228,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     final accountRec = _accounts.record(id);
     final accountValue = await accountRec.get(db);
     if (accountValue != null) {
-      final accountModel = v1.AccountModel.fromRecord(accountValue);
+      final accountModel = v1.SembastAccountModel.fromRecord(accountValue);
       final updatedAccountModel = accountModel.copyWith(
         selectedChainId: chainId,
       );
@@ -245,7 +245,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   AccountDetails _toDetails(String id, Map<String, Object?> value) {
-    final model = v1.AccountModel.fromRecord(value);
+    final model = v1.SembastAccountModel.fromRecord(value);
     final chainId = model.selectedChainId;
 
     var address = '';
@@ -268,11 +268,11 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     );
   }
 
-  v1.AccountKind _toKindV1(AccountKind kind) {
-    return v1.AccountKind.values.byName(kind.name);
+  v1.SembastAccountKind _toKindV1(AccountKind kind) {
+    return v1.SembastAccountKind.values.byName(kind.name);
   }
 
-  AccountKind _fromKindV1(v1.AccountKind kind) {
+  AccountKind _fromKindV1(v1.SembastAccountKind kind) {
     return AccountKind.values.byName(kind.name);
   }
 }

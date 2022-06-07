@@ -1,15 +1,15 @@
-enum AccountStatus {
+enum SembastAccountStatus {
   pending,
   ready,
 }
 
-enum AccountKind {
+enum SembastAccountKind {
   single,
   multi,
 }
 
-class PublicKeyModel {
-  PublicKeyModel({
+class SembastPublicKeyModel {
+  SembastPublicKeyModel({
     required this.address,
     required this.hex,
     required this.chainId,
@@ -25,8 +25,8 @@ class PublicKeyModel {
         'chainId': chainId,
       };
 
-  factory PublicKeyModel.fromRecord(Map<String, dynamic> rec) {
-    return PublicKeyModel(
+  factory SembastPublicKeyModel.fromRecord(Map<String, dynamic> rec) {
+    return SembastPublicKeyModel(
       address: rec['address'] as String,
       hex: rec['hex'] as String,
       chainId: rec['chainId'] as String,
@@ -34,19 +34,19 @@ class PublicKeyModel {
   }
 }
 
-class AccountModel {
-  AccountModel({
+class SembastAccountModel {
+  SembastAccountModel({
     required this.name,
     required this.publicKeys,
     required this.selectedChainId,
-    this.kind = AccountKind.single,
-    this.status = AccountStatus.ready,
+    this.kind = SembastAccountKind.single,
+    this.status = SembastAccountStatus.ready,
   });
 
   final String name;
-  final List<PublicKeyModel> publicKeys;
-  final AccountKind kind;
-  final AccountStatus status;
+  final List<SembastPublicKeyModel> publicKeys;
+  final SembastAccountKind kind;
+  final SembastAccountStatus status;
   final String selectedChainId;
 
   Map<String, dynamic> toRecord() => {
@@ -57,24 +57,25 @@ class AccountModel {
         'selectedChainId': selectedChainId,
       };
 
-  factory AccountModel.fromRecord(Map<String, dynamic> rec) => AccountModel(
+  factory SembastAccountModel.fromRecord(Map<String, dynamic> rec) =>
+      SembastAccountModel(
         name: rec['name'] as String,
-        kind: AccountKind.values.byName(rec['kind'] as String),
-        status: AccountStatus.values.byName(rec['status'] as String),
+        kind: SembastAccountKind.values.byName(rec['kind'] as String),
+        status: SembastAccountStatus.values.byName(rec['status'] as String),
         publicKeys: (rec['publicKeys'] as List<dynamic>)
-            .map((e) => PublicKeyModel.fromRecord(e))
+            .map((e) => SembastPublicKeyModel.fromRecord(e))
             .toList(),
         selectedChainId: rec['selectedChainId'] as String,
       );
 
-  AccountModel copyWith({
+  SembastAccountModel copyWith({
     String? name,
-    List<PublicKeyModel>? publicKeys,
+    List<SembastPublicKeyModel>? publicKeys,
     String? selectedChainId,
-    AccountKind? kind,
-    AccountStatus? status,
+    SembastAccountKind? kind,
+    SembastAccountStatus? status,
   }) =>
-      AccountModel(
+      SembastAccountModel(
         name: name ?? this.name,
         publicKeys: publicKeys ?? this.publicKeys,
         selectedChainId: selectedChainId ?? this.selectedChainId,

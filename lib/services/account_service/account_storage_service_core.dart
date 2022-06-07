@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
 enum AccountKind {

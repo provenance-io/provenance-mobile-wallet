@@ -1,12 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
-import 'receive_bloc_test.mocks.dart';
-
-@GenerateMocks([ReceiveNavigator])
 main() {
   final walletDetails = AccountDetails(
     id: "123",
@@ -17,11 +13,9 @@ main() {
   );
 
   ReceiveBloc? bloc;
-  MockReceiveNavigator? navigator;
 
   setUp(() {
-    navigator = MockReceiveNavigator();
-    bloc = ReceiveBloc(walletDetails, navigator!);
+    bloc = ReceiveBloc(walletDetails);
   });
 
   test("state", () async {

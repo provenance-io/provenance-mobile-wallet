@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:prov_wallet_flutter/src/cipher_service_error.dart';
-import 'package:prov_wallet_flutter/src/cipher_service_error_code.dart';
 
 class PlatformCipherService implements CipherService {
   static const _channel = const MethodChannel('prov_wallet_flutter');
