@@ -1,7 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_management.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
@@ -68,24 +67,25 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
         }
 
         return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.neutral750,
-              elevation: 0.0,
-              centerTitle: true,
-              title: PwText(details.validator.moniker),
-              leading: Padding(
-                padding: EdgeInsets.only(left: 21),
-                child: IconButton(
-                  icon: PwIcon(
-                    PwIcons.back,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.neutral750,
+            elevation: 0.0,
+            centerTitle: true,
+            title: PwText(details.validator.moniker),
+            leading: Padding(
+              padding: EdgeInsets.only(left: 21),
+              child: IconButton(
+                icon: PwIcon(
+                  PwIcons.back,
                 ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
-            body: _getBody(details.selectedDelegationType));
+          ),
+          body: _getBody(details.selectedDelegationType),
+        );
       },
     );
   }
@@ -94,9 +94,10 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     switch (type) {
       case SelectedDelegationType.claimRewards:
       case SelectedDelegationType.initial:
-        return StakingManagement(
-          navigator: widget.navigator,
-        );
+        return Container();
+      // return StakingManagement(
+      //   navigator: widget.navigator,
+      // );
       case SelectedDelegationType.delegate:
         return StakingDelegate(
           navigator: widget.navigator,
