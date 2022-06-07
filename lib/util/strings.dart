@@ -552,4 +552,9 @@ class Strings {
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
   static const stakingDelegationBlocClaimRewards = "Claim Rewards";
+
+  // Staking Success Screen
+  static const stakingSuccessSuccess = "SUCCESS";
+  static String stakingSuccessSuccessful(String delegationType) =>
+      '$delegationType successful!';
 }
