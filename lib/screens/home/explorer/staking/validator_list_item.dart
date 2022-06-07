@@ -23,19 +23,21 @@ class ValidatorListItem extends StatelessWidget {
         if (account == null) {
           return;
         }
-        final stakingDetails = get<StakingFlowBloc>().stakingDetails.value;
+        final bloc = get<StakingFlowBloc>();
+        final stakingDetails = bloc.stakingDetails.value;
         Delegation? delegation;
         try {
           delegation = stakingDetails.delegates
               .firstWhere((element) => element.sourceAddress == item.addressId);
         } finally {
-          Navigator.of(context).push(
+          await Navigator.of(context).push(
             StakingFlow(
               item.addressId,
               account,
               delegation,
             ).route(),
           );
+          await bloc.load();
         }
       },
       child: Padding(
