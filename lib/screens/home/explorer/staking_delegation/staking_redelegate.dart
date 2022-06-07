@@ -74,7 +74,13 @@ class _StakingRedelegateState extends State<StakingRedelegate> {
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null || details.validators.isEmpty) {
-          return Container();
+          return Stack(
+            children: const [
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          );
         }
         return ListView(
           children: [
