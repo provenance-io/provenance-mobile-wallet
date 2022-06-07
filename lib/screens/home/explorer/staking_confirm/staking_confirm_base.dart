@@ -16,7 +16,7 @@ class StakingConfirmBase extends StatefulWidget {
 
   final String appBarTitle;
   final VoidCallback onDataClick;
-  final Function(num) onTransactionSign;
+  final Function(double) onTransactionSign;
   final List<Widget> children;
 
   @override
@@ -140,7 +140,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                   child: PwButton(
                     onPressed: () {
                       final updatedGas =
-                          num.tryParse(_textEditingController.text) ?? 1.25;
+                          double.tryParse(_textEditingController.text) ?? 1.25;
                       widget.onTransactionSign(updatedGas);
                     },
                     child: PwText(
