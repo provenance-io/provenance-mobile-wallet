@@ -37,7 +37,12 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
 }''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) {},
+          onTransactionSign: (gasEstimated) async {
+            ModalLoadingRoute.showLoading('', context);
+            // Give the loading modal time to display
+            await Future.delayed(Duration(milliseconds: 500));
+            await _sendTransaction(gasEstimated, context);
+          },
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -67,6 +72,30 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _sendTransaction(
+    double gasEstimated,
+    BuildContext context,
+  ) async {
+    await (get<StakingDelegationBloc>())
+        .claimRewards(gasEstimated)
+        .then((value) {
+      ModalLoadingRoute.dismiss(context);
+      navigator.showTransactionSuccess();
+    }).catchError(
+      (err) {
+        ModalLoadingRoute.dismiss(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(
+              error: err.toString(),
+            );
+          },
         );
       },
     );

@@ -1,5 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
@@ -39,7 +41,12 @@ class ConfirmDelegateScreen extends StatelessWidget {
 }''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) {},
+          onTransactionSign: (gasEstimated) async {
+            ModalLoadingRoute.showLoading('', context);
+            // Give the loading modal time to display
+            await Future.delayed(Duration(milliseconds: 500));
+            await _sendTransaction(bloc, details, gasEstimated, context);
+          },
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -105,5 +112,48 @@ class ConfirmDelegateScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _sendTransaction(
+    StakingDelegationBloc bloc,
+    StakingDelegationDetails details,
+    double gasEstimated,
+    BuildContext context,
+  ) async {
+    if (SelectedDelegationType.delegate == details.selectedDelegationType) {
+      await bloc.doDelegate(gasEstimated).then((value) {
+        ModalLoadingRoute.dismiss(context);
+        navigator.showTransactionSuccess();
+      }).catchError(
+        (err) {
+          ModalLoadingRoute.dismiss(context);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return ErrorDialog(
+                error: err.toString(),
+              );
+            },
+          );
+        },
+      );
+    } else {
+      await bloc.doUndelegate(gasEstimated).then((value) {
+        ModalLoadingRoute.dismiss(context);
+        navigator.showTransactionSuccess();
+      }).catchError(
+        (err) {
+          ModalLoadingRoute.dismiss(context);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return ErrorDialog(
+                error: err.toString(),
+              );
+            },
+          );
+        },
+      );
+    }
   }
 }
