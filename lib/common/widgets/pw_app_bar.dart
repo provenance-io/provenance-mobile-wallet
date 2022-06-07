@@ -9,6 +9,7 @@ class PwAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.color,
     this.leadingIconOnPress,
     this.bottom,
+    this.textColor,
   }) : super(key: key);
 
   final String? title;
@@ -17,6 +18,7 @@ class PwAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function? leadingIconOnPress;
   final Color? color;
   final PreferredSizeWidget? bottom;
+  final PwColor? textColor;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -36,6 +38,7 @@ class _PwAppBarState extends State<PwAppBar> {
         widget.title ?? "",
         style: PwTextStyle.subhead,
         textAlign: TextAlign.left,
+        color: widget.textColor,
       ),
       bottom: widget.bottom,
       leading: (widget.hasIcon ?? true)
