@@ -8,10 +8,10 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i8;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
 import 'package:prov_wallet_flutter/src/cipher_service_error.dart' as _i7;
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart'
+    as _i5;
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
     as _i2;
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart'
-    as _i5;
 import 'package:provenance_wallet/services/models/account_details.dart' as _i4;
 
 // ignore_for_file: type=lint
