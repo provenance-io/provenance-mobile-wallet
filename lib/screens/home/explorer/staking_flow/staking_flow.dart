@@ -23,7 +23,7 @@ abstract class StakingFlowNavigator {
 
   Future<void> showTransactionData(String data);
 
-  Future<void> showFinishedTransaction();
+  Future<void> showTransactionSuccess();
 
   void onComplete();
 }
@@ -114,7 +114,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showFinishedTransaction() async {
+  Future<void> showTransactionSuccess() async {
     showPage(
       (context) => StakingSuccessScreen(
         navigator: this,
