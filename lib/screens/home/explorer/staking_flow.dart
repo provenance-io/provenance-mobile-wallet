@@ -1,7 +1,9 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_redelegate_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
@@ -85,8 +87,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         );
         break;
       case SelectedDelegationType.claimRewards:
-        // FIXME: use correct view.
-        widget = ConfirmRedelegateScreen(
+        widget = ConfirmClaimRewardsScreen(
           navigator: this,
         );
         break;
@@ -101,48 +102,14 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     );
   }
 
-// TODO: have the caller make the string.
   @override
   Future<void> showTransactionData(String data) async {
-//     String data;
-//     switch (type) {
-//       case SelectedDelegationType.initial:
-//         return;
-//       case SelectedDelegationType.undelegate:
-//       case SelectedDelegationType.delegate:
-//         data = '''
-// {
-//   "delegatorAddress": "${widget.details.address}",
-//   "validatorAddress": "${widget.validatorAddress}",
-//   "amount": {
-//     "denom": "nhash",
-//     "amount": "${details.hashDelegated.nhashFromHash()}"
-//   }
-// }
-// ''';
-//         break;
-//       case SelectedDelegationType.claimRewards:
-//         data = '''
-// {
-//   "delegatorAddress": "${widget.details.address}",
-//   "validatorAddress": "${widget.validatorAddress}",
-// }
-// ''';
-//         break;
-//       case SelectedDelegationType.redelegate:
-//         data = '''
-// {
-//   "delegatorAddress": "${widget.details.address}",
-//   "validatorSrcAddress": "${widget.validatorAddress}",
-//   "validatorDstAddress": "${validator!.address}",
-//   "amount": {
-//     "denom": "nhash",
-//     "amount": "${details.hashDelegated.nhashFromHash()}"
-//   }
-// }
-// ''';
-//         break;
-//     }
+    showPage(
+      (context) => StakingTransactionDataScreen(
+        data: data,
+        navigator: this,
+      ),
+    );
   }
 
   @override

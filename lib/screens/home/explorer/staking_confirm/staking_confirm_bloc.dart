@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -29,7 +30,6 @@ class StakingConfirmBloc extends Disposable {
     String denom,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgDelegate(
@@ -49,7 +49,6 @@ class StakingConfirmBloc extends Disposable {
     String denom,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgUndelegate(
@@ -70,7 +69,6 @@ class StakingConfirmBloc extends Disposable {
     String destinationAddress,
   ) async {
     await _sendMessage(
-      amount,
       gasEstimate,
       denom,
       staking.MsgBeginRedelegate(
@@ -85,13 +83,27 @@ class StakingConfirmBloc extends Disposable {
     );
   }
 
+  Future<void> claimRewards(
+    double gasEstimate,
+    String denom,
+    String destinationAddress,
+  ) async {
+    await _sendMessage(
+      gasEstimate,
+      denom,
+      MsgWithdrawDelegatorReward(
+        delegatorAddress: _accountDetails.address,
+        validatorAddress: _validatorAddress,
+      ).toAny(),
+    );
+  }
+
   @override
   FutureOr onDispose() {
     // TODO: Remove `Disposable` if not needing to implement this.
   }
 
   Future<void> _sendMessage(
-    num amount,
     double gasEstimate,
     String denom,
     proto.Any message,
