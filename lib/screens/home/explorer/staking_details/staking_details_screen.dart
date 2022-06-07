@@ -58,7 +58,6 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
         appBar: PwAppBar(
           title: Strings.stakingDetailsValidatorDetails,
           leadingIcon: PwIcons.back,
-          leadingIconOnPress: () => widget.navigator.goBack(),
         ),
         body: Stack(
           children: [
