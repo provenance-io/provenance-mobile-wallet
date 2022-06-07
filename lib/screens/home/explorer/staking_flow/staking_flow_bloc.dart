@@ -70,13 +70,11 @@ class StakingFlowBloc extends PwPagingCache {
         _accountDetails.coin,
         _accountDetails.address,
         _delegationPages.value,
-        _stakingDetails.value.selectedState,
       );
 
       final validators = await _validatorService.getRecentValidators(
         _accountDetails.coin,
         _validatorPages.value,
-        _stakingDetails.value.selectedStatus,
       );
 
       _stakingDetails.tryAdd(
@@ -105,52 +103,12 @@ class StakingFlowBloc extends PwPagingCache {
 
     _delegationPages.value = 1;
     try {
-      final delegations = await _validatorService.getDelegations(
-          _accountDetails.coin,
-          _accountDetails.address,
-          _delegationPages.value,
-          state);
-
-      _stakingDetails.tryAdd(
-        StakingDetails(
-          abbreviatedValidators: _abbreviatedValidators,
-          delegates: delegations,
-          validators: oldDetails.validators,
-          address: oldDetails.address,
-          selectedState: state,
-          selectedStatus: oldDetails.selectedStatus,
-        ),
-      );
-    } finally {
-      _isLoading.tryAdd(false);
-    }
-  }
-
-  Future<void> updateStatus(ValidatorStatus status) async {
-    final oldDetails = _stakingDetails.value;
-
-    if (status == oldDetails.selectedStatus) {
-      return;
-    }
-
-    _isLoading.tryAdd(true);
-
-    _validatorPages.value = 1;
-    try {
-      final validators = await _validatorService.getRecentValidators(
-        _accountDetails.coin,
-        _validatorPages.value,
-        status,
-      );
-
       _stakingDetails.tryAdd(
         StakingDetails(
           abbreviatedValidators: _abbreviatedValidators,
           delegates: oldDetails.delegates,
           validators: validators,
           address: oldDetails.address,
-          selectedState: oldDetails.selectedState,
-          selectedStatus: status,
         ),
       );
     } finally {
@@ -165,11 +123,8 @@ class StakingFlowBloc extends PwPagingCache {
         oldDetails.delegates,
         _delegationPages,
         _isLoadingDelegations,
-        () async => await _validatorService.getDelegations(
-            _accountDetails.coin,
-            _accountDetails.address,
-            _delegationPages.value,
-            oldDetails.selectedState));
+        () async => await _validatorService.getDelegations(_accountDetails.coin,
+            _accountDetails.address, _delegationPages.value));
 
     _stakingDetails.tryAdd(
       StakingDetails(
@@ -177,8 +132,6 @@ class StakingFlowBloc extends PwPagingCache {
         delegates: delegates,
         validators: oldDetails.validators,
         address: oldDetails.address,
-        selectedState: oldDetails.selectedState,
-        selectedStatus: oldDetails.selectedStatus,
       ),
     );
 
@@ -195,7 +148,6 @@ class StakingFlowBloc extends PwPagingCache {
         () async => await _validatorService.getRecentValidators(
               _accountDetails.coin,
               _validatorPages.value,
-              oldDetails.selectedStatus,
             ));
 
     _stakingDetails.tryAdd(
@@ -204,8 +156,6 @@ class StakingFlowBloc extends PwPagingCache {
         delegates: oldDetails.delegates,
         validators: validators,
         address: oldDetails.address,
-        selectedState: oldDetails.selectedState,
-        selectedStatus: oldDetails.selectedStatus,
       ),
     );
 
@@ -218,23 +168,15 @@ class StakingDetails {
     required this.abbreviatedValidators,
     required this.delegates,
     required this.validators,
-    this.selectedState = DelegationState.bonded,
-    this.selectedStatus = ValidatorStatus.active,
     required this.address,
   });
 
   final List<AbbreviatedValidator> abbreviatedValidators;
   final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
-  final DelegationState selectedState;
-  final ValidatorStatus selectedStatus;
   final String address;
 }
 
-enum DelegationState {
-  bonded,
-  redelegated,
-  unbonded,
 }
 
 enum ValidatorStatus {
@@ -243,39 +185,12 @@ enum ValidatorStatus {
   jailed,
 }
 
-extension ValidatorStatusExtension on ValidatorStatus {
   String get dropDownTitle {
     switch (this) {
-      case ValidatorStatus.active:
-        return Strings.dropDownActive;
-      case ValidatorStatus.candidate:
-        return Strings.dropDownCandidate;
-      case ValidatorStatus.jailed:
-        return Strings.dropDownJailed;
-    }
-  }
-}
-
-extension DelegationStateExtension on DelegationState {
-  String get dropDownTitle {
-    switch (this) {
-      case DelegationState.bonded:
-        return Strings.dropDownDelegate;
-      case DelegationState.redelegated:
-        return Strings.dropDownRedelegate;
-      case DelegationState.unbonded:
-        return Strings.dropDownUndelegate;
     }
   }
 
-  String get urlRoute {
     switch (this) {
-      case DelegationState.bonded:
-        return 'delegations';
-      case DelegationState.redelegated:
-        return 'redelegations';
-      case DelegationState.unbonded:
-        return 'unbonding';
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -12,7 +11,6 @@ abstract class ValidatorService {
   Future<List<ProvenanceValidator>> getRecentValidators(
     Coin coin,
     int pageNumber,
-    ValidatorStatus status,
   ) {
     throw Strings.notImplementedMessage;
   }
@@ -21,7 +19,6 @@ abstract class ValidatorService {
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    DelegationState state,
   ) {
     throw Strings.notImplementedMessage;
   }
