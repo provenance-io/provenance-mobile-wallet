@@ -4,7 +4,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_management.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegate.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
