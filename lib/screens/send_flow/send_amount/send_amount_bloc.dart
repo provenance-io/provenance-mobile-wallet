@@ -94,10 +94,6 @@ class SendAmountBloc extends Disposable {
         }
       }
 
-      final priceList =
-          await _priceService.getAssetPrices(accountDetails.coin, ["nhash"]);
-      final price = (priceList.isNotEmpty) ? priceList.first.usdPrice : 0.0;
-
       _fee = MultiSendAsset(
         estimate.estimate,
         individualFees,

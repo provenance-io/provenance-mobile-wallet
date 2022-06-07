@@ -13,7 +13,7 @@ class ReceiveState {
 }
 
 class ReceiveBloc implements Disposable {
-  ReceiveBloc(this._accountDetails, this._navigator) {
+  ReceiveBloc(this._accountDetails) {
     final state = ReceiveState(
       _accountDetails.address,
     );
@@ -22,7 +22,6 @@ class ReceiveBloc implements Disposable {
   }
 
   final AccountDetails _accountDetails;
-  final ReceiveNavigator _navigator;
   final _streamController = StreamController<ReceiveState>();
 
   Stream<ReceiveState> get stream => _streamController.stream;

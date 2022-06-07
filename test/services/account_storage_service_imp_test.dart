@@ -4,9 +4,9 @@ import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
-import 'package:provenance_wallet/services/account_service/wallet_storage_service.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 
 import 'account_storage_service_imp_test.mocks.dart';

@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provenance_wallet/screens/send_flow/send_flow.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -15,7 +13,6 @@ import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 
 import 'send_flow_test.mocks.dart';
-import 'send_flow_test_constants.dart';
 
 final get = GetIt.instance;
 
@@ -27,22 +24,6 @@ final get = GetIt.instance;
   PriceService,
 ])
 main() {
-  SendFlowState? state;
-  Future<void> _build(WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: SendFlow(walletDetails),
-        ),
-      ),
-    );
-
-    await tester
-        .pump(Duration(milliseconds: 600)); // allow simulation timer to elapse.
-    state = tester.allStates.firstWhere((element) => element is SendFlowState)
-        as SendFlowState;
-  }
-
   MockAssetService? mockAssetService;
   MockTransactionService? mockTransactionService;
   MockAccountService? mockAccountService;

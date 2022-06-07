@@ -259,9 +259,6 @@ main() {
     test('url with out start or end dates', () async {
       _setupResults<AssetGraphItem>(null);
 
-      final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-      final now = DateTime.now();
-
       await assetService!.getAssetGraphingData(
         Coin.testNet,
         "AssetTypeA",
