@@ -463,14 +463,10 @@ class Strings {
   static const proposals = "Proposals";
 
   // Staking Tab
-  static const dropDownDelegateHeader = "My Validator Type:";
-  static const dropDownDelegate = "Delegate";
-  static const dropDownRedelegate = "Redelegate";
-  static const dropDownUndelegate = "Undelegate";
-  static const dropDownStateHeader = "Validator Status:";
-  static const dropDownActive = "Active";
-  static const dropDownCandidate = "Candidate";
-  static const dropDownJailed = "Jailed";
+  static const stakingTabMyDelegations = "My Delegations";
+  static const dropDownStateHeader = "Sort Validators by";
+  static const dropDownVotingPower = "Voting Power";
+  static const dropDownAlphabetically = "Name";
   static String endTimeFormatted(String formattedTime) =>
       "Ended: $formattedTime";
   static String displayDenomFormatted(String displayDenom) =>
