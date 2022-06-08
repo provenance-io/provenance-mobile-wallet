@@ -42,7 +42,7 @@ abstract class StakingFlowNavigator {
 
   Future<void> showTransactionData(String data);
 
-  Future<void> showTransactionSuccess();
+  Future<void> showTransactionSuccess(SelectedDelegationType selected);
 
   void onComplete();
 }
@@ -136,7 +136,14 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     DetailedValidator validator,
   ) async {
     get.registerSingleton(
-        StakingDelegationBloc(null, validator, "", widget.details));
+      StakingDelegationBloc(
+        null,
+        validator,
+        "",
+        SelectedDelegationType.claimRewards,
+        widget.details,
+      ),
+    );
     showPage(
       (context) => ConfirmClaimRewardsScreen(
         navigator: this,
@@ -164,9 +171,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showTransactionSuccess() async {
+  Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
     showPage(
       (context) => StakingSuccessScreen(
+        selected: selected,
         navigator: this,
       ),
     );

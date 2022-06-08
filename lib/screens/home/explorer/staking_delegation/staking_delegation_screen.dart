@@ -48,6 +48,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
       widget.delegation,
       widget.validator,
       widget.commissionRate,
+      SelectedDelegationType.delegate,
       widget.accountDetails,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);

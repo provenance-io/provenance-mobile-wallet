@@ -45,6 +45,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
       widget.delegation,
       widget.validator,
       "",
+      SelectedDelegationType.undelegate,
       widget.accountDetails,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
