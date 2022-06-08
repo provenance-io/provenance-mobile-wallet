@@ -35,7 +35,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             final data = '''
 {
   "delegatorAddress": "${details.accountDetails.address}",
-  "validatorSrcAddress": "${details.delegation.address}",
+  "validatorSrcAddress": "${details.delegation.sourceAddress}",
   "validatorDstAddress": "${details.toRedelegate?.address}",
   "amount": {
     "denom": "nhash",
@@ -69,10 +69,25 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.stakingConfirmValidatorAddress,
+              title: Strings.stakingConfirmValidatorSource,
               endChild: Flexible(
                 child: PwText(
-                  details.delegation.address.abbreviateAddress(),
+                  details.delegation.sourceAddress.abbreviateAddress(),
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.body,
+                ),
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.stakingConfirmValidatorDestination,
+              endChild: Flexible(
+                child: PwText(
+                  details.toRedelegate?.address.abbreviateAddress() ?? "",
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

@@ -507,6 +507,8 @@ class Strings {
   // Staking Confirm
   static const stakingConfirmDelegatorAddress = "Delegator Address";
   static const stakingConfirmValidatorAddress = "Validator Address";
+  static const stakingConfirmValidatorSource = "Validator Source";
+  static const stakingConfirmValidatorDestination = "Validator Destination";
   static const stakingConfirmDenom = "Denom";
   static const stakingConfirmAmount = "Amount";
   static const stakingConfirmHash = "hash";
