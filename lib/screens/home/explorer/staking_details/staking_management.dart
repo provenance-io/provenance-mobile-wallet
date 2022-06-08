@@ -2,17 +2,25 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingManagement extends StatelessWidget {
   const StakingManagement({
     Key? key,
+    required this.validator,
+    required this.navigator,
     required this.delegation,
+    required this.commission,
   }) : super(key: key);
-
+  final DetailedValidator validator;
+  final StakingFlowNavigator navigator;
   final Delegation delegation;
+  final Commission commission;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +53,10 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    // open delegate screen
+                    navigator.showDelegationScreen(
+                      validator,
+                      commission,
+                    );
                   },
                   child: PwText(
                     SelectedDelegationType.delegate.dropDownTitle,
@@ -60,7 +71,7 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    // open redelegate screen
+                    navigator.showRedelegationScreen(validator);
                   },
                   child: PwText(
                     SelectedDelegationType.redelegate.dropDownTitle,
@@ -88,7 +99,7 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    // open undelegate screen
+                    navigator.showUndelegationScreen(validator);
                   },
                   child: PwText(
                     SelectedDelegationType.undelegate.dropDownTitle,
@@ -103,7 +114,7 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    // open claim rewards screen
+                    navigator.showClaimRewardsReview(validator);
                   },
                   child: PwText(
                     SelectedDelegationType.claimRewards.dropDownTitle,

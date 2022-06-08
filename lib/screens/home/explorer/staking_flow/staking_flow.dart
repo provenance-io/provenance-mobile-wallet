@@ -4,6 +4,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_redelegate_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_transaction_data_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegation_screen.dart';
@@ -13,6 +14,7 @@ import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 abstract class StakingFlowNavigator {
   Future<void> showDelegationScreen(
@@ -32,7 +34,9 @@ abstract class StakingFlowNavigator {
 
   Future<void> showUndelegationReview();
 
-  Future<void> showClaimRewardsReview();
+  Future<void> showClaimRewardsReview(
+    DetailedValidator validator,
+  );
 
   Future<void> showRedelegationReview();
 
@@ -128,12 +132,16 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showClaimRewardsReview() async {
+  Future<void> showClaimRewardsReview(
+    DetailedValidator validator,
+  ) async {
+    get.registerSingleton(
+        StakingDelegationBloc(null, validator, "", widget.details));
     showPage(
       (context) => ConfirmClaimRewardsScreen(
         navigator: this,
       ),
-    );
+    ).whenComplete(() => get.unregister<StakingDelegationBloc>());
   }
 
   @override

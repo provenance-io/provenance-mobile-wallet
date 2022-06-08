@@ -123,7 +123,10 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                     ),
                     if (details.delegation != null)
                       StakingManagement(
+                        navigator: widget.navigator,
                         delegation: details.delegation!,
+                        commission: commission,
+                        validator: validator,
                       ),
                     if (details.delegation == null)
                       Container(
