@@ -138,13 +138,11 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                             Flexible(
                               child: PwButton(
                                 child: PwText(
-                                  delegate == null
-                                      ? Strings.stakingDetailsButtonDelegate
-                                      : Strings.stakingDetailsButtonManage,
+                                  Strings.stakingDetailsButtonDelegate,
                                   style: PwTextStyle.body,
                                 ),
                                 onPressed: () async {
-                                  widget.navigator.showDelegationManagement(
+                                  widget.navigator.showDelegationScreen(
                                     validator,
                                     commission,
                                   );

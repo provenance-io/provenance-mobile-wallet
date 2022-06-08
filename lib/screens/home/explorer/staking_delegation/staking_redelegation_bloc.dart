@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/account_service/transaction_handler.d
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -19,10 +20,12 @@ import 'package:rxdart/rxdart.dart';
 
 class StakingRedelegationBloc extends Disposable {
   StakingRedelegationBloc(
+    final DetailedValidator validator,
     final Delegation delegation,
     this._accountDetails,
   ) : _stakingRedelegationDetails = BehaviorSubject.seeded(
           StakingRedelegationDetails(
+            validator,
             delegation,
             0,
             _accountDetails,
@@ -52,6 +55,7 @@ class StakingRedelegationBloc extends Disposable {
       final oldDetails = _stakingRedelegationDetails.value;
       _stakingRedelegationDetails.tryAdd(
         StakingRedelegationDetails(
+          oldDetails.validator,
           oldDetails.delegation,
           oldDetails.hashRedelegated,
           oldDetails.accountDetails,
@@ -68,6 +72,7 @@ class StakingRedelegationBloc extends Disposable {
     final oldDetails = _stakingRedelegationDetails.value;
     _stakingRedelegationDetails.tryAdd(
       StakingRedelegationDetails(
+        oldDetails.validator,
         oldDetails.delegation,
         hashRedelegated,
         oldDetails.accountDetails,
@@ -81,6 +86,7 @@ class StakingRedelegationBloc extends Disposable {
     final oldDetails = _stakingRedelegationDetails.value;
     _stakingRedelegationDetails.tryAdd(
       StakingRedelegationDetails(
+        oldDetails.validator,
         oldDetails.delegation,
         oldDetails.hashRedelegated,
         oldDetails.accountDetails,
@@ -133,6 +139,7 @@ class StakingRedelegationBloc extends Disposable {
 
 class StakingRedelegationDetails {
   StakingRedelegationDetails(
+    this.validator,
     this.delegation,
     this.hashRedelegated,
     this.accountDetails,
@@ -140,6 +147,7 @@ class StakingRedelegationDetails {
     this.validators,
   );
 
+  final DetailedValidator validator;
   final Delegation delegation;
   final SelectedDelegationType selectedDelegationType =
       SelectedDelegationType.redelegate;

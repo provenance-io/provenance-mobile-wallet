@@ -4,8 +4,9 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_redelegate_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_transaction_data_screen.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -14,12 +15,26 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 
 abstract class StakingFlowNavigator {
-  Future<void> showDelegationManagement(
+  Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
   );
 
-  Future<void> showReviewTransaction(SelectedDelegationType type);
+  Future<void> showRedelegationScreen(
+    DetailedValidator validator,
+  );
+
+  Future<void> showUndelegationScreen(
+    DetailedValidator validator,
+  );
+
+  Future<void> showDelegationReview();
+
+  Future<void> showUndelegationReview();
+
+  Future<void> showClaimRewardsReview();
+
+  Future<void> showRedelegationReview();
 
   Future<void> showTransactionData(String data);
 
@@ -55,7 +70,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       );
 
   @override
-  Future<void> showDelegationManagement(
+  Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
   ) async {
@@ -71,30 +86,62 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showReviewTransaction(SelectedDelegationType type) async {
-    Widget widget;
-    switch (type) {
-      case SelectedDelegationType.initial:
-        return;
-      case SelectedDelegationType.undelegate:
-      case SelectedDelegationType.delegate:
-        widget = ConfirmDelegateScreen(
-          navigator: this,
-        );
-        break;
-      case SelectedDelegationType.claimRewards:
-        widget = ConfirmClaimRewardsScreen(
-          navigator: this,
-        );
-        break;
-      case SelectedDelegationType.redelegate:
-        widget = ConfirmRedelegateScreen(
-          navigator: this,
-        );
-        break;
-    }
+  Future<void> showRedelegationScreen(
+    DetailedValidator validator,
+  ) async {
     showPage(
-      (context) => widget,
+      (context) => StakingRedelegationScreen(
+        delegation: widget.selectedDelegation!,
+        validator: validator,
+        accountDetails: widget.details,
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showUndelegationScreen(
+    DetailedValidator validator,
+  ) async {
+    showPage(
+      (context) => StakingUndelegationScreen(
+        delegation: widget.selectedDelegation,
+        validator: validator,
+        accountDetails: widget.details,
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showDelegationReview() async {
+    showPage(
+      (context) => ConfirmDelegateScreen(
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showUndelegationReview() async {
+    showDelegationReview();
+  }
+
+  @override
+  Future<void> showClaimRewardsReview() async {
+    showPage(
+      (context) => ConfirmClaimRewardsScreen(
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showRedelegationReview() async {
+    showPage(
+      (context) => ConfirmRedelegateScreen(
+        navigator: this,
+      ),
     );
   }
 
