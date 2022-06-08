@@ -171,48 +171,26 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                   horizontal: Spacing.largeX3,
                   vertical: Spacing.xLarge,
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (details.delegation != null)
-                      Flexible(
-                        child: PwButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: PwText(
-                            SelectedDelegationType.initial.dropDownTitle,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            color: PwColor.neutralNeutral,
-                            style: PwTextStyle.body,
-                          ),
-                        ),
-                      ),
-                    if (details.delegation != null) HorizontalSpacer.large(),
-                    Flexible(
-                      child: PwButton(
-                        enabled: _formKey.currentState?.validate() == true &&
-                            details.hashDelegated > 0,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() == false ||
-                              0 == details.hashDelegated ||
-                              details.hashDelegated.isNegative) {
-                            return;
-                          }
-                          widget.navigator.showDelegationReview();
-                        },
-                        child: PwText(
-                          SelectedDelegationType.delegate.dropDownTitle,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
+                child: Flexible(
+                  child: PwButton(
+                    enabled: _formKey.currentState?.validate() == true &&
+                        details.hashDelegated > 0,
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() == false ||
+                          0 == details.hashDelegated ||
+                          details.hashDelegated.isNegative) {
+                        return;
+                      }
+                      widget.navigator.showDelegationReview();
+                    },
+                    child: PwText(
+                      SelectedDelegationType.delegate.dropDownTitle,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                      color: PwColor.neutralNeutral,
+                      style: PwTextStyle.body,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

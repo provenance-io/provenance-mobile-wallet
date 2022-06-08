@@ -198,34 +198,28 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                   horizontal: Spacing.largeX3,
                   vertical: Spacing.xLarge,
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: PwButton(
-                        enabled: _formKey.currentState?.validate() == true &&
-                            details.hashRedelegated > 0 &&
-                            details.hashRedelegated <=
-                                details.delegation.hashAmount,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() == false ||
-                              0 == details.hashRedelegated ||
-                              details.hashRedelegated.isNegative) {
-                            return;
-                          }
-                          widget.navigator.showRedelegationReview();
-                        },
-                        child: PwText(
-                          details.selectedDelegationType.dropDownTitle,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
+                child: Flexible(
+                  child: PwButton(
+                    enabled: _formKey.currentState?.validate() == true &&
+                        details.hashRedelegated > 0 &&
+                        details.hashRedelegated <=
+                            details.delegation.hashAmount,
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() == false ||
+                          0 == details.hashRedelegated ||
+                          details.hashRedelegated.isNegative) {
+                        return;
+                      }
+                      widget.navigator.showRedelegationReview();
+                    },
+                    child: PwText(
+                      details.selectedDelegationType.dropDownTitle,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                      color: PwColor.neutralNeutral,
+                      style: PwTextStyle.body,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

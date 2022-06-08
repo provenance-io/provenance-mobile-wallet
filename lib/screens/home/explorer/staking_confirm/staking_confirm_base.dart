@@ -87,58 +87,31 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: ListView(children: [
-          ...widget.children,
-          PwListDivider(
-            indent: Spacing.largeX3,
-          ),
-          DetailsItem(
-            title: Strings.stakingConfirmGasAdjustment,
-            endChild: Flexible(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Form(
-                      key: _formKey,
-                      child: StakingTextFormField(
-                        hint: Strings.stakingConfirmHash,
-                        textEditingController: _textEditingController,
-                      ),
-                    ),
-                  ),
-                ],
+        child: ListView(
+          children: [
+            ...widget.children,
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.stakingConfirmGasAdjustment,
+              endChild: Flexible(
+                child: StakingTextFormField(
+                  hint: "",
+                  textEditingController: _textEditingController,
+                  shouldAutovalidate: false,
+                ),
               ),
             ),
-          ),
-          PwListDivider(
-            indent: Spacing.largeX3,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.largeX3,
-              vertical: Spacing.xLarge,
+            PwListDivider(
+              indent: Spacing.largeX3,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: PwButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: PwText(
-                      Strings.stakingConfirmBack,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                  ),
+            Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.largeX3,
+                  vertical: Spacing.xLarge,
                 ),
-                HorizontalSpacer.large(),
-                Flexible(
+                child: Flexible(
                   child: PwButton(
                     onPressed: () {
                       final gasAdjustment =
@@ -153,11 +126,9 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                       style: PwTextStyle.body,
                     ),
                   ),
-                )
-              ],
-            ),
-          )
-        ]),
+                )),
+          ],
+        ),
       ),
     );
   }

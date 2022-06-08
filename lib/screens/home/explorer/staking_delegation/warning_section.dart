@@ -56,11 +56,15 @@ class WarningSection extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    PwText(
-                      _title,
-                      style: PwTextStyle.subhead,
-                      color: _textColor ?? PwColor.notice800,
-                      textAlign: TextAlign.left,
+                    Flexible(
+                      child: PwText(
+                        _title,
+                        style: PwTextStyle.subhead,
+                        color: _textColor ?? PwColor.notice800,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
+                      ),
                     ),
                   ],
                 ),
@@ -73,6 +77,8 @@ class WarningSection extends StatelessWidget {
                     textAlign: TextAlign.left,
                     style: PwTextStyle.body,
                     color: _textColor ?? PwColor.notice800,
+                    overflow: TextOverflow.fade,
+                    maxLines: 5,
                   ),
                 ),
               ],
