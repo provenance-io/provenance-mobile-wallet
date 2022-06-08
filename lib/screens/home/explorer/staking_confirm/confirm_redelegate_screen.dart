@@ -45,11 +45,16 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 ''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) async {
+          onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
-            await _sendTransaction(bloc, gasEstimated, context);
+            await _sendTransaction(
+              bloc,
+              details.selectedDelegationType,
+              gasAdjustment,
+              context,
+            );
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
@@ -136,14 +141,15 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 
   Future<void> _sendTransaction(
     StakingRedelegationBloc bloc,
-    double gasEstimated,
+    SelectedDelegationType selected,
+    double? gasAdjustment,
     BuildContext context,
   ) async {
     await (get<StakingRedelegationBloc>())
-        .doRedelegate(gasEstimated)
+        .doRedelegate(gasAdjustment)
         .then((value) {
       ModalLoadingRoute.dismiss(context);
-      navigator.showTransactionSuccess();
+      navigator.showTransactionSuccess(selected);
     }).catchError(
       (err) {
         ModalLoadingRoute.dismiss(context);

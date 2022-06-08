@@ -37,11 +37,12 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
 }''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) async {
+          onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
-            await _sendTransaction(gasEstimated, context);
+            await _sendTransaction(
+                gasAdjustment, details.selectedDelegationType, context);
           },
           signButtonTitle: Strings.stakingConfirmRewardClaim,
           children: [
@@ -79,14 +80,15 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
   }
 
   Future<void> _sendTransaction(
-    double gasEstimated,
+    double? gasAdjustment,
+    SelectedDelegationType selected,
     BuildContext context,
   ) async {
     await (get<StakingDelegationBloc>())
-        .claimRewards(gasEstimated)
+        .claimRewards(gasAdjustment)
         .then((value) {
       ModalLoadingRoute.dismiss(context);
-      navigator.showTransactionSuccess();
+      navigator.showTransactionSuccess(selected);
     }).catchError(
       (err) {
         ModalLoadingRoute.dismiss(context);

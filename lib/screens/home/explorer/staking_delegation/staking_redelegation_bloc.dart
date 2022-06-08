@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:decimal/decimal.dart';
+import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -14,6 +15,7 @@ import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/util/extensions/num_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -97,7 +99,7 @@ class StakingRedelegationBloc extends Disposable {
   }
 
   Future<void> doRedelegate(
-    double gasEstimate,
+    double? gasAdjustment,
   ) async {
     final details = _stakingRedelegationDetails.value;
 
@@ -106,25 +108,23 @@ class StakingRedelegationBloc extends Disposable {
         staking.MsgBeginRedelegate(
                 amount: proto.Coin(
                   denom: 'nhash',
-                  amount: details.hashRedelegated.toString(),
+                  amount: details.hashRedelegated.nhashFromHash(),
                 ),
                 delegatorAddress: _accountDetails.address,
-                validatorDstAddress: details.delegation.address,
-                validatorSrcAddress: details.toRedelegate?.address ?? "")
+                validatorSrcAddress: details.delegation.sourceAddress,
+                validatorDstAddress: details.toRedelegate?.address ?? "")
             .toAny(),
       ],
     );
 
     final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
-    final adjustedEstimate = int.parse(
-        (Decimal.parse(gasEstimate.toString()) * Decimal.fromInt(10).pow(9))
-            .toString());
+    final adjustedEstimate = await _estimateGas(body);
 
     AccountGasEstimate estimate = AccountGasEstimate(
-      adjustedEstimate,
-      null,
-      null,
-      [],
+      adjustedEstimate.estimate,
+      adjustedEstimate.baseFee,
+      gasAdjustment ?? adjustedEstimate.feeAdjustment,
+      adjustedEstimate.feeCalculated,
     );
 
     final response = await get<TransactionHandler>().executeTransaction(
@@ -134,6 +134,15 @@ class StakingRedelegationBloc extends Disposable {
     );
 
     log(response.asJsonString());
+  }
+
+  Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
+    final publicKey = PublicKey.fromCompressPublicHex(
+      convert.hex.decoder.convert(_accountDetails.publicKey),
+      _accountDetails.coin,
+    );
+
+    return await (get<TransactionHandler>()).estimateGas(body, publicKey);
   }
 }
 

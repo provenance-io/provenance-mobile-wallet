@@ -17,7 +17,7 @@ class StakingConfirmBase extends StatefulWidget {
 
   final String appBarTitle;
   final VoidCallback onDataClick;
-  final Function(double) onTransactionSign;
+  final Function(double?) onTransactionSign;
   final String signButtonTitle;
   final List<Widget> children;
 
@@ -141,9 +141,9 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                 Flexible(
                   child: PwButton(
                     onPressed: () {
-                      final updatedGas =
-                          double.tryParse(_textEditingController.text) ?? 1.25;
-                      widget.onTransactionSign(updatedGas);
+                      final gasAdjustment =
+                          double.tryParse(_textEditingController.text);
+                      widget.onTransactionSign(gasAdjustment);
                     },
                     child: PwText(
                       widget.signButtonTitle,
