@@ -43,6 +43,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             await Future.delayed(Duration(milliseconds: 500));
             await _sendTransaction(gasEstimated, context);
           },
+          signButtonTitle: Strings.stakingConfirmRewardClaim,
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,

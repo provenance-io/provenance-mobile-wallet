@@ -47,6 +47,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
             await Future.delayed(Duration(milliseconds: 500));
             await _sendTransaction(bloc, details, gasEstimated, context);
           },
+          signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,

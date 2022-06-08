@@ -11,12 +11,14 @@ class StakingConfirmBase extends StatefulWidget {
     required this.appBarTitle,
     required this.onDataClick,
     required this.onTransactionSign,
+    required this.signButtonTitle,
     this.children = const <Widget>[],
   }) : super(key: key);
 
   final String appBarTitle;
   final VoidCallback onDataClick;
   final Function(double) onTransactionSign;
+  final String signButtonTitle;
   final List<Widget> children;
 
   @override
@@ -144,7 +146,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                       widget.onTransactionSign(updatedGas);
                     },
                     child: PwText(
-                      Strings.stakingConfirmSign,
+                      widget.signButtonTitle,
                       softWrap: false,
                       overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,

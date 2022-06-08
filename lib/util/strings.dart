@@ -552,4 +552,7 @@ class Strings {
   static const stakingSuccessSuccess = "SUCCESS";
   static String stakingSuccessSuccessful(String delegationType) =>
       '$delegationType successful!';
+
+  // Staking Confirm Rewards Screen
+  static const stakingConfirmRewardClaim = "Claim";
 }
