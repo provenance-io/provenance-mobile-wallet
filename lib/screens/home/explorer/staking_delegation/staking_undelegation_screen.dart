@@ -149,24 +149,6 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (details.delegation != null)
-                      Flexible(
-                        child: PwButton(
-                          onPressed: () {
-                            bloc.updateSelectedDelegationType(
-                              SelectedDelegationType.initial,
-                            );
-                          },
-                          child: PwText(
-                            SelectedDelegationType.initial.dropDownTitle,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            color: PwColor.neutralNeutral,
-                            style: PwTextStyle.body,
-                          ),
-                        ),
-                      ),
-                    if (details.delegation != null) HorizontalSpacer.large(),
                     Flexible(
                       child: PwButton(
                         enabled: _formKey.currentState?.validate() == true &&

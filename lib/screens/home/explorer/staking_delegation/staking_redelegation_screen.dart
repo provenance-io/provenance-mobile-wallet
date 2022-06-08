@@ -81,12 +81,15 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
         final details = snapshot.data;
 
         if (details == null || details.validators.isEmpty) {
-          return Stack(
-            children: const [
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
+          return Container(
+            child: Stack(
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            ),
+            color: Theme.of(context).colorScheme.neutral750,
           );
         }
 
@@ -145,7 +148,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         ),
                       ),
                     ),
-                    //Expanded(child: Container()),
                   ],
                 ),
               ),
@@ -200,24 +202,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Flexible(
-                      child: PwButton(
-                        onPressed: () {
-                          get<StakingDelegationBloc>()
-                              .updateSelectedDelegationType(
-                            SelectedDelegationType.initial,
-                          );
-                        },
-                        child: PwText(
-                          SelectedDelegationType.initial.dropDownTitle,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    ),
-                    HorizontalSpacer.large(),
                     Flexible(
                       child: PwButton(
                         enabled: _formKey.currentState?.validate() == true &&
