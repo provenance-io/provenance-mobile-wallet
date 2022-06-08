@@ -1,13 +1,16 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegate.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegate.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegate.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class StakingDelegationScreen extends StatefulWidget {
   final Delegation? delegation;
@@ -34,9 +37,13 @@ class StakingDelegationScreen extends StatefulWidget {
 
 class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   late final StakingDelegationBloc _bloc;
+  late final TextEditingController _textEditingController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
+    _textEditingController = TextEditingController();
+    _textEditingController.addListener(_onTextChanged);
     _bloc = StakingDelegationBloc(
       widget.delegation,
       widget.validator,
@@ -51,7 +58,19 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   @override
   void dispose() {
     get.unregister<StakingDelegationBloc>();
+    _textEditingController.removeListener(_onTextChanged);
+    _textEditingController.dispose();
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    String text = _textEditingController.text;
+    if (text.isEmpty) {
+      return;
+    }
+
+    final number = num.tryParse(text) ?? 0;
+    get<StakingDelegationBloc>().updateHashDelegated(number);
   }
 
   @override
@@ -84,34 +103,121 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
               ),
             ),
           ),
-          body: _getBody(details.selectedDelegationType),
+          body: ListView(
+            children: [
+              if (details.hashInsufficient)
+                WarningSection(
+                  title: Strings.stakingDelegateWarningAccountLockTitle,
+                  message: Strings.stakingDelegateWarningAccountLockMessage,
+                  background: Theme.of(context).colorScheme.error,
+                ),
+              WarningSection(
+                title: Strings.stakingDelegateWarningFundsLockTitle,
+                message: Strings.stakingDelegateWarningFundsLockMessage,
+              ),
+              DetailsItem(
+                title: Strings.stakingManagementMyDelegation,
+                endChild: Flexible(
+                  child: PwText(
+                    details.delegation?.displayDenom ??
+                        Strings.stakingManagementNoHash,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: PwTextStyle.body,
+                  ),
+                ),
+              ),
+              PwListDivider(
+                indent: Spacing.largeX3,
+              ),
+              DetailsItem(
+                title: Strings.stakingDelegateAvailableBalance,
+                endChild: Flexible(
+                  child: PwText(
+                    '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: PwTextStyle.body,
+                  ),
+                ),
+              ),
+              PwListDivider(
+                indent: Spacing.largeX3,
+              ),
+              DetailsItem(
+                title: Strings.stakingDelegateAmountToDelegate,
+                endChild: Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Flexible(
+                          child: Form(
+                        key: _formKey,
+                        child: StakingTextFormField(
+                          hint: Strings.stakingDelegateConfirmHash,
+                          textEditingController: _textEditingController,
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+              ),
+              PwListDivider(
+                indent: Spacing.largeX3,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.largeX3,
+                  vertical: Spacing.xLarge,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (details.delegation != null)
+                      Flexible(
+                        child: PwButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: PwText(
+                            SelectedDelegationType.initial.dropDownTitle,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            color: PwColor.neutralNeutral,
+                            style: PwTextStyle.body,
+                          ),
+                        ),
+                      ),
+                    if (details.delegation != null) HorizontalSpacer.large(),
+                    Flexible(
+                      child: PwButton(
+                        enabled: _formKey.currentState?.validate() == true &&
+                            details.hashDelegated > 0,
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() == false ||
+                              0 == details.hashDelegated ||
+                              details.hashDelegated.isNegative) {
+                            return;
+                          }
+                          widget.navigator.showDelegationReview();
+                        },
+                        child: PwText(
+                          SelectedDelegationType.delegate.dropDownTitle,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          color: PwColor.neutralNeutral,
+                          style: PwTextStyle.body,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
-  }
-
-  Widget _getBody(SelectedDelegationType type) {
-    switch (type) {
-      case SelectedDelegationType.claimRewards:
-      case SelectedDelegationType.initial:
-        return Container();
-      // return StakingManagement(
-      //   navigator: widget.navigator,
-      // );
-      case SelectedDelegationType.delegate:
-        return StakingDelegate(
-          navigator: widget.navigator,
-        );
-      case SelectedDelegationType.undelegate:
-        return StakingUndelegate(
-          navigator: widget.navigator,
-        );
-      case SelectedDelegationType.redelegate:
-        return StakingRedelegate(
-          navigator: widget.navigator,
-          accountDetails: widget.accountDetails,
-          delegation: widget.delegation!,
-        );
-    }
   }
 }
