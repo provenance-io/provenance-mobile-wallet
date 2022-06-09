@@ -40,7 +40,7 @@ class ValidatorListItem extends StatelessWidget {
               item.addressId,
               account,
               delegation,
-              null,
+              rewards,
             ).route(),
           );
           if (response == true) {
