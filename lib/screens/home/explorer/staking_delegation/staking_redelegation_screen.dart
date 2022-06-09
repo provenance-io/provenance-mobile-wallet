@@ -2,10 +2,12 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -91,6 +93,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
             color: Theme.of(context).colorScheme.neutral750,
           );
         }
+        final flowBloc = get<StakingFlowBloc>();
 
         return Scaffold(
           appBar: AppBar(
@@ -112,6 +115,67 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
           ),
           body: ListView(
             children: [
+              StreamBuilder<StakingDetails>(
+                  initialData: flowBloc.stakingDetails.value,
+                  stream: flowBloc.stakingDetails,
+                  builder: (context, snapshot) {
+                    final stakingDetails = snapshot.data;
+                    if (stakingDetails == null) {
+                      return Container(
+                        child: Stack(
+                          children: const [
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        ),
+                        color: Theme.of(context).colorScheme.neutral750,
+                      );
+                    }
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Spacing.xxLarge,
+                      ),
+                      child: Row(
+                        children: [
+                          PwText(
+                            Strings.dropDownStateHeader,
+                            color: PwColor.neutralNeutral,
+                            style: PwTextStyle.body,
+                          ),
+                          HorizontalSpacer.large(),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      Theme.of(context).colorScheme.neutral250,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Spacing.medium,
+                              ),
+                              child: PwDropDown<ValidatorSortingState>(
+                                initialValue: stakingDetails.selectedSort,
+                                items: ValidatorSortingState.values,
+                                isExpanded: true,
+                                onValueChanged: (item) {
+                                  flowBloc.updateSort(item);
+                                },
+                                builder: (item) => PwText(
+                                  item.dropDownTitle,
+                                  color: PwColor.neutralNeutral,
+                                  style: PwTextStyle.body,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: Spacing.largeX3,
@@ -123,6 +187,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                   children: const [
                     Flexible(
                       //fit: FlexFit.tight,
+                      child: RedelegationList(),
                     ),
                   ],
                 ),
