@@ -1,5 +1,4 @@
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -26,13 +25,6 @@ abstract class ValidatorService {
   Future<List<Rewards>> getRewards(
     Coin coin,
     String provenanceAddress,
-  ) {
-    throw Strings.notImplementedMessage;
-  }
-
-  Future<List<AbbreviatedValidator>> getAbbreviatedValidators(
-    Coin coin,
-    int pageNumber,
   ) {
     throw Strings.notImplementedMessage;
   }

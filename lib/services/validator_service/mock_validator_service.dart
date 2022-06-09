@@ -1,7 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
-import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -22,31 +21,6 @@ class MockValidatorService extends ValidatorService {
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
     return _getValidators().toList();
-  }
-
-  @override
-  Future<List<AbbreviatedValidator>> getAbbreviatedValidators(
-    Coin coin,
-    int pageNumber,
-  ) async {
-    await Future.delayed(Duration(milliseconds: 500));
-    return _getAbbrVldrs().toList();
-  }
-
-  AbbreviatedValidator _getAbbrVldr() {
-    return AbbreviatedValidator.fake(
-      moniker: _getMoniker(),
-      address:
-          faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
-      commission: faker.randomGenerator.decimal().toString(),
-      imgUrl: faker.randomGenerator.boolean()
-          ? null
-          : faker.image.image(width: 60, height: 60, random: true),
-    );
-  }
-
-  Iterable<AbbreviatedValidator> _getAbbrVldrs({int count = 46}) {
-    return Iterable.generate(count).map((e) => _getAbbrVldr());
   }
 
   @override
