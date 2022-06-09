@@ -10,6 +10,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flo
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,11 +22,13 @@ class StakingDetailsScreen extends StatefulWidget {
     required this.details,
     required this.selectedDelegation,
     required this.navigator,
+    required this.rewards,
   }) : super(key: key);
 
   final String validatorAddress;
   final AccountDetails details;
   final Delegation? selectedDelegation;
+  final Rewards? rewards;
   final StakingFlowNavigator navigator;
 
   @override
@@ -41,6 +44,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
       widget.validatorAddress,
       widget.details,
       widget.selectedDelegation,
+      widget.rewards,
     );
     _bloc.load();
     get.registerSingleton<StakingDetailsBloc>(_bloc);
@@ -155,6 +159,22 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                           ],
                         ),
                       ),
+                    PwListDivider(
+                      indent: Spacing.largeX3,
+                    ),
+                    if (details.rewards == null ||
+                        details.rewards?.rewards.isEmpty == true)
+                      DetailsItem(
+                        title: Strings.stakingDetailsReward,
+                        endChild: PwText('---'),
+                      ),
+                    if (details.rewards != null &&
+                        details.rewards!.rewards.isNotEmpty)
+                      for (var reward in details.rewards!.rewards)
+                        DetailsItem(
+                          title: Strings.stakingDetailsReward,
+                          endChild: PwText('${reward.amount} ${reward.denom}'),
+                        ),
                     PwListDivider(
                       indent: Spacing.largeX3,
                     ),

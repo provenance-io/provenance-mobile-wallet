@@ -9,23 +9,26 @@ import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingDetailsBloc extends Disposable {
   final _validatorDetails =
-      BehaviorSubject.seeded(DetailedValidatorDetails(null, null, null));
+      BehaviorSubject.seeded(DetailedValidatorDetails(null, null, null, null));
   final _isLoading = BehaviorSubject.seeded(false);
   final String _validatorAddress;
   final AccountDetails _accountDetails;
   final Delegation? _selectedDelegation;
+  final Rewards? _rewards;
   final _validatorService = get<ValidatorService>();
 
   StakingDetailsBloc(
     this._validatorAddress,
     this._accountDetails,
     this._selectedDelegation,
+    this._rewards,
   );
 
   ValueStream<bool> get isLoading => _isLoading;
@@ -51,6 +54,7 @@ class StakingDetailsBloc extends Disposable {
         validator,
         commission,
         _selectedDelegation,
+        _rewards,
       ));
     } finally {
       _isLoading.tryAdd(false);
@@ -89,9 +93,11 @@ class DetailedValidatorDetails {
     this.validator,
     this.commission,
     this.delegation,
+    this.rewards,
   );
 
   final Delegation? delegation;
   final DetailedValidator? validator;
   final Commission? commission;
+  final Rewards? rewards;
 }

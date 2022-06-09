@@ -5,6 +5,7 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -15,11 +16,7 @@ class StakingFlowBloc extends PwPagingCache {
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
   final _stakingDetails = BehaviorSubject.seeded(
-    StakingDetails(
-      address: "",
-      delegates: [],
-      validators: [],
-    ),
+    StakingDetails(address: "", delegates: [], validators: [], rewards: []),
   );
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
@@ -60,6 +57,9 @@ class StakingFlowBloc extends PwPagingCache {
         _delegationPages.value,
       );
 
+      final rewards =
+          await _validatorService.getRewards(account.coin, account.address);
+
       final validators = await _validatorService.getRecentValidators(
         _accountDetails.coin,
         _validatorPages.value,
@@ -67,10 +67,10 @@ class StakingFlowBloc extends PwPagingCache {
 
       _stakingDetails.tryAdd(
         StakingDetails(
-          delegates: delegations,
-          validators: validators,
-          address: account.address,
-        ),
+            delegates: delegations,
+            validators: validators,
+            address: account.address,
+            rewards: rewards),
       );
     } finally {
       if (showLoading) {
@@ -96,6 +96,7 @@ class StakingFlowBloc extends PwPagingCache {
           validators: selectedSort.sort(oldDetails.validators),
           address: oldDetails.address,
           selectedSort: selectedSort,
+          rewards: oldDetails.rewards,
         ),
       );
     } finally {
@@ -119,6 +120,7 @@ class StakingFlowBloc extends PwPagingCache {
         validators: oldDetails.validators,
         address: oldDetails.address,
         selectedSort: oldDetails.selectedSort,
+        rewards: oldDetails.rewards,
       ),
     );
 
@@ -143,6 +145,7 @@ class StakingFlowBloc extends PwPagingCache {
         validators: oldDetails.selectedSort.sort(validators),
         address: oldDetails.address,
         selectedSort: oldDetails.selectedSort,
+        rewards: oldDetails.rewards,
       ),
     );
 
@@ -154,12 +157,14 @@ class StakingDetails {
   StakingDetails({
     required this.delegates,
     required this.validators,
+    required this.rewards,
     this.selectedSort = ValidatorSortingState.votingPower,
     required this.address,
   });
 
   final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
+  final List<Rewards> rewards;
   final ValidatorSortingState selectedSort;
   final String address;
 }

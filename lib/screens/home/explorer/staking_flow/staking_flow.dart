@@ -14,6 +14,7 @@ import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class StakingFlowNavigator {
@@ -51,13 +52,15 @@ class StakingFlow extends FlowBase {
   const StakingFlow(
     this.validatorAddress,
     this.details,
-    this.selectedDelegation, {
+    this.selectedDelegation,
+    this.rewards, {
     Key? key,
   }) : super(key: key);
 
   final String validatorAddress;
   final AccountDetails details;
   final Delegation? selectedDelegation;
+  final Rewards? rewards;
 
   @override
   State<StatefulWidget> createState() => StakingFlowState();
@@ -71,6 +74,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         details: widget.details,
         selectedDelegation: widget.selectedDelegation,
         navigator: this,
+        rewards: widget.rewards,
       );
 
   @override
