@@ -7,7 +7,6 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -80,7 +79,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
       builder: (context, snapshot) {
         final details = snapshot.data;
 
-        if (details == null || details.validators.isEmpty) {
+        if (details == null) {
           return Container(
             child: Stack(
               children: const [
@@ -121,32 +120,9 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Flexible(
                       //fit: FlexFit.tight,
-                      child: PwDropDown<AbbreviatedValidator>(
-                        initialValue: details.validators.first,
-                        items: details.validators,
-                        isExpanded: true,
-                        onValueChanged: (item) =>
-                            _bloc.selectRedelegation(item),
-                        builder: (item) => Row(
-                          children: [
-                            Flexible(
-                              child: PwText(
-                                item.moniker,
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                                color: PwColor.neutralNeutral,
-                                style: PwTextStyle.body,
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
