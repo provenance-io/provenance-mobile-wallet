@@ -6,9 +6,9 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';

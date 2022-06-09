@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
