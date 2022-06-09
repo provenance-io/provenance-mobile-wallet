@@ -2,8 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -14,7 +14,7 @@ class DelegationListItem extends StatelessWidget {
     required this.item,
   }) : super(key: key);
 
-  final AbbreviatedValidator validator;
+  final ProvenanceValidator validator;
   final Delegation item;
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,14 @@ class DelegationListItem extends StatelessWidget {
           return;
         }
         final bloc = get<StakingFlowBloc>();
+        final rewards = bloc.stakingDetails.value.rewards.firstWhere(
+            (element) => element.validatorAddress == validator.addressId);
         final response = await Navigator.of(context).push(
           StakingFlow(
-            validator.address,
+            validator.addressId,
             account,
             item,
+            rewards,
           ).route(),
         );
         if (response == true) {

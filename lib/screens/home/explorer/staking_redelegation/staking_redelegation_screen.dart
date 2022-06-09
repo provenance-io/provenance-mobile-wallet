@@ -1,13 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -75,66 +73,67 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<StakingRedelegationDetails>(
-      initialData: _bloc.stakingRedelegationDetails.value,
-      stream: _bloc.stakingRedelegationDetails,
-      builder: (context, snapshot) {
-        final details = snapshot.data;
+    return Container(
+      color: Theme.of(context).colorScheme.neutral750,
+      child: Material(
+        child: StreamBuilder<StakingRedelegationDetails>(
+          initialData: _bloc.stakingRedelegationDetails.value,
+          stream: _bloc.stakingRedelegationDetails,
+          builder: (context, snapshot) {
+            final details = snapshot.data;
 
-        if (details == null) {
-          return Container(
-            child: Stack(
-              children: const [
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            ),
-            color: Theme.of(context).colorScheme.neutral750,
-          );
-        }
-        final flowBloc = get<StakingFlowBloc>();
+            if (details == null) {
+              return Container();
+            }
+            final flowBloc = get<StakingFlowBloc>();
 
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.neutral750,
-            elevation: 0.0,
-            centerTitle: true,
-            title: PwText(details.validator.moniker),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 21),
-              child: IconButton(
-                icon: PwIcon(
-                  PwIcons.back,
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppBar(
+                  primary: false,
+                  backgroundColor: Theme.of(context).colorScheme.neutral750,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  title: PwText(
+                    Strings.stakingRedelegateSelectForRedelegation,
+                    style: PwTextStyle.subhead,
+                  ),
+                  leading: Padding(
+                    padding: EdgeInsets.only(left: 21),
+                    child: IconButton(
+                      icon: PwIcon(
+                        PwIcons.back,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ),
-          body: ListView(
-            children: [
-              StreamBuilder<StakingDetails>(
+                DetailsItem(
+                  title: Strings.stakingRedelegateRedelegatingFrom,
+                  endChild: PwText(
+                    details.validator.moniker,
+                    color: PwColor.neutralNeutral,
+                    style: PwTextStyle.body,
+                  ),
+                ),
+                PwListDivider(
+                  indent: Spacing.largeX3,
+                ),
+                StreamBuilder<StakingDetails>(
                   initialData: flowBloc.stakingDetails.value,
                   stream: flowBloc.stakingDetails,
                   builder: (context, snapshot) {
                     final stakingDetails = snapshot.data;
                     if (stakingDetails == null) {
-                      return Container(
-                        child: Stack(
-                          children: const [
-                            Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ],
-                        ),
-                        color: Theme.of(context).colorScheme.neutral750,
-                      );
+                      return Container();
                     }
                     return Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Spacing.xxLarge,
+                      padding: EdgeInsets.all(
+                        Spacing.largeX3,
                       ),
                       child: Row(
                         children: [
@@ -175,98 +174,24 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         ],
                       ),
                     );
-                  }),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
+                  },
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
-                    Flexible(
-                      //fit: FlexFit.tight,
-                      child: RedelegationList(),
-                    ),
-                  ],
+                PwListDivider(
+                  indent: Spacing.largeX3,
                 ),
-              ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              DetailsItem(
-                title: Strings.stakingRedelegateAvailableForRedelegation,
-                endChild: Flexible(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: PwText(
-                          details.delegation.displayDenom,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    ],
-                  ),
+                RedelegationList(),
+                PwListDivider(
+                  indent: Spacing.largeX3,
                 ),
-              ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
+                StakingRedelegationList(
+                  details: details,
+                  navigator: widget.navigator,
                 ),
-                child: Flexible(
-                  child: Form(
-                    key: _formKey,
-                    child: StakingTextFormField(
-                      hint: Strings.stakingDelegateConfirmHash,
-                      textEditingController: _textEditingController,
-                    ),
-                  ),
-                ),
-              ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Flexible(
-                  child: PwButton(
-                    enabled: _formKey.currentState?.validate() == true &&
-                        details.hashRedelegated > 0 &&
-                        details.hashRedelegated <=
-                            details.delegation.hashAmount,
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() == false ||
-                          0 == details.hashRedelegated ||
-                          details.hashRedelegated.isNegative) {
-                        return;
-                      }
-                      widget.navigator.showRedelegationReview();
-                    },
-                    child: PwText(
-                      details.selectedDelegationType.dropDownTitle,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }

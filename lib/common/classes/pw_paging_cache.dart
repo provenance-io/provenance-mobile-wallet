@@ -25,9 +25,7 @@ abstract class PwPagingCache extends Disposable {
     isLoading.value = true;
     final newList = await function();
 
-    if (newList.isNotEmpty) {
-      oldList.addAll(newList);
-    }
-    return oldList;
+    newList.insertAll(0, oldList);
+    return newList;
   }
 }

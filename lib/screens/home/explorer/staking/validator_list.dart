@@ -36,36 +36,37 @@ class ValidatorListState extends State<ValidatorList> {
       child: Stack(
         children: [
           StreamBuilder<StakingDetails>(
-              initialData: _bloc.stakingDetails.value,
-              stream: _bloc.stakingDetails,
-              builder: (context, snapshot) {
-                final stakingDetails = snapshot.data;
-                if (stakingDetails == null) {
-                  return Container();
-                }
-                return ListView.separated(
-                  padding: EdgeInsets.all(
-                    Spacing.xLarge,
-                  ),
-                  controller: _scrollController,
-                  itemBuilder: (context, index) {
-                    if (stakingDetails.validators.isEmpty) {
-                      return Container();
-                    }
-                    final item = stakingDetails.validators[index];
+            initialData: _bloc.stakingDetails.value,
+            stream: _bloc.stakingDetails,
+            builder: (context, snapshot) {
+              final stakingDetails = snapshot.data;
+              if (stakingDetails == null) {
+                return Container();
+              }
+              return ListView.separated(
+                padding: EdgeInsets.all(
+                  Spacing.xLarge,
+                ),
+                controller: _scrollController,
+                itemBuilder: (context, index) {
+                  if (stakingDetails.validators.isEmpty) {
+                    return Container();
+                  }
+                  final item = stakingDetails.validators[index];
 
-                    return ValidatorListItem(
-                      item: item,
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return PwListDivider();
-                  },
-                  itemCount: stakingDetails.validators.length,
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                );
-              }),
+                  return ValidatorListItem(
+                    item: item,
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return PwListDivider();
+                },
+                itemCount: stakingDetails.validators.length,
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+              );
+            },
+          ),
           StreamBuilder<bool>(
             initialData: _bloc.isLoadingValidators.value,
             stream: _bloc.isLoadingValidators,

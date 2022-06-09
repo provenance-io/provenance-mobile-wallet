@@ -45,7 +45,8 @@ class RedelegationListState extends State<RedelegationList> {
                 }
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xLarge,
+                    vertical: Spacing.xLarge,
+                    horizontal: Spacing.largeX3,
                   ),
                   controller: _scrollController,
                   itemBuilder: (context, index) {
