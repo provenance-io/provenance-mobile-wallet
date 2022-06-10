@@ -38,9 +38,7 @@ class StakingSuccessScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  VerticalSpacer.custom(
-                    spacing: 110,
-                  ),
+                  Expanded(child: Container()),
                   Image.asset(
                     Assets.imagePaths.transactionComplete,
                     height: 80,
@@ -51,6 +49,8 @@ class StakingSuccessScreen extends StatelessWidget {
                     Strings.stakingSuccessSuccess,
                     style: PwTextStyle.display2,
                     textAlign: TextAlign.center,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
                   ),
                   VerticalSpacer.medium(),
                   PwText(
@@ -58,8 +58,9 @@ class StakingSuccessScreen extends StatelessWidget {
                       selected.dropDownTitle,
                     ),
                     style: PwTextStyle.displayBody,
+                    textAlign: TextAlign.center,
                   ),
-                  Expanded(child: Container()),
+                  Expanded(flex: 2, child: Container()),
                   Padding(
                     padding: EdgeInsets.only(
                         left: 20, right: 20, bottom: Spacing.largeX4),
@@ -67,6 +68,7 @@ class StakingSuccessScreen extends StatelessWidget {
                       child: PwText(
                         Strings.sendDone,
                         style: PwTextStyle.bodyBold,
+                        textAlign: TextAlign.center,
                       ),
                       onPressed: () {
                         navigator.onComplete();
