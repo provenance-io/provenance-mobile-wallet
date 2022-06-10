@@ -145,23 +145,20 @@ class ConfirmRedelegateScreen extends StatelessWidget {
     double? gasAdjustment,
     BuildContext context,
   ) async {
-    await (get<StakingRedelegationBloc>())
-        .doRedelegate(gasAdjustment)
-        .then((value) {
+    try {
+      await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
       navigator.showTransactionSuccess(selected);
-    }).catchError(
-      (err) {
-        ModalLoadingRoute.dismiss(context);
-        showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorDialog(
-              error: err.toString(),
-            );
-          },
-        );
-      },
-    );
+    } catch (err) {
+      ModalLoadingRoute.dismiss(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: err.toString(),
+          );
+        },
+      );
+    }
   }
 }

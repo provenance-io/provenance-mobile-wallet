@@ -84,23 +84,20 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     SelectedDelegationType selected,
     BuildContext context,
   ) async {
-    await (get<StakingDelegationBloc>())
-        .claimRewards(gasAdjustment)
-        .then((value) {
+    try {
+      await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
       navigator.showTransactionSuccess(selected);
-    }).catchError(
-      (err) {
-        ModalLoadingRoute.dismiss(context);
-        showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorDialog(
-              error: err.toString(),
-            );
-          },
-        );
-      },
-    );
+    } catch (err) {
+      ModalLoadingRoute.dismiss(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: err.toString(),
+          );
+        },
+      );
+    }
   }
 }
