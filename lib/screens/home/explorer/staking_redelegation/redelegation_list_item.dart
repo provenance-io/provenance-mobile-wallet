@@ -73,19 +73,14 @@ class RedelegationListItem extends StatelessWidget {
                       ),
                       Expanded(child: Container()),
                       if (item == details.toRedelegate)
-                        Padding(
+                        Flexible(
+                            child: Padding(
                           padding: EdgeInsets.only(left: 16),
                           child: Icon(
                             Icons.check_circle,
                             color: Theme.of(context).colorScheme.neutralNeutral,
                           ),
-
-                          // PwIcon(
-                          //   PwIcons.caret,
-                          //   color: Theme.of(context).colorScheme.neutralNeutral,
-                          //   size: 12.0,
-                          // ),
-                        ),
+                        )),
                     ],
                   ),
                 ),
