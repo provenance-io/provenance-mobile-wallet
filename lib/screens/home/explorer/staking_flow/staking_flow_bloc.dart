@@ -70,13 +70,11 @@ class StakingFlowBloc extends PwPagingCache {
         _accountDetails.coin,
         _accountDetails.address,
         _delegationPages.value,
-        _stakingDetails.value.selectedState,
       );
 
       final validators = await _validatorService.getRecentValidators(
         _accountDetails.coin,
         _validatorPages.value,
-        _stakingDetails.value.selectedStatus,
       );
 
       _stakingDetails.tryAdd(
@@ -94,10 +92,10 @@ class StakingFlowBloc extends PwPagingCache {
     }
   }
 
-  Future<void> updateState(DelegationState state) async {
+  Future<void> updateSort(ValidatorSortingState selectedSort) async {
     final oldDetails = _stakingDetails.value;
 
-    if (state == oldDetails.selectedState) {
+    if (selectedSort == oldDetails.selectedSort) {
       return;
     }
 
@@ -105,52 +103,13 @@ class StakingFlowBloc extends PwPagingCache {
 
     _delegationPages.value = 1;
     try {
-      final delegations = await _validatorService.getDelegations(
-          _accountDetails.coin,
-          _accountDetails.address,
-          _delegationPages.value,
-          state);
-
-      _stakingDetails.tryAdd(
-        StakingDetails(
-          abbreviatedValidators: _abbreviatedValidators,
-          delegates: delegations,
-          validators: oldDetails.validators,
-          address: oldDetails.address,
-          selectedState: state,
-          selectedStatus: oldDetails.selectedStatus,
-        ),
-      );
-    } finally {
-      _isLoading.tryAdd(false);
-    }
-  }
-
-  Future<void> updateStatus(ValidatorStatus status) async {
-    final oldDetails = _stakingDetails.value;
-
-    if (status == oldDetails.selectedStatus) {
-      return;
-    }
-
-    _isLoading.tryAdd(true);
-
-    _validatorPages.value = 1;
-    try {
-      final validators = await _validatorService.getRecentValidators(
-        _accountDetails.coin,
-        _validatorPages.value,
-        status,
-      );
-
       _stakingDetails.tryAdd(
         StakingDetails(
           abbreviatedValidators: _abbreviatedValidators,
           delegates: oldDetails.delegates,
-          validators: validators,
+          validators: selectedSort.sort(oldDetails.validators),
           address: oldDetails.address,
-          selectedState: oldDetails.selectedState,
-          selectedStatus: status,
+          selectedSort: selectedSort,
         ),
       );
     } finally {
@@ -165,11 +124,8 @@ class StakingFlowBloc extends PwPagingCache {
         oldDetails.delegates,
         _delegationPages,
         _isLoadingDelegations,
-        () async => await _validatorService.getDelegations(
-            _accountDetails.coin,
-            _accountDetails.address,
-            _delegationPages.value,
-            oldDetails.selectedState));
+        () async => await _validatorService.getDelegations(_accountDetails.coin,
+            _accountDetails.address, _delegationPages.value));
 
     _stakingDetails.tryAdd(
       StakingDetails(
@@ -177,8 +133,7 @@ class StakingFlowBloc extends PwPagingCache {
         delegates: delegates,
         validators: oldDetails.validators,
         address: oldDetails.address,
-        selectedState: oldDetails.selectedState,
-        selectedStatus: oldDetails.selectedStatus,
+        selectedSort: oldDetails.selectedSort,
       ),
     );
 
@@ -195,17 +150,15 @@ class StakingFlowBloc extends PwPagingCache {
         () async => await _validatorService.getRecentValidators(
               _accountDetails.coin,
               _validatorPages.value,
-              oldDetails.selectedStatus,
             ));
 
     _stakingDetails.tryAdd(
       StakingDetails(
         abbreviatedValidators: _abbreviatedValidators,
         delegates: oldDetails.delegates,
-        validators: validators,
+        validators: oldDetails.selectedSort.sort(validators),
         address: oldDetails.address,
-        selectedState: oldDetails.selectedState,
-        selectedStatus: oldDetails.selectedStatus,
+        selectedSort: oldDetails.selectedSort,
       ),
     );
 
@@ -218,23 +171,22 @@ class StakingDetails {
     required this.abbreviatedValidators,
     required this.delegates,
     required this.validators,
-    this.selectedState = DelegationState.bonded,
-    this.selectedStatus = ValidatorStatus.active,
+    this.selectedSort = ValidatorSortingState.votingPower,
     required this.address,
   });
 
   final List<AbbreviatedValidator> abbreviatedValidators;
   final List<Delegation> delegates;
   final List<ProvenanceValidator> validators;
-  final DelegationState selectedState;
-  final ValidatorStatus selectedStatus;
+  final ValidatorSortingState selectedSort;
   final String address;
 }
 
-enum DelegationState {
-  bonded,
-  redelegated,
-  unbonded,
+enum ValidatorSortingState {
+  votingPower,
+  delegators,
+  commission,
+  alphabetically,
 }
 
 enum ValidatorStatus {
@@ -243,39 +195,35 @@ enum ValidatorStatus {
   jailed,
 }
 
-extension ValidatorStatusExtension on ValidatorStatus {
+extension ValidatorSortingStateExtension on ValidatorSortingState {
   String get dropDownTitle {
     switch (this) {
-      case ValidatorStatus.active:
-        return Strings.dropDownActive;
-      case ValidatorStatus.candidate:
-        return Strings.dropDownCandidate;
-      case ValidatorStatus.jailed:
-        return Strings.dropDownJailed;
-    }
-  }
-}
-
-extension DelegationStateExtension on DelegationState {
-  String get dropDownTitle {
-    switch (this) {
-      case DelegationState.bonded:
-        return Strings.dropDownDelegate;
-      case DelegationState.redelegated:
-        return Strings.dropDownRedelegate;
-      case DelegationState.unbonded:
-        return Strings.dropDownUndelegate;
+      case ValidatorSortingState.votingPower:
+        return Strings.dropDownVotingPower;
+      case ValidatorSortingState.delegators:
+      case ValidatorSortingState.commission:
+        return name.capitalize();
+      case ValidatorSortingState.alphabetically:
+        return Strings.dropDownAlphabetically;
     }
   }
 
-  String get urlRoute {
+  List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
     switch (this) {
-      case DelegationState.bonded:
-        return 'delegations';
-      case DelegationState.redelegated:
-        return 'redelegations';
-      case DelegationState.unbonded:
-        return 'unbonding';
+      case ValidatorSortingState.votingPower:
+        validators.sort((a, b) => a.votingPower.compareTo(b.votingPower));
+        break;
+      case ValidatorSortingState.delegators:
+        validators.sort((a, b) => a.delegators.compareTo(b.delegators));
+        break;
+      case ValidatorSortingState.commission:
+        validators.sort((a, b) => a.rawCommission.compareTo(b.rawCommission));
+        break;
+      case ValidatorSortingState.alphabetically:
+        return validators
+          ..sort((a, b) =>
+              a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase()));
     }
+    return validators.reversed.toList();
   }
 }

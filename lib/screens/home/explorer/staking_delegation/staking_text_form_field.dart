@@ -5,11 +5,13 @@ class StakingTextFormField extends StatelessWidget {
   final String hint;
   final TextEditingController textEditingController;
   final Function? submit;
+  final bool shouldAutovalidate;
 
   const StakingTextFormField({
     Key? key,
     required this.hint,
     required this.textEditingController,
+    this.shouldAutovalidate = true,
     this.submit,
   }) : super(key: key);
 
@@ -26,7 +28,9 @@ class StakingTextFormField extends StatelessWidget {
           submit!();
         }
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: shouldAutovalidate
+          ? AutovalidateMode.onUserInteraction
+          : AutovalidateMode.disabled,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return Strings.required;

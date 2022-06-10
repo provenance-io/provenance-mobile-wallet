@@ -487,14 +487,10 @@ class Strings {
   static const proposals = "Proposals";
 
   // Staking Tab
-  static const dropDownDelegateHeader = "My Validator Type:";
-  static const dropDownDelegate = "Delegate";
-  static const dropDownRedelegate = "Redelegate";
-  static const dropDownUndelegate = "Undelegate";
-  static const dropDownStateHeader = "Validator Status:";
-  static const dropDownActive = "Active";
-  static const dropDownCandidate = "Candidate";
-  static const dropDownJailed = "Jailed";
+  static const stakingTabMyDelegations = "My Delegations";
+  static const dropDownStateHeader = "Sort Validators by";
+  static const dropDownVotingPower = "Voting Power";
+  static const dropDownAlphabetically = "Name";
   static String endTimeFormatted(String formattedTime) =>
       "Ended: $formattedTime";
   static String displayDenomFormatted(String displayDenom) =>
@@ -503,7 +499,6 @@ class Strings {
   // Staking Details
   static const stakingDetailsValidatorDetails = "Validator Details";
   static const stakingDetailsButtonDelegate = "Delegate";
-  static const stakingDetailsButtonManage = "Manage";
   static const stakingDetailsOperatorAddress = "Operator Address";
   static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
   static const stakingDetailsOwnerAddress = "Owner Address";
@@ -536,6 +531,8 @@ class Strings {
   // Staking Confirm
   static const stakingConfirmDelegatorAddress = "Delegator Address";
   static const stakingConfirmValidatorAddress = "Validator Address";
+  static const stakingConfirmValidatorSource = "Validator Source";
+  static const stakingConfirmValidatorDestination = "Validator Destination";
   static const stakingConfirmDenom = "Denom";
   static const stakingConfirmAmount = "Amount";
   static const stakingConfirmHash = "hash";
@@ -581,4 +578,7 @@ class Strings {
   static const stakingSuccessSuccess = "SUCCESS";
   static String stakingSuccessSuccessful(String delegationType) =>
       '$delegationType successful!';
+
+  // Staking Confirm Rewards Screen
+  static const stakingConfirmRewardClaim = "Claim";
 }

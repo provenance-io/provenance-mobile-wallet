@@ -26,19 +26,16 @@ class DelegationListItem extends StatelessWidget {
           return;
         }
         final bloc = get<StakingFlowBloc>();
-        final stakingDetails = bloc.stakingDetails.value;
-        final delegation =
-            DelegationState.bonded == stakingDetails.selectedState
-                ? item
-                : null;
-        await Navigator.of(context).push(
+        final response = await Navigator.of(context).push(
           StakingFlow(
             validator.address,
             account,
-            delegation,
+            item,
           ).route(),
         );
-        await bloc.load();
+        if (response == true) {
+          await bloc.load();
+        }
       },
       child: Padding(
         padding: EdgeInsets.zero,

@@ -41,12 +41,13 @@ class ConfirmDelegateScreen extends StatelessWidget {
 }''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) async {
+          onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
-            await _sendTransaction(bloc, details, gasEstimated, context);
+            await _sendTransaction(bloc, details, gasAdjustment, context);
           },
+          signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -117,13 +118,14 @@ class ConfirmDelegateScreen extends StatelessWidget {
   Future<void> _sendTransaction(
     StakingDelegationBloc bloc,
     StakingDelegationDetails details,
-    double gasEstimated,
+    double? gasAdjustment,
     BuildContext context,
   ) async {
-    if (SelectedDelegationType.delegate == details.selectedDelegationType) {
-      await bloc.doDelegate(gasEstimated).then((value) {
+    final selected = details.selectedDelegationType;
+    if (SelectedDelegationType.delegate == selected) {
+      await bloc.doDelegate(gasAdjustment).then((value) {
         ModalLoadingRoute.dismiss(context);
-        navigator.showTransactionSuccess();
+        navigator.showTransactionSuccess(selected);
       }).catchError(
         (err) {
           ModalLoadingRoute.dismiss(context);
@@ -138,9 +140,9 @@ class ConfirmDelegateScreen extends StatelessWidget {
         },
       );
     } else {
-      await bloc.doUndelegate(gasEstimated).then((value) {
+      await bloc.doUndelegate(gasAdjustment).then((value) {
         ModalLoadingRoute.dismiss(context);
-        navigator.showTransactionSuccess();
+        navigator.showTransactionSuccess(selected);
       }).catchError(
         (err) {
           ModalLoadingRoute.dismiss(context);

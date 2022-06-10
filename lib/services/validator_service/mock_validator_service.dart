@@ -19,10 +19,9 @@ class MockValidatorService extends ValidatorService {
   Future<List<ProvenanceValidator>> getRecentValidators(
     Coin coin,
     int pageNumber,
-    ValidatorStatus status,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
-    return _getValidators(status).toList();
+    return _getValidators().toList();
   }
 
   @override
@@ -55,10 +54,9 @@ class MockValidatorService extends ValidatorService {
     Coin coin,
     String provenanceAddress,
     int pageNumber,
-    DelegationState state,
   ) async {
     await Future.delayed(Duration(milliseconds: 500));
-    return _getDelegates(state, provenanceAddress).toList();
+    return _getDelegates(provenanceAddress).toList();
   }
 
   @override
@@ -153,63 +151,34 @@ class MockValidatorService extends ValidatorService {
     );
   }
 
-  Delegation _getDelegate(DelegationState state, String address) {
+  Delegation _getDelegate(String address) {
     var sourceAddress =
         faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength);
     var amount = faker.randomGenerator.integer(9999999).toString();
-    switch (state) {
-      case DelegationState.bonded:
-        return Delegation.fake(
-            address: address,
-            sourceAddress: sourceAddress,
-            amount: amount,
-            denom: 'hash',
-            shares: amount);
-      case DelegationState.redelegated:
-        return Delegation.fake(
-          address: address,
-          sourceAddress: sourceAddress,
-          amount: amount,
-          denom: 'hash',
-          block: faker.randomGenerator.integer(9999999),
-          destinationAddress: faker.randomGenerator
-              .fromCharSet(_addressCharSet, _addressLength),
-          initialAmount: amount,
-          initialDenom: 'hash',
-          endTime: DateTime.now(),
-          shares: amount,
-        );
-      case DelegationState.unbonded:
-        return Delegation.fake(
-          address: address,
-          sourceAddress: sourceAddress,
-          amount: amount,
-          denom: 'hash',
-          block: faker.randomGenerator.integer(9999999),
-          destinationAddress: faker.randomGenerator
-              .fromCharSet(_addressCharSet, _addressLength),
-          initialAmount: amount,
-          initialDenom: 'hash',
-          endTime: DateTime.now(),
-        );
-    }
+    return Delegation.fake(
+        address: address,
+        sourceAddress: sourceAddress,
+        amount: amount,
+        denom: 'hash',
+        shares: amount);
   }
 
-  Iterable<Delegation> _getDelegates(DelegationState state, String address,
-      {int count = 4}) {
-    return Iterable.generate(count).map((e) => _getDelegate(state, address));
+  Iterable<Delegation> _getDelegates(String address, {int count = 4}) {
+    return Iterable.generate(count).map((e) => _getDelegate(address));
   }
 
-  ProvenanceValidator _getValidator(ValidatorStatus status) {
+  ProvenanceValidator _getValidator() {
+    final commission = faker.randomGenerator.decimal();
     return ProvenanceValidator.fake(
         moniker: _getMoniker(),
         addressId:
             faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
         consensusAddress:
             faker.randomGenerator.fromCharSet(_addressCharSet, _addressLength),
-        commission: faker.randomGenerator.decimal().toString(),
+        commission: commission.toString(),
+        rawCommission: commission,
         delegators: faker.randomGenerator.integer(13, min: 1),
-        status: status.toString(),
+        status: faker.randomGenerator.element(ValidatorStatus.values),
         uptime: faker.randomGenerator.decimal(scale: 100, min: 90),
         bondedTokensCount: faker.randomGenerator.integer(9999999).toString(),
         bondedTokensDenom: 'nhash',
@@ -223,9 +192,8 @@ class MockValidatorService extends ValidatorService {
         proposerPriority: faker.randomGenerator.integer(9999999));
   }
 
-  Iterable<ProvenanceValidator> _getValidators(ValidatorStatus status,
-      {int count = 11}) {
-    return Iterable.generate(count).map((e) => _getValidator(status));
+  Iterable<ProvenanceValidator> _getValidators({int count = 11}) {
+    return Iterable.generate(count).map((e) => _getValidator());
   }
 
   String _getMoniker() {

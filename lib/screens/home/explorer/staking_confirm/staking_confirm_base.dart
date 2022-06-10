@@ -11,12 +11,14 @@ class StakingConfirmBase extends StatefulWidget {
     required this.appBarTitle,
     required this.onDataClick,
     required this.onTransactionSign,
+    required this.signButtonTitle,
     this.children = const <Widget>[],
   }) : super(key: key);
 
   final String appBarTitle;
   final VoidCallback onDataClick;
-  final Function(double) onTransactionSign;
+  final Function(double?) onTransactionSign;
+  final String signButtonTitle;
   final List<Widget> children;
 
   @override
@@ -85,77 +87,48 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: ListView(children: [
-          ...widget.children,
-          PwListDivider(
-            indent: Spacing.largeX3,
-          ),
-          DetailsItem(
-            title: Strings.stakingConfirmGasAdjustment,
-            endChild: Flexible(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Form(
-                      key: _formKey,
-                      child: StakingTextFormField(
-                        hint: Strings.stakingConfirmHash,
-                        textEditingController: _textEditingController,
-                      ),
-                    ),
-                  ),
-                ],
+        child: ListView(
+          children: [
+            ...widget.children,
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.stakingConfirmGasAdjustment,
+              endChild: Flexible(
+                child: StakingTextFormField(
+                  hint: "",
+                  textEditingController: _textEditingController,
+                  shouldAutovalidate: false,
+                ),
               ),
             ),
-          ),
-          PwListDivider(
-            indent: Spacing.largeX3,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.largeX3,
-              vertical: Spacing.xLarge,
+            PwListDivider(
+              indent: Spacing.largeX3,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: PwButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: PwText(
-                      Strings.stakingConfirmBack,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                  ),
+            Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.largeX3,
+                  vertical: Spacing.xLarge,
                 ),
-                HorizontalSpacer.large(),
-                Flexible(
+                child: Flexible(
                   child: PwButton(
                     onPressed: () {
-                      final updatedGas =
-                          double.tryParse(_textEditingController.text) ?? 1.25;
-                      widget.onTransactionSign(updatedGas);
+                      final gasAdjustment =
+                          double.tryParse(_textEditingController.text);
+                      widget.onTransactionSign(gasAdjustment);
                     },
                     child: PwText(
-                      Strings.stakingConfirmSign,
+                      widget.signButtonTitle,
                       softWrap: false,
                       overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.body,
                     ),
                   ),
-                )
-              ],
-            ),
-          )
-        ]),
+                )),
+          ],
+        ),
       ),
     );
   }

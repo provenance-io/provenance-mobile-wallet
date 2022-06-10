@@ -35,7 +35,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             final data = '''
 {
   "delegatorAddress": "${details.accountDetails.address}",
-  "validatorSrcAddress": "${details.delegation.address}",
+  "validatorSrcAddress": "${details.delegation.sourceAddress}",
   "validatorDstAddress": "${details.toRedelegate?.address}",
   "amount": {
     "denom": "nhash",
@@ -45,12 +45,18 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 ''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) async {
+          onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
-            await _sendTransaction(bloc, gasEstimated, context);
+            await _sendTransaction(
+              bloc,
+              details.selectedDelegationType,
+              gasAdjustment,
+              context,
+            );
           },
+          signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -68,10 +74,25 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.stakingConfirmValidatorAddress,
+              title: Strings.stakingConfirmValidatorSource,
               endChild: Flexible(
                 child: PwText(
-                  details.delegation.address.abbreviateAddress(),
+                  details.delegation.sourceAddress.abbreviateAddress(),
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.body,
+                ),
+              ),
+            ),
+            PwListDivider(
+              indent: Spacing.largeX3,
+            ),
+            DetailsItem(
+              title: Strings.stakingConfirmValidatorDestination,
+              endChild: Flexible(
+                child: PwText(
+                  details.toRedelegate?.address.abbreviateAddress() ?? "",
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -120,14 +141,15 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 
   Future<void> _sendTransaction(
     StakingRedelegationBloc bloc,
-    double gasEstimated,
+    SelectedDelegationType selected,
+    double? gasAdjustment,
     BuildContext context,
   ) async {
     await (get<StakingRedelegationBloc>())
-        .doRedelegate(gasEstimated)
+        .doRedelegate(gasAdjustment)
         .then((value) {
       ModalLoadingRoute.dismiss(context);
-      navigator.showTransactionSuccess();
+      navigator.showTransactionSuccess(selected);
     }).catchError(
       (err) {
         ModalLoadingRoute.dismiss(context);

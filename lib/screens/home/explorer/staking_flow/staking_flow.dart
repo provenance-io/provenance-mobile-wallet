@@ -6,24 +6,43 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/confirm_
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 abstract class StakingFlowNavigator {
-  Future<void> showDelegationManagement(
+  Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
   );
 
-  Future<void> showReviewTransaction(SelectedDelegationType type);
+  Future<void> showRedelegationScreen(
+    DetailedValidator validator,
+  );
+
+  Future<void> showUndelegationScreen(
+    DetailedValidator validator,
+  );
+
+  Future<void> showDelegationReview();
+
+  Future<void> showUndelegationReview();
+
+  Future<void> showClaimRewardsReview(
+    DetailedValidator validator,
+  );
+
+  Future<void> showRedelegationReview();
 
   Future<void> showTransactionData(String data);
 
-  Future<void> showTransactionSuccess();
+  Future<void> showTransactionSuccess(SelectedDelegationType selected);
 
   void onComplete();
 }
@@ -55,7 +74,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       );
 
   @override
-  Future<void> showDelegationManagement(
+  Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
   ) async {
@@ -71,30 +90,73 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showReviewTransaction(SelectedDelegationType type) async {
-    Widget widget;
-    switch (type) {
-      case SelectedDelegationType.initial:
-        return;
-      case SelectedDelegationType.undelegate:
-      case SelectedDelegationType.delegate:
-        widget = ConfirmDelegateScreen(
-          navigator: this,
-        );
-        break;
-      case SelectedDelegationType.claimRewards:
-        widget = ConfirmClaimRewardsScreen(
-          navigator: this,
-        );
-        break;
-      case SelectedDelegationType.redelegate:
-        widget = ConfirmRedelegateScreen(
-          navigator: this,
-        );
-        break;
-    }
+  Future<void> showRedelegationScreen(
+    DetailedValidator validator,
+  ) async {
     showPage(
-      (context) => widget,
+      (context) => StakingRedelegationScreen(
+        delegation: widget.selectedDelegation!,
+        validator: validator,
+        accountDetails: widget.details,
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showUndelegationScreen(
+    DetailedValidator validator,
+  ) async {
+    showPage(
+      (context) => StakingUndelegationScreen(
+        delegation: widget.selectedDelegation,
+        validator: validator,
+        accountDetails: widget.details,
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showDelegationReview() async {
+    showPage(
+      (context) => ConfirmDelegateScreen(
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showUndelegationReview() async {
+    showDelegationReview();
+  }
+
+  @override
+  Future<void> showClaimRewardsReview(
+    DetailedValidator validator,
+  ) async {
+    get.registerSingleton(
+      StakingDelegationBloc(
+        null,
+        validator,
+        "",
+        SelectedDelegationType.claimRewards,
+        widget.details,
+      ),
+    );
+    showPage(
+      (context) => ConfirmClaimRewardsScreen(
+        navigator: this,
+      ),
+    ).whenComplete(() => get.unregister<StakingDelegationBloc>());
+  }
+
+  @override
+  Future<void> showRedelegationReview() async {
+    showPage(
+      (context) => ConfirmRedelegateScreen(
+        navigator: this,
+      ),
     );
   }
 
@@ -109,9 +171,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showTransactionSuccess() async {
+  Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
     showPage(
       (context) => StakingSuccessScreen(
+        selected: selected,
         navigator: this,
       ),
     );
@@ -119,6 +182,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   void onComplete() {
-    completeFlow(null);
+    completeFlow(true);
   }
 }

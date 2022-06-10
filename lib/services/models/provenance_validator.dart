@@ -1,3 +1,4 @@
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/recent_validator_dto.dart';
 
 class ProvenanceValidator {
@@ -16,8 +17,10 @@ class ProvenanceValidator {
         consensusAddress = dto.consensusAddress!,
         commission =
             '${(num.tryParse(dto.commission!)! * 100).toStringAsFixed(0)}%',
+        rawCommission = double.parse(dto.commission!),
         delegators = dto.delegators!,
-        status = dto.status!,
+        status = ValidatorStatus.values
+            .firstWhere((element) => element.name == dto.status!),
         uptime = dto.uptime!,
         proposerPriority = dto.proposerPriority,
         votingPowerCount = dto.votingPower?.count,
@@ -33,6 +36,7 @@ class ProvenanceValidator {
     required this.addressId,
     required this.consensusAddress,
     required this.commission,
+    required this.rawCommission,
     required this.delegators,
     required this.status,
     required this.uptime,
@@ -53,12 +57,17 @@ class ProvenanceValidator {
   final int? votingPowerCount;
   final int? votingPowerTotal;
   final String commission;
+  final double rawCommission;
   final String? bondedTokensCount;
   final String? bondedTokensTotal;
   final String? bondedTokensDenom;
   final int delegators;
-  final String status;
+  final ValidatorStatus status;
   final String? imgUrl;
   final String? hr24Change;
   final double uptime;
+
+  double get votingPower {
+    return (votingPowerCount ?? 0 / (votingPowerTotal ?? 0)) * 100;
+  }
 }
