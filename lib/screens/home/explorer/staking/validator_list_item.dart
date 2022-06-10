@@ -1,10 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ValidatorListItem extends StatelessWidget {
@@ -27,25 +26,21 @@ class ValidatorListItem extends StatelessWidget {
         final bloc = get<StakingFlowBloc>();
         final stakingDetails = bloc.stakingDetails.value;
 
-        Delegation? delegation;
-        Rewards? rewards;
-        try {
-          delegation = stakingDetails.delegates
-              .firstWhere((element) => element.sourceAddress == item.addressId);
-          rewards = bloc.stakingDetails.value.rewards.firstWhere(
-              (element) => element.validatorAddress == item.addressId);
-        } finally {
-          final response = await Navigator.of(context).push(
-            StakingFlow(
-              item.addressId,
-              account,
-              delegation,
-              rewards,
-            ).route(),
-          );
-          if (response == true) {
-            await bloc.load();
-          }
+        final delegation = stakingDetails.delegates.firstWhereOrNull(
+            (element) => element.sourceAddress == item.addressId);
+        final rewards = stakingDetails.rewards.firstWhereOrNull(
+            (element) => element.validatorAddress == item.addressId);
+
+        final response = await Navigator.of(context).push(
+          StakingFlow(
+            item.addressId,
+            account,
+            delegation,
+            rewards,
+          ).route(),
+        );
+        if (response == true) {
+          await bloc.load();
         }
       },
       child: Container(
