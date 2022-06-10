@@ -22,7 +22,6 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_kind.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/memory_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -47,6 +46,7 @@ import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
@@ -68,6 +68,7 @@ import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast_io.dart';
+import 'package:sembast/sembast_memory.dart';
 
 import 'util/get.dart';
 
@@ -216,7 +217,14 @@ void main() {
 
           break;
         case AccountStorageServiceKind.memory:
-          accountStorageService = MemoryAccountStorageService();
+          final serviceCore = SembastAccountStorageService(
+            factory: databaseFactoryMemory,
+            directory: sembastInMemoryDatabasePath,
+          );
+          accountStorageService = AccountStorageServiceImp(
+            serviceCore,
+            cipherService,
+          );
           break;
       }
 
@@ -226,11 +234,11 @@ void main() {
         '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
       );
 
-      final accountService = AccountService(storage: accountStorageService)
-        ..init();
+      final accountService = AccountService(storage: accountStorageService);
       get.registerSingleton<AccountService>(accountService);
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
+      get.registerLazySingleton<MultiSigService>(() => MultiSigService());
 
       runApp(
         Phoenix(

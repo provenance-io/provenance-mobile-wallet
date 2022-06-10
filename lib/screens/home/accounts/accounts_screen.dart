@@ -4,10 +4,11 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
-import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
+import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/pending_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -97,9 +98,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                           padding: EdgeInsets.only(
                             bottom: 1,
                           ),
-                          child: AccountItem(
-                            account: account,
-                          ),
+                          child: _getItem(account),
                         ),
                       );
                     },
@@ -131,7 +130,7 @@ class AccountsScreenState extends State<AccountsScreen> {
     );
   }
 
-  void _onRemoved(List<AccountDetails> accounts) {
+  void _onRemoved(List<Account> accounts) {
     for (final account in accounts) {
       final index = _accountsBloc.removeAccount(account.id);
       if (index != -1) {
@@ -145,9 +144,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                   end: Offset(0, 0),
                 ),
               ),
-              child: AccountItem(
-                account: account,
-              ),
+              child: _getItem(account),
             );
           },
         );
@@ -165,5 +162,25 @@ class AccountsScreenState extends State<AccountsScreen> {
     } else {
       ModalLoadingRoute.dismiss(context);
     }
+  }
+
+  Widget _getItem(Account account) {
+    Widget item;
+
+    switch (account.kind) {
+      case AccountKind.basic:
+      case AccountKind.multi:
+        item = BasicAccountItem(
+          account: account as TransactableAccount,
+        );
+        break;
+      case AccountKind.pendingMulti:
+        item = PendingAccountItem(
+          account: account as PendingMultiAccount,
+        );
+        break;
+    }
+
+    return item;
   }
 }

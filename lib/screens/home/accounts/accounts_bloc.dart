@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,16 +20,16 @@ class AccountsBloc implements Disposable {
   final _assetService = get<AssetService>();
   final _count = BehaviorSubject.seeded(0);
 
-  final _updated = PublishSubject<AccountDetails>();
+  final _updated = PublishSubject<Account>();
   final _insert = PublishSubject<int>();
   final _loading = BehaviorSubject.seeded(false);
 
   Completer? _completer;
-  var _accounts = <AccountDetails>[];
+  var _accounts = <Account>[];
   final _assetCounts = <String, int>{};
 
   ValueStream<int> get count => _count;
-  Stream<AccountDetails> get updated => _updated;
+  Stream<Account> get updated => _updated;
   Stream<int> get insert => _insert;
   ValueStream<bool> get loading => _loading;
 
@@ -65,13 +65,13 @@ class AccountsBloc implements Disposable {
     }
   }
 
-  AccountDetails getAccountAtIndex(int index) {
+  Account getAccountAtIndex(int index) {
     final account = _accounts[index];
 
     return account;
   }
 
-  AccountDetails getAccount(String id) {
+  Account getAccount(String id) {
     final account = _accounts.firstWhere((e) => e.id == id);
 
     return account;
@@ -90,7 +90,7 @@ class AccountsBloc implements Disposable {
     return index;
   }
 
-  Future<int> getAssetCount(AccountDetails account) async {
+  Future<int> getAssetCount(TransactableAccount account) async {
     var count = _assetCounts[account.id];
     if (count == null) {
       final assets =
@@ -111,12 +111,12 @@ class AccountsBloc implements Disposable {
     _loading.close();
   }
 
-  Future<void> _onAdded(AccountDetails account) async {
+  Future<void> _onAdded(Account account) async {
     _accounts.add(account);
     _insert.tryAdd(_accounts.length - 1);
   }
 
-  void _onUpdated(AccountDetails account) {
+  void _onUpdated(TransactableAccount account) {
     final index = _accounts.indexWhere((e) => e.id == account.id);
     if (index != -1) {
       _accounts[index] = account;
@@ -125,7 +125,7 @@ class AccountsBloc implements Disposable {
     }
   }
 
-  void _onSelected(AccountDetails? account) {
+  void _onSelected(TransactableAccount? account) {
     if (account != null) {
       _updated.add(account);
     }

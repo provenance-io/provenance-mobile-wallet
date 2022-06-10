@@ -1,22 +1,18 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 class PublicKeyData {
   PublicKeyData({
-    required this.address,
     required this.hex,
     required this.chainId,
   });
 
-  final String address;
   final String hex;
   final String chainId;
 
   @override
   int get hashCode => hashValues(
-        address,
         hex,
         chainId,
       );
@@ -24,7 +20,6 @@ class PublicKeyData {
   @override
   bool operator ==(Object other) {
     return other is PublicKeyData &&
-        other.address == address &&
         other.hex == hex &&
         other.chainId == chainId;
   }
@@ -33,31 +28,43 @@ class PublicKeyData {
 abstract class AccountStorageService {
   AccountStorageService._();
 
-  Future<List<AccountDetails>> getAccounts();
+  Future<List<BasicAccount>> getBasicAccounts();
 
-  Future<AccountDetails?> getAccount(String id);
+  Future<List<MultiAccount>> getMultiAccounts();
 
-  Future<AccountDetails?> getSelectedAccount();
+  Future<List<Account>> getAccounts();
 
-  Future<AccountDetails?> selectAccount({
+  Future<Account?> getAccount(String id);
+
+  Future<TransactableAccount?> getSelectedAccount();
+
+  Future<TransactableAccount?> selectAccount({
     String? id,
   });
 
-  Future<AccountDetails?> renameAccount({
+  Future<TransactableAccount?> renameAccount({
     required String id,
     required String name,
   });
 
-  Future<AccountDetails?> addAccount({
+  Future<TransactableAccount?> addAccount({
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
   });
 
-  Future<AccountDetails?> addPendingAccount({
+  Future<MultiAccount?> addMultiAccount({
     required String name,
-    required AccountKind kind,
-    required Coin coin,
+    required List<PublicKeyData> publicKeys,
+    required Coin selectedCoin,
+  });
+
+  Future<PendingMultiAccount?> addPendingMultiAccount({
+    required String name,
+    required String remoteId,
+    required String linkedAccountId,
+    required int cosignerCount,
+    required int signaturesRequired,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);
@@ -66,7 +73,7 @@ abstract class AccountStorageService {
 
   Future<bool> removeAllAccounts();
 
-  Future<AccountDetails?> setAccountCoin({
+  Future<TransactableAccount?> setAccountCoin({
     required String id,
     required Coin coin,
   });

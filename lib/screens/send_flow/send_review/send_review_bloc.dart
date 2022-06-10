@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendReviewNaviagor {
@@ -70,7 +70,7 @@ class SendReviewBloc implements Disposable {
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
   final TransactionHandler _transactionHandler;
-  final AccountDetails _accountDetails;
+  final TransactableAccount _accountDetails;
   final String receivingAddress;
   final String? note;
   final SendAsset sendingAsset;

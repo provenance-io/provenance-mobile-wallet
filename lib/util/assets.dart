@@ -42,6 +42,7 @@ class ImagePaths {
   final String recoverAccount = 'assets/images/recoverAccount.png';
   final String backupComplete = 'assets/images/backupComplete.png';
   final String accountFinished = 'assets/images/accountFinished.png';
+  final String multiSigInvite = 'assets/images/multi_sig_invite.png';
   final String etf = 'assets/images/etf.svg';
   final String usdf = 'assets/images/usdf.svg';
   final String inu = 'assets/images/inu.svg';

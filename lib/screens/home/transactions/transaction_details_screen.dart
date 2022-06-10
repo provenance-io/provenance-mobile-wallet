@@ -4,7 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -33,7 +33,7 @@ class TransactionDetailsScreen extends StatelessWidget {
           children: [
             DetailsItem(
               title: Strings.tradeDetailsAccount,
-              endChild: StreamBuilder<AccountDetails?>(
+              endChild: StreamBuilder<TransactableAccount?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
                 builder: (context, snapshot) {

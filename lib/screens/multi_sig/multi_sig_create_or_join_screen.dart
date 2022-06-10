@@ -53,17 +53,34 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                             .submitMultiSigCreateOrJoin(MultiSigAddKind.create);
                       },
                     ),
-                    // TODO-Roy: Enable join multi-sig
-                    //
                     // VerticalSpacer.large(),
-                    // AccountTypeButton(
+                    // AccountButton(
                     //   name: Strings.accountTypeMultiSigJoinName,
                     //   desc: Strings.accountTypeMultiSigJoinDesc,
                     //   onPressed: () {
                     //     _bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
                     //   },
                     // ),
-                    VerticalSpacer.largeX3(),
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.link);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(
+                          Spacing.medium,
+                        ),
+                        child: PwText(
+                          Strings.accountTypeMultiSigJoinLink,
+                          style: PwTextStyle.body,
+                          textAlign: TextAlign.center,
+                          underline: true,
+                        ),
+                      ),
+                    ),
+                    VerticalSpacer.largeX4(),
                   ],
                 ),
               ),

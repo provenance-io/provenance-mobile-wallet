@@ -1,15 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 main() {
-  final walletDetails = AccountDetails(
+  final publicKey = PrivateKey.fromSeed(
+    Mnemonic.createSeed(['one']),
+    Coin.testNet,
+  ).defaultKey().publicKey;
+
+  final walletDetails = BasicAccount(
     id: "123",
-    address: "Address",
     name: "Name",
-    publicKey: "abc123",
-    coin: Coin.testNet,
+    publicKey: publicKey,
   );
 
   ReceiveBloc? bloc;

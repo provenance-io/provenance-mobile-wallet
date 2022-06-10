@@ -4,7 +4,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 class AccountStorageServiceImp implements AccountStorageService {
   AccountStorageServiceImp(
@@ -16,7 +16,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   final CipherService _cipherService;
 
   @override
-  Future<AccountDetails?> addAccount({
+  Future<TransactableAccount?> addAccount({
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
@@ -24,11 +24,10 @@ class AccountStorageServiceImp implements AccountStorageService {
     final keyDatas = <PublicKeyData>[];
     for (var privateKey in privateKeys) {
       final publicKey = privateKey.defaultKey().publicKey;
-      final address = publicKey.address;
+
       final hex = publicKey.compressedPublicKeyHex;
       final network = ChainId.forCoin(publicKey.coin);
       final data = PublicKeyData(
-        address: address,
         hex: hex,
         chainId: network,
       );
@@ -67,33 +66,59 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<AccountDetails?> addPendingAccount({
+  Future<MultiAccount?> addMultiAccount({
     required String name,
-    required AccountKind kind,
-    required Coin coin,
+    required List<PublicKeyData> publicKeys,
+    required Coin selectedCoin,
   }) async {
-    final details = await _serviceCore.addAccount(
+    final details = await _serviceCore.addMultiAccount(
       name: name,
-      publicKeys: [],
-      selectedChainId: ChainId.forCoin(coin),
-      kind: kind,
+      publicKeys: publicKeys,
+      selectedChainId: ChainId.forCoin(selectedCoin),
     );
 
     return details;
   }
 
   @override
-  Future<AccountDetails?> getSelectedAccount() {
+  Future<PendingMultiAccount?> addPendingMultiAccount({
+    required String name,
+    required String remoteId,
+    required String linkedAccountId,
+    required int cosignerCount,
+    required int signaturesRequired,
+  }) {
+    return _serviceCore.addPendingMultiAccount(
+      name: name,
+      remoteId: remoteId,
+      linkedAccountId: linkedAccountId,
+      cosignerCount: cosignerCount,
+      signaturesRequired: signaturesRequired,
+    );
+  }
+
+  @override
+  Future<TransactableAccount?> getSelectedAccount() {
     return _serviceCore.getSelectedAccount();
   }
 
   @override
-  Future<AccountDetails?> getAccount(String id) {
+  Future<Account?> getAccount(String id) {
     return _serviceCore.getAccount(id: id);
   }
 
   @override
-  Future<List<AccountDetails>> getAccounts() {
+  Future<List<BasicAccount>> getBasicAccounts() {
+    return _serviceCore.getBasicAccounts();
+  }
+
+  @override
+  Future<List<MultiAccount>> getMultiAccounts() {
+    return _serviceCore.getMultiAccounts();
+  }
+
+  @override
+  Future<List<Account>> getAccounts() async {
     return _serviceCore.getAccounts();
   }
 
@@ -130,7 +155,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<AccountDetails?> renameAccount({
+  Future<TransactableAccount?> renameAccount({
     required String id,
     required String name,
   }) {
@@ -138,7 +163,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<AccountDetails?> setAccountCoin({
+  Future<TransactableAccount?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -153,7 +178,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<AccountDetails?> selectAccount({String? id}) {
+  Future<TransactableAccount?> selectAccount({String? id}) {
     return _serviceCore.selectAccount(id: id);
   }
 

@@ -13,5 +13,11 @@ extension MaterialPageExtensions<T> on Widget {
         fullscreenDialog: fullScreenDialog,
       );
 
-  MaterialPageRoute<T> route() => MaterialPageRoute<T>(builder: (_) => this);
+  MaterialPageRoute<T> route({
+    bool fullScreenDialog = false,
+  }) =>
+      MaterialPageRoute<T>(
+        builder: (_) => this,
+        fullscreenDialog: fullScreenDialog,
+      );
 }
