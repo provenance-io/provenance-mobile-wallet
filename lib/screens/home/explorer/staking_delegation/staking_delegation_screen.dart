@@ -4,7 +4,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_management.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegate.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegate.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -92,16 +92,14 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
 
   Widget _getBody(SelectedDelegationType type) {
     switch (type) {
+      case SelectedDelegationType.claimRewards:
       case SelectedDelegationType.initial:
-        return StakingManagement();
+        return StakingManagement(
+          navigator: widget.navigator,
+        );
       case SelectedDelegationType.delegate:
         return StakingDelegate(
           navigator: widget.navigator,
-        );
-      case SelectedDelegationType.claimRewards:
-        widget.navigator.showReviewTransaction(type);
-        return Center(
-          child: CircularProgressIndicator(),
         );
       case SelectedDelegationType.undelegate:
         return StakingUndelegate(

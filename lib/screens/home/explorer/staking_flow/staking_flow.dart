@@ -7,14 +7,13 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 
 abstract class StakingFlowNavigator {
-  void goBack();
-
   Future<void> showDelegationManagement(
     DetailedValidator validator,
     Commission commission,
@@ -24,7 +23,9 @@ abstract class StakingFlowNavigator {
 
   Future<void> showTransactionData(String data);
 
-  Future<void> showFinishedTransaction();
+  Future<void> showTransactionSuccess();
+
+  void onComplete();
 }
 
 class StakingFlow extends FlowBase {
@@ -45,11 +46,6 @@ class StakingFlow extends FlowBase {
 
 class StakingFlowState extends FlowBaseState<StakingFlow>
     implements StakingFlowNavigator {
-  @override
-  void goBack() {
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget createStartPage() => StakingDetailsScreen(
         validatorAddress: widget.validatorAddress,
@@ -113,5 +109,16 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showFinishedTransaction() async {}
+  Future<void> showTransactionSuccess() async {
+    showPage(
+      (context) => StakingSuccessScreen(
+        navigator: this,
+      ),
+    );
+  }
+
+  @override
+  void onComplete() {
+    completeFlow(null);
+  }
 }

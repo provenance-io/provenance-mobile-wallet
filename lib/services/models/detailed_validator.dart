@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/detailed_validator_dto.dart';
 
 class DetailedValidator {

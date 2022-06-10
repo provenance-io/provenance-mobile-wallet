@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/validator_list.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 

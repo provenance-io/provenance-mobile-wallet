@@ -1,8 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/num_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -16,11 +19,11 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingDelegationBloc>();
+    final bloc = get<StakingRedelegationBloc>();
 
-    return StreamBuilder<StakingDelegationDetails>(
-      initialData: bloc.stakingDelegationDetails.value,
-      stream: bloc.stakingDelegationDetails,
+    return StreamBuilder<StakingRedelegationDetails>(
+      initialData: bloc.stakingRedelegationDetails.value,
+      stream: bloc.stakingRedelegationDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null) {
@@ -32,17 +35,22 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             final data = '''
 {
   "delegatorAddress": "${details.accountDetails.address}",
-  "validatorSrcAddress": "${details.validator.operatorAddress}",
-  "validatorDstAddress": "addressGoesHere",
+  "validatorSrcAddress": "${details.delegation.address}",
+  "validatorDstAddress": "${details.toRedelegate?.address}",
   "amount": {
     "denom": "nhash",
-    "amount": "${details.hashDelegated.nhashFromHash()}"
+    "amount": "${details.hashRedelegated.nhashFromHash()}"
   }
 }
 ''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) {},
+          onTransactionSign: (gasEstimated) async {
+            ModalLoadingRoute.showLoading('', context);
+            // Give the loading modal time to display
+            await Future.delayed(Duration(milliseconds: 500));
+            await _sendTransaction(bloc, gasEstimated, context);
+          },
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -63,7 +71,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmValidatorAddress,
               endChild: Flexible(
                 child: PwText(
-                  details.validator.operatorAddress.abbreviateAddress(),
+                  details.delegation.address.abbreviateAddress(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -78,7 +86,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmDenom,
               endChild: Flexible(
                 child: PwText(
-                  details.asset?.denom ?? Strings.stakingConfirmHash,
+                  Strings.stakingConfirmHash,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -93,7 +101,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmAmount,
               endChild: Flexible(
                 child: PwText(
-                  details.hashDelegated.nhashFromHash(),
+                  details.hashRedelegated.nhashFromHash(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -105,6 +113,31 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _sendTransaction(
+    StakingRedelegationBloc bloc,
+    double gasEstimated,
+    BuildContext context,
+  ) async {
+    await (get<StakingRedelegationBloc>())
+        .doRedelegate(gasEstimated)
+        .then((value) {
+      ModalLoadingRoute.dismiss(context);
+      navigator.showTransactionSuccess();
+    }).catchError(
+      (err) {
+        ModalLoadingRoute.dismiss(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(
+              error: err.toString(),
+            );
+          },
         );
       },
     );

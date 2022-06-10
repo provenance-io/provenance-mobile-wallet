@@ -5,7 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
@@ -74,7 +74,13 @@ class _StakingRedelegateState extends State<StakingRedelegate> {
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null || details.validators.isEmpty) {
-          return Container();
+          return Stack(
+            children: const [
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          );
         }
         return ListView(
           children: [

@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -25,18 +25,20 @@ class DelegationListItem extends StatelessWidget {
         if (account == null) {
           return;
         }
-        final stakingDetails = get<StakingFlowBloc>().stakingDetails.value;
+        final bloc = get<StakingFlowBloc>();
+        final stakingDetails = bloc.stakingDetails.value;
         final delegation =
             DelegationState.bonded == stakingDetails.selectedState
                 ? item
                 : null;
-        Navigator.of(context).push(
+        await Navigator.of(context).push(
           StakingFlow(
             validator.address,
             account,
             delegation,
           ).route(),
         );
+        await bloc.load();
       },
       child: Padding(
         padding: EdgeInsets.zero,

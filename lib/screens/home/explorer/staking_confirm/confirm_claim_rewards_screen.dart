@@ -1,8 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -35,7 +37,12 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
 }''';
             navigator.showTransactionData(data);
           },
-          onTransactionSign: (gasEstimated) {},
+          onTransactionSign: (gasEstimated) async {
+            ModalLoadingRoute.showLoading('', context);
+            // Give the loading modal time to display
+            await Future.delayed(Duration(milliseconds: 500));
+            await _sendTransaction(gasEstimated, context);
+          },
           children: [
             DetailsItem(
               title: Strings.stakingConfirmDelegatorAddress,
@@ -65,6 +72,30 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _sendTransaction(
+    double gasEstimated,
+    BuildContext context,
+  ) async {
+    await (get<StakingDelegationBloc>())
+        .claimRewards(gasEstimated)
+        .then((value) {
+      ModalLoadingRoute.dismiss(context);
+      navigator.showTransactionSuccess();
+    }).catchError(
+      (err) {
+        ModalLoadingRoute.dismiss(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(
+              error: err.toString(),
+            );
+          },
         );
       },
     );

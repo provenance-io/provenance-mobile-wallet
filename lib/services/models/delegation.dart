@@ -48,8 +48,8 @@ class Delegation {
     return "${amount.nhashToHash()} hash";
   }
 
-  int get hashAmount {
-    return int.tryParse(amount.nhashToHash()) ?? 0;
+  num get hashAmount {
+    return num.tryParse(amount.nhashToHash()) ?? 0;
   }
 
   String get formattedTime {
