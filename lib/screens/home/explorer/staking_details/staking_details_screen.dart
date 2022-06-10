@@ -70,7 +70,6 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
               final details = snapshot.data;
               final validator = snapshot.data?.validator;
               final commission = snapshot.data?.commission;
-              final delegate = snapshot.data?.delegation;
               if (details == null || validator == null || commission == null) {
                 return Container();
               }
