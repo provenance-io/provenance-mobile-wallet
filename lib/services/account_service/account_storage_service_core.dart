@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
@@ -6,7 +7,7 @@ abstract class AccountStorageServiceCore {
 
   Future<int> getVersion();
 
-  Future<BasicAccount?> addAccount({
+  Future<BasicAccount?> addBasicAccount({
     required String name,
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
@@ -14,8 +15,9 @@ abstract class AccountStorageServiceCore {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
+    required List<PublicKey> publicKeys,
     required String selectedChainId,
+    required String linkedAccountId,
   });
 
   Future<PendingMultiAccount?> addPendingMultiAccount({

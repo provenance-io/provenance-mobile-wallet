@@ -5,9 +5,10 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i8;
-import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i6;
-import 'package:prov_wallet_flutter/src/cipher_service_error.dart' as _i7;
+import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i9;
+import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i7;
+import 'package:prov_wallet_flutter/src/cipher_service_error.dart' as _i8;
+import 'package:provenance_dart/wallet.dart' as _i6;
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart'
     as _i5;
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
@@ -38,12 +39,12 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#getVersion, []),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
-  _i3.Future<_i4.BasicAccount?> addAccount(
+  _i3.Future<_i4.BasicAccount?> addBasicAccount(
           {String? name,
           List<_i5.PublicKeyData>? publicKeys,
           String? selectedChainId}) =>
       (super.noSuchMethod(
-              Invocation.method(#addAccount, [], {
+              Invocation.method(#addBasicAccount, [], {
                 #name: name,
                 #publicKeys: publicKeys,
                 #selectedChainId: selectedChainId
@@ -53,13 +54,15 @@ class MockAccountStorageServiceCore extends _i1.Mock
   @override
   _i3.Future<_i4.MultiAccount?> addMultiAccount(
           {String? name,
-          List<_i5.PublicKeyData>? publicKeys,
-          String? selectedChainId}) =>
+          List<_i6.PublicKey>? publicKeys,
+          String? selectedChainId,
+          String? linkedAccountId}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
                 #publicKeys: publicKeys,
-                #selectedChainId: selectedChainId
+                #selectedChainId: selectedChainId,
+                #linkedAccountId: linkedAccountId
               }),
               returnValue: Future<_i4.MultiAccount?>.value())
           as _i3.Future<_i4.MultiAccount?>);
@@ -160,7 +163,7 @@ class MockAccountStorageServiceCore extends _i1.Mock
 /// A class which mocks [CipherService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCipherService extends _i1.Mock implements _i6.CipherService {
+class MockCipherService extends _i1.Mock implements _i7.CipherService {
   MockCipherService() {
     _i1.throwOnMissingStub(this);
   }
@@ -170,15 +173,15 @@ class MockCipherService extends _i1.Mock implements _i6.CipherService {
       (super.noSuchMethod(Invocation.getter(#platformVersion),
           returnValue: Future<String?>.value()) as _i3.Future<String?>);
   @override
-  _i3.Stream<_i7.CipherServiceError> get error =>
+  _i3.Stream<_i8.CipherServiceError> get error =>
       (super.noSuchMethod(Invocation.getter(#error),
-              returnValue: Stream<_i7.CipherServiceError>.empty())
-          as _i3.Stream<_i7.CipherServiceError>);
+              returnValue: Stream<_i8.CipherServiceError>.empty())
+          as _i3.Stream<_i8.CipherServiceError>);
   @override
-  _i3.Future<_i8.BiometryType> getBiometryType() => (super.noSuchMethod(
+  _i3.Future<_i9.BiometryType> getBiometryType() => (super.noSuchMethod(
           Invocation.method(#getBiometryType, []),
-          returnValue: Future<_i8.BiometryType>.value(_i8.BiometryType.none))
-      as _i3.Future<_i8.BiometryType>);
+          returnValue: Future<_i9.BiometryType>.value(_i9.BiometryType.none))
+      as _i3.Future<_i9.BiometryType>);
   @override
   _i3.Future<bool> getLockScreenEnabled() =>
       (super.noSuchMethod(Invocation.method(#getLockScreenEnabled, []),
