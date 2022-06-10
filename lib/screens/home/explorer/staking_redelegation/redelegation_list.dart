@@ -2,12 +2,16 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/redelegation_list_item.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class RedelegationList extends StatefulWidget {
   const RedelegationList({
     Key? key,
+    required this.validator,
   }) : super(key: key);
+
+  final DetailedValidator validator;
 
   @override
   State<StatefulWidget> createState() => RedelegationListState();
@@ -55,6 +59,10 @@ class RedelegationListState extends State<RedelegationList> {
                     }
                     final item = stakingDetails.validators[index];
 
+                    if (item.moniker == widget.validator.moniker) {
+                      return Container();
+                    }
+
                     return RedelegationListItem(
                       item: item,
                     );
@@ -62,7 +70,7 @@ class RedelegationListState extends State<RedelegationList> {
                   separatorBuilder: (context, index) {
                     return PwListDivider();
                   },
-                  itemCount: stakingDetails.validators.length,
+                  itemCount: stakingDetails.validators.length - 1,
                   shrinkWrap: true,
                   physics: AlwaysScrollableScrollPhysics(),
                 );

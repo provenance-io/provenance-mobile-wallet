@@ -182,7 +182,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                     PwListDivider(
                       indent: Spacing.largeX3,
                     ),
-                    RedelegationList(),
+                    RedelegationList(validator: details.validator),
                     PwListDivider(
                       indent: Spacing.largeX3,
                     ),

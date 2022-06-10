@@ -28,6 +28,9 @@ class RedelegationListItem extends StatelessWidget {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
+            if (item.addressId == details.delegation.sourceAddress) {
+              return;
+            }
             _bloc.selectRedelegation(item);
           },
           child: Container(
