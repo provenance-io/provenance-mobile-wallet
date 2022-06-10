@@ -68,6 +68,12 @@ class ProvenanceValidator {
   final double uptime;
 
   double get votingPower {
-    return (votingPowerCount ?? 0 / (votingPowerTotal ?? 0)) * 100;
+    if (votingPowerCount == null ||
+        votingPowerCount == 0 ||
+        votingPowerTotal == null ||
+        votingPowerTotal == 0) {
+      return 0;
+    }
+    return (votingPowerCount! / votingPowerTotal!) * 100;
   }
 }

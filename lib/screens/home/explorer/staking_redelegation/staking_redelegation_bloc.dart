@@ -10,11 +10,10 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/abbreviated_validator.dart';
 import 'package:provenance_wallet/services/models/account_details.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/extensions/num_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -32,7 +31,6 @@ class StakingRedelegationBloc extends Disposable {
             0,
             _accountDetails,
             null,
-            [],
           ),
         );
 
@@ -52,8 +50,6 @@ class StakingRedelegationBloc extends Disposable {
   Future<void> load() async {
     _isLoading.tryAdd(true);
     try {
-      final validators = await get<ValidatorService>()
-          .getAbbreviatedValidators(_accountDetails.coin, 1);
       final oldDetails = _stakingRedelegationDetails.value;
       _stakingRedelegationDetails.tryAdd(
         StakingRedelegationDetails(
@@ -62,7 +58,6 @@ class StakingRedelegationBloc extends Disposable {
           oldDetails.hashRedelegated,
           oldDetails.accountDetails,
           oldDetails.toRedelegate,
-          validators,
         ),
       );
     } finally {
@@ -79,12 +74,11 @@ class StakingRedelegationBloc extends Disposable {
         hashRedelegated,
         oldDetails.accountDetails,
         oldDetails.toRedelegate,
-        oldDetails.validators,
       ),
     );
   }
 
-  void selectRedelegation(AbbreviatedValidator toRedelegate) {
+  void selectRedelegation(ProvenanceValidator toRedelegate) {
     final oldDetails = _stakingRedelegationDetails.value;
     _stakingRedelegationDetails.tryAdd(
       StakingRedelegationDetails(
@@ -93,7 +87,6 @@ class StakingRedelegationBloc extends Disposable {
         oldDetails.hashRedelegated,
         oldDetails.accountDetails,
         toRedelegate,
-        oldDetails.validators,
       ),
     );
   }
@@ -112,7 +105,7 @@ class StakingRedelegationBloc extends Disposable {
                 ),
                 delegatorAddress: _accountDetails.address,
                 validatorSrcAddress: details.delegation.sourceAddress,
-                validatorDstAddress: details.toRedelegate?.address ?? "")
+                validatorDstAddress: details.toRedelegate?.addressId ?? "")
             .toAny(),
       ],
     );
@@ -153,7 +146,6 @@ class StakingRedelegationDetails {
     this.hashRedelegated,
     this.accountDetails,
     this.toRedelegate,
-    this.validators,
   );
 
   final DetailedValidator validator;
@@ -162,6 +154,5 @@ class StakingRedelegationDetails {
       SelectedDelegationType.redelegate;
   final num hashRedelegated;
   final AccountDetails accountDetails;
-  final AbbreviatedValidator? toRedelegate;
-  final List<AbbreviatedValidator> validators;
+  final ProvenanceValidator? toRedelegate;
 }

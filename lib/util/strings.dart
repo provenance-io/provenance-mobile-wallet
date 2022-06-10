@@ -522,6 +522,7 @@ class Strings {
   static const stakingDetailsTotalShares = "Total Shares";
   static const stakingDetailsCommissionRateRange = "Commission Rate Range";
   static const stakingDetailsValidatorTransactions = "Validator Transactions";
+  static const stakingDetailsReward = "Reward";
 
   // Staking Management
   static const stakingManagementDescription = "Description";
@@ -557,6 +558,9 @@ class Strings {
   // Staking Redelegate
   static const stakingRedelegateAvailableForRedelegation =
       "Available for redelegation";
+  static const stakingRedelegateSelectForRedelegation =
+      "Select Validator for Redelegation";
+  static const stakingRedelegateRedelegatingFrom = "Redelegating from";
 
   // Staking Undelegate
   static const stakingUndelegateWarningUnbondingPeriodTitle =

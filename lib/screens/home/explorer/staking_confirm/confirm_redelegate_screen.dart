@@ -4,8 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/num_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -36,7 +36,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
 {
   "delegatorAddress": "${details.accountDetails.address}",
   "validatorSrcAddress": "${details.delegation.sourceAddress}",
-  "validatorDstAddress": "${details.toRedelegate?.address}",
+  "validatorDstAddress": "${details.toRedelegate?.addressId}",
   "amount": {
     "denom": "nhash",
     "amount": "${details.hashRedelegated.nhashFromHash()}"
@@ -92,7 +92,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmValidatorDestination,
               endChild: Flexible(
                 child: PwText(
-                  details.toRedelegate?.address.abbreviateAddress() ?? "",
+                  details.toRedelegate?.addressId.abbreviateAddress() ?? "",
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -145,23 +145,20 @@ class ConfirmRedelegateScreen extends StatelessWidget {
     double? gasAdjustment,
     BuildContext context,
   ) async {
-    await (get<StakingRedelegationBloc>())
-        .doRedelegate(gasAdjustment)
-        .then((value) {
+    try {
+      await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
       navigator.showTransactionSuccess(selected);
-    }).catchError(
-      (err) {
-        ModalLoadingRoute.dismiss(context);
-        showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorDialog(
-              error: err.toString(),
-            );
-          },
-        );
-      },
-    );
+    } catch (err) {
+      ModalLoadingRoute.dismiss(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: err.toString(),
+          );
+        },
+      );
+    }
   }
 }

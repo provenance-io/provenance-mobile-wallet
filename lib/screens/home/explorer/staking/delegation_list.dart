@@ -53,9 +53,9 @@ class DelegationListState extends State<DelegationList> {
                       return Container();
                     }
                     final item = stakingDetails.delegates[index];
-                    final validator = stakingDetails.abbreviatedValidators
+                    final validator = stakingDetails.validators
                         .where(
-                          (element) => element.address == item.sourceAddress,
+                          (element) => element.addressId == item.sourceAddress,
                         )
                         .first;
 

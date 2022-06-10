@@ -1,19 +1,19 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking/validator_list_item.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/redelegation_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class ValidatorList extends StatefulWidget {
-  const ValidatorList({
+class RedelegationList extends StatefulWidget {
+  const RedelegationList({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ValidatorListState();
+  State<StatefulWidget> createState() => RedelegationListState();
 }
 
-class ValidatorListState extends State<ValidatorList> {
+class RedelegationListState extends State<RedelegationList> {
   final StakingFlowBloc _bloc = get<StakingFlowBloc>();
   final _scrollController = ScrollController();
 
@@ -36,37 +36,37 @@ class ValidatorListState extends State<ValidatorList> {
       child: Stack(
         children: [
           StreamBuilder<StakingDetails>(
-            initialData: _bloc.stakingDetails.value,
-            stream: _bloc.stakingDetails,
-            builder: (context, snapshot) {
-              final stakingDetails = snapshot.data;
-              if (stakingDetails == null) {
-                return Container();
-              }
-              return ListView.separated(
-                padding: EdgeInsets.all(
-                  Spacing.xLarge,
-                ),
-                controller: _scrollController,
-                itemBuilder: (context, index) {
-                  if (stakingDetails.validators.isEmpty) {
-                    return Container();
-                  }
-                  final item = stakingDetails.validators[index];
+              initialData: _bloc.stakingDetails.value,
+              stream: _bloc.stakingDetails,
+              builder: (context, snapshot) {
+                final stakingDetails = snapshot.data;
+                if (stakingDetails == null) {
+                  return Container();
+                }
+                return ListView.separated(
+                  padding: EdgeInsets.symmetric(
+                    vertical: Spacing.xLarge,
+                    horizontal: Spacing.largeX3,
+                  ),
+                  controller: _scrollController,
+                  itemBuilder: (context, index) {
+                    if (stakingDetails.validators.isEmpty) {
+                      return Container();
+                    }
+                    final item = stakingDetails.validators[index];
 
-                  return ValidatorListItem(
-                    item: item,
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return PwListDivider();
-                },
-                itemCount: stakingDetails.validators.length,
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-              );
-            },
-          ),
+                    return RedelegationListItem(
+                      item: item,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return PwListDivider();
+                  },
+                  itemCount: stakingDetails.validators.length,
+                  shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
+                );
+              }),
           StreamBuilder<bool>(
             initialData: _bloc.isLoadingValidators.value,
             stream: _bloc.isLoadingValidators,

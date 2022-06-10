@@ -123,39 +123,33 @@ class ConfirmDelegateScreen extends StatelessWidget {
   ) async {
     final selected = details.selectedDelegationType;
     if (SelectedDelegationType.delegate == selected) {
-      await bloc.doDelegate(gasAdjustment).then((value) {
+      try {
+        await bloc.doDelegate(gasAdjustment);
         ModalLoadingRoute.dismiss(context);
         navigator.showTransactionSuccess(selected);
-      }).catchError(
-        (err) {
-          ModalLoadingRoute.dismiss(context);
-          showDialog(
-            context: context,
-            builder: (context) {
-              return ErrorDialog(
-                error: err.toString(),
-              );
-            },
-          );
-        },
-      );
+      } catch (err) {
+        await _showErrorModal(err, context);
+      }
     } else {
-      await bloc.doUndelegate(gasAdjustment).then((value) {
+      try {
+        await bloc.doUndelegate(gasAdjustment);
         ModalLoadingRoute.dismiss(context);
         navigator.showTransactionSuccess(selected);
-      }).catchError(
-        (err) {
-          ModalLoadingRoute.dismiss(context);
-          showDialog(
-            context: context,
-            builder: (context) {
-              return ErrorDialog(
-                error: err.toString(),
-              );
-            },
-          );
-        },
-      );
+      } catch (err) {
+        await _showErrorModal(err, context);
+      }
     }
+  }
+
+  Future<void> _showErrorModal(Object error, BuildContext context) async {
+    ModalLoadingRoute.dismiss(context);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return ErrorDialog(
+          error: error.toString(),
+        );
+      },
+    );
   }
 }
