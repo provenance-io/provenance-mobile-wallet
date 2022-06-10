@@ -31,6 +31,10 @@ class RedelegationListItem extends StatelessWidget {
             if (item.addressId == details.delegation.sourceAddress) {
               return;
             }
+            if (item.moniker == details.toRedelegate?.moniker) {
+              _bloc.selectRedelegation(null);
+              return;
+            }
             _bloc.selectRedelegation(item);
           },
           child: Container(
