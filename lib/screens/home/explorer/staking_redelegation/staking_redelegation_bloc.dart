@@ -78,7 +78,7 @@ class StakingRedelegationBloc extends Disposable {
     );
   }
 
-  void selectRedelegation(ProvenanceValidator toRedelegate) {
+  void selectRedelegation(ProvenanceValidator? toRedelegate) {
     final oldDetails = _stakingRedelegationDetails.value;
     _stakingRedelegationDetails.tryAdd(
       StakingRedelegationDetails(

@@ -75,7 +75,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
-      child: Material(
+      child: SafeArea(
         child: StreamBuilder<StakingRedelegationDetails>(
           initialData: _bloc.stakingRedelegationDetails.value,
           stream: _bloc.stakingRedelegationDetails,
@@ -86,108 +86,113 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
               return Container();
             }
             final flowBloc = get<StakingFlowBloc>();
-
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppBar(
-                  primary: false,
-                  backgroundColor: Theme.of(context).colorScheme.neutral750,
-                  elevation: 0.0,
-                  centerTitle: true,
-                  title: PwText(
-                    Strings.stakingRedelegateSelectForRedelegation,
-                    style: PwTextStyle.subhead,
+            return Scaffold(
+              appBar: AppBar(
+                primary: false,
+                backgroundColor: Theme.of(context).colorScheme.neutral750,
+                elevation: 0.0,
+                centerTitle: true,
+                title: PwText(
+                  Strings.stakingRedelegateSelectForRedelegation,
+                  style: PwTextStyle.subhead,
+                ),
+                leading: Padding(
+                  padding: EdgeInsets.only(left: 21),
+                  child: IconButton(
+                    icon: PwIcon(
+                      PwIcons.back,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  leading: Padding(
-                    padding: EdgeInsets.only(left: 21),
-                    child: IconButton(
-                      icon: PwIcon(
-                        PwIcons.back,
+                ),
+              ),
+              body: Container(
+                color: Theme.of(context).colorScheme.neutral750,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DetailsItem(
+                      title: Strings.stakingRedelegateRedelegatingFrom,
+                      endChild: PwText(
+                        details.validator.moniker,
+                        color: PwColor.neutralNeutral,
+                        style: PwTextStyle.body,
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
+                    ),
+                    PwListDivider(
+                      indent: Spacing.largeX3,
+                    ),
+                    StreamBuilder<StakingDetails>(
+                      initialData: flowBloc.stakingDetails.value,
+                      stream: flowBloc.stakingDetails,
+                      builder: (context, snapshot) {
+                        final stakingDetails = snapshot.data;
+                        if (stakingDetails == null) {
+                          return Container();
+                        }
+                        return Container(
+                          padding: EdgeInsets.all(
+                            Spacing.largeX3,
+                          ),
+                          child: Row(
+                            children: [
+                              PwText(
+                                Strings.dropDownStateHeader,
+                                color: PwColor.neutralNeutral,
+                                style: PwTextStyle.body,
+                              ),
+                              HorizontalSpacer.large(),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .neutral250,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(4)),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: Spacing.medium,
+                                  ),
+                                  child: PwDropDown<ValidatorSortingState>(
+                                    initialValue: stakingDetails.selectedSort,
+                                    items: ValidatorSortingState.values,
+                                    isExpanded: true,
+                                    onValueChanged: (item) {
+                                      flowBloc.updateSort(item);
+                                    },
+                                    builder: (item) => PwText(
+                                      item.dropDownTitle,
+                                      color: PwColor.neutralNeutral,
+                                      style: PwTextStyle.body,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
                       },
                     ),
-                  ),
+                    PwListDivider(
+                      indent: Spacing.largeX3,
+                    ),
+                    RedelegationList(validator: details.validator),
+                    PwListDivider(
+                      indent: Spacing.largeX3,
+                    ),
+                    StakingRedelegationList(
+                      details: details,
+                      navigator: widget.navigator,
+                    ),
+                  ],
                 ),
-                DetailsItem(
-                  title: Strings.stakingRedelegateRedelegatingFrom,
-                  endChild: PwText(
-                    details.validator.moniker,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
-                ),
-                PwListDivider(
-                  indent: Spacing.largeX3,
-                ),
-                StreamBuilder<StakingDetails>(
-                  initialData: flowBloc.stakingDetails.value,
-                  stream: flowBloc.stakingDetails,
-                  builder: (context, snapshot) {
-                    final stakingDetails = snapshot.data;
-                    if (stakingDetails == null) {
-                      return Container();
-                    }
-                    return Container(
-                      padding: EdgeInsets.all(
-                        Spacing.largeX3,
-                      ),
-                      child: Row(
-                        children: [
-                          PwText(
-                            Strings.dropDownStateHeader,
-                            color: PwColor.neutralNeutral,
-                            style: PwTextStyle.body,
-                          ),
-                          HorizontalSpacer.large(),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color:
-                                      Theme.of(context).colorScheme.neutral250,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4)),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: Spacing.medium,
-                              ),
-                              child: PwDropDown<ValidatorSortingState>(
-                                initialValue: stakingDetails.selectedSort,
-                                items: ValidatorSortingState.values,
-                                isExpanded: true,
-                                onValueChanged: (item) {
-                                  flowBloc.updateSort(item);
-                                },
-                                builder: (item) => PwText(
-                                  item.dropDownTitle,
-                                  color: PwColor.neutralNeutral,
-                                  style: PwTextStyle.body,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                PwListDivider(
-                  indent: Spacing.largeX3,
-                ),
-                RedelegationList(),
-                PwListDivider(
-                  indent: Spacing.largeX3,
-                ),
-                StakingRedelegationList(
-                  details: details,
-                  navigator: widget.navigator,
-                ),
-              ],
+              ),
             );
           },
         ),

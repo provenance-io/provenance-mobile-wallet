@@ -1,8 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
-import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/common/widgets/pw_slider.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingConfirmBase extends StatefulWidget {
@@ -26,20 +25,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  late final TextEditingController _textEditingController;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
+  double _gasEstimate = 1.25;
 
   @override
   Widget build(BuildContext context) {
@@ -93,15 +79,16 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            DetailsItem(
+            PwSlider(
               title: Strings.stakingConfirmGasAdjustment,
-              endChild: Flexible(
-                child: StakingTextFormField(
-                  hint: "",
-                  textEditingController: _textEditingController,
-                  shouldAutovalidate: false,
-                ),
-              ),
+              startingValue: 1.25,
+              min: 0,
+              max: 5,
+              onValueChanged: (value) {
+                setState(() {
+                  _gasEstimate = value;
+                });
+              },
             ),
             PwListDivider(
               indent: Spacing.largeX3,
@@ -114,9 +101,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                 child: Flexible(
                   child: PwButton(
                     onPressed: () {
-                      final gasAdjustment =
-                          double.tryParse(_textEditingController.text);
-                      widget.onTransactionSign(gasAdjustment);
+                      widget.onTransactionSign(_gasEstimate);
                     },
                     child: PwText(
                       widget.signButtonTitle,

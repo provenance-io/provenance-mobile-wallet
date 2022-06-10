@@ -28,6 +28,13 @@ class RedelegationListItem extends StatelessWidget {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
+            if (item.addressId == details.delegation.sourceAddress) {
+              return;
+            }
+            if (item.moniker == details.toRedelegate?.moniker) {
+              _bloc.selectRedelegation(null);
+              return;
+            }
             _bloc.selectRedelegation(item);
           },
           child: Container(
@@ -73,19 +80,14 @@ class RedelegationListItem extends StatelessWidget {
                       ),
                       Expanded(child: Container()),
                       if (item == details.toRedelegate)
-                        Padding(
+                        Flexible(
+                            child: Padding(
                           padding: EdgeInsets.only(left: 16),
                           child: Icon(
                             Icons.check_circle,
                             color: Theme.of(context).colorScheme.neutralNeutral,
                           ),
-
-                          // PwIcon(
-                          //   PwIcons.caret,
-                          //   color: Theme.of(context).colorScheme.neutralNeutral,
-                          //   size: 12.0,
-                          // ),
-                        ),
+                        )),
                     ],
                   ),
                 ),
