@@ -6,8 +6,7 @@ part of 'proposals_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ProposalssDto _$ProposalssDtoFromJson(Map<String, dynamic> json) =>
-    ProposalssDto(
+ProposalsDto _$ProposalsDtoFromJson(Map<String, dynamic> json) => ProposalsDto(
       pages: json['pages'] as int?,
       total: json['total'] as int?,
       results: (json['results'] as List<dynamic>?)
@@ -15,7 +14,7 @@ ProposalssDto _$ProposalssDtoFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$ProposalssDtoToJson(ProposalssDto instance) =>
+Map<String, dynamic> _$ProposalsDtoToJson(ProposalsDto instance) =>
     <String, dynamic>{
       'pages': instance.pages,
       'total': instance.total,

@@ -4,8 +4,8 @@ import 'package:provenance_wallet/services/governance_service/dtos/proposal_dto.
 part 'proposals_dto.g.dart';
 
 @JsonSerializable()
-class ProposalssDto {
-  ProposalssDto({
+class ProposalsDto {
+  ProposalsDto({
     this.pages,
     this.total,
     this.results,
@@ -16,7 +16,7 @@ class ProposalssDto {
   final List<ProposalDto>? results;
 
   // ignore: member-ordering
-  factory ProposalssDto.fromJson(Map<String, dynamic> json) =>
-      _$ProposalssDtoFromJson(json);
-  Map<String, dynamic> toJson() => _$ProposalssDtoToJson(this);
+  factory ProposalsDto.fromJson(Map<String, dynamic> json) =>
+      _$ProposalsDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$ProposalsDtoToJson(this);
 }
