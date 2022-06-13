@@ -12,6 +12,7 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_confirm_screen.dar
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_create_or_join_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_join_link_screen.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
@@ -36,6 +37,7 @@ abstract class AddAccountFlowNavigator {
   void showAccountSetupConfirmation();
   void showRecoverPassphraseEntry(int currentStep, int totalSteps);
   void showMultiSigCreateOrJoin();
+  void showMultiSigJoinLink();
   void showMultiSigConnect(int currentStep, int totalSteps);
   void showMultiSigAccountName(int currentStep, int totalSteps);
   void showMultiSigCosigners(FieldMode mode,
@@ -218,6 +220,13 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   @override
   void showMultiSigCreateOrJoin() {
     showPage((context) => MultiSigCreateOrJoinScreen());
+  }
+
+  @override
+  void showMultiSigJoinLink() {
+    showPage(
+      (context) => MultiSigJoinLinkScreen(),
+    );
   }
 
   @override

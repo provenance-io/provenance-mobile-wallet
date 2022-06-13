@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -18,13 +18,15 @@ final get = GetIt.instance;
 
 const receivingAddress = "ReceivingAddress";
 
-final accountDetails = AccountDetails(
+final publicKey = PrivateKey.fromSeed(
+  Mnemonic.createSeed(['one']),
+  Coin.testNet,
+).defaultKey().publicKey;
+
+final accountDetails = BasicAccount(
   id: "Id",
-  address: "Address",
   name: "Name",
-  publicKey:
-      "02da92ecc44eef3299e00cdf8f4768d5b606bf8242ff5277e6f07aadd935257a37",
-  coin: Coin.testNet,
+  publicKey: publicKey,
 );
 
 @GenerateMocks([

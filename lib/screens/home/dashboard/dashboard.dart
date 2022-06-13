@@ -15,7 +15,7 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -162,7 +162,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
               centerTitle: false,
-              title: StreamBuilder<AccountDetails?>(
+              title: StreamBuilder<TransactableAccount?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
                 builder: (context, snapshot) {

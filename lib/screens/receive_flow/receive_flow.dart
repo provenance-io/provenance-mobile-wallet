@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ReceiveFlow extends FlowBase {
@@ -11,7 +11,7 @@ class ReceiveFlow extends FlowBase {
     Key? key,
   }) : super(key: key);
 
-  final AccountDetails _accountDetails;
+  final TransactableAccount _accountDetails;
 
   @override
   State<StatefulWidget> createState() => ReceiveFlowState();

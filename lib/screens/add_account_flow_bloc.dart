@@ -8,13 +8,15 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum AddAccountScreen {
   accountType,
@@ -31,6 +33,7 @@ enum AddAccountScreen {
   recoverPassphraseEntry,
   // multi
   multiSigCreateOrJoin,
+  multiSigJoinLink,
   multiSigConnect,
   multiSigAccountName,
   multiSigCosigners,
@@ -73,6 +76,11 @@ const _flowMultiSigCreate = [
   AddAccountScreen.multiSigCosigners,
   AddAccountScreen.multiSigSignatures,
   AddAccountScreen.multiSigConfirm,
+];
+
+const _flowMultiSigJoinLink = [
+  AddAccountScreen.multiSigCreateOrJoin,
+  AddAccountScreen.multiSigJoinLink,
 ];
 
 const _flowRecover = [
@@ -140,7 +148,7 @@ class AddAccountFlowBloc implements Disposable {
   AccountAddKind? _addKind;
 
   BiometryType? _biometryType;
-  AccountDetails? _multiSigIndividualAccount;
+  TransactableAccount? _multiSigLinkedAccount;
 
   @override
   void onDispose() {
@@ -258,6 +266,9 @@ class AddAccountFlowBloc implements Disposable {
       case AddAccountScreen.multiSigCreateOrJoin:
         _navigator.showMultiSigCreateOrJoin();
         break;
+      case AddAccountScreen.multiSigJoinLink:
+        _navigator.showMultiSigJoinLink();
+        break;
       case AddAccountScreen.multiSigConnect:
         _navigator.showMultiSigConnect(currentStep, totalSteps);
         break;
@@ -370,7 +381,7 @@ class AddAccountFlowBloc implements Disposable {
       context,
     );
 
-    AccountDetails? details;
+    TransactableAccount? details;
 
     final enrolled = await get<LocalAuthHelper>().enroll(
       _pin.join(),
@@ -401,21 +412,26 @@ class AddAccountFlowBloc implements Disposable {
 
   Future<void> submitRecoverPassphraseEntry(
       BuildContext context, List<String> words) async {
-    if (_origin == AddAccountOrigin.accounts) {
-      ModalLoadingRoute.showLoading(
-        "",
-        context,
-      );
+    switch (_origin) {
+      case AddAccountOrigin.accounts:
+        ModalLoadingRoute.showLoading(
+          "",
+          context,
+        );
 
-      final coin = await _defaultCoin();
+        final coin = await _defaultCoin();
 
-      await get<AccountService>().addAccount(
-        phrase: words,
-        name: name.value,
-        coin: coin,
-      );
+        await get<AccountService>().addAccount(
+          phrase: words,
+          name: name.value,
+          coin: coin,
+        );
 
-      ModalLoadingRoute.dismiss(context);
+        ModalLoadingRoute.dismiss(context);
+        break;
+      case AddAccountOrigin.landing:
+        _words = words;
+        break;
     }
 
     _showNext(AddAccountScreen.recoverPassphraseEntry);
@@ -433,15 +449,26 @@ class AddAccountFlowBloc implements Disposable {
       case MultiSigAddKind.join:
         // TODO-Roy: Handle this case.
         throw 'Not Implemented';
+      case MultiSigAddKind.link:
+        _flow = _flowMultiSigJoinLink;
+        break;
     }
 
     _showNext(AddAccountScreen.multiSigCreateOrJoin);
   }
 
-  void submitMultiSigConnect(AccountDetails? details) {
-    _multiSigIndividualAccount = details;
+  Future<void> submitMultiSigJoinLink(String link) async {
+    if (await canLaunch(link)) {
+      _showNext(AddAccountScreen.multiSigJoinLink);
 
-    if (_multiSigIndividualAccount == null) {
+      launch(link, forceWebView: true);
+    }
+  }
+
+  void submitMultiSigConnect(TransactableAccount? account) {
+    _multiSigLinkedAccount = account;
+
+    if (_multiSigLinkedAccount == null) {
       // TODO-Roy: Set _flow to a create flow
       throw 'Not Implemented';
     }
@@ -470,17 +497,31 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitMultiSigConfirm(BuildContext context) async {
     ModalLoadingRoute.showLoading('', context);
 
-    final coin = await _defaultCoin();
+    final id = await get<MultiSigService>().register(
+      cosignerCount: _multiSigCosignerCount.value.value,
+    );
 
-    await _accountService.addPendingAccount(
+    await _accountService.addPendingMultiAccount(
       name: _multiSigName.value,
-      kind: AccountKind.multi,
-      coin: coin,
+      remoteId: id,
+      linkedAccountId: _multiSigLinkedAccount!.id,
+      cosignerCount: _multiSigCosignerCount.value.value,
+      signaturesRequired: _multiSigSignatureCount.value.value,
     );
 
     ModalLoadingRoute.dismiss(context);
 
-    _showNext(AddAccountScreen.multiSigConfirm);
+    _navigator.endFlow();
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(
+      MultiSigCreationStatus(
+        accountId: id,
+      ).route(
+        fullScreenDialog: true,
+      ),
+    );
   }
 
   Future<Coin> _defaultCoin() async {

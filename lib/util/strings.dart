@@ -176,15 +176,16 @@ class Strings {
   static const renameAccountDescription =
       'Please enter the new name you would like to call your account.';
   static const renameAccountAccountName = 'Account Name';
-  static const required = '*required';
+  static const required = 'Required';
   static const confirm = 'Confirm';
 
   // Accounts Page
   static const accounts = 'Accounts';
-  static const accountKindSingle = 'Basic';
+  static const accountKindBasic = 'Basic';
   static const accountKindMulti = 'Multi-sig';
   static const selectedAccountLabel = 'Selected Account';
   static const accountStatusPending = 'Pending';
+  static const accountMenuItemViewInvite = 'View Invitation Details';
   static String numAssets(int numAssets) =>
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
 
@@ -221,6 +222,14 @@ class Strings {
       'Account shared by two or more users';
   static const accountTypeMultiSigJoinName = 'Join Multi-Signature Account';
   static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
+  static const accountTypeMultiSigJoinLink = 'Have an invitation link?';
+
+  // Multi-Sig Join Link
+  static const multiSigJoinLinkTitle = 'Multi-Signature Account';
+  static const multiSigJoinLinkMessage =
+      'Paste invitation code address you’ve received as an invitation';
+  static const multiSigJoinLinkFieldLabel = 'Enter Invitation Link';
+  static const multiSigInvalidLink = 'Invalid link';
 
   // Multi-Sig Connect
   static const multiSigConnectTitle = 'Connect to Individual Account';
@@ -249,6 +258,29 @@ class Strings {
   static const multiSigConfirmAccountNameLabel = 'Account Name';
   static const multiSigConfirmCosignersLabel = 'Total number of co-signers';
   static const multiSigConfirmSignaturesLabel = 'Signatures required';
+
+  // Multi-Sig Creation Status
+  static const multiSigCreationStatusTitle = 'Multi-Sig Account Invitation';
+  static const multiSigCreationStatusMessage = "Here’s how it works:";
+  static const multiSigCreationStatusDescription =
+      'Share the QR code or invitation link with the co-signers joining this account. Each co-signer has to create their own recovery phrase once everyone accepts invitation.\n\nTo recover funds stored in a multi-sig account, you need the recovery phrase from each co-signer.';
+  static const multiSigCreationStatusListHeading = 'Wallet Creation Status:';
+  static const multiSigCreationStatusPending = 'Invitation Pending';
+  static const multiSigCreationStatusActionRequired = 'Action Required';
+  static const multiSigCreationStatusSelf = 'Self';
+
+  // Multi-Sig Invite
+  static const multiSigInviteCosignerSelf = 'Self';
+  static const multiSigInviteCosignerPrefix = 'Co-signer #';
+  static const multiSigInviteTitlePrefix = 'For Co-signer #';
+  static const multiSigInviteDescription =
+      'Invite your co-signer to scan the QR code below or share their invitation link';
+  static const multiSigInviteShareButtonLabel = 'Share Invitation';
+  static const multiSigInviteMessagePrefix = 'Your message:\n';
+  static const multiSigInviteSubject =
+      'Provenance Blockchain Multi-sig Account Invitation';
+  static const multiSigInviteMessage =
+      '“You’re invited to join my Provenance Blockchain Multi-sig Account by clicking the link below.”';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';

@@ -16,7 +16,7 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -419,7 +419,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     );
   }
 
-  Future<AccountDetails?> setAccountCoin({
+  Future<TransactableAccount?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -457,7 +457,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  void _onSelected(AccountDetails? details) {
+  void _onSelected(TransactableAccount? details) {
     load();
   }
 

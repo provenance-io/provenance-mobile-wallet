@@ -12,7 +12,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -21,7 +21,7 @@ import 'package:provenance_wallet/util/strings.dart';
 class SendFlow extends FlowBase {
   const SendFlow(this.accountDetails, {Key? key}) : super(key: key);
 
-  final AccountDetails accountDetails;
+  final TransactableAccount accountDetails;
   @override
   State<StatefulWidget> createState() => SendFlowState();
 }
@@ -35,9 +35,11 @@ class SendFlowState extends FlowBaseState<SendFlow>
   void initState() {
     super.initState();
     get.registerLazySingleton<SendBloc>(() {
+      final publicKey = widget.accountDetails.publicKey;
+
       return SendBloc(
-        widget.accountDetails.coin,
-        widget.accountDetails.address,
+        publicKey.coin,
+        publicKey.address,
         get<AssetService>(),
         get<PriceService>(),
         get<TransactionService>(),

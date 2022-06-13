@@ -1,12 +1,10 @@
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -25,12 +23,8 @@ class MultiSigConnectScreen extends StatefulWidget {
 }
 
 class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
-  static const _defaultValue = AccountDetails(
-    id: '',
-    address: '',
+  static const _defaultValue = _Item(
     name: '-',
-    publicKey: '',
-    coin: Coin.mainNet,
   );
 
   final _keyNextButton = ValueKey('$MultiSigConnectScreen.next_button');
@@ -39,7 +33,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   final _accountService = get<AccountService>();
 
   late final FocusNode _focusNext;
-  Future<List<AccountDetails>>? _load;
+  Future<List<BasicAccount>>? _load;
 
   var _value = _defaultValue;
   var _boxHasFocus = false;
@@ -49,7 +43,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
     super.initState();
 
     _focusNext = FocusNode(debugLabel: 'Next button');
-    _load ??= _accountService.getAccounts();
+    _load ??= _accountService.getBasicAccounts();
   }
 
   @override
@@ -125,7 +119,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
-                      child: FutureBuilder<List<AccountDetails>>(
+                      child: FutureBuilder<List<TransactableAccount>>(
                           future: _load,
                           builder: (context, snapshot) {
                             final accounts = [
@@ -135,11 +129,17 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                             final data = snapshot.data;
 
                             if (data != null) {
-                              accounts.addAll(data.where((e) =>
-                                  e.kind == AccountKind.single && e.isReady));
+                              accounts.addAll(
+                                data.map(
+                                  (e) => _Item(
+                                    name: e.name,
+                                    account: e,
+                                  ),
+                                ),
+                              );
                             }
 
-                            return PwDropDown<AccountDetails>(
+                            return PwDropDown<_Item>(
                               isExpanded: true,
                               autofocus: true,
                               onValueChanged: (value) {
@@ -213,7 +213,24 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   }
 
   void _submit() {
-    final value = _value == _defaultValue ? null : _value;
-    _bloc.submitMultiSigConnect(value);
+    final account = _value == _defaultValue ? null : _value.account;
+    _bloc.submitMultiSigConnect(account);
   }
+}
+
+class _Item {
+  const _Item({
+    required this.name,
+    this.account,
+  });
+
+  final String name;
+  final TransactableAccount? account;
+
+  @override
+  int get hashCode => hashValues(name, account);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _Item && other.name == name && other.account == account;
 }

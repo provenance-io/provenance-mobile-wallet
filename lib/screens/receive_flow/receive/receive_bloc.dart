@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 
 abstract class ReceiveNavigator {}
 
@@ -21,7 +21,7 @@ class ReceiveBloc implements Disposable {
     _streamController.add(state);
   }
 
-  final AccountDetails _accountDetails;
+  final TransactableAccount _accountDetails;
   final _streamController = StreamController<ReceiveState>();
 
   Stream<ReceiveState> get stream => _streamController.stream;
