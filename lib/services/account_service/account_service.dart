@@ -160,13 +160,15 @@ class AccountService implements Disposable {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
+    required List<PublicKey> publicKeys,
     required Coin coin,
+    required String linkedAccountId,
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
       publicKeys: publicKeys,
       selectedCoin: coin,
+      linkedAccountId: linkedAccountId,
     );
 
     if (details != null) {

@@ -11,12 +11,10 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
     as _i5;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart'
-    as _i9;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i10;
+    as _i9;
 import 'package:provenance_wallet/services/models/account.dart' as _i7;
 
 // ignore_for_file: type=lint
@@ -65,13 +63,14 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
       Invocation.getter(#events),
       returnValue: _FakeAccountServiceEvents_0()) as _i2.AccountServiceEvents);
   @override
-  _i6.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
-  @override
   _i6.Future<_i7.Account?> getAccount(String? id) => (super.noSuchMethod(
       Invocation.method(#getAccount, [id]),
       returnValue: Future<_i7.Account?>.value()) as _i6.Future<_i7.Account?>);
+  @override
+  _i6.Future<_i7.TransactableAccount?> selectFirstAccount() =>
+      (super.noSuchMethod(Invocation.method(#selectFirstAccount, []),
+              returnValue: Future<_i7.TransactableAccount?>.value())
+          as _i6.Future<_i7.TransactableAccount?>);
   @override
   _i6.Future<_i7.TransactableAccount?> selectAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
@@ -118,11 +117,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
   @override
   _i6.Future<_i7.MultiAccount?> addMultiAccount(
           {String? name,
-          List<_i9.PublicKeyData>? publicKeys,
-          _i8.Coin? coin}) =>
+          List<_i8.PublicKey>? publicKeys,
+          _i8.Coin? coin,
+          String? linkedAccountId}) =>
       (super.noSuchMethod(
-              Invocation.method(#addMultiAccount, [],
-                  {#name: name, #publicKeys: publicKeys, #coin: coin}),
+              Invocation.method(#addMultiAccount, [], {
+                #name: name,
+                #publicKeys: publicKeys,
+                #coin: coin,
+                #linkedAccountId: linkedAccountId
+              }),
               returnValue: Future<_i7.MultiAccount?>.value())
           as _i6.Future<_i7.MultiAccount?>);
   @override
@@ -166,16 +170,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i10.TransactionHandler {
+    implements _i9.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Stream<_i10.TransactionResponse> get transaction =>
+  _i6.Stream<_i9.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i10.TransactionResponse>.empty())
-          as _i6.Stream<_i10.TransactionResponse>);
+              returnValue: Stream<_i9.TransactionResponse>.empty())
+          as _i6.Stream<_i9.TransactionResponse>);
   @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
           _i4.TxBody? txBody, _i8.PublicKey? publicKey) =>

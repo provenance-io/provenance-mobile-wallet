@@ -89,7 +89,7 @@ main() {
     test('success', () async {
       final account = firstAccount();
 
-      when(_mockAccountStorageServiceCore!.addAccount(
+      when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -108,7 +108,7 @@ main() {
 
       expect(result, account);
 
-      verify(_mockAccountStorageServiceCore!.addAccount(
+      verify(_mockAccountStorageServiceCore!.addBasicAccount(
         name: account.name,
         publicKeys: publicKeys,
         selectedChainId: ChainId.forCoin(selectedCoin!),
@@ -127,7 +127,7 @@ main() {
     testWidgets('add wallet failure', (tester) async {
       final exception = Exception("Error");
 
-      when(_mockAccountStorageServiceCore!.addAccount(
+      when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -150,7 +150,7 @@ main() {
 
       when(_mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(0));
-      when(_mockAccountStorageServiceCore!.addAccount(
+      when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
