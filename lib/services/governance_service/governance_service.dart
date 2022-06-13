@@ -1,8 +1,9 @@
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class GovernanceService {
-  Future<List<Any>> getProposals(
+  Future<List<Proposal>> getProposals(
     Coin coin,
     int pageNumber,
   ) {
