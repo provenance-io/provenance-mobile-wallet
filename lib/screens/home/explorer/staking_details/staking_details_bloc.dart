@@ -5,7 +5,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_color.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -19,14 +19,14 @@ class StakingDetailsBloc extends Disposable {
       BehaviorSubject.seeded(DetailedValidatorDetails(null, null, null, null));
   final _isLoading = BehaviorSubject.seeded(false);
   final String _validatorAddress;
-  final AccountDetails _accountDetails;
+  final TransactableAccount _account;
   final Delegation? _selectedDelegation;
   final Rewards? _rewards;
   final _validatorService = get<ValidatorService>();
 
   StakingDetailsBloc(
     this._validatorAddress,
-    this._accountDetails,
+    this._account,
     this._selectedDelegation,
     this._rewards,
   );
@@ -37,7 +37,7 @@ class StakingDetailsBloc extends Disposable {
 
   Future<void> load() async {
     _isLoading.tryAdd(true);
-    final account = _accountDetails;
+    final account = _account;
 
     try {
       final validator = await _validatorService.getDetailedValidator(
@@ -79,7 +79,7 @@ class StakingDetailsBloc extends Disposable {
   }
 
   String getProvUrl() {
-    switch (_accountDetails.coin) {
+    switch (_account.coin) {
       case Coin.testNet:
         return 'https://explorer.test.provenance.io/validator/$_validatorAddress';
       case Coin.mainNet:

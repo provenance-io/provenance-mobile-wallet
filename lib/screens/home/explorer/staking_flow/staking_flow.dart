@@ -10,7 +10,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -51,14 +51,14 @@ abstract class StakingFlowNavigator {
 class StakingFlow extends FlowBase {
   const StakingFlow(
     this.validatorAddress,
-    this.details,
+    this.account,
     this.selectedDelegation,
     this.rewards, {
     Key? key,
   }) : super(key: key);
 
   final String validatorAddress;
-  final AccountDetails details;
+  final TransactableAccount account;
   final Delegation? selectedDelegation;
   final Rewards? rewards;
 
@@ -71,7 +71,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Widget createStartPage() => StakingDetailsScreen(
         validatorAddress: widget.validatorAddress,
-        details: widget.details,
+        account: widget.account,
         selectedDelegation: widget.selectedDelegation,
         navigator: this,
         rewards: widget.rewards,
@@ -86,7 +86,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       (context) => StakingDelegationScreen(
         delegation: widget.selectedDelegation,
         validator: validator,
-        accountDetails: widget.details,
+        account: widget.account,
         commissionRate: commission.commissionRate,
         navigator: this,
       ),
@@ -101,7 +101,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       (context) => StakingRedelegationScreen(
         delegation: widget.selectedDelegation!,
         validator: validator,
-        accountDetails: widget.details,
+        account: widget.account,
         navigator: this,
       ),
     );
@@ -115,7 +115,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       (context) => StakingUndelegationScreen(
         delegation: widget.selectedDelegation,
         validator: validator,
-        accountDetails: widget.details,
+        account: widget.account,
         navigator: this,
       ),
     );
@@ -145,7 +145,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         validator,
         "",
         SelectedDelegationType.claimRewards,
-        widget.details,
+        widget.account,
       ),
     );
     showPage(

@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -10,10 +10,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class ExplorerScreen extends StatefulWidget {
   const ExplorerScreen({
     Key? key,
-    required this.accountDetails,
+    required this.account,
   }) : super(key: key);
 
-  final AccountDetails accountDetails;
+  final TransactableAccount account;
   @override
   State<StatefulWidget> createState() => HomeScreenState();
 }
@@ -46,7 +46,7 @@ class HomeScreenState extends State<ExplorerScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance.addObserver(this);
-    final bloc = StakingFlowBloc(accountDetails: widget.accountDetails);
+    final bloc = StakingFlowBloc(account: widget.account);
     get.registerSingleton<StakingFlowBloc>(bloc);
     bloc.load();
 

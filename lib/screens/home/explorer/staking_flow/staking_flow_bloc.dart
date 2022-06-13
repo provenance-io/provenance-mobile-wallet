@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
@@ -21,11 +21,11 @@ class StakingFlowBloc extends PwPagingCache {
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
   final _validatorService = get<ValidatorService>();
-  final AccountDetails _accountDetails;
+  final TransactableAccount _account;
 
   StakingFlowBloc({
-    required AccountDetails accountDetails,
-  })  : _accountDetails = accountDetails,
+    required TransactableAccount account,
+  })  : _account = account,
         super(50);
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
@@ -49,11 +49,11 @@ class StakingFlowBloc extends PwPagingCache {
     }
 
     try {
-      final account = _accountDetails;
+      final account = _account;
 
       final delegations = await _validatorService.getDelegations(
-        _accountDetails.coin,
-        _accountDetails.address,
+        _account.coin,
+        _account.address,
         _delegationPages.value,
       );
 
@@ -61,7 +61,7 @@ class StakingFlowBloc extends PwPagingCache {
           await _validatorService.getRewards(account.coin, account.address);
 
       final validators = await _validatorService.getRecentValidators(
-        _accountDetails.coin,
+        _account.coin,
         _validatorPages.value,
       );
 
@@ -111,8 +111,8 @@ class StakingFlowBloc extends PwPagingCache {
         oldDetails.delegates,
         _delegationPages,
         _isLoadingDelegations,
-        () async => await _validatorService.getDelegations(_accountDetails.coin,
-            _accountDetails.address, _delegationPages.value));
+        () async => await _validatorService.getDelegations(
+            _account.coin, _account.address, _delegationPages.value));
 
     _stakingDetails.tryAdd(
       StakingDetails(
@@ -135,7 +135,7 @@ class StakingFlowBloc extends PwPagingCache {
         _validatorPages,
         _isLoadingValidators,
         () async => await _validatorService.getRecentValidators(
-              _accountDetails.coin,
+              _account.coin,
               _validatorPages.value,
             ));
 

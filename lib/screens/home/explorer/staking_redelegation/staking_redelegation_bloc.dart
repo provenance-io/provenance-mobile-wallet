@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
@@ -23,20 +21,20 @@ class StakingRedelegationBloc extends Disposable {
   StakingRedelegationBloc(
     final DetailedValidator validator,
     final Delegation delegation,
-    this._accountDetails,
+    this._account,
   ) : _stakingRedelegationDetails = BehaviorSubject.seeded(
           StakingRedelegationDetails(
             validator,
             delegation,
             0,
-            _accountDetails,
+            _account,
             null,
           ),
         );
 
   final BehaviorSubject<StakingRedelegationDetails> _stakingRedelegationDetails;
   final _isLoading = BehaviorSubject.seeded(false);
-  final AccountDetails _accountDetails;
+  final TransactableAccount _account;
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<StakingRedelegationDetails> get stakingRedelegationDetails =>
       _stakingRedelegationDetails;
@@ -56,7 +54,7 @@ class StakingRedelegationBloc extends Disposable {
           oldDetails.validator,
           oldDetails.delegation,
           oldDetails.hashRedelegated,
-          oldDetails.accountDetails,
+          oldDetails.account,
           oldDetails.toRedelegate,
         ),
       );
@@ -72,7 +70,7 @@ class StakingRedelegationBloc extends Disposable {
         oldDetails.validator,
         oldDetails.delegation,
         hashRedelegated,
-        oldDetails.accountDetails,
+        oldDetails.account,
         oldDetails.toRedelegate,
       ),
     );
@@ -85,7 +83,7 @@ class StakingRedelegationBloc extends Disposable {
         oldDetails.validator,
         oldDetails.delegation,
         oldDetails.hashRedelegated,
-        oldDetails.accountDetails,
+        oldDetails.account,
         toRedelegate,
       ),
     );
@@ -103,14 +101,14 @@ class StakingRedelegationBloc extends Disposable {
                   denom: 'nhash',
                   amount: details.hashRedelegated.nhashFromHash(),
                 ),
-                delegatorAddress: _accountDetails.address,
+                delegatorAddress: _account.address,
                 validatorSrcAddress: details.delegation.sourceAddress,
                 validatorDstAddress: details.toRedelegate?.addressId ?? "")
             .toAny(),
       ],
     );
 
-    final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
+    final privateKey = await get<AccountService>().loadKey(_account.id);
     final adjustedEstimate = await _estimateGas(body);
 
     AccountGasEstimate estimate = AccountGasEstimate(
@@ -130,12 +128,8 @@ class StakingRedelegationBloc extends Disposable {
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    final publicKey = PublicKey.fromCompressPublicHex(
-      convert.hex.decoder.convert(_accountDetails.publicKey),
-      _accountDetails.coin,
-    );
-
-    return await (get<TransactionHandler>()).estimateGas(body, publicKey);
+    return await (get<TransactionHandler>())
+        .estimateGas(body, _account.publicKey);
   }
 }
 
@@ -144,7 +138,7 @@ class StakingRedelegationDetails {
     this.validator,
     this.delegation,
     this.hashRedelegated,
-    this.accountDetails,
+    this.account,
     this.toRedelegate,
   );
 
@@ -153,6 +147,6 @@ class StakingRedelegationDetails {
   final SelectedDelegationType selectedDelegationType =
       SelectedDelegationType.redelegate;
   final num hashRedelegated;
-  final AccountDetails accountDetails;
+  final TransactableAccount account;
   final ProvenanceValidator? toRedelegate;
 }

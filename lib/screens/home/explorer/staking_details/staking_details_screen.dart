@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -19,14 +19,14 @@ class StakingDetailsScreen extends StatefulWidget {
   const StakingDetailsScreen({
     Key? key,
     required this.validatorAddress,
-    required this.details,
+    required this.account,
     required this.selectedDelegation,
     required this.navigator,
     required this.rewards,
   }) : super(key: key);
 
   final String validatorAddress;
-  final AccountDetails details;
+  final TransactableAccount account;
   final Delegation? selectedDelegation;
   final Rewards? rewards;
   final StakingFlowNavigator navigator;
@@ -42,7 +42,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
   void initState() {
     _bloc = StakingDetailsBloc(
       widget.validatorAddress,
-      widget.details,
+      widget.account,
       widget.selectedDelegation,
       widget.rewards,
     );

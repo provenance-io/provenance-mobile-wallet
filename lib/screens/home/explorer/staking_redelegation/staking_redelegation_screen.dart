@@ -7,7 +7,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/red
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -17,14 +17,14 @@ class StakingRedelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final StakingFlowNavigator navigator;
-  final AccountDetails accountDetails;
+  final TransactableAccount account;
   final Delegation delegation;
 
   const StakingRedelegationScreen({
     Key? key,
     required this.delegation,
     required this.validator,
-    required this.accountDetails,
+    required this.account,
     required this.navigator,
   }) : super(key: key);
 
@@ -44,7 +44,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
     _bloc = StakingRedelegationBloc(
       widget.validator,
       widget.delegation,
-      widget.accountDetails,
+      widget.account,
     );
     get.registerSingleton<StakingRedelegationBloc>(_bloc);
     _bloc.load();

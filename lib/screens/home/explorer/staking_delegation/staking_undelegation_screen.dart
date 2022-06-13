@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -18,14 +18,14 @@ class StakingUndelegationScreen extends StatefulWidget {
     required this.navigator,
     this.delegation,
     required this.validator,
-    required this.accountDetails,
+    required this.account,
   }) : super(key: key);
 
   final Delegation? delegation;
 
   final DetailedValidator validator;
 
-  final AccountDetails accountDetails;
+  final TransactableAccount account;
   final StakingFlowNavigator navigator;
 
   @override
@@ -46,7 +46,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
       widget.validator,
       "",
       SelectedDelegationType.undelegate,
-      widget.accountDetails,
+      widget.account,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();

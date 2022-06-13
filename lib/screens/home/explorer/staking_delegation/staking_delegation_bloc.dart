@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
-import 'package:provenance_dart/wallet.dart' as account;
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/models/account_details.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -27,7 +25,7 @@ class StakingDelegationBloc extends Disposable {
     final DetailedValidator validator,
     final String commissionRate,
     final SelectedDelegationType selectedDelegationType,
-    this._accountDetails,
+    this._account,
   ) : _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
             validator,
@@ -36,11 +34,11 @@ class StakingDelegationBloc extends Disposable {
             selectedDelegationType,
             null,
             0,
-            _accountDetails,
+            _account,
           ),
         );
 
-  final AccountDetails _accountDetails;
+  final TransactableAccount _account;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
       _stakingDelegationDetails;
 
@@ -50,9 +48,9 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<void> load() async {
-    final asset = (await get<AssetService>()
-            .getAssets(_accountDetails.coin, _accountDetails.address))
-        .firstWhere((element) => element.denom == 'nhash');
+    final asset =
+        (await get<AssetService>().getAssets(_account.coin, _account.address))
+            .firstWhere((element) => element.denom == 'nhash');
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -62,7 +60,7 @@ class StakingDelegationBloc extends Disposable {
         oldDetails.selectedDelegationType,
         asset,
         oldDetails.hashDelegated,
-        oldDetails.accountDetails,
+        oldDetails.account,
       ),
     );
   }
@@ -77,7 +75,7 @@ class StakingDelegationBloc extends Disposable {
         oldDetails.selectedDelegationType,
         oldDetails.asset,
         hashDelegated,
-        oldDetails.accountDetails,
+        oldDetails.account,
       ),
     );
   }
@@ -94,7 +92,7 @@ class StakingDelegationBloc extends Disposable {
           denom: details.asset?.denom ?? 'nhash',
           amount: details.hashDelegated.toString(),
         ),
-        delegatorAddress: _accountDetails.address,
+        delegatorAddress: _account.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -111,7 +109,7 @@ class StakingDelegationBloc extends Disposable {
           denom: details.asset?.denom ?? 'nhash',
           amount: details.hashDelegated.toString(),
         ),
-        delegatorAddress: _accountDetails.address,
+        delegatorAddress: _account.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -124,7 +122,7 @@ class StakingDelegationBloc extends Disposable {
     await _sendMessage(
       gasAdjustment,
       MsgWithdrawDelegatorReward(
-        delegatorAddress: _accountDetails.address,
+        delegatorAddress: _account.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -140,7 +138,7 @@ class StakingDelegationBloc extends Disposable {
       ],
     );
 
-    final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
+    final privateKey = await get<AccountService>().loadKey(_account.id);
 
     final adjustedEstimate = await _estimateGas(body);
 
@@ -161,12 +159,8 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    final publicKey = account.PublicKey.fromCompressPublicHex(
-      convert.hex.decoder.convert(_accountDetails.publicKey),
-      _accountDetails.coin,
-    );
-
-    return await (get<TransactionHandler>()).estimateGas(body, publicKey);
+    return await (get<TransactionHandler>())
+        .estimateGas(body, _account.publicKey);
   }
 }
 
@@ -178,7 +172,7 @@ class StakingDelegationDetails {
     this.selectedDelegationType,
     this.asset,
     this.hashDelegated,
-    this.accountDetails,
+    this.account,
   );
 
   final Delegation? delegation;
@@ -187,7 +181,7 @@ class StakingDelegationDetails {
   final SelectedDelegationType selectedDelegationType;
   final Asset? asset;
   final num hashDelegated;
-  final AccountDetails accountDetails;
+  final TransactableAccount account;
 
   bool get hashInsufficient {
     if (0 == hashDelegated) {

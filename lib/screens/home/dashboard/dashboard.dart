@@ -256,7 +256,7 @@ class _DashboardState extends State<Dashboard> {
                       final account =
                           await get<AccountService>().getSelectedAccount();
                       Navigator.of(context).push(ExplorerScreen(
-                        accountDetails: account!,
+                        account: account!,
                       ).route());
                     },
                   ),
