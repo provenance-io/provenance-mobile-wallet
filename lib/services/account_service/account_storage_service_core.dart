@@ -26,6 +26,7 @@ abstract class AccountStorageServiceCore {
     required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
+    required List<String> inviteLinks,
   });
 
   Future<Account?> getAccount({

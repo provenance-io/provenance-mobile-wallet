@@ -66,6 +66,7 @@ abstract class AccountStorageService {
     required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
+    required List<String> inviteLinks,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);

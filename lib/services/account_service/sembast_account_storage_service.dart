@@ -441,6 +441,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
+    required List<String> inviteLinks,
   }) async {
     final db = await _db;
 
@@ -450,6 +451,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       linkedAccountId: linkedAccountId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
     final id = await _pendingMultiAccounts.add(
       db,
@@ -582,6 +584,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
         linkedAccountName: linkedAccount.name,
         cosignerCount: model.cosignerCount,
         signaturesRequired: model.signaturesRequired,
+        inviteLinks: model.inviteLinks,
       );
     }
 

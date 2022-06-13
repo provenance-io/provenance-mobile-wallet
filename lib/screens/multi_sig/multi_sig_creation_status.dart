@@ -100,6 +100,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                             number: i + 1,
                             checked: cosigner.isSelf,
                             description: description,
+                            inviteLink: cosigner.inviteLink,
                           ),
                         );
                       }
@@ -154,6 +155,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
         cosigners.add(
           CosignerData(
             isSelf: false,
+            inviteLink: account.inviteLinks[i - 1],
           ),
         );
       }
@@ -166,11 +168,13 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
 class CosignerData {
   CosignerData({
     required this.isSelf,
+    this.inviteLink,
     this.name,
     this.address,
   });
 
   final bool isSelf;
+  final String? inviteLink;
   final String? name;
   final String? address;
 }
@@ -179,6 +183,7 @@ class _CoSigner extends StatelessWidget {
   const _CoSigner({
     required this.number,
     required this.checked,
+    this.inviteLink,
     this.description,
     Key? key,
   }) : super(key: key);
@@ -186,17 +191,18 @@ class _CoSigner extends StatelessWidget {
   final bool checked;
   final int number;
   final String? description;
+  final String? inviteLink;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: checked
+      onPressed: checked || inviteLink == null
           ? null
           : () {
               Navigator.of(context).push(
                 MultiSigInviteScreen(
                   number: number,
-                  url: 'https://provenance.io',
+                  url: inviteLink!,
                 ).route(),
               );
             },

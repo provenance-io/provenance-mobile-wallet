@@ -89,6 +89,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
+    required List<String> inviteLinks,
   }) {
     return _serviceCore.addPendingMultiAccount(
       name: name,
@@ -96,6 +97,7 @@ class AccountStorageServiceImp implements AccountStorageService {
       linkedAccountId: linkedAccountId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
   }
 

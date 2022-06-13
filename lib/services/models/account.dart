@@ -151,6 +151,7 @@ class PendingMultiAccount implements Account {
     required this.linkedAccountName,
     required this.cosignerCount,
     required this.signaturesRequired,
+    required this.inviteLinks,
   });
 
   @override
@@ -165,4 +166,5 @@ class PendingMultiAccount implements Account {
   final String linkedAccountName;
   final int cosignerCount;
   final int signaturesRequired;
+  final List<String> inviteLinks;
 }

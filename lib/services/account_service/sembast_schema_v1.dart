@@ -46,7 +46,7 @@ class SembastAccountModel {
         'status': status.name,
         'publicKeys': publicKeys.map((e) => e.toRecord()).toList(),
         'selectedChainId': selectedChainId,
-        'linkedAccounts': linkedAccountIds,
+        'linkedAccountIds': linkedAccountIds,
       };
 
   factory SembastAccountModel.fromRecord(Map<String, dynamic> rec) =>
@@ -57,9 +57,10 @@ class SembastAccountModel {
             .map((e) => SembastPublicKeyModel.fromRecord(e))
             .toList(),
         selectedChainId: rec['selectedChainId'] as String,
-        linkedAccountIds: (rec['linkedAccounts'] as List<dynamic>)
-            .map((e) => e as String)
-            .toList(),
+        linkedAccountIds: (rec['linkedAccountIds'] as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
       );
 
   SembastAccountModel copyWith({
@@ -133,6 +134,7 @@ class SembastPendingMultiAccountModel {
     required this.linkedAccountId,
     required this.cosignerCount,
     required this.signaturesRequired,
+    required this.inviteLinks,
   });
 
   final String name;
@@ -140,6 +142,7 @@ class SembastPendingMultiAccountModel {
   final String linkedAccountId;
   final int cosignerCount;
   final int signaturesRequired;
+  final List<String> inviteLinks;
 
   Map<String, dynamic> toRecord() => {
         'name': name,
@@ -147,6 +150,7 @@ class SembastPendingMultiAccountModel {
         'linkedAccountId': linkedAccountId,
         'cosignerCount': cosignerCount,
         'signaturesRequired': signaturesRequired,
+        'inviteLinks': inviteLinks,
       };
 
   factory SembastPendingMultiAccountModel.fromRecord(
@@ -157,6 +161,10 @@ class SembastPendingMultiAccountModel {
         linkedAccountId: rec['linkedAccountId'] as String,
         cosignerCount: rec['cosignerCount'] as int,
         signaturesRequired: rec['signaturesRequired'] as int,
+        inviteLinks: (rec['inviteLinks'] as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
       );
 
   SembastPendingMultiAccountModel copyWith({
@@ -169,5 +177,6 @@ class SembastPendingMultiAccountModel {
         linkedAccountId: linkedAccountId,
         cosignerCount: cosignerCount,
         signaturesRequired: signaturesRequired,
+        inviteLinks: inviteLinks,
       );
 }

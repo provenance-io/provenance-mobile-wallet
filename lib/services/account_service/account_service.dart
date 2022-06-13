@@ -187,6 +187,7 @@ class AccountService implements Disposable {
     required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
+    required List<String> inviteLinks,
   }) async {
     final account = await _storage.addPendingMultiAccount(
       name: name,
@@ -194,6 +195,7 @@ class AccountService implements Disposable {
       linkedAccountId: linkedAccountId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
 
     if (account != null) {
