@@ -5,16 +5,17 @@ part 'height_dto.g.dart';
 
 @JsonSerializable()
 class HeightDto {
-  HeightDto(
-      {this.height,
-      this.hash,
-      this.time,
-      this.proposerAddress,
-      this.moniker,
-      this.icon,
-      this.votingPower,
-      this.validatorCount,
-      this.txNum});
+  HeightDto({
+    this.height,
+    this.hash,
+    this.time,
+    this.proposerAddress,
+    this.moniker,
+    this.icon,
+    this.votingPower,
+    this.validatorCount,
+    this.txNum,
+  });
 
   final int? height;
   final String? hash;

@@ -1,4 +1,5 @@
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/services/models/block_height.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -11,7 +12,7 @@ abstract class GovernanceService {
     throw Strings.notImplementedMessage;
   }
 
-  Future<Any> getHeight(
+  Future<BlockHeight> getHeight(
     Coin coin,
   ) {
     //https://service-explorer.test.provenance.io/api/v2/blocks/height
