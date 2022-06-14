@@ -136,12 +136,11 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   Future<List<CosignerData>> _getCosigners() async {
     final cosigners = <CosignerData>[];
 
-    final account = await _accountService.getAccount(widget.accountId)
-        as PendingMultiAccount?;
+    final account =
+        await _accountService.getAccount(widget.accountId) as MultiAccount?;
 
     if (account != null) {
-      final linkedAccount = await _accountService
-          .getAccount(account.linkedAccountId) as BasicAccount;
+      final linkedAccount = account.linkedAccount;
       final self = CosignerData(
         isSelf: true,
         name: linkedAccount.name,

@@ -122,20 +122,17 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
       Invocation.method(#getAccount, [id]),
       returnValue: Future<_i14.Account?>.value()) as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.TransactableAccount?> selectFirstAccount() =>
-      (super.noSuchMethod(Invocation.method(#selectFirstAccount, []),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+  _i7.Future<_i14.Account?> selectFirstAccount() => (super.noSuchMethod(
+      Invocation.method(#selectFirstAccount, []),
+      returnValue: Future<_i14.Account?>.value()) as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.TransactableAccount?> selectAccount({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+  _i7.Future<_i14.Account?> selectAccount({String? id}) => (super.noSuchMethod(
+      Invocation.method(#selectAccount, [], {#id: id}),
+      returnValue: Future<_i14.Account?>.value()) as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.TransactableAccount?> getSelectedAccount() =>
-      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+  _i7.Future<_i14.Account?> getSelectedAccount() => (super.noSuchMethod(
+      Invocation.method(#getSelectedAccount, []),
+      returnValue: Future<_i14.Account?>.value()) as _i7.Future<_i14.Account?>);
   @override
   _i7.Future<List<_i14.Account>> getAccounts() =>
       (super.noSuchMethod(Invocation.method(#getAccounts, []),
@@ -148,27 +145,25 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
                   Future<List<_i14.BasicAccount>>.value(<_i14.BasicAccount>[]))
           as _i7.Future<List<_i14.BasicAccount>>);
   @override
-  _i7.Future<_i14.TransactableAccount?> renameAccount(
-          {String? id, String? name}) =>
+  _i7.Future<_i14.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+              returnValue: Future<_i14.Account?>.value())
+          as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.TransactableAccount?> setAccountCoin(
-          {String? id, _i9.Coin? coin}) =>
+  _i7.Future<_i14.Account?> setAccountCoin({String? id, _i9.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(#setAccountCoin, [], {#id: id, #coin: coin}),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+              returnValue: Future<_i14.Account?>.value())
+          as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.TransactableAccount?> addAccount(
+  _i7.Future<_i14.Account?> addAccount(
           {List<String>? phrase, String? name, _i9.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: Future<_i14.TransactableAccount?>.value())
-          as _i7.Future<_i14.TransactableAccount?>);
+              returnValue: Future<_i14.Account?>.value())
+          as _i7.Future<_i14.Account?>);
   @override
   _i7.Future<_i14.MultiAccount?> addMultiAccount(
           {String? name,

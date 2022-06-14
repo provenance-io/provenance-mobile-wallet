@@ -17,13 +17,13 @@ class AccountServiceEvents {
 
   final _added = PublishSubject<Account>();
   final _removed = PublishSubject<List<Account>>();
-  final _updated = PublishSubject<TransactableAccount>();
-  final _selected = BehaviorSubject<TransactableAccount?>.seeded(null);
+  final _updated = PublishSubject<Account>();
+  final _selected = BehaviorSubject<Account?>.seeded(null);
 
   Stream<Account> get added => _added;
   Stream<List<Account>> get removed => _removed;
-  Stream<TransactableAccount> get updated => _updated;
-  ValueStream<TransactableAccount?> get selected => _selected;
+  Stream<Account> get updated => _updated;
+  ValueStream<Account?> get selected => _selected;
 
   void clear() {
     _subscriptions.clear();
@@ -66,15 +66,15 @@ class AccountService implements Disposable {
     return _storage.getAccount(id);
   }
 
-  Future<TransactableAccount?> selectFirstAccount() async {
+  Future<Account?> selectFirstAccount() async {
     final id = (await _storage.getAccounts())
-        .firstWhereOrNull((e) => e is TransactableAccount)
+        .firstWhereOrNull((e) => e.publicKey != null)
         ?.id;
 
     return await selectAccount(id: id);
   }
 
-  Future<TransactableAccount?> selectAccount({String? id}) async {
+  Future<Account?> selectAccount({String? id}) async {
     final details = await _storage.selectAccount(id: id);
 
     events._selected.add(details);
@@ -82,8 +82,7 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<TransactableAccount?> getSelectedAccount() =>
-      _storage.getSelectedAccount();
+  Future<Account?> getSelectedAccount() => _storage.getSelectedAccount();
 
   Future<List<Account>> getAccounts() async {
     final accounts = await _storage.getAccounts();
@@ -93,7 +92,7 @@ class AccountService implements Disposable {
 
   Future<List<BasicAccount>> getBasicAccounts() => _storage.getBasicAccounts();
 
-  Future<TransactableAccount?> renameAccount({
+  Future<Account?> renameAccount({
     required String id,
     required String name,
   }) async {
@@ -112,7 +111,7 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<TransactableAccount?> setAccountCoin({
+  Future<Account?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -131,7 +130,7 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<TransactableAccount?> addAccount({
+  Future<Account?> addAccount({
     required List<String> phrase,
     required String name,
     required Coin coin,
@@ -163,12 +162,20 @@ class AccountService implements Disposable {
     required List<PublicKey> publicKeys,
     required Coin coin,
     required String linkedAccountId,
+    required String remoteId,
+    required int cosignerCount,
+    required int signaturesRequired,
+    required List<String> inviteLinks,
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
       publicKeys: publicKeys,
       selectedCoin: coin,
       linkedAccountId: linkedAccountId,
+      remoteId: remoteId,
+      cosignerCount: cosignerCount,
+      signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
 
     if (details != null) {
@@ -179,30 +186,6 @@ class AccountService implements Disposable {
     }
 
     return details;
-  }
-
-  Future<PendingMultiAccount?> addPendingMultiAccount({
-    required String name,
-    required String remoteId,
-    required String linkedAccountId,
-    required int cosignerCount,
-    required int signaturesRequired,
-    required List<String> inviteLinks,
-  }) async {
-    final account = await _storage.addPendingMultiAccount(
-      name: name,
-      remoteId: remoteId,
-      linkedAccountId: linkedAccountId,
-      cosignerCount: cosignerCount,
-      signaturesRequired: signaturesRequired,
-      inviteLinks: inviteLinks,
-    );
-
-    if (account != null) {
-      events._added.add(account);
-    }
-
-    return account;
   }
 
   Future<Account?> removeAccount({required String id}) async {
@@ -241,7 +224,7 @@ class AccountService implements Disposable {
   }
 
   Future<PrivateKey?> loadKey(String accountId) async {
-    final coin = events.selected.value?.coin;
+    final coin = events.selected.value?.publicKey?.coin;
     PrivateKey? privateKey;
     if (coin != null) {
       privateKey = await _storage.loadKey(accountId, coin);

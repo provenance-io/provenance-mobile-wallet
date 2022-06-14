@@ -127,10 +127,9 @@ class MockAccountStorageServiceCore extends _i1.Mock
                   <_i4.PendingMultiAccount>[]))
           as _i3.Future<List<_i4.PendingMultiAccount>>);
   @override
-  _i3.Future<_i4.TransactableAccount?> getSelectedAccount() =>
-      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+  _i3.Future<_i4.Account?> getSelectedAccount() => (super.noSuchMethod(
+      Invocation.method(#getSelectedAccount, []),
+      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
   @override
   _i3.Future<int> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
@@ -140,24 +139,21 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#removeAllAccounts, []),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
-  _i3.Future<_i4.TransactableAccount?> renameAccount(
-          {String? id, String? name}) =>
+  _i3.Future<_i4.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+              returnValue: Future<_i4.Account?>.value())
+          as _i3.Future<_i4.Account?>);
   @override
-  _i3.Future<_i4.TransactableAccount?> selectAccount({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+  _i3.Future<_i4.Account?> selectAccount({String? id}) => (super.noSuchMethod(
+      Invocation.method(#selectAccount, [], {#id: id}),
+      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
   @override
-  _i3.Future<_i4.TransactableAccount?> setChainId(
-          {String? id, String? chainId}) =>
+  _i3.Future<_i4.Account?> setChainId({String? id, String? chainId}) =>
       (super.noSuchMethod(
               Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+              returnValue: Future<_i4.Account?>.value())
+          as _i3.Future<_i4.Account?>);
 }
 
 /// A class which mocks [CipherService].

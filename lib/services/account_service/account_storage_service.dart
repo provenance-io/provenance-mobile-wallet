@@ -36,18 +36,18 @@ abstract class AccountStorageService {
 
   Future<Account?> getAccount(String id);
 
-  Future<TransactableAccount?> getSelectedAccount();
+  Future<Account?> getSelectedAccount();
 
-  Future<TransactableAccount?> selectAccount({
+  Future<Account?> selectAccount({
     String? id,
   });
 
-  Future<TransactableAccount?> renameAccount({
+  Future<Account?> renameAccount({
     required String id,
     required String name,
   });
 
-  Future<TransactableAccount?> addAccount({
+  Future<Account?> addAccount({
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
@@ -58,12 +58,7 @@ abstract class AccountStorageService {
     required List<PublicKey> publicKeys,
     required Coin selectedCoin,
     required String linkedAccountId,
-  });
-
-  Future<PendingMultiAccount?> addPendingMultiAccount({
-    required String name,
     required String remoteId,
-    required String linkedAccountId,
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteLinks,
@@ -75,7 +70,7 @@ abstract class AccountStorageService {
 
   Future<bool> removeAllAccounts();
 
-  Future<TransactableAccount?> setAccountCoin({
+  Future<Account?> setAccountCoin({
     required String id,
     required Coin coin,
   });

@@ -119,7 +119,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
-                      child: FutureBuilder<List<TransactableAccount>>(
+                      child: FutureBuilder<List<Account>>(
                           future: _load,
                           builder: (context, snapshot) {
                             final accounts = [
@@ -225,7 +225,7 @@ class _Item {
   });
 
   final String name;
-  final TransactableAccount? account;
+  final Account? account;
 
   @override
   int get hashCode => hashValues(name, account);

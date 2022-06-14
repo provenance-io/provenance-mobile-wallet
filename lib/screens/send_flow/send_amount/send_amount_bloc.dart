@@ -40,7 +40,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
-  final TransactableAccount accountDetails;
+  final Account accountDetails;
   final SendAsset asset;
   final String receivingAddress;
 
@@ -50,7 +50,7 @@ class SendAmountBloc extends Disposable {
     final body = TxBody(
       messages: [
         MsgSend(
-          fromAddress: accountDetails.publicKey.address,
+          fromAddress: accountDetails.publicKey!.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -62,7 +62,7 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final publicKey = accountDetails.publicKey;
+    final publicKey = accountDetails.publicKey!;
 
     get<TransactionHandler>()
         .estimateGas(body, publicKey)

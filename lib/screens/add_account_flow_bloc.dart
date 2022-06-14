@@ -148,7 +148,7 @@ class AddAccountFlowBloc implements Disposable {
   AccountAddKind? _addKind;
 
   BiometryType? _biometryType;
-  TransactableAccount? _multiSigLinkedAccount;
+  Account? _multiSigLinkedAccount;
 
   @override
   void onDispose() {
@@ -381,7 +381,7 @@ class AddAccountFlowBloc implements Disposable {
       context,
     );
 
-    TransactableAccount? details;
+    Account? details;
 
     final enrolled = await get<LocalAuthHelper>().enroll(
       _pin.join(),
@@ -465,7 +465,7 @@ class AddAccountFlowBloc implements Disposable {
     }
   }
 
-  void submitMultiSigConnect(TransactableAccount? account) {
+  void submitMultiSigConnect(Account? account) {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
@@ -499,7 +499,7 @@ class AddAccountFlowBloc implements Disposable {
 
     final invite = await get<MultiSigService>().createInvite(
       name: _multiSigName.value,
-      linkedPublicKey: _multiSigLinkedAccount!.publicKey,
+      linkedPublicKey: _multiSigLinkedAccount!.publicKey!,
       cosignerCount: _multiSigCosignerCount.value.value,
       threshold: _multiSigSignatureCount.value.value,
     );
@@ -507,8 +507,10 @@ class AddAccountFlowBloc implements Disposable {
     String? id;
 
     if (invite != null) {
-      final account = await _accountService.addPendingMultiAccount(
+      final account = await _accountService.addMultiAccount(
         name: _multiSigName.value,
+        coin: _multiSigLinkedAccount!.publicKey!.coin,
+        publicKeys: [],
         remoteId: invite.id,
         inviteLinks: invite.inviteLinks,
         linkedAccountId: _multiSigLinkedAccount!.id,
