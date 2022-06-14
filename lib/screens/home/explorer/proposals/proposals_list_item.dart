@@ -14,7 +14,14 @@ class ProposalListItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         // TODO: Navigate to ProposalDetails
-        print("Tapped!");
+        final now = DateTime.now().toUtc();
+        print("Now: $now");
+        print("StartTime: ${item.startTime}");
+        print("EndTime: ${item.endTime}");
+        print("StartTime is in past: ${now.compareTo(item.startTime) == 1}");
+        print(
+            "EndTime has been reached: ${now.compareTo(item.startTime) == 1}");
+        print("-------------------------------------------------------");
       },
       child: Padding(
         padding: EdgeInsets.zero,
