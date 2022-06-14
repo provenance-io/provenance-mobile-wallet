@@ -119,6 +119,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                 Navigator.of(context).push(
                   AddAccountFlow(
                     origin: AddAccountOrigin.accounts,
+                    includeMultiSig: true,
                   ).route(),
                 );
               },

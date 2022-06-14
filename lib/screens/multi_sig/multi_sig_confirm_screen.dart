@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -59,7 +60,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         final name = snapshot.data ?? '';
 
-                        return _Field(
+                        return MultiSigField(
                           name: Strings.multiSigConfirmAccountNameLabel,
                           value: name,
                           onEdit: () {
@@ -84,7 +85,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         final count = snapshot.data?.value ?? 0;
 
-                        return _Field(
+                        return MultiSigField(
                           name: Strings.multiSigConfirmCosignersLabel,
                           value: count.toString(),
                           onEdit: () {
@@ -108,7 +109,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         final count = snapshot.data?.value ?? 0;
 
-                        return _Field(
+                        return MultiSigField(
                           name: Strings.multiSigConfirmSignaturesLabel,
                           value: count.toString(),
                           onEdit: () {
@@ -141,64 +142,6 @@ class MultiSigConfirmScreen extends StatelessWidget {
                   VerticalSpacer.largeX4(),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  const _Field({
-    required this.name,
-    required this.value,
-    required this.onEdit,
-    Key? key,
-  }) : super(key: key);
-
-  final String name;
-  final String value;
-  final void Function() onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        bottom: Spacing.small,
-        left: Spacing.small,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        textDirection: TextDirection.ltr,
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(
-                top: Spacing.small,
-              ),
-              child: Column(
-                textDirection: TextDirection.ltr,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PwText(
-                    name,
-                    style: PwTextStyle.bodyBold,
-                    overflow: TextOverflow.fade,
-                  ),
-                  PwText(
-                    value,
-                    style: PwTextStyle.body,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: onEdit,
-            icon: PwIcon(
-              PwIcons.edit,
-              color: Theme.of(context).colorScheme.neutralNeutral,
             ),
           ),
         ],

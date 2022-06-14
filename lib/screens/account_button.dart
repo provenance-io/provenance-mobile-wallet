@@ -5,6 +5,7 @@ class AccountButton extends StatelessWidget {
     Key? key,
     required this.name,
     required this.desc,
+    this.icon,
     this.onPressed,
   }) : super(key: key);
 
@@ -16,6 +17,7 @@ class AccountButton extends StatelessWidget {
 
   final String name;
   final String desc;
+  final String? icon;
   final void Function()? onPressed;
 
   @override
@@ -34,6 +36,12 @@ class AccountButton extends StatelessWidget {
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
+            if (icon != null)
+              PwIcon(
+                icon!,
+                color: Theme.of(context).colorScheme.neutralNeutral,
+              ),
+            if (icon != null) VerticalSpacer.large(),
             PwText(
               name,
               textAlign: TextAlign.center,

@@ -19,6 +19,7 @@ import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class AddAccountFlowNavigator {
@@ -45,16 +46,18 @@ abstract class AddAccountFlowNavigator {
   void showMultiSigSignatures(FieldMode mode,
       [int? currentStep, int? totalSteps]);
   void showMultiSigConfirm(int currentStep, int totalSteps);
-  void endFlow();
+  void endFlow(Account? createdAccount);
 }
 
 class AddAccountFlow extends FlowBase {
   const AddAccountFlow({
     required this.origin,
+    required this.includeMultiSig,
     Key? key,
   }) : super(key: key);
 
   final AddAccountOrigin origin;
+  final bool includeMultiSig;
 
   @override
   State<StatefulWidget> createState() => AddAccountFlowState();
@@ -86,7 +89,9 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  Widget createStartPage() => AccountTypeScreen();
+  Widget createStartPage() => AccountTypeScreen(
+        includeMultiSig: widget.includeMultiSig,
+      );
 
   @override
   void showAccountName(int currentStep, int totalSteps) {
@@ -122,12 +127,16 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
 
   @override
   void showAccountType() {
-    showPage((context) => AccountTypeScreen());
+    showPage(
+      (context) => AccountTypeScreen(
+        includeMultiSig: widget.includeMultiSig,
+      ),
+    );
   }
 
   @override
-  void endFlow() {
-    completeFlow(null);
+  void endFlow(Account? createdAccount) {
+    completeFlow(createdAccount);
   }
 
   @override
@@ -233,6 +242,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   void showMultiSigConnect(int currentStep, int totalSteps) {
     showPage(
       (context) => MultiSigConnectScreen(
+        onAccount: _bloc.submitMultiSigConnect,
         currentStep: currentStep,
         totalSteps: totalSteps,
       ),

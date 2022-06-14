@@ -2,7 +2,6 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -10,13 +9,15 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigConnectScreen extends StatefulWidget {
   const MultiSigConnectScreen({
-    required this.currentStep,
-    required this.totalSteps,
+    required this.onAccount,
+    this.currentStep,
+    this.totalSteps,
     Key? key,
   }) : super(key: key);
 
-  final int currentStep;
-  final int totalSteps;
+  final void Function(Account? account) onAccount;
+  final int? currentStep;
+  final int? totalSteps;
 
   @override
   State<MultiSigConnectScreen> createState() => _MultiSigConnectScreenState();
@@ -28,8 +29,6 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   );
 
   final _keyNextButton = ValueKey('$MultiSigConnectScreen.next_button');
-
-  final _bloc = get<AddAccountFlowBloc>();
   final _accountService = get<AccountService>();
 
   late final FocusNode _focusNext;
@@ -55,14 +54,19 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentStep = widget.currentStep;
+    final totalSteps = widget.totalSteps;
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.multiSigConnectTitle,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
+        bottom: currentStep == null || totalSteps == null
+            ? null
+            : ProgressStepper(
+                currentStep,
+                totalSteps,
+              ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -71,7 +75,6 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
             SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   VerticalSpacer.xxLarge(),
                   Container(
@@ -86,15 +89,22 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                     ),
                   ),
                   VerticalSpacer.largeX3(),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
-                    ),
-                    child: PwText(
-                      Strings.multiSigConnectSelectionLabel,
-                      style: PwTextStyle.body,
-                      color: PwColor.neutralNeutral,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: Spacing.xxLarge,
+                        ),
+                        child: PwText(
+                          Strings.multiSigConnectSelectionLabel,
+                          style: PwTextStyle.body,
+                          color: PwColor.neutralNeutral,
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                    ],
                   ),
                   VerticalSpacer.small(),
                   Focus(
@@ -214,7 +224,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
 
   void _submit() {
     final account = _value == _defaultValue ? null : _value.account;
-    _bloc.submitMultiSigConnect(account);
+    widget.onAccount(account);
   }
 }
 

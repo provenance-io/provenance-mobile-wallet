@@ -9,12 +9,14 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class AccountTypeScreen extends StatelessWidget {
   AccountTypeScreen({
+    required this.includeMultiSig,
     Key? key,
   }) : super(key: key);
 
   static final keyBasicAccount = ValueKey('$AccountTypeScreen.basic_button');
 
   final _keyValueService = get<KeyValueService>();
+  final bool includeMultiSig;
 
   @override
   Widget build(BuildContext context) {
@@ -59,33 +61,34 @@ class AccountTypeScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    StreamBuilder<KeyValueData<bool>>(
-                        initialData: _keyValueService
-                            .stream<bool>(PrefKey.enableMultiSig)
-                            .valueOrNull,
-                        stream: _keyValueService
-                            .stream<bool>(PrefKey.enableMultiSig),
-                        builder: (context, snapshot) {
-                          final enable = snapshot.data?.data ?? false;
-                          if (enable) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                top: Spacing.large,
-                              ),
-                              child: AccountButton(
-                                name: Strings.accountTypeOptionMultiName,
-                                desc: Strings.accountTypeOptionMultiDesc,
-                                onPressed: () {
-                                  get<AddAccountFlowBloc>().submitAccountType(
-                                    AccountAddKind.createMulti,
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
+                    if (includeMultiSig)
+                      StreamBuilder<KeyValueData<bool>>(
+                          initialData: _keyValueService
+                              .stream<bool>(PrefKey.enableMultiSig)
+                              .valueOrNull,
+                          stream: _keyValueService
+                              .stream<bool>(PrefKey.enableMultiSig),
+                          builder: (context, snapshot) {
+                            final enable = snapshot.data?.data ?? false;
+                            if (enable) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  top: Spacing.large,
+                                ),
+                                child: AccountButton(
+                                  name: Strings.accountTypeOptionMultiName,
+                                  desc: Strings.accountTypeOptionMultiDesc,
+                                  onPressed: () {
+                                    get<AddAccountFlowBloc>().submitAccountType(
+                                      AccountAddKind.createMulti,
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
                     VerticalSpacer.largeX3(),
                   ],
                 ),
