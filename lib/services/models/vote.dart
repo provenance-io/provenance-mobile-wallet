@@ -31,4 +31,16 @@ class Vote {
   final int proposalId;
   final String proposalTitle;
   final String proposalStatus;
+
+  String get formattedVote {
+    if (answerYes != null) {
+      return "Yes";
+    } else if (answerNo != null) {
+      return "No";
+    } else if (answerNoWithVeto != null) {
+      return "No With Veto";
+    } else {
+      return "Abstain";
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/block_height.dart';
 import 'package:provenance_wallet/services/models/deposit.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
@@ -22,6 +22,7 @@ abstract class GovernanceService {
   }
 
   Future<List<Vote>> getVotes(
+    int proposalId,
     Coin coin,
     int pageNumber,
   ) {
@@ -29,7 +30,16 @@ abstract class GovernanceService {
     throw Strings.notImplementedMessage;
   }
 
+  Future<List<Vote>> getVotesForAddress(
+    String address,
+    Coin coin,
+  ) {
+    // https://service-explorer.test.provenance.io/api/v2/gov/address/{address}/votes?count=50&page=1
+    throw Strings.notImplementedMessage;
+  }
+
   Future<List<Deposit>> getDeposits(
+    int proposalId,
     Coin coin,
     int pageNumber,
   ) {
