@@ -7,6 +7,7 @@ import 'package:provenance_wallet/services/governance_service/governance_service
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -14,7 +15,7 @@ class ProposalsBloc extends PwPagingCache {
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingProposals = BehaviorSubject.seeded(false);
   final _proposalDetails = BehaviorSubject.seeded(
-    ProposalDetails(proposals: [], asset: null),
+    ProposalDetails(proposals: [], myVotes: [], asset: null),
   );
   final _proposalPages = BehaviorSubject.seeded(1);
   final _governanceService = get<GovernanceService>();
@@ -51,9 +52,15 @@ class ProposalsBloc extends PwPagingCache {
         _proposalPages.value,
       );
 
+      final myVotes = await _governanceService.getVotesForAddress(
+        _account.address,
+        _account.coin,
+      );
+
       _proposalDetails.tryAdd(
         ProposalDetails(
           proposals: proposals,
+          myVotes: myVotes,
           asset: asset,
         ),
       );
@@ -77,6 +84,7 @@ class ProposalsBloc extends PwPagingCache {
     _proposalDetails.tryAdd(
       ProposalDetails(
         proposals: proposals,
+        myVotes: oldDetails.myVotes,
         asset: oldDetails.asset,
       ),
     );
@@ -88,9 +96,11 @@ class ProposalsBloc extends PwPagingCache {
 class ProposalDetails {
   ProposalDetails({
     required this.proposals,
+    required this.myVotes,
     required this.asset,
   });
 
   final List<Proposal> proposals;
+  final List<Vote> myVotes;
   final Asset? asset;
 }

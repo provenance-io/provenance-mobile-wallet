@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_bloc.dart';
@@ -53,9 +54,13 @@ class ProposalsListState extends State<ProposalsList> {
                       return Container();
                     }
                     final item = details.proposals[index];
+                    final vote = details.myVotes.firstWhereOrNull(
+                      (element) => element.proposalId == item.proposalId,
+                    );
 
                     return ProposalListItem(
                       item: item,
+                      vote: vote,
                     );
                   },
                   separatorBuilder: (context, index) {

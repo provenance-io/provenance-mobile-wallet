@@ -111,12 +111,11 @@ class DefaultGovernanceService extends GovernanceService
   Future<List<Vote>> getVotesForAddress(
     String address,
     Coin coin,
-    int pageNumber,
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
       // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/gov/address/$address/votes?count=50&page=$pageNumber',
+      'https://service-explorer.test.provenance.io/api/v2/gov/address/$address/votes',
       converter: (json) {
         if (json is String) {
           return <Vote>[];

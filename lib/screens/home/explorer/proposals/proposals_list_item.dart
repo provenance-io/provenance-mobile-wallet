@@ -1,13 +1,13 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/services/models/vote.dart';
 
 class ProposalListItem extends StatelessWidget {
-  const ProposalListItem({
-    Key? key,
-    required this.item,
-  }) : super(key: key);
+  const ProposalListItem({Key? key, required this.item, this.vote})
+      : super(key: key);
 
   final Proposal item;
+  final Vote? vote;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -27,12 +27,42 @@ class ProposalListItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PwText(
-                      "${item.proposalId} ${item.title}",
-                      style: PwTextStyle.bodyBold,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
+                    if (vote != null)
+                      Row(
+                        children: [
+                          Flexible(
+                            child: PwText(
+                              "${item.proposalId} ${item.title}",
+                              style: PwTextStyle.bodyBold,
+                              overflow: TextOverflow.fade,
+                              color: PwColor.neutralNeutral,
+                              softWrap: false,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: Spacing.large,
+                            ),
+                            child: Chip(
+                              label: PwText(
+                                "Voted ${vote!.formattedVote}",
+                                style: PwTextStyle.footnote,
+                                color: PwColor.primaryP500,
+                              ),
+                              side: BorderSide(
+                                color: Theme.of(context).colorScheme.primary550,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (vote == null)
+                      PwText(
+                        "${item.proposalId} ${item.title}",
+                        style: PwTextStyle.bodyBold,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
                     VerticalSpacer.xSmall(),
                     SizedBox(
                       width: 180,
@@ -47,7 +77,6 @@ class ProposalListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              //Expanded(child: Container()),
               Padding(
                 padding: EdgeInsets.only(left: 16),
                 child: PwIcon(
