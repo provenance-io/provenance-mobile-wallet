@@ -2,16 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'multi_sig_create_response_dto.g.dart';
 
-// {
-// 	"name": String,
-// 	"walletUuid": UUID,
-// 	"inviteLinks": [
-// 		String,
-// 		String,
-// 		String
-// 	]
-// }
-
 @JsonSerializable()
 class MultiSigCreateResponseDto {
   MultiSigCreateResponseDto({

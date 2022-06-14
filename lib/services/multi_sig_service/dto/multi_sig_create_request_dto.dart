@@ -2,15 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'multi_sig_create_request_dto.g.dart';
 
-// {
-// 	"name": String,
-// 	"publicKey": String,
-// 	"address: String,
-// 	"numOfAdditionalSigners": Int,
-// 	"threshold": Int,
-// 	"chainId": String
-// }
-
 @JsonSerializable()
 class MultiSigCreateRequestDto {
   MultiSigCreateRequestDto({
