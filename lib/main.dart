@@ -42,6 +42,8 @@ import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/governance_service/default_governance_service.dart';
+import 'package:provenance_wallet/services/governance_service/governance_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -408,6 +410,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => isMockingValidatorService
           ? MockValidatorService()
           : DefaultValidatorService(),
+    );
+
+    // final isMockingGovernanceService =
+    //     await keyValueService.getBool(PrefKey.isMockingGovernanceService) ??
+    //         false;
+    get.registerLazySingleton<GovernanceService>(
+      () => //isMockingGovernanceService
+          //? MockGovernanceService() :
+          DefaultGovernanceService(),
     );
     get.registerLazySingleton<ConnectivityService>(
       () => DefaultConnectivityService(),

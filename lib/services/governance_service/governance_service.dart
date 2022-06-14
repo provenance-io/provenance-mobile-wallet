@@ -22,6 +22,7 @@ abstract class GovernanceService {
   }
 
   Future<List<Vote>> getVotes(
+    int proposalId,
     Coin coin,
     int pageNumber,
   ) {
@@ -30,6 +31,7 @@ abstract class GovernanceService {
   }
 
   Future<List<Deposit>> getDeposits(
+    int proposalId,
     Coin coin,
     int pageNumber,
   ) {
