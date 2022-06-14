@@ -1,4 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_tab.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
@@ -15,10 +17,10 @@ class ExplorerScreen extends StatefulWidget {
 
   final TransactableAccount account;
   @override
-  State<StatefulWidget> createState() => HomeScreenState();
+  State<StatefulWidget> createState() => _ExplorerScreenState();
 }
 
-class HomeScreenState extends State<ExplorerScreen>
+class _ExplorerScreenState extends State<ExplorerScreen>
     with TickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   late TabController _tabController;
   int _currentTabIndex = 0;
@@ -30,6 +32,7 @@ class HomeScreenState extends State<ExplorerScreen>
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
     get.unregister<StakingFlowBloc>();
+    get.unregister<ProposalsBloc>();
 
     super.dispose();
   }
@@ -49,6 +52,9 @@ class HomeScreenState extends State<ExplorerScreen>
     final bloc = StakingFlowBloc(account: widget.account);
     get.registerSingleton<StakingFlowBloc>(bloc);
     bloc.load();
+    final gBloc = ProposalsBloc(account: widget.account);
+    get.registerSingleton<ProposalsBloc>(gBloc);
+    gBloc.load();
 
     super.initState();
   }
@@ -102,9 +108,7 @@ class HomeScreenState extends State<ExplorerScreen>
                 physics: NeverScrollableScrollPhysics(),
                 children: const [
                   StakingTab(),
-                  Center(
-                    child: PwText(Strings.proposals),
-                  ),
+                  ProposalsTab(),
                 ],
               ),
             ),

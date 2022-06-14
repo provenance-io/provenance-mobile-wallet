@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/governance_service/dtos/proposal_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Proposal {
   Proposal({required ProposalDto dto})
@@ -26,7 +27,10 @@ class Proposal {
         assert(dto.timings?.voting?.tally?.total?.count != null),
         assert(dto.timings?.voting?.tally?.total?.amount?.amount != null),
         proposalId = dto.header!.proposalId!,
-        status = dto.header!.status!,
+        status = dto.header!.status!
+            .replaceAll("PROPOSAL_STATUS_", "")
+            .toLowerCase()
+            .capitalize(),
         title = dto.header!.title!,
         description = dto.header!.description!,
         type = dto.header!.type!,

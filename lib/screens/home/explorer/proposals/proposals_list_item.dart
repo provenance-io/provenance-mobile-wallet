@@ -14,6 +14,7 @@ class ProposalListItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         // TODO: Navigate to ProposalDetails
+        print("Tapped!");
       },
       child: Padding(
         padding: EdgeInsets.zero,
@@ -22,27 +23,31 @@ class ProposalListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PwText(
-                    "${item.proposalId}. ${item.title}",
-                    style: PwTextStyle.bodyBold,
-                  ),
-                  VerticalSpacer.xSmall(),
-                  SizedBox(
-                    width: 180,
-                    child: PwText(
-                      item.status,
-                      color: PwColor.neutral200,
-                      style: PwTextStyle.footnote,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PwText(
+                      "${item.proposalId} ${item.title}",
+                      style: PwTextStyle.bodyBold,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
-                  ),
-                ],
+                    VerticalSpacer.xSmall(),
+                    SizedBox(
+                      width: 180,
+                      child: PwText(
+                        item.status,
+                        color: PwColor.neutral200,
+                        style: PwTextStyle.footnote,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Expanded(child: Container()),
+              //Expanded(child: Container()),
               Padding(
                 padding: EdgeInsets.only(left: 16),
                 child: PwIcon(
