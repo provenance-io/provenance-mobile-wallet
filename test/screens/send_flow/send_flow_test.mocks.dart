@@ -120,13 +120,14 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
       Invocation.getter(#events),
       returnValue: _FakeAccountServiceEvents_0()) as _i2.AccountServiceEvents);
   @override
-  _i7.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
-  @override
   _i7.Future<_i14.Account?> getAccount(String? id) => (super.noSuchMethod(
       Invocation.method(#getAccount, [id]),
       returnValue: Future<_i14.Account?>.value()) as _i7.Future<_i14.Account?>);
+  @override
+  _i7.Future<_i14.TransactableAccount?> selectFirstAccount() =>
+      (super.noSuchMethod(Invocation.method(#selectFirstAccount, []),
+              returnValue: Future<_i14.TransactableAccount?>.value())
+          as _i7.Future<_i14.TransactableAccount?>);
   @override
   _i7.Future<_i14.TransactableAccount?> selectAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
