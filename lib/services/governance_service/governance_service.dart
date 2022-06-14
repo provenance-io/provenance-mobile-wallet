@@ -1,4 +1,4 @@
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/block_height.dart';
 import 'package:provenance_wallet/services/models/deposit.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
