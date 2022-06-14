@@ -336,6 +336,7 @@ class SqliteAccountStorageService {
       name: name,
       publicKey: PublicKey.fromCompressPublicHex(
           convert.hex.decoder.convert(hex), coin),
+      linkedAccountIds: [],
     );
   }
 }

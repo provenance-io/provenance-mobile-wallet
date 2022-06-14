@@ -52,7 +52,7 @@ main() {
 
   group("addWallet", () {
     setUp(() {
-      when(mockAccountStorageServiceCore!.addAccount(
+      when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -81,7 +81,7 @@ main() {
         selectedCoin: selectedPrivateKey.coin,
       );
 
-      verify(mockAccountStorageServiceCore!.addAccount(
+      verify(mockAccountStorageServiceCore!.addBasicAccount(
         name: "New Name",
         publicKeys: publicKeys
             .map((e) => PublicKeyData(
@@ -108,7 +108,7 @@ main() {
       when(mockAccountStorageServiceCore!.removeAccount(id: anyNamed("id")))
           .thenAnswer((_) => Future.value(12));
 
-      when(mockAccountStorageServiceCore!.addAccount(
+      when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
@@ -123,7 +123,7 @@ main() {
       expect(result, null);
       verifyNoMoreInteractions(mockCipherService!);
 
-      verify(mockAccountStorageServiceCore!.addAccount(
+      verify(mockAccountStorageServiceCore!.addBasicAccount(
         name: "New Name",
         publicKeys: publicKeys
             .map((e) => PublicKeyData(
@@ -157,7 +157,7 @@ main() {
     test('add wallet error', () async {
       final exception = Exception("A");
 
-      when(mockAccountStorageServiceCore!.addAccount(
+      when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
         publicKeys: anyNamed("publicKeys"),
         selectedChainId: anyNamed("selectedChainId"),
