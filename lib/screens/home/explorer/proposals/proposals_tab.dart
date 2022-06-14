@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_list.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -63,27 +62,6 @@ class ProposalsTabState extends State<ProposalsTab> {
                       ),
                     ),
                     ProposalsList(),
-                    VerticalSpacer.medium(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Spacing.largeX3,
-                        vertical: Spacing.xLarge,
-                      ),
-                      child: Flexible(
-                        child: PwButton(
-                          onPressed: () {
-                            // TODO: Navigate to Submit New Proposal
-                          },
-                          child: PwText(
-                            "Submit New Proposal",
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            color: PwColor.neutralNeutral,
-                            style: PwTextStyle.body,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 );
               },
