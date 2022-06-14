@@ -19,11 +19,11 @@ import 'package:rxdart/rxdart.dart';
 class BasicAccountItem extends StatefulWidget {
   const BasicAccountItem({
     Key? key,
-    required Account account,
+    required BasicAccount account,
   })  : _initialAccount = account,
         super(key: key);
 
-  final Account _initialAccount;
+  final BasicAccount _initialAccount;
 
   @override
   State<BasicAccountItem> createState() => _BasicAccountItemState();
@@ -33,7 +33,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   final _subscriptions = CompositeSubscription();
   final _bloc = get<AccountsBloc>();
 
-  late Account _account;
+  late BasicAccount _account;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
     _bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
-          _account = e;
+          _account = e as BasicAccount;
         }
       });
     }).addTo(_subscriptions);
@@ -67,7 +67,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           isSelected: isSelected,
         ),
         AccountNetworkRow(
-          coin: account.publicKey!.coin,
+          coin: account.publicKey.coin,
         ),
       ],
       isSelected: isSelected,
@@ -81,7 +81,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
   Future<void> _showMenu(
     BuildContext context,
-    Account item,
+    BasicAccount item,
     bool isSelected,
   ) async {
     final showAdvancedUI =
@@ -106,13 +106,14 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
                 Navigator.of(context).pop(MenuOperation.rename);
               },
             ),
-            PwListDivider(),
-            PwGreyButton(
-              text: Strings.remove,
-              onPressed: () {
-                Navigator.of(context).pop(MenuOperation.delete);
-              },
-            ),
+            if (item.linkedAccountIds.isEmpty) PwListDivider(),
+            if (item.linkedAccountIds.isEmpty)
+              PwGreyButton(
+                text: Strings.remove,
+                onPressed: () {
+                  Navigator.of(context).pop(MenuOperation.delete);
+                },
+              ),
             if (!isSelected) PwListDivider(),
             if (!isSelected)
               PwGreyButton(
@@ -124,7 +125,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             if (showAdvancedUI) PwListDivider(),
             if (showAdvancedUI)
               PwGreyButton(
-                text: item.publicKey!.coin == Coin.mainNet
+                text: item.publicKey.coin == Coin.mainNet
                     ? Strings.profileMenuUseTestnet
                     : Strings.profileMenuUseMainnet,
                 onPressed: () {
@@ -165,7 +166,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       case MenuOperation.copy:
         await Clipboard.setData(
           ClipboardData(
-            text: item.publicKey!.address,
+            text: item.publicKey.address,
           ),
         );
         ScaffoldMessenger.of(context).showSnackBar(
@@ -198,7 +199,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         break;
       case MenuOperation.switchCoin:
         final coin =
-            item.publicKey!.coin == Coin.mainNet ? Coin.testNet : Coin.mainNet;
+            item.publicKey.coin == Coin.mainNet ? Coin.testNet : Coin.mainNet;
         await bloc.setAccountCoin(id: item.id, coin: coin);
         break;
       default:

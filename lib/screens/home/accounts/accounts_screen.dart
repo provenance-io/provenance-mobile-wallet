@@ -170,7 +170,7 @@ class AccountsScreenState extends State<AccountsScreen> {
     switch (account.kind) {
       case AccountKind.basic:
         item = BasicAccountItem(
-          account: account,
+          account: account as BasicAccount,
         );
         break;
       case AccountKind.multi:
