@@ -114,33 +114,24 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           {String? name,
           List<_i8.PublicKey>? publicKeys,
           _i8.Coin? coin,
-          String? linkedAccountId}) =>
+          String? linkedAccountId,
+          String? remoteId,
+          int? cosignerCount,
+          int? signaturesRequired,
+          List<String>? inviteLinks}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
                 #publicKeys: publicKeys,
                 #coin: coin,
-                #linkedAccountId: linkedAccountId
+                #linkedAccountId: linkedAccountId,
+                #remoteId: remoteId,
+                #cosignerCount: cosignerCount,
+                #signaturesRequired: signaturesRequired,
+                #inviteLinks: inviteLinks
               }),
               returnValue: Future<_i7.MultiAccount?>.value())
           as _i6.Future<_i7.MultiAccount?>);
-  @override
-  _i6.Future<_i7.PendingMultiAccount?> addPendingMultiAccount(
-          {String? name,
-          String? remoteId,
-          String? linkedAccountId,
-          int? cosignerCount,
-          int? signaturesRequired}) =>
-      (super.noSuchMethod(
-              Invocation.method(#addPendingMultiAccount, [], {
-                #name: name,
-                #remoteId: remoteId,
-                #linkedAccountId: linkedAccountId,
-                #cosignerCount: cosignerCount,
-                #signaturesRequired: signaturesRequired
-              }),
-              returnValue: Future<_i7.PendingMultiAccount?>.value())
-          as _i6.Future<_i7.PendingMultiAccount?>);
   @override
   _i6.Future<_i7.Account?> removeAccount({String? id}) => (super.noSuchMethod(
       Invocation.method(#removeAccount, [], {#id: id}),

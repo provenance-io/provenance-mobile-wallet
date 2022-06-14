@@ -125,12 +125,8 @@ class AccountStorageServiceImp implements AccountStorageService {
 
   @override
   Future<bool> removeAllAccounts() async {
-    final success = await _cipherService.resetKeys();
-    var count = 0;
-
-    if (success) {
-      count = await _serviceCore.removeAllAccounts();
-    }
+    await _cipherService.resetKeys();
+    final count = await _serviceCore.removeAllAccounts();
 
     return count != 0;
   }

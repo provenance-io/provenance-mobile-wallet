@@ -186,6 +186,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     String? key;
 
     final account = await getAccount(id: id);
+    final selectedAccountId = await _main.record(_keySelectedAccountId).get(db);
 
     if (account != null) {
       switch (account.kind) {
@@ -196,11 +197,24 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             break;
           }
 
-          key = await _basicAccounts.record(id).delete(db);
+          key = await db.transaction((tx) async {
+            if (account.id == selectedAccountId) {
+              // Remove selected account
+              await _main.record(_keySelectedAccountId).put(tx, '');
+            }
+
+            await _basicAccounts.record(id).delete(tx);
+          });
+
           break;
         case AccountKind.multi:
           final multiAccount = account as MultiAccount;
           key = await db.transaction((tx) async {
+            if (account.id == selectedAccountId) {
+              // Remove selected account
+              await _main.record(_keySelectedAccountId).put(tx, '');
+            }
+
             // Updated linked basic account
             final linkedAccount = await _basicAccounts
                 .record(multiAccount.linkedAccount.id)
@@ -239,6 +253,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     var count = 0;
 
     await db.transaction((tx) async {
+      await _main.record(_keySelectedAccountId).put(tx, '');
       final basic = await _basicAccounts.delete(tx);
       final multi = await _multiAccounts.delete(tx);
 
