@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 
 enum AccountKind {
   basic,
@@ -35,6 +34,7 @@ class BasicAccount with Diagnosticable implements TransactableAccount {
     required this.id,
     required this.name,
     required this.publicKey,
+    this.linkedAccountIds = const [],
   });
 
   @override
@@ -55,19 +55,23 @@ class BasicAccount with Diagnosticable implements TransactableAccount {
   @override
   final PublicKey publicKey;
 
+  final List<String> linkedAccountIds;
+
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hashAll([
         id,
         name,
         publicKey.address,
-      );
+        linkedAccountIds,
+      ]);
 
   @override
   bool operator ==(Object other) {
     return other is BasicAccount &&
         other.id == id &&
         other.name == name &&
-        other.publicKey.address == publicKey.address;
+        other.publicKey.address == publicKey.address &&
+        other.linkedAccountIds == linkedAccountIds;
   }
 
   @override
@@ -77,6 +81,8 @@ class BasicAccount with Diagnosticable implements TransactableAccount {
     properties.add(StringProperty('id', id));
     properties.add(StringProperty('address', publicKey.address));
     properties.add(StringProperty('name', name));
+    properties
+        .add(StringProperty('linkedAccountIds', linkedAccountIds.toString()));
   }
 }
 
@@ -85,6 +91,7 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
     required this.id,
     required this.name,
     required this.publicKey,
+    required this.linkedAccountId,
   });
 
   @override
@@ -105,19 +112,23 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
   @override
   final PublicKey publicKey;
 
+  final String linkedAccountId;
+
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hashAll([
         id,
         name,
         publicKey.address,
-      );
+        linkedAccountId,
+      ]);
 
   @override
   bool operator ==(Object other) {
-    return other is BasicAccount &&
+    return other is MultiAccount &&
         other.id == id &&
         other.name == name &&
-        other.publicKey.address == publicKey.address;
+        other.publicKey.address == publicKey.address &&
+        other.linkedAccountId == linkedAccountId;
   }
 
   @override
@@ -127,6 +138,7 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
     properties.add(StringProperty('id', id));
     properties.add(StringProperty('address', publicKey.address));
     properties.add(StringProperty('name', name));
+    properties.add(StringProperty('linkedAccountId', linkedAccountId));
   }
 }
 

@@ -55,8 +55,9 @@ abstract class AccountStorageService {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
+    required List<PublicKey> publicKeys,
     required Coin selectedCoin,
+    required String linkedAccountId,
   });
 
   Future<PendingMultiAccount?> addPendingMultiAccount({

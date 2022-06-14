@@ -123,6 +123,88 @@ void main() {
     expect(account, isNotNull);
     expect(account!.coin, newCoin);
   });
+
+  test('When multi-sig is added, linked account is updated', () async {
+    final datas = await _initAccounts(count: 1);
+    final account = datas.first;
+    final chainId = account.selectedKey.chainId;
+
+    final seed = Mnemonic.createSeed(['multi']);
+    final publicKeys = Coin.values
+        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
+        .toList();
+
+    final multiAccount = await service.addMultiAccount(
+      name: 'multi',
+      publicKeys: publicKeys,
+      selectedChainId: chainId,
+      linkedAccountId: account.id,
+    );
+
+    expect(multiAccount, isNotNull);
+
+    final linkedAccount = await service.getBasicAccount(id: account.id);
+    expect(linkedAccount, isNotNull);
+
+    final linkedAccountIds = linkedAccount!.linkedAccountIds;
+    expect(linkedAccountIds.contains(multiAccount!.id), isTrue);
+  });
+
+  test('When multi-sig is removed, linked account is updated', () async {
+    final datas = await _initAccounts(count: 1);
+    final account = datas.first;
+    final chainId = account.selectedKey.chainId;
+
+    final seed = Mnemonic.createSeed(['multi']);
+    final publicKeys = Coin.values
+        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
+        .toList();
+
+    final multiAccount = await service.addMultiAccount(
+      name: 'multi',
+      publicKeys: publicKeys,
+      selectedChainId: chainId,
+      linkedAccountId: account.id,
+    );
+
+    expect(multiAccount, isNotNull);
+
+    final count = await service.removeAccount(id: multiAccount!.id);
+    expect(count, 1);
+
+    final linkedAccount = await service.getBasicAccount(id: account.id);
+    expect(linkedAccount, isNotNull);
+
+    final linkedAccountIds = linkedAccount!.linkedAccountIds;
+    expect(linkedAccountIds, isEmpty);
+  });
+
+  test('Given account with multi-sig, linked account may not be deleted',
+      () async {
+    final datas = await _initAccounts(count: 1);
+    final account = datas.first;
+    final chainId = account.selectedKey.chainId;
+
+    final seed = Mnemonic.createSeed(['multi']);
+    final publicKeys = Coin.values
+        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
+        .toList();
+
+    final multiAccount = await service.addMultiAccount(
+      name: 'multi',
+      publicKeys: publicKeys,
+      selectedChainId: chainId,
+      linkedAccountId: account.id,
+    );
+
+    expect(multiAccount, isNotNull);
+
+    final linkedAccount = await service.getBasicAccount(id: account.id);
+    expect(linkedAccount, isNotNull);
+
+    final count = await service.removeAccount(id: linkedAccount!.id);
+    expect(count, isZero);
+  });
 }
 
 class _AccountData {
@@ -175,7 +257,7 @@ Future<List<_AccountData>> _initAccounts({
       );
     }
 
-    final details = await service.addAccount(
+    final details = await service.addBasicAccount(
       name: name,
       publicKeys: publicKeyDatas,
       selectedChainId: selectedChainId,

@@ -36,7 +36,7 @@ class AccountStorageServiceImp implements AccountStorageService {
 
     final selectedChainId = ChainId.forCoin(selectedCoin);
 
-    final details = await _serviceCore.addAccount(
+    final details = await _serviceCore.addBasicAccount(
       name: name,
       publicKeys: keyDatas,
       selectedChainId: selectedChainId,
@@ -68,13 +68,15 @@ class AccountStorageServiceImp implements AccountStorageService {
   @override
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
+    required List<PublicKey> publicKeys,
     required Coin selectedCoin,
+    required String linkedAccountId,
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
       publicKeys: publicKeys,
       selectedChainId: ChainId.forCoin(selectedCoin),
+      linkedAccountId: linkedAccountId,
     );
 
     return details;
