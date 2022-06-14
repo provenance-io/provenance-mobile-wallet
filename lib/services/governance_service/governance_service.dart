@@ -30,6 +30,15 @@ abstract class GovernanceService {
     throw Strings.notImplementedMessage;
   }
 
+  Future<List<Vote>> getVotesForAddress(
+    String address,
+    Coin coin,
+    int pageNumber,
+  ) {
+    // https://service-explorer.test.provenance.io/api/v2/gov/address/{address}/votes?count=50&page=1
+    throw Strings.notImplementedMessage;
+  }
+
   Future<List<Deposit>> getDeposits(
     int proposalId,
     Coin coin,

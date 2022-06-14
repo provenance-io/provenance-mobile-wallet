@@ -108,6 +108,43 @@ class DefaultGovernanceService extends GovernanceService
   }
 
   @override
+  Future<List<Vote>> getVotesForAddress(
+    String address,
+    Coin coin,
+    int pageNumber,
+  ) async {
+    final client = await getClient(coin);
+    final data = await client.get(
+      // FIXME: Replace this URL with the service's URL
+      'https://service-explorer.test.provenance.io/api/v2/gov/address/$address/votes?count=50&page=$pageNumber',
+      converter: (json) {
+        if (json is String) {
+          return <Vote>[];
+        }
+
+        final List<Vote> votes = [];
+
+        var dtos = VotesDto.fromJson(json);
+        var test = dtos.results?.map((t) {
+          return Vote(dto: t);
+        }).toList();
+
+        if (test == null) {
+          return <Vote>[];
+        }
+
+        votes.addAll(test);
+
+        return votes;
+      },
+    );
+
+    notifyOnError(data);
+
+    return data.data ?? [];
+  }
+
+  @override
   Future<List<Deposit>> getDeposits(
     int proposalId,
     Coin coin,
