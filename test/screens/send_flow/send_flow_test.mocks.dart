@@ -9,12 +9,10 @@ import 'package:provenance_dart/proto.dart' as _i4;
 import 'package:provenance_dart/wallet.dart' as _i9;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart'
-    as _i15;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i16;
+    as _i15;
 import 'package:provenance_wallet/services/asset_service/asset_service.dart'
     as _i6;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
@@ -22,12 +20,12 @@ import 'package:provenance_wallet/services/models/account.dart' as _i14;
 import 'package:provenance_wallet/services/models/asset.dart' as _i8;
 import 'package:provenance_wallet/services/models/asset_graph_item.dart'
     as _i10;
-import 'package:provenance_wallet/services/models/price.dart' as _i18;
+import 'package:provenance_wallet/services/models/price.dart' as _i17;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i17;
+    as _i16;
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
     as _i11;
 
@@ -174,11 +172,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
   @override
   _i7.Future<_i14.MultiAccount?> addMultiAccount(
           {String? name,
-          List<_i15.PublicKeyData>? publicKeys,
-          _i9.Coin? coin}) =>
+          List<_i9.PublicKey>? publicKeys,
+          _i9.Coin? coin,
+          String? linkedAccountId}) =>
       (super.noSuchMethod(
-              Invocation.method(#addMultiAccount, [],
-                  {#name: name, #publicKeys: publicKeys, #coin: coin}),
+              Invocation.method(#addMultiAccount, [], {
+                #name: name,
+                #publicKeys: publicKeys,
+                #coin: coin,
+                #linkedAccountId: linkedAccountId
+              }),
               returnValue: Future<_i14.MultiAccount?>.value())
           as _i7.Future<_i14.MultiAccount?>);
   @override
@@ -222,16 +225,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i16.TransactionHandler {
+    implements _i15.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Stream<_i16.TransactionResponse> get transaction =>
+  _i7.Stream<_i15.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i16.TransactionResponse>.empty())
-          as _i7.Stream<_i16.TransactionResponse>);
+              returnValue: Stream<_i15.TransactionResponse>.empty())
+          as _i7.Stream<_i15.TransactionResponse>);
   @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
           _i4.TxBody? txBody, _i9.PublicKey? publicKey) =>
@@ -254,18 +257,18 @@ class MockTransactionHandler extends _i1.Mock
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i17.PriceService {
+class MockPriceService extends _i1.Mock implements _i16.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i18.Price>> getAssetPrices(
+  _i7.Future<List<_i17.Price>> getAssetPrices(
           _i9.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: Future<List<_i18.Price>>.value(<_i18.Price>[]))
-          as _i7.Future<List<_i18.Price>>);
+              returnValue: Future<List<_i17.Price>>.value(<_i17.Price>[]))
+          as _i7.Future<List<_i17.Price>>);
   @override
   _i7.Future<_i5.HttpClient> getClient(_i9.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),

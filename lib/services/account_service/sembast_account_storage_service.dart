@@ -96,7 +96,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<BasicAccount?> addAccount({
+  Future<BasicAccount?> addBasicAccount({
     required String name,
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
@@ -111,6 +111,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
               ))
           .toList(),
       selectedChainId: selectedChainId,
+      linkedAccountIds: [],
     );
     final id = await _basicAccounts.add(
       db,
@@ -191,13 +192,45 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     String? key;
 
     final account = await getAccount(id: id);
+
     if (account != null) {
       switch (account.kind) {
         case AccountKind.basic:
+          final basic = account as BasicAccount;
+          if (basic.linkedAccountIds.isNotEmpty) {
+            // If linked, cannot delete
+            break;
+          }
+
           key = await _basicAccounts.record(id).delete(db);
           break;
         case AccountKind.multi:
-          key = await _multiAccounts.record(id).delete(db);
+          final multiAccount = account as MultiAccount;
+          key = await db.transaction((tx) async {
+            // Updated linked basic account
+            final linkedAccount = await _basicAccounts
+                .record(multiAccount.linkedAccountId)
+                .get(tx);
+
+            if (linkedAccount != null) {
+              final linkedAccountModel =
+                  v1.SembastAccountModel.fromRecord(linkedAccount);
+              final linkedAccountIds = linkedAccountModel.linkedAccountIds
+                ..remove(multiAccount.id);
+
+              await _basicAccounts.update(
+                tx,
+                linkedAccountModel
+                    .copyWith(
+                      linkedAccountIds: linkedAccountIds,
+                    )
+                    .toRecord(),
+              );
+            }
+
+            // Delete record
+            return await _multiAccounts.record(id).delete(tx);
+          });
           break;
         case AccountKind.pendingMulti:
           key = await _pendingMultiAccounts.record(id).delete(db);
@@ -211,11 +244,18 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   @override
   Future<int> removeAllAccounts() async {
     final db = await _db;
-    final basic = await _basicAccounts.delete(db);
-    final multi = await _multiAccounts.delete(db);
-    final pending = await _pendingMultiAccounts.delete(db);
 
-    return basic + multi + pending;
+    var count = 0;
+
+    await db.transaction((tx) async {
+      final basic = await _basicAccounts.delete(tx);
+      final multi = await _multiAccounts.delete(tx);
+      final pending = await _pendingMultiAccounts.delete(tx);
+
+      count = basic + multi + pending;
+    });
+
+    return count;
   }
 
   @override
@@ -343,24 +383,53 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   @override
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
+    required List<PublicKey> publicKeys,
     required String selectedChainId,
+    required String linkedAccountId,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
       name: name,
       publicKeys: publicKeys
           .map((e) => v1.SembastPublicKeyModel(
-                hex: e.hex,
-                chainId: e.chainId,
+                hex: e.compressedPublicKeyHex,
+                chainId: ChainId.forCoin(e.coin),
               ))
           .toList(),
       selectedChainId: selectedChainId,
+      linkedAccountId: linkedAccountId,
     );
-    final id = await _multiAccounts.add(
-      db,
-      model.toRecord(),
-    );
+
+    final id = await db.transaction((tx) async {
+      // Add multi-account
+      final multiAccountId = await _multiAccounts.add(
+        tx,
+        model.toRecord(),
+      );
+
+      // Updated linked basic account
+      final linkedAccount =
+          await _basicAccounts.record(linkedAccountId).get(tx);
+      if (linkedAccount != null) {
+        final linkedAccountModel =
+            v1.SembastAccountModel.fromRecord(linkedAccount);
+        final linkedAccountIds = linkedAccountModel.linkedAccountIds
+          ..add(multiAccountId)
+          ..toSet()
+          ..toList();
+
+        await _basicAccounts.update(
+          tx,
+          linkedAccountModel
+              .copyWith(
+                linkedAccountIds: linkedAccountIds,
+              )
+              .toRecord(),
+        );
+      }
+
+      return multiAccountId;
+    });
 
     return getMultiAccount(id: id);
   }
@@ -468,6 +537,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       id: id,
       name: model.name,
       publicKey: publicKey,
+      linkedAccountIds: model.linkedAccountIds,
     );
   }
 
@@ -492,6 +562,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       id: id,
       name: model.name,
       publicKey: publicKey,
+      linkedAccountId: model.linkedAccountId,
     );
   }
 
