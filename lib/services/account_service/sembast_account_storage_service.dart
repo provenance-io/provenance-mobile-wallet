@@ -203,7 +203,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
               await _main.record(_keySelectedAccountId).put(tx, '');
             }
 
-            await _basicAccounts.record(id).delete(tx);
+            return await _basicAccounts.record(id).delete(tx);
           });
 
           break;
