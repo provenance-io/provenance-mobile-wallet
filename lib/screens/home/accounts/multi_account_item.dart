@@ -9,14 +9,14 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class PendingAccountItem extends StatelessWidget {
-  const PendingAccountItem({
-    required PendingMultiAccount account,
+class MultiAccountItem extends StatelessWidget {
+  const MultiAccountItem({
+    required MultiAccount account,
     Key? key,
   })  : _account = account,
         super(key: key);
 
-  final PendingMultiAccount _account;
+  final MultiAccount _account;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,12 @@ class PendingAccountItem extends StatelessWidget {
                 kind: _account.kind,
                 isSelected: isSelected,
               ),
-              PwText(
-                Strings.accountStatusPending,
-                style: PwTextStyle.bodySmall,
-                color: PwColor.neutralNeutral,
-              ),
+              if (_account.publicKey == null)
+                PwText(
+                  Strings.accountStatusPending,
+                  style: PwTextStyle.bodySmall,
+                  color: PwColor.neutralNeutral,
+                ),
             ],
             isSelected: isSelected,
             onShowMenu: () => _showMenu(
@@ -55,7 +56,7 @@ class PendingAccountItem extends StatelessWidget {
               indent: 24,
               color: Theme.of(context).colorScheme.neutral750),
           LinkedAccount(
-            name: _account.linkedAccountName,
+            name: _account.linkedAccount.name,
             isSelected: isSelected,
           ),
         ],
@@ -65,7 +66,7 @@ class PendingAccountItem extends StatelessWidget {
 
   Future<void> _showMenu(
     BuildContext context,
-    PendingMultiAccount item,
+    MultiAccount item,
     bool isSelected,
   ) async {
     var result = await showModalBottomSheet<MenuOperation>(

@@ -11,7 +11,7 @@ class ReceiveFlow extends FlowBase {
     Key? key,
   }) : super(key: key);
 
-  final TransactableAccount _accountDetails;
+  final Account _accountDetails;
 
   @override
   State<StatefulWidget> createState() => ReceiveFlowState();

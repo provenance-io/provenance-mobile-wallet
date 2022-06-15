@@ -36,8 +36,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
       _basicAccounts = stringMapStoreFactory.store('accounts');
       _multiAccounts = stringMapStoreFactory.store('multi_accounts');
-      _pendingMultiAccounts =
-          stringMapStoreFactory.store('pending_multi_accounts');
 
       final db = await factory.openDatabase(
         path,
@@ -65,7 +63,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   final DatabaseFactory _factory;
   late final StoreRef<String, Map<String, Object?>> _basicAccounts;
   late final StoreRef<String, Map<String, Object?>> _multiAccounts;
-  late final StoreRef<String, Map<String, Object?>> _pendingMultiAccounts;
   late final StoreRef<String, String?> _main;
   late final Future<Database> _db;
 
@@ -127,7 +124,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }) async {
     Account? account = await getBasicAccount(id: id);
     account ??= await getMultiAccount(id: id);
-    account ??= await getPendingMultiAccount(id: id);
 
     return account;
   }
@@ -161,23 +157,21 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   Future<List<Account>> getAccounts() async {
     final basic = await getBasicAccounts();
     final multi = await getMultiAccounts();
-    final pending = await getPendingMultiAccounts();
 
     return [
       ...basic,
       ...multi,
-      ...pending,
     ];
   }
 
   @override
-  Future<TransactableAccount?> getSelectedAccount() async {
+  Future<Account?> getSelectedAccount() async {
     final db = await _db;
     final selectedId = await _main.record(_keySelectedAccountId).get(db);
 
-    TransactableAccount? account;
+    Account? account;
     if (selectedId != null && selectedId.isNotEmpty) {
-      account = await getAccount(id: selectedId) as TransactableAccount?;
+      account = await getAccount(id: selectedId);
     }
 
     return account;
@@ -192,6 +186,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     String? key;
 
     final account = await getAccount(id: id);
+    final selectedAccountId = await _main.record(_keySelectedAccountId).get(db);
 
     if (account != null) {
       switch (account.kind) {
@@ -202,14 +197,27 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             break;
           }
 
-          key = await _basicAccounts.record(id).delete(db);
+          key = await db.transaction((tx) async {
+            if (account.id == selectedAccountId) {
+              // Remove selected account
+              await _main.record(_keySelectedAccountId).put(tx, '');
+            }
+
+            return await _basicAccounts.record(id).delete(tx);
+          });
+
           break;
         case AccountKind.multi:
           final multiAccount = account as MultiAccount;
           key = await db.transaction((tx) async {
+            if (account.id == selectedAccountId) {
+              // Remove selected account
+              await _main.record(_keySelectedAccountId).put(tx, '');
+            }
+
             // Updated linked basic account
             final linkedAccount = await _basicAccounts
-                .record(multiAccount.linkedAccountId)
+                .record(multiAccount.linkedAccount.id)
                 .get(tx);
 
             if (linkedAccount != null) {
@@ -232,9 +240,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             return await _multiAccounts.record(id).delete(tx);
           });
           break;
-        case AccountKind.pendingMulti:
-          key = await _pendingMultiAccounts.record(id).delete(db);
-          break;
       }
     }
 
@@ -248,22 +253,22 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     var count = 0;
 
     await db.transaction((tx) async {
+      await _main.record(_keySelectedAccountId).put(tx, '');
       final basic = await _basicAccounts.delete(tx);
       final multi = await _multiAccounts.delete(tx);
-      final pending = await _pendingMultiAccounts.delete(tx);
 
-      count = basic + multi + pending;
+      count = basic + multi;
     });
 
     return count;
   }
 
   @override
-  Future<TransactableAccount?> renameAccount({
+  Future<Account?> renameAccount({
     required String id,
     required String name,
   }) async {
-    TransactableAccount? updatedAccount;
+    Account? updatedAccount;
 
     final account = await getAccount(id: id);
     if (account != null) {
@@ -292,12 +297,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             final updated =
                 await ref.update(db, old.copyWith(name: name).toRecord());
             if (updated != null) {
-              updatedAccount = _toMulti(id, updated);
+              updatedAccount = await _toMulti(id, updated);
             }
           }
           break;
-        case AccountKind.pendingMulti:
-          throw 'Rename not supported for ${account.kind}';
       }
     }
 
@@ -305,15 +308,15 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<TransactableAccount?> selectAccount({
+  Future<Account?> selectAccount({
     String? id,
   }) async {
     final db = await _db;
 
-    TransactableAccount? account;
+    Account? account;
 
     if (id != null) {
-      account = await getAccount(id: id) as TransactableAccount?;
+      account = await getAccount(id: id);
     }
 
     var success = false;
@@ -327,11 +330,11 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<TransactableAccount?> setChainId({
+  Future<Account?> setChainId({
     required String id,
     required String chainId,
   }) async {
-    TransactableAccount? updatedAccount;
+    Account? updatedAccount;
 
     final account = await getAccount(id: id);
     if (account != null) {
@@ -368,12 +371,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
               updatedModel.toRecord(),
             );
             if (updatedRec != null) {
-              updatedAccount = _toMulti(id, updatedRec);
+              updatedAccount = await _toMulti(id, updatedRec);
             }
           }
           break;
-        case AccountKind.pendingMulti:
-          throw 'setChainId not supported for ${account.kind}';
       }
     }
 
@@ -386,6 +387,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required List<PublicKey> publicKeys,
     required String selectedChainId,
     required String linkedAccountId,
+    required String remoteId,
+    required int cosignerCount,
+    required int signaturesRequired,
+    required List<String> inviteLinks,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
@@ -398,6 +403,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           .toList(),
       selectedChainId: selectedChainId,
       linkedAccountId: linkedAccountId,
+      remoteId: remoteId,
+      cosignerCount: cosignerCount,
+      signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
 
     final id = await db.transaction((tx) async {
@@ -435,31 +444,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<PendingMultiAccount?> addPendingMultiAccount({
-    required String name,
-    required String remoteId,
-    required String linkedAccountId,
-    required int cosignerCount,
-    required int signaturesRequired,
-  }) async {
-    final db = await _db;
-
-    final model = v1.SembastPendingMultiAccountModel(
-      name: name,
-      remoteId: remoteId,
-      linkedAccountId: linkedAccountId,
-      cosignerCount: cosignerCount,
-      signaturesRequired: signaturesRequired,
-    );
-    final id = await _pendingMultiAccounts.add(
-      db,
-      model.toRecord(),
-    );
-
-    return getPendingMultiAccount(id: id);
-  }
-
-  @override
   Future<MultiAccount?> getMultiAccount({
     required String id,
   }) async {
@@ -468,7 +452,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
     final rec = await _multiAccounts.record(id).get(db);
     if (rec != null) {
-      details = _toMulti(id, rec);
+      details = await _toMulti(id, rec);
     }
 
     return details;
@@ -479,41 +463,13 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     final db = await _db;
     final recs = await _multiAccounts.find(db);
 
-    return recs.map((e) {
-      return _toMulti(e.key, e.value);
-    }).toList();
-  }
-
-  @override
-  Future<PendingMultiAccount?> getPendingMultiAccount({
-    required String id,
-  }) async {
-    final db = await _db;
-    PendingMultiAccount? account;
-
-    final rec = await _pendingMultiAccounts.record(id).get(db);
-    if (rec != null) {
-      account = await _toPendingMulti(id, rec);
-    }
-
-    return account;
-  }
-
-  @override
-  Future<List<PendingMultiAccount>> getPendingMultiAccounts() async {
-    final db = await _db;
-    final recs = await _pendingMultiAccounts.find(db);
-
-    final accounts = <PendingMultiAccount>[];
-
+    final results = <MultiAccount>[];
     for (var rec in recs) {
-      final account = await _toPendingMulti(rec.key, rec.value);
-      if (account != null) {
-        accounts.add(account);
-      }
+      final multi = await _toMulti(rec.key, rec.value);
+      results.add(multi);
     }
 
-    return accounts;
+    return results;
   }
 
   BasicAccount _toBasic(String id, Map<String, Object?> value) {
@@ -541,9 +497,11 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     );
   }
 
-  MultiAccount _toMulti(String id, Map<String, Object?> value) {
+  Future<MultiAccount> _toMulti(String id, Map<String, Object?> value) async {
     final model = v1.SembastMultiAccountModel.fromRecord(value);
     final chainId = model.selectedChainId;
+
+    final linkedAccount = await getBasicAccount(id: model.linkedAccountId);
 
     var hex = '';
 
@@ -562,29 +520,11 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       id: id,
       name: model.name,
       publicKey: publicKey,
-      linkedAccountId: model.linkedAccountId,
+      linkedAccount: linkedAccount!,
+      remoteId: model.remoteId,
+      cosignerCount: model.cosignerCount,
+      signaturesRequired: model.signaturesRequired,
+      inviteLinks: model.inviteLinks,
     );
-  }
-
-  Future<PendingMultiAccount?> _toPendingMulti(
-      String id, Map<String, Object?> value) async {
-    PendingMultiAccount? account;
-
-    final model = v1.SembastPendingMultiAccountModel.fromRecord(value);
-
-    final linkedAccount = await getAccount(id: model.linkedAccountId);
-    if (linkedAccount != null) {
-      account = PendingMultiAccount(
-        id: id,
-        name: model.name,
-        remoteId: model.remoteId,
-        linkedAccountId: model.linkedAccountId,
-        linkedAccountName: linkedAccount.name,
-        cosignerCount: model.cosignerCount,
-        signaturesRequired: model.signaturesRequired,
-      );
-    }
-
-    return account;
   }
 }

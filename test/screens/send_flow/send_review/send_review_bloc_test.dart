@@ -144,7 +144,7 @@ void main() {
 
       final msg = txBody.messages[0];
       final sendMsg = bank.MsgSend.fromBuffer(msg.value);
-      expect(sendMsg.fromAddress, accountDetails.address);
+      expect(sendMsg.fromAddress, accountDetails.publicKey.address);
       expect(sendMsg.toAddress, receivingAddress);
       expect(sendMsg.amount.length, 1);
       expect(sendMsg.amount[0].denom, dollarAsset.denom);

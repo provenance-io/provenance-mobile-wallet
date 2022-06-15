@@ -148,7 +148,7 @@ class AddAccountFlowBloc implements Disposable {
   AccountAddKind? _addKind;
 
   BiometryType? _biometryType;
-  TransactableAccount? _multiSigLinkedAccount;
+  Account? _multiSigLinkedAccount;
 
   @override
   void onDispose() {
@@ -381,7 +381,7 @@ class AddAccountFlowBloc implements Disposable {
       context,
     );
 
-    TransactableAccount? details;
+    Account? details;
 
     final enrolled = await get<LocalAuthHelper>().enroll(
       _pin.join(),
@@ -465,7 +465,7 @@ class AddAccountFlowBloc implements Disposable {
     }
   }
 
-  void submitMultiSigConnect(TransactableAccount? account) {
+  void submitMultiSigConnect(Account? account) {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
@@ -497,31 +497,46 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitMultiSigConfirm(BuildContext context) async {
     ModalLoadingRoute.showLoading('', context);
 
-    final id = await get<MultiSigService>().register(
+    final invite = await get<MultiSigService>().createInvite(
+      name: _multiSigName.value,
+      linkedPublicKey: _multiSigLinkedAccount!.publicKey!,
       cosignerCount: _multiSigCosignerCount.value.value,
+      threshold: _multiSigSignatureCount.value.value,
     );
 
-    await _accountService.addPendingMultiAccount(
-      name: _multiSigName.value,
-      remoteId: id,
-      linkedAccountId: _multiSigLinkedAccount!.id,
-      cosignerCount: _multiSigCosignerCount.value.value,
-      signaturesRequired: _multiSigSignatureCount.value.value,
-    );
+    String? id;
+
+    if (invite != null) {
+      final account = await _accountService.addMultiAccount(
+        name: _multiSigName.value,
+        coin: _multiSigLinkedAccount!.publicKey!.coin,
+        publicKeys: [],
+        remoteId: invite.id,
+        inviteLinks: invite.inviteLinks,
+        linkedAccountId: _multiSigLinkedAccount!.id,
+        cosignerCount: _multiSigCosignerCount.value.value,
+        signaturesRequired: _multiSigSignatureCount.value.value,
+      );
+
+      id = account?.id;
+    }
 
     ModalLoadingRoute.dismiss(context);
 
     _navigator.endFlow();
-    Navigator.of(
-      context,
-      rootNavigator: true,
-    ).push(
-      MultiSigCreationStatus(
-        accountId: id,
-      ).route(
-        fullScreenDialog: true,
-      ),
-    );
+
+    if (id != null) {
+      Navigator.of(
+        context,
+        rootNavigator: true,
+      ).push(
+        MultiSigCreationStatus(
+          accountId: id,
+        ).route(
+          fullScreenDialog: true,
+        ),
+      );
+    }
   }
 
   Future<Coin> _defaultCoin() async {

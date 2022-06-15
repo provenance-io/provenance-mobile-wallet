@@ -24,7 +24,7 @@ void main() {
     });
 
     final initial = service.events.selected.value!;
-    expect(initial.coin, initialCoin);
+    expect(initial.publicKey!.coin, initialCoin);
 
     const updatedCoin = Coin.testNet;
     final updated =
@@ -32,8 +32,8 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(updated!.coin, updatedCoin);
-    expect(service.events.selected.value!.coin, updatedCoin);
+    expect(updated!.publicKey!.coin, updatedCoin);
+    expect(service.events.selected.value!.publicKey!.coin, updatedCoin);
     expect(calledUpdate, isTrue);
   });
 

@@ -24,6 +24,6 @@ main() {
   test("state", () async {
     final state = await bloc!.stream.first;
 
-    expect(state.accountAddress, walletDetails.address);
+    expect(state.accountAddress, walletDetails.publicKey.address);
   });
 }

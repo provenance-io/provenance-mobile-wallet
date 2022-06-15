@@ -111,7 +111,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   );
                 },
               ),
-              StreamBuilder<TransactableAccount?>(
+              StreamBuilder<Account?>(
                 stream: get<AccountService>().events.selected,
                 initialData: null,
                 builder: (context, snapshot) {

@@ -136,13 +136,13 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
         }
 
         assetList = await _assetService.getAssets(
-          account.coin,
-          account.address,
+          account.publicKey!.coin,
+          account.publicKey!.address,
         );
 
         transactions = await _transactionService.getTransactions(
-          account.coin,
-          account.address,
+          account.publicKey!.coin,
+          account.publicKey!.address,
           _transactionPages.value,
         );
       }
@@ -151,7 +151,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
       _transactionDetails.tryAdd(
         TransactionDetails(
-          address: account?.address ?? '',
+          address: account?.publicKey?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
         ),
@@ -175,8 +175,8 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
     if (account != null) {
       final newTransactions = await _transactionService.getTransactions(
-        account.coin,
-        account.address,
+        account.publicKey!.coin,
+        account.publicKey!.address,
         _transactionPages.value,
       );
       if (newTransactions.isNotEmpty) {
@@ -186,7 +186,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
 
     _transactionDetails.tryAdd(
       TransactionDetails(
-        address: account?.address ?? '',
+        address: account?.publicKey?.address ?? '',
         filteredTransactions: oldDetails.filteredTransactions,
         transactions: transactions.toList(),
       ),
@@ -215,7 +215,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
           .toList();
     }
     _transactionDetails.tryAdd(TransactionDetails(
-      address: _accountService.events.selected.value?.address ?? "",
+      address: _accountService.events.selected.value?.publicKey?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,
@@ -266,7 +266,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
       walletInfo: WalletInfo(
         accountDetails.id,
         accountDetails.name,
-        accountDetails.coin,
+        accountDetails.publicKey!.coin,
       ),
     );
     final session = WalletConnectSession(
@@ -419,7 +419,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     );
   }
 
-  Future<TransactableAccount?> setAccountCoin({
+  Future<Account?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -457,7 +457,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  void _onSelected(TransactableAccount? details) {
+  void _onSelected(Account? details) {
     load();
   }
 
