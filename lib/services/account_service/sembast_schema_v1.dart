@@ -57,7 +57,9 @@ class SembastAccountModel {
             .map((e) => SembastPublicKeyModel.fromRecord(e))
             .toList(),
         selectedChainId: rec['selectedChainId'] as String,
-        linkedAccountIds: (rec['linkedAccounts'] as List<dynamic>)
+        linkedAccountIds: (!rec.containsKey('linkedAccounts')
+                ? []
+                : rec['linkedAccounts'] as List<dynamic>)
             .map((e) => e as String)
             .toList(),
       );
