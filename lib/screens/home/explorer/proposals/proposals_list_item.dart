@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals/proposal_details_screen.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 
@@ -14,7 +15,17 @@ class ProposalListItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         // TODO: Navigate to ProposalDetails
-        print("Tapped!");
+        final now = DateTime.now().toUtc();
+        print("Now: $now");
+        print("StartTime: ${item.startTime}");
+        print("EndTime: ${item.endTime}");
+        print("StartTime is in past: ${now.compareTo(item.startTime) == 1}");
+        print(
+            "EndTime has been reached: ${now.compareTo(item.startTime) == 1}");
+        print("-------------------------------------------------------");
+        Navigator.of(context).push(
+          ProposalDetailsScreen(selectedProposal: item).route(),
+        );
       },
       child: Padding(
         padding: EdgeInsets.zero,
