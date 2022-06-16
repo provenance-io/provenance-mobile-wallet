@@ -55,7 +55,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
               //   return
               Scaffold(
             appBar: PwAppBar(
-              title: "Proposal ${widget.selectedProposal.proposalId}",
+              title: Strings.proposalDetailsTitle(
+                  widget.selectedProposal.proposalId),
               leadingIcon: PwIcons.back,
             ),
             body: ListView(
@@ -66,7 +67,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     vertical: Spacing.xLarge,
                   ),
                   child: PwText(
-                    "Proposal Information",
+                    Strings.proposalDetailsProposalInformation,
                     style: PwTextStyle.title,
                   ),
                 ),
@@ -74,28 +75,28 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "ID",
+                  title: Strings.proposalDetailsId,
                   endChild: PwText("${widget.selectedProposal.proposalId}"),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Title",
+                  title: Strings.proposalDetailsTitleString,
                   endChild: PwText(widget.selectedProposal.title),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Status",
+                  title: Strings.proposalDetailsStatus,
                   endChild: PwText(widget.selectedProposal.status),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Proposer",
+                  title: Strings.proposalDetailsProposer,
                   endChild: PwText(widget.selectedProposal.proposerAddress
                       .abbreviateAddress()),
                 ),
@@ -103,7 +104,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Description",
+                  title: Strings.proposalDetailsDescription,
                   needsExpansion: false,
                   endChild: Expanded(
                     child: Column(
@@ -124,7 +125,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     vertical: Spacing.xLarge,
                   ),
                   child: PwText(
-                    "Proposal Timing",
+                    Strings.proposalDetailsProposalTiming,
                     style: PwTextStyle.title,
                   ),
                 ),
@@ -132,7 +133,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Submit Time",
+                  title: Strings.proposalDetailsSubmitTime,
                   endChild: PwText(
                       _formatter.format(widget.selectedProposal.submitTime)),
                 ),
@@ -140,7 +141,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Deposit End Time",
+                  title: Strings.proposalDetailsDepositEndTime,
                   endChild: PwText(_formatter
                       .format(widget.selectedProposal.depositEndTime)),
                 ),
@@ -148,7 +149,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Voting Start Time",
+                  title: Strings.proposalDetailsVotingStartTime,
                   endChild: PwText(widget.selectedProposal.startTime.year == 1
                       ? "--"
                       : _formatter.format(widget.selectedProposal.startTime)),
@@ -157,7 +158,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Voting End Time",
+                  title: Strings.proposalDetailsVotingEndTime,
                   endChild: PwText(widget.selectedProposal.endTime.year == 1
                       ? "--"
                       : _formatter.format(widget.selectedProposal.endTime)),
@@ -171,10 +172,11 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     right: Spacing.largeX3,
                     top: Spacing.xLarge,
                   ),
-                  title: "Deposits",
-                  endChild: PwText(
-                    "${widget.selectedProposal.currentDepositFormatted} hash (${widget.selectedProposal.depositPercentage})",
-                  ),
+                  title: Strings.proposalDetailsDeposits,
+                  endChild: PwText(Strings.proposalDetailsDepositsHash(
+                    widget.selectedProposal.currentDepositFormatted,
+                    widget.selectedProposal.depositPercentage,
+                  )),
                 ),
                 DepositBarChart(
                   widget.selectedProposal.currentDepositFormatted,
@@ -184,7 +186,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Quorum Threshold",
+                  title: Strings.proposalDetailsQuorumThreshold,
                   endChild: PwText(
                     "${(widget.selectedProposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                   ),
@@ -193,7 +195,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Pass Threshold",
+                  title: Strings.proposalDetailsPassThreshold,
                   endChild: PwText(
                     "${(widget.selectedProposal.passThreshold * 100).toStringAsFixed(2)}%",
                   ),
@@ -202,7 +204,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Veto Threshold",
+                  title: Strings.proposalDetailsVetoThreshold,
                   endChild: PwText(
                     "${(widget.selectedProposal.vetoThreshold * 100).toStringAsFixed(2)}%",
                   ),
@@ -216,7 +218,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     right: Spacing.largeX3,
                     top: Spacing.xLarge,
                   ),
-                  title: "Percent Voted",
+                  title: Strings.proposalDetailsPercentVoted,
                   endChild: PwText(
                     widget.selectedProposal.votePercentage,
                   ),
@@ -229,7 +231,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
-                  title: "Total Votes",
+                  title: Strings.proposalDetailsTotalVotes,
                   endChild: PwText(
                     widget.selectedProposal.totalAmount
                         .toInt()
@@ -250,28 +252,28 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           color: Theme.of(context).colorScheme.primary550,
                         ),
                         PwText(
-                          "Yes",
+                          Strings.proposalDetailsYes,
                         ),
                         HorizontalSpacer.large(),
                         ColorKey(
                           color: Theme.of(context).colorScheme.error,
                         ),
                         PwText(
-                          "No",
+                          Strings.proposalDetailsNo,
                         ),
                         HorizontalSpacer.large(),
                         ColorKey(
                           color: Theme.of(context).colorScheme.notice350,
                         ),
                         PwText(
-                          "No With Veto",
+                          Strings.proposalDetailsNoWithVeto,
                         ),
                         HorizontalSpacer.large(),
                         ColorKey(
                           color: Theme.of(context).colorScheme.neutral600,
                         ),
                         PwText(
-                          "Abstain",
+                          Strings.proposalDetailsAbstain,
                         ),
                       ],
                     ),
