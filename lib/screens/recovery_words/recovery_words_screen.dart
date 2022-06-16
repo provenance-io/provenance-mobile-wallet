@@ -7,16 +7,17 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words/words_table.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsScreen extends StatefulWidget {
   const RecoveryWordsScreen({
+    required this.bloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc bloc;
   final int currentStep;
   final int totalSteps;
 
@@ -28,7 +29,6 @@ class RecoveryWordsScreen extends StatefulWidget {
 
 class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _bloc = get<AddAccountFlowBloc>();
 
   List<String> words = [];
 
@@ -142,7 +142,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () {
-                _bloc.submitRecoveryWords(words);
+                widget.bloc.submitRecoveryWords(words);
               },
             ),
           ),

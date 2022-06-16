@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -28,12 +27,11 @@ class AccountNameScreen extends StatefulWidget {
   factory AccountNameScreen.single({
     required FieldMode mode,
     required String leadingIcon,
+    required AddAccountFlowBloc bloc,
     int? currentStep,
     int? totalSteps,
     Key? key,
   }) {
-    final bloc = get<AddAccountFlowBloc>();
-
     return AccountNameScreen(
       mode: mode,
       leadingIcon: leadingIcon,
@@ -49,12 +47,11 @@ class AccountNameScreen extends StatefulWidget {
   factory AccountNameScreen.multi({
     required FieldMode mode,
     required String leadingIcon,
+    required AddAccountFlowBloc bloc,
     int? currentStep,
     int? totalSteps,
     Key? key,
   }) {
-    final bloc = get<AddAccountFlowBloc>();
-
     bool pop;
     void Function(String name) submit;
 

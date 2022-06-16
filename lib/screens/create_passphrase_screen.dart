@@ -4,23 +4,22 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePassphraseScreen extends StatelessWidget {
   const CreatePassphraseScreen({
+    required this.bloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc bloc;
   final int currentStep;
   final int totalSteps;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<AddAccountFlowBloc>();
-
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.createPassphrase,

@@ -5,16 +5,17 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmPin extends StatefulHookWidget {
   const ConfirmPin({
+    required this.bloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc bloc;
   final int currentStep;
   final int totalSteps;
 
@@ -25,8 +26,6 @@ class ConfirmPin extends StatefulHookWidget {
 }
 
 class ConfirmPinState extends State<ConfirmPin> {
-  final _bloc = get<AddAccountFlowBloc>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +60,7 @@ class ConfirmPinState extends State<ConfirmPin> {
 
   _onFinish(List<int> inputCodes) async {
     Function eq = const ListEquality().equals;
-    if (!eq(inputCodes, _bloc.pin)) {
+    if (!eq(inputCodes, widget.bloc.pin)) {
       await showDialog(
         useSafeArea: true,
         context: context,
@@ -70,7 +69,7 @@ class ConfirmPinState extends State<ConfirmPin> {
         ),
       );
     } else {
-      await _bloc.submitConfirmPin();
+      await widget.bloc.submitConfirmPin();
     }
   }
 }

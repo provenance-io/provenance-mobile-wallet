@@ -5,20 +5,21 @@ import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigConfirmScreen extends StatelessWidget {
-  MultiSigConfirmScreen({
+  const MultiSigConfirmScreen({
     required this.currentStep,
     required this.totalSteps,
+    required AddAccountFlowBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
   final int currentStep;
   final int totalSteps;
 
-  final _bloc = get<AddAccountFlowBloc>();
+  final AddAccountFlowBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                   return AccountNameScreen.multi(
                                     mode: FieldMode.edit,
                                     leadingIcon: PwIcons.close,
+                                    bloc: _bloc,
                                   );
                                 },
                               ),
@@ -94,6 +96,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                 fullscreenDialog: true,
                                 builder: (context) {
                                   return MultiSigCountScreen.cosigners(
+                                    bloc: _bloc,
                                     mode: FieldMode.edit,
                                   );
                                 },
@@ -118,6 +121,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                 fullscreenDialog: true,
                                 builder: (context) {
                                   return MultiSigCountScreen.signatures(
+                                    bloc: _bloc,
                                     mode: FieldMode.edit,
                                   );
                                 },

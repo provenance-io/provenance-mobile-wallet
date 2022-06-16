@@ -9,6 +9,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class AccountTypeScreen extends StatelessWidget {
   AccountTypeScreen({
+    required this.bloc,
     required this.includeMultiSig,
     Key? key,
   }) : super(key: key);
@@ -17,6 +18,7 @@ class AccountTypeScreen extends StatelessWidget {
 
   final _keyValueService = get<KeyValueService>();
   final bool includeMultiSig;
+  final AddAccountFlowBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class AccountTypeScreen extends StatelessWidget {
                       name: Strings.accountTypeOptionBasicName,
                       desc: Strings.accountTypeOptionBasicDesc,
                       onPressed: () {
-                        get<AddAccountFlowBloc>().submitAccountType(
+                        bloc.submitAccountType(
                           AccountAddKind.createSingle,
                         );
                       },
@@ -56,7 +58,7 @@ class AccountTypeScreen extends StatelessWidget {
                       name: Strings.accountTypeOptionImportName,
                       desc: Strings.accountTypeOptionImportDesc,
                       onPressed: () {
-                        get<AddAccountFlowBloc>().submitAccountType(
+                        bloc.submitAccountType(
                           AccountAddKind.recover,
                         );
                       },
@@ -79,7 +81,7 @@ class AccountTypeScreen extends StatelessWidget {
                                   name: Strings.accountTypeOptionMultiName,
                                   desc: Strings.accountTypeOptionMultiDesc,
                                   onPressed: () {
-                                    get<AddAccountFlowBloc>().submitAccountType(
+                                    bloc.submitAccountType(
                                       AccountAddKind.createMulti,
                                     );
                                   },
