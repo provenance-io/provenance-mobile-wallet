@@ -29,6 +29,7 @@ class Proposal {
         proposalId = dto.header!.proposalId!,
         status = dto.header!.status!
             .replaceAll("PROPOSAL_STATUS_", "")
+            .replaceAll("_", " ")
             .toLowerCase()
             .capitalize(),
         title = dto.header!.title!,

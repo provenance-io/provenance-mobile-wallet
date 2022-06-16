@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/color_key.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/deposit_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/voting_bar_chart.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals/voting_buttons.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -286,16 +287,9 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   abstain: widget.selectedProposal.abstainAmount,
                   total: widget.selectedProposal.totalAmount,
                 ),
-                // DepositChart(
-                //   widget.selectedProposal.startTime,
-                //   widget.selectedProposal.endTime,
-                //   double.parse(
-                //       widget.selectedProposal.currentDeposit.nhashToHash()),
-                //   double.parse(
-                //       widget.selectedProposal.initialDeposit.nhashToHash()),
-                //   double.parse(
-                //       widget.selectedProposal.neededDeposit.nhashToHash()),
-                // )
+                if (widget.selectedProposal.status.toLowerCase() ==
+                    "voting period")
+                  VotingButtons()
               ],
             ),
             //);
