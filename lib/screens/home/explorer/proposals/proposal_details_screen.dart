@@ -192,6 +192,24 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem(
+                  title: "Pass Threshold",
+                  endChild: PwText(
+                    "${(widget.selectedProposal.passThreshold * 100).toStringAsFixed(2)}%",
+                  ),
+                ),
+                PwListDivider(
+                  indent: Spacing.largeX3,
+                ),
+                DetailsItem(
+                  title: "Veto Threshold",
+                  endChild: PwText(
+                    "${(widget.selectedProposal.vetoThreshold * 100).toStringAsFixed(2)}%",
+                  ),
+                ),
+                PwListDivider(
+                  indent: Spacing.largeX3,
+                ),
+                DetailsItem(
                   padding: EdgeInsets.only(
                     left: Spacing.largeX3,
                     right: Spacing.largeX3,
