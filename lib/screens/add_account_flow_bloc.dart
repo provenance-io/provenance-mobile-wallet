@@ -15,6 +15,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -473,8 +474,8 @@ class AddAccountFlowBloc implements Disposable {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
-      // TODO-Roy: Set _flow to a create flow
-      throw 'Not Implemented';
+      logError('No individual account selected');
+      _navigator.endFlow(null);
     }
 
     _showNext(AddAccountScreen.multiSigConnect);
