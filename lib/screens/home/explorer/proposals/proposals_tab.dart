@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_list.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalsTab extends StatefulWidget {
   const ProposalsTab({
@@ -46,7 +47,7 @@ class ProposalsTabState extends State<ProposalsTab> {
                       backgroundColor: Theme.of(context).colorScheme.neutral750,
                       elevation: 0.0,
                       title: PwText(
-                        "Proposals",
+                        Strings.proposalsTabProposals,
                         style: PwTextStyle.subhead,
                       ),
                       leading: Padding(
