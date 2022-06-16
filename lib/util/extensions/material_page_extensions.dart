@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-extension MaterialPageExtensions<T> on Widget {
-  MaterialPage<T> page({
+extension MaterialPageExtensions on Widget {
+  MaterialPage<T> page<T>({
     LocalKey? key,
     String? name,
     bool fullScreenDialog = false,
@@ -13,7 +13,7 @@ extension MaterialPageExtensions<T> on Widget {
         fullscreenDialog: fullScreenDialog,
       );
 
-  MaterialPageRoute<T> route({
+  MaterialPageRoute<T> route<T>({
     bool fullScreenDialog = false,
   }) =>
       MaterialPageRoute<T>(

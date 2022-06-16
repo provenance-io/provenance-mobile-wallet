@@ -261,6 +261,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
     showPage(
       (context) => MultiSigConnectScreen(
         onAccount: _bloc.submitMultiSigConnect,
+        enableCreate: true,
         currentStep: currentStep,
         totalSteps: totalSteps,
       ),

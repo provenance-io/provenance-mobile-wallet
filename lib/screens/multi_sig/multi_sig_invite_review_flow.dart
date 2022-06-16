@@ -106,6 +106,7 @@ class MultiSigInviteReviewFlowState
     showPage(
       (context) => MultiSigConnectScreen(
         onAccount: bloc.submitLinkedAccount,
+        enableCreate: false,
       ),
     );
   }
