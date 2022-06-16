@@ -9,6 +9,7 @@ class DetailsItem extends StatelessWidget {
     required this.title,
     required this.endChild,
     this.headerStyle = PwTextStyle.body,
+    this.needsExpansion = true,
   }) : super(key: key);
 
   DetailsItem.fromStrings({
@@ -17,6 +18,7 @@ class DetailsItem extends StatelessWidget {
     required this.title,
     required String value,
     this.headerStyle = PwTextStyle.body,
+    this.needsExpansion = true,
   }) : super(key: key) {
     endChild = PwText(
       value,
@@ -28,6 +30,7 @@ class DetailsItem extends StatelessWidget {
   late final Widget endChild;
   final EdgeInsets? padding;
   final PwTextStyle headerStyle;
+  final bool needsExpansion;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,8 @@ class DetailsItem extends StatelessWidget {
             title,
             style: headerStyle,
           ),
-          Expanded(child: Container()),
+          if (needsExpansion) Expanded(child: Container()),
+          if (!needsExpansion) HorizontalSpacer.large(),
           endChild,
         ],
       ),

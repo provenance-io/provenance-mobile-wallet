@@ -617,4 +617,35 @@ class Strings {
 
   // Staking Confirm Rewards Screen
   static const stakingConfirmRewardClaim = "Claim";
+
+  // Proposals Tab
+  static const proposalsTabProposals = "Proposals";
+
+  // Proposal Details Screen
+  static String proposalDetailsTitle(int proposalId) => "Proposal $proposalId";
+  static const proposalDetailsProposalInformation = "Proposal Information";
+  static const proposalDetailsId = "ID";
+  static const proposalDetailsTitleString = "Title";
+  static const proposalDetailsStatus = "Status";
+  static const proposalDetailsProposer = "Proposer";
+  static const proposalDetailsDescription = "Description";
+  static const proposalDetailsProposalTiming = "Proposal Timing";
+  static const proposalDetailsSubmitTime = "Submit Time";
+  static const proposalDetailsDepositEndTime = "Deposit End Time";
+  static const proposalDetailsVotingStartTime = "Voting Start Time";
+  static const proposalDetailsVotingEndTime = "Voting End Time";
+  static const proposalDetailsDeposits = "Deposits";
+  static String proposalDetailsDepositsHash(
+          int deposited, String depositPercentage) =>
+      "$deposited hash ($depositPercentage)";
+  static const proposalDetailsQuorumThreshold = "Quorum Threshold";
+  static const proposalDetailsPassThreshold = "Pass Threshold";
+  static const proposalDetailsVetoThreshold = "Veto Threshold";
+  static const proposalDetailsPercentVoted = "Percent Voted";
+  static const proposalDetailsTotalVotes = "Total Votes";
+  static const proposalDetailsYes = "Yes";
+  static const proposalDetailsNo = "No";
+  static const proposalDetailsNoWithVeto = "No With Veto";
+  static const proposalDetailsAbstain = "Abstain";
+  static const proposalDetailsProposalVoting = "Proposal Voting";
 }

@@ -29,6 +29,7 @@ class Proposal {
         proposalId = dto.header!.proposalId!,
         status = dto.header!.status!
             .replaceAll("PROPOSAL_STATUS_", "")
+            .replaceAll("_", " ")
             .toLowerCase()
             .capitalize(),
         title = dto.header!.title!,
@@ -39,21 +40,45 @@ class Proposal {
         currentDeposit = dto.timings!.deposit!.current!,
         neededDeposit = dto.timings!.deposit!.needed!,
         denomDeposit = dto.timings!.deposit!.denom!,
-        totalEligibleAmount =
-            dto.timings!.voting!.params!.totalEligibleAmount!.amount!,
-        quorumThreshold = dto.timings!.voting!.params!.quorumThreshold!,
-        passThreshold = dto.timings!.voting!.params!.passThreshold!,
-        vetoThreshold = dto.timings!.voting!.params!.vetoThreshold!,
+        totalEligibleAmount = double.tryParse(dto
+                .timings!.voting!.params!.totalEligibleAmount!.amount!
+                .nhashToHash()) ??
+            0,
+        quorumThreshold =
+            double.tryParse(dto.timings!.voting!.params!.quorumThreshold!) ?? 0,
+        passThreshold =
+            double.tryParse(dto.timings!.voting!.params!.passThreshold!) ?? 0,
+        vetoThreshold =
+            double.tryParse(dto.timings!.voting!.params!.vetoThreshold!) ?? 0,
         submitTime = dto.timings!.submitTime!,
         depositEndTime = dto.timings!.depositEndTime!,
         startTime = dto.timings!.votingTime!.startTime!,
         endTime = dto.timings!.votingTime!.endTime!,
         yesCount = dto.timings!.voting!.tally!.yes!.count!,
+        yesAmount = double.tryParse(dto
+                .timings!.voting!.tally!.yes!.amount!.amount!
+                .nhashToHash()) ??
+            0,
         noCount = dto.timings!.voting!.tally!.no!.count!,
+        noAmount = double.tryParse(dto
+                .timings!.voting!.tally!.no!.amount!.amount!
+                .nhashToHash()) ??
+            0,
         noWithVetoCount = dto.timings!.voting!.tally!.noWithVeto!.count!,
+        noWithVetoAmount = double.tryParse(dto
+                .timings!.voting!.tally!.noWithVeto!.amount!.amount!
+                .nhashToHash()) ??
+            0,
         abstainCount = dto.timings!.voting!.tally!.abstain!.count!,
+        abstainAmount = double.tryParse(dto
+                .timings!.voting!.tally!.abstain!.amount!.amount!
+                .nhashToHash()) ??
+            0,
         totalCount = dto.timings!.voting!.tally!.total!.count!,
-        totalAmount = dto.timings!.voting!.tally!.total!.amount!.amount!;
+        totalAmount = double.tryParse(dto
+                .timings!.voting!.tally!.total!.amount!.amount!
+                .nhashToHash()) ??
+            0;
   final int proposalId;
   final String status;
   final String proposerAddress;
@@ -64,18 +89,42 @@ class Proposal {
   final String currentDeposit;
   final String neededDeposit;
   final String denomDeposit;
-  final String totalEligibleAmount;
-  final String quorumThreshold;
-  final String passThreshold;
-  final String vetoThreshold;
+  final double totalEligibleAmount;
+  final double quorumThreshold;
+  final double passThreshold;
+  final double vetoThreshold;
   final DateTime submitTime;
   final DateTime depositEndTime;
   final DateTime startTime;
   final DateTime endTime;
   final int yesCount;
+  final double yesAmount;
   final int noCount;
+  final double noAmount;
   final int noWithVetoCount;
+  final double noWithVetoAmount;
   final int abstainCount;
+  final double abstainAmount;
   final int totalCount;
-  final String totalAmount;
+  final double totalAmount;
+
+  double get initialDepositFormatted {
+    return double.tryParse(initialDeposit.nhashToHash()) ?? 0;
+  }
+
+  int get currentDepositFormatted {
+    return int.tryParse(currentDeposit.nhashToHash()) ?? 0;
+  }
+
+  int get neededDepositFormatted {
+    return int.tryParse(neededDeposit.nhashToHash()) ?? 0;
+  }
+
+  String get depositPercentage {
+    return "${((currentDepositFormatted / neededDepositFormatted) * 100).toInt()}%";
+  }
+
+  String get votePercentage {
+    return "${((totalAmount / totalEligibleAmount) * 100).toStringAsFixed(2)}%";
+  }
 }
