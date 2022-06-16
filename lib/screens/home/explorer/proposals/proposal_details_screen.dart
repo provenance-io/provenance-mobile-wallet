@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals/color_key.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/deposit_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/voting_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
@@ -245,37 +246,29 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          IconData(0xf5e1, fontFamily: 'MaterialIcons'),
+                        ColorKey(
                           color: Theme.of(context).colorScheme.primary550,
-                          size: 10,
                         ),
                         PwText(
                           "Yes",
                         ),
                         HorizontalSpacer.large(),
-                        Icon(
-                          IconData(0xf5e1, fontFamily: 'MaterialIcons'),
+                        ColorKey(
                           color: Theme.of(context).colorScheme.error,
-                          size: 10,
                         ),
                         PwText(
                           "No",
                         ),
                         HorizontalSpacer.large(),
-                        Icon(
-                          IconData(0xf5e1, fontFamily: 'MaterialIcons'),
+                        ColorKey(
                           color: Theme.of(context).colorScheme.notice350,
-                          size: 10,
                         ),
                         PwText(
                           "No With Veto",
                         ),
                         HorizontalSpacer.large(),
-                        Icon(
-                          IconData(0xf5e1, fontFamily: 'MaterialIcons'),
+                        ColorKey(
                           color: Theme.of(context).colorScheme.neutral600,
-                          size: 10,
                         ),
                         PwText(
                           "Abstain",
