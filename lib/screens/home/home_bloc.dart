@@ -210,8 +210,7 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
           transactions.where((t) => t.messageType == messageType).toList();
     } else {
       filtered = transactions
-          .where((t) =>
-              t.messageType == messageType && t.status == status.toUpperCase())
+          .where((t) => t.messageType == messageType && t.status == status)
           .toList();
     }
     _transactionDetails.tryAdd(TransactionDetails(

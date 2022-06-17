@@ -3,11 +3,15 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigJoinLinkScreen extends StatefulWidget {
-  const MultiSigJoinLinkScreen({Key? key}) : super(key: key);
+  const MultiSigJoinLinkScreen({
+    required this.bloc,
+    Key? key,
+  }) : super(key: key);
+
+  final AddAccountFlowBloc bloc;
 
   @override
   State<MultiSigJoinLinkScreen> createState() => _MultiSigJoinLinkScreenState();
@@ -115,7 +119,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
 
   void _submit(String text) {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
-      get<AddAccountFlowBloc>().submitMultiSigJoinLink(_textController.text);
+      widget.bloc.submitMultiSigJoinLink(_textController.text);
     }
   }
 

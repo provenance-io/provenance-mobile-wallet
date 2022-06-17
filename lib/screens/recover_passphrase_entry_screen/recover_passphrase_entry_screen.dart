@@ -15,6 +15,7 @@ import 'package:provenance_wallet/util/timed_counter.dart';
 
 class RecoverPassphraseEntryScreen extends StatefulWidget {
   const RecoverPassphraseEntryScreen({
+    required this.addAccountBloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
@@ -36,6 +37,7 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
   static Key keyPassphraseWordTextField(int index) =>
       ValueKey('$RecoverPassphraseEntryScreen.word_$index');
 
+  final AddAccountFlowBloc addAccountBloc;
   final int currentStep;
   final int totalSteps;
 
@@ -49,7 +51,6 @@ class RecoverPassphraseEntryScreenState
     extends State<RecoverPassphraseEntryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _keyValueService = get<KeyValueService>();
-  final _addAccountBloc = get<AddAccountFlowBloc>();
   late final TimedCounter _tapCounter;
   late final RecoverPassphraseBloc _bloc;
 
@@ -60,7 +61,6 @@ class RecoverPassphraseEntryScreenState
   void initState() {
     super.initState();
     _bloc = RecoverPassphraseBloc();
-    get.registerSingleton<RecoverPassphraseBloc>(_bloc);
 
     _tapCounter = TimedCounter(
       onSuccess: _toggleAdvancedUI,
@@ -70,7 +70,7 @@ class RecoverPassphraseEntryScreenState
 
   @override
   void dispose() {
-    get.unregister<RecoverPassphraseBloc>();
+    _bloc.onDispose();
     _tapCounter.cancel();
     super.dispose();
   }
@@ -170,6 +170,7 @@ class RecoverPassphraseEntryScreenState
                         ),
                         VerticalSpacer.small(),
                         _TextFormField(
+                          bloc: _bloc,
                           key: RecoverPassphraseEntryScreen
                               .keyPassphraseWordTextField(index),
                           index: index,
@@ -210,7 +211,7 @@ class RecoverPassphraseEntryScreenState
     if (_formKey.currentState?.validate() == true) {
       final words = _bloc.getCompletedMnemonic();
 
-      await _addAccountBloc.submitRecoverPassphraseEntry(context, words);
+      await widget.addAccountBloc.submitRecoverPassphraseEntry(context, words);
     }
   }
 
@@ -226,12 +227,14 @@ class RecoverPassphraseEntryScreenState
 
 class _TextFormField extends StatelessWidget {
   const _TextFormField({
-    Key? key,
+    required this.bloc,
     required this.index,
     this.inputAction = TextInputAction.done,
     this.onFieldSubmitted,
+    Key? key,
   }) : super(key: key);
 
+  final RecoverPassphraseBloc bloc;
   final int index;
   final TextInputAction inputAction;
   final Function(String value)? onFieldSubmitted;
@@ -239,7 +242,6 @@ class _TextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bloc = get<RecoverPassphraseBloc>();
 
     return Autocomplete<String>(
       optionsViewBuilder: (context, onSelected, options) {

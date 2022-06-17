@@ -1,15 +1,16 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_button.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WordSelector extends StatefulWidget {
   const WordSelector({
+    required this.bloc,
     required this.index,
     Key? key,
   }) : super(key: key);
 
+  final RecoveryWordsBloc bloc;
   final int index;
 
   @override
@@ -21,7 +22,7 @@ class WordSelector extends StatefulWidget {
 class WordSelectorState extends State<WordSelector> {
   @override
   Widget build(BuildContext context) {
-    final bloc = get<RecoveryWordsBloc>();
+    final bloc = widget.bloc;
 
     return Padding(
       padding: EdgeInsets.only(left: Spacing.xxLarge, right: Spacing.xxLarge),

@@ -6,16 +6,17 @@ import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   const RecoveryWordsConfirmScreen({
+    required this.addAccountBloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc addAccountBloc;
   final int currentStep;
   final int totalSteps;
 
@@ -27,20 +28,22 @@ class RecoveryWordsConfirmScreen extends StatefulWidget {
 
 class RecoveryWordsConfirmScreenState
     extends State<RecoveryWordsConfirmScreen> {
-  final _addAccountBloc = get<AddAccountFlowBloc>();
   bool _isResponsible = false;
   String _error = "";
 
+  final bloc = RecoveryWordsBloc();
+
   @override
   void initState() {
-    get.registerSingleton<RecoveryWordsBloc>(RecoveryWordsBloc());
-    get<RecoveryWordsBloc>().setup(_addAccountBloc.words);
+    bloc.setup(widget.addAccountBloc.words);
+
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<RecoveryWordsBloc>();
+    bloc.onDispose();
+
     super.dispose();
   }
 
@@ -81,13 +84,25 @@ class RecoveryWordsConfirmScreenState
                     ),
                   )
                 : Container(),
-            WordSelector(index: 0),
+            WordSelector(
+              bloc: bloc,
+              index: 0,
+            ),
             VerticalSpacer.xLarge(),
-            WordSelector(index: 1),
+            WordSelector(
+              bloc: bloc,
+              index: 1,
+            ),
             VerticalSpacer.xLarge(),
-            WordSelector(index: 2),
+            WordSelector(
+              bloc: bloc,
+              index: 2,
+            ),
             VerticalSpacer.xLarge(),
-            WordSelector(index: 3),
+            WordSelector(
+              bloc: bloc,
+              index: 3,
+            ),
             VerticalSpacer.largeX3(),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -137,7 +152,6 @@ class RecoveryWordsConfirmScreenState
   }
 
   void _validation() async {
-    final bloc = get<RecoveryWordsBloc>();
     final selectedWords = bloc.selectedWords.value;
     final trueWords = bloc.trueWords.value;
 
@@ -151,7 +165,7 @@ class RecoveryWordsConfirmScreenState
     } else if (!_isResponsible) {
       setError(Strings.youMustAgreeToThePassphraseTerms);
     } else {
-      _addAccountBloc.submitRecoveryWordsConfirm();
+      widget.addAccountBloc.submitRecoveryWordsConfirm();
 
       setError("");
     }

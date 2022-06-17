@@ -15,6 +15,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -149,6 +150,7 @@ class AddAccountFlowBloc implements Disposable {
 
   BiometryType? _biometryType;
   Account? _multiSigLinkedAccount;
+  Account? _createdAccount;
 
   @override
   void onDispose() {
@@ -217,7 +219,7 @@ class AddAccountFlowBloc implements Disposable {
         totalSteps: _flow.length - 1,
       );
     } else {
-      _navigator.endFlow();
+      _navigator.endFlow(_createdAccount);
     }
   }
 
@@ -381,7 +383,7 @@ class AddAccountFlowBloc implements Disposable {
       context,
     );
 
-    Account? details;
+    Account? account;
 
     final enrolled = await get<LocalAuthHelper>().enroll(
       _pin.join(),
@@ -392,7 +394,7 @@ class AddAccountFlowBloc implements Disposable {
 
     if (enrolled) {
       final coin = await _defaultCoin();
-      details = await get<AccountService>().addAccount(
+      account = await get<AccountService>().addAccount(
         phrase: words,
         name: name.value,
         coin: coin,
@@ -401,7 +403,8 @@ class AddAccountFlowBloc implements Disposable {
 
     ModalLoadingRoute.dismiss(context);
 
-    if (details != null) {
+    if (account != null) {
+      _createdAccount = account;
       _showNext(AddAccountScreen.enableFaceId);
     }
   }
@@ -421,11 +424,13 @@ class AddAccountFlowBloc implements Disposable {
 
         final coin = await _defaultCoin();
 
-        await get<AccountService>().addAccount(
+        final account = await get<AccountService>().addAccount(
           phrase: words,
           name: name.value,
           coin: coin,
         );
+
+        _createdAccount = account;
 
         ModalLoadingRoute.dismiss(context);
         break;
@@ -469,8 +474,8 @@ class AddAccountFlowBloc implements Disposable {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
-      // TODO-Roy: Set _flow to a create flow
-      throw 'Not Implemented';
+      logError('No individual account selected');
+      _navigator.endFlow(null);
     }
 
     _showNext(AddAccountScreen.multiSigConnect);
@@ -523,7 +528,7 @@ class AddAccountFlowBloc implements Disposable {
 
     ModalLoadingRoute.dismiss(context);
 
-    _navigator.endFlow();
+    _navigator.endFlow(_createdAccount);
 
     if (id != null) {
       Navigator.of(

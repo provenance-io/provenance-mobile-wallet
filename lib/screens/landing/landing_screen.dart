@@ -105,6 +105,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         Navigator.of(context).push(
                           AddAccountFlow(
                             origin: AddAccountOrigin.landing,
+                            includeMultiSig: true,
                           ).route(),
                         );
                       }
