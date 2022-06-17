@@ -289,7 +289,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 ),
                 if (widget.selectedProposal.status.toLowerCase() ==
                     "voting period")
-                  VotingButtons()
+                  VotingButtons(),
               ],
             ),
             //);

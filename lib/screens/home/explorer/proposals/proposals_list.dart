@@ -9,6 +9,7 @@ class ProposalsList extends StatefulWidget {
   const ProposalsList({
     Key? key,
   }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => ProposalsListState();
 }

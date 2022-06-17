@@ -3,10 +3,10 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_tab.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 abstract class ProposalsFlowNavigator {
   Future<void> showProposalDetails(
@@ -29,18 +29,12 @@ abstract class ProposalsFlowNavigator {
 }
 
 class ProposalsFlow extends FlowBase {
-  const ProposalsFlow(
-    this.validatorAddress,
-    this.account,
-    this.selectedDelegation,
-    this.rewards, {
+  const ProposalsFlow({
     Key? key,
+    required this.account,
   }) : super(key: key);
 
-  final String validatorAddress;
   final TransactableAccount account;
-  final Delegation? selectedDelegation;
-  final Rewards? rewards;
 
   @override
   State<StatefulWidget> createState() => _ProposalsFlowState();
@@ -49,6 +43,18 @@ class ProposalsFlow extends FlowBase {
 class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     implements ProposalsFlowNavigator {
   @override
+  void initState() {
+    get.registerSingleton<ProposalsFlowBloc>(ProposalsFlowBloc(this));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    get.unregister<ProposalsFlowBloc>();
+    super.dispose();
+  }
+
+  @override
   Widget createStartPage() => ProposalsTab();
 
   @override
@@ -56,7 +62,9 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     Proposal proposal,
   ) async {
     showPage(
-      (context) => ProposalDetailsScreen(selectedProposal: proposal),
+      (context) => ProposalDetailsScreen(
+        selectedProposal: proposal,
+      ),
     );
   }
 
