@@ -80,7 +80,7 @@ class TransactionTabState extends State<TransactionTab> {
                           horizontal: Spacing.medium,
                         ),
                         child: PwDropDown.fromStrings(
-                          initialValue: transactionDetails.selectedType,
+                          value: transactionDetails.selectedType,
                           items: transactionDetails.types,
                           onValueChanged: (item) {
                             _bloc.filterTransactions(
@@ -102,7 +102,7 @@ class TransactionTabState extends State<TransactionTab> {
                           horizontal: Spacing.medium,
                         ),
                         child: PwDropDown.fromStrings(
-                          initialValue: Strings.dropDownAllStatuses,
+                          value: transactionDetails.selectedStatus,
                           items: transactionDetails.statuses,
                           onValueChanged: (item) {
                             _bloc.filterTransactions(

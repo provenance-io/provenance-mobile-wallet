@@ -36,17 +36,38 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   final _accountService = get<AccountService>();
 
   late final FocusNode _focusNext;
-  Future<List<BasicAccount>>? _load;
 
   var _value = _defaultValue;
   var _boxHasFocus = false;
+  List<_Item>? _items;
+
+  Future<void> _load(Account? selected) async {
+    final items = [
+      _defaultValue,
+    ];
+
+    final accounts = await _accountService.getBasicAccounts();
+    items.addAll(
+      accounts.map(
+        (e) => _Item(
+          name: e.name,
+          account: e,
+        ),
+      ),
+    );
+
+    setState(() {
+      _items = items;
+      _value = items.firstWhere((e) => e.account?.id == selected?.id);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
 
     _focusNext = FocusNode(debugLabel: 'Next button');
-    _load ??= _accountService.getBasicAccounts();
+    _load(null);
   }
 
   @override
@@ -60,6 +81,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
   Widget build(BuildContext context) {
     final currentStep = widget.currentStep;
     final totalSteps = widget.totalSteps;
+    final items = _items;
 
     return Scaffold(
       appBar: PwAppBar(
@@ -133,27 +155,9 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
-                      child: FutureBuilder<List<Account>>(
-                          future: _load,
-                          builder: (context, snapshot) {
-                            final accounts = [
-                              _defaultValue,
-                            ];
-
-                            final data = snapshot.data;
-
-                            if (data != null) {
-                              accounts.addAll(
-                                data.map(
-                                  (e) => _Item(
-                                    name: e.name,
-                                    account: e,
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return PwDropDown<_Item>(
+                      child: items == null
+                          ? Container()
+                          : PwDropDown<_Item>(
                               isExpanded: true,
                               autofocus: true,
                               onValueChanged: (value) {
@@ -170,8 +174,8 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                                   },
                                 );
                               },
-                              initialValue: _defaultValue,
-                              items: accounts,
+                              value: _value,
+                              items: items,
                               builder: (item) {
                                 return PwText(
                                   item.name,
@@ -179,8 +183,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                                   style: PwTextStyle.body,
                                 );
                               },
-                            );
-                          }),
+                            ),
                     ),
                   ),
                   VerticalSpacer.xxLarge(),
@@ -220,13 +223,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                           );
 
                           if (account != null) {
-                            _load = _accountService.getBasicAccounts();
-
-                            final accounts = await _load;
-
-                            setState(() {});
-                            // refresh list
-                            // select new account
+                            _load(account);
                           }
                         },
                         child: PwText(
@@ -258,9 +255,9 @@ class _Item {
   final Account? account;
 
   @override
-  int get hashCode => hashValues(name, account);
+  int get hashCode => hashValues(name, account?.id);
 
   @override
   bool operator ==(Object other) =>
-      other is _Item && other.name == name && other.account == account;
+      other is _Item && other.name == name && other.account?.id == account?.id;
 }
