@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';

@@ -1,8 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_tab/proposals_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_tab/staking_tab.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
