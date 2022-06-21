@@ -287,9 +287,11 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   abstain: widget.selectedProposal.abstainAmount,
                   total: widget.selectedProposal.totalAmount,
                 ),
-                if (widget.selectedProposal.status.toLowerCase() ==
-                    "voting period")
-                  VotingButtons(),
+                // if (widget.selectedProposal.status.toLowerCase() ==
+                //     "voting period")
+                VotingButtons(
+                  proposal: widget.selectedProposal,
+                ),
               ],
             ),
             //);

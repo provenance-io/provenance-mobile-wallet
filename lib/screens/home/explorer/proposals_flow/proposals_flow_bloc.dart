@@ -1,4 +1,4 @@
-import 'package:provenance_dart/src/proto/proto_gen/cosmos/gov/v1beta1/gov.pbenum.dart';
+import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 
@@ -28,7 +28,12 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showVoteReview(VoteOption voteOption) async {
+  Future<void> showVoteReview(gov.VoteOption voteOption) async {
     await _navigator.showVoteReview(voteOption);
+  }
+
+  @override
+  Future<void> showWeightedVote(Proposal proposal) async {
+    await _navigator.showWeightedVote(proposal);
   }
 }

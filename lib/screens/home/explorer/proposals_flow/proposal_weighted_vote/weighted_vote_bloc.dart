@@ -34,14 +34,14 @@ class WeightedVoteBloc extends Disposable {
 
 class WeightedVoteDetails {
   WeightedVoteDetails({
-    this.yesAmount,
-    this.noAmount,
-    this.noWithVetoAmount,
-    this.abstainAmount,
+    this.yesAmount = 100,
+    this.noAmount = 0,
+    this.noWithVetoAmount = 0,
+    this.abstainAmount = 0,
   });
 
-  final double? yesAmount;
-  final double? noAmount;
-  final double? noWithVetoAmount;
-  final double? abstainAmount;
+  final double yesAmount;
+  final double noAmount;
+  final double noWithVetoAmount;
+  final double abstainAmount;
 }

@@ -80,20 +80,29 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.neutral750,
-      child: Scaffold(
-        appBar: PwAppBar(
-          title: "Weighted Vote",
-          leadingIcon: PwIcons.back,
-        ),
-        body: ListView(
+    return Scaffold(
+      appBar: PwAppBar(
+        title: "Weighted Vote",
+        leadingIcon: PwIcons.back,
+      ),
+      body: Container(
+        color: Theme.of(context).colorScheme.neutral750,
+        child: ListView(
           children: [
             DetailsItem(
               title: "Yes",
-              endChild: StakingTextFormField(
-                hint: "%",
-                textEditingController: _yesTextEditingController,
+              endChild: Flexible(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: StakingTextFormField(
+                        hint: "%",
+                        textEditingController: _yesTextEditingController,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             PwListDivider(
@@ -101,9 +110,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
             ),
             DetailsItem(
               title: "No",
-              endChild: StakingTextFormField(
-                hint: "%",
-                textEditingController: _noTextEditingController,
+              endChild: Flexible(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: StakingTextFormField(
+                        hint: "%",
+                        textEditingController: _noTextEditingController,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             PwListDivider(
@@ -111,9 +129,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
             ),
             DetailsItem(
               title: "No With Veto",
-              endChild: StakingTextFormField(
-                hint: "%",
-                textEditingController: _noWithVetoTextEditingController,
+              endChild: Flexible(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: StakingTextFormField(
+                        hint: "%",
+                        textEditingController: _noWithVetoTextEditingController,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             PwListDivider(
@@ -121,15 +148,29 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
             ),
             DetailsItem(
               title: "Abstain",
-              endChild: StakingTextFormField(
-                hint: "%",
-                textEditingController: _abstainTextEditingController,
+              endChild: Flexible(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: StakingTextFormField(
+                        hint: "%",
+                        textEditingController: _abstainTextEditingController,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             PwListDivider(
               indent: Spacing.largeX3,
             ),
-            WeightedVotingPieChart(),
+            WeightedVotingPieChart(
+              yes: Theme.of(context).colorScheme.primary550,
+              no: Theme.of(context).colorScheme.error,
+              noWithVeto: Theme.of(context).colorScheme.notice350,
+              abstain: Theme.of(context).colorScheme.neutral600,
+            ),
           ],
         ),
       ),
