@@ -1,5 +1,5 @@
-class MultiSigInvite {
-  MultiSigInvite({
+class MultiSigRegistration {
+  MultiSigRegistration({
     required this.id,
     required this.name,
     required this.inviteLinks,

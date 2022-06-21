@@ -1,10 +1,10 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_signer_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_invite.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_registration.dart';
 import 'package:uuid/uuid.dart';
 
 enum MultiSigInviteStatus {
@@ -24,7 +24,7 @@ class MultiSigCosignerResponse {
 class MultiSigService with ClientCoinMixin {
   final _samples = <String, MultiSigGetAccountsResponseDto>{};
 
-  Future<MultiSigInvite?> createInvite({
+  Future<MultiSigRegistration?> register({
     required String name,
     required int cosignerCount,
     required int threshold,
@@ -34,7 +34,7 @@ class MultiSigService with ClientCoinMixin {
     final coin = linkedPublicKey.coin;
     final chainId = ChainId.forCoin(coin);
 
-    final body = MultiSigCreateRequestDto(
+    final body = MultiSigRegisterRequestDto(
       name: name,
       publicKey: linkedPublicKey.compressedPublicKeyHex,
       address: linkedPublicKey.address,
@@ -66,16 +66,16 @@ class MultiSigService with ClientCoinMixin {
 
     // final client = await getClient(coin);
     // final response = await client.post(
-    //   '/multisig/create',
+    //   '/multisig/register',
     //   body: body,
     //   converter: (json) => MultiSigCreateResponseDto.fromJson(json),
     // );
 
-    MultiSigInvite? invite;
+    MultiSigRegistration? invite;
 
     // final data = response.data;
     // if (data != null) {
-    //   invite = MultiSigInvite(
+    //   invite = MultiSigRegistration(
     //     id: data.walletUuid,
     //     name: data.name,
     //     inviteLinks: data.inviteLinks,
@@ -86,7 +86,7 @@ class MultiSigService with ClientCoinMixin {
     for (var i = 0; i < cosignerCount - 1; i++) {
       inviteLinks.add('https://provenance.io/invite/$i');
     }
-    invite = MultiSigInvite(
+    invite = MultiSigRegistration(
       id: inviteId,
       name: name,
       inviteLinks: inviteLinks,
