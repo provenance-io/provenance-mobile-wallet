@@ -1,9 +1,9 @@
 import 'package:provenance_dart/proto_gov.dart' as proto;
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals/proposal_details_screen.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_tab.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_tab/proposals_tab.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';

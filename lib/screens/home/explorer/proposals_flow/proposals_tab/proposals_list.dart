@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals/proposals_list_item.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_tab/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_tab/proposals_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ProposalsList extends StatefulWidget {
