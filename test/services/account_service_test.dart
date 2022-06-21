@@ -10,7 +10,6 @@ import '../screens/receive_flow/receive/receive_screen_test.dart';
 
 void main() {
   tearDown(() async {
-    await get<SembastAccountStorageService>().deleteDatabase();
     await get.reset(dispose: true);
   });
 
@@ -66,11 +65,16 @@ void main() {
 Future<AccountService> createService({
   int dataCount = 0,
   Coin coin = Coin.mainNet,
-  bool? useBiometry,
 }) async {
+  final export = await createDatabaseExport(
+    dataCount: dataCount,
+    coin: coin,
+  );
+
   final serviceCore = SembastAccountStorageService(
-    factory: databaseFactoryMemory,
+    factory: newDatabaseFactoryMemory(),
     directory: sembastInMemoryDatabasePath,
+    import: export,
   );
   final cipherService = MemoryCipherService();
   final service = AccountService(
@@ -80,8 +84,32 @@ Future<AccountService> createService({
     ),
   );
 
+  final accounts = await service.getAccounts();
+  expect(accounts.length, dataCount);
+
   get.registerSingleton(serviceCore);
   get.registerSingleton(service);
+
+  await pumpEventQueue();
+
+  return service;
+}
+
+Future<Map<String, Object?>> createDatabaseExport({
+  int dataCount = 0,
+  Coin coin = Coin.mainNet,
+}) async {
+  final serviceCore = SembastAccountStorageService(
+    factory: newDatabaseFactoryMemory(),
+    directory: sembastInMemoryDatabasePath,
+  );
+  final cipherService = MemoryCipherService();
+  final service = AccountService(
+    storage: AccountStorageServiceImp(
+      serviceCore,
+      cipherService,
+    ),
+  );
 
   for (var i = 0; i < dataCount; i++) {
     await service.addAccount(
@@ -95,7 +123,7 @@ Future<AccountService> createService({
 
   await service.selectFirstAccount();
 
-  await pumpEventQueue();
+  final data = await serviceCore.exportDatabase();
 
-  return service;
+  return data;
 }

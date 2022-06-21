@@ -17,13 +17,13 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     Map<dynamic, dynamic>? import,
   }) : _factory = factory {
     final path = p.join(directory, _fileName);
-    if (import != null) {
-      ie.importDatabase(import, factory, path);
-    }
 
-    _main = StoreRef<String, String>.main();
+    Future<Database> initDb(
+        DatabaseFactory factory, Map<dynamic, dynamic>? import) async {
+      if (import != null) {
+        await ie.importDatabase(import, factory, path);
+      }
 
-    Future<Database> initDb(DatabaseFactory factory) async {
       Future<void> onVersionChanged(
           Database db, int oldVersion, int newVersion) async {
         var current = oldVersion;
@@ -34,6 +34,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
         }
       }
 
+      _main = StoreRef<String, String>.main();
       _basicAccounts = stringMapStoreFactory.store('accounts');
       _multiAccounts = stringMapStoreFactory.store('multi_accounts');
 
@@ -46,7 +47,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       return db;
     }
 
-    _db = initDb(factory);
+    _db = initDb(factory, import);
   }
 
   static const version = 1;
