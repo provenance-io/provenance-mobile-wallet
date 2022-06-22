@@ -49,7 +49,9 @@ class AccountServiceEvents {
 class AccountService implements Disposable {
   AccountService({
     required AccountStorageService storage,
-  }) : _storage = storage;
+  }) : _storage = storage {
+    _init();
+  }
 
   final AccountStorageService _storage;
 
@@ -235,4 +237,11 @@ class AccountService implements Disposable {
 
   Future<bool> isValidWalletConnectData(String qrData) =>
       Future.value(WalletConnectAddress.create(qrData) != null);
+
+  Future<void> _init() async {
+    final account = await getSelectedAccount();
+    if (account != null) {
+      events._selected.add(account);
+    }
+  }
 }
