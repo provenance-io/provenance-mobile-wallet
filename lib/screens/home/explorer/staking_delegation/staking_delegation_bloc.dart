@@ -89,7 +89,7 @@ class StakingDelegationBloc extends Disposable {
       gasAdjustment,
       staking.MsgDelegate(
         amount: proto.Coin(
-          denom: details.asset?.denom ?? 'nhash',
+          denom: details.asset?.denom,
           amount: details.hashDelegated.toString(),
         ),
         delegatorAddress: _account.publicKey!.address,
