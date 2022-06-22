@@ -24,17 +24,13 @@ class ProposalDetailsScreen extends StatefulWidget {
 
 class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
   final _formatter = DateFormat.yMMMd('en_US').add_Hms();
-  // @override
-  // void initState() {
-  //   get.registerSingleton<StakingDetailsBloc>(_bloc);
-  //   super.initState();
-  // }
 
-  // @override
-  // void dispose() {
-  //   get.unregister<StakingDetailsBloc>();
-  //   super.dispose();
-  // }
+  late final Proposal _proposal;
+  @override
+  void initState() {
+    _proposal = widget.selectedProposal;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +52,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
               //   return
               Scaffold(
             appBar: PwAppBar(
-              title: Strings.proposalDetailsTitle(
-                  widget.selectedProposal.proposalId),
+              title: Strings.proposalDetailsTitle(_proposal.proposalId),
               leadingIcon: PwIcons.back,
             ),
             body: ListView(
@@ -77,36 +72,35 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsId,
-                  value: "${widget.selectedProposal.proposalId}",
+                  value: "${_proposal.proposalId}",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsTitleString,
-                  value: widget.selectedProposal.title,
+                  value: _proposal.title,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsStatus,
-                  value: widget.selectedProposal.status,
+                  value: _proposal.status,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsProposer,
-                  value: widget.selectedProposal.proposerAddress
-                      .abbreviateAddress(),
+                  value: _proposal.proposerAddress.abbreviateAddress(),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsDescription,
-                  value: widget.selectedProposal.description,
+                  value: _proposal.description,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -126,33 +120,32 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsSubmitTime,
-                  value: _formatter.format(widget.selectedProposal.submitTime),
+                  value: _formatter.format(_proposal.submitTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsDepositEndTime,
-                  value:
-                      _formatter.format(widget.selectedProposal.depositEndTime),
+                  value: _formatter.format(_proposal.depositEndTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVotingStartTime,
-                  value: widget.selectedProposal.startTime.year == 1
+                  value: _proposal.startTime.year == 1
                       ? "--"
-                      : _formatter.format(widget.selectedProposal.startTime),
+                      : _formatter.format(_proposal.startTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVotingEndTime,
-                  value: widget.selectedProposal.endTime.year == 1
+                  value: _proposal.endTime.year == 1
                       ? "--"
-                      : _formatter.format(widget.selectedProposal.endTime),
+                      : _formatter.format(_proposal.endTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -165,8 +158,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   ),
                   title: Strings.proposalDetailsDeposits,
                   value: Strings.proposalDetailsDepositsHash(
-                    widget.selectedProposal.currentDepositFormatted,
-                    widget.selectedProposal.depositPercentage,
+                    _proposal.currentDepositFormatted,
+                    _proposal.depositPercentage,
                   ),
                 ),
                 DetailsItem.fromStrings(
@@ -177,12 +170,12 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   ),
                   title: Strings.proposalDetailsNeededDeposit,
                   value: Strings.proposalDetailsHashNeeded(
-                    widget.selectedProposal.neededDepositFormatted,
+                    _proposal.neededDepositFormatted,
                   ),
                 ),
                 DepositBarChart(
-                  widget.selectedProposal.currentDepositFormatted,
-                  widget.selectedProposal.neededDepositFormatted,
+                  _proposal.currentDepositFormatted,
+                  _proposal.neededDepositFormatted,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -190,7 +183,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsQuorumThreshold,
                   value:
-                      "${(widget.selectedProposal.quorumThreshold * 100).toStringAsFixed(2)}%",
+                      "${(_proposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -198,7 +191,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsPassThreshold,
                   value:
-                      "${(widget.selectedProposal.passThreshold * 100).toStringAsFixed(2)}%",
+                      "${(_proposal.passThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -206,7 +199,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVetoThreshold,
                   value:
-                      "${(widget.selectedProposal.vetoThreshold * 100).toStringAsFixed(2)}%",
+                      "${(_proposal.vetoThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -218,21 +211,19 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     top: Spacing.xLarge,
                   ),
                   title: Strings.proposalDetailsPercentVoted,
-                  value: widget.selectedProposal.votePercentage,
+                  value: _proposal.votePercentage,
                 ),
                 DepositBarChart(
-                  widget.selectedProposal.totalAmount,
-                  widget.selectedProposal.totalEligibleAmount,
+                  _proposal.totalAmount,
+                  _proposal.totalEligibleAmount,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
                 DetailsItem.fromStrings(
                   title: Strings.proposalDetailsTotalVotes,
-                  value: widget.selectedProposal.totalAmount
-                      .toInt()
-                      .toString()
-                      .formatNumber(),
+                  value:
+                      _proposal.totalAmount.toInt().toString().formatNumber(),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -275,16 +266,16 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   ),
                 ),
                 VotingBarChart(
-                  yes: widget.selectedProposal.yesAmount,
-                  no: widget.selectedProposal.noAmount,
-                  noWithVeto: widget.selectedProposal.noWithVetoAmount,
-                  abstain: widget.selectedProposal.abstainAmount,
-                  total: widget.selectedProposal.totalAmount,
+                  yes: _proposal.yesAmount,
+                  no: _proposal.noAmount,
+                  noWithVeto: _proposal.noWithVetoAmount,
+                  abstain: _proposal.abstainAmount,
+                  total: _proposal.totalAmount,
                 ),
-                // if (widget.selectedProposal.status.toLowerCase() ==
+                // if (_proposal.status.toLowerCase() ==
                 //     "voting period")
                 VotingButtons(
-                  proposal: widget.selectedProposal,
+                  proposal: _proposal,
                 ),
               ],
             ),
