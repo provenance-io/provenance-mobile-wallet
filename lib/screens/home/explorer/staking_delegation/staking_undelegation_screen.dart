@@ -25,7 +25,7 @@ class StakingUndelegationScreen extends StatefulWidget {
 
   final DetailedValidator validator;
 
-  final TransactableAccount account;
+  final Account account;
   final StakingFlowNavigator navigator;
 
   @override

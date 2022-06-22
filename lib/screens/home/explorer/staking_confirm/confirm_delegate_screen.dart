@@ -32,7 +32,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
           appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''{
-  "delegatorAddress": "${details.account.address}",
+  "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
   "amount": {
     "denom": "nhash",
@@ -53,7 +53,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmDelegatorAddress,
               endChild: Flexible(
                 child: PwText(
-                  details.account.address.abbreviateAddress(),
+                  details.account.publicKey!.address.abbreviateAddress(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

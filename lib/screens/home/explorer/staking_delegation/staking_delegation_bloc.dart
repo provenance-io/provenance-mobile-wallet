@@ -38,7 +38,7 @@ class StakingDelegationBloc extends Disposable {
           ),
         );
 
-  final TransactableAccount _account;
+  final Account _account;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
       _stakingDelegationDetails;
 
@@ -48,9 +48,9 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<void> load() async {
-    final asset =
-        (await get<AssetService>().getAssets(_account.coin, _account.address))
-            .firstWhere((element) => element.denom == 'nhash');
+    final asset = (await get<AssetService>()
+            .getAssets(_account.publicKey!.coin, _account.publicKey!.address))
+        .firstWhere((element) => element.denom == 'nhash');
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -92,7 +92,7 @@ class StakingDelegationBloc extends Disposable {
           denom: details.asset?.denom ?? 'nhash',
           amount: details.hashDelegated.toString(),
         ),
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -109,7 +109,7 @@ class StakingDelegationBloc extends Disposable {
           denom: details.asset?.denom ?? 'nhash',
           amount: details.hashDelegated.toString(),
         ),
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -122,7 +122,7 @@ class StakingDelegationBloc extends Disposable {
     await _sendMessage(
       gasAdjustment,
       MsgWithdrawDelegatorReward(
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -160,7 +160,7 @@ class StakingDelegationBloc extends Disposable {
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey);
+        .estimateGas(body, _account.publicKey!);
   }
 }
 
@@ -181,7 +181,7 @@ class StakingDelegationDetails {
   final SelectedDelegationType selectedDelegationType;
   final Asset? asset;
   final num hashDelegated;
-  final TransactableAccount account;
+  final Account account;
 
   bool get hashInsufficient {
     if (0 == hashDelegated) {

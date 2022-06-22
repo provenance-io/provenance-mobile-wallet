@@ -91,7 +91,7 @@ class SendAssetList extends StatelessWidget {
       child = PwDropDown<SendAsset>(
         isExpanded: true,
         itemHeight: 50,
-        initialValue: selectedAsset,
+        value: selectedAsset,
         items: assets,
         onValueChanged: onAssetChanged,
         builder: (item) => SendAssetCell(item),

@@ -34,7 +34,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           onDataClick: () {
             final data = '''
 {
-  "delegatorAddress": "${details.account.address}",
+  "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorSrcAddress": "${details.delegation.sourceAddress}",
   "validatorDstAddress": "${details.toRedelegate?.addressId}",
   "amount": {
@@ -62,7 +62,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmDelegatorAddress,
               endChild: Flexible(
                 child: PwText(
-                  details.account.address.abbreviateAddress(),
+                  details.account.publicKey!.address.abbreviateAddress(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

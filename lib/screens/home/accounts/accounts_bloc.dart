@@ -90,11 +90,11 @@ class AccountsBloc implements Disposable {
     return index;
   }
 
-  Future<int> getAssetCount(TransactableAccount account) async {
+  Future<int> getAssetCount(Account account) async {
     var count = _assetCounts[account.id];
     if (count == null) {
-      final assets =
-          await _assetService.getAssets(account.coin, account.address);
+      final assets = await _assetService.getAssets(
+          account.publicKey!.coin, account.publicKey!.address);
       count = assets.length;
       _assetCounts[account.id] = count;
     }
@@ -116,7 +116,7 @@ class AccountsBloc implements Disposable {
     _insert.tryAdd(_accounts.length - 1);
   }
 
-  void _onUpdated(TransactableAccount account) {
+  void _onUpdated(Account account) {
     final index = _accounts.indexWhere((e) => e.id == account.id);
     if (index != -1) {
       _accounts[index] = account;
@@ -125,7 +125,7 @@ class AccountsBloc implements Disposable {
     }
   }
 
-  void _onSelected(TransactableAccount? account) {
+  void _onSelected(Account? account) {
     if (account != null) {
       _updated.add(account);
     }

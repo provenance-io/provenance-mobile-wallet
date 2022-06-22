@@ -13,7 +13,7 @@ class ExplorerScreen extends StatefulWidget {
     required this.account,
   }) : super(key: key);
 
-  final TransactableAccount account;
+  final Account account;
   @override
   State<StatefulWidget> createState() => HomeScreenState();
 }

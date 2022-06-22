@@ -526,7 +526,7 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
         final details = await accountStorageService.addAccount(
           name: account.name,
           privateKeys: privateKeys,
-          selectedCoin: account.coin,
+          selectedCoin: account.publicKey!.coin,
         );
 
         if (details != null) {

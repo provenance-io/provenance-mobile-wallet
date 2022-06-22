@@ -89,7 +89,7 @@ class SqliteAccountStorageService {
     await db.close();
   }
 
-  Future<List<TransactableAccount>> getAccounts() async {
+  Future<List<Account>> getAccounts() async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetAccounts);
     final details = results.map(_mapAccount).toList();
@@ -97,11 +97,11 @@ class SqliteAccountStorageService {
     return details;
   }
 
-  Future<TransactableAccount?> getAccount({required String id}) async {
+  Future<Account?> getAccount({required String id}) async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetAccount, [id]);
 
-    TransactableAccount? account;
+    Account? account;
     if (results.isNotEmpty) {
       account = _mapAccount(results[0]);
     }
@@ -109,11 +109,11 @@ class SqliteAccountStorageService {
     return account;
   }
 
-  Future<TransactableAccount?> getSelectedAccount() async {
+  Future<Account?> getSelectedAccount() async {
     final db = await _getDb();
     final results = await db.rawQuery(_sqlGetSelectedAccount);
 
-    TransactableAccount? account;
+    Account? account;
     if (results.isNotEmpty) {
       account = _mapAccount(results[0]);
     }
@@ -121,7 +121,7 @@ class SqliteAccountStorageService {
     return account;
   }
 
-  Future<TransactableAccount?> selectAccount({String? id}) async {
+  Future<Account?> selectAccount({String? id}) async {
     final db = await _getDb();
 
     if (id == null) {
@@ -136,7 +136,7 @@ class SqliteAccountStorageService {
     return getSelectedAccount();
   }
 
-  Future<TransactableAccount?> renameAccount({
+  Future<Account?> renameAccount({
     required String id,
     required String name,
   }) async {
@@ -146,7 +146,7 @@ class SqliteAccountStorageService {
     return await getAccount(id: id);
   }
 
-  Future<TransactableAccount?> setChainId({
+  Future<Account?> setChainId({
     required String id,
     required String chainId,
   }) async {
@@ -164,7 +164,7 @@ class SqliteAccountStorageService {
       publicKeyId = selectResults.first['Id'] as int;
     }
 
-    TransactableAccount? details;
+    Account? details;
 
     if (publicKeyId != null) {
       final updateArgs = [
@@ -185,7 +185,7 @@ class SqliteAccountStorageService {
     return details;
   }
 
-  Future<TransactableAccount?> addAccount({
+  Future<Account?> addAccount({
     required String name,
     required List<PublicKeyData> publicKeys,
     required String selectedChainId,
@@ -245,7 +245,7 @@ class SqliteAccountStorageService {
       }
     });
 
-    TransactableAccount? details;
+    Account? details;
     if (accountId != null) {
       details = await getAccount(id: accountId.toString());
     }
@@ -324,7 +324,7 @@ class SqliteAccountStorageService {
     batch.execute('DROP TABLE IF EXISTS Config');
   }
 
-  static TransactableAccount _mapAccount(Map<String, Object?> result) {
+  static Account _mapAccount(Map<String, Object?> result) {
     final id = result['Id'] as int;
     final name = result['Name'] as String;
     final hex = result['Hex'] as String;

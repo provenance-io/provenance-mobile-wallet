@@ -32,7 +32,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
           appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''{
-  "delegatorAddress": "${details.account.address}",
+  "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
 }''';
             navigator.showTransactionData(data);
@@ -50,7 +50,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
               title: Strings.stakingConfirmDelegatorAddress,
               endChild: Flexible(
                 child: PwText(
-                  details.account.address.abbreviateAddress(),
+                  details.account.publicKey!.address.abbreviateAddress(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

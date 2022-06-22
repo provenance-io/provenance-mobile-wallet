@@ -17,7 +17,7 @@ class StakingRedelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final StakingFlowNavigator navigator;
-  final TransactableAccount account;
+  final Account account;
   final Delegation delegation;
 
   const StakingRedelegationScreen({
@@ -160,7 +160,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                                     horizontal: Spacing.medium,
                                   ),
                                   child: PwDropDown<ValidatorSortingState>(
-                                    initialValue: stakingDetails.selectedSort,
+                                    value: stakingDetails.selectedSort,
                                     items: ValidatorSortingState.values,
                                     isExpanded: true,
                                     onValueChanged: (item) {

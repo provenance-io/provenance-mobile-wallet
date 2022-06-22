@@ -26,7 +26,7 @@ class StakingDetailsScreen extends StatefulWidget {
   }) : super(key: key);
 
   final String validatorAddress;
-  final TransactableAccount account;
+  final Account account;
   final Delegation? selectedDelegation;
   final Rewards? rewards;
   final StakingFlowNavigator navigator;

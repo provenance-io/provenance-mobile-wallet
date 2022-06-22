@@ -303,6 +303,9 @@ class PwGreyButton extends StatelessWidget {
       padding: MaterialStateProperty.all(
         EdgeInsets.symmetric(vertical: Spacing.large),
       ),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(),
+      ),
     );
   }
 }

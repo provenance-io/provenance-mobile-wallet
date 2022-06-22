@@ -18,7 +18,7 @@ class StakingDelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final String commissionRate;
-  final TransactableAccount account;
+  final Account account;
   final StakingFlowNavigator navigator;
 
   const StakingDelegationScreen({

@@ -109,7 +109,7 @@ class StakingTabState extends State<StakingTab> {
                                 horizontal: Spacing.medium,
                               ),
                               child: PwDropDown<ValidatorSortingState>(
-                                initialValue: stakingDetails.selectedSort,
+                                value: stakingDetails.selectedSort,
                                 items: ValidatorSortingState.values,
                                 isExpanded: true,
                                 onValueChanged: (item) {

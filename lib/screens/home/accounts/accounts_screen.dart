@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/pending_account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/multi_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -119,6 +119,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                 Navigator.of(context).push(
                   AddAccountFlow(
                     origin: AddAccountOrigin.accounts,
+                    includeMultiSig: true,
                   ).route(),
                 );
               },
@@ -169,15 +170,15 @@ class AccountsScreenState extends State<AccountsScreen> {
 
     switch (account.kind) {
       case AccountKind.basic:
-      case AccountKind.multi:
         item = BasicAccountItem(
-          account: account as TransactableAccount,
+          account: account as BasicAccount,
         );
         break;
-      case AccountKind.pendingMulti:
-        item = PendingAccountItem(
-          account: account as PendingMultiAccount,
+      case AccountKind.multi:
+        item = MultiAccountItem(
+          account: account as MultiAccount,
         );
+
         break;
     }
 

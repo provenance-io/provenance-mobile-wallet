@@ -119,7 +119,7 @@ main() {
       final dropDownFind =
           find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
       final dropDown = tester.widget<PwDropDown<SendAsset>>(dropDownFind);
-      expect(dropDown.initialValue, hashAsset);
+      expect(dropDown.value, hashAsset);
     });
 
     testWidgets("non-empty assets, asset selected", (tester) async {
@@ -133,7 +133,7 @@ main() {
       final dropDownFind =
           find.byWidgetPredicate((widget) => widget is PwDropDown<SendAsset>);
       final dropDown = tester.widget<PwDropDown<SendAsset>>(dropDownFind);
-      expect(dropDown.initialValue, dollarAsset);
+      expect(dropDown.value, dollarAsset);
     });
 
     testWidgets("Value Changed", (tester) async {

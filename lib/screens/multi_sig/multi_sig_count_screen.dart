@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_edit_count.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,12 +20,12 @@ class MultiSigCountScreen extends StatefulWidget {
   }) : super(key: key);
 
   factory MultiSigCountScreen.signatures({
+    required AddAccountFlowBloc bloc,
     required FieldMode mode,
     int? currentStep,
     int? totalSteps,
     Key? key,
   }) {
-    final bloc = get<AddAccountFlowBloc>();
     void Function(int count) onConfirm;
 
     switch (mode) {
@@ -51,12 +50,12 @@ class MultiSigCountScreen extends StatefulWidget {
   }
 
   factory MultiSigCountScreen.cosigners({
+    required AddAccountFlowBloc bloc,
     required FieldMode mode,
     int? currentStep,
     int? totalSteps,
     Key? key,
   }) {
-    final bloc = get<AddAccountFlowBloc>();
     void Function(int count) onConfirm;
 
     switch (mode) {
@@ -95,7 +94,6 @@ class MultiSigCountScreen extends StatefulWidget {
 
 class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
   final subscriptions = CompositeSubscription();
-  final bloc = get<AddAccountFlowBloc>();
   var value = 0;
   int? min;
   int? max;

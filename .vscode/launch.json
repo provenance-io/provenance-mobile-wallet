@@ -66,5 +66,14 @@
                 "prod"
             ]
         },
+        {
+            "name": "Update goldens",
+            "type": "dart",
+            "request": "launch",
+            "program": "./test",
+            "args": [
+                "--update-goldens"
+            ]
+        },
     ]
 }

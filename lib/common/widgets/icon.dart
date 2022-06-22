@@ -12,6 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 ///
 
 class PwIcons {
+  static const String account = 'account';
   static const String back = 'back';
   static const String close = 'close';
   static const String staking = 'staking';
@@ -31,6 +32,7 @@ class PwIcons {
   static const String ellipsis = "ellipsis";
   static const String qr = "qr";
   static const String check = "check";
+  static const String link = 'link';
   static const String linked = "linked";
   static const String warn = 'warn';
   static const String plus = 'plus';

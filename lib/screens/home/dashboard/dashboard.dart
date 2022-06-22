@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -15,6 +16,7 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -42,6 +44,7 @@ class _DashboardState extends State<Dashboard> {
 
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
+    final _keyValueService = get<KeyValueService>();
 
     return Container(
       decoration: BoxDecoration(
@@ -160,17 +163,34 @@ class _DashboardState extends State<Dashboard> {
                     );
                   },
                 ),
+                StreamBuilder<KeyValueData<bool>>(
+                  initialData: _keyValueService
+                      .stream<bool>(PrefKey.enableMultiSig)
+                      .valueOrNull,
+                  stream: _keyValueService.stream<bool>(PrefKey.enableMultiSig),
+                  builder: (context, snapshot) {
+                    final show = snapshot.data?.data ?? false;
+                    if (!show) {
+                      return Container();
+                    }
+
+                    return NotificationBell(
+                      notificationCount: 11,
+                      placeCount: 1,
+                    );
+                  },
+                ),
               ],
               centerTitle: false,
-              title: StreamBuilder<TransactableAccount?>(
+              title: StreamBuilder<Account?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
                 builder: (context, snapshot) {
                   final details = snapshot.data;
 
                   final name = details?.name ?? '';
-                  final accountAddress = details?.address ?? '';
-                  final coin = details?.coin;
+                  final accountAddress = details?.publicKey?.address ?? '';
+                  final coin = details?.publicKey?.coin;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,8 +322,8 @@ class _DashboardState extends State<Dashboard> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                final coin =
-                                    accountService.events.selected.value?.coin;
+                                final coin = accountService
+                                    .events.selected.value?.publicKey?.coin;
                                 if (coin != null) {
                                   get<DashboardTabBloc>().openAsset(coin, item);
                                 }
