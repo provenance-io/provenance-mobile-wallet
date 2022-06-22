@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'multi_sig_create_response_dto.dart';
+part of 'multi_sig_register_response_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MultiSigCreateResponseDto _$MultiSigCreateResponseDtoFromJson(
+MultiSigRegisterResponseDto _$MultiSigRegisterResponseDtoFromJson(
         Map<String, dynamic> json) =>
-    MultiSigCreateResponseDto(
+    MultiSigRegisterResponseDto(
       name: json['name'] as String,
       walletUuid: json['walletUuid'] as String,
       inviteLinks: (json['inviteLinks'] as List<dynamic>)
@@ -16,8 +16,8 @@ MultiSigCreateResponseDto _$MultiSigCreateResponseDtoFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$MultiSigCreateResponseDtoToJson(
-        MultiSigCreateResponseDto instance) =>
+Map<String, dynamic> _$MultiSigRegisterResponseDtoToJson(
+        MultiSigRegisterResponseDto instance) =>
     <String, dynamic>{
       'name': instance.name,
       'walletUuid': instance.walletUuid,

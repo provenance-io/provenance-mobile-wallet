@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'multi_sig_create_request_dto.g.dart';
+part 'multi_sig_register_request_dto.g.dart';
 
 @JsonSerializable()
-class MultiSigCreateRequestDto {
-  MultiSigCreateRequestDto({
+class MultiSigRegisterRequestDto {
+  MultiSigRegisterRequestDto({
     required this.name,
     required this.publicKey,
     required this.address,
@@ -21,7 +21,7 @@ class MultiSigCreateRequestDto {
   final String chainId;
 
   // ignore: member-ordering
-  factory MultiSigCreateRequestDto.fromJson(Map<String, dynamic> json) =>
-      _$MultiSigCreateRequestDtoFromJson(json);
-  Map<String, dynamic> toJson() => _$MultiSigCreateRequestDtoToJson(this);
+  factory MultiSigRegisterRequestDto.fromJson(Map<String, dynamic> json) =>
+      _$MultiSigRegisterRequestDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$MultiSigRegisterRequestDtoToJson(this);
 }
