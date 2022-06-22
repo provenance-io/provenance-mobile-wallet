@@ -648,4 +648,7 @@ class Strings {
   static const proposalDetailsNoWithVeto = "No With Veto";
   static const proposalDetailsAbstain = "Abstain";
   static const proposalDetailsProposalVoting = "Proposal Voting";
+
+  // Weighted Vote Screen
+  static const proposalWeightedVote = "Weighted Vote";
 }

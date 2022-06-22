@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class WeightedVotingPieChart extends StatefulWidget {
   const WeightedVotingPieChart({
@@ -54,25 +55,25 @@ class _WeightedVotingPieChartState extends State<WeightedVotingPieChart> {
               centerSpaceRadius: 0,
               sections: [
                 PieChartSectionData(
-                  title: "Yes",
+                  title: Strings.proposalDetailsYes,
                   color: widget.yes,
                   value: details.yesAmount,
                   titleStyle: style,
                 ),
                 PieChartSectionData(
-                  title: "No",
+                  title: Strings.proposalDetailsNo,
                   color: widget.no,
                   value: details.noAmount,
                   titleStyle: style,
                 ),
                 PieChartSectionData(
-                  title: "No With Veto",
+                  title: Strings.proposalDetailsNoWithVeto,
                   color: widget.noWithVeto,
                   value: details.noWithVetoAmount,
                   titleStyle: style,
                 ),
                 PieChartSectionData(
-                  title: "Abstain",
+                  title: Strings.proposalDetailsAbstain,
                   color: widget.abstain,
                   value: details.abstainAmount,
                   titleStyle: style,

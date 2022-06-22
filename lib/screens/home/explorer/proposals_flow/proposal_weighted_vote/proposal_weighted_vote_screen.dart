@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_del
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalWeightedVoteScreen extends StatefulWidget {
   const ProposalWeightedVoteScreen({
@@ -31,10 +33,10 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
   void initState() {
     _bloc = WeightedVoteBloc();
     get.registerSingleton<WeightedVoteBloc>(_bloc);
-    _yesTextEditingController = TextEditingController();
-    _noTextEditingController = TextEditingController();
-    _noWithVetoTextEditingController = TextEditingController();
-    _abstainTextEditingController = TextEditingController();
+    _yesTextEditingController = TextEditingController(text: "100");
+    _noTextEditingController = TextEditingController(text: "0");
+    _noWithVetoTextEditingController = TextEditingController(text: "0");
+    _abstainTextEditingController = TextEditingController(text: "0");
     _yesTextEditingController.addListener(_onYesTextChanged);
     _noTextEditingController.addListener(_onNoTextChanged);
     _noWithVetoTextEditingController.addListener(_onNoWithVetoTextChanged);
@@ -59,30 +61,33 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
 
   void _onYesTextChanged() {
     _bloc.updateWeight(
-        yesAmount: double.tryParse(_yesTextEditingController.text));
+      yesAmount: double.tryParse(_yesTextEditingController.text),
+    );
   }
 
   void _onNoTextChanged() {
     _bloc.updateWeight(
-        noAmount: double.tryParse(_noTextEditingController.text));
+      noAmount: double.tryParse(_noTextEditingController.text),
+    );
   }
 
   void _onNoWithVetoTextChanged() {
     _bloc.updateWeight(
-        noWithVetoAmount:
-            double.tryParse(_noWithVetoTextEditingController.text));
+      noWithVetoAmount: double.tryParse(_noWithVetoTextEditingController.text),
+    );
   }
 
   void _onAbstainTextChanged() {
     _bloc.updateWeight(
-        abstainAmount: double.tryParse(_abstainTextEditingController.text));
+      abstainAmount: double.tryParse(_abstainTextEditingController.text),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: "Weighted Vote",
+        title: Strings.proposalWeightedVote,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
@@ -90,17 +95,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
         child: ListView(
           children: [
             DetailsItem(
-              title: "Yes",
+              title: Strings.proposalDetailsYes,
               endChild: Flexible(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       child: StakingTextFormField(
-                        hint: "%",
+                        hint: "",
                         textEditingController: _yesTextEditingController,
                       ),
                     ),
+                    PwText(" %"),
                   ],
                 ),
               ),
@@ -109,17 +115,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "No",
+              title: Strings.proposalDetailsNo,
               endChild: Flexible(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       child: StakingTextFormField(
-                        hint: "%",
+                        hint: "",
                         textEditingController: _noTextEditingController,
                       ),
                     ),
+                    PwText(" %"),
                   ],
                 ),
               ),
@@ -128,17 +135,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "No With Veto",
+              title: Strings.proposalDetailsNoWithVeto,
               endChild: Flexible(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       child: StakingTextFormField(
-                        hint: "%",
+                        hint: "",
                         textEditingController: _noWithVetoTextEditingController,
                       ),
                     ),
+                    PwText(" %"),
                   ],
                 ),
               ),
@@ -147,17 +155,18 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Abstain",
+              title: Strings.proposalDetailsAbstain,
               endChild: Flexible(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       child: StakingTextFormField(
-                        hint: "%",
+                        hint: "",
                         textEditingController: _abstainTextEditingController,
                       ),
                     ),
+                    PwText(" %"),
                   ],
                 ),
               ),
@@ -170,6 +179,49 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               no: Theme.of(context).colorScheme.error,
               noWithVeto: Theme.of(context).colorScheme.notice350,
               abstain: Theme.of(context).colorScheme.neutral600,
+            ),
+            StreamBuilder<WeightedVoteDetails>(
+              initialData: _bloc.weightedVoteDetails.value,
+              stream: _bloc.weightedVoteDetails,
+              builder: (context, snapshot) {
+                final details = snapshot.data;
+
+                if (details == null) {
+                  return Container();
+                }
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: Spacing.largeX3,
+                    right: Spacing.largeX3,
+                    bottom: Spacing.largeX3,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: PwButton(
+                          enabled: details.abstainAmount +
+                                  details.noAmount +
+                                  details.noWithVetoAmount +
+                                  details.yesAmount ==
+                              100,
+                          onPressed: () {
+                            // TODO: Submit weighted vote.
+                          },
+                          child: PwText(
+                            Strings.continueName,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            color: PwColor.neutralNeutral,
+                            style: PwTextStyle.body,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

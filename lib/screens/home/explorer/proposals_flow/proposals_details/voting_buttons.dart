@@ -143,7 +143,7 @@ class VotingButtons extends StatelessWidget {
                     _bloc.showWeightedVote(proposal);
                   },
                   child: PwText(
-                    "Weighted Vote",
+                    Strings.proposalWeightedVote,
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     color: PwColor.neutralNeutral,
