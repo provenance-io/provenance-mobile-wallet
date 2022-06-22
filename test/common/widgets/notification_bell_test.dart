@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 
-const GOLDEN_ROOT = "../../goldens/common/widgets/notification_bell";
+const _goldenRoot = "../../goldens/common/widgets/notification_bell";
 
 main() {
   Future<void> _build(WidgetTester tester, int notificationCount,
@@ -77,11 +77,11 @@ main() {
 
       final bellFind = find.byType(NotificationBell);
       await expectLater(bellFind,
-          matchesGoldenFile("$GOLDEN_ROOT/inactive-defaultColor.png"));
+          matchesGoldenFile("$_goldenRoot/inactive-defaultColor.png"));
 
       await _build(tester, 1);
       await expectLater(
-          bellFind, matchesGoldenFile("$GOLDEN_ROOT/active-defaultColor.png"));
+          bellFind, matchesGoldenFile("$_goldenRoot/active-defaultColor.png"));
     });
 
     testWidgets('custom active and interactive colors', (tester) async {
@@ -90,12 +90,12 @@ main() {
 
       final bellFind = find.byType(NotificationBell);
       await expectLater(
-          bellFind, matchesGoldenFile("$GOLDEN_ROOT/inactive-customColor.png"));
+          bellFind, matchesGoldenFile("$_goldenRoot/inactive-customColor.png"));
 
       await _build(tester, 1,
           activeColor: Colors.blue, inactiveColor: Colors.pink);
       await expectLater(
-          bellFind, matchesGoldenFile("$GOLDEN_ROOT/active-customColor.png"));
+          bellFind, matchesGoldenFile("$_goldenRoot/active-customColor.png"));
     });
   });
 
@@ -119,7 +119,7 @@ main() {
         await expectLater(
             bellFind,
             matchesGoldenFile(
-                "$GOLDEN_ROOT/count-change-animation/$milliseconds-milliseconds.png"));
+                "$_goldenRoot/count-change-animation/$milliseconds-milliseconds.png"));
       }
     });
   });
