@@ -179,6 +179,17 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     widget.selectedProposal.depositPercentage,
                   )),
                 ),
+                DetailsItem(
+                  padding: EdgeInsets.only(
+                    left: Spacing.largeX3,
+                    right: Spacing.largeX3,
+                    top: Spacing.xLarge,
+                  ),
+                  title: "Needed Deposit",
+                  endChild: PwText(
+                    "${widget.selectedProposal.neededDepositFormatted} hash",
+                  ),
+                ),
                 DepositBarChart(
                   widget.selectedProposal.currentDepositFormatted,
                   widget.selectedProposal.neededDepositFormatted,

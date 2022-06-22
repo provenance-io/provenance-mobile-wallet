@@ -31,9 +31,22 @@ class DepositBarChart extends StatelessWidget {
               color: Theme.of(context).colorScheme.neutral700,
             ),
           ),
-          FractionallySizedBox(
-            widthFactor: current / total,
-            child: Container(
+          if (current <= total)
+            FractionallySizedBox(
+              widthFactor: current / total,
+              child: Container(
+                height: 20,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary550,
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                  color: Theme.of(context).colorScheme.primary550,
+                ),
+              ),
+            ),
+          if (current > total)
+            Container(
               height: 20,
               decoration: BoxDecoration(
                 border: Border.all(
@@ -43,7 +56,6 @@ class DepositBarChart extends StatelessWidget {
                 color: Theme.of(context).colorScheme.primary550,
               ),
             ),
-          ),
         ],
       ),
     );

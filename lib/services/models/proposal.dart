@@ -109,15 +109,15 @@ class Proposal {
   final double totalAmount;
 
   double get initialDepositFormatted {
-    return double.tryParse(initialDeposit.nhashToHash()) ?? 0;
+    return double.tryParse(initialDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
   }
 
   double get currentDepositFormatted {
-    return double.tryParse(currentDeposit.nhashToHash()) ?? 0;
+    return double.tryParse(currentDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
   }
 
   double get neededDepositFormatted {
-    return double.tryParse(neededDeposit.nhashToHash()) ?? 0;
+    return double.tryParse(neededDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
   }
 
   String get depositPercentage {
