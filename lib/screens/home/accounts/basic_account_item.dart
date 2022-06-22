@@ -132,6 +132,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
                   Navigator.of(context).pop(MenuOperation.switchCoin);
                 },
               ),
+            PwListDivider(),
             PwGreyButton(
               enabled: false,
               text: "",

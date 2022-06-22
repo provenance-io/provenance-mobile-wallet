@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -82,12 +83,14 @@ class MultiAccountItem extends StatelessWidget {
                 Navigator.of(context).pop(MenuOperation.viewInvite);
               },
             ),
+            PwListDivider(),
             PwGreyButton(
               text: Strings.remove,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
+            PwListDivider(),
             PwGreyButton(
               enabled: false,
               text: '',
