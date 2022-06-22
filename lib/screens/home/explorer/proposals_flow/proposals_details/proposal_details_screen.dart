@@ -75,47 +75,38 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsId,
-                  endChild: PwText("${widget.selectedProposal.proposalId}"),
+                  value: "${widget.selectedProposal.proposalId}",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsTitleString,
-                  endChild: PwText(widget.selectedProposal.title),
+                  value: widget.selectedProposal.title,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsStatus,
-                  endChild: PwText(widget.selectedProposal.status),
+                  value: widget.selectedProposal.status,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsProposer,
-                  endChild: PwText(widget.selectedProposal.proposerAddress
-                      .abbreviateAddress()),
+                  value: widget.selectedProposal.proposerAddress
+                      .abbreviateAddress(),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsDescription,
-                  needsExpansion: false,
-                  endChild: Expanded(
-                    child: Column(
-                      children: [
-                        PwText(
-                          widget.selectedProposal.description,
-                        ),
-                      ],
-                    ),
-                  ),
+                  value: widget.selectedProposal.description,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
@@ -133,61 +124,60 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsSubmitTime,
-                  endChild: PwText(
-                      _formatter.format(widget.selectedProposal.submitTime)),
+                  value: _formatter.format(widget.selectedProposal.submitTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsDepositEndTime,
-                  endChild: PwText(_formatter
-                      .format(widget.selectedProposal.depositEndTime)),
+                  value:
+                      _formatter.format(widget.selectedProposal.depositEndTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVotingStartTime,
-                  endChild: PwText(widget.selectedProposal.startTime.year == 1
+                  value: widget.selectedProposal.startTime.year == 1
                       ? "--"
-                      : _formatter.format(widget.selectedProposal.startTime)),
+                      : _formatter.format(widget.selectedProposal.startTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVotingEndTime,
-                  endChild: PwText(widget.selectedProposal.endTime.year == 1
+                  value: widget.selectedProposal.endTime.year == 1
                       ? "--"
-                      : _formatter.format(widget.selectedProposal.endTime)),
+                      : _formatter.format(widget.selectedProposal.endTime),
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   padding: EdgeInsets.only(
                     left: Spacing.largeX3,
                     right: Spacing.largeX3,
                     top: Spacing.xLarge,
                   ),
                   title: Strings.proposalDetailsDeposits,
-                  endChild: PwText(Strings.proposalDetailsDepositsHash(
+                  value: Strings.proposalDetailsDepositsHash(
                     widget.selectedProposal.currentDepositFormatted,
                     widget.selectedProposal.depositPercentage,
-                  )),
+                  ),
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   padding: EdgeInsets.only(
                     left: Spacing.largeX3,
                     right: Spacing.largeX3,
                     top: Spacing.xLarge,
                   ),
-                  title: "Needed Deposit",
-                  endChild: PwText(
-                    "${widget.selectedProposal.neededDepositFormatted} hash",
+                  title: Strings.proposalDetailsNeededDeposit,
+                  value: Strings.proposalDetailsHashNeeded(
+                    widget.selectedProposal.neededDepositFormatted,
                   ),
                 ),
                 DepositBarChart(
@@ -197,43 +187,38 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsQuorumThreshold,
-                  endChild: PwText(
-                    "${(widget.selectedProposal.quorumThreshold * 100).toStringAsFixed(2)}%",
-                  ),
+                  value:
+                      "${(widget.selectedProposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsPassThreshold,
-                  endChild: PwText(
-                    "${(widget.selectedProposal.passThreshold * 100).toStringAsFixed(2)}%",
-                  ),
+                  value:
+                      "${(widget.selectedProposal.passThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsVetoThreshold,
-                  endChild: PwText(
-                    "${(widget.selectedProposal.vetoThreshold * 100).toStringAsFixed(2)}%",
-                  ),
+                  value:
+                      "${(widget.selectedProposal.vetoThreshold * 100).toStringAsFixed(2)}%",
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   padding: EdgeInsets.only(
                     left: Spacing.largeX3,
                     right: Spacing.largeX3,
                     top: Spacing.xLarge,
                   ),
                   title: Strings.proposalDetailsPercentVoted,
-                  endChild: PwText(
-                    widget.selectedProposal.votePercentage,
-                  ),
+                  value: widget.selectedProposal.votePercentage,
                 ),
                 DepositBarChart(
                   widget.selectedProposal.totalAmount,
@@ -242,14 +227,12 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 PwListDivider(
                   indent: Spacing.largeX3,
                 ),
-                DetailsItem(
+                DetailsItem.fromStrings(
                   title: Strings.proposalDetailsTotalVotes,
-                  endChild: PwText(
-                    widget.selectedProposal.totalAmount
-                        .toInt()
-                        .toString()
-                        .formatNumber(),
-                  ),
+                  value: widget.selectedProposal.totalAmount
+                      .toInt()
+                      .toString()
+                      .formatNumber(),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
