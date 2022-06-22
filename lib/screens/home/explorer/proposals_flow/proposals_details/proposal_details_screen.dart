@@ -38,19 +38,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
       children: [
         Container(
           color: Theme.of(context).colorScheme.neutral750,
-          child: //StreamBuilder<DetailedValidatorDetails>(
-              // initialData: _bloc.validatorDetails.value,
-              // stream: _bloc.validatorDetails,
-              // builder: (context, snapshot) {
-              //   final details = snapshot.data;
-              //   final validator = snapshot.data?.validator;
-              //   final commission = snapshot.data?.commission;
-              //   if (details == null || validator == null || commission == null) {
-              //     return Container();
-              //   }
-
-              //   return
-              Scaffold(
+          child: Scaffold(
             appBar: PwAppBar(
               title: Strings.proposalDetailsTitle(_proposal.proposalId),
               leadingIcon: PwIcons.back,
@@ -279,28 +267,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                 ),
               ],
             ),
-            //);
-            //},
           ),
         ),
-        // StreamBuilder<bool>(
-        //   initialData: _bloc.isLoading.value,
-        //   stream: _bloc.isLoading,
-        //   builder: (context, snapshot) {
-        //     final isLoading = snapshot.data ?? false;
-        //     if (isLoading) {
-        //       return SizedBox(
-        //         height: MediaQuery.of(context).size.height,
-        //         width: MediaQuery.of(context).size.width,
-        //         child: Center(
-        //           child: CircularProgressIndicator(),
-        //         ),
-        //       );
-        //     }
-
-        //     return Container();
-        //   },
-        // ),
       ],
     );
   }
