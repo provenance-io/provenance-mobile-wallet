@@ -648,6 +648,8 @@ class Strings {
   static const proposalDetailsNoWithVeto = "No With Veto";
   static const proposalDetailsAbstain = "Abstain";
   static const proposalDetailsProposalVoting = "Proposal Voting";
+  static const proposalDetailsNeededDeposit = "Needed Deposit";
+  static String proposalDetailsHashNeeded(double needed) => "$needed hash";
 
   // Weighted Vote Screen
   static const proposalWeightedVote = "Weighted Vote";
