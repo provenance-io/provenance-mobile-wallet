@@ -11,8 +11,8 @@ class DepositBarChart extends StatelessWidget {
     ),
   }) : super(key: key);
 
-  final int total;
-  final int current;
+  final double total;
+  final double current;
   final EdgeInsets padding;
 
   @override

@@ -225,8 +225,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   ),
                 ),
                 DepositBarChart(
-                  widget.selectedProposal.totalAmount.toInt(),
-                  widget.selectedProposal.totalEligibleAmount.toInt(),
+                  widget.selectedProposal.totalAmount,
+                  widget.selectedProposal.totalEligibleAmount,
                 ),
                 PwListDivider(
                   indent: Spacing.largeX3,

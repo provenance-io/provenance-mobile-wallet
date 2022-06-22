@@ -636,7 +636,7 @@ class Strings {
   static const proposalDetailsVotingEndTime = "Voting End Time";
   static const proposalDetailsDeposits = "Deposits";
   static String proposalDetailsDepositsHash(
-          int deposited, String depositPercentage) =>
+          double deposited, String depositPercentage) =>
       "$deposited hash ($depositPercentage)";
   static const proposalDetailsQuorumThreshold = "Quorum Threshold";
   static const proposalDetailsPassThreshold = "Pass Threshold";

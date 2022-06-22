@@ -112,16 +112,18 @@ class Proposal {
     return double.tryParse(initialDeposit.nhashToHash()) ?? 0;
   }
 
-  int get currentDepositFormatted {
-    return int.tryParse(currentDeposit.nhashToHash()) ?? 0;
+  double get currentDepositFormatted {
+    return double.tryParse(currentDeposit.nhashToHash()) ?? 0;
   }
 
-  int get neededDepositFormatted {
-    return int.tryParse(neededDeposit.nhashToHash()) ?? 0;
+  double get neededDepositFormatted {
+    return double.tryParse(neededDeposit.nhashToHash()) ?? 0;
   }
 
   String get depositPercentage {
-    return "${((currentDepositFormatted / neededDepositFormatted) * 100).toInt()}%";
+    final percentage = (currentDepositFormatted / neededDepositFormatted) * 100;
+
+    return "${(!percentage.isNaN ? percentage : 0).toInt()}%";
   }
 
   String get votePercentage {
