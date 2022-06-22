@@ -3,7 +3,7 @@ description: The Provenance Blockchain Wallet provides users in all categories t
 
 publish_to: "none"
 
-version: 1.0.3
+version: 1.0.4
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
