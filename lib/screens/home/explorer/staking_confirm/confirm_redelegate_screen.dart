@@ -7,7 +7,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/extensions/num_extensions.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -39,7 +39,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
   "validatorDstAddress": "${details.toRedelegate?.addressId}",
   "amount": {
     "denom": "nhash",
-    "amount": "${details.hashRedelegated.nhashFromHash()}"
+    "amount": "${hashToNHash(details.hashRedelegated)}"
   }
 }
 ''';
@@ -122,7 +122,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmAmount,
               endChild: Flexible(
                 child: PwText(
-                  details.hashRedelegated.nhashFromHash(),
+                  hashToNHash(details.hashRedelegated).toString(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

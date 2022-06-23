@@ -1,5 +1,7 @@
+import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Delegation {
@@ -48,8 +50,10 @@ class Delegation {
     return "${amount.nhashToHash()} hash";
   }
 
-  num get hashAmount {
-    return num.tryParse(amount.nhashToHash()) ?? 0;
+  Decimal get hashAmount {
+    final nHash = BigInt.tryParse(amount) ?? BigInt.zero;
+
+    return nHashToHash(nHash);
   }
 
   String get formattedTime {
