@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -67,7 +68,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
       return;
     }
 
-    final number = num.tryParse(text) ?? 0;
+    final number = Decimal.tryParse(text) ?? Decimal.zero;
     _bloc.updateHashRedelegated(number);
   }
 

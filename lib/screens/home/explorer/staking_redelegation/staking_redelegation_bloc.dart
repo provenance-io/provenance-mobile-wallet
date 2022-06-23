@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
@@ -12,7 +13,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
-import 'package:provenance_wallet/util/extensions/num_extensions.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,7 +27,7 @@ class StakingRedelegationBloc extends Disposable {
           StakingRedelegationDetails(
             validator,
             delegation,
-            0,
+            Decimal.zero,
             _account,
             null,
           ),
@@ -63,7 +64,7 @@ class StakingRedelegationBloc extends Disposable {
     }
   }
 
-  void updateHashRedelegated(num hashRedelegated) {
+  void updateHashRedelegated(Decimal hashRedelegated) {
     final oldDetails = _stakingRedelegationDetails.value;
     _stakingRedelegationDetails.tryAdd(
       StakingRedelegationDetails(
@@ -99,7 +100,7 @@ class StakingRedelegationBloc extends Disposable {
         staking.MsgBeginRedelegate(
                 amount: proto.Coin(
                   denom: 'nhash',
-                  amount: details.hashRedelegated.nhashFromHash(),
+                  amount: hashToNHash(details.hashRedelegated).toString(),
                 ),
                 delegatorAddress: _account.publicKey!.address,
                 validatorSrcAddress: details.delegation.sourceAddress,
@@ -146,7 +147,7 @@ class StakingRedelegationDetails {
   final Delegation delegation;
   final SelectedDelegationType selectedDelegationType =
       SelectedDelegationType.redelegate;
-  final num hashRedelegated;
+  final Decimal hashRedelegated;
   final Account account;
   final ProvenanceValidator? toRedelegate;
 }

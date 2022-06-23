@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -52,7 +53,7 @@ class StakingRedelegationListState extends State<StakingRedelegationList> {
       return;
     }
 
-    final number = num.tryParse(text) ?? 0;
+    final number = Decimal.tryParse(text) ?? Decimal.zero;
     get<StakingRedelegationBloc>().updateHashRedelegated(number);
   }
 
@@ -118,14 +119,13 @@ class StakingRedelegationListState extends State<StakingRedelegationList> {
                     child: Flexible(
                       child: PwButton(
                         enabled: _formKey.currentState?.validate() == true &&
-                            widget.details.hashRedelegated > 0 &&
+                            widget.details.hashRedelegated > Decimal.zero &&
                             widget.details.hashRedelegated <=
                                 widget.details.delegation.hashAmount &&
                             widget.details.toRedelegate != null,
                         onPressed: () {
                           if (_formKey.currentState?.validate() == false ||
-                              0 == widget.details.hashRedelegated ||
-                              widget.details.hashRedelegated.isNegative) {
+                              widget.details.hashRedelegated <= Decimal.zero) {
                             return;
                           }
                           widget.navigator.showRedelegationReview();
