@@ -14,6 +14,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -91,7 +92,7 @@ class StakingDelegationBloc extends Disposable {
       staking.MsgDelegate(
         amount: proto.Coin(
           denom: details.asset?.denom,
-          amount: details.hashDelegated.toString(),
+          amount: hashToNHash(details.hashDelegated).toString(),
         ),
         delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
