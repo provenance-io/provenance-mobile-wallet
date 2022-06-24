@@ -1,0 +1,113 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
+import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
+import 'package:provenance_wallet/util/get.dart';
+
+import './action_list_screen_test.mocks.dart';
+
+@GenerateMocks([ActionListBloc])
+main() {
+  group("ActionListTab", () {
+    Future<void> _build(WidgetTester tester, String label, int count) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Material(
+          child: ActionListTab(
+            label: label,
+            count: count,
+          ),
+        ),
+      ));
+    }
+
+    testWidgets("contents", (tester) async {
+      await _build(tester, "Items", 3);
+      expect(find.text("Items (3)"), findsOneWidget);
+    });
+  });
+
+  group("ActionListScreen", () {
+    late MockActionListBloc mockBloc;
+    late StreamController<ActionListBlocState> _streamController;
+
+    Future<void> _build(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Material(
+          child: ActionListScreen(),
+        ),
+      ));
+    }
+
+    setUp(() {
+      _streamController = StreamController<ActionListBlocState>();
+
+      mockBloc = MockActionListBloc();
+      when(mockBloc.onDispose()).thenAnswer((_) => Future.value());
+      when(mockBloc.stream).thenAnswer((_) => _streamController.stream);
+
+      get.pushNewScope();
+      get.registerSingleton<ActionListBloc>(mockBloc);
+    });
+
+    tearDown(() {
+      get.popScope();
+      _streamController.close();
+    });
+
+    testWidgets("empty screen when there is no state", (tester) async {
+      await _build(tester);
+      expect(find.byType(ActionList), findsNothing);
+      expect(find.byType(NotificationList), findsNothing);
+      expect(find.byType(TabBar), findsNothing);
+      expect(find.byType(TabBarView), findsNothing);
+    });
+
+    testWidgets("empty screen when there is no state", (tester) async {
+      await _build(tester);
+      _streamController.add(ActionListBlocState([
+        ActionListGroup(
+          label: "ActionLabel",
+          subLabel: "ActionSubLabel",
+          isSelected: true,
+          isBasicAccount: true,
+          items: [],
+        )
+      ], [
+        NotificationItem(
+          label: "Notification",
+          created: DateTime.fromMillisecondsSinceEpoch(100),
+        ),
+        NotificationItem(
+            label: "Notification2",
+            created: DateTime.fromMillisecondsSinceEpoch(25))
+      ]));
+
+      await tester.pumpAndSettle(); // let the builder complete
+
+      expect(find.byType(ActionList), findsOneWidget);
+      expect(find.byType(TabBar), findsOneWidget);
+      expect(find.byType(TabBarView), findsOneWidget);
+
+      final tabFind = find.byType(ActionListTab);
+
+      final notificationTabFind = tabFind.last;
+      final actionTabFind = tabFind.first;
+
+      expect(notificationTabFind, findsOneWidget);
+      expect(actionTabFind, findsOneWidget);
+
+      expect(tester.widget<ActionListTab>(notificationTabFind).count, 2);
+      expect(tester.widget<ActionListTab>(actionTabFind).count, 1);
+
+      await tester.tap(notificationTabFind);
+      await tester.pumpAndSettle();
+      expect(find.byType(NotificationList), findsOneWidget);
+    });
+  });
+}
