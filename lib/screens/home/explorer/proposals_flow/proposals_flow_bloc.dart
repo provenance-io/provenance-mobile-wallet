@@ -28,8 +28,12 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showVoteReview(gov.VoteOption voteOption) async {
-    await _navigator.showVoteReview(voteOption);
+  Future<void> showVoteReview(
+      Proposal proposal, gov.VoteOption voteOption) async {
+    await _navigator.showVoteReview(
+      proposal,
+      voteOption,
+    );
   }
 
   @override

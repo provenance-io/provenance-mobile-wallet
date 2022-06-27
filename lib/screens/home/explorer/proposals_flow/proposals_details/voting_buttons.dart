@@ -50,6 +50,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwButton(
                   onPressed: () {
                     _bloc.showVoteReview(
+                      proposal,
                       gov.VoteOption.VOTE_OPTION_YES,
                     );
                   },
@@ -67,6 +68,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwButton(
                   onPressed: () {
                     _bloc.showVoteReview(
+                      proposal,
                       gov.VoteOption.VOTE_OPTION_NO,
                     );
                   },
@@ -95,6 +97,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwButton(
                   onPressed: () {
                     _bloc.showVoteReview(
+                      proposal,
                       gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
                     );
                   },
@@ -112,6 +115,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwButton(
                   onPressed: () {
                     _bloc.showVoteReview(
+                      proposal,
                       gov.VoteOption.VOTE_OPTION_ABSTAIN,
                     );
                   },

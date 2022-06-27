@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_sliders.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_voting_pie_chart.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
@@ -174,6 +175,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
             PwListDivider(
               indent: Spacing.largeX3,
             ),
+            WeightedVoteSliders(),
             WeightedVotingPieChart(
               yes: Theme.of(context).colorScheme.primary550,
               no: Theme.of(context).colorScheme.error,
