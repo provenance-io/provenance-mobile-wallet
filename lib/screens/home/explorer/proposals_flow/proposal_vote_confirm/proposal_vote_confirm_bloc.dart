@@ -36,15 +36,6 @@ class ProposalVoteConfirmBloc {
     );
   }
 
-  Future<void> doWeightedVote(
-    double? gasAdjustment,
-  ) async {
-    await _sendMessage(
-      gasAdjustment,
-      gov.MsgVoteWeighted().toAny(),
-    );
-  }
-
   Future<void> _sendMessage(
     double? gasAdjustment,
     proto.Any message,
