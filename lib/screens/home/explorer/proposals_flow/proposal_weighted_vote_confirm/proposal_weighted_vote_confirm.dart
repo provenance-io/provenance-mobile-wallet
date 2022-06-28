@@ -125,7 +125,7 @@ class _ProposalWeightedVoteConfirmScreenState
                     child: Flexible(
                       child: PwButton(
                         onPressed: () {
-                          // TODO: Actually do the voting
+                          print(_bloc.getMsgVoteWeightedJson());
                         },
                         child: PwText(
                           Strings.proposalVoteConfirmVote,

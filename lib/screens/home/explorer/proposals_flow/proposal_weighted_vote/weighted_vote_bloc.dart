@@ -27,6 +27,53 @@ class WeightedVoteBloc extends Disposable {
   ValueStream<WeightedVoteDetails> get weightedVoteDetails =>
       _weightedVoteDetails;
 
+  gov.MsgVoteWeighted _getMsgVoteWeighted() {
+    var options = <gov.WeightedVoteOption>[];
+    final details = _weightedVoteDetails.value;
+
+    if (details.yesAmount > 0) {
+      options.add(
+        gov.WeightedVoteOption(
+          option: gov.VoteOption.VOTE_OPTION_YES,
+          weight: "${details.yesAmount.toInt()}%",
+        ),
+      );
+    }
+
+    if (details.noAmount > 0) {
+      options.add(
+        gov.WeightedVoteOption(
+          option: gov.VoteOption.VOTE_OPTION_NO,
+          weight: "${details.noAmount.toInt()}%",
+        ),
+      );
+    }
+
+    if (details.noWithVetoAmount > 0) {
+      options.add(
+        gov.WeightedVoteOption(
+          option: gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
+          weight: "${details.noWithVetoAmount.toInt()}%",
+        ),
+      );
+    }
+
+    if (details.abstainAmount > 0) {
+      options.add(
+        gov.WeightedVoteOption(
+          option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
+          weight: "${details.abstainAmount.toInt()}%",
+        ),
+      );
+    }
+
+    return gov.MsgVoteWeighted(
+      options: options,
+      proposalId: Int64.parseInt(_proposal.proposalId.toString()),
+      voter: _account.address,
+    );
+  }
+
   @override
   FutureOr onDispose() {
     _weightedVoteDetails.close();
@@ -49,55 +96,16 @@ class WeightedVoteBloc extends Disposable {
     );
   }
 
+  String getMsgVoteWeightedJson() {
+    return _getMsgVoteWeighted().toProto3Json().toString();
+  }
+
   Future<void> doWeightedVote(
     double? gasAdjustment,
   ) async {
-    var options = <gov.WeightedVoteOption>[];
-    final details = _weightedVoteDetails.value;
-
-    if (details.yesAmount > 0) {
-      options.add(
-        gov.WeightedVoteOption(
-          option: gov.VoteOption.VOTE_OPTION_YES,
-          weight: "${details.yesAmount}%",
-        ),
-      );
-    }
-
-    if (details.noAmount > 0) {
-      options.add(
-        gov.WeightedVoteOption(
-          option: gov.VoteOption.VOTE_OPTION_NO,
-          weight: "${details.noAmount}%",
-        ),
-      );
-    }
-
-    if (details.noWithVetoAmount > 0) {
-      options.add(
-        gov.WeightedVoteOption(
-          option: gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
-          weight: "${details.noWithVetoAmount}%",
-        ),
-      );
-    }
-
-    if (details.abstainAmount > 0) {
-      options.add(
-        gov.WeightedVoteOption(
-          option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
-          weight: "${details.abstainAmount}%",
-        ),
-      );
-    }
-
     final body = proto.TxBody(
       messages: [
-        gov.MsgVoteWeighted(
-          options: options,
-          proposalId: _proposal.proposalId as Int64,
-          voter: _account.address,
-        ).toAny(),
+        _getMsgVoteWeighted().toAny(),
       ],
     );
 
