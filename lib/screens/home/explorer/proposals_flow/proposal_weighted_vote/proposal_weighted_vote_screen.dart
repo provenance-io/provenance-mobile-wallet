@@ -1,12 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_sliders.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_voting_pie_chart.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_delegation/staking_text_form_field.dart';
-import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -95,93 +91,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
           children: [
-            DetailsItem(
-              title: Strings.proposalDetailsYes,
-              endChild: Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: StakingTextFormField(
-                        hint: "",
-                        textEditingController: _yesTextEditingController,
-                      ),
-                    ),
-                    PwText(" %"),
-                  ],
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.proposalDetailsNo,
-              endChild: Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: StakingTextFormField(
-                        hint: "",
-                        textEditingController: _noTextEditingController,
-                      ),
-                    ),
-                    PwText(" %"),
-                  ],
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.proposalDetailsNoWithVeto,
-              endChild: Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: StakingTextFormField(
-                        hint: "",
-                        textEditingController: _noWithVetoTextEditingController,
-                      ),
-                    ),
-                    PwText(" %"),
-                  ],
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.proposalDetailsAbstain,
-              endChild: Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: StakingTextFormField(
-                        hint: "",
-                        textEditingController: _abstainTextEditingController,
-                      ),
-                    ),
-                    PwText(" %"),
-                  ],
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
             WeightedVoteSliders(),
-            WeightedVotingPieChart(
-              yes: Theme.of(context).colorScheme.primary550,
-              no: Theme.of(context).colorScheme.error,
-              noWithVeto: Theme.of(context).colorScheme.notice350,
-              abstain: Theme.of(context).colorScheme.neutral600,
-            ),
             StreamBuilder<WeightedVoteDetails>(
               initialData: _bloc.weightedVoteDetails.value,
               stream: _bloc.weightedVoteDetails,
