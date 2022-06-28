@@ -664,7 +664,7 @@ class Strings {
   static const proposalDetailsVotingEndTime = "Voting End Time";
   static const proposalDetailsDeposits = "Deposits";
   static String proposalDetailsDepositsHash(
-          int deposited, String depositPercentage) =>
+          double deposited, String depositPercentage) =>
       "$deposited hash ($depositPercentage)";
   static const proposalDetailsQuorumThreshold = "Quorum Threshold";
   static const proposalDetailsPassThreshold = "Pass Threshold";
@@ -676,4 +676,9 @@ class Strings {
   static const proposalDetailsNoWithVeto = "No With Veto";
   static const proposalDetailsAbstain = "Abstain";
   static const proposalDetailsProposalVoting = "Proposal Voting";
+  static const proposalDetailsNeededDeposit = "Needed Deposit";
+  static String proposalDetailsHashNeeded(double needed) => "$needed hash";
+
+  // Weighted Vote Screen
+  static const proposalWeightedVote = "Weighted Vote";
 }
