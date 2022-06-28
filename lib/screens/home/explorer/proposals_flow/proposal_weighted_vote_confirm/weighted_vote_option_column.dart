@@ -35,7 +35,7 @@ class WeightedVoteOptionColumn extends StatelessWidget {
         DetailsItem(
           title: Strings.proposalVoteConfirmWeight,
           endChild: PwText(
-            "$voteAmount%",
+            "${voteAmount.toInt()}%",
             overflow: TextOverflow.fade,
             softWrap: false,
             color: PwColor.neutralNeutral,
