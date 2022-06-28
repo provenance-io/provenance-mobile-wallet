@@ -418,8 +418,8 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       );
 
       // Updated linked basic account
-      final linkedAccount =
-          await _basicAccounts.record(linkedAccountId).get(tx);
+      final linkedAccountRef = _basicAccounts.record(linkedAccountId);
+      final linkedAccount = await linkedAccountRef.get(tx);
       if (linkedAccount != null) {
         final linkedAccountModel =
             v1.SembastAccountModel.fromRecord(linkedAccount);
@@ -428,7 +428,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           ..toSet()
           ..toList();
 
-        await _basicAccounts.update(
+        await linkedAccountRef.update(
           tx,
           linkedAccountModel
               .copyWith(
