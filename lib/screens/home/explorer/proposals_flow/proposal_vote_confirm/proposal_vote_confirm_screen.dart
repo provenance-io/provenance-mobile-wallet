@@ -53,14 +53,14 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     return Scaffold(
       appBar: PwAppBar(
         leadingIcon: PwIcons.back,
-        title: "Vote Confirm",
+        title: Strings.proposalVoteConfirmVoteConfirm,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
           children: [
             DetailsItem(
-              title: "Proposer Address",
+              title: Strings.proposalVoteConfirmProposerAddress,
               endChild: PwText(
                 widget.proposal.proposalId.toString(),
                 overflow: TextOverflow.fade,
@@ -73,7 +73,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Voter Address",
+              title: Strings.proposalVoteConfirmVoterAddress,
               endChild: PwText(
                 widget.account.address.abbreviateAddress(),
                 overflow: TextOverflow.fade,
@@ -86,7 +86,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: "Vote Option",
+              title: Strings.proposalVoteConfirmVoteOption,
               endChild: PwText(
                 widget.voteOption.displayTitle,
                 overflow: TextOverflow.fade,
@@ -123,7 +123,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                       // TODO: Actually do the voting
                     },
                     child: PwText(
-                      "Vote",
+                      Strings.proposalVoteConfirmVote,
                       softWrap: false,
                       overflow: TextOverflow.fade,
                       color: PwColor.neutralNeutral,
