@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_sliders.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -11,9 +12,11 @@ class ProposalWeightedVoteScreen extends StatefulWidget {
   const ProposalWeightedVoteScreen({
     Key? key,
     required this.proposal,
+    required this.account,
   }) : super(key: key);
 
   final Proposal proposal;
+  final TransactableAccount account;
 
   @override
   State<StatefulWidget> createState() => _ProposalDetailsScreenState();
@@ -24,7 +27,10 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
 
   @override
   void initState() {
-    _bloc = WeightedVoteBloc();
+    _bloc = WeightedVoteBloc(
+      widget.proposal,
+      widget.account,
+    );
     get.registerSingleton<WeightedVoteBloc>(_bloc);
     super.initState();
   }

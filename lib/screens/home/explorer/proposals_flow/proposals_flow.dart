@@ -80,7 +80,10 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     Proposal proposal,
   ) async {
     showPage(
-      (context) => ProposalWeightedVoteScreen(proposal: proposal),
+      (context) => ProposalWeightedVoteScreen(
+        proposal: proposal,
+        account: widget.account,
+      ),
     );
   }
 
