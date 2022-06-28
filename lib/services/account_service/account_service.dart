@@ -167,7 +167,7 @@ class AccountService implements Disposable {
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
-    required List<String> inviteLinks,
+    required List<String> inviteIds,
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
@@ -177,7 +177,7 @@ class AccountService implements Disposable {
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
-      inviteLinks: inviteLinks,
+      inviteIds: inviteIds,
     );
 
     if (details != null) {

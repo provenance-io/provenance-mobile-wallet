@@ -151,10 +151,12 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
 
       final cosignerCount = account.cosignerCount;
       for (var i = 1; i < cosignerCount; i++) {
+        final inviteId = account.inviteIds[i - 1];
+        final inviteLink = 'https://provenance.io/invite/$inviteId';
         cosigners.add(
           CosignerData(
             isSelf: false,
-            inviteLink: account.inviteLinks[i - 1],
+            inviteLink: inviteLink,
           ),
         );
       }

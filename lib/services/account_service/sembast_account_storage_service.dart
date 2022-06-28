@@ -391,7 +391,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
-    required List<String> inviteLinks,
+    required List<String> inviteIds,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
@@ -407,7 +407,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
-      inviteLinks: inviteLinks,
+      inviteIds: inviteIds,
     );
 
     final id = await db.transaction((tx) async {
@@ -525,7 +525,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       remoteId: model.remoteId,
       cosignerCount: model.cosignerCount,
       signaturesRequired: model.signaturesRequired,
-      inviteLinks: model.inviteLinks,
+      inviteIds: model.inviteIds,
     );
   }
 }

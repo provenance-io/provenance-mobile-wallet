@@ -502,9 +502,9 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitMultiSigConfirm(BuildContext context) async {
     ModalLoadingRoute.showLoading('', context);
 
-    final registration = await get<MultiSigService>().register(
+    final registration = await get<MultiSigService>().create(
       name: _multiSigName.value,
-      linkedPublicKey: _multiSigLinkedAccount!.publicKey!,
+      publicKey: _multiSigLinkedAccount!.publicKey!,
       cosignerCount: _multiSigCosignerCount.value.value,
       threshold: _multiSigSignatureCount.value.value,
     );
@@ -516,8 +516,8 @@ class AddAccountFlowBloc implements Disposable {
         name: _multiSigName.value,
         coin: _multiSigLinkedAccount!.publicKey!.coin,
         publicKeys: [],
-        remoteId: registration.id,
-        inviteLinks: registration.inviteLinks,
+        remoteId: registration.remoteId,
+        inviteIds: registration.signers.map((e) => e.inviteId).toList(),
         linkedAccountId: _multiSigLinkedAccount!.id,
         cosignerCount: _multiSigCosignerCount.value.value,
         signaturesRequired: _multiSigSignatureCount.value.value,
