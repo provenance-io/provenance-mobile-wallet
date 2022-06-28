@@ -51,7 +51,7 @@ class _ProposalWeightedVoteConfirmScreenState
         return Scaffold(
           appBar: PwAppBar(
             leadingIcon: PwIcons.back,
-            title: Strings.proposalVoteConfirmVoteConfirm,
+            title: Strings.proposalWeightedVoteConfirmVoteConfirm,
           ),
           body: Container(
             color: Theme.of(context).colorScheme.neutral750,

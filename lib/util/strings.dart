@@ -661,4 +661,7 @@ class Strings {
   static const proposalVoteConfirmVoteOption = "Vote Option";
   static const proposalVoteConfirmVote = "Vote";
   static const proposalVoteConfirmWeight = "Weight";
+
+  // Proposal Vote Confirm Screen
+  static const proposalWeightedVoteConfirmVoteConfirm = "Weighted Vote Confirm";
 }
