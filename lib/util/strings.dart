@@ -224,6 +224,34 @@ class Strings {
   static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
   static const accountTypeMultiSigJoinLink = 'Have an invitation link?';
 
+  // Multi-Sig Invite Review Landing
+
+  static String multiSigInviteReviewLandingDesc(String accountName) =>
+      'You’re invited to join the "$accountName" Multi-Sig Wallet';
+  static const multiSigInviteReviewLandingInvitationButton =
+      'Review Invitation';
+  static const multiSigInviteReviewLandingLearnMoreButton = 'Learn More';
+
+  // Multi-Sig Invite Review Invitation Details
+  static const multiSigInviteReviewDetailsTitle = 'Review Invitation';
+  static const multiSigInviteReviewDetailsDesc =
+      'Review the multi-sig account information.';
+  static const multiSigInviteReviewDetailsChooseAccountButton =
+      'Choose Individual Account';
+  static const multiSigInviteReviewDetailsMaybeLaterButton = 'Maybe Later';
+  static const multiSigInviteReviewDetailsDeclineButton = 'Decline Invitation';
+
+  // Multi-Sig Invite Review Create or Link
+  static const multiSigInviteReviewCreateOrLinkTitle =
+      'Choose Individual Account';
+  static const multiSigInviteReviewCreateOrLinkCreate = 'Create New Account';
+  static const multiSigInviteReviewCreateOrLinkCreateDesc =
+      'Create a passphrase and use this account to join the multi-sig account';
+  static const multiSigInviteReviewCreateOrLinkLinkExisting =
+      'Link Existing Account';
+  static const multiSigInviteReviewCreateOrLinkLinkExistingDesc =
+      'Select an account to join this multi-sig account';
+
   // Multi-Sig Join Link
   static const multiSigJoinLinkTitle = 'Multi-Signature Account';
   static const multiSigJoinLinkMessage =
@@ -234,7 +262,7 @@ class Strings {
   // Multi-Sig Connect
   static const multiSigConnectTitle = 'Connect to Individual Account';
   static const multiSigConnectDesc =
-      "You are creating a new multi-signature account. Select which account you’d like to join with.";
+      "Select an account to link with the multi-sig account.";
   static const multiSigConnectSelectionLabel = 'Select Account';
   static const multiSigConnectCreateButton = 'Create New Account';
 

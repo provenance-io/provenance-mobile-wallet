@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/extensions/num_extensions.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -32,11 +32,11 @@ class ConfirmDelegateScreen extends StatelessWidget {
           appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''{
-  "delegatorAddress": "${details.account.address}",
+  "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
   "amount": {
     "denom": "nhash",
-    "amount": "${details.hashDelegated.nhashFromHash()}"
+    "amount": "${hashToNHash(details.hashDelegated)}"
   }
 }''';
             navigator.showTransactionData(data);
@@ -53,7 +53,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmDelegatorAddress,
               endChild: Flexible(
                 child: PwText(
-                  details.account.address.abbreviateAddress(),
+                  details.account.publicKey!.address.abbreviateAddress(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,
@@ -98,7 +98,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
               title: Strings.stakingConfirmAmount,
               endChild: Flexible(
                 child: PwText(
-                  details.hashDelegated.nhashFromHash(),
+                  hashToNHash(details.hashDelegated).toString(),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

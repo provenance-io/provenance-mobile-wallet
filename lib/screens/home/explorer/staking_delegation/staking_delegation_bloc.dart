@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
@@ -13,6 +14,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -33,12 +35,12 @@ class StakingDelegationBloc extends Disposable {
             delegation,
             selectedDelegationType,
             null,
-            0,
+            Decimal.zero,
             _account,
           ),
         );
 
-  final TransactableAccount _account;
+  final Account _account;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
       _stakingDelegationDetails;
 
@@ -48,9 +50,9 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<void> load() async {
-    final asset =
-        (await get<AssetService>().getAssets(_account.coin, _account.address))
-            .firstWhere((element) => element.denom == 'nhash');
+    final asset = (await get<AssetService>()
+            .getAssets(_account.publicKey!.coin, _account.publicKey!.address))
+        .firstWhere((element) => element.denom == 'nhash');
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -65,7 +67,7 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  void updateHashDelegated(num hashDelegated) {
+  void updateHashDelegated(Decimal hashDelegated) {
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -89,10 +91,10 @@ class StakingDelegationBloc extends Disposable {
       gasAdjustment,
       staking.MsgDelegate(
         amount: proto.Coin(
-          denom: details.asset?.denom ?? 'nhash',
-          amount: details.hashDelegated.toString(),
+          denom: details.asset?.denom,
+          amount: hashToNHash(details.hashDelegated).toString(),
         ),
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -109,7 +111,7 @@ class StakingDelegationBloc extends Disposable {
           denom: details.asset?.denom ?? 'nhash',
           amount: details.hashDelegated.toString(),
         ),
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -122,7 +124,7 @@ class StakingDelegationBloc extends Disposable {
     await _sendMessage(
       gasAdjustment,
       MsgWithdrawDelegatorReward(
-        delegatorAddress: _account.address,
+        delegatorAddress: _account.publicKey!.address,
         validatorAddress: details.validator.operatorAddress,
       ).toAny(),
     );
@@ -160,7 +162,7 @@ class StakingDelegationBloc extends Disposable {
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey);
+        .estimateGas(body, _account.publicKey!);
   }
 }
 
@@ -180,19 +182,15 @@ class StakingDelegationDetails {
   final String commissionRate;
   final SelectedDelegationType selectedDelegationType;
   final Asset? asset;
-  final num hashDelegated;
-  final TransactableAccount account;
+  final Decimal hashDelegated;
+  final Account account;
 
   bool get hashInsufficient {
-    if (0 == hashDelegated) {
+    if (Decimal.zero == hashDelegated) {
       return false;
     }
-    final remainingHash =
-        num.tryParse(asset?.amount.nhashToHash(fractionDigits: 7) ?? "");
 
-    if (null == remainingHash) {
-      return true;
-    }
+    final remainingHash = Decimal.parse(asset?.amount ?? '0');
 
     return hashDelegated > remainingHash;
   }

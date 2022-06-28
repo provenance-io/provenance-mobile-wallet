@@ -4,7 +4,6 @@ import 'package:provenance_dart/wallet.dart';
 enum AccountKind {
   basic,
   multi,
-  pendingMulti,
 }
 
 abstract class Account {
@@ -13,23 +12,10 @@ abstract class Account {
   abstract final String id;
   abstract final String name;
   abstract final AccountKind kind;
+  abstract final PublicKey? publicKey;
 }
 
-abstract class TransactableAccount implements Account {
-  TransactableAccount._();
-
-  @override
-  abstract final String id;
-
-  @override
-  abstract final String name;
-
-  abstract final Coin coin;
-  abstract final String address;
-  abstract final PublicKey publicKey;
-}
-
-class BasicAccount with Diagnosticable implements TransactableAccount {
+class BasicAccount with Diagnosticable implements Account {
   const BasicAccount({
     required this.id,
     required this.name,
@@ -39,12 +25,6 @@ class BasicAccount with Diagnosticable implements TransactableAccount {
 
   @override
   AccountKind get kind => AccountKind.basic;
-
-  @override
-  String get address => publicKey.address;
-
-  @override
-  Coin get coin => publicKey.coin;
 
   @override
   final String id;
@@ -86,22 +66,20 @@ class BasicAccount with Diagnosticable implements TransactableAccount {
   }
 }
 
-class MultiAccount with Diagnosticable implements TransactableAccount {
+class MultiAccount with Diagnosticable implements Account {
   const MultiAccount({
     required this.id,
     required this.name,
     required this.publicKey,
-    required this.linkedAccountId,
+    required this.linkedAccount,
+    required this.remoteId,
+    required this.cosignerCount,
+    required this.signaturesRequired,
+    required this.inviteLinks,
   });
 
   @override
   AccountKind get kind => AccountKind.multi;
-
-  @override
-  String get address => publicKey.address;
-
-  @override
-  Coin get coin => publicKey.coin;
 
   @override
   final String id;
@@ -110,16 +88,28 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
   final String name;
 
   @override
-  final PublicKey publicKey;
+  final PublicKey? publicKey;
 
-  final String linkedAccountId;
+  final BasicAccount linkedAccount;
+
+  final String remoteId;
+
+  final int cosignerCount;
+
+  final int signaturesRequired;
+
+  final List<String> inviteLinks;
 
   @override
   int get hashCode => Object.hashAll([
         id,
         name,
-        publicKey.address,
-        linkedAccountId,
+        publicKey?.address,
+        linkedAccount,
+        remoteId,
+        cosignerCount,
+        signaturesRequired,
+        inviteLinks,
       ]);
 
   @override
@@ -127,8 +117,12 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
     return other is MultiAccount &&
         other.id == id &&
         other.name == name &&
-        other.publicKey.address == publicKey.address &&
-        other.linkedAccountId == linkedAccountId;
+        other.publicKey?.address == publicKey?.address &&
+        other.linkedAccount == linkedAccount &&
+        other.remoteId == remoteId &&
+        other.cosignerCount == cosignerCount &&
+        other.signaturesRequired == signaturesRequired &&
+        other.inviteLinks == inviteLinks;
   }
 
   @override
@@ -136,33 +130,7 @@ class MultiAccount with Diagnosticable implements TransactableAccount {
     super.debugFillProperties(properties);
 
     properties.add(StringProperty('id', id));
-    properties.add(StringProperty('address', publicKey.address));
+    properties.add(StringProperty('address', publicKey?.address));
     properties.add(StringProperty('name', name));
-    properties.add(StringProperty('linkedAccountId', linkedAccountId));
   }
-}
-
-class PendingMultiAccount implements Account {
-  PendingMultiAccount({
-    required this.id,
-    required this.remoteId,
-    required this.name,
-    required this.linkedAccountId,
-    required this.linkedAccountName,
-    required this.cosignerCount,
-    required this.signaturesRequired,
-  });
-
-  @override
-  AccountKind get kind => AccountKind.pendingMulti;
-
-  @override
-  final String id;
-  @override
-  final String name;
-  final String remoteId;
-  final String linkedAccountId;
-  final String linkedAccountName;
-  final int cosignerCount;
-  final int signaturesRequired;
 }

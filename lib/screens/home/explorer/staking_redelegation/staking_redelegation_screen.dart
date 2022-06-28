@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -17,7 +18,7 @@ class StakingRedelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final StakingFlowNavigator navigator;
-  final TransactableAccount account;
+  final Account account;
   final Delegation delegation;
 
   const StakingRedelegationScreen({
@@ -67,7 +68,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
       return;
     }
 
-    final number = num.tryParse(text) ?? 0;
+    final number = Decimal.tryParse(text) ?? Decimal.zero;
     _bloc.updateHashRedelegated(number);
   }
 
@@ -160,7 +161,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                                     horizontal: Spacing.medium,
                                   ),
                                   child: PwDropDown<ValidatorSortingState>(
-                                    initialValue: stakingDetails.selectedSort,
+                                    value: stakingDetails.selectedSort,
                                     items: ValidatorSortingState.values,
                                     isExpanded: true,
                                     onValueChanged: (item) {

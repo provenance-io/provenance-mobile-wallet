@@ -3,16 +3,17 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class CreatePin extends StatefulHookWidget {
   const CreatePin({
+    required this.bloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc bloc;
   final int currentStep;
   final int totalSteps;
 
@@ -23,8 +24,6 @@ class CreatePin extends StatefulHookWidget {
 }
 
 class CreatePinState extends State<CreatePin> {
-  final _bloc = get<AddAccountFlowBloc>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +57,6 @@ class CreatePinState extends State<CreatePin> {
   }
 
   _onFinish(List<int> inputCodes) {
-    _bloc.submitCreatePin(inputCodes);
+    widget.bloc.submitCreatePin(inputCodes);
   }
 }

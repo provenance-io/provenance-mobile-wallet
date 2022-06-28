@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -18,7 +19,7 @@ class StakingDelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final String commissionRate;
-  final TransactableAccount account;
+  final Account account;
   final StakingFlowNavigator navigator;
 
   const StakingDelegationScreen({
@@ -70,7 +71,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
       return;
     }
 
-    final number = num.tryParse(text) ?? 0;
+    final number = Decimal.tryParse(text) ?? Decimal.zero;
     get<StakingDelegationBloc>().updateHashDelegated(number);
   }
 
@@ -174,11 +175,10 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 child: Flexible(
                   child: PwButton(
                     enabled: _formKey.currentState?.validate() == true &&
-                        details.hashDelegated > 0,
+                        details.hashDelegated > Decimal.zero,
                     onPressed: () {
                       if (_formKey.currentState?.validate() == false ||
-                          0 == details.hashDelegated ||
-                          details.hashDelegated.isNegative) {
+                          details.hashDelegated <= Decimal.zero) {
                         return;
                       }
                       widget.navigator.showDelegationReview();

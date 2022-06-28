@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -9,14 +10,14 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class PendingAccountItem extends StatelessWidget {
-  const PendingAccountItem({
-    required PendingMultiAccount account,
+class MultiAccountItem extends StatelessWidget {
+  const MultiAccountItem({
+    required MultiAccount account,
     Key? key,
   })  : _account = account,
         super(key: key);
 
-  final PendingMultiAccount _account;
+  final MultiAccount _account;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +36,12 @@ class PendingAccountItem extends StatelessWidget {
                 kind: _account.kind,
                 isSelected: isSelected,
               ),
-              PwText(
-                Strings.accountStatusPending,
-                style: PwTextStyle.bodySmall,
-                color: PwColor.neutralNeutral,
-              ),
+              if (_account.publicKey == null)
+                PwText(
+                  Strings.accountStatusPending,
+                  style: PwTextStyle.bodySmall,
+                  color: PwColor.neutralNeutral,
+                ),
             ],
             isSelected: isSelected,
             onShowMenu: () => _showMenu(
@@ -55,7 +57,7 @@ class PendingAccountItem extends StatelessWidget {
               indent: 24,
               color: Theme.of(context).colorScheme.neutral750),
           LinkedAccount(
-            name: _account.linkedAccountName,
+            name: _account.linkedAccount.name,
             isSelected: isSelected,
           ),
         ],
@@ -65,7 +67,7 @@ class PendingAccountItem extends StatelessWidget {
 
   Future<void> _showMenu(
     BuildContext context,
-    PendingMultiAccount item,
+    MultiAccount item,
     bool isSelected,
   ) async {
     var result = await showModalBottomSheet<MenuOperation>(
@@ -81,12 +83,14 @@ class PendingAccountItem extends StatelessWidget {
                 Navigator.of(context).pop(MenuOperation.viewInvite);
               },
             ),
+            PwListDivider(),
             PwGreyButton(
               text: Strings.remove,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
+            PwListDivider(),
             PwGreyButton(
               enabled: false,
               text: '',

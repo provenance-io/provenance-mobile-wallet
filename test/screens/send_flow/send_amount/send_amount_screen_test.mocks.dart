@@ -21,8 +21,7 @@ import 'package:provenance_wallet/services/models/account.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeTransactableAccount_0 extends _i1.Fake
-    implements _i2.TransactableAccount {}
+class _FakeAccount_0 extends _i1.Fake implements _i2.Account {}
 
 class _FakeSendAsset_1 extends _i1.Fake implements _i3.SendAsset {}
 
@@ -35,9 +34,9 @@ class MockSendAmountBloc extends _i1.Mock implements _i4.SendAmountBloc {
   }
 
   @override
-  _i2.TransactableAccount get accountDetails => (super.noSuchMethod(
-      Invocation.getter(#accountDetails),
-      returnValue: _FakeTransactableAccount_0()) as _i2.TransactableAccount);
+  _i2.Account get accountDetails =>
+      (super.noSuchMethod(Invocation.getter(#accountDetails),
+          returnValue: _FakeAccount_0()) as _i2.Account);
   @override
   _i3.SendAsset get asset => (super.noSuchMethod(Invocation.getter(#asset),
       returnValue: _FakeSendAsset_1()) as _i3.SendAsset);

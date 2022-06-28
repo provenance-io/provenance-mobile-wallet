@@ -33,7 +33,7 @@ class TransactionDetailsScreen extends StatelessWidget {
           children: [
             DetailsItem(
               title: Strings.tradeDetailsAccount,
-              endChild: StreamBuilder<TransactableAccount?>(
+              endChild: StreamBuilder<Account?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
                 builder: (context, snapshot) {
@@ -121,7 +121,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                     onTap: () async {
                       final account = await accountService.getSelectedAccount();
                       String url;
-                      switch (account?.coin) {
+                      switch (account?.publicKey?.coin) {
                         case Coin.testNet:
                           url =
                               'https://explorer.test.provenance.io/tx/${transaction.hash}';

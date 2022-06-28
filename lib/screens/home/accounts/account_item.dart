@@ -56,7 +56,6 @@ class AccountTitleRow extends StatelessWidget {
         name = Strings.accountKindBasic;
         break;
       case AccountKind.multi:
-      case AccountKind.pendingMulti:
         name = Strings.accountKindMulti;
         break;
     }
@@ -121,15 +120,15 @@ class AccountContainer extends StatelessWidget {
   }
 }
 
-class TransactableAccountDescriptionRow extends StatelessWidget {
-  const TransactableAccountDescriptionRow({
+class AccountDescriptionRow extends StatelessWidget {
+  const AccountDescriptionRow({
     required this.account,
     required this.isSelected,
     Key? key,
   }) : super(key: key);
 
   final bool isSelected;
-  final TransactableAccount account;
+  final Account account;
 
   @override
   Widget build(BuildContext context) {

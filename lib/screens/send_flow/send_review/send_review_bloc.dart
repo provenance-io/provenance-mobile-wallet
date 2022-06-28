@@ -70,7 +70,7 @@ class SendReviewBloc implements Disposable {
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
   final TransactionHandler _transactionHandler;
-  final TransactableAccount _accountDetails;
+  final Account _accountDetails;
   final String receivingAddress;
   final String? note;
   final SendAsset sendingAsset;
@@ -90,7 +90,7 @@ class SendReviewBloc implements Disposable {
       memo: note,
       messages: [
         MsgSend(
-          fromAddress: _accountDetails.address,
+          fromAddress: _accountDetails.publicKey!.address,
           toAddress: receivingAddress,
           amount: [
             Coin(

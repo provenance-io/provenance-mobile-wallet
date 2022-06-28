@@ -3,18 +3,18 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_button.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigCreateOrJoinScreen extends StatelessWidget {
-  MultiSigCreateOrJoinScreen({
+  const MultiSigCreateOrJoinScreen({
+    required this.bloc,
     Key? key,
   }) : super(key: key);
 
   static final keyJoinMultiSig =
       ValueKey('$MultiSigCreateOrJoinScreen.join_button');
 
-  final _bloc = get<AddAccountFlowBloc>();
+  final AddAccountFlowBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +49,7 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                       name: Strings.accountTypeMultiSigCreateName,
                       desc: Strings.accountTypeMultiSigCreateDesc,
                       onPressed: () {
-                        _bloc
-                            .submitMultiSigCreateOrJoin(MultiSigAddKind.create);
+                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.create);
                       },
                     ),
                     // VerticalSpacer.large(),
@@ -66,7 +65,7 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        _bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.link);
+                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.link);
                       },
                       child: Container(
                         padding: EdgeInsets.all(

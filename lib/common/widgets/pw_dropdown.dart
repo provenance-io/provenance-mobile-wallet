@@ -3,10 +3,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 class PwDropDown<X> extends StatefulWidget {
   const PwDropDown({
     Key? key,
-    required this.initialValue,
+    required this.value,
     required this.items,
     required this.builder,
-    this.onValueChanged,
+    required this.onValueChanged,
     this.isExpanded = false,
     this.autofocus = false,
     this.focusNode,
@@ -15,10 +15,10 @@ class PwDropDown<X> extends StatefulWidget {
     this.icon,
   }) : super(key: key);
 
-  final X initialValue;
+  final X value;
   final List<X> items;
   final Widget Function(X item) builder;
-  final void Function(X item)? onValueChanged;
+  final void Function(X item) onValueChanged;
   final bool isExpanded;
   final bool autofocus;
   final FocusNode? focusNode;
@@ -31,12 +31,12 @@ class PwDropDown<X> extends StatefulWidget {
 
   static PwDropDown<String> fromStrings({
     Key? key,
-    required String initialValue,
+    required String value,
     required List<String> items,
-    void Function(String item)? onValueChanged,
+    required void Function(String item) onValueChanged,
   }) {
     return PwDropDown<String>(
-      initialValue: initialValue,
+      value: value,
       items: items,
       key: key,
       isExpanded: true,
@@ -55,12 +55,20 @@ class PwDropDown<X> extends StatefulWidget {
 }
 
 class _PwDropDownState<X> extends State<PwDropDown<X>> {
-  late X dropdownValue;
+  late X _value;
 
   @override
   void initState() {
-    dropdownValue = widget.initialValue;
     super.initState();
+
+    _value = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant PwDropDown<X> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _value = widget.value;
   }
 
   @override
@@ -73,7 +81,7 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
       dropdownColor:
           widget.dropdownColor ?? Theme.of(context).colorScheme.neutral750,
       underline: Container(),
-      value: dropdownValue,
+      value: _value,
       icon: widget.icon ??
           Padding(
             padding: EdgeInsets.only(left: 16),
@@ -82,7 +90,7 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
               color: Theme.of(context).colorScheme.neutralNeutral,
             ),
           ),
-      onChanged: _onChange,
+      onChanged: (e) => widget.onValueChanged.call(e!),
       items: widget.items.map<DropdownMenuItem<X>>((X value) {
         return DropdownMenuItem<X>(
           value: value,
@@ -90,15 +98,5 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
         );
       }).toList(),
     );
-  }
-
-  void _onChange(X? newValue) {
-    setState(() {
-      dropdownValue = newValue!;
-    });
-
-    if (widget.onValueChanged != null) {
-      widget.onValueChanged!.call(newValue!);
-    }
   }
 }

@@ -21,10 +21,10 @@ class StakingFlowBloc extends PwPagingCache {
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
   final _validatorService = get<ValidatorService>();
-  final TransactableAccount _account;
+  final Account _account;
 
   StakingFlowBloc({
-    required TransactableAccount account,
+    required Account account,
   })  : _account = account,
         super(50);
 
@@ -52,16 +52,16 @@ class StakingFlowBloc extends PwPagingCache {
       final account = _account;
 
       final delegations = await _validatorService.getDelegations(
-        _account.coin,
-        _account.address,
+        _account.publicKey!.coin,
+        _account.publicKey!.address,
         _delegationPages.value,
       );
 
-      final rewards =
-          await _validatorService.getRewards(account.coin, account.address);
+      final rewards = await _validatorService.getRewards(
+          account.publicKey!.coin, account.publicKey!.address);
 
       final validators = await _validatorService.getRecentValidators(
-        _account.coin,
+        _account.publicKey!.coin,
         _validatorPages.value,
       );
 
@@ -69,7 +69,7 @@ class StakingFlowBloc extends PwPagingCache {
         StakingDetails(
             delegates: delegations,
             validators: validators,
-            address: account.address,
+            address: account.publicKey!.address,
             rewards: rewards),
       );
     } finally {
@@ -112,7 +112,9 @@ class StakingFlowBloc extends PwPagingCache {
         _delegationPages,
         _isLoadingDelegations,
         () async => await _validatorService.getDelegations(
-            _account.coin, _account.address, _delegationPages.value));
+            _account.publicKey!.coin,
+            _account.publicKey!.address,
+            _delegationPages.value));
 
     _stakingDetails.tryAdd(
       StakingDetails(
@@ -135,7 +137,7 @@ class StakingFlowBloc extends PwPagingCache {
         _validatorPages,
         _isLoadingValidators,
         () async => await _validatorService.getRecentValidators(
-              _account.coin,
+              _account.publicKey!.coin,
               _validatorPages.value,
             ));
 

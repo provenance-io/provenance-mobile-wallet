@@ -3,20 +3,19 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class EnableFaceIdScreen extends StatelessWidget {
-  EnableFaceIdScreen({
+  const EnableFaceIdScreen({
+    required this.bloc,
     required this.currentStep,
     required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
+  final AddAccountFlowBloc bloc;
   final int currentStep;
   final int totalSteps;
-
-  final _bloc = get<AddAccountFlowBloc>();
 
   static final keyEnableButton = ValueKey('$EnableFaceIdScreen.enable_button');
   static final keySkipButton = ValueKey('$EnableFaceIdScreen.skip_button');
@@ -28,7 +27,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     String message;
     String icon;
 
-    switch (_bloc.biometryType) {
+    switch (bloc.biometryType) {
       case BiometryType.faceId:
         header = Strings.faceId;
         title = Strings.useFaceIdTitle;
@@ -51,7 +50,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     }
 
     Widget skipButton;
-    skipButton = _bloc.biometryType == BiometryType.none
+    skipButton = bloc.biometryType == BiometryType.none
         ? PwTextButton.primaryAction(
             key: keySkipButton,
             context: context,
@@ -129,7 +128,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  if (_bloc.biometryType != BiometryType.none)
+                  if (bloc.biometryType != BiometryType.none)
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
@@ -167,7 +166,7 @@ class EnableFaceIdScreen extends StatelessWidget {
     BuildContext context, {
     required bool useBiometry,
   }) async {
-    await _bloc.submitEnableFaceId(
+    await bloc.submitEnableFaceId(
       context: context,
       useBiometry: useBiometry,
     );

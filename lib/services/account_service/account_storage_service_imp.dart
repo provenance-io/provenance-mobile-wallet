@@ -16,7 +16,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   final CipherService _cipherService;
 
   @override
-  Future<TransactableAccount?> addAccount({
+  Future<Account?> addAccount({
     required String name,
     required List<PrivateKey> privateKeys,
     required Coin selectedCoin,
@@ -71,36 +71,27 @@ class AccountStorageServiceImp implements AccountStorageService {
     required List<PublicKey> publicKeys,
     required Coin selectedCoin,
     required String linkedAccountId,
+    required String remoteId,
+    required int cosignerCount,
+    required int signaturesRequired,
+    required List<String> inviteLinks,
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
       publicKeys: publicKeys,
       selectedChainId: ChainId.forCoin(selectedCoin),
       linkedAccountId: linkedAccountId,
+      remoteId: remoteId,
+      cosignerCount: cosignerCount,
+      signaturesRequired: signaturesRequired,
+      inviteLinks: inviteLinks,
     );
 
     return details;
   }
 
   @override
-  Future<PendingMultiAccount?> addPendingMultiAccount({
-    required String name,
-    required String remoteId,
-    required String linkedAccountId,
-    required int cosignerCount,
-    required int signaturesRequired,
-  }) {
-    return _serviceCore.addPendingMultiAccount(
-      name: name,
-      remoteId: remoteId,
-      linkedAccountId: linkedAccountId,
-      cosignerCount: cosignerCount,
-      signaturesRequired: signaturesRequired,
-    );
-  }
-
-  @override
-  Future<TransactableAccount?> getSelectedAccount() {
+  Future<Account?> getSelectedAccount() {
     return _serviceCore.getSelectedAccount();
   }
 
@@ -134,12 +125,8 @@ class AccountStorageServiceImp implements AccountStorageService {
 
   @override
   Future<bool> removeAllAccounts() async {
-    final success = await _cipherService.resetKeys();
-    var count = 0;
-
-    if (success) {
-      count = await _serviceCore.removeAllAccounts();
-    }
+    await _cipherService.resetKeys();
+    final count = await _serviceCore.removeAllAccounts();
 
     return count != 0;
   }
@@ -157,7 +144,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<TransactableAccount?> renameAccount({
+  Future<Account?> renameAccount({
     required String id,
     required String name,
   }) {
@@ -165,7 +152,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<TransactableAccount?> setAccountCoin({
+  Future<Account?> setAccountCoin({
     required String id,
     required Coin coin,
   }) async {
@@ -180,7 +167,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<TransactableAccount?> selectAccount({String? id}) {
+  Future<Account?> selectAccount({String? id}) {
     return _serviceCore.selectAccount(id: id);
   }
 

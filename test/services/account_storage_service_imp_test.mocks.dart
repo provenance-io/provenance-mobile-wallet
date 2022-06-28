@@ -56,33 +56,24 @@ class MockAccountStorageServiceCore extends _i1.Mock
           {String? name,
           List<_i6.PublicKey>? publicKeys,
           String? selectedChainId,
-          String? linkedAccountId}) =>
+          String? linkedAccountId,
+          String? remoteId,
+          int? cosignerCount,
+          int? signaturesRequired,
+          List<String>? inviteLinks}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
                 #publicKeys: publicKeys,
                 #selectedChainId: selectedChainId,
-                #linkedAccountId: linkedAccountId
+                #linkedAccountId: linkedAccountId,
+                #remoteId: remoteId,
+                #cosignerCount: cosignerCount,
+                #signaturesRequired: signaturesRequired,
+                #inviteLinks: inviteLinks
               }),
               returnValue: Future<_i4.MultiAccount?>.value())
           as _i3.Future<_i4.MultiAccount?>);
-  @override
-  _i3.Future<_i4.PendingMultiAccount?> addPendingMultiAccount(
-          {String? name,
-          String? remoteId,
-          String? linkedAccountId,
-          int? cosignerCount,
-          int? signaturesRequired}) =>
-      (super.noSuchMethod(
-              Invocation.method(#addPendingMultiAccount, [], {
-                #name: name,
-                #remoteId: remoteId,
-                #linkedAccountId: linkedAccountId,
-                #cosignerCount: cosignerCount,
-                #signaturesRequired: signaturesRequired
-              }),
-              returnValue: Future<_i4.PendingMultiAccount?>.value())
-          as _i3.Future<_i4.PendingMultiAccount?>);
   @override
   _i3.Future<_i4.Account?> getAccount({String? id}) => (super.noSuchMethod(
       Invocation.method(#getAccount, [], {#id: id}),
@@ -97,12 +88,6 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#getMultiAccount, [], {#id: id}),
               returnValue: Future<_i4.MultiAccount?>.value())
           as _i3.Future<_i4.MultiAccount?>);
-  @override
-  _i3.Future<_i4.PendingMultiAccount?> getPendingMultiAccount({String? id}) =>
-      (super.noSuchMethod(
-              Invocation.method(#getPendingMultiAccount, [], {#id: id}),
-              returnValue: Future<_i4.PendingMultiAccount?>.value())
-          as _i3.Future<_i4.PendingMultiAccount?>);
   @override
   _i3.Future<List<_i4.Account>> getAccounts() =>
       (super.noSuchMethod(Invocation.method(#getAccounts, []),
@@ -121,16 +106,9 @@ class MockAccountStorageServiceCore extends _i1.Mock
                   Future<List<_i4.MultiAccount>>.value(<_i4.MultiAccount>[]))
           as _i3.Future<List<_i4.MultiAccount>>);
   @override
-  _i3.Future<List<_i4.PendingMultiAccount>> getPendingMultiAccounts() =>
-      (super.noSuchMethod(Invocation.method(#getPendingMultiAccounts, []),
-              returnValue: Future<List<_i4.PendingMultiAccount>>.value(
-                  <_i4.PendingMultiAccount>[]))
-          as _i3.Future<List<_i4.PendingMultiAccount>>);
-  @override
-  _i3.Future<_i4.TransactableAccount?> getSelectedAccount() =>
-      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+  _i3.Future<_i4.Account?> getSelectedAccount() => (super.noSuchMethod(
+      Invocation.method(#getSelectedAccount, []),
+      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
   @override
   _i3.Future<int> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
@@ -140,24 +118,21 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#removeAllAccounts, []),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
-  _i3.Future<_i4.TransactableAccount?> renameAccount(
-          {String? id, String? name}) =>
+  _i3.Future<_i4.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+              returnValue: Future<_i4.Account?>.value())
+          as _i3.Future<_i4.Account?>);
   @override
-  _i3.Future<_i4.TransactableAccount?> selectAccount({String? id}) =>
-      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+  _i3.Future<_i4.Account?> selectAccount({String? id}) => (super.noSuchMethod(
+      Invocation.method(#selectAccount, [], {#id: id}),
+      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
   @override
-  _i3.Future<_i4.TransactableAccount?> setChainId(
-          {String? id, String? chainId}) =>
+  _i3.Future<_i4.Account?> setChainId({String? id, String? chainId}) =>
       (super.noSuchMethod(
               Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
-              returnValue: Future<_i4.TransactableAccount?>.value())
-          as _i3.Future<_i4.TransactableAccount?>);
+              returnValue: Future<_i4.Account?>.value())
+          as _i3.Future<_i4.Account?>);
 }
 
 /// A class which mocks [CipherService].
