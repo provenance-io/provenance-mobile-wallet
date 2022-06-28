@@ -93,8 +93,10 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           value: "${_currentValues[3].toInt()}%",
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
+          padding: EdgeInsets.only(
+            left: Spacing.large,
+            right: Spacing.large,
+            bottom: Spacing.largeX3,
           ),
           child: WeightedVoteSlider(
             thumbColor: colors.neutral550,

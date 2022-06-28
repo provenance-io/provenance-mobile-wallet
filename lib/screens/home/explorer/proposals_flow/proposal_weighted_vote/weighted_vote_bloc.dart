@@ -24,10 +24,11 @@ class WeightedVoteBloc extends Disposable {
     final oldDetails = _weightedVoteDetails.value;
     _weightedVoteDetails.tryAdd(
       WeightedVoteDetails(
-          yesAmount: yesAmount ?? oldDetails.yesAmount,
-          noAmount: noAmount ?? oldDetails.noAmount,
-          abstainAmount: abstainAmount ?? oldDetails.abstainAmount,
-          noWithVetoAmount: noWithVetoAmount ?? oldDetails.noWithVetoAmount),
+        yesAmount: yesAmount ?? oldDetails.yesAmount,
+        noAmount: noAmount ?? oldDetails.noAmount,
+        abstainAmount: abstainAmount ?? oldDetails.abstainAmount,
+        noWithVetoAmount: noWithVetoAmount ?? oldDetails.noWithVetoAmount,
+      ),
     );
   }
 }
