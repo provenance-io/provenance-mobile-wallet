@@ -185,6 +185,8 @@ class AccountService implements Disposable {
       if (events.selected.value == null) {
         selectAccount(id: details.id);
       }
+
+      events._updated.add(details.linkedAccount);
     }
 
     return details;
@@ -201,6 +203,14 @@ class AccountService implements Disposable {
           final first = accounts.firstOrNull;
           if (first != null) {
             await selectAccount(id: first.id);
+          }
+        }
+
+        if (account is MultiAccount) {
+          final linkedAccount =
+              await _storage.getAccount(account.linkedAccount.id);
+          if (linkedAccount != null) {
+            events._updated.add(linkedAccount);
           }
         }
       } else {
