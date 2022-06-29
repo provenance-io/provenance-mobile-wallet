@@ -126,7 +126,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
             DetailsItem(
               title: Strings.proposalVoteConfirmVoteOption,
               endChild: PwText(
-                widget.voteOption.displayTitle,
+                widget.voteOption.name,
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 color: PwColor.neutralNeutral,

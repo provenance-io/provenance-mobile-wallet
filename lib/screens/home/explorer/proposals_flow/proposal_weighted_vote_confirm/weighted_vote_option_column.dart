@@ -1,7 +1,6 @@
 import 'package:provenance_dart/proto_gov.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -22,7 +21,7 @@ class WeightedVoteOptionColumn extends StatelessWidget {
         DetailsItem(
           title: Strings.proposalVoteConfirmVoteOption,
           endChild: PwText(
-            option.displayTitle,
+            option.name,
             overflow: TextOverflow.fade,
             softWrap: false,
             color: PwColor.neutralNeutral,

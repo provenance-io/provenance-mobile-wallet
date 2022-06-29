@@ -11,7 +11,6 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalVoteConfirmBloc {
   final TransactableAccount _account;
@@ -78,16 +77,5 @@ class ProposalVoteConfirmBloc {
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
         .estimateGas(body, _account.publicKey);
-  }
-}
-
-extension VoteOptionExtension on gov.VoteOption {
-  String get displayTitle {
-    var chunks = name.toLowerCase().replaceAll("vote_", "").split("_");
-    var word = "";
-    for (var element in chunks) {
-      word += element.capitalize();
-    }
-    return word;
   }
 }
