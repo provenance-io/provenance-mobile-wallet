@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
@@ -70,6 +71,7 @@ class MultiSigService with ClientCoinMixin {
               ),
             )
             .toList(),
+        signersRequired: data.threshold,
       );
     }
 
@@ -146,12 +148,64 @@ class MultiSigService with ClientCoinMixin {
                     ),
                   )
                   .toList(),
+              signersRequired: e.threshold,
             ),
           )
           .toList();
     }
 
     return accounts;
+  }
+
+  Future<MultiSigRemoteAccount?> getAccount({
+    required String remoteId,
+    required PublicKey signerPublicKey,
+  }) async {
+    final accounts = await getAccounts(
+      publicKey: signerPublicKey,
+    );
+
+    MultiSigRemoteAccount? account;
+
+    if (accounts != null) {
+      account = accounts.firstWhereOrNull((e) => e.remoteId == remoteId);
+    }
+
+    return account;
+  }
+
+  Future<MultiSigRemoteAccount?> getAccountByInvite({
+    required String inviteId,
+  }) async {
+    MultiSigRemoteAccount? account;
+
+    const inviteIds = {
+      'e472ec16-4436-46d5-b72d-6a998b80cd82',
+      '991198b7-97bb-42dc-8ead-0e783c8ac45b',
+      '42ac4c04-f8df-4dd4-80e6-a2933aa0e25c',
+    };
+
+    // TODO-Roy: Add service call.
+    if (inviteIds.contains(inviteId)) {
+      account = MultiSigRemoteAccount(
+        remoteId: 'cdfa44a1-7dbd-4be5-8e03-db8a7c6d83c2',
+        name: "Roy's Multisig Three",
+        signers: [
+          MultiSigSigner(
+            inviteId: 'e472ec16-4436-46d5-b72d-6a998b80cd82',
+          ),
+          MultiSigSigner(
+            inviteId: '991198b7-97bb-42dc-8ead-0e783c8ac45b',
+          ),
+          MultiSigSigner(
+            inviteId: '42ac4c04-f8df-4dd4-80e6-a2933aa0e25c',
+          ),
+        ],
+        signersRequired: 2,
+      );
+    }
+
+    return account;
   }
 
   MultiSigSigner _toMultiSigSigner({

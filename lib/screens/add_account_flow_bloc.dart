@@ -12,12 +12,13 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.da
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 enum AddAccountScreen {
   accountType,
@@ -40,6 +41,7 @@ enum AddAccountScreen {
   multiSigCosigners,
   multiSigSignatures,
   multiSigConfirm,
+  multiSigInviteReviewFlow,
 }
 
 const _flowCreateSingle = [
@@ -82,6 +84,7 @@ const _flowMultiSigCreate = [
 const _flowMultiSigJoinLink = [
   AddAccountScreen.multiSigCreateOrJoin,
   AddAccountScreen.multiSigJoinLink,
+  AddAccountScreen.multiSigInviteReviewFlow,
 ];
 
 const _flowRecover = [
@@ -113,6 +116,7 @@ class AddAccountFlowBloc implements Disposable {
   final AddAccountOrigin _origin;
   final _accountService = get<AccountService>();
   final _keyValueService = get<KeyValueService>();
+  final _multiSigService = get<MultiSigService>();
 
   final _name = BehaviorSubject<String>();
   final _multiSigName = BehaviorSubject<String>();
@@ -151,6 +155,8 @@ class AddAccountFlowBloc implements Disposable {
   BiometryType? _biometryType;
   Account? _multiSigLinkedAccount;
   Account? _createdAccount;
+  String? _inviteId;
+  MultiSigRemoteAccount? _multiSigRemoteAccount;
 
   @override
   void onDispose() {
@@ -272,7 +278,10 @@ class AddAccountFlowBloc implements Disposable {
         _navigator.showMultiSigJoinLink();
         break;
       case AddAccountScreen.multiSigConnect:
-        _navigator.showMultiSigConnect(currentStep, totalSteps);
+        _navigator.showMultiSigConnect(
+          currentStep: currentStep,
+          totalSteps: totalSteps,
+        );
         break;
       case AddAccountScreen.multiSigAccountName:
         _navigator.showMultiSigAccountName(currentStep, totalSteps);
@@ -287,6 +296,10 @@ class AddAccountFlowBloc implements Disposable {
         break;
       case AddAccountScreen.multiSigConfirm:
         _navigator.showMultiSigConfirm(currentStep, totalSteps);
+        break;
+      case AddAccountScreen.multiSigInviteReviewFlow:
+        _navigator.showMultiSigInviteReviewFlow(
+            _inviteId!, _multiSigRemoteAccount!);
         break;
     }
   }
@@ -452,8 +465,8 @@ class AddAccountFlowBloc implements Disposable {
         _flow = _flowMultiSigCreate;
         break;
       case MultiSigAddKind.join:
-        // TODO-Roy: Handle this case.
-        throw 'Not Implemented';
+      // TODO-Roy: Handle this case.
+      // show qr scanner
       case MultiSigAddKind.link:
         _flow = _flowMultiSigJoinLink;
         break;
@@ -462,12 +475,26 @@ class AddAccountFlowBloc implements Disposable {
     _showNext(AddAccountScreen.multiSigCreateOrJoin);
   }
 
-  Future<void> submitMultiSigJoinLink(String link) async {
-    if (await canLaunch(link)) {
-      _showNext(AddAccountScreen.multiSigJoinLink);
+  Future<bool> submitMultiSigJoinLink(String link) async {
+    var success = false;
 
-      launch(link, forceWebView: true);
+    final redirectedLink = await tryFollowRedirect(link);
+    if (redirectedLink != null) {
+      final inviteId = parseInviteId(redirectedLink);
+      if (inviteId != null) {
+        final remoteAccount = await _multiSigService.getAccountByInvite(
+          inviteId: inviteId,
+        );
+        if (remoteAccount != null) {
+          _inviteId = inviteId;
+          _multiSigRemoteAccount = remoteAccount;
+          success = true;
+          _showNext(AddAccountScreen.multiSigJoinLink);
+        }
+      }
     }
+
+    return success;
   }
 
   void submitMultiSigConnect(Account? account) {
@@ -502,7 +529,7 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitMultiSigConfirm(BuildContext context) async {
     ModalLoadingRoute.showLoading('', context);
 
-    final registration = await get<MultiSigService>().create(
+    final registration = await _multiSigService.create(
       name: _multiSigName.value,
       publicKey: _multiSigLinkedAccount!.publicKey!,
       cosignerCount: _multiSigCosignerCount.value.value,
@@ -542,6 +569,10 @@ class AddAccountFlowBloc implements Disposable {
         ),
       );
     }
+  }
+
+  void submitMultiSigAccount(MultiAccount? account) {
+    _navigator.endFlow(account);
   }
 
   Future<Coin> _defaultCoin() async {

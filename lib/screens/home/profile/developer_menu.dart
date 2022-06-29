@@ -6,7 +6,6 @@ import 'package:provenance_wallet/screens/home/profile/link_item.dart';
 import 'package:provenance_wallet/screens/home/profile/service_mocks_screen.dart';
 import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
 import 'package:provenance_wallet/screens/home/profile/wallet_connect_item.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -25,19 +24,19 @@ class DeveloperMenu extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CategoryLabel(Strings.profileDeveloperCategoryTitle),
-        PwListDivider(),
-        LinkItem(
-          text: 'Show invite review',
-          onTap: () {
-            Navigator.of(context, rootNavigator: false).push(
-              MultiSigInviteReviewFlow(
-                name: 'name',
-                cosignerCount: 3,
-                signaturesRequired: 2,
-              ).route(),
-            );
-          },
-        ),
+        // PwListDivider(),
+        // LinkItem(
+        //   text: 'Show invite review',
+        //   onTap: () {
+        //     Navigator.of(context, rootNavigator: false).push(
+        //       MultiSigInviteReviewFlow(
+        //         name: 'name',
+        //         cosignerCount: 3,
+        //         signaturesRequired: 2,
+        //       ).route(),
+        //     );
+        //   },
+        // ),
         PwListDivider(),
         WalletConnectItem(),
         PwListDivider(),

@@ -52,14 +52,14 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.create);
                       },
                     ),
-                    // VerticalSpacer.large(),
-                    // AccountButton(
-                    //   name: Strings.accountTypeMultiSigJoinName,
-                    //   desc: Strings.accountTypeMultiSigJoinDesc,
-                    //   onPressed: () {
-                    //     _bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
-                    //   },
-                    // ),
+                    VerticalSpacer.large(),
+                    AccountButton(
+                      name: Strings.accountTypeMultiSigJoinName,
+                      desc: Strings.accountTypeMultiSigJoinDesc,
+                      onPressed: () {
+                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
+                      },
+                    ),
                     Expanded(
                       child: SizedBox(),
                     ),
