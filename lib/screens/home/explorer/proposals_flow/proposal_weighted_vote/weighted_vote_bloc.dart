@@ -98,7 +98,7 @@ class WeightedVoteBloc extends Disposable {
   }
 
   String getMsgVoteWeightedJson() {
-    return prettyJson(_getMsgVoteWeighted().toProto3Json().toString());
+    return prettyJson(_getMsgVoteWeighted().toProto3Json());
   }
 
   Future<void> doWeightedVote(

@@ -34,7 +34,7 @@ class ProposalVoteConfirmBloc {
   }
 
   String getMsgVoteJson() {
-    return prettyJson(_getMsgVote().toProto3Json().toString());
+    return prettyJson(_getMsgVote().toProto3Json());
   }
 
   gov.MsgVote _getMsgVote() {
