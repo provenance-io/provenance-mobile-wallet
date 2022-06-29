@@ -620,6 +620,8 @@ class Strings {
 
   // Proposals Tab
   static const proposalsTabProposals = "Proposals";
+  static String proposalsTabVoted(String formattedVote) =>
+      "Voted $formattedVote";
 
   // Proposal Details Screen
   static String proposalDetailsTitle(int proposalId) => "Proposal $proposalId";
