@@ -1,6 +1,7 @@
 import 'package:provenance_dart/proto_gov.dart' as proto;
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
@@ -15,6 +16,7 @@ abstract class ProposalsFlowNavigator {
   );
 
   Future<void> showVoteReview(
+    Proposal proposal,
     proto.VoteOption voteOption,
   );
 
@@ -78,17 +80,25 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     Proposal proposal,
   ) async {
     showPage(
-      (context) => ProposalWeightedVoteScreen(proposal: proposal),
+      (context) => ProposalWeightedVoteScreen(
+        proposal: proposal,
+        account: widget.account,
+      ),
     );
   }
 
   @override
   Future<void> showVoteReview(
+    Proposal proposal,
     proto.VoteOption voteOption,
   ) async {
     showPage(
       // FIXME
-      (context) => Container(),
+      (context) => ProposalVoteConfirmScreen(
+        account: widget.account,
+        proposal: proposal,
+        voteOption: voteOption,
+      ),
     );
   }
 
