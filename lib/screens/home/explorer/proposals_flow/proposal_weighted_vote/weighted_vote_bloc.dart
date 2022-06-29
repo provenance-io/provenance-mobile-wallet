@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/extension/stream_controller.dart';
@@ -97,7 +98,7 @@ class WeightedVoteBloc extends Disposable {
   }
 
   String getMsgVoteWeightedJson() {
-    return _getMsgVoteWeighted().toProto3Json().toString();
+    return prettyJson(_getMsgVoteWeighted().toProto3Json().toString());
   }
 
   Future<void> doWeightedVote(

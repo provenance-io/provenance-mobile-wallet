@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -28,11 +29,19 @@ class ProposalVoteConfirmBloc {
   ) async {
     await _sendMessage(
       gasAdjustment,
-      gov.MsgVote(
-              option: _voteOption,
-              proposalId: _proposal.proposalId as Int64,
-              voter: _account.address)
-          .toAny(),
+      _getMsgVote().toAny(),
+    );
+  }
+
+  String getMsgVoteJson() {
+    return prettyJson(_getMsgVote().toProto3Json().toString());
+  }
+
+  gov.MsgVote _getMsgVote() {
+    return gov.MsgVote(
+      option: _voteOption,
+      proposalId: Int64.parseInt(_proposal.proposalId.toString()),
+      voter: _account.address,
     );
   }
 
