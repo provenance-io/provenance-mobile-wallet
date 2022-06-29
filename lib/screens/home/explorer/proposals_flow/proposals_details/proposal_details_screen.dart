@@ -260,11 +260,10 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   abstain: _proposal.abstainAmount,
                   total: _proposal.totalAmount,
                 ),
-                // if (_proposal.status.toLowerCase() ==
-                //     "voting period")
-                VotingButtons(
-                  proposal: _proposal,
-                ),
+                if (_proposal.status.toLowerCase() == "voting period")
+                  VotingButtons(
+                    proposal: _proposal,
+                  ),
               ],
             ),
           ),
