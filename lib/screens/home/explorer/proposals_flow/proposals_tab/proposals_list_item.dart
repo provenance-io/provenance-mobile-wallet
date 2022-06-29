@@ -18,15 +18,6 @@ class ProposalListItem extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        // TODO: Navigate to ProposalDetails
-        final now = DateTime.now().toUtc();
-        print("Now: $now");
-        print("StartTime: ${item.startTime}");
-        print("EndTime: ${item.endTime}");
-        print("StartTime is in past: ${now.compareTo(item.startTime) == 1}");
-        print(
-            "EndTime has been reached: ${now.compareTo(item.startTime) == 1}");
-        print("-------------------------------------------------------");
         get<ProposalsFlowBloc>().showProposalDetails(item);
       },
       child: Padding(
