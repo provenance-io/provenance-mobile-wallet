@@ -1,8 +1,10 @@
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_slider.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote_confirm/weighted_vote_option_column.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
@@ -162,8 +164,11 @@ class _ProposalWeightedVoteConfirmScreenState
                     ),
                     child: Flexible(
                       child: PwButton(
-                        onPressed: () {
-                          print(_bloc.getMsgVoteWeightedJson());
+                        onPressed: () async {
+                          ModalLoadingRoute.showLoading('', context);
+                          // Give the loading modal time to display
+                          await Future.delayed(Duration(milliseconds: 500));
+                          await _sendWeightedVote(_gasEstimate, context);
                         },
                         child: PwText(
                           Strings.proposalVoteConfirmVote,
@@ -177,6 +182,31 @@ class _ProposalWeightedVoteConfirmScreenState
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> _sendWeightedVote(
+    double? gasEstimate,
+    BuildContext context,
+  ) async {
+    try {
+      await _bloc.doWeightedVote(gasEstimate);
+      ModalLoadingRoute.dismiss(context);
+      get<ProposalsFlowBloc>().showTransactionSuccess();
+    } catch (err) {
+      await _showErrorModal(err, context);
+    }
+  }
+
+  Future<void> _showErrorModal(Object error, BuildContext context) async {
+    ModalLoadingRoute.dismiss(context);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return ErrorDialog(
+          error: error.toString(),
         );
       },
     );

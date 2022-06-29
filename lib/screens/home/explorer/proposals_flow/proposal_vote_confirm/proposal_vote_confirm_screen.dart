@@ -1,8 +1,10 @@
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_slider.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
@@ -157,8 +159,11 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 ),
                 child: Flexible(
                   child: PwButton(
-                    onPressed: () {
-                      // TODO: Actually do the voting
+                    onPressed: () async {
+                      ModalLoadingRoute.showLoading('', context);
+                      // Give the loading modal time to display
+                      await Future.delayed(Duration(milliseconds: 500));
+                      await _sendVote(_gasEstimate, context);
                     },
                     child: PwText(
                       Strings.proposalVoteConfirmVote,
@@ -172,6 +177,31 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _sendVote(
+    double? gasEstimate,
+    BuildContext context,
+  ) async {
+    try {
+      await _bloc.doVote(gasEstimate);
+      ModalLoadingRoute.dismiss(context);
+      get<ProposalsFlowBloc>().showTransactionSuccess();
+    } catch (err) {
+      await _showErrorModal(err, context);
+    }
+  }
+
+  Future<void> _showErrorModal(Object error, BuildContext context) async {
+    ModalLoadingRoute.dismiss(context);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return ErrorDialog(
+          error: error.toString(),
+        );
+      },
     );
   }
 }
