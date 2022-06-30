@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_color.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';

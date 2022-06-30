@@ -87,10 +87,8 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   void initState() {
-    final bloc = StakingFlowBloc(account: widget.account, navigator: this);
+    final bloc = StakingFlowBloc(navigator: this);
     get.registerSingleton<StakingFlowBloc>(bloc);
-    bloc.load();
-
     super.initState();
   }
 

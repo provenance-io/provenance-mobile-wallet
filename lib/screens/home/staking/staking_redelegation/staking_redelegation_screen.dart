@@ -2,10 +2,10 @@ import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_list.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -82,7 +82,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
             if (details == null) {
               return Container();
             }
-            final flowBloc = get<StakingFlowBloc>();
+            final stakingBloc = get<StakingScreenBloc>();
             return Scaffold(
               appBar: AppBar(
                 primary: false,
@@ -123,8 +123,8 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                       indent: Spacing.largeX3,
                     ),
                     StreamBuilder<StakingDetails>(
-                      initialData: flowBloc.stakingDetails.value,
-                      stream: flowBloc.stakingDetails,
+                      initialData: stakingBloc.stakingDetails.value,
+                      stream: stakingBloc.stakingDetails,
                       builder: (context, snapshot) {
                         final stakingDetails = snapshot.data;
                         if (stakingDetails == null) {
@@ -161,7 +161,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                                     items: ValidatorSortingState.values,
                                     isExpanded: true,
                                     onValueChanged: (item) {
-                                      flowBloc.updateSort(item);
+                                      stakingBloc.updateSort(item);
                                     },
                                     builder: (item) => PwText(
                                       item.dropDownTitle,

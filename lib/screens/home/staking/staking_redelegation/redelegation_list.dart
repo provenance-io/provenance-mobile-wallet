@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_list_item.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -18,7 +18,7 @@ class RedelegationList extends StatefulWidget {
 }
 
 class RedelegationListState extends State<RedelegationList> {
-  final StakingFlowBloc _bloc = get<StakingFlowBloc>();
+  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
   final _scrollController = ScrollController();
 
   @override

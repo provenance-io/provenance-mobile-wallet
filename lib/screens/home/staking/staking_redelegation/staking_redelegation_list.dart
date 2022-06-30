@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -23,7 +24,7 @@ class StakingRedelegationList extends StatefulWidget {
 }
 
 class StakingRedelegationListState extends State<StakingRedelegationList> {
-  final StakingFlowBloc _bloc = get<StakingFlowBloc>();
+  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

@@ -6,7 +6,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_i
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
