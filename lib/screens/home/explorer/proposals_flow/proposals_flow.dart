@@ -1,8 +1,11 @@
 import 'package:provenance_dart/proto_gov.dart' as proto;
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_success/proposal_success_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_voting_data/proposal_voting_data_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_tab/proposals_tab.dart';
@@ -24,13 +27,15 @@ abstract class ProposalsFlowNavigator {
     Proposal proposal,
   );
 
+  Future<void> showWeightedVoteReview(
+    Proposal proposal,
+  );
+
   Future<void> showTransactionData(
     String data,
   );
 
-  Future<void> showTransactionSuccess(
-    String message,
-  );
+  Future<void> showTransactionSuccess();
 
   void onComplete();
 }
@@ -93,7 +98,6 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     proto.VoteOption voteOption,
   ) async {
     showPage(
-      // FIXME
       (context) => ProposalVoteConfirmScreen(
         account: widget.account,
         proposal: proposal,
@@ -105,16 +109,24 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   @override
   Future<void> showTransactionData(String data) async {
     showPage(
-      // FIXME
-      (context) => Container(),
+      (context) => ProposalVotingDataScreen(data: data),
     );
   }
 
   @override
-  Future<void> showTransactionSuccess(String message) async {
+  Future<void> showTransactionSuccess() async {
     showPage(
-      // FIXME
-      (context) => Container(),
+      (context) => ProposalSuccessScreen(),
+    );
+  }
+
+  @override
+  Future<void> showWeightedVoteReview(Proposal proposal) async {
+    showPage(
+      (context) => ProposalWeightedVoteConfirmScreen(
+        account: widget.account,
+        proposal: proposal,
+      ),
     );
   }
 

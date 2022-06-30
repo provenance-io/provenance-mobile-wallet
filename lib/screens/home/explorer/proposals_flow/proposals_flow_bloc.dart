@@ -23,8 +23,8 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionSuccess(String message) async {
-    await _navigator.showTransactionSuccess(message);
+  Future<void> showTransactionSuccess() async {
+    await _navigator.showTransactionSuccess();
   }
 
   @override
@@ -39,5 +39,10 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   @override
   Future<void> showWeightedVote(Proposal proposal) async {
     await _navigator.showWeightedVote(proposal);
+  }
+
+  @override
+  Future<void> showWeightedVoteReview(Proposal proposal) async {
+    await _navigator.showWeightedVoteReview(proposal);
   }
 }

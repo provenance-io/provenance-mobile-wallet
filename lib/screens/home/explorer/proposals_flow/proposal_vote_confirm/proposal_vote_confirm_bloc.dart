@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -10,7 +11,6 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalVoteConfirmBloc {
   final TransactableAccount _account;
@@ -28,20 +28,19 @@ class ProposalVoteConfirmBloc {
   ) async {
     await _sendMessage(
       gasAdjustment,
-      gov.MsgVote(
-              option: _voteOption,
-              proposalId: _proposal.proposalId as Int64,
-              voter: _account.address)
-          .toAny(),
+      _getMsgVote().toAny(),
     );
   }
 
-  Future<void> doWeightedVote(
-    double? gasAdjustment,
-  ) async {
-    await _sendMessage(
-      gasAdjustment,
-      gov.MsgVoteWeighted().toAny(),
+  String getMsgVoteJson() {
+    return prettyJson(_getMsgVote().toProto3Json());
+  }
+
+  gov.MsgVote _getMsgVote() {
+    return gov.MsgVote(
+      option: _voteOption,
+      proposalId: Int64.parseInt(_proposal.proposalId.toString()),
+      voter: _account.address,
     );
   }
 
@@ -78,16 +77,5 @@ class ProposalVoteConfirmBloc {
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
         .estimateGas(body, _account.publicKey);
-  }
-}
-
-extension VoteOptionExtension on gov.VoteOption {
-  String get displayTitle {
-    var chunks = name.toLowerCase().replaceAll("vote_", "").split("_");
-    var word = "";
-    for (var element in chunks) {
-      word += element.capitalize();
-    }
-    return word;
   }
 }

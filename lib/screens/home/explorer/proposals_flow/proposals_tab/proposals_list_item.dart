@@ -3,6 +3,7 @@ import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalListItem extends StatelessWidget {
   const ProposalListItem({
@@ -18,15 +19,6 @@ class ProposalListItem extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        // TODO: Navigate to ProposalDetails
-        final now = DateTime.now().toUtc();
-        print("Now: $now");
-        print("StartTime: ${item.startTime}");
-        print("EndTime: ${item.endTime}");
-        print("StartTime is in past: ${now.compareTo(item.startTime) == 1}");
-        print(
-            "EndTime has been reached: ${now.compareTo(item.startTime) == 1}");
-        print("-------------------------------------------------------");
         get<ProposalsFlowBloc>().showProposalDetails(item);
       },
       child: Padding(
@@ -40,15 +32,22 @@ class ProposalListItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    PwText(
+                      "${item.proposalId} ${item.title}",
+                      style: PwTextStyle.bodyBold,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                    VerticalSpacer.xSmall(),
                     if (vote != null)
                       Row(
                         children: [
                           Flexible(
                             child: PwText(
-                              "${item.proposalId} ${item.title}",
-                              style: PwTextStyle.bodyBold,
+                              item.status,
+                              style: PwTextStyle.footnote,
                               overflow: TextOverflow.fade,
-                              color: PwColor.neutralNeutral,
+                              color: PwColor.neutral200,
                               softWrap: false,
                             ),
                           ),
@@ -58,7 +57,7 @@ class ProposalListItem extends StatelessWidget {
                             ),
                             child: Chip(
                               label: PwText(
-                                "Voted ${vote!.formattedVote}",
+                                Strings.proposalsTabVoted(vote!.formattedVote),
                                 style: PwTextStyle.footnote,
                                 color: PwColor.primaryP500,
                               ),
@@ -70,23 +69,16 @@ class ProposalListItem extends StatelessWidget {
                         ],
                       ),
                     if (vote == null)
-                      PwText(
-                        "${item.proposalId} ${item.title}",
-                        style: PwTextStyle.bodyBold,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+                      SizedBox(
+                        width: 180,
+                        child: PwText(
+                          item.status,
+                          color: PwColor.neutral200,
+                          style: PwTextStyle.footnote,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
                       ),
-                    VerticalSpacer.xSmall(),
-                    SizedBox(
-                      width: 180,
-                      child: PwText(
-                        item.status,
-                        color: PwColor.neutral200,
-                        style: PwTextStyle.footnote,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                      ),
-                    ),
                   ],
                 ),
               ),

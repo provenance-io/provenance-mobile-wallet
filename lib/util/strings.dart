@@ -648,6 +648,8 @@ class Strings {
 
   // Proposals Tab
   static const proposalsTabProposals = "Proposals";
+  static String proposalsTabVoted(String formattedVote) =>
+      "Voted $formattedVote";
 
   // Proposal Details Screen
   static String proposalDetailsTitle(int proposalId) => "Proposal $proposalId";
@@ -681,4 +683,19 @@ class Strings {
 
   // Weighted Vote Screen
   static const proposalWeightedVote = "Weighted Vote";
+
+  // Proposal Vote Confirm Screen
+  static const proposalVoteConfirmVoteConfirm = "Vote Confirm";
+  static const proposalVoteConfirmProposerAddress = "Proposer Address";
+  static const proposalVoteConfirmVoterAddress = "Voter Address";
+  static const proposalVoteConfirmVoteOption = "Vote Option";
+  static const proposalVoteConfirmVote = "Vote";
+  static const proposalVoteConfirmWeight = "Weight";
+
+  // Proposal Vote Confirm Screen
+  static const proposalWeightedVoteConfirmVoteConfirm = "Weighted Vote Confirm";
+
+  // Proposal Vote Success
+  static const proposalVoteSuccessSuccess = "Success";
+  static const proposalVoteSuccessVoteSuccessful = "Vote Successful";
 }

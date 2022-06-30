@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/governance_service/dtos/vote_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Vote {
   Vote({required VoteDto dto})
@@ -20,6 +21,21 @@ class Vote {
         answerNo = dto.answer?.VOTE_OPTION_NO,
         answerNoWithVeto = dto.answer?.VOTE_OPTION_NO_WITH_VETO,
         answerAbstain = dto.answer?.VOTE_OPTION_ABSTAIN;
+
+  Vote.fake({
+    required this.proposalId,
+    required this.proposalTitle,
+    required this.proposalStatus,
+    required this.voterAddress,
+    required this.blockHeight,
+    required this.txHash,
+    required this.txTimestamp,
+    this.answerYes,
+    this.answerNo,
+    this.answerNoWithVeto,
+    this.answerAbstain,
+  });
+
   final String voterAddress;
   final int? answerYes;
   final int? answerNo;
@@ -33,14 +49,19 @@ class Vote {
   final String proposalStatus;
 
   String get formattedVote {
+    var answers = <String>[];
     if (answerYes != null) {
-      return "Yes";
-    } else if (answerNo != null) {
-      return "No";
-    } else if (answerNoWithVeto != null) {
-      return "No With Veto";
-    } else {
-      return "Abstain";
+      answers.add(Strings.proposalDetailsYes);
     }
+    if (answerNo != null) {
+      answers.add(Strings.proposalDetailsNo);
+    }
+    if (answerNoWithVeto != null) {
+      answers.add(Strings.proposalDetailsNoWithVeto);
+    }
+    if (answerAbstain != null) {
+      answers.add(Strings.proposalDetailsAbstain);
+    }
+    return answers.join(", ");
   }
 }
