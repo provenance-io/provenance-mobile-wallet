@@ -40,6 +40,7 @@ class PwIcons {
   static const String edit = 'edit';
   static const String circleChecked = 'circle_checked';
   static const String circleUnchecked = 'circle_unchecked';
+  static const String viewMore = "view_more";
 }
 
 class PwIcon extends StatelessWidget {
