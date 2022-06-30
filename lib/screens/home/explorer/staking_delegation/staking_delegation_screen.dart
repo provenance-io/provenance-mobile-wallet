@@ -5,7 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/warning_section.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -20,7 +20,6 @@ class StakingDelegationScreen extends StatefulWidget {
 
   final String commissionRate;
   final Account account;
-  final StakingFlowNavigator navigator;
 
   const StakingDelegationScreen({
     Key? key,
@@ -28,7 +27,6 @@ class StakingDelegationScreen extends StatefulWidget {
     required this.validator,
     required this.commissionRate,
     required this.account,
-    required this.navigator,
   }) : super(key: key);
 
   @override
@@ -181,7 +179,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                           details.hashDelegated <= Decimal.zero) {
                         return;
                       }
-                      widget.navigator.showDelegationReview();
+                      get<StakingFlowBloc>().showDelegationReview();
                     },
                     child: PwText(
                       SelectedDelegationType.delegate.dropDownTitle,

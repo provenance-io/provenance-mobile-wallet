@@ -4,7 +4,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_text_form_field.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
@@ -15,11 +14,9 @@ class StakingRedelegationList extends StatefulWidget {
   const StakingRedelegationList({
     Key? key,
     required this.details,
-    required this.navigator,
   }) : super(key: key);
 
   final StakingRedelegationDetails details;
-  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => StakingRedelegationListState();
@@ -128,7 +125,7 @@ class StakingRedelegationListState extends State<StakingRedelegationList> {
                               widget.details.hashRedelegated <= Decimal.zero) {
                             return;
                           }
-                          widget.navigator.showRedelegationReview();
+                          get<StakingFlowBloc>().showRedelegationReview();
                         },
                         child: PwText(
                           widget.details.selectedDelegationType.dropDownTitle,

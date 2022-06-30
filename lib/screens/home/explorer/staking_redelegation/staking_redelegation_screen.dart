@@ -2,7 +2,6 @@ import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_bloc.dart';
@@ -16,8 +15,6 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class StakingRedelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
-
-  final StakingFlowNavigator navigator;
   final Account account;
   final Delegation delegation;
 
@@ -26,7 +23,6 @@ class StakingRedelegationScreen extends StatefulWidget {
     required this.delegation,
     required this.validator,
     required this.account,
-    required this.navigator,
   }) : super(key: key);
 
   @override
@@ -189,7 +185,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                     ),
                     StakingRedelegationList(
                       details: details,
-                      navigator: widget.navigator,
                     ),
                   ],
                 ),

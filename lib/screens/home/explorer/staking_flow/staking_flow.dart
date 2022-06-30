@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staki
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_details/staking_details_screen.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -78,6 +79,22 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       );
 
   @override
+  void dispose() {
+    get.unregister<StakingFlowBloc>();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    final bloc = StakingFlowBloc(account: widget.account, navigator: this);
+    get.registerSingleton<StakingFlowBloc>(bloc);
+    bloc.load();
+
+    super.initState();
+  }
+
+  @override
   Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
@@ -88,7 +105,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         validator: validator,
         account: widget.account,
         commissionRate: commission.commissionRate,
-        navigator: this,
       ),
     );
   }
@@ -102,7 +118,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         delegation: widget.selectedDelegation!,
         validator: validator,
         account: widget.account,
-        navigator: this,
       ),
     );
   }
@@ -116,7 +131,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         delegation: widget.selectedDelegation,
         validator: validator,
         account: widget.account,
-        navigator: this,
       ),
     );
   }
@@ -124,9 +138,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showDelegationReview() async {
     showPage(
-      (context) => ConfirmDelegateScreen(
-        navigator: this,
-      ),
+      (context) => ConfirmDelegateScreen(),
     );
   }
 
@@ -149,18 +161,14 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
       ),
     );
     showPage(
-      (context) => ConfirmClaimRewardsScreen(
-        navigator: this,
-      ),
+      (context) => ConfirmClaimRewardsScreen(),
     ).whenComplete(() => get.unregister<StakingDelegationBloc>());
   }
 
   @override
   Future<void> showRedelegationReview() async {
     showPage(
-      (context) => ConfirmRedelegateScreen(
-        navigator: this,
-      ),
+      (context) => ConfirmRedelegateScreen(),
     );
   }
 
@@ -169,7 +177,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     showPage(
       (context) => StakingTransactionDataScreen(
         data: data,
-        navigator: this,
       ),
     );
   }
@@ -179,7 +186,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     showPage(
       (context) => StakingSuccessScreen(
         selected: selected,
-        navigator: this,
       ),
     );
   }

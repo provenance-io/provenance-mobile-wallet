@@ -4,16 +4,15 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmClaimRewardsScreen extends StatelessWidget {
-  const ConfirmClaimRewardsScreen({Key? key, required this.navigator})
-      : super(key: key);
-
-  final StakingFlowNavigator navigator;
+  const ConfirmClaimRewardsScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
   "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
 }''';
-            navigator.showTransactionData(data);
+            get<StakingFlowBloc>().showTransactionData(data);
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
@@ -87,7 +86,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     try {
       await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      navigator.showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionSuccess(selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

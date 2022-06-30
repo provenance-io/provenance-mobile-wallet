@@ -71,7 +71,9 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    navigator.showRedelegationScreen(validator);
+                    navigator.showRedelegationScreen(
+                      validator,
+                    );
                   },
                   child: PwText(
                     SelectedDelegationType.redelegate.dropDownTitle,
@@ -99,7 +101,9 @@ class StakingManagement extends StatelessWidget {
               Flexible(
                 child: PwButton(
                   onPressed: () {
-                    navigator.showUndelegationScreen(validator);
+                    navigator.showUndelegationScreen(
+                      validator,
+                    );
                   },
                   child: PwText(
                     SelectedDelegationType.undelegate.dropDownTitle,

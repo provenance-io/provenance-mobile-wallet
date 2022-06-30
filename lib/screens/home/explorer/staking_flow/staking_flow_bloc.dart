@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
+import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
@@ -11,7 +15,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
-class StakingFlowBloc extends PwPagingCache {
+class StakingFlowBloc extends PwPagingCache implements StakingFlowNavigator {
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingValidators = BehaviorSubject.seeded(false);
   final _isLoadingDelegations = BehaviorSubject.seeded(false);
@@ -22,10 +26,13 @@ class StakingFlowBloc extends PwPagingCache {
   final _delegationPages = BehaviorSubject.seeded(1);
   final _validatorService = get<ValidatorService>();
   final Account _account;
+  final StakingFlowNavigator _navigator;
 
   StakingFlowBloc({
     required Account account,
+    required StakingFlowNavigator navigator,
   })  : _account = account,
+        _navigator = navigator,
         super(50);
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
@@ -152,6 +159,61 @@ class StakingFlowBloc extends PwPagingCache {
     );
 
     _isLoadingValidators.value = false;
+  }
+
+  @override
+  void onComplete() {
+    _navigator.onComplete();
+  }
+
+  @override
+  Future<void> showClaimRewardsReview(DetailedValidator validator) async {
+    _navigator.showClaimRewardsReview(validator);
+  }
+
+  @override
+  Future<void> showDelegationReview() async {
+    _navigator.showDelegationReview();
+  }
+
+  @override
+  Future<void> showDelegationScreen(
+    DetailedValidator validator,
+    Commission commission,
+  ) async {
+    _navigator.showDelegationScreen(validator, commission);
+  }
+
+  @override
+  Future<void> showRedelegationReview() async {
+    _navigator.showRedelegationReview();
+  }
+
+  @override
+  Future<void> showRedelegationScreen(
+    DetailedValidator validator,
+  ) async {
+    _navigator.showRedelegationScreen(validator);
+  }
+
+  @override
+  Future<void> showTransactionData(String data) async {
+    _navigator.showTransactionData(data);
+  }
+
+  @override
+  Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
+    _navigator.showTransactionSuccess(selected);
+  }
+
+  @override
+  Future<void> showUndelegationReview() async {
+    _navigator.showUndelegationReview();
+  }
+
+  @override
+  Future<void> showUndelegationScreen(DetailedValidator validator) async {
+    _navigator.showUndelegationScreen(validator);
   }
 }
 

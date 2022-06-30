@@ -4,17 +4,16 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ConfirmDelegateScreen extends StatelessWidget {
-  const ConfirmDelegateScreen({Key? key, required this.navigator})
-      : super(key: key);
-
-  final StakingFlowNavigator navigator;
+  const ConfirmDelegateScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
     "amount": "${hashToNHash(details.hashDelegated)}"
   }
 }''';
-            navigator.showTransactionData(data);
+            get<StakingFlowBloc>().showTransactionData(data);
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);
@@ -126,7 +125,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
       try {
         await bloc.doDelegate(gasAdjustment);
         ModalLoadingRoute.dismiss(context);
-        navigator.showTransactionSuccess(selected);
+        get<StakingFlowBloc>().showTransactionSuccess(selected);
       } catch (err) {
         await _showErrorModal(err, context);
       }
@@ -134,7 +133,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
       try {
         await bloc.doUndelegate(gasAdjustment);
         ModalLoadingRoute.dismiss(context);
-        navigator.showTransactionSuccess(selected);
+        get<StakingFlowBloc>().showTransactionSuccess(selected);
       } catch (err) {
         await _showErrorModal(err, context);
       }

@@ -12,10 +12,10 @@ class StakingScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => StakingScreenState();
+  State<StatefulWidget> createState() => _StakingScreenState();
 }
 
-class StakingScreenState extends State<StakingScreen> {
+class _StakingScreenState extends State<StakingScreen> {
   late StakingFlowBloc _bloc;
 
   @override

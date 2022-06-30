@@ -1,16 +1,13 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingTransactionDataScreen extends StatelessWidget {
   const StakingTransactionDataScreen({
     Key? key,
     required this.data,
-    required this.navigator,
   }) : super(key: key);
   final String data;
-  final StakingFlowNavigator navigator;
 
   @override
   Widget build(BuildContext context) {
