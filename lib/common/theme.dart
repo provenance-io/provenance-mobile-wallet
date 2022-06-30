@@ -193,6 +193,7 @@ class ProvenanceThemeData {
   static const Color _error = Color(0xFFED6E74);
   static const Color _notice350 = Color(0xFFF4B601);
   static const Color _notice800 = Color(0xFF140F00);
+  static const Color _positive300 = Color(0xFF5AE70D);
 
   // ----- PROVENANCE TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
@@ -446,6 +447,7 @@ extension CustomColorScheme on ColorScheme {
   Color get error => ProvenanceThemeData._error;
   Color get notice350 => ProvenanceThemeData._notice350;
   Color get notice800 => ProvenanceThemeData._notice800;
+  Color get positive300 => ProvenanceThemeData._positive300;
 }
 
 extension CustomTextTheme on TextTheme {

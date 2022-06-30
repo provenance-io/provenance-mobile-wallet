@@ -8,7 +8,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class DelegationListItem extends StatelessWidget {
-  const DelegationListItem({
+  DelegationListItem({
     Key? key,
     required this.validator,
     required this.item,
@@ -16,6 +16,7 @@ class DelegationListItem extends StatelessWidget {
 
   final ProvenanceValidator validator;
   final Delegation item;
+  final bloc = get<StakingScreenBloc>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,7 +26,6 @@ class DelegationListItem extends StatelessWidget {
         if (account == null) {
           return;
         }
-        final bloc = get<StakingScreenBloc>();
         final rewards = bloc.stakingDetails.value.rewards.firstWhere(
             (element) => element.validatorAddress == validator.addressId);
         final response = await Navigator.of(context).push(
@@ -44,17 +44,30 @@ class DelegationListItem extends StatelessWidget {
         padding: EdgeInsets.zero,
         child: Container(
           padding: EdgeInsets.all(20),
+          color: Theme.of(context).colorScheme.neutral700,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: Spacing.largeX3,
                 height: Spacing.largeX3,
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundImage: NetworkImage(validator.imgUrl ?? ""),
-                  child:
-                      PwText(validator.moniker.substring(0, 1).toUpperCase()),
+                child: Container(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.neutralNeutral,
+                    foregroundImage: NetworkImage(validator.imgUrl ?? ""),
+                    child: PwText(
+                      validator.moniker.substring(0, 1).toUpperCase(),
+                    ),
+                  ),
                 ),
               ),
               HorizontalSpacer.medium(),
@@ -63,21 +76,37 @@ class DelegationListItem extends StatelessWidget {
                 children: [
                   PwText(
                     validator.moniker,
-                    style: PwTextStyle.bodyBold,
+                    style: PwTextStyle.body,
                   ),
                   VerticalSpacer.xSmall(),
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      item.endTime != null
-                          ? Strings.endTimeFormatted(item.formattedTime)
-                          : Strings.displayDenomFormatted(item.displayDenom),
+                      Strings.displayDenomFormatted(item.displayDenom),
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
                   ),
+                  VerticalSpacer.xSmall(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.brightness_1,
+                        color: bloc.getColor(validator.status, context),
+                        size: 8,
+                      ),
+                      HorizontalSpacer.xSmall(),
+                      PwText(
+                        validator.status.name.capitalize(),
+                        color: PwColor.neutral200,
+                        style: PwTextStyle.footnote,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      )
+                    ],
+                  )
                 ],
               ),
               Expanded(child: Container()),

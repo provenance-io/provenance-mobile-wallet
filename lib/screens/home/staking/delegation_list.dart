@@ -44,7 +44,7 @@ class DelegationListState extends State<DelegationList> {
                 }
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                     vertical: 20,
                   ),
                   controller: _scrollController,
@@ -65,7 +65,9 @@ class DelegationListState extends State<DelegationList> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return PwListDivider();
+                    return PwListDivider(
+                      color: Theme.of(context).colorScheme.neutral750,
+                    );
                   },
                   itemCount: stakingDetails.delegates.length,
                   shrinkWrap: true,
