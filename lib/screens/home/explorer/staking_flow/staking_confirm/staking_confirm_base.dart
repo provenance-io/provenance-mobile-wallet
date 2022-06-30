@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_slider.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingConfirmBase extends StatefulWidget {
@@ -25,7 +26,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = 1.25;
+  double _gasEstimate = defaultGasEstimate;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             ),
             PwSlider(
               title: Strings.stakingConfirmGasAdjustment,
-              startingValue: 1.25,
+              startingValue: defaultGasEstimate,
               min: 0,
               max: 5,
               onValueChanged: (value) {

@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals
 import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals_details/voting_buttons.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalDetailsScreen extends StatefulWidget {
@@ -260,7 +261,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   abstain: _proposal.abstainAmount,
                   total: _proposal.totalAmount,
                 ),
-                if (_proposal.status.toLowerCase() == "voting period")
+                if (_proposal.status.toLowerCase() == votingPeriod)
                   VotingButtons(
                     proposal: _proposal,
                   ),

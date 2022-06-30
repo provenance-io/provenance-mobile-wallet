@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/home/explorer/proposals_flow/proposals
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -31,7 +32,7 @@ class ProposalWeightedVoteConfirmScreen extends StatefulWidget {
 
 class _ProposalWeightedVoteConfirmScreenState
     extends State<ProposalWeightedVoteConfirmScreen> {
-  double _gasEstimate = 1.25;
+  double _gasEstimate = defaultGasEstimate;
   late final WeightedVoteBloc _bloc;
 
   @override
@@ -145,7 +146,7 @@ class _ProposalWeightedVoteConfirmScreenState
                   ),
                 PwSlider(
                   title: Strings.stakingConfirmGasAdjustment,
-                  startingValue: 1.25,
+                  startingValue: defaultGasEstimate,
                   min: 0,
                   max: 5,
                   onValueChanged: (value) {
