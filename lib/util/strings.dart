@@ -550,8 +550,6 @@ class Strings {
   static const dropDownStateHeader = "Sort Validators by";
   static const dropDownVotingPower = "Voting Power";
   static const dropDownAlphabetically = "Name";
-  static String endTimeFormatted(String formattedTime) =>
-      "Ended: $formattedTime";
   static String displayDenomFormatted(String displayDenom) =>
       "$displayDenom delegated";
 
