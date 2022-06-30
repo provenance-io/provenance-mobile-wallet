@@ -135,8 +135,8 @@ class HomeScreenState extends State<HomeScreen>
                 ),
                 TabItem(
                   2 == _currentTabIndex,
-                  Strings.profile,
-                  PwIcons.userAccount,
+                  Strings.viewMore,
+                  PwIcons.viewMore,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),

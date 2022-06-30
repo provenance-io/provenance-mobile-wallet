@@ -64,7 +64,7 @@ class _ProfileTabState extends State<ProfileTab> {
               PwAppBarGestureDetector(
                 onTap: _tapCounter.increment,
                 child: PwAppBar(
-                  title: Strings.profile,
+                  title: Strings.globalSettings,
                   hasIcon: false,
                 ),
               ),

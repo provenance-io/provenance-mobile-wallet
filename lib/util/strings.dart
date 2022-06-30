@@ -128,8 +128,11 @@ class Strings {
   static const noTransactionsText =
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
-  static const profile = "Profile";
+  static const globalSettings = "Global Settings";
   static const errorDisconnected = 'Disconnected';
+  static const viewMore = "View More";
+  static const staking = "Staking";
+  static const proposals = "Proposals";
 
   // QR Scanner
   static const qrScannerTitle = 'Scan QR Code';
@@ -541,10 +544,6 @@ class Strings {
   static const cipherUnknownError = 'Unknown error.';
   static const cipherUpgradeError = 'An error occured during while upgrading.';
   static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
-
-  // Explorer Screen
-  static const staking = "Staking";
-  static const proposals = "Proposals";
 
   // Staking Tab
   static const stakingTabMyDelegations = "My Delegations";
