@@ -6,12 +6,12 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dar
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
+import 'package:provenance_wallet/screens/home/global_settings/category_label.dart';
+import 'package:provenance_wallet/screens/home/global_settings/developer_menu.dart';
+import 'package:provenance_wallet/screens/home/global_settings/future_toggle_item.dart';
+import 'package:provenance_wallet/screens/home/global_settings/link_item.dart';
+import 'package:provenance_wallet/screens/home/global_settings/toggle_item.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
-import 'package:provenance_wallet/screens/home/profile/category_label.dart';
-import 'package:provenance_wallet/screens/home/profile/developer_menu.dart';
-import 'package:provenance_wallet/screens/home/profile/future_toggle_item.dart';
-import 'package:provenance_wallet/screens/home/profile/link_item.dart';
-import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';

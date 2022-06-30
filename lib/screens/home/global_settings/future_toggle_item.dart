@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
+import 'package:provenance_wallet/screens/home/global_settings/toggle_item.dart';
 
 class FutureToggleItem extends StatefulWidget {
   const FutureToggleItem({

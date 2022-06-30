@@ -1,11 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/global_settings/category_label.dart';
+import 'package:provenance_wallet/screens/home/global_settings/link_item.dart';
+import 'package:provenance_wallet/screens/home/global_settings/service_mocks_screen.dart';
+import 'package:provenance_wallet/screens/home/global_settings/toggle_item.dart';
+import 'package:provenance_wallet/screens/home/global_settings/wallet_connect_item.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
-import 'package:provenance_wallet/screens/home/profile/category_label.dart';
-import 'package:provenance_wallet/screens/home/profile/link_item.dart';
-import 'package:provenance_wallet/screens/home/profile/service_mocks_screen.dart';
-import 'package:provenance_wallet/screens/home/profile/toggle_item.dart';
-import 'package:provenance_wallet/screens/home/profile/wallet_connect_item.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
