@@ -6,12 +6,12 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dar
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
-import 'package:provenance_wallet/screens/home/global_settings/category_label.dart';
-import 'package:provenance_wallet/screens/home/global_settings/developer_menu.dart';
-import 'package:provenance_wallet/screens/home/global_settings/future_toggle_item.dart';
-import 'package:provenance_wallet/screens/home/global_settings/link_item.dart';
-import 'package:provenance_wallet/screens/home/global_settings/toggle_item.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
+import 'package:provenance_wallet/screens/home/settings/category_label.dart';
+import 'package:provenance_wallet/screens/home/settings/developer_menu.dart';
+import 'package:provenance_wallet/screens/home/settings/future_toggle_item.dart';
+import 'package:provenance_wallet/screens/home/settings/link_item.dart';
+import 'package:provenance_wallet/screens/home/settings/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -21,14 +21,14 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class GlobalSettingsScreen extends StatefulWidget {
-  const GlobalSettingsScreen({Key? key}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  _GlobalSettingsScreenState createState() => _GlobalSettingsScreenState();
+  _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _GlobalSettingsScreenState extends State<GlobalSettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   static const _divider = PwListDivider();
 
   final _keyValueService = get<KeyValueService>();

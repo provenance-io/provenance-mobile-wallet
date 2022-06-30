@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/home/global_settings/global_settings_screen.dart';
+import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -52,7 +52,7 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           child: _getLink(
                             PwIcons.gear,
                             Strings.globalSettings,
-                            GlobalSettingsScreen(),
+                            SettingsScreen(),
                           ),
                         ),
                       ],
