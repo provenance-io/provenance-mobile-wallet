@@ -217,9 +217,9 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             }
 
             // Updated linked basic account
-            final linkedAccount = await _basicAccounts
-                .record(multiAccount.linkedAccount.id)
-                .get(tx);
+            final linkedAccountRef =
+                _basicAccounts.record(multiAccount.linkedAccount.id);
+            final linkedAccount = await linkedAccountRef.get(tx);
 
             if (linkedAccount != null) {
               final linkedAccountModel =
@@ -227,7 +227,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
               final linkedAccountIds = linkedAccountModel.linkedAccountIds
                 ..remove(multiAccount.id);
 
-              await _basicAccounts.update(
+              await linkedAccountRef.update(
                 tx,
                 linkedAccountModel
                     .copyWith(
