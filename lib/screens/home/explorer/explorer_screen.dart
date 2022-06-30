@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking/staking_tab.dart';
+import 'package:provenance_wallet/screens/home/explorer/staking/staking_screen.dart';
 import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -101,7 +101,7 @@ class HomeScreenState extends State<ExplorerScreen>
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: const [
-                  StakingTab(),
+                  StakingScreen(),
                   Center(
                     child: PwText(Strings.proposals),
                   ),

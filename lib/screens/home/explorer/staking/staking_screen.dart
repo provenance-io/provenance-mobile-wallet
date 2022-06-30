@@ -6,19 +6,17 @@ import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flo
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class StakingTab extends StatefulWidget {
-  const StakingTab({
+class StakingScreen extends StatefulWidget {
+  const StakingScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => StakingTabState();
+  State<StatefulWidget> createState() => StakingScreenState();
 }
 
-class StakingTabState extends State<StakingTab> {
+class StakingScreenState extends State<StakingScreen> {
   late StakingFlowBloc _bloc;
-
-  final textDivider = " • ";
 
   @override
   void initState() {

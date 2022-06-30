@@ -21,14 +21,14 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileTab extends StatefulWidget {
-  const ProfileTab({Key? key}) : super(key: key);
+class GlobalSettingsScreen extends StatefulWidget {
+  const GlobalSettingsScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileTabState createState() => _ProfileTabState();
+  _GlobalSettingsScreenState createState() => _GlobalSettingsScreenState();
 }
 
-class _ProfileTabState extends State<ProfileTab> {
+class _GlobalSettingsScreenState extends State<GlobalSettingsScreen> {
   static const _divider = PwListDivider();
 
   final _keyValueService = get<KeyValueService>();
