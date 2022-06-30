@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking/validator_list_item.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/validator_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ValidatorList extends StatefulWidget {

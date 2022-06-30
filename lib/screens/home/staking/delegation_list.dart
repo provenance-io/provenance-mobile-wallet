@@ -1,23 +1,18 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_redelegation/redelegation_list_item.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/screens/home/staking/delegation_list_item.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class RedelegationList extends StatefulWidget {
-  const RedelegationList({
+class DelegationList extends StatefulWidget {
+  const DelegationList({
     Key? key,
-    required this.validator,
   }) : super(key: key);
-
-  final DetailedValidator validator;
-
   @override
-  State<StatefulWidget> createState() => RedelegationListState();
+  State<StatefulWidget> createState() => DelegationListState();
 }
 
-class RedelegationListState extends State<RedelegationList> {
+class DelegationListState extends State<DelegationList> {
   final StakingFlowBloc _bloc = get<StakingFlowBloc>();
   final _scrollController = ScrollController();
 
@@ -49,35 +44,37 @@ class RedelegationListState extends State<RedelegationList> {
                 }
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(
-                    vertical: Spacing.xLarge,
-                    horizontal: Spacing.largeX3,
+                    horizontal: Spacing.xxLarge,
+                    vertical: 20,
                   ),
                   controller: _scrollController,
                   itemBuilder: (context, index) {
-                    if (stakingDetails.validators.isEmpty) {
+                    if (stakingDetails.delegates.isEmpty) {
                       return Container();
                     }
-                    final item = stakingDetails.validators[index];
+                    final item = stakingDetails.delegates[index];
+                    final validator = stakingDetails.validators
+                        .where(
+                          (element) => element.addressId == item.sourceAddress,
+                        )
+                        .first;
 
-                    if (item.moniker == widget.validator.moniker) {
-                      return Container();
-                    }
-
-                    return RedelegationListItem(
+                    return DelegationListItem(
+                      validator: validator,
                       item: item,
                     );
                   },
                   separatorBuilder: (context, index) {
                     return PwListDivider();
                   },
-                  itemCount: stakingDetails.validators.length - 1,
+                  itemCount: stakingDetails.delegates.length,
                   shrinkWrap: true,
                   physics: AlwaysScrollableScrollPhysics(),
                 );
               }),
           StreamBuilder<bool>(
-            initialData: _bloc.isLoadingValidators.value,
-            stream: _bloc.isLoadingValidators,
+            initialData: _bloc.isLoadingDelegations.value,
+            stream: _bloc.isLoadingDelegations,
             builder: (context, snapshot) {
               final isLoading = snapshot.data ?? false;
               if (isLoading) {
@@ -106,7 +103,7 @@ class RedelegationListState extends State<RedelegationList> {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalValidators();
+      _bloc.loadAdditionalDelegates();
     }
   }
 }

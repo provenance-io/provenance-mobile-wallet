@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
