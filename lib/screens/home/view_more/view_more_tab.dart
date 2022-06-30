@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/global_settings/global_settings_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ViewMoreTab extends StatefulWidget {
@@ -17,10 +18,12 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
       appBar: PwAppBar(
         title: Strings.viewMore,
         hasIcon: false,
+        style: PwTextStyle.footnote,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          VerticalSpacer.large(),
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -36,8 +39,11 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           padding: EdgeInsets.only(
                             bottom: 1,
                           ),
-                          child: _getLink(PwIcons.coinsOutline, Strings.staking,
-                              Container()),
+                          child: _getLink(
+                            PwIcons.coinsOutline,
+                            Strings.staking,
+                            StakingScreen(),
+                          ),
                         ),
                         Container(
                           padding: EdgeInsets.only(
@@ -62,7 +68,12 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
   }
 
   Widget _getLink(String icon, String name, Widget screen) {
-    return Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Navigator.of(context).push(screen.route());
+      },
+      child: Container(
         color: Theme.of(context).colorScheme.neutral700,
         padding: EdgeInsets.only(left: 20),
         child: Row(
@@ -84,25 +95,21 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
               softWrap: false,
             ),
             Expanded(child: Container()),
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                Navigator.of(context).push(screen.route());
-              },
-              child: SizedBox(
-                width: 60,
-                height: 60,
-                child: Center(
-                  child: PwIcon.only(
-                    PwIcons.caret,
-                    width: 4,
-                    height: 8,
-                    color: Theme.of(context).colorScheme.neutralNeutral,
-                  ),
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(
+                child: PwIcon.only(
+                  PwIcons.caret,
+                  width: 4,
+                  height: 8,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
                 ),
               ),
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
