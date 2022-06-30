@@ -52,199 +52,202 @@ class _GlobalSettingsScreenState extends State<GlobalSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.neutral750,
-      child: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            textDirection: TextDirection.ltr,
-            children: [
-              PwAppBarGestureDetector(
-                onTap: _tapCounter.increment,
-                child: PwAppBar(
-                  title: Strings.globalSettings,
-                  hasIcon: false,
+    return Material(
+      child: Container(
+        color: Theme.of(context).colorScheme.neutral750,
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.ltr,
+              children: [
+                PwAppBarGestureDetector(
+                  onTap: _tapCounter.increment,
+                  child: PwAppBar(
+                    title: Strings.globalSettings,
+                    leadingIcon: PwIcons.back,
+                  ),
                 ),
-              ),
-              CategoryLabel(Strings.security),
-              _divider,
-              FutureBuilder<BiometryType>(
-                future: get<CipherService>().getBiometryType(),
-                builder: (context, snapshot) {
-                  var type = snapshot.data;
-                  if (type == null || type == BiometryType.none) {
-                    return Container();
-                  }
+                CategoryLabel(Strings.security),
+                _divider,
+                FutureBuilder<BiometryType>(
+                  future: get<CipherService>().getBiometryType(),
+                  builder: (context, snapshot) {
+                    var type = snapshot.data;
+                    if (type == null || type == BiometryType.none) {
+                      return Container();
+                    }
 
-                  var label = '';
+                    var label = '';
 
-                  switch (type) {
-                    case BiometryType.none:
-                      break;
-                    case BiometryType.faceId:
-                      label = Strings.faceId;
-                      break;
-                    case BiometryType.touchId:
-                      label = Strings.touchId;
-                      break;
-                    case BiometryType.unknown:
-                      label = Strings.biometry;
-                      break;
-                  }
+                    switch (type) {
+                      case BiometryType.none:
+                        break;
+                      case BiometryType.faceId:
+                        label = Strings.faceId;
+                        break;
+                      case BiometryType.touchId:
+                        label = Strings.touchId;
+                        break;
+                      case BiometryType.unknown:
+                        label = Strings.biometry;
+                        break;
+                    }
 
-                  return Column(
-                    children: [
-                      FutureToggleItem(
-                        text: label,
-                        getValue: () async =>
-                            await get<CipherService>().getUseBiometry() ??
-                            false,
-                        setValue: (value) =>
-                            get<CipherService>().setUseBiometry(
-                          useBiometry: value,
+                    return Column(
+                      children: [
+                        FutureToggleItem(
+                          text: label,
+                          getValue: () async =>
+                              await get<CipherService>().getUseBiometry() ??
+                              false,
+                          setValue: (value) =>
+                              get<CipherService>().setUseBiometry(
+                            useBiometry: value,
+                          ),
                         ),
-                      ),
-                      _divider,
-                    ],
-                  );
-                },
-              ),
-              StreamBuilder<Account?>(
-                stream: get<AccountService>().events.selected,
-                initialData: null,
-                builder: (context, snapshot) {
-                  var accountName = snapshot.data?.name ?? "";
+                        _divider,
+                      ],
+                    );
+                  },
+                ),
+                StreamBuilder<Account?>(
+                  stream: get<AccountService>().events.selected,
+                  initialData: null,
+                  builder: (context, snapshot) {
+                    var accountName = snapshot.data?.name ?? "";
 
-                  return LinkItem(
-                    text: Strings.pinCode,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChangePinFlow(accountName),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              _divider,
-              LinkItem(
-                text: Strings.resetAccounts,
-                onTap: () async {
-                  bool shouldReset = await PwDialog.showConfirmation(
-                    context,
-                    title: Strings.resetAccounts,
-                    message: Strings.resetAccountsAreYouSure,
-                    cancelText: Strings.cancel,
-                    confirmText: Strings.resetAccounts,
-                  );
-                  if (shouldReset) {
-                    await get<HomeBloc>().resetAccounts();
-                  }
-                },
-              ),
-              _divider,
-              CategoryLabel(Strings.general),
-              _divider,
-              LinkItem(
-                text: Strings.aboutProvenanceBlockchain,
-                onTap: () {
-                  launchUrl('https://provenance.io/');
-                },
-              ),
-              _divider,
-              LinkItem(
-                text: Strings.moreInformation,
-                onTap: () {
-                  launchUrl('https://docs.provenance.io/');
-                },
-              ),
-              _divider,
-              StreamBuilder<KeyValueData<bool>>(
-                initialData: _keyValueService
-                    .stream<bool>(PrefKey.showAdvancedUI)
-                    .valueOrNull,
-                stream: _keyValueService.stream<bool>(PrefKey.showAdvancedUI),
-                builder: (context, snapshot) {
-                  final streamData = snapshot.data;
-                  if (streamData == null) {
-                    return Container();
-                  }
-
-                  final show = streamData.data ?? false;
-
-                  return ToggleItem(
-                    text: Strings.profileShowAdvancedUI,
-                    value: show,
-                    onChanged: (value) =>
-                        _keyValueService.setBool(PrefKey.showAdvancedUI, value),
-                  );
-                },
-              ),
-              _divider,
-              StreamBuilder<KeyValueData<bool>>(
-                initialData: _keyValueService
-                    .stream<bool>(PrefKey.allowCrashlitics)
-                    .valueOrNull,
-                stream: _keyValueService.stream<bool>(PrefKey.allowCrashlitics),
-                builder: (context, snapshot) {
-                  final streamData = snapshot.data;
-                  if (streamData == null) {
-                    return Container();
-                  }
-
-                  final show = streamData.data ?? true;
-
-                  return ToggleItem(
-                    text: Strings.profileAllowCrashlitics,
-                    value: show,
-                    onChanged: (value) async {
-                      await _keyValueService.setBool(
-                        PrefKey.allowCrashlitics,
-                        value,
-                      );
-
-                      final crashReportingService =
-                          get<CrashReportingService>();
-
-                      if (value) {
-                        await crashReportingService.enableCrashCollection(
-                          enable: !kDebugMode,
+                    return LinkItem(
+                      text: Strings.pinCode,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePinFlow(accountName),
+                          ),
                         );
-                      } else {
-                        await crashReportingService.enableCrashCollection(
-                          enable: false,
-                        );
-                        await crashReportingService.deleteUnsentReports();
-                      }
-                    },
-                  );
-                },
-              ),
-              StreamBuilder<KeyValueData<bool>>(
-                initialData: _keyValueService
-                    .stream<bool>(PrefKey.showDevMenu)
-                    .valueOrNull,
-                stream: _keyValueService.stream<bool>(PrefKey.showDevMenu),
-                builder: (context, snapshot) {
-                  final show = snapshot.data?.data ?? false;
-                  if (!show) {
-                    return Container();
-                  }
+                      },
+                    );
+                  },
+                ),
+                _divider,
+                LinkItem(
+                  text: Strings.resetAccounts,
+                  onTap: () async {
+                    bool shouldReset = await PwDialog.showConfirmation(
+                      context,
+                      title: Strings.resetAccounts,
+                      message: Strings.resetAccountsAreYouSure,
+                      cancelText: Strings.cancel,
+                      confirmText: Strings.resetAccounts,
+                    );
+                    if (shouldReset) {
+                      await get<HomeBloc>().resetAccounts();
+                    }
+                  },
+                ),
+                _divider,
+                CategoryLabel(Strings.general),
+                _divider,
+                LinkItem(
+                  text: Strings.aboutProvenanceBlockchain,
+                  onTap: () {
+                    launchUrl('https://provenance.io/');
+                  },
+                ),
+                _divider,
+                LinkItem(
+                  text: Strings.moreInformation,
+                  onTap: () {
+                    launchUrl('https://docs.provenance.io/');
+                  },
+                ),
+                _divider,
+                StreamBuilder<KeyValueData<bool>>(
+                  initialData: _keyValueService
+                      .stream<bool>(PrefKey.showAdvancedUI)
+                      .valueOrNull,
+                  stream: _keyValueService.stream<bool>(PrefKey.showAdvancedUI),
+                  builder: (context, snapshot) {
+                    final streamData = snapshot.data;
+                    if (streamData == null) {
+                      return Container();
+                    }
 
-                  return Column(
-                    children: const [
-                      _divider,
-                      DeveloperMenu(),
-                    ],
-                  );
-                },
-              ),
-              _divider,
-            ],
+                    final show = streamData.data ?? false;
+
+                    return ToggleItem(
+                      text: Strings.profileShowAdvancedUI,
+                      value: show,
+                      onChanged: (value) => _keyValueService.setBool(
+                          PrefKey.showAdvancedUI, value),
+                    );
+                  },
+                ),
+                _divider,
+                StreamBuilder<KeyValueData<bool>>(
+                  initialData: _keyValueService
+                      .stream<bool>(PrefKey.allowCrashlitics)
+                      .valueOrNull,
+                  stream:
+                      _keyValueService.stream<bool>(PrefKey.allowCrashlitics),
+                  builder: (context, snapshot) {
+                    final streamData = snapshot.data;
+                    if (streamData == null) {
+                      return Container();
+                    }
+
+                    final show = streamData.data ?? true;
+
+                    return ToggleItem(
+                      text: Strings.profileAllowCrashlitics,
+                      value: show,
+                      onChanged: (value) async {
+                        await _keyValueService.setBool(
+                          PrefKey.allowCrashlitics,
+                          value,
+                        );
+
+                        final crashReportingService =
+                            get<CrashReportingService>();
+
+                        if (value) {
+                          await crashReportingService.enableCrashCollection(
+                            enable: !kDebugMode,
+                          );
+                        } else {
+                          await crashReportingService.enableCrashCollection(
+                            enable: false,
+                          );
+                          await crashReportingService.deleteUnsentReports();
+                        }
+                      },
+                    );
+                  },
+                ),
+                StreamBuilder<KeyValueData<bool>>(
+                  initialData: _keyValueService
+                      .stream<bool>(PrefKey.showDevMenu)
+                      .valueOrNull,
+                  stream: _keyValueService.stream<bool>(PrefKey.showDevMenu),
+                  builder: (context, snapshot) {
+                    final show = snapshot.data?.data ?? false;
+                    if (!show) {
+                      return Container();
+                    }
+
+                    return Column(
+                      children: const [
+                        _divider,
+                        DeveloperMenu(),
+                      ],
+                    );
+                  },
+                ),
+                _divider,
+              ],
+            ),
           ),
         ),
       ),
