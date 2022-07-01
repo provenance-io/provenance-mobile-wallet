@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_item_copy.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management.dart';
@@ -76,54 +76,182 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
 
               return Scaffold(
                 appBar: PwAppBar(
-                  title: validator.status.name.capitalize(),
+                  title: validator.moniker,
                   leadingIcon: PwIcons.back,
-                  textColor: _bloc.getColor(validator.status),
+                  style: PwTextStyle.footnote,
                 ),
                 body: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Spacing.largeX3,
-                        vertical: Spacing.xLarge,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  foregroundImage:
-                                      NetworkImage(validator.imgUrl ?? ""),
-                                  child: PwText(validator.moniker
-                                      .substring(0, 1)
-                                      .toUpperCase()),
-                                ),
-                                VerticalSpacer.large(),
-                                PwText(
-                                  validator.moniker,
-                                  style: PwTextStyle.bodyBold,
-                                ),
-                                if (validator.description.isNotEmpty)
-                                  VerticalSpacer.large(),
-                                // Description, might be empty string.
-                                if (validator.description.isNotEmpty)
-                                  PwText(
-                                    validator.description,
-                                    style: PwTextStyle.body,
-                                  ),
-                              ],
+                    DetailsHeader(
+                      title: Strings.stakingDetailsDelegationStatus,
+                    ),
+                    _getDivider(context),
+                    _getHashDetails(
+                      Strings.stakingManagementMyDelegation,
+                      details.delegation?.displayDenom ??
+                          Strings.stakingManagementNoHash,
+                    ),
+                    _getDivider(context),
+                    if (details.rewards == null ||
+                        details.rewards?.rewards.isEmpty == true)
+                      _getHashDetails(Strings.stakingDetailsRewards,
+                          Strings.stakingManagementNoHash),
+                    if (details.rewards != null &&
+                        details.rewards!.rewards.isNotEmpty)
+                      for (var reward in details.rewards!.rewards)
+                        _getHashDetails(Strings.stakingDetailsRewards,
+                            '${reward.amount} ${reward.denom}'),
+                    _getDivider(context),
+                    _getDetailsItem(
+                      Strings.stakingDetailsStatus,
+                      [
+                        Icon(
+                          Icons.brightness_1,
+                          color: get<StakingScreenBloc>()
+                              .getColor(validator.status, context),
+                          size: 8,
+                        ),
+                        HorizontalSpacer.xSmall(),
+                        PwText(
+                          validator.status.name.capitalize(),
+                          style: PwTextStyle.footnote,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        )
+                      ],
+                    ),
+                    _getDivider(context),
+                    DetailsHeader(
+                      title: Strings.stakingDetailsCommissionInformation,
+                    ),
+                    _getDivider(context),
+                    _getHashDetails(
+                      Strings.stakingDetailsBonded,
+                      commission.formattedBondedTokens,
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsCommissionRateRange,
+                      "0 ~ ${commission.commissionMaxRate}",
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsCommissionRate,
+                      commission.commissionMaxRate,
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsDelegators,
+                      commission.delegatorCount.toString(),
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsMaxChangeRate,
+                      commission.commissionMaxChangeRate,
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsMissedBlocks,
+                      "${validator.blockCount} in ${validator.blockTotal}",
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsRewards,
+                      commission.formattedRewards,
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsTotalShares,
+                      commission.formattedTotalShares,
+                    ),
+                    _getDivider(context),
+                    _getDetailsItem(
+                      Strings.stakingDetailsValidatorTransactions,
+                      [
+                        GestureDetector(
+                          onTap: () async {
+                            String url = _bloc.getProvUrl();
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: PwIcon(
+                              PwIcons.newWindow,
+                              color:
+                                  Theme.of(context).colorScheme.neutralNeutral,
+                              size: 20,
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    _getDivider(context),
+                    DetailsHeader(title: Strings.stakingDetailsAddresses),
+                    _getDivider(context),
+                    DetailsItemCopy(
+                      displayTitle: Strings.stakingDetailsOperatorAddress,
+                      dataToCopy: validator.operatorAddress,
+                      snackBarTitle:
+                          Strings.stakingDetailsOperatorAddressCopied,
+                    ),
+                    _getDivider(context),
+                    DetailsItemCopy(
+                      displayTitle: Strings.stakingDetailsOwnerAddress,
+                      dataToCopy: validator.ownerAddress,
+                      snackBarTitle: Strings.stakingDetailsOwnerAddressCopied,
+                    ),
+                    _getDivider(context),
+                    DetailsItemCopy(
+                      displayTitle: Strings.stakingDetailsWithdrawAddress,
+                      dataToCopy: validator.withdrawalAddress,
+                      snackBarTitle:
+                          Strings.stakingDetailsWithdrawAddressCopied,
+                    ),
+                    _getDivider(context),
+                    DetailsItemCopy(
+                      displayTitle: Strings.stakingDetailsConsensusPubkey,
+                      dataToCopy: validator.consensusPubKey,
+                      snackBarTitle:
+                          Strings.stakingDetailsConsensusPubkeyCopied,
+                    ),
+                    _getDivider(context),
+                    DetailsHeader(
+                        title: Strings.stakingDetailsAdditionalDetails),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsBondHeight,
+                      validator.bondHeight.toString(),
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsUptime,
+                      "${validator.uptime}%",
+                    ),
+                    _getDivider(context),
+                    _getStringDetailsItem(
+                      Strings.stakingDetailsVotingPower,
+                      validator.formattedVotingPower,
+                    ),
+                    if (ValidatorStatus.jailed == validator.status)
+                      _getDivider(context),
+                    if (ValidatorStatus.jailed == validator.status)
+                      _getStringDetailsItem(
+                        Strings.stakingDetailsJailedUntil,
+                        validator.formattedJailedUntil,
                       ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
+                    if (ValidatorStatus.jailed == validator.status)
+                      _getDivider(context),
+                    if (ValidatorStatus.jailed == validator.status)
+                      _getStringDetailsItem(
+                        Strings.stakingDetailsUnbondingHeight,
+                        (validator.unbondingHeight ?? 0).toString(),
+                      ),
                     if (details.delegation != null)
                       StakingManagement(
                         navigator: widget.navigator,
@@ -131,258 +259,6 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         commission: commission,
                         validator: validator,
                       ),
-                    if (details.delegation == null)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.largeX3,
-                          vertical: Spacing.xLarge,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: PwButton(
-                                child: PwText(
-                                  Strings.stakingDetailsButtonDelegate,
-                                  style: PwTextStyle.body,
-                                ),
-                                onPressed: () async {
-                                  widget.navigator.showDelegationScreen(
-                                    validator,
-                                    commission,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    if (details.rewards == null ||
-                        details.rewards?.rewards.isEmpty == true)
-                      DetailsItem(
-                        title: Strings.stakingDetailsReward,
-                        endChild: PwText('---'),
-                      ),
-                    if (details.rewards != null &&
-                        details.rewards!.rewards.isNotEmpty)
-                      for (var reward in details.rewards!.rewards)
-                        DetailsItem(
-                          title: Strings.stakingDetailsReward,
-                          endChild: PwText('${reward.amount} ${reward.denom}'),
-                        ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItemCopy(
-                      displayTitle: Strings.stakingDetailsOperatorAddress,
-                      dataToCopy: validator.operatorAddress,
-                      snackBarTitle:
-                          Strings.stakingDetailsOperatorAddressCopied,
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItemCopy(
-                      displayTitle: Strings.stakingDetailsOwnerAddress,
-                      dataToCopy: validator.ownerAddress,
-                      snackBarTitle: Strings.stakingDetailsOwnerAddressCopied,
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItemCopy(
-                      displayTitle: Strings.stakingDetailsWithdrawAddress,
-                      dataToCopy: validator.withdrawalAddress,
-                      snackBarTitle:
-                          Strings.stakingDetailsWithdrawAddressCopied,
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    if (ValidatorStatus.jailed == validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsUnbondingHeight,
-                        endChild: PwText(
-                          (validator.unbondingHeight ?? 0).toString(),
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    if (ValidatorStatus.jailed == validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    if (validator.formattedVotingPower.isNotEmpty &&
-                        ValidatorStatus.jailed != validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsVotingPower,
-                        endChild: PwText(
-                          validator.formattedVotingPower,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    if (validator.formattedVotingPower.isNotEmpty &&
-                        ValidatorStatus.jailed != validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsUptime,
-                        endChild: PwText(
-                          "${validator.uptime}%",
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsMissedBlocks,
-                        endChild: PwText(
-                          "${validator.blockCount} in ${validator.blockTotal}",
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsBondHeight,
-                        endChild: PwText(
-                          validator.bondHeight.toString(),
-                        ),
-                      ),
-                    if (ValidatorStatus.jailed != validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    DetailsItemCopy(
-                      displayTitle: Strings.stakingDetailsConsensusPubkey,
-                      dataToCopy: validator.consensusPubKey,
-                      snackBarTitle:
-                          Strings.stakingDetailsConsensusPubkeyCopied,
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    if (ValidatorStatus.jailed == validator.status)
-                      DetailsItem(
-                        title: Strings.stakingDetailsJailedUntil,
-                        endChild: PwText(
-                          validator.formattedJailedUntil,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    if (ValidatorStatus.jailed == validator.status)
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Spacing.largeX3,
-                        vertical: Spacing.xLarge,
-                      ),
-                      child: PwText(
-                        Strings.stakingDetailsCommissionInfo,
-                        style: PwTextStyle.title,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsCommissionRate,
-                      endChild: PwText(
-                        commission.commissionRate,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsDelegators,
-                      endChild: PwText(
-                        commission.delegatorCount.toString(),
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsRewards,
-                      endChild: PwText(
-                        commission.formattedRewards,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsMaxChangeRate,
-                      endChild: PwText(
-                        commission.commissionMaxChangeRate,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsBonded,
-                      endChild: PwText(
-                        commission.formattedBondedTokens,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsTotalShares,
-                      endChild: PwText(
-                        commission.formattedTotalShares,
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsCommissionRateRange,
-                      endChild: PwText(
-                        "0 ~ ${commission.commissionMaxRate}",
-                      ),
-                    ),
-                    PwListDivider(
-                      indent: Spacing.largeX3,
-                    ),
-                    DetailsItem(
-                      title: Strings.stakingDetailsValidatorTransactions,
-                      endChild: GestureDetector(
-                        onTap: () async {
-                          String url = _bloc.getProvUrl();
-                          if (await canLaunch(url)) {
-                            await launch(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
-                        },
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: PwIcon(
-                            PwIcons.newWindow,
-                            color: Theme.of(context).colorScheme.neutralNeutral,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               );
@@ -408,6 +284,57 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _getHashDetails(String title, String hashString) {
+    return _getDetailsItem(
+      title,
+      [
+        PwIcon(
+          PwIcons.hashLogo,
+          size: 24,
+          color: Theme.of(context).colorScheme.neutralNeutral,
+        ),
+        HorizontalSpacer.small(),
+        PwText(
+          hashString,
+          overflow: TextOverflow.fade,
+          softWrap: false,
+          style: PwTextStyle.footnote,
+        ),
+      ],
+    );
+  }
+
+  Widget _getDetailsItem(String title, List<Widget> children) {
+    return DetailsItem(
+      title: title,
+      padding: EdgeInsets.symmetric(vertical: Spacing.large),
+      style: PwTextStyle.footnote,
+      color: PwColor.neutral200,
+      endChild: children.length == 1
+          ? children.first
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+    );
+  }
+
+  Widget _getStringDetailsItem(String title, String value) {
+    return DetailsItem.fromStrings(
+      padding: EdgeInsets.symmetric(vertical: Spacing.large),
+      color: PwColor.neutral200,
+      style: PwTextStyle.footnote,
+      title: title,
+      value: value,
+    );
+  }
+
+  Widget _getDivider(BuildContext context) {
+    return PwListDivider(
+      color: Theme.of(context).colorScheme.neutral700,
     );
   }
 }
