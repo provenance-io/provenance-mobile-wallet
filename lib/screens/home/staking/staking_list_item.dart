@@ -45,15 +45,12 @@ class StakingListItem extends StatelessWidget {
                     style: PwTextStyle.body,
                   ),
                   VerticalSpacer.xSmall(),
-                  SizedBox(
-                    width: 180,
-                    child: PwText(
-                      listItemText,
-                      color: PwColor.neutral200,
-                      style: PwTextStyle.footnote,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
+                  PwText(
+                    listItemText,
+                    color: PwColor.neutral200,
+                    style: PwTextStyle.footnote,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
                   ),
                   VerticalSpacer.xSmall(),
                   Row(
