@@ -64,12 +64,12 @@ class Commission {
 
   String get formattedBondedTokens {
     var tokens = bondedTokensCount.nhashToHash(fractionDigits: 7).split('.');
-    return '${tokens[0].formatNumber()}.${tokens[1]} hash';
+    return '${tokens[0].formatNumber()}.${tokens[1]} HASH';
   }
 
   String get formattedRewards {
     var rewards =
         commissionRewardsAmount.nhashToHash(fractionDigits: 7).split('.');
-    return '${rewards[0].formatNumber()}.${rewards[1]} hash';
+    return '${rewards[0].formatNumber()}.${rewards[1]} HASH';
   }
 }
