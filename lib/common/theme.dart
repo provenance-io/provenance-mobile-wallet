@@ -281,6 +281,7 @@ class ProvenanceThemeData {
     fontSize: 14,
     fontWeight: FontWeight.w700,
     letterSpacing: 14 * 0.04,
+    height: 22.4 / 14,
   );
   static const TextStyle _bodySmall = TextStyle(
     fontFamily: 'GothicA1',

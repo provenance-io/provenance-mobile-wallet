@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/home/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/validator_list.dart';
@@ -98,7 +97,8 @@ class _StakingScreenState extends State<StakingScreen>
                             EdgeInsets.symmetric(horizontal: Spacing.large),
                         child: TabBar(
                           controller: _tabController,
-                          indicatorColor: Colors.white,
+                          indicatorColor:
+                              Theme.of(context).colorScheme.neutralNeutral,
                           tabs: [
                             Padding(
                               padding: EdgeInsets.only(bottom: Spacing.small),
@@ -131,46 +131,40 @@ class _StakingScreenState extends State<StakingScreen>
                             DelegationList(),
                             Column(
                               children: [
+                                VerticalSpacer.xLarge(),
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: Spacing.xxLarge,
+                                    horizontal: Spacing.large,
                                   ),
                                   child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       PwText(
-                                        Strings.dropDownStateHeader,
+                                        Strings.stakingTabAvailableToSelect,
                                         color: PwColor.neutralNeutral,
-                                        style: PwTextStyle.body,
+                                        style: PwTextStyle.bodyBold,
                                       ),
-                                      HorizontalSpacer.large(),
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .neutral250,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(4)),
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: Spacing.medium,
-                                          ),
-                                          child:
-                                              PwDropDown<ValidatorSortingState>(
-                                            value: stakingDetails.selectedSort,
-                                            items: ValidatorSortingState.values,
-                                            isExpanded: true,
-                                            onValueChanged: (item) {
-                                              _bloc.updateSort(item);
-                                            },
-                                            builder: (item) => PwText(
-                                              item.dropDownTitle,
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {},
+                                        child: Row(
+                                          children: [
+                                            PwText(
+                                              Strings.stakingTabSortBy,
                                               color: PwColor.neutralNeutral,
                                               style: PwTextStyle.body,
                                             ),
-                                          ),
+                                            HorizontalSpacer.small(),
+                                            PwIcon(
+                                              PwIcons.sort,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .neutralNeutral,
+                                            ),
+                                          ],
                                         ),
                                       )
                                     ],

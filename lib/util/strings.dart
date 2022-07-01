@@ -549,7 +549,8 @@ class Strings {
   static const stakingTabMyDelegations = "My Delegations";
   static const stakingTabStakingDefined =
       "Staking is a process that involves committing your assets to support Provenance's network and to confirm transactions.";
-  static const dropDownStateHeader = "Sort Validators by";
+  static const stakingTabAvailableToSelect = "Available to Select";
+  static const stakingTabSortBy = "Sort by";
   static const dropDownVotingPower = "Voting Power";
   static const dropDownAlphabetically = "Name";
   static String displayDenomFormatted(String displayDenom) =>
