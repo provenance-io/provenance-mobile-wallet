@@ -49,7 +49,7 @@ class ValidatorListState extends State<ValidatorList> {
               }
               return ListView.separated(
                 padding: EdgeInsets.all(
-                  Spacing.xLarge,
+                  Spacing.large,
                 ),
                 controller: _scrollController,
                 itemBuilder: (context, index) {
