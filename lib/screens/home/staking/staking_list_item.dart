@@ -1,44 +1,28 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/staking/pw_avatar.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class DelegationListItem extends StatelessWidget {
-  DelegationListItem({
+class StakingListItem extends StatelessWidget {
+  StakingListItem({
     Key? key,
     required this.validator,
-    required this.item,
+    required this.listItemText,
+    required this.onTouch,
   }) : super(key: key);
 
   final ProvenanceValidator validator;
-  final Delegation item;
+  final String listItemText;
+  final Future<void> Function() onTouch;
   final bloc = get<StakingScreenBloc>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        final account = await get<AccountService>().getSelectedAccount();
-        if (account == null) {
-          return;
-        }
-        final rewards = bloc.stakingDetails.value.rewards.firstWhere(
-            (element) => element.validatorAddress == validator.addressId);
-        final response = await Navigator.of(context).push(
-          StakingFlow(
-            validator.addressId,
-            account,
-            item,
-            rewards,
-          ).route(),
-        );
-        if (response == true) {
-          await bloc.load();
-        }
+        await onTouch();
       },
       child: Padding(
         padding: EdgeInsets.zero,
@@ -48,27 +32,9 @@ class DelegationListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                width: Spacing.largeX3,
-                height: Spacing.largeX3,
-                child: Container(
-                  decoration: ShapeDecoration(
-                    shape: CircleBorder(
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.neutralNeutral,
-                      ),
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor:
-                        Theme.of(context).colorScheme.neutralNeutral,
-                    foregroundImage: NetworkImage(validator.imgUrl ?? ""),
-                    child: PwText(
-                      validator.moniker.substring(0, 1).toUpperCase(),
-                    ),
-                  ),
-                ),
+              PwAvatar(
+                initial: validator.moniker.substring(0, 1),
+                imgUrl: validator.imgUrl ?? "",
               ),
               HorizontalSpacer.medium(),
               Column(
@@ -82,7 +48,7 @@ class DelegationListItem extends StatelessWidget {
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      Strings.displayDenomFormatted(item.displayDenom),
+                      listItemText,
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,

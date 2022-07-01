@@ -1,8 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/staking/delegation_list_item.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DelegationList extends StatefulWidget {
   const DelegationList({
@@ -59,9 +62,32 @@ class DelegationListState extends State<DelegationList> {
                         )
                         .first;
 
-                    return DelegationListItem(
+                    return StakingListItem(
                       validator: validator,
-                      item: item,
+                      listItemText:
+                          Strings.displayDenomFormatted(item.displayDenom),
+                      onTouch: () async {
+                        final account =
+                            await get<AccountService>().getSelectedAccount();
+                        if (account == null) {
+                          return;
+                        }
+                        final rewards = stakingDetails.rewards.firstWhere(
+                            (element) =>
+                                element.validatorAddress ==
+                                validator.addressId);
+                        final response = await Navigator.of(context).push(
+                          StakingFlow(
+                            validator.addressId,
+                            account,
+                            item,
+                            rewards,
+                          ).route(),
+                        );
+                        if (response == true) {
+                          await _bloc.load();
+                        }
+                      },
                     );
                   },
                   separatorBuilder: (context, index) {
