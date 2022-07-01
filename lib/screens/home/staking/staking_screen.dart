@@ -87,39 +87,41 @@ class _StakingScreenState extends State<StakingScreen>
                           vertical: Spacing.largeX3,
                         ),
                         child: PwText(
-                          "Staking is a process that involves committing your assets to support Provenance's network and to confirm transactions.",
+                          Strings.stakingTabStakingDefined,
                           color: PwColor.neutral250,
                           style: PwTextStyle.body,
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TabBar(
-                        controller: _tabController,
-                        indicatorColor: Colors.white,
-                        indicatorPadding:
+                      Padding(
+                        padding:
                             EdgeInsets.symmetric(horizontal: Spacing.large),
-                        tabs: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: Spacing.small),
-                            child: PwText(
-                              Strings.stakingTabMyDelegations,
-                              color: _currentTabIndex == 0
-                                  ? PwColor.neutralNeutral
-                                  : PwColor.neutral250,
-                              style: PwTextStyle.footnote,
+                        child: TabBar(
+                          controller: _tabController,
+                          indicatorColor: Colors.white,
+                          tabs: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: Spacing.small),
+                              child: PwText(
+                                Strings.stakingTabMyDelegations,
+                                color: _currentTabIndex == 0
+                                    ? PwColor.neutralNeutral
+                                    : PwColor.neutral250,
+                                style: PwTextStyle.footnote,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: Spacing.small),
-                            child: PwText(
-                              Strings.validators,
-                              color: _currentTabIndex == 1
-                                  ? PwColor.neutralNeutral
-                                  : PwColor.neutral250,
-                              style: PwTextStyle.footnote,
+                            Padding(
+                              padding: EdgeInsets.only(bottom: Spacing.small),
+                              child: PwText(
+                                Strings.validators,
+                                color: _currentTabIndex == 1
+                                    ? PwColor.neutralNeutral
+                                    : PwColor.neutral250,
+                                style: PwTextStyle.footnote,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Expanded(
                         child: TabBarView(
