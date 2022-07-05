@@ -137,7 +137,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                           child: Row(
                             children: [
                               PwText(
-                                Strings.dropDownStateHeader,
+                                Strings.stakingTabAvailableToSelect,
                                 color: PwColor.neutralNeutral,
                                 style: PwTextStyle.body,
                               ),

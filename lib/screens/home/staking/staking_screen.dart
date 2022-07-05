@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/validator_list.dart';
@@ -15,13 +16,17 @@ class StakingScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _StakingScreenState();
 }
 
-class _StakingScreenState extends State<StakingScreen> {
+class _StakingScreenState extends State<StakingScreen>
+    with TickerProviderStateMixin {
   late StakingScreenBloc _bloc;
+  late TabController _tabController;
+  int _currentTabIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_setCurrentTab);
     _bloc = StakingScreenBloc();
     get.registerSingleton(_bloc);
     _bloc.load();
@@ -29,6 +34,8 @@ class _StakingScreenState extends State<StakingScreen> {
 
   @override
   void dispose() {
+    _tabController.removeListener(_setCurrentTab);
+    _tabController.dispose();
     get.unregister<StakingScreenBloc>();
     super.dispose();
   }
@@ -61,7 +68,7 @@ class _StakingScreenState extends State<StakingScreen> {
                         elevation: 0.0,
                         title: PwText(
                           Strings.staking,
-                          style: PwTextStyle.subhead,
+                          style: PwTextStyle.footnote,
                         ),
                         leading: Padding(
                           padding: EdgeInsets.only(left: 21),
@@ -77,67 +84,101 @@ class _StakingScreenState extends State<StakingScreen> {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
+                          vertical: Spacing.largeX3,
                         ),
-                        child: Row(
-                          children: const [
-                            PwText(
-                              Strings.stakingTabMyDelegations,
-                              color: PwColor.neutralNeutral,
-                              style: PwTextStyle.body,
-                            ),
-                            HorizontalSpacer.large(),
-                          ],
+                        child: PwText(
+                          Strings.stakingTabStakingDefined,
+                          color: PwColor.neutral250,
+                          style: PwTextStyle.body,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      DelegationList(),
-                      VerticalSpacer.medium(),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
-                        ),
-                        child: Row(
-                          children: [
-                            PwText(
-                              Strings.dropDownStateHeader,
-                              color: PwColor.neutralNeutral,
-                              style: PwTextStyle.body,
-                            ),
-                            HorizontalSpacer.large(),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .neutral250,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(4)),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: Spacing.medium,
-                                ),
-                                child: PwDropDown<ValidatorSortingState>(
-                                  value: stakingDetails.selectedSort,
-                                  items: ValidatorSortingState.values,
-                                  isExpanded: true,
-                                  onValueChanged: (item) {
-                                    _bloc.updateSort(item);
-                                  },
-                                  builder: (item) => PwText(
-                                    item.dropDownTitle,
-                                    color: PwColor.neutralNeutral,
-                                    style: PwTextStyle.body,
-                                  ),
-                                ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Spacing.large),
+                        child: TabBar(
+                          controller: _tabController,
+                          indicatorColor:
+                              Theme.of(context).colorScheme.neutralNeutral,
+                          tabs: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: Spacing.small),
+                              child: PwText(
+                                Strings.stakingTabMyDelegations,
+                                color: _currentTabIndex == 0
+                                    ? PwColor.neutralNeutral
+                                    : PwColor.neutral250,
+                                style: PwTextStyle.footnote,
                               ),
-                            )
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: Spacing.small),
+                              child: PwText(
+                                Strings.validators,
+                                color: _currentTabIndex == 1
+                                    ? PwColor.neutralNeutral
+                                    : PwColor.neutral250,
+                                style: PwTextStyle.footnote,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      VerticalSpacer.medium(),
-                      ValidatorList(),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            DelegationList(),
+                            Column(
+                              children: [
+                                VerticalSpacer.xLarge(),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: Spacing.large,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      PwText(
+                                        Strings.stakingTabAvailableToSelect,
+                                        color: PwColor.neutralNeutral,
+                                        style: PwTextStyle.bodyBold,
+                                      ),
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () => _showMenu(context),
+                                        child: Row(
+                                          children: [
+                                            PwText(
+                                              Strings.stakingTabSortBy,
+                                              color: PwColor.neutralNeutral,
+                                              style: PwTextStyle.body,
+                                            ),
+                                            HorizontalSpacer.small(),
+                                            PwIcon(
+                                              PwIcons.sort,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .neutralNeutral,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                VerticalSpacer.large(),
+                                ValidatorList(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 },
@@ -165,5 +206,64 @@ class _StakingScreenState extends State<StakingScreen> {
         ],
       ),
     );
+  }
+
+  void _setCurrentTab() {
+    setState(() {
+      _currentTabIndex = _tabController.index;
+    });
+  }
+
+  Future<void> _showMenu(
+    BuildContext context,
+  ) async {
+    var result = await showModalBottomSheet<ValidatorSortingState>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            PwGreyButton(
+              text: ValidatorSortingState.alphabetically.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.alphabetically);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.commission.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.commission);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.delegators.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.delegators);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.votingPower.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.votingPower);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              enabled: false,
+              text: "",
+              // ignore: no-empty-block
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+    if (result != null) {
+      _bloc.updateSort(result);
+    }
   }
 }

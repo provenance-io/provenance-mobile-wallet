@@ -1,8 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/screens/home/staking/validator_list_item.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ValidatorList extends StatefulWidget {
   const ValidatorList({
@@ -45,7 +49,7 @@ class ValidatorListState extends State<ValidatorList> {
               }
               return ListView.separated(
                 padding: EdgeInsets.all(
-                  Spacing.xLarge,
+                  Spacing.large,
                 ),
                 controller: _scrollController,
                 itemBuilder: (context, index) {
@@ -54,8 +58,38 @@ class ValidatorListState extends State<ValidatorList> {
                   }
                   final item = stakingDetails.validators[index];
 
-                  return ValidatorListItem(
-                    item: item,
+                  return StakingListItem(
+                    validator: item,
+                    listItemText: Strings.displayDelegatorsWithCommission(
+                      item.delegators,
+                      item.commission,
+                    ),
+                    onTouch: () async {
+                      final account =
+                          await get<AccountService>().getSelectedAccount();
+                      if (account == null) {
+                        return;
+                      }
+
+                      final delegation = stakingDetails.delegates
+                          .firstWhereOrNull((element) =>
+                              element.sourceAddress == item.addressId);
+                      final rewards = stakingDetails.rewards.firstWhereOrNull(
+                          (element) =>
+                              element.validatorAddress == item.addressId);
+
+                      final response = await Navigator.of(context).push(
+                        StakingFlow(
+                          item.addressId,
+                          account,
+                          delegation,
+                          rewards,
+                        ).route(),
+                      );
+                      if (response == true) {
+                        await _bloc.load();
+                      }
+                    },
                   );
                 },
                 separatorBuilder: (context, index) {

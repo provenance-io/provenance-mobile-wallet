@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -151,6 +152,18 @@ class StakingScreenBloc extends PwPagingCache {
     );
 
     _isLoadingValidators.value = false;
+  }
+
+  Color getColor(ValidatorStatus status, BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    switch (status) {
+      case ValidatorStatus.active:
+        return colorScheme.positive300;
+      case ValidatorStatus.candidate:
+        return colorScheme.secondaryContainer;
+      case ValidatorStatus.jailed:
+        return colorScheme.error;
+    }
   }
 }
 

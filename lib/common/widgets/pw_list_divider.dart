@@ -1,9 +1,14 @@
 import '../pw_design.dart';
 
 class PwListDivider extends StatelessWidget {
-  const PwListDivider({Key? key, this.indent}) : super(key: key);
+  const PwListDivider({
+    Key? key,
+    this.indent,
+    this.color,
+  }) : super(key: key);
 
   final double? indent;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,7 @@ class PwListDivider extends StatelessWidget {
       thickness: 1,
       indent: indent,
       endIndent: indent,
-      color: Theme.of(context).colorScheme.neutral600,
+      color: color ?? Theme.of(context).colorScheme.neutral600,
     );
   }
 }

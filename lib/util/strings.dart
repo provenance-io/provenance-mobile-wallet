@@ -547,13 +547,17 @@ class Strings {
 
   // Staking Tab
   static const stakingTabMyDelegations = "My Delegations";
-  static const dropDownStateHeader = "Sort Validators by";
+  static const stakingTabStakingDefined =
+      "Staking is a process that involves committing your assets to support Provenance's network and to confirm transactions.";
+  static const stakingTabAvailableToSelect = "Available to Select";
+  static const stakingTabSortBy = "Sort by";
   static const dropDownVotingPower = "Voting Power";
   static const dropDownAlphabetically = "Name";
-  static String endTimeFormatted(String formattedTime) =>
-      "Ended: $formattedTime";
   static String displayDenomFormatted(String displayDenom) =>
       "$displayDenom delegated";
+  static String displayDelegatorsWithCommission(
+          int delegators, String commission) =>
+      "$delegators delegators • $commission commission";
 
   // Staking Details
   static const stakingDetailsValidatorDetails = "Validator Details";
