@@ -74,7 +74,6 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         validatorAddress: widget.validatorAddress,
         account: widget.account,
         selectedDelegation: widget.selectedDelegation,
-        navigator: this,
         rewards: widget.rewards,
       );
 

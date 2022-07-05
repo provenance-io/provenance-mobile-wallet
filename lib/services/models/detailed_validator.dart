@@ -86,6 +86,6 @@ class DetailedValidator {
   String get formattedVotingPower {
     return votingPowerCount != null && votingPowerCount != null
         ? "${((votingPowerCount! / votingPowerTotal!) * 100).toStringAsFixed(2)}%"
-        : "";
+        : "0 %";
   }
 }

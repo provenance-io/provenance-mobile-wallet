@@ -560,8 +560,15 @@ class Strings {
       "$delegators delegators • $commission commission";
 
   // Staking Details
+  static const stakingDetailsDelegation = "Delegation";
+  static const stakingDetailsDelegationStatus = "Delegation Status";
+  static const stakingDetailsDelegating = "Delegating";
+  static const stakingDetailsStatus = "Status";
+  static const stakingDetailsCommissionInformation = "Commission Information";
+  static const stakingDetailsAdditionalDetails = "Additional Details";
   static const stakingDetailsValidatorDetails = "Validator Details";
   static const stakingDetailsButtonDelegate = "Delegate";
+  static const stakingDetailsAddresses = "Addresses";
   static const stakingDetailsOperatorAddress = "Operator Address";
   static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
   static const stakingDetailsOwnerAddress = "Owner Address";
@@ -586,11 +593,12 @@ class Strings {
   static const stakingDetailsCommissionRateRange = "Commission Rate Range";
   static const stakingDetailsValidatorTransactions = "Validator Transactions";
   static const stakingDetailsReward = "Reward";
+  static const stakingDetailsViewLess = "View Less";
 
   // Staking Management
   static const stakingManagementDescription = "Description";
   static const stakingManagementMyDelegation = "My Delegation";
-  static const stakingManagementNoHash = "0 hash";
+  static const stakingManagementNoHash = "-- HASH";
 
   // Staking Confirm
   static const stakingConfirmDelegatorAddress = "Delegator Address";
