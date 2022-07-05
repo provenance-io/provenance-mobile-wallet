@@ -180,6 +180,7 @@ class Strings {
       'Please enter the new name you would like to call your account.';
   static const renameAccountAccountName = 'Account Name';
   static const required = 'Required';
+  static const starRequired = '*Required';
   static const confirm = 'Confirm';
 
   // Accounts Page
@@ -622,9 +623,13 @@ class Strings {
       "Staking will lock your funds for 21+ days";
   static const stakingDelegateWarningFundsLockMessage =
       "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
-  static const stakingDelegateAvailableBalance = "Available Balance";
-  static const stakingDelegateAmountToDelegate = "Amount to Delegate";
+  static const stakingDelegateAvailableBalance = "Available HASH Balance";
+  static const stakingDelegateAmountToDelegate = "Amount to Delegate*";
   static const stakingDelegateConfirmHash = "hash";
+  static const stakingDelegateCurrentDelegation = "Current Delegation";
+  static const stakingDelegateDetails = "Details";
+  static const stakingDelegateEnterAmountToDelegate =
+      "Enter Amount of HASH to delegate";
 
   // Staking Redelegate
   static const stakingRedelegateAvailableForRedelegation =

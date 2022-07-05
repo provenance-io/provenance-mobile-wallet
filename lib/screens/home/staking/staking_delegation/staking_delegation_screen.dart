@@ -5,6 +5,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -90,7 +92,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
             backgroundColor: Theme.of(context).colorScheme.neutral750,
             elevation: 0.0,
             centerTitle: true,
-            title: PwText(details.validator.moniker),
+            title: PwText(Strings.stakingDetailsButtonDelegate),
             leading: Padding(
               padding: EdgeInsets.only(left: 21),
               child: IconButton(
@@ -104,93 +106,71 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
             ),
           ),
           body: ListView(
+            padding: EdgeInsets.symmetric(horizontal: Spacing.large),
             children: [
+              VerticalSpacer.largeX3(),
               if (details.hashInsufficient)
                 WarningSection(
                   title: Strings.stakingDelegateWarningAccountLockTitle,
                   message: Strings.stakingDelegateWarningAccountLockMessage,
                   background: Theme.of(context).colorScheme.error,
                 ),
-              WarningSection(
-                title: Strings.stakingDelegateWarningFundsLockTitle,
-                message: Strings.stakingDelegateWarningFundsLockMessage,
+              ValidatorDetails(validator: details.validator),
+              PwListDivider.alternate(context: context),
+              DetailsHeader(
+                title: Strings.stakingDelegateDetails,
               ),
-              DetailsItem(
-                title: Strings.stakingManagementMyDelegation,
-                endChild: Flexible(
-                  child: PwText(
-                    details.delegation?.displayDenom ??
-                        Strings.stakingManagementNoHash,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    style: PwTextStyle.body,
-                  ),
-                ),
+              PwListDivider.alternate(context: context),
+              DetailsItem.withHash(
+                title: Strings.stakingDelegateCurrentDelegation,
+                hashString: details.delegation?.displayDenom ??
+                    Strings.stakingManagementNoHash,
+                context: context,
               ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              DetailsItem(
+              PwListDivider.alternate(context: context),
+              DetailsItem.alternateStrings(
                 title: Strings.stakingDelegateAvailableBalance,
-                endChild: Flexible(
-                  child: PwText(
+                value:
                     '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
+              ),
+              PwListDivider.alternate(context: context),
+              VerticalSpacer.largeX3(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: PwText(Strings.stakingDelegateAmountToDelegate),
+              ),
+              Flexible(
+                child: Form(
+                  key: _formKey,
+                  child: StakingTextFormField(
+                    hint: Strings.stakingDelegateEnterAmountToDelegate,
+                    textEditingController: _textEditingController,
+                  ),
+                ),
+              ),
+              VerticalSpacer.largeX3(),
+              PwListDivider.alternate(context: context),
+              Flexible(
+                child: PwButton(
+                  enabled: _formKey.currentState?.validate() == true &&
+                      details.hashDelegated > Decimal.zero,
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() == false ||
+                        details.hashDelegated <= Decimal.zero) {
+                      return;
+                    }
+                    get<StakingFlowBloc>().showDelegationReview();
+                  },
+                  child: PwText(
+                    Strings.continueName,
                     overflow: TextOverflow.fade,
                     softWrap: false,
+                    color: PwColor.neutralNeutral,
                     style: PwTextStyle.body,
                   ),
                 ),
               ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              DetailsItem(
-                title: Strings.stakingDelegateAmountToDelegate,
-                endChild: Flexible(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Flexible(
-                          child: Form(
-                        key: _formKey,
-                        child: StakingTextFormField(
-                          hint: Strings.stakingDelegateConfirmHash,
-                          textEditingController: _textEditingController,
-                        ),
-                      )),
-                    ],
-                  ),
-                ),
-              ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Flexible(
-                  child: PwButton(
-                    enabled: _formKey.currentState?.validate() == true &&
-                        details.hashDelegated > Decimal.zero,
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() == false ||
-                          details.hashDelegated <= Decimal.zero) {
-                        return;
-                      }
-                      get<StakingFlowBloc>().showDelegationReview();
-                    },
-                    child: PwText(
-                      SelectedDelegationType.delegate.dropDownTitle,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                  ),
-                ),
-              ),
+              VerticalSpacer.largeX3(),
             ],
           ),
         );
