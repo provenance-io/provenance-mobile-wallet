@@ -35,6 +35,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final _notificationBellNotifier = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -172,10 +174,15 @@ class _DashboardState extends State<Dashboard> {
                       return Container();
                     }
 
-                    return NotificationBell(
-                      notificationCount: 11,
-                      placeCount: 1,
-                    );
+                    return ValueListenableBuilder<int>(
+                        valueListenable: _notificationBellNotifier,
+                        builder: (context, value, child) {
+                          return NotificationBell(
+                            notificationCount: value,
+                            placeCount: 1,
+                            onClicked: _onNotificationBellClicked,
+                          );
+                        });
                   },
                 ),
               ],
@@ -394,5 +401,9 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  void _onNotificationBellClicked() {
+    _notificationBellNotifier.value += 1;
   }
 }
