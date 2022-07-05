@@ -5,7 +5,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_item_copy.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -21,7 +20,6 @@ class StakingDetailsScreen extends StatefulWidget {
     required this.validatorAddress,
     required this.account,
     required this.selectedDelegation,
-    required this.navigator,
     required this.rewards,
   }) : super(key: key);
 
@@ -29,7 +27,6 @@ class StakingDetailsScreen extends StatefulWidget {
   final Account account;
   final Delegation? selectedDelegation;
   final Rewards? rewards;
-  final StakingFlowNavigator navigator;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
@@ -263,7 +260,6 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       ),
                     if (details.delegation != null)
                       StakingManagement(
-                        navigator: widget.navigator,
                         delegation: details.delegation!,
                         commission: commission,
                         validator: validator,
