@@ -92,7 +92,10 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
             backgroundColor: Theme.of(context).colorScheme.neutral750,
             elevation: 0.0,
             centerTitle: true,
-            title: PwText(Strings.stakingDetailsButtonDelegate),
+            title: PwText(
+              Strings.stakingDetailsButtonDelegate,
+              style: PwTextStyle.footnote,
+            ),
             leading: Padding(
               padding: EdgeInsets.only(left: 21),
               child: IconButton(
