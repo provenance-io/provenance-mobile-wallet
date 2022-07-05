@@ -562,6 +562,7 @@ class Strings {
   // Staking Details
   static const stakingDetailsDelegation = "Delegation";
   static const stakingDetailsDelegationStatus = "Delegation Status";
+  static const stakingDetailsDelegating = "Delegating";
   static const stakingDetailsStatus = "Status";
   static const stakingDetailsCommissionInformation = "Commission Information";
   static const stakingDetailsAdditionalDetails = "Additional Details";

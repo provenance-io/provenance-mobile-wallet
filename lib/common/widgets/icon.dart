@@ -35,6 +35,7 @@ class PwIcons {
   static const String link = 'link';
   static const String linked = "linked";
   static const String warn = 'warn';
+  static const String warnCircle = 'warn_circle';
   static const String plus = 'plus';
   static const String minus = 'minus';
   static const String edit = 'edit';

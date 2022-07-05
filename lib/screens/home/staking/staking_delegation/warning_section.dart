@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/pw_design.dart';
 class WarningSection extends StatelessWidget {
   final String _title;
   final String _message;
-  final Color? _background;
   final PwColor? _textColor;
   final String? _pwIconName;
   final Color? _iconColor;
@@ -18,7 +17,6 @@ class WarningSection extends StatelessWidget {
     Color? iconColor,
   })  : _title = title,
         _message = message,
-        _background = background,
         _textColor = textColor,
         _pwIconName = pwIconName,
         _iconColor = iconColor,
@@ -27,61 +25,70 @@ class WarningSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        top: Spacing.large,
-        bottom: Spacing.large,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary500,
+        ),
+        borderRadius: BorderRadius.circular(4),
+        color: Theme.of(context).colorScheme.primary500,
       ),
-      padding: EdgeInsets.symmetric(
-        vertical: Spacing.large,
-        horizontal: Spacing.xxLarge,
-      ),
-      color: _background ?? Theme.of(context).colorScheme.notice350,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(
-              right: Spacing.large,
+            padding: EdgeInsets.all(
+              Spacing.large,
             ),
             child: PwIcon(
-              _pwIconName ?? PwIcons.warn,
-              color: _iconColor ?? Theme.of(context).colorScheme.neutral800,
+              _pwIconName ?? PwIcons.warnCircle,
+              color: _iconColor ?? Theme.of(context).colorScheme.neutral600,
               size: 24,
             ),
           ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              textDirection: TextDirection.ltr,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: PwText(
-                        _title,
-                        style: PwTextStyle.subhead,
-                        color: _textColor ?? PwColor.notice800,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.fade,
-                        maxLines: 2,
+            child: Container(
+              padding: EdgeInsets.all(Spacing.large),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.neutral750,
+                ),
+                borderRadius: BorderRadius.circular(4),
+                color: Theme.of(context).colorScheme.neutral750,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                textDirection: TextDirection.ltr,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: PwText(
+                          _title,
+                          style: PwTextStyle.body,
+                          color: _textColor ?? PwColor.neutralNeutral,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.fade,
+                          maxLines: 2,
+                        ),
                       ),
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: Spacing.xSmall,
                     ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    top: Spacing.xSmall,
+                    child: PwText(
+                      _message,
+                      textAlign: TextAlign.left,
+                      style: PwTextStyle.footnote,
+                      color: _textColor ?? PwColor.neutral250,
+                      overflow: TextOverflow.fade,
+                      maxLines: 5,
+                    ),
                   ),
-                  child: PwText(
-                    _message,
-                    textAlign: TextAlign.left,
-                    style: PwTextStyle.body,
-                    color: _textColor ?? PwColor.notice800,
-                    overflow: TextOverflow.fade,
-                    maxLines: 5,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
