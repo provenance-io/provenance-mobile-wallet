@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
@@ -5,6 +7,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/enum/account_add_kind.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
@@ -18,6 +21,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AddAccountScreen {
@@ -36,6 +40,7 @@ enum AddAccountScreen {
   // multi
   multiSigCreateOrJoin,
   multiSigJoinLink,
+  multiSigJoinScanQrCode,
   multiSigConnect,
   multiSigAccountName,
   multiSigCosigners,
@@ -87,6 +92,12 @@ const _flowMultiSigJoinLink = [
   AddAccountScreen.multiSigInviteReviewFlow,
 ];
 
+const _flowMultiSigJoinScanQrCode = [
+  AddAccountScreen.multiSigCreateOrJoin,
+  AddAccountScreen.multiSigJoinScanQrCode,
+  AddAccountScreen.multiSigInviteReviewFlow,
+];
+
 const _flowRecover = [
   AddAccountScreen.accountType,
   AddAccountScreen.accountName,
@@ -134,11 +145,13 @@ class AddAccountFlowBloc implements Disposable {
       max: 1,
     ),
   );
+  final _multiSigInviteLinkError = PublishSubject<String?>();
 
   ValueStream<String> get name => _name;
   ValueStream<String> get multiSigName => _multiSigName;
   ValueStream<Count> get multiSigCosignerCount => _multiSigCosignerCount;
   ValueStream<Count> get multiSigSignatureCount => _multiSigSignatureCount;
+  Stream<String?> get multiSigInviteLinkError => _multiSigInviteLinkError;
 
   BiometryType get biometryType => _biometryType!;
 
@@ -164,6 +177,7 @@ class AddAccountFlowBloc implements Disposable {
     _multiSigName.close();
     _multiSigCosignerCount.close();
     _multiSigSignatureCount.close();
+    _multiSigInviteLinkError.close();
   }
 
   void setMultiSigName(String name) {
@@ -276,6 +290,9 @@ class AddAccountFlowBloc implements Disposable {
         break;
       case AddAccountScreen.multiSigJoinLink:
         _navigator.showMultiSigJoinLink();
+        break;
+      case AddAccountScreen.multiSigJoinScanQrCode:
+        _navigator.showMultiSigScanQrCode();
         break;
       case AddAccountScreen.multiSigConnect:
         _navigator.showMultiSigConnect(
@@ -465,8 +482,8 @@ class AddAccountFlowBloc implements Disposable {
         _flow = _flowMultiSigCreate;
         break;
       case MultiSigAddKind.join:
-      // TODO-Roy: Handle this case.
-      // show qr scanner
+        _flow = _flowMultiSigJoinScanQrCode;
+        break;
       case MultiSigAddKind.link:
         _flow = _flowMultiSigJoinLink;
         break;
@@ -475,7 +492,8 @@ class AddAccountFlowBloc implements Disposable {
     _showNext(AddAccountScreen.multiSigCreateOrJoin);
   }
 
-  Future<bool> submitMultiSigJoinLink(String link) async {
+  Future<bool> submitMultiSigJoinLink(
+      String link, AddAccountScreen current) async {
     var success = false;
 
     final redirectedLink = await tryFollowRedirect(link);
@@ -489,9 +507,13 @@ class AddAccountFlowBloc implements Disposable {
           _inviteId = inviteId;
           _multiSigRemoteAccount = remoteAccount;
           success = true;
-          _showNext(AddAccountScreen.multiSigJoinLink);
+          _showNext(current);
         }
       }
+    }
+
+    if (!success) {
+      _multiSigInviteLinkError.tryAdd(Strings.multiSigInvalidLink);
     }
 
     return success;

@@ -60,6 +60,39 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
                       },
                     ),
+                    StreamBuilder<String?>(
+                      stream: bloc.multiSigInviteLinkError,
+                      builder: (context, snapshot) {
+                        final error = snapshot.data;
+                        if (error == null) {
+                          return Container();
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.only(
+                            top: Spacing.large,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              PwIcon(
+                                PwIcons.warnCircle,
+                                color:
+                                    Theme.of(context).colorScheme.negative350,
+                              ),
+                              HorizontalSpacer.xSmall(),
+                              Expanded(
+                                child: PwText(
+                                  error,
+                                  color: PwColor.negative350,
+                                  style: PwTextStyle.body,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     Expanded(
                       child: SizedBox(),
                     ),

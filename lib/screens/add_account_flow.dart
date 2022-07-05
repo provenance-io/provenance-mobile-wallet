@@ -16,12 +16,14 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_join_link_screen.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 
 abstract class AddAccountFlowNavigator {
   AddAccountFlowNavigator._();
@@ -40,6 +42,7 @@ abstract class AddAccountFlowNavigator {
   void showRecoverPassphraseEntry(int currentStep, int totalSteps);
   void showMultiSigCreateOrJoin();
   void showMultiSigJoinLink();
+  void showMultiSigScanQrCode();
   void showMultiSigConnect({int? currentStep, int? totalSteps});
   void showMultiSigAccountName(int currentStep, int totalSteps);
   void showMultiSigCosigners(FieldMode mode,
@@ -258,6 +261,22 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
         bloc: _bloc,
       ),
     );
+  }
+
+  @override
+  Future<void> showMultiSigScanQrCode() async {
+    final link = await showPage<String?>(
+      (context) => QRCodeScanner(
+        isValidCallback: (e) async => parseInviteId(e) != null,
+      ),
+    );
+
+    if (link != null) {
+      await _bloc.submitMultiSigJoinLink(
+        link,
+        AddAccountScreen.multiSigJoinScanQrCode,
+      );
+    }
   }
 
   @override

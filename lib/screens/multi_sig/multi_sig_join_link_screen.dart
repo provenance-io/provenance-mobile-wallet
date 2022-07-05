@@ -127,8 +127,10 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
 
   Future<void> _submit(String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
-      final success =
-          await widget.bloc.submitMultiSigJoinLink(_textController.text.trim());
+      final success = await widget.bloc.submitMultiSigJoinLink(
+        _textController.text.trim(),
+        AddAccountScreen.multiSigJoinLink,
+      );
       if (!success) {
         setState(() {
           _validate = _validateInvalid;
