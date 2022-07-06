@@ -24,19 +24,6 @@ class DeveloperMenu extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CategoryLabel(Strings.profileDeveloperCategoryTitle),
-        // PwListDivider(),
-        // LinkItem(
-        //   text: 'Show invite review',
-        //   onTap: () {
-        //     Navigator.of(context, rootNavigator: false).push(
-        //       MultiSigInviteReviewFlow(
-        //         name: 'name',
-        //         cosignerCount: 3,
-        //         signaturesRequired: 2,
-        //       ).route(),
-        //     );
-        //   },
-        // ),
         PwListDivider(),
         WalletConnectItem(),
         PwListDivider(),
