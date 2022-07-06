@@ -55,88 +55,100 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
-        child: StreamBuilder<StakingRedelegationDetails>(
-          initialData: _bloc.stakingRedelegationDetails.value,
-          stream: _bloc.stakingRedelegationDetails,
-          builder: (context, snapshot) {
-            final details = snapshot.data;
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return StreamBuilder<StakingRedelegationDetails>(
+              initialData: _bloc.stakingRedelegationDetails.value,
+              stream: _bloc.stakingRedelegationDetails,
+              builder: (context, snapshot) {
+                final details = snapshot.data;
 
-            if (details == null) {
-              return Container();
-            }
-            return Scaffold(
-              appBar: AppBar(
-                primary: false,
-                backgroundColor: Theme.of(context).colorScheme.neutral750,
-                elevation: 0.0,
-                centerTitle: true,
-                title: PwText(
-                  Strings.stakingRedelegateRedelegate,
-                  style: PwTextStyle.footnote,
-                ),
-                leading: Padding(
-                  padding: EdgeInsets.only(left: 21),
-                  child: IconButton(
-                    icon: PwIcon(
-                      PwIcons.back,
+                if (details == null) {
+                  return Container();
+                }
+                return Scaffold(
+                  appBar: AppBar(
+                    //toolbarHeight: 22,
+                    primary: false,
+                    backgroundColor: Theme.of(context).colorScheme.neutral750,
+                    elevation: 0.0,
+                    centerTitle: true,
+                    title: PwText(
+                      Strings.stakingRedelegateRedelegate,
+                      style: PwTextStyle.footnote,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    leading:
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 21),
+                        //   child:
+                        IconButton(
+                      icon: PwIcon(
+                        PwIcons.back,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    // ),
                   ),
-                ),
-              ),
-              body: ListView(
-                padding: EdgeInsets.symmetric(horizontal: Spacing.large),
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  body: ListView(
+                    padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                     children: [
-                      DetailsHeader(
-                          title: Strings.stakingRedelegateRedelegating),
-                      PwListDivider.alternate(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: Spacing.small,
-                        ),
-                        child: PwText(
-                          Strings.stakingRedelegateFrom,
-                          color: PwColor.neutral200,
-                        ),
-                      ),
-                      ValidatorCard(
-                        moniker: details.validator.moniker,
-                        imgUrl: details.validator.imgUrl,
-                        description: details.validator.description,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: Spacing.small,
-                        ),
-                        child: PwText(
-                          Strings.stakingRedelegateTo,
-                          color: PwColor.neutral200,
-                        ),
-                      ),
-                      ValidatorCard(),
-                      DetailsHeader(title: Strings.stakingDelegateDetails),
-                      PwListDivider.alternate(),
-                      DetailsItem.withHash(
-                        title:
-                            Strings.stakingRedelegateAvailableForRedelegation,
-                        hashString: details.delegation.displayDenom,
-                        context: context,
-                      ),
-                      PwListDivider.alternate(),
-                      SizedBox(
-                        height: 375,
-                        child: StakingRedelegationList(),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DetailsHeader(
+                              title: Strings.stakingRedelegateRedelegating),
+                          PwListDivider.alternate(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Spacing.small,
+                            ),
+                            child: PwText(
+                              Strings.stakingRedelegateFrom,
+                              color: PwColor.neutral200,
+                            ),
+                          ),
+                          ValidatorCard(
+                            moniker: details.validator.moniker,
+                            imgUrl: details.validator.imgUrl,
+                            description: details.validator.description,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Spacing.small,
+                            ),
+                            child: PwText(
+                              Strings.stakingRedelegateTo,
+                              color: PwColor.neutral200,
+                            ),
+                          ),
+                          ValidatorCard(),
+                          VerticalSpacer.xLarge(),
+                          PwText(
+                            Strings.stakingDelegateDetails,
+                            style: PwTextStyle.subhead,
+                          ),
+                          VerticalSpacer.large(),
+                          PwListDivider.alternate(),
+                          DetailsItem.withHash(
+                            title: Strings
+                                .stakingRedelegateAvailableForRedelegation,
+                            hashString: details.delegation.displayDenom,
+                            context: context,
+                          ),
+                          PwListDivider.alternate(),
+                          SizedBox(
+                            height: constraints.maxHeight - 55,
+                            child: StakingRedelegationList(),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),

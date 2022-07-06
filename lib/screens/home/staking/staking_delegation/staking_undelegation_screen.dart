@@ -148,15 +148,11 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                 title: Strings.stakingUndelegateUndelegationDetails,
               ),
               PwListDivider.alternate(),
-              DetailsItem(
+              DetailsItem.withHash(
                 title: Strings.stakingUndelegateAvailableForUndelegation,
-                endChild: PwText(
-                  details.delegation?.displayDenom ??
-                      Strings.stakingManagementNoHash,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  style: PwTextStyle.body,
-                ),
+                hashString: details.delegation?.displayDenom ??
+                    Strings.stakingManagementNoHash,
+                context: context,
               ),
               PwListDivider(
                 indent: Spacing.largeX3,

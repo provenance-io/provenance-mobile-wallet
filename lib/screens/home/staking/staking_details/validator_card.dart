@@ -37,7 +37,7 @@ class _ValidatorCardState extends State<ValidatorCard> {
   Widget build(BuildContext context) {
     return Container(
       padding: widget.hasValidator
-          ? EdgeInsets.all(20)
+          ? EdgeInsets.all(Spacing.large)
           : EdgeInsets.symmetric(
               horizontal: Spacing.large, vertical: Spacing.xxLarge),
       decoration: BoxDecoration(

@@ -141,7 +141,7 @@ class DelegatorDetails extends StatelessWidget {
                       height: 20,
                       child: PwIcon(
                         PwIcons.newWindow,
-                        color: PwColor.neutralNeutral,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
                         size: 20,
                       ),
                     ),
