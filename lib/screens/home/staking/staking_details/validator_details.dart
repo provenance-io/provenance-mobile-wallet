@@ -25,14 +25,14 @@ class ValidatorDetails extends StatelessWidget {
         DetailsHeader(
           title: Strings.stakingDetailsDelegating,
         ),
-        PwListDivider.alternate(context: context),
+        PwListDivider.alternate(),
         VerticalSpacer.large(),
         ValidatorCard(
           moniker: validator.moniker,
           imgUrl: validator.imgUrl,
           description: validator.description,
         ),
-        PwListDivider.alternate(context: context),
+        PwListDivider.alternate(),
       ],
     );
   }

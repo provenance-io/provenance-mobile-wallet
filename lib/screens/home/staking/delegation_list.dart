@@ -92,7 +92,7 @@ class DelegationListState extends State<DelegationList> {
                   },
                   separatorBuilder: (context, index) {
                     return PwListDivider(
-                      color: Theme.of(context).colorScheme.neutral750,
+                      color: PwColor.neutral750,
                     );
                   },
                   itemCount: stakingDetails.delegates.length,

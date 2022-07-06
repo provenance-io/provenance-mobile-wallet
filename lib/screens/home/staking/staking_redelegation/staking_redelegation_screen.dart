@@ -95,7 +95,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                     children: [
                       DetailsHeader(
                           title: Strings.stakingRedelegateRedelegating),
-                      PwListDivider.alternate(context: context),
+                      PwListDivider.alternate(),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           vertical: Spacing.small,
@@ -121,14 +121,14 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                       ),
                       ValidatorCard(),
                       DetailsHeader(title: Strings.stakingDelegateDetails),
-                      PwListDivider.alternate(context: context),
+                      PwListDivider.alternate(),
                       DetailsItem.withHash(
                         title:
                             Strings.stakingRedelegateAvailableForRedelegation,
                         hashString: details.delegation.displayDenom,
                         context: context,
                       ),
-                      PwListDivider.alternate(context: context),
+                      PwListDivider.alternate(),
                       SizedBox(
                         height: 375,
                         child: StakingRedelegationList(),
