@@ -2,6 +2,8 @@ import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_list.dart';
@@ -91,7 +93,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                 centerTitle: true,
                 title: PwText(
                   Strings.stakingRedelegateSelectForRedelegation,
-                  style: PwTextStyle.subhead,
+                  style: PwTextStyle.footnote,
                 ),
                 leading: Padding(
                   padding: EdgeInsets.only(left: 21),
@@ -107,10 +109,34 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
               ),
               body: Container(
                 color: Theme.of(context).colorScheme.neutral750,
+                padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    DetailsHeader(title: "Redelegating"),
+                    PwListDivider.alternate(context: context),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: Spacing.small,
+                      ),
+                      child: PwText("From", color: PwColor.neutral200),
+                    ),
+                    ValidatorCard(
+                      moniker: details.validator.moniker,
+                      imgUrl: details.validator.imgUrl,
+                      description: details.validator.description,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: Spacing.small,
+                      ),
+                      child: PwText("To", color: PwColor.neutral200),
+                    ),
+                    ValidatorCard(
+                      moniker: details.toRedelegate?.moniker,
+                      imgUrl: details.toRedelegate?.imgUrl,
+                    ),
                     DetailsItem(
                       title: Strings.stakingRedelegateRedelegatingFrom,
                       endChild: PwText(

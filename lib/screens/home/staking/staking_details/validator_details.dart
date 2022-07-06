@@ -27,7 +27,11 @@ class ValidatorDetails extends StatelessWidget {
         ),
         PwListDivider.alternate(context: context),
         VerticalSpacer.large(),
-        ValidatorCard(validator: validator),
+        ValidatorCard(
+          moniker: validator.moniker,
+          imgUrl: validator.imgUrl,
+          description: validator.description,
+        ),
         PwListDivider.alternate(context: context),
       ],
     );
