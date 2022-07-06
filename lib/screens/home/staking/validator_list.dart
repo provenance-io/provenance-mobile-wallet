@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
@@ -36,96 +37,189 @@ class ValidatorListState extends State<ValidatorList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
-          StreamBuilder<StakingDetails>(
-            initialData: _bloc.stakingDetails.value,
-            stream: _bloc.stakingDetails,
-            builder: (context, snapshot) {
-              final stakingDetails = snapshot.data;
-              if (stakingDetails == null) {
-                return Container();
-              }
-              return ListView.separated(
-                padding: EdgeInsets.all(
-                  Spacing.large,
+    return Column(
+      children: [
+        VerticalSpacer.xLarge(),
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: Spacing.large,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              PwText(
+                Strings.stakingTabAvailableToSelect,
+                color: PwColor.neutralNeutral,
+                style: PwTextStyle.bodyBold,
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _showMenu(context),
+                child: Row(
+                  children: [
+                    PwText(
+                      Strings.stakingTabSortBy,
+                      color: PwColor.neutralNeutral,
+                      style: PwTextStyle.body,
+                    ),
+                    HorizontalSpacer.small(),
+                    PwIcon(
+                      PwIcons.sort,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
+                    ),
+                  ],
                 ),
-                controller: _scrollController,
-                itemBuilder: (context, index) {
-                  if (stakingDetails.validators.isEmpty) {
+              )
+            ],
+          ),
+        ),
+        VerticalSpacer.large(),
+        Expanded(
+          child: Stack(
+            children: [
+              StreamBuilder<StakingDetails>(
+                initialData: _bloc.stakingDetails.value,
+                stream: _bloc.stakingDetails,
+                builder: (context, snapshot) {
+                  final stakingDetails = snapshot.data;
+                  if (stakingDetails == null) {
                     return Container();
                   }
-                  final item = stakingDetails.validators[index];
-
-                  return StakingListItem(
-                    validator: item,
-                    listItemText: Strings.displayDelegatorsWithCommission(
-                      item.delegators,
-                      item.commission,
+                  return ListView.separated(
+                    padding: EdgeInsets.all(
+                      Spacing.large,
                     ),
-                    onTouch: () async {
-                      final account =
-                          await get<AccountService>().getSelectedAccount();
-                      if (account == null) {
-                        return;
+                    controller: _scrollController,
+                    itemBuilder: (context, index) {
+                      if (stakingDetails.validators.isEmpty) {
+                        return Container();
                       }
+                      final item = stakingDetails.validators[index];
 
-                      final delegation = stakingDetails.delegates
-                          .firstWhereOrNull((element) =>
-                              element.sourceAddress == item.addressId);
-                      final rewards = stakingDetails.rewards.firstWhereOrNull(
-                          (element) =>
-                              element.validatorAddress == item.addressId);
+                      return StakingListItem(
+                        validator: item,
+                        listItemText: Strings.displayDelegatorsWithCommission(
+                          item.delegators,
+                          item.commission,
+                        ),
+                        onTouch: () async {
+                          final account =
+                              await get<AccountService>().getSelectedAccount();
+                          if (account == null) {
+                            return;
+                          }
 
-                      final response = await Navigator.of(context).push(
-                        StakingFlow(
-                          item.addressId,
-                          account,
-                          delegation,
-                          rewards,
-                        ).route(),
+                          final delegation = stakingDetails.delegates
+                              .firstWhereOrNull((element) =>
+                                  element.sourceAddress == item.addressId);
+                          final rewards = stakingDetails.rewards
+                              .firstWhereOrNull((element) =>
+                                  element.validatorAddress == item.addressId);
+
+                          final response = await Navigator.of(context).push(
+                            StakingFlow(
+                              item.addressId,
+                              account,
+                              delegation,
+                              rewards,
+                            ).route(),
+                          );
+                          if (response == true) {
+                            await _bloc.load();
+                          }
+                        },
                       );
-                      if (response == true) {
-                        await _bloc.load();
-                      }
                     },
+                    separatorBuilder: (context, index) {
+                      return PwListDivider();
+                    },
+                    itemCount: stakingDetails.validators.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
                   );
                 },
-                separatorBuilder: (context, index) {
-                  return PwListDivider();
-                },
-                itemCount: stakingDetails.validators.length,
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-              );
-            },
-          ),
-          StreamBuilder<bool>(
-            initialData: _bloc.isLoadingValidators.value,
-            stream: _bloc.isLoadingValidators,
-            builder: (context, snapshot) {
-              final isLoading = snapshot.data ?? false;
-              if (isLoading) {
-                return Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: SizedBox(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                );
-              }
+              ),
+              StreamBuilder<bool>(
+                initialData: _bloc.isLoadingValidators.value,
+                stream: _bloc.isLoadingValidators,
+                builder: (context, snapshot) {
+                  final isLoading = snapshot.data ?? false;
+                  if (isLoading) {
+                    return Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: SizedBox(
+                        height: 80,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  }
 
-              return Container();
-            },
+                  return Container();
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  Future<void> _showMenu(
+    BuildContext context,
+  ) async {
+    var result = await showModalBottomSheet<ValidatorSortingState>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            PwGreyButton(
+              text: ValidatorSortingState.alphabetically.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.alphabetically);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.commission.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.commission);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.delegators.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.delegators);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: ValidatorSortingState.votingPower.dropDownTitle,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.votingPower);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              enabled: false,
+              text: "",
+              // ignore: no-empty-block
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+    if (result != null) {
+      _bloc.updateSort(result);
+    }
   }
 
   void _onScrollEnd() {
