@@ -22,6 +22,10 @@ class ValidatorCard extends StatefulWidget {
         (description?.isNotEmpty ?? false);
   }
 
+  bool get hasDescription {
+    return description != null && description!.isNotEmpty;
+  }
+
   @override
   State<ValidatorCard> createState() => _ValidatorCardState();
 }
@@ -47,7 +51,9 @@ class _ValidatorCardState extends State<ValidatorCard> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: widget.hasDescription
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: !widget.hasValidator
             ? [
                 PwText(
@@ -57,35 +63,32 @@ class _ValidatorCardState extends State<ValidatorCard> {
                 )
               ]
             : [
-                Padding(
-                  padding: EdgeInsets.only(top: Spacing.medium),
-                  child: PwAvatar(
-                    initial: widget.moniker!.substring(0, 1),
-                    imgUrl: widget.imgUrl ?? "",
-                  ),
-                ),
+                widget.description != null && widget.description!.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(top: Spacing.medium),
+                        child: PwAvatar(
+                          initial: widget.moniker!.substring(0, 1),
+                          imgUrl: widget.imgUrl ?? "",
+                        ),
+                      )
+                    : PwAvatar(
+                        initial: widget.moniker!.substring(0, 1),
+                        imgUrl: widget.imgUrl ?? "",
+                      ),
                 HorizontalSpacer.medium(),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     textDirection: TextDirection.ltr,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: PwText(
-                              widget.moniker ?? "",
-                              style: PwTextStyle.body,
-                              color: PwColor.neutralNeutral,
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.fade,
-                            ),
-                          ),
-                        ],
+                      PwText(
+                        widget.moniker ?? "",
+                        style: PwTextStyle.body,
+                        color: PwColor.neutralNeutral,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
                       ),
-                      if (widget.description != null &&
-                          widget.description!.isNotEmpty)
+                      if (widget.hasDescription)
                         Container(
                           margin: EdgeInsets.only(
                             top: Spacing.xSmall,
@@ -100,23 +103,24 @@ class _ValidatorCardState extends State<ValidatorCard> {
                             softWrap: _isActive,
                           ),
                         ),
-                      HorizontalSpacer.xSmall(),
-                      GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            _isActive = !_isActive;
-                          });
-                        },
-                        child: PwText(
-                          _isActive
-                              ? Strings.stakingDetailsViewLess
-                              : Strings.viewMore,
-                          color: PwColor.neutral200,
-                          style: PwTextStyle.footnote,
-                          softWrap: false,
-                          underline: true,
+                      if (widget.hasDescription) HorizontalSpacer.xSmall(),
+                      if (widget.hasDescription)
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _isActive = !_isActive;
+                            });
+                          },
+                          child: PwText(
+                            _isActive
+                                ? Strings.stakingDetailsViewLess
+                                : Strings.viewMore,
+                            color: PwColor.neutral200,
+                            style: PwTextStyle.footnote,
+                            softWrap: false,
+                            underline: true,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -130,16 +134,21 @@ class _ValidatorCardState extends State<ValidatorCard> {
                       throw 'Could not launch $url';
                     }
                   },
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: Spacing.large,
-                      top: Spacing.xLarge,
-                    ),
-                    child: PwIcon(
-                      PwIcons.newWindow,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
-                  ),
+                  child: widget.hasDescription
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            left: Spacing.large,
+                            top: Spacing.xLarge,
+                          ),
+                          child: PwIcon(
+                            PwIcons.newWindow,
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                          ),
+                        )
+                      : PwIcon(
+                          PwIcons.newWindow,
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                        ),
                 ),
               ],
       ),

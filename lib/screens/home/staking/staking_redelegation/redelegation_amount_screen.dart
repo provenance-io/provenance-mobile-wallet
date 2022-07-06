@@ -1,53 +1,54 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class StakingRedelegationScreen extends StatefulWidget {
-  final DetailedValidator validator;
-  final Account account;
-  final Delegation delegation;
-
-  const StakingRedelegationScreen({
+class RedelegationAmountScreen extends StatefulWidget {
+  const RedelegationAmountScreen({
     Key? key,
-    required this.delegation,
-    required this.validator,
-    required this.account,
   }) : super(key: key);
 
   @override
-  _StakingRedelegationScreenState createState() =>
-      _StakingRedelegationScreenState();
+  State<RedelegationAmountScreen> createState() =>
+      _RedelegationAmountScreenState();
 }
 
-class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
-  late final StakingRedelegationBloc _bloc;
+class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
+  late final TextEditingController _textEditingController;
+  final StakingRedelegationBloc _bloc = get<StakingRedelegationBloc>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _bloc = StakingRedelegationBloc(
-      widget.validator,
-      widget.delegation,
-      widget.account,
-    );
-    get.registerSingleton<StakingRedelegationBloc>(_bloc);
-    _bloc.load();
+    _textEditingController = TextEditingController();
+    _textEditingController.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
-    get.unregister<StakingRedelegationBloc>();
+    _textEditingController.removeListener(_onTextChanged);
+    _textEditingController.dispose();
 
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    String text = _textEditingController.text;
+    if (text.isEmpty) {
+      return;
+    }
+
+    final number = Decimal.tryParse(text) ?? Decimal.zero;
+    _bloc.updateHashRedelegated(number);
   }
 
   @override
@@ -119,7 +120,10 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                           color: PwColor.neutral200,
                         ),
                       ),
-                      ValidatorCard(),
+                      ValidatorCard(
+                        moniker: details.toRedelegate?.moniker,
+                        imgUrl: details.toRedelegate?.imgUrl,
+                      ),
                       DetailsHeader(title: Strings.stakingDelegateDetails),
                       PwListDivider.alternate(context: context),
                       DetailsItem.withHash(
@@ -129,10 +133,45 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         context: context,
                       ),
                       PwListDivider.alternate(context: context),
-                      SizedBox(
-                        height: 375,
-                        child: StakingRedelegationList(),
+                      PwListDivider.alternate(context: context),
+                      VerticalSpacer.largeX3(),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child:
+                            PwText(Strings.stakingDelegateAmountToRedelegate),
                       ),
+                      Flexible(
+                        child: Form(
+                          key: _formKey,
+                          child: StakingTextFormField(
+                            hint: Strings.stakingRedelegateEnterAmount,
+                            textEditingController: _textEditingController,
+                          ),
+                        ),
+                      ),
+                      VerticalSpacer.largeX3(),
+                      PwListDivider.alternate(context: context),
+                      Flexible(
+                        child: PwButton(
+                          enabled: _formKey.currentState?.validate() == true &&
+                              details.hashRedelegated > Decimal.zero,
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() == false ||
+                                details.hashRedelegated <= Decimal.zero) {
+                              return;
+                            }
+                            get<StakingFlowBloc>().showRedelegationReview();
+                          },
+                          child: PwText(
+                            Strings.continueName,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            color: PwColor.neutralNeutral,
+                            style: PwTextStyle.body,
+                          ),
+                        ),
+                      ),
+                      VerticalSpacer.largeX3(),
                     ],
                   ),
                 ],

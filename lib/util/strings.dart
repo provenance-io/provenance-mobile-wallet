@@ -632,11 +632,19 @@ class Strings {
       "Enter Amount of HASH to delegate";
 
   // Staking Redelegate
+  static const stakingRedelegateRedelegate = "Redelegate";
   static const stakingRedelegateAvailableForRedelegation =
-      "Available for redelegation";
+      "Available for Redelegation";
   static const stakingRedelegateSelectForRedelegation =
       "Select Validator for Redelegation";
-  static const stakingRedelegateRedelegatingFrom = "Redelegating from";
+  static const stakingRedelegateRedelegating = "Redelegating";
+  static const stakingRedelegateFrom = "From";
+  static const stakingRedelegateTo = "To";
+  static const stakingRedelegateValidatorNotSelected =
+      "Validator has not been selected yet";
+  static const stakingDelegateAmountToRedelegate = "Amount to Redelegate*";
+  static const stakingRedelegateEnterAmount =
+      "Enter Amount of HASH to redelegate";
 
   // Staking Undelegate
   static const stakingUndelegateWarningUnbondingPeriodTitle =

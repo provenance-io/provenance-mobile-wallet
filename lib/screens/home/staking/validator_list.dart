@@ -6,13 +6,13 @@ import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ValidatorList extends StatefulWidget {
-  const ValidatorList({
-    Key? key,
-  }) : super(key: key);
+  const ValidatorList({Key? key, this.onTap}) : super(key: key);
+  final Function(ProvenanceValidator)? onTap;
 
   @override
   State<StatefulWidget> createState() => ValidatorListState();
@@ -40,39 +40,34 @@ class ValidatorListState extends State<ValidatorList> {
     return Column(
       children: [
         VerticalSpacer.xLarge(),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              PwText(
-                Strings.stakingTabAvailableToSelect,
-                color: PwColor.neutralNeutral,
-                style: PwTextStyle.bodyBold,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            PwText(
+              Strings.stakingTabAvailableToSelect,
+              color: PwColor.neutralNeutral,
+              style: PwTextStyle.bodyBold,
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _showMenu(context),
+              child: Row(
+                children: [
+                  PwText(
+                    Strings.stakingTabSortBy,
+                    color: PwColor.neutralNeutral,
+                    style: PwTextStyle.body,
+                  ),
+                  HorizontalSpacer.small(),
+                  PwIcon(
+                    PwIcons.sort,
+                    color: Theme.of(context).colorScheme.neutralNeutral,
+                  ),
+                ],
               ),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => _showMenu(context),
-                child: Row(
-                  children: [
-                    PwText(
-                      Strings.stakingTabSortBy,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                    HorizontalSpacer.small(),
-                    PwIcon(
-                      PwIcons.sort,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
         VerticalSpacer.large(),
         Expanded(
@@ -87,9 +82,6 @@ class ValidatorListState extends State<ValidatorList> {
                     return Container();
                   }
                   return ListView.separated(
-                    padding: EdgeInsets.all(
-                      Spacing.large,
-                    ),
                     controller: _scrollController,
                     itemBuilder: (context, index) {
                       if (stakingDetails.validators.isEmpty) {
@@ -104,6 +96,10 @@ class ValidatorListState extends State<ValidatorList> {
                           item.commission,
                         ),
                         onTouch: () async {
+                          if (widget.onTap != null) {
+                            widget.onTap!(item);
+                            return;
+                          }
                           final account =
                               await get<AccountService>().getSelectedAccount();
                           if (account == null) {

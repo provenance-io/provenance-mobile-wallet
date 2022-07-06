@@ -9,6 +9,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -27,6 +28,8 @@ abstract class StakingFlowNavigator {
   Future<void> showRedelegationScreen(
     DetailedValidator validator,
   );
+
+  Future<void> showRedelegationAmountScreen();
 
   Future<void> showUndelegationScreen(
     DetailedValidator validator,
@@ -116,6 +119,13 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         validator: validator,
         account: widget.account,
       ),
+    );
+  }
+
+  @override
+  Future<void> showRedelegationAmountScreen() async {
+    showPage(
+      (context) => RedelegationAmountScreen(),
     );
   }
 

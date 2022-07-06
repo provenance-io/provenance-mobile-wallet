@@ -129,7 +129,12 @@ class _StakingScreenState extends State<StakingScreen>
                           physics: NeverScrollableScrollPhysics(),
                           children: const [
                             DelegationList(),
-                            ValidatorList(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Spacing.large,
+                              ),
+                              child: ValidatorList(),
+                            ),
                           ],
                         ),
                       ),
