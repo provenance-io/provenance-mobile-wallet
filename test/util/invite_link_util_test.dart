@@ -1,48 +1,36 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
+
+const inviteId = 'abc';
+const coin = Coin.testNet;
 
 void main() {
   test('Parses valid invite link', () {
-    const inviteId = 'abc';
-    final inviteLink = createInviteLink(inviteId);
+    final inviteLink = createInviteLink(inviteId, coin);
 
-    final actual = parseInviteId(inviteLink);
-    expect(actual, inviteId);
+    final data = parseInviteLinkData(inviteLink);
+    expect(data?.inviteId, inviteId);
+    expect(data?.coin, coin);
   });
 
   test('Parse invalid scheme returns null', () {
-    const inviteId = 'abc';
-    final inviteLink = createInviteLink(inviteId);
+    final inviteLink = createInviteLink(inviteId, coin);
 
     final uri = Uri.parse(inviteLink);
     final invalidLink = uri.replace(scheme: 'http').toString();
 
-    final actual = parseInviteId(invalidLink);
-    expect(actual, isNull);
+    final data = parseInviteLinkData(invalidLink);
+    expect(data, isNull);
   });
 
   test('Parse invalid host returns null', () {
-    const inviteId = 'abc';
-    final inviteLink = createInviteLink(inviteId);
+    final inviteLink = createInviteLink(inviteId, coin);
 
     final uri = Uri.parse(inviteLink);
     final invalidLink = uri.replace(host: 'google.com').toString();
 
-    final actual = parseInviteId(invalidLink);
-    expect(actual, isNull);
-  });
-
-  test('Query parameters are ignored', () {
-    const inviteId = 'abc';
-    final inviteLink = createInviteLink(inviteId);
-
-    final uri = Uri.parse(inviteLink);
-    final linkWithQuery = uri.replace(queryParameters: {
-      'a': 'b',
-      'c': 'd',
-    }).toString();
-
-    final actual = parseInviteId(linkWithQuery);
-    expect(actual, inviteId);
+    final data = parseInviteLinkData(invalidLink);
+    expect(data, isNull);
   });
 }

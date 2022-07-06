@@ -498,13 +498,14 @@ class AddAccountFlowBloc implements Disposable {
 
     final redirectedLink = await tryFollowRedirect(link);
     if (redirectedLink != null) {
-      final inviteId = parseInviteId(redirectedLink);
-      if (inviteId != null) {
+      final linkData = parseInviteLinkData(redirectedLink);
+      if (linkData != null) {
         final remoteAccount = await _multiSigService.getAccountByInvite(
-          inviteId: inviteId,
+          inviteId: linkData.inviteId,
+          coin: linkData.coin,
         );
         if (remoteAccount != null) {
-          _inviteId = inviteId;
+          _inviteId = linkData.inviteId;
           _multiSigRemoteAccount = remoteAccount;
           success = true;
           _showNext(current);

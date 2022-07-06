@@ -7,6 +7,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigCreationStatus extends StatefulWidget {
@@ -148,8 +149,9 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
       );
 
       if (remoteAccount != null) {
+        final coin = remoteAccount.coin;
         for (var signer in remoteAccount.signers) {
-          final inviteLink = 'https://provenance.io/invite/${signer.inviteId}';
+          final inviteLink = createInviteLink(signer.inviteId, coin);
           final signerAddress = signer.publicKey?.address;
 
           cosigners.add(

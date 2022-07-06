@@ -267,7 +267,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   Future<void> showMultiSigScanQrCode() async {
     final link = await showPage<String?>(
       (context) => QRCodeScanner(
-        isValidCallback: (e) async => parseInviteId(e) != null,
+        isValidCallback: (e) async => parseInviteLinkData(e) != null,
       ),
     );
 

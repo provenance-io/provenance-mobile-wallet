@@ -156,7 +156,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     if (text == null || text.isEmpty) {
       error = Strings.required;
     } else {
-      final valid = parseInviteId(text) != null;
+      final valid = parseInviteLinkData(text) != null;
       if (!valid) {
         error = Strings.multiSigInvalidLink;
       }

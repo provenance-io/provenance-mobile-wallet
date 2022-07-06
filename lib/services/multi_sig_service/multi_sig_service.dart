@@ -4,6 +4,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
@@ -62,6 +63,7 @@ class MultiSigService with ClientCoinMixin {
       invite = MultiSigRemoteAccount(
         remoteId: data.walletUuid,
         name: data.name,
+        coin: coin,
         signers: data.signers
             .map(
               (e) => _toMultiSigSigner(
@@ -114,7 +116,8 @@ class MultiSigService with ClientCoinMixin {
   Future<List<MultiSigRemoteAccount>?> getAccounts({
     required PublicKey publicKey,
   }) async {
-    final client = await getClient(publicKey.coin);
+    final coin = publicKey.coin;
+    final client = await getClient(coin);
     final path = '$_basePath/by-address/${publicKey.address}';
 
     List<MultiSigRemoteAccount>? accounts;
@@ -139,12 +142,13 @@ class MultiSigService with ClientCoinMixin {
             (e) => MultiSigRemoteAccount(
               remoteId: e.walletUuid,
               name: e.name,
+              coin: coin,
               signers: e.signers
                   .map(
                     (e) => _toMultiSigSigner(
                       publicKeyHex: e.publicKey,
                       inviteUuid: e.inviteUuid,
-                      coin: publicKey.coin,
+                      coin: coin,
                     ),
                   )
                   .toList(),
@@ -176,32 +180,32 @@ class MultiSigService with ClientCoinMixin {
 
   Future<MultiSigRemoteAccount?> getAccountByInvite({
     required String inviteId,
+    required Coin coin,
   }) async {
+    final client = await getClient(coin);
+    final path = '$_basePath/by-invite/$inviteId';
+
     MultiSigRemoteAccount? account;
 
-    const inviteIds = {
-      'e472ec16-4436-46d5-b72d-6a998b80cd82',
-      '991198b7-97bb-42dc-8ead-0e783c8ac45b',
-      '42ac4c04-f8df-4dd4-80e6-a2933aa0e25c',
-    };
+    final response = await client.get(
+      path,
+      converter: (json) => MultiSigGetAccountByInviteResponseDto.fromJson(json),
+    );
 
-    // TODO-Roy: Add service call.
-    if (inviteIds.contains(inviteId)) {
+    final data = response.data;
+    if (data != null) {
       account = MultiSigRemoteAccount(
-        remoteId: 'cdfa44a1-7dbd-4be5-8e03-db8a7c6d83c2',
-        name: "Roy's Multisig Three",
-        signers: [
-          MultiSigSigner(
-            inviteId: 'e472ec16-4436-46d5-b72d-6a998b80cd82',
-          ),
-          MultiSigSigner(
-            inviteId: '991198b7-97bb-42dc-8ead-0e783c8ac45b',
-          ),
-          MultiSigSigner(
-            inviteId: '42ac4c04-f8df-4dd4-80e6-a2933aa0e25c',
-          ),
-        ],
-        signersRequired: 2,
+        remoteId: data.walletUuid,
+        name: data.name,
+        coin: coin,
+        signers: data.signers
+            .map((e) => _toMultiSigSigner(
+                  publicKeyHex: e.publicKey,
+                  inviteUuid: e.inviteUuid,
+                  coin: coin,
+                ))
+            .toList(),
+        signersRequired: data.threshold,
       );
     }
 
