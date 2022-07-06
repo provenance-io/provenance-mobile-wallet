@@ -36,14 +36,14 @@ class DelegatorDetails extends StatelessWidget {
               DetailsHeader(
                 title: Strings.stakingDetailsDelegationStatus,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: Strings.stakingManagementMyDelegation,
                 hashString: details.delegation?.displayDenom ??
                     Strings.stakingManagementNoHash,
                 context: context,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               if (details.rewards == null ||
                   details.rewards?.rewards.isEmpty == true)
                 DetailsItem.withHash(
@@ -59,7 +59,7 @@ class DelegatorDetails extends StatelessWidget {
                     hashString: '${reward.amount} ${reward.denom}',
                     context: context,
                   ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.withRowChildren(
                 title: Strings.stakingDetailsStatus,
                 children: [
@@ -78,52 +78,52 @@ class DelegatorDetails extends StatelessWidget {
                   )
                 ],
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsHeader(
                 title: Strings.stakingDetailsCommissionInformation,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: Strings.stakingDetailsBonded,
                 hashString: commission.formattedBondedTokens,
                 context: context,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsCommissionRateRange,
                 value: "0 ~ ${commission.commissionMaxRate}",
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsCommissionRate,
                 value: commission.commissionMaxRate,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsDelegators,
                 value: commission.delegatorCount.toString(),
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsMaxChangeRate,
                 value: commission.commissionMaxChangeRate,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsMissedBlocks,
                 value: "${validator.blockCount} in ${validator.blockTotal}",
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsRewards,
                 value: commission.formattedRewards,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsTotalShares,
                 value: commission.formattedTotalShares,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.withRowChildren(
                 title: Strings.stakingDetailsValidatorTransactions,
                 children: [
@@ -141,65 +141,65 @@ class DelegatorDetails extends StatelessWidget {
                       height: 20,
                       child: PwIcon(
                         PwIcons.newWindow,
-                        color: Theme.of(context).colorScheme.neutralNeutral,
+                        color: PwColor.neutralNeutral,
                         size: 20,
                       ),
                     ),
                   ),
                 ],
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsHeader(title: Strings.stakingDetailsAddresses),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItemCopy(
                 displayTitle: Strings.stakingDetailsOperatorAddress,
                 dataToCopy: validator.operatorAddress,
                 snackBarTitle: Strings.stakingDetailsOperatorAddressCopied,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItemCopy(
                 displayTitle: Strings.stakingDetailsOwnerAddress,
                 dataToCopy: validator.ownerAddress,
                 snackBarTitle: Strings.stakingDetailsOwnerAddressCopied,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItemCopy(
                 displayTitle: Strings.stakingDetailsWithdrawAddress,
                 dataToCopy: validator.withdrawalAddress,
                 snackBarTitle: Strings.stakingDetailsWithdrawAddressCopied,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItemCopy(
                 displayTitle: Strings.stakingDetailsConsensusPubkey,
                 dataToCopy: validator.consensusPubKey,
                 snackBarTitle: Strings.stakingDetailsConsensusPubkeyCopied,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsHeader(title: Strings.stakingDetailsAdditionalDetails),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsBondHeight,
                 value: validator.bondHeight.toString(),
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsUptime,
                 value: "${validator.uptime}%",
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDetailsVotingPower,
                 value: validator.formattedVotingPower,
               ),
               if (ValidatorStatus.jailed == validator.status)
-                PwListDivider.alternate(context: context),
+                PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
                 DetailsItem.alternateStrings(
                   title: Strings.stakingDetailsJailedUntil,
                   value: validator.formattedJailedUntil,
                 ),
               if (ValidatorStatus.jailed == validator.status)
-                PwListDivider.alternate(context: context),
+                PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
                 DetailsItem.alternateStrings(
                   title: Strings.stakingDetailsUnbondingHeight,

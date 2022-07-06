@@ -5,6 +5,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -87,7 +89,10 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
             backgroundColor: Theme.of(context).colorScheme.neutral750,
             elevation: 0.0,
             centerTitle: true,
-            title: PwText(details.validator.moniker),
+            title: PwText(
+              Strings.stakingUndelegateUndelegate,
+              style: PwTextStyle.footnote,
+            ),
             leading: Padding(
               padding: EdgeInsets.only(left: 21),
               child: IconButton(
@@ -101,17 +106,48 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
             ),
           ),
           body: ListView(
+            padding: EdgeInsets.symmetric(horizontal: Spacing.large),
             children: [
+              VerticalSpacer.largeX3(),
               WarningSection(
                 title: Strings.stakingUndelegateWarningUnbondingPeriodTitle,
                 message: Strings.stakingUndelegateWarningUnbondingPeriodMessage,
               ),
-              WarningSection(
-                title: Strings.stakingUndelegateWarningSwitchValidatorsTitle,
-                message:
-                    Strings.stakingUndelegateWarningSwitchValidatorsMessage,
-                background: Theme.of(context).colorScheme.primary500,
+              VerticalSpacer.large(),
+              Flexible(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    get<StakingFlowBloc>()
+                        .redirectToRedelegation(widget.validator);
+                  },
+                  child: PwText(
+                    Strings.stakingUndelegateWarningSwitchValidators,
+                    style: PwTextStyle.footnote,
+                    underline: true,
+                  ),
+                ),
               ),
+              DetailsHeader(title: Strings.stakingUndelegateUndelegating),
+              PwListDivider.alternate(),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: Spacing.small,
+                ),
+                child: PwText(
+                  Strings.stakingRedelegateFrom,
+                  color: PwColor.neutral200,
+                ),
+              ),
+              ValidatorCard(
+                moniker: details.validator.moniker,
+                imgUrl: details.validator.imgUrl,
+                description: details.validator.description,
+              ),
+              DetailsHeader(
+                title: Strings.stakingUndelegateUndelegationDetails,
+              ),
+              PwListDivider.alternate(),
               DetailsItem(
                 title: Strings.stakingUndelegateAvailableForUndelegation,
                 endChild: PwText(

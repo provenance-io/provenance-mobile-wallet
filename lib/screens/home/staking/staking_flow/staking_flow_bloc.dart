@@ -71,4 +71,9 @@ class StakingFlowBloc implements StakingFlowNavigator {
   Future<void> showRedelegationAmountScreen() async {
     _navigator.showRedelegationAmountScreen();
   }
+
+  @override
+  Future<void> redirectToRedelegation(DetailedValidator validator) async {
+    _navigator.redirectToRedelegation(validator);
+  }
 }

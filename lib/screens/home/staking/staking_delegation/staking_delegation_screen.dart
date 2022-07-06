@@ -119,24 +119,24 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                   background: Theme.of(context).colorScheme.error,
                 ),
               ValidatorDetails(validator: details.validator),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsHeader(
                 title: Strings.stakingDelegateDetails,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: Strings.stakingDelegateCurrentDelegation,
                 hashString: details.delegation?.displayDenom ??
                     Strings.stakingManagementNoHash,
                 context: context,
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: Strings.stakingDelegateAvailableBalance,
                 value:
                     '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
               ),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               VerticalSpacer.largeX3(),
               Padding(
                 padding: EdgeInsets.only(bottom: 10),
@@ -152,7 +152,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 ),
               ),
               VerticalSpacer.largeX3(),
-              PwListDivider.alternate(context: context),
+              PwListDivider.alternate(),
               Flexible(
                 child: PwButton(
                   enabled: _formKey.currentState?.validate() == true &&

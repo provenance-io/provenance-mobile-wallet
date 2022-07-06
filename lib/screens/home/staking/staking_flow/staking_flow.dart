@@ -29,6 +29,10 @@ abstract class StakingFlowNavigator {
     DetailedValidator validator,
   );
 
+  Future<void> redirectToRedelegation(
+    DetailedValidator validator,
+  );
+
   Future<void> showRedelegationAmountScreen();
 
   Future<void> showUndelegationScreen(
@@ -152,6 +156,17 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showUndelegationReview() async {
     showDelegationReview();
+  }
+
+  @override
+  Future<void> redirectToRedelegation(DetailedValidator validator) async {
+    redirectToPage(
+      (context) => StakingRedelegationScreen(
+        delegation: widget.selectedDelegation!,
+        validator: validator,
+        account: widget.account,
+      ),
+    );
   }
 
   @override
