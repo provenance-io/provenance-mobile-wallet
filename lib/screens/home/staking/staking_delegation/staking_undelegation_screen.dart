@@ -154,58 +154,44 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                     Strings.stakingManagementNoHash,
                 context: context,
               ),
-              PwListDivider(
-                indent: Spacing.largeX3,
-              ),
+              PwListDivider.alternate(),
+              VerticalSpacer.largeX3(),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Flexible(
-                  child: Form(
-                    key: _formKey,
-                    child: StakingTextFormField(
-                      hint: Strings.stakingDelegateConfirmHash,
-                      textEditingController: _textEditingController,
-                    ),
+                padding: EdgeInsets.only(bottom: 10),
+                child: PwText(Strings.stakingUndelegateAmountToUndelegate),
+              ),
+              Flexible(
+                child: Form(
+                  key: _formKey,
+                  child: StakingTextFormField(
+                    hint: Strings.stakingUndelegateEnterAmount,
+                    textEditingController: _textEditingController,
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: PwButton(
-                        enabled: _formKey.currentState?.validate() == true &&
-                            details.hashDelegated > Decimal.zero &&
-                            (details.delegation?.hashAmount ?? Decimal.zero) >=
-                                details.hashDelegated,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() == false ||
-                              details.hashDelegated <= Decimal.zero) {
-                            return;
-                          }
-                          get<StakingFlowBloc>().showUndelegationReview();
-                        },
-                        child: PwText(
-                          SelectedDelegationType.undelegate.dropDownTitle,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    ),
-                  ],
+              VerticalSpacer.largeX3(),
+              PwListDivider.alternate(),
+              PwButton(
+                enabled: _formKey.currentState?.validate() == true &&
+                    details.hashDelegated > Decimal.zero &&
+                    (details.delegation?.hashAmount ?? Decimal.zero) >=
+                        details.hashDelegated,
+                onPressed: () {
+                  if (_formKey.currentState?.validate() == false ||
+                      details.hashDelegated <= Decimal.zero) {
+                    return;
+                  }
+                  get<StakingFlowBloc>().showUndelegationReview();
+                },
+                child: PwText(
+                  Strings.continueName,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.body,
                 ),
               ),
+              VerticalSpacer.largeX3(),
             ],
           ),
         );

@@ -658,6 +658,9 @@ class Strings {
       "Trying to switch validators?  Instantly stake your assets to another validator by tapping here.";
   static const stakingUndelegateAvailableForUndelegation =
       "Available for Undelegation";
+  static const stakingUndelegateAmountToUndelegate = "Amount to Undelegate*";
+  static const stakingUndelegateEnterAmount =
+      "Enter Amount of HASH to undelegate";
 
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
