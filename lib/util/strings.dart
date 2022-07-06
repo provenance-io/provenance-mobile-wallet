@@ -647,16 +647,17 @@ class Strings {
       "Enter Amount of HASH to redelegate";
 
   // Staking Undelegate
+  static const stakingUndelegateUndelegate = "Undelegate";
+  static const stakingUndelegateUndelegating = "Undelegating";
+  static const stakingUndelegateUndelegationDetails = "Undelegation Details";
   static const stakingUndelegateWarningUnbondingPeriodTitle =
       "Once the unbonding period begins you will:";
   static const stakingUndelegateWarningUnbondingPeriodMessage =
-      "-not receive staking reward\n-not be able to cancel the unbonding\n-need to wait 21 days for the amount to be liquid";
-  static const stakingUndelegateWarningSwitchValidatorsTitle =
-      "Trying to switch validators?";
-  static const stakingUndelegateWarningSwitchValidatorsMessage =
-      "Use the 'Redelegate' feature to instantly stake your assets to another validator.";
+      " • not receive staking reward\n • not be able to cancel the unbonding\n • need to wait 21 days for the amount to be liquid";
+  static const stakingUndelegateWarningSwitchValidators =
+      "Trying to switch validators?  Instantly stake your assets to another validator by tapping here.";
   static const stakingUndelegateAvailableForUndelegation =
-      "Available for undelegation";
+      "Available for Undelegation";
 
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
