@@ -655,7 +655,7 @@ class Strings {
   static const stakingUndelegateWarningUnbondingPeriodMessage =
       " • not receive staking reward\n • not be able to cancel the unbonding\n • need to wait 21 days for the amount to be liquid";
   static const stakingUndelegateWarningSwitchValidators =
-      "Trying to switch validators?  Instantly stake your assets to another validator by tapping here.";
+      "Trying to switch validators? Instantly stake your assets to another validator by tapping here.";
   static const stakingUndelegateAvailableForUndelegation =
       "Available for Undelegation";
   static const stakingUndelegateAmountToUndelegate = "Amount to Undelegate*";
