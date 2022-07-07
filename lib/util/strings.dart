@@ -180,6 +180,7 @@ class Strings {
       'Please enter the new name you would like to call your account.';
   static const renameAccountAccountName = 'Account Name';
   static const required = 'Required';
+  static const starRequired = '*Required';
   static const confirm = 'Confirm';
 
   // Accounts Page
@@ -622,28 +623,44 @@ class Strings {
       "Staking will lock your funds for 21+ days";
   static const stakingDelegateWarningFundsLockMessage =
       "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
-  static const stakingDelegateAvailableBalance = "Available Balance";
-  static const stakingDelegateAmountToDelegate = "Amount to Delegate";
+  static const stakingDelegateAvailableBalance = "Available HASH Balance";
+  static const stakingDelegateAmountToDelegate = "Amount to Delegate*";
   static const stakingDelegateConfirmHash = "hash";
+  static const stakingDelegateCurrentDelegation = "Current Delegation";
+  static const stakingDelegateDetails = "Details";
+  static const stakingDelegateEnterAmountToDelegate =
+      "Enter Amount of HASH to delegate";
 
   // Staking Redelegate
+  static const stakingRedelegateRedelegate = "Redelegate";
   static const stakingRedelegateAvailableForRedelegation =
-      "Available for redelegation";
+      "Available for Redelegation";
   static const stakingRedelegateSelectForRedelegation =
       "Select Validator for Redelegation";
-  static const stakingRedelegateRedelegatingFrom = "Redelegating from";
+  static const stakingRedelegateRedelegating = "Redelegating";
+  static const stakingRedelegateFrom = "From";
+  static const stakingRedelegateTo = "To";
+  static const stakingRedelegateValidatorNotSelected =
+      "Validator has not been selected yet";
+  static const stakingDelegateAmountToRedelegate = "Amount to Redelegate*";
+  static const stakingRedelegateEnterAmount =
+      "Enter Amount of HASH to redelegate";
 
   // Staking Undelegate
+  static const stakingUndelegateUndelegate = "Undelegate";
+  static const stakingUndelegateUndelegating = "Undelegating";
+  static const stakingUndelegateUndelegationDetails = "Undelegation Details";
   static const stakingUndelegateWarningUnbondingPeriodTitle =
       "Once the unbonding period begins you will:";
   static const stakingUndelegateWarningUnbondingPeriodMessage =
-      "-not receive staking reward\n-not be able to cancel the unbonding\n-need to wait 21 days for the amount to be liquid";
-  static const stakingUndelegateWarningSwitchValidatorsTitle =
-      "Trying to switch validators?";
-  static const stakingUndelegateWarningSwitchValidatorsMessage =
-      "Use the 'Redelegate' feature to instantly stake your assets to another validator.";
+      " • not receive staking reward\n • not be able to cancel the unbonding\n • need to wait 21 days for the amount to be liquid";
+  static const stakingUndelegateWarningSwitchValidators =
+      "Trying to switch validators? Instantly stake your assets to another validator by tapping here.";
   static const stakingUndelegateAvailableForUndelegation =
-      "Available for undelegation";
+      "Available for Undelegation";
+  static const stakingUndelegateAmountToUndelegate = "Amount to Undelegate*";
+  static const stakingUndelegateEnterAmount =
+      "Enter Amount of HASH to undelegate";
 
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";

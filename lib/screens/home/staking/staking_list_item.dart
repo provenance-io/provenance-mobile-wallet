@@ -27,7 +27,7 @@ class StakingListItem extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.zero,
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(Spacing.large),
           color: Theme.of(context).colorScheme.neutral700,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -33,7 +33,7 @@ class StakingTextFormField extends StatelessWidget {
           : AutovalidateMode.disabled,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return Strings.required;
+          return Strings.starRequired;
         }
         final number = num.tryParse(value);
         return null == number || number.isNegative ? "*positive number" : null;
@@ -50,11 +50,26 @@ class StakingTextFormField extends StatelessWidget {
           ),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: theme.colorScheme.neutral250,
-          ),
+        enabledBorder: _enabledBorder(
+          theme.colorScheme.neutral250,
         ),
+        errorStyle: theme.textTheme.footnote.copyWith(
+          color: theme.colorScheme.neutral150,
+        ),
+        focusedErrorBorder: _enabledBorder(
+          theme.colorScheme.neutral250,
+        ),
+        errorBorder: _enabledBorder(
+          theme.colorScheme.neutral250,
+        ),
+      ),
+    );
+  }
+
+  InputBorder _enabledBorder(Color color) {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        color: color,
       ),
     );
   }
