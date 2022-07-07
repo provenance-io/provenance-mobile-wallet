@@ -45,6 +45,7 @@ abstract class StakingFlowNavigator {
 
   Future<void> showClaimRewardsReview(
     DetailedValidator validator,
+    Reward? reward,
   );
 
   Future<void> showRedelegationReview();
@@ -172,14 +173,16 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showClaimRewardsReview(
     DetailedValidator validator,
+    Reward? reward,
   ) async {
     get.registerSingleton(
       StakingDelegationBloc(
-        null,
+        widget.selectedDelegation!,
         validator,
         "",
         SelectedDelegationType.claimRewards,
         widget.account,
+        reward,
       ),
     );
     showPage(

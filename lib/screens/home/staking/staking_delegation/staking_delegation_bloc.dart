@@ -14,6 +14,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -28,6 +29,7 @@ class StakingDelegationBloc extends Disposable {
     final String commissionRate,
     final SelectedDelegationType selectedDelegationType,
     this._account,
+    final Reward? reward,
   ) : _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
             validator,
@@ -37,6 +39,7 @@ class StakingDelegationBloc extends Disposable {
             null,
             Decimal.zero,
             _account,
+            reward,
           ),
         );
 
@@ -63,6 +66,7 @@ class StakingDelegationBloc extends Disposable {
         asset,
         oldDetails.hashDelegated,
         oldDetails.account,
+        oldDetails.reward,
       ),
     );
   }
@@ -78,6 +82,7 @@ class StakingDelegationBloc extends Disposable {
         oldDetails.asset,
         hashDelegated,
         oldDetails.account,
+        oldDetails.reward,
       ),
     );
   }
@@ -175,6 +180,7 @@ class StakingDelegationDetails {
     this.asset,
     this.hashDelegated,
     this.account,
+    this.reward,
   );
 
   final Delegation? delegation;
@@ -184,6 +190,7 @@ class StakingDelegationDetails {
   final Asset? asset;
   final Decimal hashDelegated;
   final Account account;
+  final Reward? reward;
 
   bool get hashInsufficient {
     if (Decimal.zero == hashDelegated) {

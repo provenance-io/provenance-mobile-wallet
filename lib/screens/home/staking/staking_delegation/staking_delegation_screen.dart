@@ -12,11 +12,13 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingDelegationScreen extends StatefulWidget {
   final Delegation? delegation;
+  final Reward? reward;
 
   final DetailedValidator validator;
 
@@ -26,6 +28,7 @@ class StakingDelegationScreen extends StatefulWidget {
   const StakingDelegationScreen({
     Key? key,
     this.delegation,
+    this.reward,
     required this.validator,
     required this.commissionRate,
     required this.account,
@@ -51,6 +54,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
       widget.commissionRate,
       SelectedDelegationType.delegate,
       widget.account,
+      widget.reward,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();

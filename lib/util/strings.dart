@@ -666,6 +666,7 @@ class Strings {
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
   static const stakingDelegationBlocClaimRewards = "Claim Rewards";
+  static const stakingConfirmClaimRewardsDetails = "Claim Rewards Details";
 
   // Staking Success Screen
   static const stakingSuccessSuccess = "SUCCESS";
@@ -674,4 +675,5 @@ class Strings {
 
   // Staking Confirm Rewards Screen
   static const stakingConfirmRewardClaim = "Claim";
+  static const stakingConfirmRewardsAvailable = "Rewards Available";
 }

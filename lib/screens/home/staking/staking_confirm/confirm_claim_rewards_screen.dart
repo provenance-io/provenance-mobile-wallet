@@ -4,6 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -43,34 +45,35 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             await _sendTransaction(
                 gasAdjustment, details.selectedDelegationType, context);
           },
-          signButtonTitle: Strings.stakingConfirmRewardClaim,
+          signButtonTitle: Strings.stakingDelegationBlocClaimRewards,
           children: [
-            DetailsItem(
-              title: Strings.stakingConfirmDelegatorAddress,
-              endChild: Flexible(
-                child: PwText(
-                  details.account.publicKey!.address.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
+            DetailsHeader(title: Strings.stakingConfirmClaimRewardsDetails),
+            PwListDivider.alternate(),
+            VerticalSpacer.large(),
+            PwText(
+              Strings.stakingRedelegateFrom,
+              color: PwColor.neutral200,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            VerticalSpacer.small(),
+            ValidatorCard(
+              moniker: details.validator.moniker,
+              imgUrl: details.validator.imgUrl,
+              description: details.validator.description,
             ),
-            DetailsItem(
-              title: Strings.stakingConfirmValidatorAddress,
-              endChild: Flexible(
-                child: PwText(
-                  details.validator.operatorAddress.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
+            VerticalSpacer.largeX3(),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingDelegateCurrentDelegation,
+              hashString: details.delegation?.displayDenom ??
+                  Strings.stakingManagementNoHash,
+              context: context,
+            ),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmRewardsAvailable,
+              hashString: details.reward?.formattedAmount ??
+                  Strings.stakingManagementNoHash,
+              context: context,
             ),
           ],
         );
