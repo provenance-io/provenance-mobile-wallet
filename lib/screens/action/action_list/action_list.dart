@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/util/get.dart';
 
 ///
 /// a widget that represents an action group's state
@@ -118,9 +119,13 @@ class ActionGroupHeaderCell extends StatelessWidget {
 }
 
 class ActionListCell extends StatelessWidget {
-  const ActionListCell({required this.group, Key? key}) : super(key: key);
+  const ActionListCell(
+      {required this.group, required this.onItemCliecked, Key? key})
+      : super(key: key);
 
   final ActionListGroup group;
+  final void Function(ActionListGroup group, ActionListItem item)
+      onItemCliecked;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +139,12 @@ class ActionListCell extends StatelessWidget {
             separatorBuilder: (context, index) => const VerticalSpacer.xSmall(),
             itemBuilder: (context, index) {
               final item = group.items[index];
-              return ActionItemCell(item: item);
+              return GestureDetector(
+                child: ActionItemCell(item: item),
+                onTap: () {
+                  onItemCliecked(group, item);
+                },
+              );
             })
       ],
     );
@@ -156,7 +166,15 @@ class ActionList extends StatelessWidget {
         itemBuilder: (context, index) {
           final group = groups[index];
 
-          return ActionListCell(group: group);
+          return ActionListCell(
+            group: group,
+            onItemCliecked: _handleOnItemClicked,
+          );
         });
+  }
+
+  void _handleOnItemClicked(ActionListGroup group, ActionListItem item) {
+    final bloc = get<ActionListBloc>();
+    bloc.actionItemClicked(group, item);
   }
 }

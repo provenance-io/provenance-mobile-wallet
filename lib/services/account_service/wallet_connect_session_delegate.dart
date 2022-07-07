@@ -103,7 +103,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   ) async {
     final id = Uuid().v1().toString();
 
-    _completerLookup[id] = (bool approve) {
+    _completerLookup[id] = (bool approve) async {
       SessionApprovalData? sessionApproval;
       final chainId = ChainId.forCoin(_privateKey.publicKey.coin);
       if (approve) {
@@ -114,7 +114,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      return callback(sessionApproval, null);
+      await callback(sessionApproval, null);
+      _queueService.removeRequest(_address, id);
     };
 
     await _queueService.createWalletConnectSessionGroup(
@@ -134,14 +135,15 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final id = Uuid().v1().toString();
     log("Approve sign");
 
-    _completerLookup[id] = (bool accept) {
+    _completerLookup[id] = (bool accept) async {
       List<int>? signedData;
       if (accept) {
         signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))
           ..removeLast();
       }
 
-      return callback(signedData, null);
+      await callback(signedData, null);
+      _queueService.removeRequest(_address, id);
     };
 
     final signRequest = SignRequest(
@@ -223,7 +225,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      return callback(response, null);
+      await callback(response, null);
+      _queueService.removeRequest(_address, id);
     };
 
     _queueService.addWalletConnectSendRequest(_address, sendRequest);
@@ -237,6 +240,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     _completerLookup.clear();
     events._onClose.add(null);
+    _queueService.removeWalletConnectSessionGroup(_address);
   }
 
   @override
