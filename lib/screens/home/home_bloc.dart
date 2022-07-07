@@ -24,6 +24,7 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -258,10 +259,13 @@ class HomeBloc extends Disposable with WidgetsBindingObserver {
     final connection = get<WalletConnectionFactory>().call(address);
     final remoteNotificationService = get<RemoteNotificationService>();
     final keyValueService = get<KeyValueService>();
+    final queueServce = get<WalletConnectQueueService>();
 
     final delegate = WalletConnectSessionDelegate(
       privateKey: privateKey,
       transactionHandler: _transactionHandler,
+      address: address,
+      queueService: queueServce,
       walletInfo: WalletInfo(
         accountDetails.id,
         accountDetails.name,

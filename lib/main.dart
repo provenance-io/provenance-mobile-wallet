@@ -61,6 +61,7 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
@@ -239,6 +240,9 @@ void main() {
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
       get.registerLazySingleton<MultiSigService>(() => MultiSigService());
+
+      get.registerSingleton<WalletConnectQueueService>(
+          WalletConnectQueueService());
 
       runApp(
         Phoenix(

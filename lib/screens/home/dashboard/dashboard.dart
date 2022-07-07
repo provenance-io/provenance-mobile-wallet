@@ -18,6 +18,7 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -37,6 +38,21 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final _notificationBellNotifier = ValueNotifier<int>(0);
+  late WalletConnectQueueService _connectQueueService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _connectQueueService = get<WalletConnectQueueService>();
+    _connectQueueService.addListener(_connectQueueUpdated);
+  }
+
+  @override
+  void dispose() {
+    _connectQueueService.removeListener(_connectQueueUpdated);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -407,8 +423,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void _onNotificationBellClicked() async {
-    _notificationBellNotifier.value += 1;
-
     final accountService = get<AccountService>();
     final account = accountService.events.selected.value;
     if (account == null) {
@@ -416,5 +430,12 @@ class _DashboardState extends State<Dashboard> {
     }
 
     Navigator.push(context, ActionFlow(account: account).route());
+  }
+
+  void _connectQueueUpdated() async {
+    final groups = await _connectQueueService.loadAllGroups();
+    final counts = groups.map((group) => group.actionLookup.length);
+    _notificationBellNotifier.value =
+        counts.reduce((value, element) => value + element);
   }
 }
