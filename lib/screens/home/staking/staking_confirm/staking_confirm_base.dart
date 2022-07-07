@@ -36,7 +36,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
         centerTitle: true,
         title: PwText(
           widget.appBarTitle,
-          style: PwTextStyle.subhead,
+          style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
         leading: Padding(
@@ -65,7 +65,8 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
               },
               child: PwText(
                 Strings.stakingConfirmData,
-                style: PwTextStyle.body,
+                style: PwTextStyle.footnote,
+                underline: true,
               ),
             ),
           ),

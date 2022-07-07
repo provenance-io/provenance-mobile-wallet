@@ -610,7 +610,8 @@ class Strings {
   static const stakingConfirmAmount = "Amount";
   static const stakingConfirmHash = "hash";
   static const stakingConfirmData = "Data";
-  static const stakingConfirmGasAdjustment = "Gas Adjustment (default: 1.25)";
+  static const stakingConfirmGasAdjustment = "Gas Adjustment";
+  static const stakingConfirmDefault = "(Default)";
   static const stakingConfirmBack = "Back";
   static const stakingConfirmSign = "Sign";
 
