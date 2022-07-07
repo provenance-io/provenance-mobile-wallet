@@ -160,7 +160,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   Future<void> redirectToRedelegation(DetailedValidator validator) async {
-    redirectToPage(
+    replaceLastPage(
       (context) => StakingRedelegationScreen(
         delegation: widget.selectedDelegation!,
         validator: validator,

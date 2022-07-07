@@ -96,7 +96,7 @@ abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
     return _navigatorKey.currentState!.push<X>(route);
   }
 
-  Future<X?> redirectToPage<X>(WidgetBuilder builder,
+  Future<X?> replaceLastPage<X>(WidgetBuilder builder,
       {RouteSettings? settings}) {
     final route = MaterialPageRoute<X>(
       settings: settings,

@@ -133,7 +133,6 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                         context: context,
                       ),
                       PwListDivider.alternate(),
-                      PwListDivider.alternate(),
                       VerticalSpacer.largeX3(),
                       Padding(
                         padding: EdgeInsets.only(bottom: 10),
