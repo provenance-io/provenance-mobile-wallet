@@ -208,12 +208,14 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Row(
                         children: [
-                          PwText(
-                            accountAddress.abbreviateAddress(),
-                            key: Dashboard.keyAccountAddressText,
-                            style: PwTextStyle.body,
+                          Expanded(
+                            child: PwText(
+                              accountAddress.abbreviateAddress(),
+                              key: Dashboard.keyAccountAddressText,
+                              style: PwTextStyle.body,
+                              overflow: TextOverflow.fade,
+                            ),
                           ),
-                          if (coin != null) HorizontalSpacer.large(),
                           if (coin != null)
                             PwText(
                               coin.displayName,
