@@ -4,8 +4,10 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigCreationStatus extends StatefulWidget {
@@ -22,6 +24,7 @@ class MultiSigCreationStatus extends StatefulWidget {
 
 class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _accountService = get<AccountService>();
+  final _multiSigService = get<MultiSigService>();
 
   @override
   Widget build(BuildContext context) {
@@ -140,23 +143,25 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
         await _accountService.getAccount(widget.accountId) as MultiAccount?;
 
     if (account != null) {
-      final linkedAccount = account.linkedAccount;
-      final self = CosignerData(
-        isSelf: true,
-        name: linkedAccount.name,
-        address: linkedAccount.publicKey.address,
+      final remoteAccount = await _multiSigService.getAccount(
+        remoteId: account.remoteId,
+        signerPublicKey: account.linkedAccount.publicKey,
       );
 
-      cosigners.add(self);
+      if (remoteAccount != null) {
+        final coin = remoteAccount.coin;
+        for (var signer in remoteAccount.signers) {
+          final inviteLink = createInviteLink(signer.inviteId, coin);
+          final signerAddress = signer.publicKey?.address;
 
-      final cosignerCount = account.cosignerCount;
-      for (var i = 1; i < cosignerCount; i++) {
-        cosigners.add(
-          CosignerData(
-            isSelf: false,
-            inviteLink: account.inviteLinks[i - 1],
-          ),
-        );
+          cosigners.add(
+            CosignerData(
+              isSelf: signerAddress == account.linkedAccount.publicKey.address,
+              inviteLink: inviteLink,
+              address: signer.publicKey?.address,
+            ),
+          );
+        }
       }
     }
 

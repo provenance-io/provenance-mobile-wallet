@@ -18,7 +18,7 @@ class MultiSigConnectScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final void Function(Account? account) onAccount;
+  final void Function(BasicAccount? account) onAccount;
   final bool enableCreate;
   final int? currentStep;
   final int? totalSteps;
@@ -252,7 +252,7 @@ class _Item {
   });
 
   final String name;
-  final Account? account;
+  final BasicAccount? account;
 
   @override
   int get hashCode => hashValues(name, account?.id);

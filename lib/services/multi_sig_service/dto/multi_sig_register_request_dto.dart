@@ -5,20 +5,14 @@ part 'multi_sig_register_request_dto.g.dart';
 @JsonSerializable()
 class MultiSigRegisterRequestDto {
   MultiSigRegisterRequestDto({
-    required this.name,
+    required this.inviteUuid,
     required this.publicKey,
     required this.address,
-    required this.numOfAdditionalSigners,
-    required this.threshold,
-    required this.chainId,
   });
 
-  final String name;
+  final String inviteUuid;
   final String publicKey;
   final String address;
-  final int numOfAdditionalSigners;
-  final int threshold;
-  final String chainId;
 
   // ignore: member-ordering
   factory MultiSigRegisterRequestDto.fromJson(Map<String, dynamic> json) =>

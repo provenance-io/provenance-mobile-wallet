@@ -239,7 +239,7 @@ class Strings {
   static const multiSigJoinLinkMessage =
       'Paste invitation code address you’ve received as an invitation';
   static const multiSigJoinLinkFieldLabel = 'Enter Invitation Link';
-  static const multiSigInvalidLink = 'Invalid link';
+  static const multiSigInvalidLink = 'Invalid link, please try again.';
 
   // Multi-Sig Connect
   static const multiSigConnectTitle = 'Connect to Individual Account';

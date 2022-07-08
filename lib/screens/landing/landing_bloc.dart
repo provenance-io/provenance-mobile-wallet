@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -27,10 +28,10 @@ class LandingBloc extends Disposable {
       return;
     }
 
-    _marketCap.value = stats.marketCap;
-    _validatorsCount.value = stats.validators;
-    _transactions.value = stats.transactions;
-    _blockTime.value = stats.blockTime;
+    _marketCap.tryAdd(stats.marketCap);
+    _validatorsCount.tryAdd(stats.validators);
+    _transactions.tryAdd(stats.transactions);
+    _blockTime.tryAdd(stats.blockTime);
   }
 
   Future<void> doAuth(BuildContext context) async {
