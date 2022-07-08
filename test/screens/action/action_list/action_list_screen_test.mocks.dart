@@ -27,14 +27,6 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
   }
 
   @override
-  List<_i2.ActionListGroup> get actionGroups =>
-      (super.noSuchMethod(Invocation.getter(#actionGroups),
-          returnValue: <_i2.ActionListGroup>[]) as List<_i2.ActionListGroup>);
-  @override
-  set actionGroups(List<_i2.ActionListGroup>? _actionGroups) =>
-      super.noSuchMethod(Invocation.setter(#actionGroups, _actionGroups),
-          returnValueForMissingStub: null);
-  @override
   List<_i2.NotificationItem> get notifications =>
       (super.noSuchMethod(Invocation.getter(#notifications),
           returnValue: <_i2.NotificationItem>[]) as List<_i2.NotificationItem>);
@@ -55,6 +47,12 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
           List<_i2.NotificationItem>? notifications) =>
       (super.noSuchMethod(
           Invocation.method(#deleteNotifications, [notifications]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+  @override
+  _i3.Future<void> actionItemClicked(
+          _i2.ActionListGroup? group, _i2.ActionListItem? item) =>
+      (super.noSuchMethod(Invocation.method(#actionItemClicked, [group, item]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
 }

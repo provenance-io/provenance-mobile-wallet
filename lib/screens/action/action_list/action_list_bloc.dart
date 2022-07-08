@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -177,15 +177,17 @@ class ActionListBloc extends Disposable {
 
     final queuedItems = await _connectQueueService.loadAllGroups();
 
-    return queuedItems.map((queuedItem) {
-      final account = accountLookup[queuedItem.walletAddress];
+    return queuedItems
+        .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
+        .map((queuedGroup) {
+      final account = accountLookup[queuedGroup.walletAddress];
       return _WalletConnectActionGroup(
-        queueGroup: queuedItem,
+        queueGroup: queuedGroup,
         label: account!.name,
-        subLabel: queuedItem.walletAddress.abbreviateAddress(),
+        subLabel: queuedGroup.walletAddress.abbreviateAddress(),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
-        items: queuedItem.actionLookup.entries.map((entry) {
+        items: queuedGroup.actionLookup.entries.map((entry) {
           String label;
           if (entry.value is WalletConnectSessionRequestData) {
             label = "Approve Session";
@@ -205,37 +207,31 @@ class ActionListBloc extends Disposable {
 
   Future<void> _processWalletConnectQueue(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) async {
-    final homeBloc = get<HomeBloc>();
-    final session = homeBloc.currentSession!;
+    final walletConnectService = get<WalletConnectService>();
 
     final payload = item.payload;
-    Future<bool> future;
 
     if (payload is WalletConnectSessionRequestData) {
-      future = _navigator.showApproveSession(payload).then((approved) {
-        return session.approveSession(
-          details: payload,
-          allowed: approved,
-        );
-      });
+      final approved = await _navigator.showApproveSession(payload);
+
+      await walletConnectService.approveSession(
+        details: payload,
+        allowed: approved,
+      );
     } else if (payload is SignRequest) {
-      future = _navigator
-          .showApproveSign(payload, group._queueGroup.clientMeta!)
-          .then((approved) {
-        return session.sendMessageFinish(
-            requestId: payload.id, allowed: approved);
-      });
+      final approved = await _navigator.showApproveSign(
+          payload, group._queueGroup.clientMeta!);
+
+      await walletConnectService.sendMessageFinish(
+          requestId: payload.id, allowed: approved);
     } else if (payload is SendRequest) {
-      future = _navigator
-          .showApproveTransaction(payload, group._queueGroup.clientMeta!)
-          .then((approved) {
-        return session.sendMessageFinish(
-            requestId: payload.id, allowed: approved);
-      });
+      final approved = await _navigator.showApproveTransaction(
+          payload, group._queueGroup.clientMeta!);
+
+      await walletConnectService.sendMessageFinish(
+          requestId: payload.id, allowed: approved);
     } else {
       throw Exception("Unknown action type ${item.runtimeType}");
     }
-
-    return future.then((_) => null);
   }
 }

@@ -19,6 +19,7 @@ import 'package:provenance_wallet/services/key_value_service/key_value_service.d
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -62,6 +63,7 @@ class _DashboardState extends State<Dashboard> {
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
     final _keyValueService = get<KeyValueService>();
+    final _walletConnectService = get<WalletConnectService>();
 
     return Container(
       decoration: BoxDecoration(
@@ -82,8 +84,8 @@ class _DashboardState extends State<Dashboard> {
               elevation: 0.0,
               actions: [
                 StreamBuilder<WalletConnectSessionState>(
-                  initialData: bloc.sessionEvents.state.value,
-                  stream: bloc.sessionEvents.state,
+                  initialData: _walletConnectService.sessionEvents.state.value,
+                  stream: _walletConnectService.sessionEvents.state,
                   builder: (context, snapshot) {
                     final connected = snapshot.data?.status ==
                         WalletConnectSessionStatus.connected;
@@ -147,8 +149,8 @@ class _DashboardState extends State<Dashboard> {
                             final accountId =
                                 accountService.events.selected.value?.id;
                             if (accountId != null) {
-                              final success =
-                                  await bloc.tryRestoreSession(accountId);
+                              final success = await _walletConnectService
+                                  .tryRestoreSession(accountId);
                               if (!success) {
                                 final addressData = await Navigator.of(
                                   context,
@@ -162,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
                                 );
 
                                 if (addressData != null) {
-                                  bloc
+                                  _walletConnectService
                                       .connectSession(accountId, addressData)
                                       .catchError((err) {
                                     PwDialog.showError(

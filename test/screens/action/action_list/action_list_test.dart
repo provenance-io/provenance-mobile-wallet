@@ -147,6 +147,9 @@ main() {
         home: Material(
           child: ActionListCell(
             group: group,
+            onItemCliecked: (group, item) {
+              
+            },
           ),
         ),
       ));
