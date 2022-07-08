@@ -42,6 +42,7 @@ enum AddAccountScreen {
   multiSigJoinLink,
   multiSigJoinScanQrCode,
   multiSigConnect,
+  multiSigRecover,
   multiSigAccountName,
   multiSigCosigners,
   multiSigSignatures,
@@ -96,6 +97,11 @@ const _flowMultiSigJoinScanQrCode = [
   AddAccountScreen.multiSigCreateOrJoin,
   AddAccountScreen.multiSigJoinScanQrCode,
   AddAccountScreen.multiSigInviteReviewFlow,
+];
+
+const _flowMultiSigJoinRecover = [
+  AddAccountScreen.multiSigCreateOrJoin,
+  AddAccountScreen.multiSigRecover,
 ];
 
 const _flowRecover = [
@@ -300,6 +306,9 @@ class AddAccountFlowBloc implements Disposable {
           totalSteps: totalSteps,
         );
         break;
+      case AddAccountScreen.multiSigRecover:
+        _navigator.showMultiSigRecover();
+        break;
       case AddAccountScreen.multiSigAccountName:
         _navigator.showMultiSigAccountName(currentStep, totalSteps);
         break;
@@ -487,6 +496,9 @@ class AddAccountFlowBloc implements Disposable {
       case MultiSigAddKind.link:
         _flow = _flowMultiSigJoinLink;
         break;
+      case MultiSigAddKind.recover:
+        _flow = _flowMultiSigJoinRecover;
+        break;
     }
 
     _showNext(AddAccountScreen.multiSigCreateOrJoin);
@@ -529,6 +541,22 @@ class AddAccountFlowBloc implements Disposable {
     }
 
     _showNext(AddAccountScreen.multiSigConnect);
+  }
+
+  Future<void> submitRecoverFromAccount(
+      MultiSigRemoteAccount account, BasicAccount linkedAccount) async {
+    final multiAccount = await _accountService.addMultiAccount(
+      name: account.name,
+      publicKeys: [],
+      coin: account.coin,
+      linkedAccountId: linkedAccount.id,
+      remoteId: account.remoteId,
+      cosignerCount: account.signers.length,
+      signaturesRequired: account.signersRequired,
+      inviteIds: account.signers.map((e) => e.inviteId).toList(),
+    );
+
+    _navigator.endFlow(multiAccount);
   }
 
   void submitMultiSigAccountName(String name) {

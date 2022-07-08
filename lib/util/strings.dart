@@ -292,6 +292,10 @@ class Strings {
   static const multiSigInviteMessage =
       '“You’re invited to join my Provenance Blockchain Multi-sig Account by clicking the link below.”';
 
+  // Multi-Sig Recover
+  static const multiSigRecoverLoadError = 'An error occured';
+  static const multiSigRecoverTitle = 'Recover Account';
+
   // Account Name
   static const nameYourAccount = 'Name Your Account';
   static const accountName = 'Account Name';
