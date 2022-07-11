@@ -95,114 +95,70 @@ class StakingDelegationBloc extends Disposable {
 
     await _sendMessage(
       gasAdjustment,
-      _getDelegateMessage(
-        details.asset?.denom ?? 'nhash',
-        hashToNHash(details.hashDelegated).toString(),
-        _account.publicKey!.address,
-        details.validator.operatorAddress,
-      ).toAny(),
+      _getDelegateMessage().toAny(),
     );
   }
 
   Future<void> doUndelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      _getUndelegateMessage(
-        details.asset?.denom ?? 'nhash',
-        details.hashDelegated.toString(),
-        _account.publicKey!.address,
-        details.validator.operatorAddress,
-      ).toAny(),
+      _getUndelegateMessage().toAny(),
     );
   }
 
   Future<void> claimRewards(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      _getClaimRewardMessage(
-        _account.publicKey!.address,
-        details.validator.operatorAddress,
-      ).toAny(),
+      _getClaimRewardMessage().toAny(),
     );
   }
 
-  staking.MsgDelegate _getDelegateMessage(
-    String denom,
-    String amount,
-    String delegatorAddress,
-    String validatorAddress,
-  ) {
+  staking.MsgDelegate _getDelegateMessage() {
+    final details = _stakingDelegationDetails.value;
     return staking.MsgDelegate(
       amount: proto.Coin(
-        denom: denom,
-        amount: amount,
+        denom: details.asset?.denom ?? 'nhash',
+        amount: hashToNHash(details.hashDelegated).toString(),
       ),
-      delegatorAddress: delegatorAddress,
-      validatorAddress: validatorAddress,
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
     );
   }
 
-  staking.MsgUndelegate _getUndelegateMessage(
-    String denom,
-    String amount,
-    String delegatorAddress,
-    String validatorAddress,
-  ) {
+  staking.MsgUndelegate _getUndelegateMessage() {
+    final details = _stakingDelegationDetails.value;
     return staking.MsgUndelegate(
       amount: proto.Coin(
-        denom: denom,
-        amount: amount,
+        denom: details.asset?.denom ?? 'nhash',
+        amount: hashToNHash(details.hashDelegated).toString(),
       ),
-      delegatorAddress: delegatorAddress,
-      validatorAddress: validatorAddress,
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
     );
   }
 
-  MsgWithdrawDelegatorReward _getClaimRewardMessage(
-    String delegatorAddress,
-    String validatorAddress,
-  ) {
+  MsgWithdrawDelegatorReward _getClaimRewardMessage() {
+    final details = _stakingDelegationDetails.value;
     return MsgWithdrawDelegatorReward(
-      delegatorAddress: delegatorAddress,
-      validatorAddress: validatorAddress,
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
     );
   }
 
   String getClaimRewardJson() {
-    final details = _stakingDelegationDetails.value;
-
-    return prettyJson(_getClaimRewardMessage(
-      _account.publicKey!.address,
-      details.validator.operatorAddress,
-    ).toProto3Json());
+    return prettyJson(_getClaimRewardMessage().toProto3Json());
   }
 
   String getUndelegateMessageJson() {
-    final details = _stakingDelegationDetails.value;
-
-    return prettyJson(_getUndelegateMessage(
-      details.asset?.denom ?? 'nhash',
-      details.hashDelegated.toString(),
-      _account.publicKey!.address,
-      details.validator.operatorAddress,
-    ).toProto3Json());
+    return prettyJson(_getUndelegateMessage().toProto3Json());
   }
 
   String getDelegateMessageJson() {
-    final details = _stakingDelegationDetails.value;
-
-    return prettyJson(_getDelegateMessage(
-      details.asset?.denom ?? 'nhash',
-      details.hashDelegated.toString(),
-      _account.publicKey!.address,
-      details.validator.operatorAddress,
-    ).toProto3Json());
+    return prettyJson(_getDelegateMessage().toProto3Json());
   }
 
   Future<void> _sendMessage(

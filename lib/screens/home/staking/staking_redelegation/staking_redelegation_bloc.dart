@@ -110,8 +110,6 @@ class StakingRedelegationBloc extends Disposable {
   Future<void> doRedelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingRedelegationDetails.value;
-
     final body = proto.TxBody(
       messages: [
         _getRedelegateMessage().toAny(),
