@@ -201,6 +201,10 @@ class StakingDelegationDetails {
 
     return hashDelegated > remainingHash;
   }
+
+  String get hashFormatted {
+    return "$hashDelegated HASH";
+  }
 }
 
 enum SelectedDelegationType {

@@ -673,7 +673,14 @@ class Strings {
   static String stakingSuccessSuccessful(String delegationType) =>
       '$delegationType successful!';
 
+  static String stakingConfirmHashAmount(String amount) => '$amount HASH';
+
   // Staking Confirm Rewards Screen
   static const stakingConfirmRewardClaim = "Claim";
   static const stakingConfirmRewardsAvailable = "Rewards Available";
+
+  // Confirm Undelegate Screen
+  static const stakingConfirmUndelegationDetails = "Undelegation Details";
+  static const stakingConfirmAmountToUndelegate = "Amount to Undelegate";
+  static const stakingConfirmNewTotalDelegation = "New Total Delegation";
 }

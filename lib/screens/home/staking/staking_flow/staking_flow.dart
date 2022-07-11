@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_redelegate_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_undelegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_screen.dart';
@@ -156,7 +157,9 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   Future<void> showUndelegationReview() async {
-    showDelegationReview();
+    showPage(
+      (context) => ConfirmUndelegateScreen(),
+    );
   }
 
   @override
