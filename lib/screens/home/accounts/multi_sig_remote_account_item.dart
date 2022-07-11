@@ -32,8 +32,8 @@ class MultiSigRemoteAccountItem extends StatelessWidget {
         Divider(
             height: 1,
             thickness: 1,
-            endIndent: 24,
-            indent: 24,
+            endIndent: Spacing.xLarge,
+            indent: Spacing.xLarge,
             color: Theme.of(context).colorScheme.neutral750),
         LinkedAccount(
           name: linkedAccount.name,
