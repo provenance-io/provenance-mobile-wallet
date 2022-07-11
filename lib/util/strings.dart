@@ -683,4 +683,13 @@ class Strings {
   static const stakingConfirmUndelegationDetails = "Undelegation Details";
   static const stakingConfirmAmountToUndelegate = "Amount to Undelegate";
   static const stakingConfirmNewTotalDelegation = "New Total Delegation";
+
+  // Confirm Redelegate Screen
+  static const stakingConfirmRedelegationDetails = "Redelegation Details";
+  static const stakingConfirmAmountToRedelegate = "Amount to Redelegate";
+
+  // Confirm Delegate Screen
+  static const stakingConfirmDelegating = "Delegating";
+  static const stakingConfirmDelegationDetails = "Delegation Details";
+  static const stakingConfirmAmountToDelegate = "Amount to Delegate";
 }
