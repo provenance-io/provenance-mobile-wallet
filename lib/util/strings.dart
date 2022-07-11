@@ -671,7 +671,8 @@ class Strings {
   // Staking Success Screen
   static const stakingSuccessSuccess = "SUCCESS";
   static String stakingSuccessSuccessful(String delegationType) =>
-      '$delegationType successful!';
+      '$delegationType successful';
+  static const stakingSuccessBackToDashboard = "Back to Dashboard";
 
   static String stakingConfirmHashAmount(String amount) => '$amount HASH';
 

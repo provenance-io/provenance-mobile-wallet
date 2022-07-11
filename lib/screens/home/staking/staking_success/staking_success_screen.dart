@@ -38,36 +38,49 @@ class StakingSuccessScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(child: Container()),
+                  PwText(
+                    Strings.stakingSuccessSuccess.toUpperCase(),
+                    style: PwTextStyle.headline2,
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                  ),
+                  VerticalSpacer.large(),
+                  PwText(
+                    Strings.stakingSuccessSuccessful(
+                      selected.dropDownTitle,
+                    ),
+                    style: PwTextStyle.body,
+                    textAlign: TextAlign.center,
+                  ),
+                  VerticalSpacer.largeX3(),
                   Image.asset(
                     Assets.imagePaths.transactionComplete,
                     height: 80,
                     width: 80,
                   ),
-                  VerticalSpacer.medium(),
-                  PwText(
-                    Strings.stakingSuccessSuccess,
-                    style: PwTextStyle.display2,
-                    textAlign: TextAlign.center,
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
-                  ),
-                  VerticalSpacer.medium(),
-                  PwText(
-                    Strings.stakingSuccessSuccessful(
-                      selected.dropDownTitle,
+                  Expanded(child: Container()),
+                  PwButton(
+                    child: PwText(
+                      Strings.continueName,
+                      style: PwTextStyle.bodyBold,
+                      textAlign: TextAlign.center,
                     ),
-                    style: PwTextStyle.displayBody,
-                    textAlign: TextAlign.center,
+                    onPressed: () {
+                      get<StakingFlowBloc>().onComplete();
+                    },
                   ),
-                  Expanded(flex: 2, child: Container()),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: 20, right: 20, bottom: Spacing.largeX4),
-                    child: PwButton(
+                      top: Spacing.large,
+                      bottom: Spacing.largeX4,
+                    ),
+                    child: PwTextButton(
                       child: PwText(
-                        Strings.sendDone,
-                        style: PwTextStyle.bodyBold,
+                        Strings.stakingSuccessBackToDashboard,
+                        style: PwTextStyle.body,
                         textAlign: TextAlign.center,
+                        color: PwColor.neutralNeutral,
                       ),
                       onPressed: () {
                         get<StakingFlowBloc>().onComplete();
