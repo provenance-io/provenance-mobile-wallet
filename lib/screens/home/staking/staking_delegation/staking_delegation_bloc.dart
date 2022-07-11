@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
@@ -94,13 +95,11 @@ class StakingDelegationBloc extends Disposable {
 
     await _sendMessage(
       gasAdjustment,
-      staking.MsgDelegate(
-        amount: proto.Coin(
-          denom: details.asset?.denom,
-          amount: hashToNHash(details.hashDelegated).toString(),
-        ),
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
+      _getDelegateMessage(
+        details.asset?.denom ?? 'nhash',
+        hashToNHash(details.hashDelegated).toString(),
+        _account.publicKey!.address,
+        details.validator.operatorAddress,
       ).toAny(),
     );
   }
@@ -111,13 +110,11 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      staking.MsgUndelegate(
-        amount: proto.Coin(
-          denom: details.asset?.denom ?? 'nhash',
-          amount: details.hashDelegated.toString(),
-        ),
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
+      _getUndelegateMessage(
+        details.asset?.denom ?? 'nhash',
+        details.hashDelegated.toString(),
+        _account.publicKey!.address,
+        details.validator.operatorAddress,
       ).toAny(),
     );
   }
@@ -128,11 +125,84 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      MsgWithdrawDelegatorReward(
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
+      _getClaimRewardMessage(
+        _account.publicKey!.address,
+        details.validator.operatorAddress,
       ).toAny(),
     );
+  }
+
+  staking.MsgDelegate _getDelegateMessage(
+    String denom,
+    String amount,
+    String delegatorAddress,
+    String validatorAddress,
+  ) {
+    return staking.MsgDelegate(
+      amount: proto.Coin(
+        denom: denom,
+        amount: amount,
+      ),
+      delegatorAddress: delegatorAddress,
+      validatorAddress: validatorAddress,
+    );
+  }
+
+  staking.MsgUndelegate _getUndelegateMessage(
+    String denom,
+    String amount,
+    String delegatorAddress,
+    String validatorAddress,
+  ) {
+    return staking.MsgUndelegate(
+      amount: proto.Coin(
+        denom: denom,
+        amount: amount,
+      ),
+      delegatorAddress: delegatorAddress,
+      validatorAddress: validatorAddress,
+    );
+  }
+
+  MsgWithdrawDelegatorReward _getClaimRewardMessage(
+    String delegatorAddress,
+    String validatorAddress,
+  ) {
+    return MsgWithdrawDelegatorReward(
+      delegatorAddress: delegatorAddress,
+      validatorAddress: validatorAddress,
+    );
+  }
+
+  String getClaimRewardJson() {
+    final details = _stakingDelegationDetails.value;
+
+    return prettyJson(_getClaimRewardMessage(
+      _account.publicKey!.address,
+      details.validator.operatorAddress,
+    ).toProto3Json());
+  }
+
+  String getUndelegateMessageJson() {
+    final details = _stakingDelegationDetails.value;
+
+    return prettyJson(_getUndelegateMessage(
+      details.asset?.denom ?? 'nhash',
+      details.hashDelegated.toString(),
+      _account.publicKey!.address,
+      details.validator.operatorAddress,
+    ).toProto3Json());
+  }
+
+  String getDelegateMessageJson() {
+    final details = _stakingDelegationDetails.value;
+
+    return prettyJson(_getDelegateMessage(
+      details.asset?.denom ?? 'nhash',
+      details.hashDelegated.toString(),
+      _account.publicKey!.address,
+      details.validator.operatorAddress,
+    ).toProto3Json());
   }
 
   Future<void> _sendMessage(
