@@ -57,7 +57,9 @@ class StakingScreenBloc extends PwPagingCache {
       );
 
       final rewards = await _validatorService.getRewards(
-          _account.publicKey!.coin, _account.publicKey!.address);
+        _account.publicKey!.coin,
+        _account.publicKey!.address,
+      );
 
       final validators = await _validatorService.getRecentValidators(
         _account.publicKey!.coin,

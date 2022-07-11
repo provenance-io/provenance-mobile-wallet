@@ -58,8 +58,8 @@ class ProvenanceValidator {
   final int? votingPowerTotal;
   final String commission;
   final double rawCommission;
-  final String? bondedTokensCount;
-  final String? bondedTokensTotal;
+  final int? bondedTokensCount;
+  final int? bondedTokensTotal;
   final String? bondedTokensDenom;
   final int delegators;
   final ValidatorStatus status;
