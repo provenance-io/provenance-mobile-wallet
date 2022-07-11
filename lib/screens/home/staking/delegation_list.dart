@@ -86,6 +86,9 @@ class DelegationListState extends State<DelegationList> {
                         );
                         if (response == true) {
                           await _bloc.load();
+                        } else if (response == false) {
+                          Navigator.pop(context);
+                          _bloc.onFlowCompletion();
                         }
                       },
                     );

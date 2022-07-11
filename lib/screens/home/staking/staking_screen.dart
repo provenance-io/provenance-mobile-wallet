@@ -8,7 +8,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class StakingScreen extends StatefulWidget {
   const StakingScreen({
     Key? key,
+    required this.onFlowCompletion,
   }) : super(key: key);
+
+  final Function onFlowCompletion;
 
   @override
   State<StatefulWidget> createState() => _StakingScreenState();
@@ -25,7 +28,7 @@ class _StakingScreenState extends State<StakingScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
-    _bloc = StakingScreenBloc();
+    _bloc = StakingScreenBloc(onFlowCompletion: widget.onFlowCompletion);
     get.registerSingleton(_bloc);
     _bloc.load();
   }

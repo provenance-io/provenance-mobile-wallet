@@ -83,7 +83,7 @@ class StakingSuccessScreen extends StatelessWidget {
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () {
-                        get<StakingFlowBloc>().onComplete();
+                        get<StakingFlowBloc>().backToDashboard();
                       },
                     ),
                   ),

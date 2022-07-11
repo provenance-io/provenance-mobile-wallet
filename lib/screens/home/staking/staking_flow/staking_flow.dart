@@ -56,6 +56,8 @@ abstract class StakingFlowNavigator {
   Future<void> showTransactionSuccess(SelectedDelegationType selected);
 
   void onComplete();
+
+  void backToDashboard();
 }
 
 class StakingFlow extends FlowBase {
@@ -221,5 +223,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   void onComplete() {
     completeFlow(true);
+  }
+
+  @override
+  void backToDashboard() {
+    completeFlow(false);
   }
 }

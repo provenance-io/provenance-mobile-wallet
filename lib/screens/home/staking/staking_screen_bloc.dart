@@ -25,8 +25,11 @@ class StakingScreenBloc extends PwPagingCache {
   final _validatorService = get<ValidatorService>();
   final Account _account;
 
-  StakingScreenBloc()
-      : _account = get<AccountService>().events.selected.value!,
+  final Function onFlowCompletion;
+
+  StakingScreenBloc({
+    required this.onFlowCompletion,
+  })  : _account = get<AccountService>().events.selected.value!,
         super(50);
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
