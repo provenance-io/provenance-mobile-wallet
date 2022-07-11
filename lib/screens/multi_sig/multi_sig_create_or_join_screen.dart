@@ -62,8 +62,8 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                     ),
                     VerticalSpacer.large(),
                     AccountButton(
-                        name: 'Recover',
-                        desc: 'Using existing linked basic account',
+                        name: Strings.accountTypeMultiSigRecoverName,
+                        desc: Strings.accountTypeMultiSigRecoverDesc,
                         onPressed: () {
                           bloc.submitMultiSigCreateOrJoin(
                               MultiSigAddKind.recover);

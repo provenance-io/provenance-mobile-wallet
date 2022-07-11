@@ -205,6 +205,9 @@ class Strings {
   static const accountTypeMultiSigJoinName = 'Join Multi-Signature Account';
   static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
   static const accountTypeMultiSigJoinLink = 'Have an invitation link?';
+  static const accountTypeMultiSigRecoverName = 'Recover';
+  static const accountTypeMultiSigRecoverDesc =
+      'Using existing linked basic account';
 
   // Multi-Sig Invite Review Landing
 
