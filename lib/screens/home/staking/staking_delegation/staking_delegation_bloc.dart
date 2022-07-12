@@ -203,7 +203,7 @@ class StakingDelegationDetails {
   }
 
   String get hashFormatted {
-    return "$hashDelegated HASH";
+    return Strings.stakingConfirmHashAmount(hashDelegated.toString());
   }
 }
 
