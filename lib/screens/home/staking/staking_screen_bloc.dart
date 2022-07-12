@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/util/extensions/list_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -97,7 +98,8 @@ class StakingScreenBloc extends PwPagingCache {
       _stakingDetails.tryAdd(
         StakingDetails(
           delegates: oldDetails.delegates,
-          validators: selectedSort.sort(oldDetails.validators),
+          validators:
+              oldDetails.validators.sortDescendingBy(state: selectedSort),
           address: oldDetails.address,
           selectedSort: selectedSort,
           rewards: oldDetails.rewards,
@@ -149,7 +151,7 @@ class StakingScreenBloc extends PwPagingCache {
     _stakingDetails.tryAdd(
       StakingDetails(
         delegates: oldDetails.delegates,
-        validators: oldDetails.selectedSort.sort(validators),
+        validators: validators.sortDescendingBy(state: oldDetails.selectedSort),
         address: oldDetails.address,
         selectedSort: oldDetails.selectedSort,
         rewards: oldDetails.rewards,
@@ -212,30 +214,5 @@ extension ValidatorSortingStateExtension on ValidatorSortingState {
       case ValidatorSortingState.alphabetically:
         return Strings.dropDownAlphabetically;
     }
-  }
-
-  List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
-    validators.sort((a, b) {
-      int sort;
-      switch (this) {
-        case ValidatorSortingState.votingPower:
-          sort = b.votingPower.compareTo(a.votingPower);
-          break;
-        case ValidatorSortingState.delegators:
-          sort = b.delegators.compareTo(a.delegators);
-          break;
-        case ValidatorSortingState.commission:
-          sort = b.rawCommission.compareTo(a.rawCommission);
-          break;
-        case ValidatorSortingState.alphabetically:
-          sort = 0;
-          break;
-      }
-      if (sort != 0) {
-        return sort;
-      }
-      return a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase());
-    });
-    return validators.toList();
   }
 }
