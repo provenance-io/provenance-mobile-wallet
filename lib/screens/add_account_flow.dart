@@ -14,6 +14,7 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart'
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_create_or_join_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_join_link_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_recover_screen.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
@@ -44,6 +45,7 @@ abstract class AddAccountFlowNavigator {
   void showMultiSigJoinLink();
   void showMultiSigScanQrCode();
   void showMultiSigConnect({int? currentStep, int? totalSteps});
+  void showMultiSigRecover();
   void showMultiSigAccountName(int currentStep, int totalSteps);
   void showMultiSigCosigners(FieldMode mode,
       [int? currentStep, int? totalSteps]);
@@ -287,6 +289,15 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
         enableCreate: true,
         currentStep: currentStep,
         totalSteps: totalSteps,
+      ),
+    );
+  }
+
+  @override
+  void showMultiSigRecover() {
+    showPage(
+      (context) => MultiSigRecoverScreen(
+        bloc: _bloc,
       ),
     );
   }

@@ -78,44 +78,39 @@ class AccountContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: isSelected
-          ? Theme.of(context).colorScheme.secondary650
-          : Theme.of(context).colorScheme.neutral700,
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(
-                left: Spacing.xLarge,
-                top: Spacing.large,
-                bottom: Spacing.large,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.ltr,
-                children: rows,
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.only(
+              left: Spacing.xLarge,
+              top: Spacing.large,
+              bottom: Spacing.large,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.ltr,
+              children: rows,
             ),
           ),
-          if (onShowMenu != null)
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: onShowMenu,
-              child: SizedBox(
-                width: 60,
-                height: 60,
-                child: Center(
-                  child: PwIcon(
-                    PwIcons.ellipsis,
-                    color: Theme.of(context).colorScheme.neutralNeutral,
-                  ),
+        ),
+        if (onShowMenu != null)
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onShowMenu,
+            child: SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(
+                child: PwIcon(
+                  PwIcons.ellipsis,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
                 ),
               ),
             ),
-          VerticalSpacer.medium(),
-        ],
-      ),
+          ),
+        VerticalSpacer.medium(),
+      ],
     );
   }
 }

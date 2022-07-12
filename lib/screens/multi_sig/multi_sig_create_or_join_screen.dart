@@ -60,6 +60,14 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
                       },
                     ),
+                    VerticalSpacer.large(),
+                    AccountButton(
+                        name: Strings.accountTypeMultiSigRecoverName,
+                        desc: Strings.accountTypeMultiSigRecoverDesc,
+                        onPressed: () {
+                          bloc.submitMultiSigCreateOrJoin(
+                              MultiSigAddKind.recover);
+                        }),
                     StreamBuilder<String?>(
                       stream: bloc.multiSigInviteLinkError,
                       builder: (context, snapshot) {

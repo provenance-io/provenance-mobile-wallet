@@ -205,6 +205,9 @@ class Strings {
   static const accountTypeMultiSigJoinName = 'Join Multi-Signature Account';
   static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
   static const accountTypeMultiSigJoinLink = 'Have an invitation link?';
+  static const accountTypeMultiSigRecoverName = 'Recover';
+  static const accountTypeMultiSigRecoverDesc =
+      'Using existing linked basic account';
 
   // Multi-Sig Invite Review Landing
 
@@ -291,6 +294,10 @@ class Strings {
       'Provenance Blockchain Multi-sig Account Invitation';
   static const multiSigInviteMessage =
       '“You’re invited to join my Provenance Blockchain Multi-sig Account by clicking the link below.”';
+
+  // Multi-Sig Recover
+  static const multiSigRecoverLoadError = 'An error occured';
+  static const multiSigRecoverTitle = 'Recover Account';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';
