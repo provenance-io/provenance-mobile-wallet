@@ -23,14 +23,15 @@ import 'package:rxdart/rxdart.dart';
 
 class StakingDelegationBloc extends Disposable {
   final BehaviorSubject<StakingDelegationDetails> _stakingDelegationDetails;
-  StakingDelegationBloc(
-    final Delegation? delegation,
-    final DetailedValidator validator,
-    final String commissionRate,
-    final SelectedDelegationType selectedDelegationType,
-    this._account,
-    final Reward? reward,
-  ) : _stakingDelegationDetails = BehaviorSubject.seeded(
+  StakingDelegationBloc({
+    Delegation? delegation,
+    Reward? reward,
+    required final DetailedValidator validator,
+    final String commissionRate = "",
+    required final SelectedDelegationType selectedDelegationType,
+    required Account account,
+  })  : _account = account,
+        _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
             validator,
             commissionRate,
@@ -38,7 +39,7 @@ class StakingDelegationBloc extends Disposable {
             selectedDelegationType,
             null,
             Decimal.zero,
-            _account,
+            account,
             reward,
           ),
         );

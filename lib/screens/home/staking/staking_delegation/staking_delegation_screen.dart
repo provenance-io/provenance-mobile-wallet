@@ -49,12 +49,12 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
     _bloc = StakingDelegationBloc(
-      widget.delegation,
-      widget.validator,
-      widget.commissionRate,
-      SelectedDelegationType.delegate,
-      widget.account,
-      widget.reward,
+      delegation: widget.delegation,
+      reward: widget.reward,
+      validator: widget.validator,
+      commissionRate: widget.commissionRate,
+      selectedDelegationType: SelectedDelegationType.delegate,
+      account: widget.account,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();
