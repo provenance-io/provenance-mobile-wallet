@@ -242,8 +242,13 @@ void main() {
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
       get.registerLazySingleton<MultiSigService>(() => MultiSigService());
 
+      final directory = await getApplicationDocumentsDirectory();
+      await directory.create(recursive: true);
       get.registerSingleton<WalletConnectQueueService>(
-          WalletConnectQueueService());
+          WalletConnectQueueService(
+        factory: databaseFactoryIo,
+        directory: directory.absolute.path,
+      ));
 
       runApp(
         Phoenix(
