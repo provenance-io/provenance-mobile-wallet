@@ -98,8 +98,7 @@ class StakingScreenBloc extends PwPagingCache {
       _stakingDetails.tryAdd(
         StakingDetails(
           delegates: oldDetails.delegates,
-          validators:
-              oldDetails.validators.sortDescendingBy(state: selectedSort),
+          validators: selectedSort.sort(oldDetails.validators),
           address: oldDetails.address,
           selectedSort: selectedSort,
           rewards: oldDetails.rewards,
@@ -151,7 +150,7 @@ class StakingScreenBloc extends PwPagingCache {
     _stakingDetails.tryAdd(
       StakingDetails(
         delegates: oldDetails.delegates,
-        validators: validators.sortDescendingBy(state: oldDetails.selectedSort),
+        validators: oldDetails.selectedSort.sort(validators),
         address: oldDetails.address,
         selectedSort: oldDetails.selectedSort,
         rewards: oldDetails.rewards,
@@ -214,5 +213,32 @@ extension ValidatorSortingStateExtension on ValidatorSortingState {
       case ValidatorSortingState.alphabetically:
         return Strings.dropDownAlphabetically;
     }
+  }
+
+  List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
+    switch (this) {
+      case ValidatorSortingState.votingPower:
+        validators.sortDescendingWithFallback(
+          get: (v) => v.votingPower,
+          fallback: (v) => v.moniker,
+        );
+        break;
+      case ValidatorSortingState.delegators:
+        validators.sortDescendingWithFallback(
+          get: (v) => v.delegators,
+          fallback: (v) => v.moniker,
+        );
+        break;
+      case ValidatorSortingState.commission:
+        validators.sortDescendingWithFallback(
+          get: (v) => v.rawCommission,
+          fallback: (v) => v.moniker,
+        );
+        break;
+      case ValidatorSortingState.alphabetically:
+        validators.sortAscendingBy((v) => v.moniker);
+        break;
+    }
+    return validators.toList();
   }
 }
