@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
-import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_staking.dart' as staking;
 import 'package:provenance_wallet/extension/stream_controller.dart';
@@ -104,7 +103,7 @@ class StakingRedelegationBloc extends Disposable {
   }
 
   String getRedelegateMessageJson() {
-    return prettyJson(_getRedelegateMessage().toProto3Json());
+    return _getRedelegateMessage().toProto3Json() as String;
   }
 
   Future<void> doRedelegate(

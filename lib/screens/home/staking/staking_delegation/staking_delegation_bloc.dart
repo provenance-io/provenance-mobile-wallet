@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
-import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
@@ -150,15 +149,15 @@ class StakingDelegationBloc extends Disposable {
   }
 
   String getClaimRewardJson() {
-    return prettyJson(_getClaimRewardMessage().toProto3Json());
+    return _getClaimRewardMessage().toProto3Json() as String;
   }
 
   String getUndelegateMessageJson() {
-    return prettyJson(_getUndelegateMessage().toProto3Json());
+    return _getUndelegateMessage().toProto3Json() as String;
   }
 
   String getDelegateMessageJson() {
-    return prettyJson(_getDelegateMessage().toProto3Json());
+    return _getDelegateMessage().toProto3Json() as String;
   }
 
   Future<void> _sendMessage(

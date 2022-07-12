@@ -1,3 +1,4 @@
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -32,7 +33,7 @@ class StakingTransactionDataScreen extends StatelessWidget {
                   Spacing.large,
                 ),
                 child: PwText(
-                  data,
+                  prettyJson(data),
                   color: PwColor.secondary350,
                 ),
               ),
