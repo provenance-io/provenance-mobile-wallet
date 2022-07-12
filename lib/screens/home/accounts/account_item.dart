@@ -211,7 +211,7 @@ class LinkedAccount extends StatelessWidget {
           HorizontalSpacer.large(),
           Expanded(
             child: PwText(
-              'Linked to ‘$name’',
+              Strings.accountLinkedTo(name),
               style: PwTextStyle.footnote,
               color: PwColor.neutralNeutral,
             ),

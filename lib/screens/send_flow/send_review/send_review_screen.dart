@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -120,7 +121,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                   VerticalSpacer.largeX4(),
                   SendReviewCell(
                     Strings.sendTo,
-                    state.receivingAddress.abbreviateAddress(),
+                    abbreviateAddress(state.receivingAddress),
                   ),
                   PwDivider(
                     indent: Spacing.xLarge,
@@ -181,7 +182,7 @@ class SendReviewPageState extends State<SendReviewPage> {
         builder: (context) => SendSuccessScreen(
           date: DateTime.now(),
           totalAmount: total,
-          addressTo: addressTo.abbreviateAddress(),
+          addressTo: abbreviateAddress(addressTo),
         ),
       ).then((value) => _bloc!.complete());
     }).catchError((err) {

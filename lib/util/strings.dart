@@ -28,16 +28,6 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return replaceAll(RegExp(r'[^\d]+'), '');
   }
-
-  String abbreviateAddress() {
-    const left = 3;
-    const right = 8;
-    const dots = '...';
-
-    return length > left + dots.length + right
-        ? '${substring(0, left)}$dots${substring(length - right)}'
-        : this;
-  }
 }
 
 class Strings {
@@ -170,6 +160,7 @@ class Strings {
   static const accountMenuItemViewInvite = 'View Invitation Details';
   static String numAssets(int numAssets) =>
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
+  static String accountLinkedTo(String name) => 'Linked to ‘$name’';
 
   // Account Item
   static const select = 'Select';
@@ -281,6 +272,7 @@ class Strings {
   static const multiSigCreationStatusPending = 'Invitation Pending';
   static const multiSigCreationStatusActionRequired = 'Action Required';
   static const multiSigCreationStatusSelf = 'Self';
+  static const multiSigCreationStatusGetStatusError = 'Failed to get status';
 
   // Multi-Sig Invite
   static const multiSigInviteCosignerSelf = 'Self';

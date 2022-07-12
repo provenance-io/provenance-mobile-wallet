@@ -70,6 +70,7 @@ class MultiSigService with ClientCoinMixin {
                 publicKeyHex: e.publicKey,
                 inviteUuid: e.inviteUuid,
                 coin: coin,
+                signerOrder: e.signerOrder,
               ),
             )
             .toList(),
@@ -107,6 +108,7 @@ class MultiSigService with ClientCoinMixin {
         publicKeyHex: data.publicKey,
         coin: publicKey.coin,
         inviteUuid: data.inviteUuid,
+        signerOrder: data.signerOrder,
       );
     }
 
@@ -149,6 +151,7 @@ class MultiSigService with ClientCoinMixin {
                       publicKeyHex: e.publicKey,
                       inviteUuid: e.inviteUuid,
                       coin: coin,
+                      signerOrder: e.signerOrder,
                     ),
                   )
                   .toList(),
@@ -203,6 +206,7 @@ class MultiSigService with ClientCoinMixin {
                   publicKeyHex: e.publicKey,
                   inviteUuid: e.inviteUuid,
                   coin: coin,
+                  signerOrder: e.signerOrder,
                 ))
             .toList(),
         signersRequired: data.threshold,
@@ -216,6 +220,7 @@ class MultiSigService with ClientCoinMixin {
     required String? publicKeyHex,
     required String inviteUuid,
     required Coin coin,
+    required int signerOrder,
   }) {
     PublicKey? publicKey;
     if (publicKeyHex != null) {
@@ -225,6 +230,7 @@ class MultiSigService with ClientCoinMixin {
     return MultiSigSigner(
       publicKey: publicKey,
       inviteId: inviteUuid,
+      signerOrder: signerOrder,
     );
   }
 }
