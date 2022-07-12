@@ -215,21 +215,27 @@ extension ValidatorSortingStateExtension on ValidatorSortingState {
   }
 
   List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
-    switch (this) {
-      case ValidatorSortingState.votingPower:
-        validators.sort((a, b) => a.votingPower.compareTo(b.votingPower));
-        break;
-      case ValidatorSortingState.delegators:
-        validators.sort((a, b) => a.delegators.compareTo(b.delegators));
-        break;
-      case ValidatorSortingState.commission:
-        validators.sort((a, b) => a.rawCommission.compareTo(b.rawCommission));
-        break;
-      case ValidatorSortingState.alphabetically:
-        return validators
-          ..sort((a, b) =>
-              a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase()));
-    }
-    return validators.reversed.toList();
+    validators.sort((a, b) {
+      int sort;
+      switch (this) {
+        case ValidatorSortingState.votingPower:
+          sort = b.votingPower.compareTo(a.votingPower);
+          break;
+        case ValidatorSortingState.delegators:
+          sort = b.delegators.compareTo(a.delegators);
+          break;
+        case ValidatorSortingState.commission:
+          sort = b.rawCommission.compareTo(a.rawCommission);
+          break;
+        case ValidatorSortingState.alphabetically:
+          sort = 0;
+          break;
+      }
+      if (sort != 0) {
+        return sort;
+      }
+      return a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase());
+    });
+    return validators.toList();
   }
 }
