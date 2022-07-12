@@ -36,6 +36,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
 

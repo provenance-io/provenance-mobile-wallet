@@ -67,6 +67,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 

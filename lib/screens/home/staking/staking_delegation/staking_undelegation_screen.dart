@@ -61,6 +61,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
