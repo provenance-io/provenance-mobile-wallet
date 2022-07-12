@@ -614,6 +614,7 @@ class Strings {
   static const stakingConfirmDefault = "(Default)";
   static const stakingConfirmBack = "Back";
   static const stakingConfirmSign = "Sign";
+  static const starPositiveNumber = '*Positive number';
 
   // Staking delegate
   static const stakingDelegateWarningAccountLockTitle =
@@ -626,7 +627,7 @@ class Strings {
       "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
   static const stakingDelegateAvailableBalance = "Available HASH Balance";
   static const stakingDelegateAmountToDelegate = "Amount to Delegate*";
-  static const stakingDelegateConfirmHash = "hash";
+  static const stakingDelegateConfirmHash = "HASH";
   static const stakingDelegateCurrentDelegation = "Current Delegation";
   static const stakingDelegateDetails = "Details";
   static const stakingDelegateEnterAmountToDelegate =

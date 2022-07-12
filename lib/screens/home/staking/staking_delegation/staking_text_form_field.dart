@@ -5,6 +5,7 @@ class StakingTextFormField extends StatelessWidget {
   final String hint;
   final TextEditingController textEditingController;
   final Function? submit;
+  final ScrollController? scrollController;
   final bool shouldAutovalidate;
 
   const StakingTextFormField({
@@ -13,6 +14,7 @@ class StakingTextFormField extends StatelessWidget {
     required this.textEditingController,
     this.shouldAutovalidate = true,
     this.submit,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -28,6 +30,22 @@ class StakingTextFormField extends StatelessWidget {
           submit!();
         }
       },
+      onTap: () async {
+        if (scrollController == null) {
+          return;
+        }
+        await Future.delayed(
+          Duration(
+            milliseconds: 575,
+          ),
+        );
+
+        await scrollController!.animateTo(
+          scrollController!.position.maxScrollExtent,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.decelerate,
+        );
+      },
       autovalidateMode: shouldAutovalidate
           ? AutovalidateMode.onUserInteraction
           : AutovalidateMode.disabled,
@@ -36,7 +54,9 @@ class StakingTextFormField extends StatelessWidget {
           return Strings.starRequired;
         }
         final number = num.tryParse(value);
-        return null == number || number.isNegative ? "*positive number" : null;
+        return null == number || number.isNegative
+            ? Strings.starPositiveNumber
+            : null;
       },
       decoration: InputDecoration(
         hintText: hint,

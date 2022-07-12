@@ -43,6 +43,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   late final StakingDelegationBloc _bloc;
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -113,6 +114,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
             ),
           ),
           body: ListView(
+            controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: Spacing.large),
             children: [
               VerticalSpacer.largeX3(),
@@ -135,10 +137,11 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 context: context,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.withHash(
                 title: Strings.stakingDelegateAvailableBalance,
-                value:
+                hashString:
                     '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
+                context: context,
               ),
               PwListDivider.alternate(),
               VerticalSpacer.largeX3(),
@@ -152,6 +155,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                   child: StakingTextFormField(
                     hint: Strings.stakingDelegateEnterAmountToDelegate,
                     textEditingController: _textEditingController,
+                    scrollController: _scrollController,
                   ),
                 ),
               ),
