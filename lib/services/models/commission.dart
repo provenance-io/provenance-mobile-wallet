@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/services/validator_service/dtos/commission_dto.dart';
-import 'package:provenance_wallet/util/extensions/int_extensions.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Commission {
@@ -64,13 +64,18 @@ class Commission {
   }
 
   String get formattedBondedTokens {
-    var tokens = bondedTokensCount.nhashToHash(fractionDigits: 7);
-    return '$tokens HASH';
+    return Strings.stakingConfirmHashAmount(
+        nHashToHash(BigInt.from(bondedTokensCount), fractionDigits: 7)
+            .toString());
   }
 
   String get formattedRewards {
-    var rewards =
-        commissionRewardsAmount.nhashToHash(fractionDigits: 7).split('.');
-    return '${rewards[0].formatNumber()}.${rewards[1]} HASH';
+    var rewards = nHashToHash(
+            BigInt.tryParse(commissionRewardsAmount) ?? BigInt.zero,
+            fractionDigits: 7)
+        .toString()
+        .split('.');
+    return Strings.stakingConfirmHashAmount(
+        '${rewards[0].formatNumber()}.${rewards[1]}');
   }
 }
