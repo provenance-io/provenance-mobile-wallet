@@ -16,7 +16,7 @@ import 'package:provenance_wallet/services/validator_service/validator_service.d
 class DefaultValidatorService extends ValidatorService
     with ClientNotificationMixin, ClientCoinMixin {
   String get _validatorServiceBasePath =>
-      '/service-mobile-wallet/external/api/v1/validators/recent';
+      '/service-mobile-wallet/external/api/v1/explorer';
 
   @override
   Future<List<ProvenanceValidator>> getRecentValidators(
@@ -25,8 +25,7 @@ class DefaultValidatorService extends ValidatorService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/validators/recent?page=$pageNumber&count=50&status=all',
+      '$_validatorServiceBasePath/validators?count=50',
       converter: (json) {
         if (json is String) {
           return <ProvenanceValidator>[];
@@ -62,8 +61,7 @@ class DefaultValidatorService extends ValidatorService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/delegations?page=$pageNumber&count=30',
+      '$_validatorServiceBasePath/delegations/$provenanceAddress?page=$pageNumber&count=30',
       converter: (json) {
         if (json is String) {
           return <Delegation>[];
@@ -98,8 +96,7 @@ class DefaultValidatorService extends ValidatorService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/accounts/$provenanceAddress/rewards',
+      '$_validatorServiceBasePath/rewards/$provenanceAddress',
       converter: (json) {
         var dto = RewardsTotalDto.fromJson(json);
 
@@ -128,8 +125,7 @@ class DefaultValidatorService extends ValidatorService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/validators/$validatorAddress',
+      '$_validatorServiceBasePath/validators/$validatorAddress',
       converter: (json) {
         var dto = DetailedValidatorDto.fromJson(json);
 
@@ -149,8 +145,7 @@ class DefaultValidatorService extends ValidatorService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/validators/$validatorAddress/commission',
+      '$_validatorServiceBasePath/validators/$validatorAddress/commission',
       converter: (json) {
         var dto = CommissionDto.fromJson(json);
 

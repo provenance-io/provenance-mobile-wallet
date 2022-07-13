@@ -610,7 +610,8 @@ class Strings {
   static const stakingConfirmAmount = "Amount";
   static const stakingConfirmHash = "hash";
   static const stakingConfirmData = "Data";
-  static const stakingConfirmGasAdjustment = "Gas Adjustment (default: 1.25)";
+  static const stakingConfirmGasAdjustment = "Gas Adjustment";
+  static const stakingConfirmDefault = "(Default)";
   static const stakingConfirmBack = "Back";
   static const stakingConfirmSign = "Sign";
 
@@ -665,12 +666,30 @@ class Strings {
   // Staking Delegation Bloc
   static const stakingDelegationBlocBack = "Back";
   static const stakingDelegationBlocClaimRewards = "Claim Rewards";
+  static const stakingConfirmClaimRewardsDetails = "Claim Rewards Details";
 
   // Staking Success Screen
   static const stakingSuccessSuccess = "SUCCESS";
   static String stakingSuccessSuccessful(String delegationType) =>
       '$delegationType successful!';
 
+  static String stakingConfirmHashAmount(String amount) => '$amount HASH';
+
   // Staking Confirm Rewards Screen
   static const stakingConfirmRewardClaim = "Claim";
+  static const stakingConfirmRewardsAvailable = "Rewards Available";
+
+  // Confirm Undelegate Screen
+  static const stakingConfirmUndelegationDetails = "Undelegation Details";
+  static const stakingConfirmAmountToUndelegate = "Amount to Undelegate";
+  static const stakingConfirmNewTotalDelegation = "New Total Delegation";
+
+  // Confirm Redelegate Screen
+  static const stakingConfirmRedelegationDetails = "Redelegation Details";
+  static const stakingConfirmAmountToRedelegate = "Amount to Redelegate";
+
+  // Confirm Delegate Screen
+  static const stakingConfirmDelegating = "Delegating";
+  static const stakingConfirmDelegationDetails = "Delegation Details";
+  static const stakingConfirmAmountToDelegate = "Amount to Delegate";
 }

@@ -92,7 +92,9 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                       validator: validator,
                       delegation: details.delegation,
                       commission: commission,
+                      rewards: details.rewards,
                     ),
+                    VerticalSpacer.largeX3(),
                   ],
                 ),
               );

@@ -8,11 +8,12 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class ConfirmClaimRewardsScreen extends StatelessWidget {
-  const ConfirmClaimRewardsScreen({
+class ConfirmUndelegateScreen extends StatelessWidget {
+  const ConfirmUndelegateScreen({
     Key? key,
   }) : super(key: key);
 
@@ -28,13 +29,16 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         if (details == null) {
           return Container();
         }
-
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
             final data = '''{
   "delegatorAddress": "${details.account.publicKey!.address}",
   "validatorAddress": "${details.validator.operatorAddress}",
+  "amount": {
+    "denom": "nhash",
+    "amount": "${hashToNHash(details.hashDelegated)}"
+  }
 }''';
             get<StakingFlowBloc>().showTransactionData(data);
           },
@@ -42,19 +46,21 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             ModalLoadingRoute.showLoading('', context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
-            await _sendTransaction(
-                gasAdjustment, details.selectedDelegationType, context);
+            await _sendTransaction(bloc, details, gasAdjustment, context);
           },
-          signButtonTitle: Strings.stakingDelegationBlocClaimRewards,
+          signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
-            DetailsHeader(title: Strings.stakingConfirmClaimRewardsDetails),
+            DetailsHeader(title: Strings.stakingConfirmUndelegationDetails),
             PwListDivider.alternate(),
-            VerticalSpacer.large(),
-            PwText(
-              Strings.stakingRedelegateFrom,
-              color: PwColor.neutral200,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: Spacing.small,
+              ),
+              child: PwText(
+                Strings.stakingRedelegateFrom,
+                color: PwColor.neutral200,
+              ),
             ),
-            VerticalSpacer.small(),
             ValidatorCard(
               moniker: details.validator.moniker,
               imgUrl: details.validator.imgUrl,
@@ -70,9 +76,16 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmRewardsAvailable,
-              hashString: details.reward?.formattedAmount ??
-                  Strings.stakingManagementNoHash,
+              title: Strings.stakingConfirmAmountToUndelegate,
+              hashString: details.hashFormatted,
+              context: context,
+            ),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmNewTotalDelegation,
+              hashString: Strings.stakingConfirmHashAmount(
+                  (details.delegation!.hashAmount - details.hashDelegated)
+                      .toString()),
               context: context,
             ),
           ],
@@ -82,24 +95,30 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
   }
 
   Future<void> _sendTransaction(
+    StakingDelegationBloc bloc,
+    StakingDelegationDetails details,
     double? gasAdjustment,
-    SelectedDelegationType selected,
     BuildContext context,
   ) async {
+    final selected = details.selectedDelegationType;
     try {
-      await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
+      await bloc.doUndelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
       get<StakingFlowBloc>().showTransactionSuccess(selected);
     } catch (err) {
-      ModalLoadingRoute.dismiss(context);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: err.toString(),
-          );
-        },
-      );
+      await _showErrorModal(err, context);
     }
+  }
+
+  Future<void> _showErrorModal(Object error, BuildContext context) async {
+    ModalLoadingRoute.dismiss(context);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return ErrorDialog(
+          error: error.toString(),
+        );
+      },
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class StakingManagement extends StatelessWidget {
@@ -13,10 +15,12 @@ class StakingManagement extends StatelessWidget {
     required this.validator,
     required this.delegation,
     required this.commission,
+    required this.rewards,
   }) : super(key: key);
   final DetailedValidator validator;
   final Delegation? delegation;
   final Commission commission;
+  final Rewards? rewards;
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +117,14 @@ class StakingManagement extends StatelessWidget {
                       child: PwOutlinedButton(
                         SelectedDelegationType.claimRewards.dropDownTitle,
                         onPressed: () {
-                          get<StakingFlowBloc>()
-                              .showClaimRewardsReview(validator);
+                          Reward? reward;
+                          if (rewards != null) {
+                            reward = rewards!.rewards.firstOrNull;
+                          }
+                          get<StakingFlowBloc>().showClaimRewardsReview(
+                            validator,
+                            reward,
+                          );
                         },
                       ),
                     )

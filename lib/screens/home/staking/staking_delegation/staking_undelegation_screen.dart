@@ -43,11 +43,10 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
     _bloc = StakingDelegationBloc(
-      widget.delegation,
-      widget.validator,
-      "",
-      SelectedDelegationType.undelegate,
-      widget.account,
+      delegation: widget.delegation,
+      validator: widget.validator,
+      selectedDelegationType: SelectedDelegationType.undelegate,
+      account: widget.account,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();

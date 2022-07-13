@@ -25,7 +25,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = 1.25;
+  double _gasEstimate = 1.25; // TODO: Replace this with a constant
 
   @override
   Widget build(BuildContext context) {
@@ -36,37 +36,32 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
         centerTitle: true,
         title: PwText(
           widget.appBarTitle,
-          style: PwTextStyle.subhead,
+          style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
-        leading: Padding(
-          padding: EdgeInsets.only(left: 21),
-          child: Flexible(
-            child: IconButton(
-              icon: PwIcon(
-                PwIcons.back,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        leading: Flexible(
+          child: IconButton(
+            icon: PwIcon(
+              PwIcons.back,
             ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 21),
-            child: PwTextButton(
-              minimumSize: Size(
-                80,
-                50,
-              ),
-              onPressed: () {
-                widget.onDataClick();
-              },
-              child: PwText(
-                Strings.stakingConfirmData,
-                style: PwTextStyle.body,
-              ),
+          PwTextButton(
+            minimumSize: Size(
+              80,
+              50,
+            ),
+            onPressed: () {
+              widget.onDataClick();
+            },
+            child: PwText(
+              Strings.stakingConfirmData,
+              style: PwTextStyle.footnote,
+              underline: true,
             ),
           ),
         ],
@@ -74,14 +69,13 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
           children: [
             ...widget.children,
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
+            PwListDivider.alternate(),
             PwSlider(
               title: Strings.stakingConfirmGasAdjustment,
-              startingValue: 1.25,
+              startingValue: 1.25, // TODO: Replace this with a constant
               min: 0,
               max: 5,
               onValueChanged: (value) {
@@ -90,28 +84,22 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                 });
               },
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            PwListDivider.alternate(),
+            VerticalSpacer.largeX3(),
+            Expanded(child: Container()),
+            PwButton(
+              onPressed: () {
+                widget.onTransactionSign(_gasEstimate);
+              },
+              child: PwText(
+                widget.signButtonTitle,
+                softWrap: false,
+                overflow: TextOverflow.fade,
+                color: PwColor.neutralNeutral,
+                style: PwTextStyle.body,
+              ),
             ),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Flexible(
-                  child: PwButton(
-                    onPressed: () {
-                      widget.onTransactionSign(_gasEstimate);
-                    },
-                    child: PwText(
-                      widget.signButtonTitle,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
-                  ),
-                )),
+            VerticalSpacer.largeX3(),
           ],
         ),
       ),

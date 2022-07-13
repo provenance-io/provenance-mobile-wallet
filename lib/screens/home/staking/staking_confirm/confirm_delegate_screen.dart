@@ -1,9 +1,12 @@
+import 'package:decimal/decimal.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
@@ -48,65 +51,37 @@ class ConfirmDelegateScreen extends StatelessWidget {
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
-            DetailsItem(
-              title: Strings.stakingConfirmDelegatorAddress,
-              endChild: Flexible(
-                child: PwText(
-                  details.account.publicKey!.address.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
+            DetailsHeader(title: Strings.stakingConfirmDelegating),
+            PwListDivider.alternate(),
+            VerticalSpacer.large(),
+            ValidatorCard(
+              moniker: details.validator.moniker,
+              imgUrl: details.validator.imgUrl,
+              description: details.validator.description,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            DetailsHeader(title: Strings.stakingConfirmDelegationDetails),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingDelegateCurrentDelegation,
+              hashString: details.delegation?.displayDenom ??
+                  Strings.stakingConfirmHashAmount("0"),
+              context: context,
             ),
-            DetailsItem(
-              title: Strings.stakingConfirmValidatorAddress,
-              endChild: Flexible(
-                child: PwText(
-                  details.validator.operatorAddress.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmAmountToDelegate,
+              hashString: Strings.stakingConfirmHashAmount(
+                  details.hashDelegated.toString()),
+              context: context,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.stakingConfirmDenom,
-              endChild: Flexible(
-                child: PwText(
-                  details.asset?.denom ?? Strings.stakingConfirmHash,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.stakingConfirmAmount,
-              endChild: Flexible(
-                child: PwText(
-                  hashToNHash(details.hashDelegated).toString(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmNewTotalDelegation,
+              hashString: Strings.stakingConfirmHashAmount(
+                  ((details.delegation?.hashAmount ?? Decimal.zero) +
+                          details.hashDelegated)
+                      .toString()),
+              context: context,
             ),
           ],
         );
@@ -120,23 +95,13 @@ class ConfirmDelegateScreen extends StatelessWidget {
     double? gasAdjustment,
     BuildContext context,
   ) async {
-    final selected = details.selectedDelegationType;
-    if (SelectedDelegationType.delegate == selected) {
-      try {
-        await bloc.doDelegate(gasAdjustment);
-        ModalLoadingRoute.dismiss(context);
-        get<StakingFlowBloc>().showTransactionSuccess(selected);
-      } catch (err) {
-        await _showErrorModal(err, context);
-      }
-    } else {
-      try {
-        await bloc.doUndelegate(gasAdjustment);
-        ModalLoadingRoute.dismiss(context);
-        get<StakingFlowBloc>().showTransactionSuccess(selected);
-      } catch (err) {
-        await _showErrorModal(err, context);
-      }
+    try {
+      await bloc.doDelegate(gasAdjustment);
+      ModalLoadingRoute.dismiss(context);
+      get<StakingFlowBloc>()
+          .showTransactionSuccess(details.selectedDelegationType);
+    } catch (err) {
+      await _showErrorModal(err, context);
     }
   }
 

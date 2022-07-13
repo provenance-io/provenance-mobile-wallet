@@ -7,8 +7,13 @@ BigInt hashToNHash(Decimal hash) {
   return toBase(hash, _hashExponent);
 }
 
-Decimal nHashToHash(BigInt nHash) {
-  return toDisplay(nHash, _hashExponent);
+Decimal nHashToHash(BigInt nHash, {int? fractionDigits}) {
+  var decimal = toDisplay(nHash, _hashExponent);
+  if (fractionDigits == null) {
+    return decimal;
+  }
+  return Decimal.tryParse(decimal.toStringAsFixed(fractionDigits)) ??
+      Decimal.zero;
 }
 
 BigInt toBase(Decimal display, int exponent) {

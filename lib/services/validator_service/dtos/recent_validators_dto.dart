@@ -7,12 +7,12 @@ part 'recent_validators_dto.g.dart';
 class RecentValidatorsDto {
   RecentValidatorsDto({
     this.pages,
-    this.totalCount,
+    this.total,
     this.results,
   });
 
   final int? pages;
-  final int? totalCount;
+  final int? total;
   final List<RecentValidatorDto>? results;
 
   // ignore: member-ordering

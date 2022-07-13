@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/services/validator_service/dtos/reward_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/rewards_dto.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class Rewards {
   Rewards({required RewardsDto dto})
@@ -36,4 +37,9 @@ class Reward {
   final String denom;
   final String pricePerToken;
   final String totalBalancePrice;
+
+  String get formattedAmount {
+    var tokens = amount.nhashToHash(fractionDigits: 7).split('.');
+    return '${tokens[0].formatNumber()}.${tokens[1]} HASH';
+  }
 }

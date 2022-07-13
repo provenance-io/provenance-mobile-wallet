@@ -4,6 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
@@ -57,80 +59,56 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
-            DetailsItem(
-              title: Strings.stakingConfirmDelegatorAddress,
-              endChild: Flexible(
-                child: PwText(
-                  details.account.publicKey!.address.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
+            DetailsHeader(title: Strings.stakingConfirmRedelegationDetails),
+            PwListDivider.alternate(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: Spacing.small,
+              ),
+              child: PwText(
+                Strings.stakingRedelegateFrom,
+                color: PwColor.neutral200,
               ),
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            ValidatorCard(
+              moniker: details.validator.moniker,
+              imgUrl: details.validator.imgUrl,
+              description: details.validator.description,
             ),
-            DetailsItem(
-              title: Strings.stakingConfirmValidatorSource,
-              endChild: Flexible(
-                child: PwText(
-                  details.delegation.sourceAddress.abbreviateAddress(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: Spacing.small,
+              ),
+              child: PwText(
+                Strings.stakingRedelegateTo,
+                color: PwColor.neutral200,
               ),
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            ValidatorCard(
+              moniker: details.toRedelegate!.moniker,
+              imgUrl: details.toRedelegate!.imgUrl,
             ),
-            DetailsItem(
-              title: Strings.stakingConfirmValidatorDestination,
-              endChild: Flexible(
-                child: PwText(
-                  details.toRedelegate?.addressId.abbreviateAddress() ?? "",
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
+            VerticalSpacer.largeX3(),
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingDelegateCurrentDelegation,
+              hashString: details.delegation.displayDenom,
+              context: context,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmAmountToRedelegate,
+              hashString: Strings.stakingConfirmHashAmount(
+                  details.hashRedelegated.toString()),
+              context: context,
             ),
-            DetailsItem(
-              title: Strings.stakingConfirmDenom,
-              endChild: Flexible(
-                child: PwText(
-                  Strings.stakingConfirmHash,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.stakingConfirmAmount,
-              endChild: Flexible(
-                child: PwText(
-                  hashToNHash(details.hashRedelegated).toString(),
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  color: PwColor.neutralNeutral,
-                  style: PwTextStyle.body,
-                ),
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
+            PwListDivider.alternate(),
+            DetailsItem.withHash(
+              title: Strings.stakingConfirmNewTotalDelegation,
+              hashString: Strings.stakingConfirmHashAmount(
+                  (details.delegation.hashAmount - details.hashRedelegated)
+                      .toString()),
+              context: context,
             ),
           ],
         );

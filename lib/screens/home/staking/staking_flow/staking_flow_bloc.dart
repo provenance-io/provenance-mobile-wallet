@@ -4,6 +4,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
+import 'package:provenance_wallet/services/models/rewards.dart';
 
 class StakingFlowBloc implements StakingFlowNavigator {
   final StakingFlowNavigator _navigator;
@@ -18,8 +19,9 @@ class StakingFlowBloc implements StakingFlowNavigator {
   }
 
   @override
-  Future<void> showClaimRewardsReview(DetailedValidator validator) async {
-    _navigator.showClaimRewardsReview(validator);
+  Future<void> showClaimRewardsReview(
+      DetailedValidator validator, Reward? reward) async {
+    _navigator.showClaimRewardsReview(validator, reward);
   }
 
   @override
