@@ -12,14 +12,19 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_confirm_screen.dar
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_create_or_join_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_join_link_screen.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_recover_screen.dart';
 import 'package:provenance_wallet/screens/pin/confirm_pin.dart';
 import 'package:provenance_wallet/screens/pin/create_pin.dart';
+import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 
 abstract class AddAccountFlowNavigator {
   AddAccountFlowNavigator._();
@@ -38,13 +43,17 @@ abstract class AddAccountFlowNavigator {
   void showRecoverPassphraseEntry(int currentStep, int totalSteps);
   void showMultiSigCreateOrJoin();
   void showMultiSigJoinLink();
-  void showMultiSigConnect(int currentStep, int totalSteps);
+  void showMultiSigScanQrCode();
+  void showMultiSigConnect({int? currentStep, int? totalSteps});
+  void showMultiSigRecover();
   void showMultiSigAccountName(int currentStep, int totalSteps);
   void showMultiSigCosigners(FieldMode mode,
       [int? currentStep, int? totalSteps]);
   void showMultiSigSignatures(FieldMode mode,
       [int? currentStep, int? totalSteps]);
   void showMultiSigConfirm(int currentStep, int totalSteps);
+  void showMultiSigInviteReviewFlow(
+      String inviteId, MultiSigRemoteAccount remoteAccount);
   void endFlow(Account? createdAccount);
 }
 
@@ -257,13 +266,38 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  void showMultiSigConnect(int currentStep, int totalSteps) {
+  Future<void> showMultiSigScanQrCode() async {
+    final link = await showPage<String?>(
+      (context) => QRCodeScanner(
+        isValidCallback: (e) async => parseInviteLinkData(e) != null,
+      ),
+    );
+
+    if (link != null) {
+      await _bloc.submitMultiSigJoinLink(
+        link,
+        AddAccountScreen.multiSigJoinScanQrCode,
+      );
+    }
+  }
+
+  @override
+  void showMultiSigConnect({int? currentStep, int? totalSteps}) {
     showPage(
       (context) => MultiSigConnectScreen(
         onAccount: _bloc.submitMultiSigConnect,
         enableCreate: true,
         currentStep: currentStep,
         totalSteps: totalSteps,
+      ),
+    );
+  }
+
+  @override
+  void showMultiSigRecover() {
+    showPage(
+      (context) => MultiSigRecoverScreen(
+        bloc: _bloc,
       ),
     );
   }
@@ -303,5 +337,18 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
         bloc: _bloc,
       ),
     );
+  }
+
+  @override
+  void showMultiSigInviteReviewFlow(
+      String inviteId, MultiSigRemoteAccount multiSigRemoteAccount) async {
+    final multiAccount = await showPage<MultiAccount?>(
+      (context) => MultiSigInviteReviewFlow(
+        inviteId: inviteId,
+        multiSigRemoteAccount: multiSigRemoteAccount,
+      ),
+    );
+
+    _bloc.submitMultiSigAccount(multiAccount);
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// All the Icons for Figure Tech Wallet. Imported from Figma SVGs.
+/// All the Icons for Provenance Blockchain Wallet. Imported from Figma SVGs.
 ///
 /// TODO: Remove these classes in favor of icon data:
 /// Ideally, we can deprecate [PwIcon] by creating a custom font using
 /// http://fluttericon.com and simply using the icons as IconData, like so:
 /// ```dart
-/// Icon(FigureIcons.creditCard);
+/// Icon(ProvenanceIcons.account);
 /// ```
 ///
 
@@ -35,11 +35,16 @@ class PwIcons {
   static const String link = 'link';
   static const String linked = "linked";
   static const String warn = 'warn';
+  static const String warnCircle = 'warn_circle';
   static const String plus = 'plus';
   static const String minus = 'minus';
   static const String edit = 'edit';
   static const String circleChecked = 'circle_checked';
   static const String circleUnchecked = 'circle_unchecked';
+  static const String viewMore = "view_more";
+  static const String coinsOutline = "coins_outline";
+  static const String gear = "gear";
+  static const String sort = "sort";
 }
 
 class PwIcon extends StatelessWidget {

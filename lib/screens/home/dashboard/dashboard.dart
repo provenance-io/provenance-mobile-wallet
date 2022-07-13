@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -9,7 +8,6 @@ import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/connection_details_modal.dart';
-import 'package:provenance_wallet/screens/home/explorer/explorer_screen.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
@@ -19,6 +17,7 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -204,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
                       Row(
                         children: [
                           PwText(
-                            accountAddress.abbreviateAddress(),
+                            abbreviateAddress(accountAddress),
                             key: Dashboard.keyAccountAddressText,
                             style: PwTextStyle.body,
                           ),
@@ -264,22 +263,6 @@ class _DashboardState extends State<Dashboard> {
                     style: PwTextStyle.title,
                   ),
                   Expanded(child: Container()),
-                  PwButton(
-                    minimumWidth: 40,
-                    minimumHeight: 30,
-                    child: PwIcon.only(
-                      PwIcons.provenance,
-                      height: 20,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
-                    onPressed: () async {
-                      final account =
-                          await get<AccountService>().getSelectedAccount();
-                      Navigator.of(context).push(ExplorerScreen(
-                        account: account!,
-                      ).route());
-                    },
-                  ),
                 ],
               ),
             ),

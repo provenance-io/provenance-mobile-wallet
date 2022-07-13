@@ -9,8 +9,8 @@ class BondedTokensDto {
     this.total,
     this.denom,
   });
-  final String? count;
-  final String? total;
+  final int? count;
+  final int? total;
   final String? denom;
 
   // ignore: member-ordering

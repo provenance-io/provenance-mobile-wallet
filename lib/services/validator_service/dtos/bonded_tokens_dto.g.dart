@@ -8,8 +8,8 @@ part of 'bonded_tokens_dto.dart';
 
 BondedTokensDto _$BondedTokensDtoFromJson(Map<String, dynamic> json) =>
     BondedTokensDto(
-      count: json['count'] as String?,
-      total: json['total'] as String?,
+      count: json['count'] as int?,
+      total: json['total'] as int?,
       denom: json['denom'] as String?,
     );
 

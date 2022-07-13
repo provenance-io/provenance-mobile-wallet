@@ -5,19 +5,20 @@ part 'multi_sig_signer_dto.g.dart';
 @JsonSerializable()
 class MultiSigSignerDto {
   MultiSigSignerDto({
-    required this.signerUuid,
     required this.inviteUuid,
-    required this.originalSigner,
-    this.publicKey,
+    required this.signerUuid,
+    required this.signerOrder,
     this.address,
+    this.publicKey,
     this.redeemDate,
   });
 
-  final String signerUuid;
   final String inviteUuid;
-  final bool originalSigner;
-  final String? publicKey;
+  final String signerUuid;
+  final int signerOrder;
+
   final String? address;
+  final String? publicKey;
   final String? redeemDate;
 
   // ignore: member-ordering

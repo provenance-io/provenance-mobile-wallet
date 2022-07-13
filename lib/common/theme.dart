@@ -191,8 +191,10 @@ class ProvenanceThemeData {
   // Other
   static const Color _provenanceLogo = Color(0xFF3F80F3);
   static const Color _error = Color(0xFFED6E74);
+  static const Color _negative350 = Color(0xFFE01B25);
   static const Color _notice350 = Color(0xFFF4B601);
   static const Color _notice800 = Color(0xFF140F00);
+  static const Color _positive300 = Color(0xFF5AE70D);
 
   // ----- PROVENANCE TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
@@ -280,6 +282,7 @@ class ProvenanceThemeData {
     fontSize: 14,
     fontWeight: FontWeight.w700,
     letterSpacing: 14 * 0.04,
+    height: 22.4 / 14,
   );
   static const TextStyle _bodySmall = TextStyle(
     fontFamily: 'GothicA1',
@@ -444,8 +447,10 @@ extension CustomColorScheme on ColorScheme {
   Color get secondary300 => ProvenanceThemeData._secondary300;
   Color get secondary250 => ProvenanceThemeData._secondary250;
   Color get error => ProvenanceThemeData._error;
+  Color get negative350 => ProvenanceThemeData._negative350;
   Color get notice350 => ProvenanceThemeData._notice350;
   Color get notice800 => ProvenanceThemeData._notice800;
+  Color get positive300 => ProvenanceThemeData._positive300;
 }
 
 extension CustomTextTheme on TextTheme {

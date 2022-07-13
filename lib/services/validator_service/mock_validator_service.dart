@@ -1,6 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
@@ -62,12 +62,11 @@ class MockValidatorService extends ValidatorService {
 
   Commission _getValidatorCommission() {
     return Commission.fake(
-        bondedTokensCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        bondedTokensCount: faker.randomGenerator.integer(99999999),
         bondedTokensDenom: 'nhash',
-        selfBondedCount: faker.randomGenerator.fromCharSet('0123456789', 20),
+        selfBondedCount: faker.randomGenerator.integer(99999999),
         selfBondedDenom: 'nhash',
-        delegatorBondedCount:
-            faker.randomGenerator.fromCharSet('0123456789', 20),
+        delegatorBondedCount: faker.randomGenerator.integer(99999999),
         delegatorBondedDenom: 'nhash',
         delegatorCount: faker.randomGenerator.integer(20, min: 2),
         totalShares: faker.randomGenerator.fromCharSet('0123456789', 20),
@@ -154,9 +153,9 @@ class MockValidatorService extends ValidatorService {
         delegators: faker.randomGenerator.integer(13, min: 1),
         status: faker.randomGenerator.element(ValidatorStatus.values),
         uptime: faker.randomGenerator.decimal(scale: 100, min: 90),
-        bondedTokensCount: faker.randomGenerator.integer(9999999).toString(),
+        bondedTokensCount: faker.randomGenerator.integer(9999999),
         bondedTokensDenom: 'nhash',
-        bondedTokensTotal: '$_tokenTotal',
+        bondedTokensTotal: _tokenTotal,
         votingPowerCount: faker.randomGenerator.integer(9999999),
         votingPowerTotal: _tokenTotal,
         hr24Change: faker.randomGenerator.integer(9999).toString(),

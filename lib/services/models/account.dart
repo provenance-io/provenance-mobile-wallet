@@ -75,7 +75,7 @@ class MultiAccount with Diagnosticable implements Account {
     required this.remoteId,
     required this.cosignerCount,
     required this.signaturesRequired,
-    required this.inviteLinks,
+    required this.inviteIds,
   });
 
   @override
@@ -98,7 +98,7 @@ class MultiAccount with Diagnosticable implements Account {
 
   final int signaturesRequired;
 
-  final List<String> inviteLinks;
+  final List<String> inviteIds;
 
   @override
   int get hashCode => Object.hashAll([
@@ -109,7 +109,7 @@ class MultiAccount with Diagnosticable implements Account {
         remoteId,
         cosignerCount,
         signaturesRequired,
-        inviteLinks,
+        inviteIds,
       ]);
 
   @override
@@ -122,7 +122,7 @@ class MultiAccount with Diagnosticable implements Account {
         other.remoteId == remoteId &&
         other.cosignerCount == cosignerCount &&
         other.signaturesRequired == signaturesRequired &&
-        other.inviteLinks == inviteLinks;
+        other.inviteIds == inviteIds;
   }
 
   @override

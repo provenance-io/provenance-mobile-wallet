@@ -8,7 +8,8 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required this.endChild,
-    this.headerStyle = PwTextStyle.body,
+    this.color,
+    this.style = PwTextStyle.body,
   }) : super(key: key);
 
   DetailsItem.fromStrings({
@@ -16,19 +17,78 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required String value,
-    this.headerStyle = PwTextStyle.body,
+    this.color,
+    this.style = PwTextStyle.body,
   }) : super(key: key) {
     endChild = PwText(
       value,
-      style: PwTextStyle.body,
       textAlign: TextAlign.end,
+      style: style,
+    );
+  }
+
+  DetailsItem.alternateStrings({
+    Key? key,
+    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    required this.title,
+    required String value,
+    this.color = PwColor.neutral200,
+    this.style = PwTextStyle.footnote,
+  }) : super(key: key) {
+    endChild = PwText(
+      value,
+      style: style,
+    );
+  }
+
+  DetailsItem.withRowChildren({
+    Key? key,
+    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    required this.title,
+    required List<Widget> children,
+    this.color = PwColor.neutral200,
+    this.style = PwTextStyle.footnote,
+  }) : super(key: key) {
+    endChild = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
+    );
+  }
+
+  DetailsItem.withHash({
+    Key? key,
+    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    required this.title,
+    required String hashString,
+    required BuildContext context,
+    this.color = PwColor.neutral200,
+    this.style = PwTextStyle.footnote,
+  }) : super(key: key) {
+    endChild = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PwIcon(
+          PwIcons.hashLogo,
+          size: 24,
+          color: Theme.of(context).colorScheme.neutralNeutral,
+        ),
+        HorizontalSpacer.small(),
+        PwText(
+          hashString,
+          overflow: TextOverflow.fade,
+          softWrap: false,
+          style: PwTextStyle.footnote,
+        ),
+      ],
     );
   }
 
   final String title;
   late final Widget endChild;
   final EdgeInsets? padding;
-  final PwTextStyle headerStyle;
+  final PwColor? color;
+
+  final PwTextStyle style;
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +102,17 @@ class DetailsItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: EdgeInsets.only(right: Spacing.medium),
-            child: PwText(
-              title,
-              style: headerStyle,
-            ),
+          PwText(
+            title,
+            style: style,
+            color: color,
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
               child: endChild,
             ),
-          )
+          ),
         ],
       ),
     );

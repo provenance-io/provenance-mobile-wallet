@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/screens/home/explorer/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/recent_validator_dto.dart';
 
 class ProvenanceValidator {
@@ -58,8 +58,8 @@ class ProvenanceValidator {
   final int? votingPowerTotal;
   final String commission;
   final double rawCommission;
-  final String? bondedTokensCount;
-  final String? bondedTokensTotal;
+  final int? bondedTokensCount;
+  final int? bondedTokensTotal;
   final String? bondedTokensDenom;
   final int delegators;
   final ValidatorStatus status;

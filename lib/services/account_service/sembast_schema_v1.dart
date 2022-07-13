@@ -87,7 +87,7 @@ class SembastMultiAccountModel {
     required this.remoteId,
     required this.cosignerCount,
     required this.signaturesRequired,
-    required this.inviteLinks,
+    required this.inviteIds,
   });
 
   final String name;
@@ -97,7 +97,7 @@ class SembastMultiAccountModel {
   final String remoteId;
   final int cosignerCount;
   final int signaturesRequired;
-  final List<String> inviteLinks;
+  final List<String> inviteIds;
 
   Map<String, dynamic> toRecord() => {
         'name': name,
@@ -107,7 +107,7 @@ class SembastMultiAccountModel {
         'remoteId': remoteId,
         'cosignerCount': cosignerCount,
         'signaturesRequired': signaturesRequired,
-        'inviteLinks': inviteLinks,
+        'inviteIds': inviteIds,
       };
 
   factory SembastMultiAccountModel.fromRecord(Map<String, dynamic> rec) =>
@@ -121,7 +121,7 @@ class SembastMultiAccountModel {
         remoteId: rec['remoteId'] as String,
         cosignerCount: rec['cosignerCount'] as int,
         signaturesRequired: rec['signaturesRequired'] as int,
-        inviteLinks: (rec['inviteLinks'] as List<dynamic>?)
+        inviteIds: (rec['inviteIds'] as List<dynamic>?)
                 ?.map((e) => e as String)
                 .toList() ??
             [],
@@ -141,6 +141,6 @@ class SembastMultiAccountModel {
         remoteId: remoteId,
         cosignerCount: cosignerCount,
         signaturesRequired: signaturesRequired,
-        inviteLinks: inviteLinks,
+        inviteIds: inviteIds,
       );
 }

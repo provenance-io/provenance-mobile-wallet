@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/validator_service/dtos/commission_dto.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Commission {
@@ -44,11 +45,11 @@ class Commission {
     required this.commissionMaxRate,
     required this.commissionMaxChangeRate,
   });
-  final String bondedTokensCount;
+  final int bondedTokensCount;
   final String bondedTokensDenom;
-  final String selfBondedCount;
+  final int selfBondedCount;
   final String selfBondedDenom;
-  final String delegatorBondedCount;
+  final int delegatorBondedCount;
   final String delegatorBondedDenom;
   final int delegatorCount;
   final String totalShares;
@@ -59,17 +60,19 @@ class Commission {
   final String commissionMaxChangeRate;
 
   String get formattedTotalShares {
-    return totalShares.split('.')[0].formatNumber();
+    return totalShares.formatNumber().split(".")[0];
   }
 
   String get formattedBondedTokens {
-    var tokens = bondedTokensCount.nhashToHash(fractionDigits: 7).split('.');
-    return '${tokens[0].formatNumber()}.${tokens[1]} hash';
+    return Strings.stakingConfirmHashAmount(
+        nHashToHash(BigInt.from(bondedTokensCount), fractionDigits: 7)
+            .toString());
   }
 
   String get formattedRewards {
-    var rewards =
-        commissionRewardsAmount.nhashToHash(fractionDigits: 7).split('.');
-    return '${rewards[0].formatNumber()}.${rewards[1]} hash';
+    var rewards = stringNHashToHash(commissionRewardsAmount, fractionDigits: 7)
+        .toString()
+        .formatNumber();
+    return Strings.stakingConfirmHashAmount(rewards);
   }
 }

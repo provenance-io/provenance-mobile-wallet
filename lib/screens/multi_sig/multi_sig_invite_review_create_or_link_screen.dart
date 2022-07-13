@@ -43,7 +43,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                       name: Strings.multiSigInviteReviewCreateOrLinkCreate,
                       desc: Strings.multiSigInviteReviewCreateOrLinkCreateDesc,
                       onPressed: () async {
-                        await _bloc.submitCreateNewAccount();
+                        await _bloc.showCreateNewAccount();
                       },
                     ),
                     VerticalSpacer.large(),
@@ -54,7 +54,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                       desc: Strings
                           .multiSigInviteReviewCreateOrLinkLinkExistingDesc,
                       onPressed: () {
-                        _bloc.submitLinkExistingAccount();
+                        _bloc.showLinkExistingAccount();
                       },
                     ),
                     VerticalSpacer.largeX4(),

@@ -173,7 +173,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
-          List<String>? inviteLinks}) =>
+          List<String>? inviteIds}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -183,7 +183,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
                 #remoteId: remoteId,
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
-                #inviteLinks: inviteLinks
+                #inviteIds: inviteIds
               }),
               returnValue: Future<_i14.MultiAccount?>.value())
           as _i7.Future<_i14.MultiAccount?>);

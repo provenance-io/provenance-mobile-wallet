@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/services/governance_service/dtos/proposal_dto.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Proposal {
@@ -40,10 +41,9 @@ class Proposal {
         currentDeposit = dto.timings!.deposit!.current!,
         neededDeposit = dto.timings!.deposit!.needed!,
         denomDeposit = dto.timings!.deposit!.denom!,
-        totalEligibleAmount = double.tryParse(dto
-                .timings!.voting!.params!.totalEligibleAmount!.amount!
-                .nhashToHash()) ??
-            0,
+        totalEligibleAmount = stringNHashToHash(
+                dto.timings!.voting!.params!.totalEligibleAmount!.amount!)
+            .toDouble(),
         quorumThreshold =
             double.tryParse(dto.timings!.voting!.params!.quorumThreshold!) ?? 0,
         passThreshold =
@@ -55,30 +55,25 @@ class Proposal {
         startTime = dto.timings!.votingTime!.startTime!,
         endTime = dto.timings!.votingTime!.endTime!,
         yesCount = dto.timings!.voting!.tally!.yes!.count!,
-        yesAmount = double.tryParse(dto
-                .timings!.voting!.tally!.yes!.amount!.amount!
-                .nhashToHash()) ??
-            0,
+        yesAmount =
+            stringNHashToHash(dto.timings!.voting!.tally!.yes!.amount!.amount!)
+                .toDouble(),
         noCount = dto.timings!.voting!.tally!.no!.count!,
-        noAmount = double.tryParse(dto
-                .timings!.voting!.tally!.no!.amount!.amount!
-                .nhashToHash()) ??
-            0,
+        noAmount =
+            stringNHashToHash(dto.timings!.voting!.tally!.no!.amount!.amount!)
+                .toDouble(),
         noWithVetoCount = dto.timings!.voting!.tally!.noWithVeto!.count!,
-        noWithVetoAmount = double.tryParse(dto
-                .timings!.voting!.tally!.noWithVeto!.amount!.amount!
-                .nhashToHash()) ??
-            0,
+        noWithVetoAmount = stringNHashToHash(
+                dto.timings!.voting!.tally!.noWithVeto!.amount!.amount!)
+            .toDouble(),
         abstainCount = dto.timings!.voting!.tally!.abstain!.count!,
-        abstainAmount = double.tryParse(dto
-                .timings!.voting!.tally!.abstain!.amount!.amount!
-                .nhashToHash()) ??
-            0,
+        abstainAmount = stringNHashToHash(
+                dto.timings!.voting!.tally!.abstain!.amount!.amount!)
+            .toDouble(),
         totalCount = dto.timings!.voting!.tally!.total!.count!,
-        totalAmount = double.tryParse(dto
-                .timings!.voting!.tally!.total!.amount!.amount!
-                .nhashToHash()) ??
-            0;
+        totalAmount = stringNHashToHash(
+                dto.timings!.voting!.tally!.total!.amount!.amount!)
+            .toDouble();
   final int proposalId;
   final String status;
   final String proposerAddress;
@@ -109,15 +104,15 @@ class Proposal {
   final double totalAmount;
 
   double get initialDepositFormatted {
-    return double.tryParse(initialDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
+    return stringNHashToHash(initialDeposit, fractionDigits: 2).toDouble();
   }
 
   double get currentDepositFormatted {
-    return double.tryParse(currentDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
+    return stringNHashToHash(currentDeposit, fractionDigits: 2).toDouble();
   }
 
   double get neededDepositFormatted {
-    return double.tryParse(neededDeposit.nhashToHash(fractionDigits: 2)) ?? 0;
+    return stringNHashToHash(neededDeposit, fractionDigits: 2).toDouble();
   }
 
   String get depositPercentage {

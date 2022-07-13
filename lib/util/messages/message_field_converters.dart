@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/util/denom.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 Object? convertAmount(Object? obj) {
@@ -16,10 +16,6 @@ Object? convertAmount(Object? obj) {
   }
 
   return amount;
-}
-
-String? convertAddress(Object? data) {
-  return data is String ? data.abbreviateAddress() : null;
 }
 
 String? convertPermissions(Object? data) {
