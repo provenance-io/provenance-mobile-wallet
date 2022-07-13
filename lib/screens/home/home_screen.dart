@@ -152,10 +152,17 @@ class HomeScreenState extends State<HomeScreen>
             child: TabBarView(
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
-              children: const [
+              children: [
                 DashboardTab(),
                 TransactionTab(),
-                ViewMoreTab(),
+                ViewMoreTab(
+                  onFlowCompletion: () {
+                    setState(() {
+                      _tabController.animateTo(0);
+                      _currentTabIndex = 0;
+                    });
+                  },
+                ),
               ],
             ),
           ),

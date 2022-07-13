@@ -37,6 +37,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
   late final StakingDelegationBloc _bloc;
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -106,6 +108,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+            controller: _scrollController,
             children: [
               VerticalSpacer.largeX3(),
               WarningSection(
@@ -165,6 +168,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                   child: StakingTextFormField(
                     hint: Strings.stakingUndelegateEnterAmount,
                     textEditingController: _textEditingController,
+                    scrollController: _scrollController,
                   ),
                 ),
               ),

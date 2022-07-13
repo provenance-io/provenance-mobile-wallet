@@ -95,45 +95,70 @@ class StakingDelegationBloc extends Disposable {
 
     await _sendMessage(
       gasAdjustment,
-      staking.MsgDelegate(
-        amount: proto.Coin(
-          denom: details.asset?.denom,
-          amount: hashToNHash(details.hashDelegated).toString(),
-        ),
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
-      ).toAny(),
+      _getDelegateMessage().toAny(),
     );
   }
 
   Future<void> doUndelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      staking.MsgUndelegate(
-        amount: proto.Coin(
-          denom: details.asset?.denom ?? 'nhash',
-          amount: details.hashDelegated.toString(),
-        ),
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
-      ).toAny(),
+      _getUndelegateMessage().toAny(),
     );
   }
 
   Future<void> claimRewards(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
     await _sendMessage(
       gasAdjustment,
-      MsgWithdrawDelegatorReward(
-        delegatorAddress: _account.publicKey!.address,
-        validatorAddress: details.validator.operatorAddress,
-      ).toAny(),
+      _getClaimRewardMessage().toAny(),
     );
+  }
+
+  staking.MsgDelegate _getDelegateMessage() {
+    final details = _stakingDelegationDetails.value;
+    return staking.MsgDelegate(
+      amount: proto.Coin(
+        denom: details.asset?.denom ?? 'nhash',
+        amount: hashToNHash(details.hashDelegated).toString(),
+      ),
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
+    );
+  }
+
+  staking.MsgUndelegate _getUndelegateMessage() {
+    final details = _stakingDelegationDetails.value;
+    return staking.MsgUndelegate(
+      amount: proto.Coin(
+        denom: details.asset?.denom ?? 'nhash',
+        amount: hashToNHash(details.hashDelegated).toString(),
+      ),
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
+    );
+  }
+
+  MsgWithdrawDelegatorReward _getClaimRewardMessage() {
+    final details = _stakingDelegationDetails.value;
+    return MsgWithdrawDelegatorReward(
+      delegatorAddress: _account.publicKey!.address,
+      validatorAddress: details.validator.operatorAddress,
+    );
+  }
+
+  String getClaimRewardJson() {
+    return _getClaimRewardMessage().toProto3Json() as String;
+  }
+
+  String getUndelegateMessageJson() {
+    return _getUndelegateMessage().toProto3Json() as String;
+  }
+
+  String getDelegateMessageJson() {
+    return _getDelegateMessage().toProto3Json() as String;
   }
 
   Future<void> _sendMessage(

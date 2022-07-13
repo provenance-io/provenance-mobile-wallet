@@ -5,7 +5,12 @@ import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ViewMoreTab extends StatefulWidget {
-  const ViewMoreTab({Key? key}) : super(key: key);
+  const ViewMoreTab({
+    Key? key,
+    required this.onFlowCompletion,
+  }) : super(key: key);
+
+  final Function onFlowCompletion;
 
   @override
   State<StatefulWidget> createState() => _ViewMoreTabState();
@@ -42,7 +47,8 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           child: _getLink(
                             PwIcons.coinsOutline,
                             Strings.staking,
-                            StakingScreen(),
+                            StakingScreen(
+                                onFlowCompletion: widget.onFlowCompletion),
                           ),
                         ),
                         Container(

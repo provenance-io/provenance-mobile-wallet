@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/util/extensions/list_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,8 +26,11 @@ class StakingScreenBloc extends PwPagingCache {
   final _validatorService = get<ValidatorService>();
   final Account _account;
 
-  StakingScreenBloc()
-      : _account = get<AccountService>().events.selected.value!,
+  final Function onFlowCompletion;
+
+  StakingScreenBloc({
+    required this.onFlowCompletion,
+  })  : _account = get<AccountService>().events.selected.value!,
         super(50);
 
   ValueStream<StakingDetails> get stakingDetails => _stakingDetails;
@@ -214,19 +218,27 @@ extension ValidatorSortingStateExtension on ValidatorSortingState {
   List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
     switch (this) {
       case ValidatorSortingState.votingPower:
-        validators.sort((a, b) => a.votingPower.compareTo(b.votingPower));
+        validators.sortDescendingWithFallback(
+          get: (v) => v.votingPower,
+          fallback: (v) => v.moniker,
+        );
         break;
       case ValidatorSortingState.delegators:
-        validators.sort((a, b) => a.delegators.compareTo(b.delegators));
+        validators.sortDescendingWithFallback(
+          get: (v) => v.delegators,
+          fallback: (v) => v.moniker,
+        );
         break;
       case ValidatorSortingState.commission:
-        validators.sort((a, b) => a.rawCommission.compareTo(b.rawCommission));
+        validators.sortDescendingWithFallback(
+          get: (v) => v.rawCommission,
+          fallback: (v) => v.moniker,
+        );
         break;
       case ValidatorSortingState.alphabetically:
-        return validators
-          ..sort((a, b) =>
-              a.moniker.toLowerCase().compareTo(b.moniker.toLowerCase()));
+        validators.sortAscendingBy((v) => v.moniker);
+        break;
     }
-    return validators.reversed.toList();
+    return validators.toList();
   }
 }

@@ -9,7 +9,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -33,15 +32,8 @@ class ConfirmDelegateScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.dropDownTitle,
           onDataClick: () {
-            final data = '''{
-  "delegatorAddress": "${details.account.publicKey!.address}",
-  "validatorAddress": "${details.validator.operatorAddress}",
-  "amount": {
-    "denom": "nhash",
-    "amount": "${hashToNHash(details.hashDelegated)}"
-  }
-}''';
-            get<StakingFlowBloc>().showTransactionData(data);
+            get<StakingFlowBloc>()
+                .showTransactionData(bloc.getDelegateMessageJson());
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading('', context);

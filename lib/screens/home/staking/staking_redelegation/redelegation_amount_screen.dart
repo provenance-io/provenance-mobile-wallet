@@ -25,6 +25,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
   late final TextEditingController _textEditingController;
   final StakingRedelegationBloc _bloc = get<StakingRedelegationBloc>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
 
@@ -88,6 +90,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                 ),
               ),
               body: ListView(
+                controller: _scrollController,
                 padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                 children: [
                   Column(
@@ -145,6 +148,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                           child: StakingTextFormField(
                             hint: Strings.stakingRedelegateEnterAmount,
                             textEditingController: _textEditingController,
+                            scrollController: _scrollController,
                           ),
                         ),
                       ),

@@ -90,22 +90,28 @@ class StakingRedelegationBloc extends Disposable {
     );
   }
 
+  staking.MsgBeginRedelegate _getRedelegateMessage() {
+    final details = _stakingRedelegationDetails.value;
+    return staking.MsgBeginRedelegate(
+        amount: proto.Coin(
+          denom: 'nhash',
+          amount: hashToNHash(details.hashRedelegated).toString(),
+        ),
+        delegatorAddress: _account.publicKey!.address,
+        validatorSrcAddress: details.delegation.sourceAddress,
+        validatorDstAddress: details.toRedelegate?.addressId ?? "");
+  }
+
+  String getRedelegateMessageJson() {
+    return _getRedelegateMessage().toProto3Json() as String;
+  }
+
   Future<void> doRedelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingRedelegationDetails.value;
-
     final body = proto.TxBody(
       messages: [
-        staking.MsgBeginRedelegate(
-                amount: proto.Coin(
-                  denom: 'nhash',
-                  amount: hashToNHash(details.hashRedelegated).toString(),
-                ),
-                delegatorAddress: _account.publicKey!.address,
-                validatorSrcAddress: details.delegation.sourceAddress,
-                validatorDstAddress: details.toRedelegate?.addressId ?? "")
-            .toAny(),
+        _getRedelegateMessage().toAny(),
       ],
     );
 
