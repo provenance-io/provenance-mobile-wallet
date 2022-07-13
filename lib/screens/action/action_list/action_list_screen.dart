@@ -17,7 +17,7 @@ class ActionListTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(Spacing.small),
       child: Text(
         "$label ($count)",
         textAlign: TextAlign.center,
@@ -68,7 +68,7 @@ class ActionListScreenState extends State<ActionListScreen>
               final state = snapshot.data!;
 
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(Spacing.small),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
