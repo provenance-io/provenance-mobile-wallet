@@ -60,7 +60,7 @@ class Commission {
   final String commissionMaxChangeRate;
 
   String get formattedTotalShares {
-    return totalShares.split('.')[0].formatNumber();
+    return totalShares.formatNumber().split(".")[0];
   }
 
   String get formattedBondedTokens {
@@ -70,12 +70,9 @@ class Commission {
   }
 
   String get formattedRewards {
-    var rewards = nHashToHash(
-            BigInt.tryParse(commissionRewardsAmount) ?? BigInt.zero,
-            fractionDigits: 7)
+    var rewards = stringNHashToHash(commissionRewardsAmount, fractionDigits: 7)
         .toString()
-        .split('.');
-    return Strings.stakingConfirmHashAmount(
-        '${rewards[0].formatNumber()}.${rewards[1]}');
+        .formatNumber();
+    return Strings.stakingConfirmHashAmount(rewards);
   }
 }

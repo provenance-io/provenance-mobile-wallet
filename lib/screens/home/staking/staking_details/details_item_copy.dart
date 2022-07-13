@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class DetailsItemCopy extends StatefulWidget {
@@ -53,7 +54,7 @@ class _DetailsItemCopyState extends State<DetailsItemCopy> {
                   children: [
                     if (!_isActive)
                       PwText(
-                        widget.dataToCopy.abbreviateAddress(),
+                        abbreviateAddress(widget.dataToCopy),
                         color: PwColor.neutral200,
                         style: PwTextStyle.footnote,
                       ),

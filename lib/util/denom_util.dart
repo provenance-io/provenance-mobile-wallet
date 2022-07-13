@@ -16,6 +16,14 @@ Decimal nHashToHash(BigInt nHash, {int? fractionDigits}) {
       Decimal.zero;
 }
 
+Decimal stringNHashToHash(String nHash, {int? fractionDigits}) {
+  final bigInt = BigInt.tryParse(nHash);
+  if (bigInt == null) {
+    return Decimal.zero;
+  }
+  return nHashToHash(bigInt, fractionDigits: fractionDigits);
+}
+
 BigInt toBase(Decimal display, int exponent) {
   if (display.scale > exponent) {
     throw ArgumentError.value(display, 'display',

@@ -1,7 +1,5 @@
 // ignore_for_file: member-ordering
 
-import 'package:decimal/decimal.dart';
-
 extension StringExtension on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${substring(1)}';
@@ -31,21 +29,13 @@ extension StringExtension on String {
     return replaceAll(RegExp(r'[^\d]+'), '');
   }
 
-
-  String nhashToHash({int? fractionDigits}) {
-    final decimal = (Decimal.parse(this) / Decimal.fromInt(10).pow(9))
-        .toDecimal(scaleOnInfinitePrecision: 9);
-    if (fractionDigits != null) {
-      return decimal.toStringAsFixed(fractionDigits);
-    }
-    return decimal.toString();
-  }
-
   String formatNumber() {
-    return replaceAllMapped(
+    var sections = split('.');
+    sections[0] = sections[0].replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     );
+    return sections.join('.');
   }
 }
 
