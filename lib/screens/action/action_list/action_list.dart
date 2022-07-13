@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -8,16 +7,12 @@ import 'package:provenance_wallet/util/strings.dart';
 /// a widget that represents an action group's state
 ///
 class ActionItemGroupStatus extends StatelessWidget {
-  static const selectedColor = Color.fromARGB(255, 0x01, 0x3C, 0x3B);
-  static const notSelectedColor = Color.fromARGB(255, 0x3E, 0x41, 0x51);
-
   static const selectedLabel = Strings.actionListSelected;
   static const basicLabel = Strings.actionListBasicAccount;
   static const multiSigLabel = Strings.actionListMultiSigAccount;
 
-  ActionItemGroupStatus({required ActionListGroup group, Key? key})
-      : color = (group.isSelected) ? selectedColor : notSelectedColor,
-        label = (group.isSelected)
+  ActionItemGroupStatus({required this.group, Key? key})
+      : label = (group.isSelected)
             ? selectedLabel
             : (group.isBasicAccount)
                 ? basicLabel
@@ -25,10 +20,16 @@ class ActionItemGroupStatus extends StatelessWidget {
         super(key: key);
 
   final String label;
-  final Color color;
+  final ActionListGroup group;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme as ProvenanceColorScheme;
+    final color = (group.isSelected)
+        ? colorScheme.actionListSelectedColor
+        : colorScheme.actionNotListSelectedColor;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration:
@@ -49,9 +50,10 @@ class ActionItemCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme as ProvenanceColorScheme;
 
     return Container(
-      color: const Color.fromARGB(255, 0x2B, 0x2F, 0x3A),
+      color: colorScheme.actionListCellBackground,
       padding: const EdgeInsets.fromLTRB(
           Spacing.large, Spacing.xLarge, Spacing.small, Spacing.xLarge),
       child: Row(
