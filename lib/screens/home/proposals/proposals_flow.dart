@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_tab.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
@@ -70,7 +70,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Widget createStartPage() => ProposalsTab();
+  Widget createStartPage() => ProposalsScreen();
 
   @override
   Future<void> showProposalDetails(

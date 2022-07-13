@@ -4,16 +4,16 @@ import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class ProposalsTab extends StatefulWidget {
-  const ProposalsTab({
+class ProposalsScreen extends StatefulWidget {
+  const ProposalsScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ProposalsTabState();
+  State<StatefulWidget> createState() => _ProposalsScreenState();
 }
 
-class ProposalsTabState extends State<ProposalsTab> {
+class _ProposalsScreenState extends State<ProposalsScreen> {
   late ProposalsBloc _bloc;
 
   @override
@@ -49,8 +49,8 @@ class ProposalsTabState extends State<ProposalsTab> {
                             Theme.of(context).colorScheme.neutral750,
                         elevation: 0.0,
                         title: PwText(
-                          Strings.proposalsTabProposals,
-                          style: PwTextStyle.subhead,
+                          Strings.governanceProposals,
+                          style: PwTextStyle.footnote,
                         ),
                         leading: IconButton(
                           icon: PwIcon(
