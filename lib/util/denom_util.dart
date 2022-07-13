@@ -7,8 +7,21 @@ BigInt hashToNHash(Decimal hash) {
   return toBase(hash, _hashExponent);
 }
 
-Decimal nHashToHash(BigInt nHash) {
-  return toDisplay(nHash, _hashExponent);
+Decimal nHashToHash(BigInt nHash, {int? fractionDigits}) {
+  var decimal = toDisplay(nHash, _hashExponent);
+  if (fractionDigits == null) {
+    return decimal;
+  }
+  return Decimal.tryParse(decimal.toStringAsFixed(fractionDigits)) ??
+      Decimal.zero;
+}
+
+Decimal stringNHashToHash(String nHash, {int? fractionDigits}) {
+  final bigInt = BigInt.tryParse(nHash);
+  if (bigInt == null) {
+    return Decimal.zero;
+  }
+  return nHashToHash(bigInt, fractionDigits: fractionDigits);
 }
 
 BigInt toBase(Decimal display, int exponent) {

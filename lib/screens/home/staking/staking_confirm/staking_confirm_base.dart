@@ -25,7 +25,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = 1.25;
+  double _gasEstimate = 1.25; // TODO: Replace this with a constant
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             PwListDivider.alternate(),
             PwSlider(
               title: Strings.stakingConfirmGasAdjustment,
-              startingValue: 1.25,
+              startingValue: 1.25, // TODO: Replace this with a constant
               min: 0,
               max: 5,
               onValueChanged: (value) {

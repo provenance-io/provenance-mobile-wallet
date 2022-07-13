@@ -120,7 +120,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         text: Strings
                             .multiSigInviteReviewDetailsChooseAccountButton,
                         onPressed: () {
-                          _bloc.submitChooseAccount();
+                          _bloc.showChooseAccount();
                         },
                       ),
                       VerticalSpacer.large(),

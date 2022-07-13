@@ -60,7 +60,7 @@ class MockAccountStorageServiceCore extends _i1.Mock
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
-          List<String>? inviteLinks}) =>
+          List<String>? inviteIds}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -70,7 +70,7 @@ class MockAccountStorageServiceCore extends _i1.Mock
                 #remoteId: remoteId,
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
-                #inviteLinks: inviteLinks
+                #inviteIds: inviteIds
               }),
               returnValue: Future<_i4.MultiAccount?>.value())
           as _i3.Future<_i4.MultiAccount?>);

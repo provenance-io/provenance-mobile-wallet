@@ -217,9 +217,9 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             }
 
             // Updated linked basic account
-            final linkedAccount = await _basicAccounts
-                .record(multiAccount.linkedAccount.id)
-                .get(tx);
+            final linkedAccountRef =
+                _basicAccounts.record(multiAccount.linkedAccount.id);
+            final linkedAccount = await linkedAccountRef.get(tx);
 
             if (linkedAccount != null) {
               final linkedAccountModel =
@@ -227,7 +227,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
               final linkedAccountIds = linkedAccountModel.linkedAccountIds
                 ..remove(multiAccount.id);
 
-              await _basicAccounts.update(
+              await linkedAccountRef.update(
                 tx,
                 linkedAccountModel
                     .copyWith(
@@ -391,7 +391,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
-    required List<String> inviteLinks,
+    required List<String> inviteIds,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
@@ -407,7 +407,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
-      inviteLinks: inviteLinks,
+      inviteIds: inviteIds,
     );
 
     final id = await db.transaction((tx) async {
@@ -418,8 +418,8 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       );
 
       // Updated linked basic account
-      final linkedAccount =
-          await _basicAccounts.record(linkedAccountId).get(tx);
+      final linkedAccountRef = _basicAccounts.record(linkedAccountId);
+      final linkedAccount = await linkedAccountRef.get(tx);
       if (linkedAccount != null) {
         final linkedAccountModel =
             v1.SembastAccountModel.fromRecord(linkedAccount);
@@ -428,7 +428,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           ..toSet()
           ..toList();
 
-        await _basicAccounts.update(
+        await linkedAccountRef.update(
           tx,
           linkedAccountModel
               .copyWith(
@@ -525,7 +525,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       remoteId: model.remoteId,
       cosignerCount: model.cosignerCount,
       signaturesRequired: model.signaturesRequired,
-      inviteLinks: model.inviteLinks,
+      inviteIds: model.inviteIds,
     );
   }
 }

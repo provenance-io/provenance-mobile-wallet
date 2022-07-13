@@ -182,12 +182,11 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   ) async {
     get.registerSingleton(
       StakingDelegationBloc(
-        widget.selectedDelegation!,
-        validator,
-        "",
-        SelectedDelegationType.claimRewards,
-        widget.account,
-        reward,
+        delegation: widget.selectedDelegation!,
+        validator: validator,
+        selectedDelegationType: SelectedDelegationType.claimRewards,
+        account: widget.account,
+        reward: reward,
       ),
     );
     showPage(

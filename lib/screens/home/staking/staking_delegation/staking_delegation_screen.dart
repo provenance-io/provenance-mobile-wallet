@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -50,12 +51,12 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
     _bloc = StakingDelegationBloc(
-      widget.delegation,
-      widget.validator,
-      widget.commissionRate,
-      SelectedDelegationType.delegate,
-      widget.account,
-      widget.reward,
+      delegation: widget.delegation,
+      reward: widget.reward,
+      validator: widget.validator,
+      commissionRate: widget.commissionRate,
+      selectedDelegationType: SelectedDelegationType.delegate,
+      account: widget.account,
     );
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();
@@ -140,8 +141,10 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
               PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: Strings.stakingDelegateAvailableBalance,
-                hashString:
-                    '${details.asset?.amount.nhashToHash(fractionDigits: 7) ?? "0"} ${Strings.stakingDelegateConfirmHash}',
+                hashString: Strings.stakingConfirmHashAmount(stringNHashToHash(
+                        details.asset?.amount ?? "",
+                        fractionDigits: 7)
+                    .toString()),
                 context: context,
               ),
               PwListDivider.alternate(),

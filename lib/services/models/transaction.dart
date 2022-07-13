@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
+import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Transaction {
@@ -57,6 +58,7 @@ class Transaction {
   }
 
   String get displayFee {
-    return "${feeAmount.nhashToHash()} hash";
+    return Strings.stakingConfirmHashAmount(
+        stringNHashToHash(feeAmount).toString());
   }
 }

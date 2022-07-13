@@ -1,11 +1,15 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigCreationStatus extends StatefulWidget {
@@ -22,6 +26,16 @@ class MultiSigCreationStatus extends StatefulWidget {
 
 class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _accountService = get<AccountService>();
+  final _multiSigService = get<MultiSigService>();
+
+  late final Future<List<CosignerData>> _getCosignersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getCosignersFuture = _getCosigners();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +95,41 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                   ),
                   VerticalSpacer.large(),
                   FutureBuilder<List<CosignerData>>(
-                    initialData: const [],
-                    future: _getCosigners(),
+                    future: _getCosignersFuture,
                     builder: (context, snapshot) {
-                      final cosigners = snapshot.data!;
+                      final cosigners = snapshot.data;
+
+                      if (cosigners == null) {
+                        return Container(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      if (cosigners.isEmpty) {
+                        return PwText(
+                          Strings.multiSigCreationStatusGetStatusError,
+                          style: PwTextStyle.body,
+                          color: PwColor.negative350,
+                        );
+                      }
 
                       final widgets = <Widget>[];
                       for (var i = 0; i < cosigners.length; i++) {
                         final cosigner = cosigners[i];
 
-                        final description = cosigner.isSelf
-                            ? Strings.multiSigInviteCosignerSelf
-                            : null;
+                        String? description;
+                        if (cosigner.isSelf) {
+                          description = Strings.multiSigInviteCosignerSelf;
+                        } else if (cosigner.address != null) {
+                          description = abbreviateAddress(cosigner.address!);
+                        }
 
                         widgets.add(divider);
                         widgets.add(
                           _CoSigner(
                             number: i + 1,
-                            checked: cosigner.isSelf,
+                            address: cosigner.address,
                             description: description,
                             inviteLink: cosigner.inviteLink,
                           ),
@@ -140,23 +171,29 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
         await _accountService.getAccount(widget.accountId) as MultiAccount?;
 
     if (account != null) {
-      final linkedAccount = account.linkedAccount;
-      final self = CosignerData(
-        isSelf: true,
-        name: linkedAccount.name,
-        address: linkedAccount.publicKey.address,
+      final remoteAccount = await _multiSigService.getAccount(
+        remoteId: account.remoteId,
+        signerPublicKey: account.linkedAccount.publicKey,
       );
 
-      cosigners.add(self);
+      if (remoteAccount != null) {
+        final coin = remoteAccount.coin;
 
-      final cosignerCount = account.cosignerCount;
-      for (var i = 1; i < cosignerCount; i++) {
-        cosigners.add(
-          CosignerData(
-            isSelf: false,
-            inviteLink: account.inviteLinks[i - 1],
-          ),
-        );
+        final signers = remoteAccount.signers;
+        signers.sortAscendingBy((e) => e.signerOrder);
+
+        for (var signer in remoteAccount.signers) {
+          final inviteLink = createInviteLink(signer.inviteId, coin);
+          final signerAddress = signer.publicKey?.address;
+
+          cosigners.add(
+            CosignerData(
+              isSelf: signerAddress == account.linkedAccount.publicKey.address,
+              inviteLink: inviteLink,
+              address: signer.publicKey?.address,
+            ),
+          );
+        }
       }
     }
 
@@ -181,19 +218,21 @@ class CosignerData {
 class _CoSigner extends StatelessWidget {
   const _CoSigner({
     required this.number,
-    required this.checked,
+    required this.address,
     this.inviteLink,
     this.description,
     Key? key,
   }) : super(key: key);
 
-  final bool checked;
+  final String? address;
   final int number;
   final String? description;
   final String? inviteLink;
 
   @override
   Widget build(BuildContext context) {
+    final checked = address != null;
+
     return TextButton(
       onPressed: checked || inviteLink == null
           ? null

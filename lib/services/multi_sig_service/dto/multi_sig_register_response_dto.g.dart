@@ -9,17 +9,21 @@ part of 'multi_sig_register_response_dto.dart';
 MultiSigRegisterResponseDto _$MultiSigRegisterResponseDtoFromJson(
         Map<String, dynamic> json) =>
     MultiSigRegisterResponseDto(
-      name: json['name'] as String,
-      walletUuid: json['walletUuid'] as String,
-      inviteLinks: (json['inviteLinks'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      address: json['address'] as String,
+      inviteUuid: json['inviteUuid'] as String,
+      publicKey: json['publicKey'] as String,
+      redeemDate: json['redeemDate'] as String,
+      signerOrder: json['signerOrder'] as int,
+      signerUuid: json['signerUuid'] as String,
     );
 
 Map<String, dynamic> _$MultiSigRegisterResponseDtoToJson(
         MultiSigRegisterResponseDto instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'walletUuid': instance.walletUuid,
-      'inviteLinks': instance.inviteLinks,
+      'address': instance.address,
+      'inviteUuid': instance.inviteUuid,
+      'publicKey': instance.publicKey,
+      'redeemDate': instance.redeemDate,
+      'signerOrder': instance.signerOrder,
+      'signerUuid': instance.signerUuid,
     };
