@@ -74,7 +74,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
-    required List<String> inviteLinks,
+    required List<String> inviteIds,
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
@@ -84,7 +84,7 @@ class AccountStorageServiceImp implements AccountStorageService {
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
-      inviteLinks: inviteLinks,
+      inviteIds: inviteIds,
     );
 
     return details;

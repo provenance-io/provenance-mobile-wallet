@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_deta
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_landing.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class MultiSigInviteReviewFlowNavigator {
@@ -15,22 +16,20 @@ abstract class MultiSigInviteReviewFlowNavigator {
 
   void showReviewInvitationDetails();
   void showChooseAccount();
-  Future<Account?> showCreateNewAccount();
+  Future<BasicAccount?> showCreateLinkedAccount();
   void showLinkExistingAccount();
-  void endFlow();
+  void endFlow(MultiAccount? account);
 }
 
 class MultiSigInviteReviewFlow extends FlowBase {
   const MultiSigInviteReviewFlow({
-    required this.name,
-    required this.cosignerCount,
-    required this.signaturesRequired,
+    required this.inviteId,
+    required this.multiSigRemoteAccount,
     Key? key,
   }) : super(key: key);
 
-  final String name;
-  final int cosignerCount;
-  final int signaturesRequired;
+  final String inviteId;
+  final MultiSigRemoteAccount multiSigRemoteAccount;
 
   @override
   State<StatefulWidget> createState() => MultiSigInviteReviewFlowState();
@@ -46,6 +45,8 @@ class MultiSigInviteReviewFlowState
     super.initState();
 
     bloc = MultiSigInviteReviewFlowBloc(
+      inviteId: widget.inviteId,
+      remoteAccount: widget.multiSigRemoteAccount,
       navigator: this,
     );
 
@@ -63,16 +64,16 @@ class MultiSigInviteReviewFlowState
 
   @override
   Widget createStartPage() => MultiSigInviteReviewLanding(
-        name: widget.name,
+        name: widget.multiSigRemoteAccount.name,
       );
 
   @override
   void showReviewInvitationDetails() {
     showPage(
       (context) => MultiSigInviteReviewDetails(
-        name: widget.name,
-        cosignerCount: widget.cosignerCount,
-        signaturesRequired: widget.signaturesRequired,
+        name: widget.multiSigRemoteAccount.name,
+        cosignerCount: widget.multiSigRemoteAccount.signers.length,
+        signaturesRequired: widget.multiSigRemoteAccount.signersRequired,
       ),
     );
   }
@@ -85,13 +86,13 @@ class MultiSigInviteReviewFlowState
   }
 
   @override
-  void endFlow() {
-    completeFlow(null);
+  void endFlow(MultiAccount? account) {
+    completeFlow(account);
   }
 
   @override
-  Future<Account?> showCreateNewAccount() async {
-    final account = await showPage<Account?>(
+  Future<BasicAccount?> showCreateLinkedAccount() async {
+    final account = await showPage<BasicAccount?>(
       (context) => AddAccountFlow(
         origin: AddAccountOrigin.accounts,
         includeMultiSig: false,

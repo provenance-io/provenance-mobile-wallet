@@ -21,6 +21,7 @@ enum PwColor {
   notice800,
   primaryP500,
   negative,
+  negative350,
   positive,
   positive2,
   neutral,
@@ -80,6 +81,8 @@ mixin PwColorMixin on Widget {
           return (theme.colorScheme as ProvenanceColorScheme).graphNegative;
         }
         return null;
+      case PwColor.negative350:
+        return theme.colorScheme.negative350;
       case PwColor.positive:
         if (theme.colorScheme is ProvenanceColorScheme) {
           return (theme.colorScheme as ProvenanceColorScheme).graphPositive;
