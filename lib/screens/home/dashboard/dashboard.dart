@@ -17,6 +17,7 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -202,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
                       Row(
                         children: [
                           PwText(
-                            accountAddress.abbreviateAddress(),
+                            abbreviateAddress(accountAddress),
                             key: Dashboard.keyAccountAddressText,
                             style: PwTextStyle.body,
                           ),

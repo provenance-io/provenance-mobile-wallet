@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -113,7 +114,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               endChild: Row(
                 children: [
                   PwText(
-                    transaction.hash.abbreviateAddress(),
+                    abbreviateAddress(transaction.hash),
                     style: PwTextStyle.body,
                   ),
                   HorizontalSpacer.large(),

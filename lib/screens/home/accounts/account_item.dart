@@ -20,29 +20,27 @@ class AccountTitleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
+      spacing: Spacing.large,
+      runSpacing: Spacing.small,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         PwText(
           name,
           style: PwTextStyle.bodyBold,
           overflow: TextOverflow.fade,
           color: PwColor.neutralNeutral,
-          softWrap: false,
+          softWrap: true,
         ),
-        Container(
-          margin: EdgeInsets.only(
-            left: Spacing.large,
+        Chip(
+          label: PwText(
+            _accountKindName(kind),
+            style: PwTextStyle.footnote,
+            color: isSelected ? PwColor.secondary350 : PwColor.neutral250,
           ),
-          child: Chip(
-            label: PwText(
-              _accountKindName(kind),
-              style: PwTextStyle.footnote,
-              color: isSelected ? PwColor.secondary350 : PwColor.neutral250,
-            ),
-            backgroundColor: isSelected
-                ? Theme.of(context).colorScheme.secondary700
-                : Theme.of(context).colorScheme.neutral600,
-          ),
+          backgroundColor: isSelected
+              ? Theme.of(context).colorScheme.secondary700
+              : Theme.of(context).colorScheme.neutral600,
         ),
       ],
     );
@@ -154,7 +152,7 @@ class AccountDescriptionRow extends StatelessWidget {
             style: PwTextStyle.bodySmall,
             color: PwColor.neutralNeutral,
             overflow: TextOverflow.fade,
-            softWrap: false,
+            softWrap: true,
           ),
         );
       },
@@ -211,10 +209,12 @@ class LinkedAccount extends StatelessWidget {
             size: 24,
           ),
           HorizontalSpacer.large(),
-          PwText(
-            'Linked to ‘$name’',
-            style: PwTextStyle.footnote,
-            color: PwColor.neutralNeutral,
+          Expanded(
+            child: PwText(
+              Strings.accountLinkedTo(name),
+              style: PwTextStyle.footnote,
+              color: PwColor.neutralNeutral,
+            ),
           ),
         ],
       ),
