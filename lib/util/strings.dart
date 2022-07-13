@@ -523,4 +523,31 @@ class Strings {
   static const cipherUnknownError = 'Unknown error.';
   static const cipherUpgradeError = 'An error occured during while upgrading.';
   static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
+
+  // NotificationList
+  static const notificationListEditLabel = 'Edit';
+  static const notificationListStatusLabel = 'Status Update';
+
+  // ActionList
+  static const actionListSelected = "Selected";
+  static const actionListBasicAccount = "Basic";
+  static const actionListMultiSigAccount = "Multi-Sig";
+
+  static const actionListAction = "Action";
+  static const actionListActions = "Actions";
+
+  // ActionListScreen strings
+  static const actionListActionsCellTitle = 'Actions';
+  static const actionListNotificationsCellTitle = 'Notifications';
+
+  static const actionListLabelApproveSession = 'Approve Session';
+  static const actionListLabelSignatureRequested = 'Signature Requested';
+  static const actionListLabelTransactionRequested = 'Transaction Requested';
+  static const actionListLabelUnknown = 'Unknown';
+
+  static const actionListSubLabelActionRequired = 'Action Required';
+
+  static const deleteConfirmationDeleteTitle = 'Delete';
+  static const deleteConfirmationTitle = 'Confirm Delete';
+  static const deleteConfirmationMessage = 'Do you want to delete these Items';
 }

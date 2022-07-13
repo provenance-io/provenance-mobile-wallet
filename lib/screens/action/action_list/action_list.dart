@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 ///
 /// a widget that represents an action group's state
@@ -10,9 +11,9 @@ class ActionItemGroupStatus extends StatelessWidget {
   static const selectedColor = Color.fromARGB(255, 0x01, 0x3C, 0x3B);
   static const notSelectedColor = Color.fromARGB(255, 0x3E, 0x41, 0x51);
 
-  static const selectedLabel = "Selected";
-  static const basicLabel = "Basic";
-  static const multiSigLabel = "Multi-Sig";
+  static const selectedLabel = Strings.actionListSelected;
+  static const basicLabel = Strings.actionListBasicAccount;
+  static const multiSigLabel = Strings.actionListMultiSigAccount;
 
   ActionItemGroupStatus({required ActionListGroup group, Key? key})
       : color = (group.isSelected) ? selectedColor : notSelectedColor,
@@ -106,7 +107,7 @@ class ActionGroupHeaderCell extends StatelessWidget {
               Text(group.label),
               VerticalSpacer.xSmall(),
               Text(
-                  "${group.subLabel} • ${group.items.length} Action${group.items.length != 1 ? "s" : ""}"),
+                  "${group.subLabel} • ${group.items.length} ${group.items.length != 1 ? Strings.actionListActions : Strings.actionListAction}"),
             ],
           )),
           ActionItemGroupStatus(

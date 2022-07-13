@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ActionListTab extends StatelessWidget {
   const ActionListTab({required this.label, required this.count, Key? key})
@@ -76,9 +77,10 @@ class ActionListScreenState extends State<ActionListScreen>
                     TabBar(
                       tabs: [
                         ActionListTab(
-                            label: "Actions", count: state.actionGroups.length),
+                            label: Strings.actionListActionsCellTitle,
+                            count: state.actionGroups.length),
                         ActionListTab(
-                            label: "Notifications",
+                            label: Strings.actionListNotificationsCellTitle,
                             count: state.notificationGroups.length),
                       ],
                       controller: _tabController,
@@ -87,7 +89,10 @@ class ActionListScreenState extends State<ActionListScreen>
                         child:
                             TabBarView(controller: _tabController, children: [
                       ActionList(groups: state.actionGroups),
-                      NotificationList(items: state.notificationGroups, onItemsDeleted: _onDeleteNotificationItems,)
+                      NotificationList(
+                        items: state.notificationGroups,
+                        onItemsDeleted: _onDeleteNotificationItems,
+                      )
                     ]))
                   ],
                 ),
@@ -95,13 +100,14 @@ class ActionListScreenState extends State<ActionListScreen>
             }));
   }
 
-  Future<void> _onDeleteNotificationItems(List<NotificationItem> deletedItems) async {
+  Future<void> _onDeleteNotificationItems(
+      List<NotificationItem> deletedItems) async {
     final delete = await PwDialog.showConfirmation(
       context,
-      cancelText: "Cancel",
-      confirmText: "Delete",
-      header: PwText("Confirm Delete"),
-      content: PwText("Do you want to delete these Items"),
+      cancelText: Strings.cancel,
+      confirmText: Strings.deleteConfirmationDeleteTitle,
+      header: PwText(Strings.deleteConfirmationTitle),
+      content: PwText(Strings.deleteConfirmationMessage),
     );
 
     if (!delete) {

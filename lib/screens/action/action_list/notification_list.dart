@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 const _checkBoxSize = 40.0;
 
@@ -154,14 +155,17 @@ class NotificationListState extends State<NotificationList>
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: const PwText("Status Update")),
+                        Expanded(
+                            child: const PwText(
+                                Strings.notificationListStatusLabel)),
                         ValueListenableBuilder<bool>(
                             valueListenable: _isEdittingController,
                             builder: (context, value, child) {
                               return (value)
                                   ? Container()
                                   : PwTextButton.shrinkWrap(
-                                      child: const PwText("Edit"),
+                                      child: const PwText(
+                                          Strings.notificationListEditLabel),
                                       onPressed: () {
                                         _isEdittingController.value =
                                             !_isEdittingController.value;

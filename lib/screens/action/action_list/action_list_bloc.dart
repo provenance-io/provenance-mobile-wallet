@@ -190,16 +190,16 @@ class ActionListBloc extends Disposable {
         items: queuedGroup.actionLookup.entries.map((entry) {
           String label;
           if (entry.value is WalletConnectSessionRequestData) {
-            label = "Approve Session";
+            label = Strings.actionListLabelApproveSession;
           } else if (entry.value is SignRequest) {
-            label = "Signature Requested";
+            label = Strings.actionListLabelSignatureRequested;
           } else if (entry.value is SendRequest) {
-            label = "Transaction Requested";
+            label = Strings.actionListLabelTransactionRequested;
           } else {
-            label = "Unknown";
+            label = Strings.actionListLabelUnknown;
           }
           return _WalletConnectActionItem(
-              label: label, subLabel: "Action Required", payload: entry.value);
+              label: label, subLabel: Strings.actionListSubLabelActionRequired, payload: entry.value);
         }).toList(),
       );
     }).toList();
