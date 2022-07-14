@@ -13,10 +13,10 @@ class VoteAnswerDto {
     this.VOTE_OPTION_NO_WITH_VETO,
   });
 
-  final int? VOTE_OPTION_YES;
-  final int? VOTE_OPTION_ABSTAIN;
-  final int? VOTE_OPTION_NO;
-  final int? VOTE_OPTION_NO_WITH_VETO;
+  final double? VOTE_OPTION_YES;
+  final double? VOTE_OPTION_ABSTAIN;
+  final double? VOTE_OPTION_NO;
+  final double? VOTE_OPTION_NO_WITH_VETO;
 
   // ignore: member-ordering
   factory VoteAnswerDto.fromJson(Map<String, dynamic> json) =>

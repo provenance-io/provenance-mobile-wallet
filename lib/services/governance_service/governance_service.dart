@@ -8,7 +8,6 @@ abstract class GovernanceService {
     Coin coin,
     int pageNumber,
   ) {
-    //https://service-explorer.test.provenance.io/api/v2/gov/proposals/all?count=30&page=1
     throw Strings.notImplementedMessage;
   }
 
@@ -16,7 +15,6 @@ abstract class GovernanceService {
     String address,
     Coin coin,
   ) {
-    // https://service-explorer.test.provenance.io/api/v2/gov/address/{address}/votes?count=50&page=1
     throw Strings.notImplementedMessage;
   }
 }
