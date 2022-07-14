@@ -383,7 +383,6 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitBackupComplete(BuildContext context) async {
     if (_origin == AddAccountOrigin.accounts) {
       ModalLoadingRoute.showLoading(
-        "",
         context,
       );
 
@@ -418,7 +417,6 @@ class AddAccountFlowBloc implements Disposable {
     required bool useBiometry,
   }) async {
     ModalLoadingRoute.showLoading(
-      "",
       context,
     );
 
@@ -457,7 +455,6 @@ class AddAccountFlowBloc implements Disposable {
     switch (_origin) {
       case AddAccountOrigin.accounts:
         ModalLoadingRoute.showLoading(
-          "",
           context,
         );
 
@@ -578,7 +575,7 @@ class AddAccountFlowBloc implements Disposable {
   }
 
   Future<void> submitMultiSigConfirm(BuildContext context) async {
-    ModalLoadingRoute.showLoading('', context);
+    ModalLoadingRoute.showLoading(context);
 
     final registration = await _multiSigService.create(
       name: _multiSigName.value,

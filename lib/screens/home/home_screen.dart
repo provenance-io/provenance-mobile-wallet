@@ -73,7 +73,7 @@ class HomeScreenState extends State<HomeScreen>
   void initState() {
     _bloc.isLoading.listen((e) {
       if (e) {
-        ModalLoadingRoute.showLoading("", context);
+        ModalLoadingRoute.showLoading(context);
       } else {
         ModalLoadingRoute.dismiss(context);
       }
@@ -234,7 +234,7 @@ class HomeScreenState extends State<HomeScreen>
       },
     );
 
-    ModalLoadingRoute.showLoading("", context);
+    ModalLoadingRoute.showLoading(context);
 
     await get<HomeBloc>()
         .sendMessageFinish(
@@ -275,7 +275,7 @@ class HomeScreenState extends State<HomeScreen>
       },
     );
 
-    ModalLoadingRoute.showLoading("", context);
+    ModalLoadingRoute.showLoading(context);
 
     await get<HomeBloc>()
         .signTransactionFinish(
