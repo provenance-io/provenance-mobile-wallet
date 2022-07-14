@@ -21,7 +21,13 @@ void main() {
     final nHash = BigInt.from(123456789);
     final hash = nHashToHash(nHash);
 
-    expect(hash, Decimal.parse('1.123456789'));
+    expect(hash, Decimal.parse('0.123456789'));
+  });
+
+  test('String to Decimal scales to decimal length', () {
+    final hash = stringNHashToHash('123456789', fractionDigits: 4);
+
+    expect(hash, Decimal.parse('0.1235'));
   });
 
   test('Decimal scale greater than exponent throws', () {
