@@ -42,7 +42,6 @@ class ModalLoadingState extends State<ModalLoading> {
       loadingMessage = newMessage;
     });
   }
-
 }
 
 const Duration _kDropdownMenuDuration = Duration(milliseconds: 300);
@@ -100,7 +99,7 @@ class ModalLoadingRoute extends PopupRoute {
     Duration? minDisplayTime,
   }) async {
     if (instance != null) {
-      instance?.loadingState.currentState?.updateMessage(message);
+      instance?.loadingState.currentState?.updateMessage("");
     } else {
       instance = ModalLoadingRoute(theme: Theme.of(context));
       Navigator.of(context, rootNavigator: true).push(instance!);
