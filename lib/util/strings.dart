@@ -5,30 +5,6 @@ extension StringExtension on String {
     return '${this[0].toUpperCase()}${substring(1)}';
   }
 
-  String displayPhone() {
-    if (length == 10) {
-      return '(${substring(0, 3)}) ${substring(3, 6)}-${substring(6, length)}';
-    }
-
-    return this;
-  }
-
-  double coinAmount() {
-    return double.parse(replaceAll(RegExp(r'[^\d\.]+'), '')) * 100;
-  }
-
-  double amount() {
-    return double.parse(removeNonDollarValue());
-  }
-
-  String removeNonDollarValue() {
-    return replaceAll(RegExp(r'[^\d\.]+'), '');
-  }
-
-  String sanitizePhoneNumber() {
-    return replaceAll(RegExp(r'[^\d]+'), '');
-  }
-
   String formatNumber() {
     var sections = split('.');
     sections[0] = sections[0].replaceAllMapped(
@@ -52,10 +28,7 @@ class Strings {
   static const biometry = 'Biometry';
   static const faceId = 'Face ID';
   static const touchId = 'Touch ID';
-  static const face = 'Face';
-  static const fingerPrint = 'Finger Print';
   static const cancel = 'Cancel';
-  static const settings = 'Settings';
 
   // Notifications
   static const String notifyServiceErrorTitle = 'Service Error';
@@ -96,18 +69,12 @@ class Strings {
   static String dashboardConnectionRequestDetails(String name) =>
       'Allow connection to $name';
 
-  static const loadingAssets = 'Loading Assets';
   static const dashboard = 'Dashboard';
   static const portfolioValue = 'Portfolio Value';
   static const send = 'Send';
   static const receive = 'Receive';
-  static const walletConnect = 'WalletConnect';
   static const myAssets = 'My Assets';
-  static String walletConnected(String? data) => 'Wallet connected: $data';
   static const disconnect = 'Disconnect';
-  static const loadingTransactions = 'Loading Transactions';
-  static const noTransactionsText =
-      'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
   static const globalSettings = "Global Settings";
   static const errorDisconnected = 'Disconnected';
@@ -118,18 +85,12 @@ class Strings {
   // QR Scanner
   static const qrScannerTitle = 'Scan QR Code';
 
-  // Profile Page
-  static const linkedServices = 'Linked Services';
+  // Settings Page
   static const security = 'Security';
   static const pinCode = 'Pin Code';
-  static const notifications = 'Notifications';
   static const general = 'General';
   static const aboutProvenanceBlockchain = 'About Provenance Blockchain';
-  static const faq = 'FAQ';
   static const moreInformation = 'More Information';
-  static const sendFeedback = 'Send Feedback';
-  static const contactUs = 'Contact Us';
-  static const policiesAndTerms = 'Policies & Terms';
   static const resetAccounts = 'Reset Accounts';
   static const resetAccountsAreYouSure =
       'Are you sure you wish to reset all accounts?';
@@ -159,7 +120,6 @@ class Strings {
   static const renameAccount = 'Rename Account';
   static const renameAccountDescription =
       'Please enter the new name you would like to call your account.';
-  static const renameAccountAccountName = 'Account Name';
   static const required = 'Required';
   static const starRequired = '*Required';
   static const confirm = 'Confirm';
@@ -217,8 +177,6 @@ class Strings {
 
   static String multiSigInviteReviewLandingDesc(String accountName) =>
       'You’re invited to join the "$accountName" Multi-Sig Wallet';
-  static const multiSigInviteReviewLandingInvitationButton =
-      'Review Invitation';
   static const multiSigInviteReviewLandingLearnMoreButton = 'Learn More';
 
   // Multi-Sig Invite Review Invitation Details
@@ -282,9 +240,6 @@ class Strings {
   static const multiSigCreationStatusDescription =
       'Share the QR code or invitation link with the co-signers joining this account. Each co-signer has to create their own recovery phrase once everyone accepts invitation.\n\nTo recover funds stored in a multi-sig account, you need the recovery phrase from each co-signer.';
   static const multiSigCreationStatusListHeading = 'Wallet Creation Status:';
-  static const multiSigCreationStatusPending = 'Invitation Pending';
-  static const multiSigCreationStatusActionRequired = 'Action Required';
-  static const multiSigCreationStatusSelf = 'Self';
   static const multiSigCreationStatusGetStatusError = 'Failed to get status';
 
   // Multi-Sig Invite
@@ -315,8 +270,6 @@ class Strings {
 
   // Confirm Pin
   static const verifyPinCode = 'Verify Pin Code';
-  static const confirmYourPinCodeReminder =
-      "Confirm your pin code. Make sure you remember it as you cannot recover it if you lose it.";
   static const yourPinDoesNotMatchPleaseTryAgain =
       "Your pin doesn't match. Please try again or go back and re-enter your pin.";
 
@@ -336,7 +289,6 @@ class Strings {
   static const useBiometryMessage =
       'Enable Face ID or Touch ID\non your device for faster, easier\naccess to your account.';
   static const enable = 'Enable';
-  static const pleaseWait = 'Please Wait';
   static const skipForNow = 'Skip for now';
 
   // PrepareRecoveryPhraseIntro
@@ -348,11 +300,9 @@ class Strings {
       'The only way to recover your account is with this recovery passphrase.';
   static const warningDoNotShare =
       'Do not share this passphrase with anyone as it grants full access to your account.';
-  static const iAmReady = "I'm ready to begin";
 
   // RecoverPassphraseEntry
   static const enterRecoveryPassphrase = 'Enter recovery passphrase';
-  static const recover = 'Recover';
   static String recoverPassphraseNetwork(String name) {
     return 'Network: $name';
   }
@@ -393,8 +343,6 @@ class Strings {
   static const sessionReject = 'Reject';
 
   // Transaction
-  static String transactionErrorUnsupportedMessage(String messageName) =>
-      'Unsupported message type: $messageName';
   static const transactionSuccessTitle = 'Success';
   static const transactionErrorTitle = 'Error';
 
@@ -410,7 +358,6 @@ class Strings {
   static const transactionFieldPlatform = 'Platform';
   static const transactionFieldFee = 'Gas Fee';
   static const transactionFieldMessage = 'Message';
-  static const transactionFieldMessageType = 'Msg. Type';
   static const transactionFieldTrue = 'Yes';
   static const transactionFieldFalse = 'No';
 
@@ -426,11 +373,8 @@ class Strings {
   // TransactionsList
   static const dropDownAllMessageTypes = "All Message Types";
   static const dropDownAllStatuses = "All Statuses";
-  static const buy = "Buy";
-  static const sell = "Sell";
 
   // TradeDetailsScreen
-  static const tradeDetailsTitle = "Trade Details";
   static const tradeDetailsAccount = "Account";
   static const tradeDetailsTransaction = "Transaction Hash";
   static const tradeDetailsResult = "Result";
@@ -465,7 +409,6 @@ class Strings {
   static const sendAmountTransactionLabel = "Transaction";
   static const sendAmountErrorTooManyDecimalPlaces = "too many decimal places";
   static const sendAmountErrorInsufficient = "Insufficient";
-  static const sendAmountErrorInvalidAmount = "is an invalid amount";
   static const sendAmountErrorGasEstimateNotReady =
       "The estimated fee is not ready";
 
@@ -484,8 +427,6 @@ class Strings {
   static const somethingWentWrong = 'Something went wrong.';
   static const okay = "Okay";
   static const serviceErrorTitle = 'SERVICE ERROR';
-  static const theSystemIsDown =
-      'Unfortunately our services are down at the moment. Please try again later.';
 
   // ConnectionDetails
   static const connectionDetails = "Connection Details";
@@ -517,11 +458,6 @@ class Strings {
   static const sendDate = "Date";
   static const sendTo = "To";
   static const sendDone = "Done";
-
-  // PushNotification
-  static const channelTitle = "High Importance Notifications";
-  static const channelDescription =
-      "This channel is used for important notifications.";
 
   // Cipher errors
   static const cipherErrorTitle = 'Cipher Error';
@@ -557,7 +493,6 @@ class Strings {
   static const stakingDetailsStatus = "Status";
   static const stakingDetailsCommissionInformation = "Commission Information";
   static const stakingDetailsAdditionalDetails = "Additional Details";
-  static const stakingDetailsValidatorDetails = "Validator Details";
   static const stakingDetailsButtonDelegate = "Delegate";
   static const stakingDetailsAddresses = "Addresses";
   static const stakingDetailsOperatorAddress = "Operator Address";
@@ -574,7 +509,6 @@ class Strings {
   static const stakingDetailsConsensusPubkey = "Consensus Pubkey";
   static const stakingDetailsConsensusPubkeyCopied = "Consensus Pubkey Copied";
   static const stakingDetailsJailedUntil = "Jailed Until";
-  static const stakingDetailsCommissionInfo = "Commission Info";
   static const stakingDetailsCommissionRate = "Commission Rate";
   static const stakingDetailsDelegators = "Delegators";
   static const stakingDetailsRewards = "Rewards";
@@ -583,27 +517,16 @@ class Strings {
   static const stakingDetailsTotalShares = "Total Shares";
   static const stakingDetailsCommissionRateRange = "Commission Rate Range";
   static const stakingDetailsValidatorTransactions = "Validator Transactions";
-  static const stakingDetailsReward = "Reward";
   static const stakingDetailsViewLess = "View Less";
 
   // Staking Management
-  static const stakingManagementDescription = "Description";
   static const stakingManagementMyDelegation = "My Delegation";
   static const stakingManagementNoHash = "-- HASH";
 
   // Staking Confirm
-  static const stakingConfirmDelegatorAddress = "Delegator Address";
-  static const stakingConfirmValidatorAddress = "Validator Address";
-  static const stakingConfirmValidatorSource = "Validator Source";
-  static const stakingConfirmValidatorDestination = "Validator Destination";
-  static const stakingConfirmDenom = "Denom";
-  static const stakingConfirmAmount = "Amount";
-  static const stakingConfirmHash = "hash";
   static const stakingConfirmData = "Data";
   static const stakingConfirmGasAdjustment = "Gas Adjustment";
   static const stakingConfirmDefault = "(Default)";
-  static const stakingConfirmBack = "Back";
-  static const stakingConfirmSign = "Sign";
   static const starPositiveNumber = '*Positive number';
 
   // Staking delegate
@@ -617,7 +540,6 @@ class Strings {
       "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
   static const stakingDelegateAvailableBalance = "Available HASH Balance";
   static const stakingDelegateAmountToDelegate = "Amount to Delegate*";
-  static const stakingDelegateConfirmHash = "HASH";
   static const stakingDelegateCurrentDelegation = "Current Delegation";
   static const stakingDelegateDetails = "Details";
   static const stakingDelegateEnterAmountToDelegate =
@@ -627,8 +549,6 @@ class Strings {
   static const stakingRedelegateRedelegate = "Redelegate";
   static const stakingRedelegateAvailableForRedelegation =
       "Available for Redelegation";
-  static const stakingRedelegateSelectForRedelegation =
-      "Select Validator for Redelegation";
   static const stakingRedelegateRedelegating = "Redelegating";
   static const stakingRedelegateFrom = "From";
   static const stakingRedelegateTo = "To";
@@ -667,12 +587,8 @@ class Strings {
 
   static String stakingConfirmHashAmount(String amount) => '$amount HASH';
 
-  // Staking Confirm Rewards Screen
-  static const stakingConfirmRewardClaim = "Claim";
-
-  // Proposals Tab
-  static const proposalsTabProposals = "Proposals";
-  static String proposalsTabVoted(String formattedVote) =>
+  // Proposals Screen
+  static String proposalsScreenVoted(String formattedVote) =>
       "Voted $formattedVote";
 
   // Proposal Details Screen
