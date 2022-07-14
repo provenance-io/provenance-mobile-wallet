@@ -53,7 +53,7 @@ class ProposalsBloc extends PwPagingCache {
       );
 
       final myVotes = await _governanceService.getVotesForAddress(
-        _account.id,
+        _account.publicKey!.address,
         _account.publicKey!.coin,
       );
 
