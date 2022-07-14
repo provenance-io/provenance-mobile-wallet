@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_thumb_shape.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -60,23 +59,7 @@ class _PwSliderState extends State<PwSlider> {
             ),
             Expanded(
               child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    showValueIndicator: ShowValueIndicator.always,
-                    trackHeight: Spacing.xSmall,
-                    trackShape: RoundedRectSliderTrackShape(),
-                    activeTrackColor: theme.colorScheme.secondary350,
-                    inactiveTrackColor: theme.colorScheme.neutral700,
-                    overlayColor: theme.colorScheme.neutralNeutral,
-                    thumbShape: PwThumbShape(),
-                    thumbColor: theme.colorScheme.secondary350,
-                    overlayShape: RoundSliderOverlayShape(overlayRadius: 5.0),
-                    tickMarkShape: RoundSliderTickMarkShape(),
-                    activeTickMarkColor: Colors.transparent,
-                    inactiveTickMarkColor: Colors.transparent,
-                    valueIndicatorColor: theme.colorScheme.secondary350,
-                    valueIndicatorTextStyle: theme.textTheme.footnote
-                        .copyWith(color: theme.colorScheme.neutral800),
-                  ),
+                  data: Theme.of(context).sliderTheme.sliderThemeData,
                   child: Slider(
                     min: widget.min,
                     max: widget.max,

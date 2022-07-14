@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_thumb_shape.dart';
 
 class ProvenanceColorScheme extends ColorScheme {
   const ProvenanceColorScheme({
@@ -415,6 +416,27 @@ class ProvenanceThemeData {
     ),
     dividerColor: _neutral600,
   );
+}
+
+extension CustomSliderTheme on SliderThemeData {
+  // unfortunately for some reason this theme gets overridden with the
+  // default settings so we have to be weird about this.
+  SliderThemeData get sliderThemeData => SliderThemeData(
+      showValueIndicator: ShowValueIndicator.always,
+      trackHeight: Spacing.xSmall,
+      trackShape: RoundedRectSliderTrackShape(),
+      activeTrackColor: ProvenanceThemeData._secondary350,
+      inactiveTrackColor: ProvenanceThemeData._neutral700,
+      overlayColor: ProvenanceThemeData._neutralNeutral,
+      thumbShape: PwThumbShape(),
+      thumbColor: ProvenanceThemeData._secondary350,
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 5.0),
+      tickMarkShape: RoundSliderTickMarkShape(),
+      activeTickMarkColor: Colors.transparent,
+      inactiveTickMarkColor: Colors.transparent,
+      valueIndicatorColor: ProvenanceThemeData._secondary350,
+      valueIndicatorTextStyle: ProvenanceThemeData._textTheme.footnote
+          .copyWith(color: ProvenanceThemeData._neutral800));
 }
 
 extension CustomColorScheme on ColorScheme {
