@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
@@ -17,6 +18,7 @@ main() {
   group("ActionListTab", () {
     Future<void> _build(WidgetTester tester, String label, int count) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionListTab(
             label: label,
@@ -38,6 +40,7 @@ main() {
 
     Future<void> _build(WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionListScreen(),
         ),

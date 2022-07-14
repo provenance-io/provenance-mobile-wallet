@@ -30,17 +30,25 @@ final isSelectedGroup = ActionListGroup(
 
 main() {
   group("ActionItemGroupStatus", () {
-    Matcher _StatusMatcher(Color color, String label) {
+    Matcher _StatusMatcher(
+        WidgetTester widgetTester, Color color, String label) {
       return predicate((arg) {
         final statusWidget = arg as ActionItemGroupStatus;
-        expect(statusWidget.color, color);
         expect(statusWidget.label, label);
+
+        final boxDecorationFind = find.byType(Container);
+        final container = widgetTester.widget<Container>(boxDecorationFind);
+
+        final boxDecoration = container.decoration as BoxDecoration;
+        expect(boxDecoration.color, color);
+
         return true;
       });
     }
 
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionItemGroupStatus(
             group: group,
@@ -56,7 +64,11 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(ActionItemGroupStatus.notSelectedColor,
+          _StatusMatcher(
+              tester,
+              (ProvenanceThemeData.themeData.colorScheme
+                      as ProvenanceColorScheme)
+                  .actionNotListSelectedColor,
               ActionItemGroupStatus.basicLabel));
     });
 
@@ -67,7 +79,11 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(ActionItemGroupStatus.notSelectedColor,
+          _StatusMatcher(
+              tester,
+              (ProvenanceThemeData.themeData.colorScheme
+                      as ProvenanceColorScheme)
+                  .actionNotListSelectedColor,
               ActionItemGroupStatus.multiSigLabel));
     });
 
@@ -78,7 +94,11 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(ActionItemGroupStatus.selectedColor,
+          _StatusMatcher(
+              tester,
+              (ProvenanceThemeData.themeData.colorScheme
+                      as ProvenanceColorScheme)
+                  .actionListSelectedColor,
               ActionItemGroupStatus.selectedLabel));
     });
   });
@@ -86,6 +106,7 @@ main() {
   group("ActionItemCell", () {
     Future<void> _build(WidgetTester tester, ActionListItem item) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionItemCell(
             item: item,
@@ -106,6 +127,7 @@ main() {
   group("ActionGroupHeaderCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionGroupHeaderCell(
             group: group,
@@ -144,12 +166,11 @@ main() {
   group("ActionListCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionListCell(
             group: group,
-            onItemCliecked: (group, item) {
-              
-            },
+            onItemCliecked: (group, item) {},
           ),
         ),
       ));
@@ -177,6 +198,7 @@ main() {
     Future<void> _build(
         WidgetTester tester, List<ActionListGroup> groups) async {
       await tester.pumpWidget(MaterialApp(
+        theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionList(
             groups: groups,
