@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:flutter/material.dart';
+import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
 import 'package:provenance_wallet/common/widgets/pw_thumb_shape.dart';
 
 class ProvenanceColorScheme extends ColorScheme {
