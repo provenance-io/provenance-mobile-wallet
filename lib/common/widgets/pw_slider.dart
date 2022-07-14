@@ -38,19 +38,14 @@ class _PwSliderState extends State<PwSlider> {
     final theme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
         VerticalSpacer.largeX3(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            PwText(
-              widget.title,
-              style: widget.headerStyle,
-              textAlign: TextAlign.start,
-            ),
-          ],
+        PwText(
+          widget.title,
+          style: widget.headerStyle,
+          textAlign: TextAlign.start,
         ),
         VerticalSpacer.largeX5(),
         Row(
