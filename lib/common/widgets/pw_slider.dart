@@ -80,7 +80,7 @@ class _PwSliderState extends State<PwSlider> {
                   child: Slider(
                     min: widget.min,
                     max: widget.max,
-                    label: _value == 1.25 // TODO: Replace this with a constant
+                    label: _value == defaultGasEstimate
                         ? "$_value ${Strings.stakingConfirmDefault}"
                         : "$_value",
                     value: _value,
