@@ -113,7 +113,7 @@ class Strings {
   static const errorDisconnected = 'Disconnected';
   static const viewMore = "View More";
   static const staking = "Staking";
-  static const proposals = "Proposals";
+  static const governanceProposals = "Governance Proposals";
 
   // QR Scanner
   static const qrScannerTitle = 'Scan QR Code';

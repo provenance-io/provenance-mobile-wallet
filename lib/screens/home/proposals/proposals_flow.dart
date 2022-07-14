@@ -8,7 +8,9 @@ import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_tab.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -43,10 +45,7 @@ abstract class ProposalsFlowNavigator {
 class ProposalsFlow extends FlowBase {
   const ProposalsFlow({
     Key? key,
-    required this.account,
   }) : super(key: key);
-
-  final Account account;
 
   @override
   State<StatefulWidget> createState() => _ProposalsFlowState();
@@ -54,20 +53,24 @@ class ProposalsFlow extends FlowBase {
 
 class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     implements ProposalsFlowNavigator {
+  late Account _account;
   @override
   void initState() {
+    _account = get<AccountService>().events.selected.value!;
     get.registerSingleton<ProposalsFlowBloc>(ProposalsFlowBloc(this));
+    get.registerSingleton(ProposalsBloc(account: _account)..load());
     super.initState();
   }
 
   @override
   void dispose() {
     get.unregister<ProposalsFlowBloc>();
+    get.unregister<ProposalsBloc>();
     super.dispose();
   }
 
   @override
-  Widget createStartPage() => ProposalsTab();
+  Widget createStartPage() => ProposalsScreen();
 
   @override
   Future<void> showProposalDetails(
@@ -87,7 +90,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     showPage(
       (context) => ProposalWeightedVoteScreen(
         proposal: proposal,
-        account: widget.account,
+        account: _account,
       ),
     );
   }
@@ -99,7 +102,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   ) async {
     showPage(
       (context) => ProposalVoteConfirmScreen(
-        account: widget.account,
+        account: _account,
         proposal: proposal,
         voteOption: voteOption,
       ),
@@ -124,7 +127,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   Future<void> showWeightedVoteReview(Proposal proposal) async {
     showPage(
       (context) => ProposalWeightedVoteConfirmScreen(
-        account: widget.account,
+        account: _account,
         proposal: proposal,
       ),
     );
