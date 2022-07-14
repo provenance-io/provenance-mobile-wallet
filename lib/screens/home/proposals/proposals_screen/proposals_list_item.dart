@@ -38,7 +38,15 @@ class ProposalListItem extends StatelessWidget {
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
-                    VerticalSpacer.xSmall(),
+                    if (item.description.isNotEmpty)
+                      PwText(
+                        item.description,
+                        style: PwTextStyle.display1,
+                        overflow: TextOverflow.ellipsis,
+                        color: PwColor.neutral200,
+                        softWrap: false,
+                      ),
+                    VerticalSpacer.medium(),
                     if (vote != null)
                       Row(
                         children: [

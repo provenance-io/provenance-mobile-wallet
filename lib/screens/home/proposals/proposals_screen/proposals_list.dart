@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_list_item.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_list_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class ProposalsList extends StatefulWidget {
@@ -46,7 +46,7 @@ class ProposalsListState extends State<ProposalsList> {
                 }
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                     vertical: 20,
                   ),
                   controller: _scrollController,
