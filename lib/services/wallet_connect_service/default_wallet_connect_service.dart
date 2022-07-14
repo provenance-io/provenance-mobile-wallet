@@ -288,6 +288,12 @@ class DefaultWalletConnectService extends WalletConnectService
           _log("Previous session has been restored");
           await _setCurrentSession(session);
         }
+
+        if (!success) {
+          final walletConnectQueue = get<WalletConnectQueueService>();
+          final address = WalletConnectAddress.create(data.address)!;
+          await walletConnectQueue.removeWalletConnectSessionGroup(address);
+        }
       }
 
       return success;
