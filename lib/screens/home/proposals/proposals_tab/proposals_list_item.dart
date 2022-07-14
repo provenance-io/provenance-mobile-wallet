@@ -57,7 +57,9 @@ class ProposalListItem extends StatelessWidget {
                             ),
                             child: Chip(
                               label: PwText(
-                                Strings.proposalsTabVoted(vote!.formattedVote),
+                                Strings.proposalsScreenVoted(
+                                  vote!.formattedVote,
+                                ),
                                 style: PwTextStyle.footnote,
                                 color: PwColor.primaryP500,
                               ),

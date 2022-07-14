@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class PwSlider extends StatefulWidget {
@@ -35,22 +36,16 @@ class _PwSliderState extends State<PwSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
         VerticalSpacer.largeX3(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            PwText(
-              widget.title,
-              style: widget.headerStyle,
-              textAlign: TextAlign.start,
-            ),
-          ],
+        PwText(
+          widget.title,
+          style: widget.headerStyle,
+          textAlign: TextAlign.start,
         ),
         VerticalSpacer.largeX5(),
         Row(
@@ -63,27 +58,11 @@ class _PwSliderState extends State<PwSlider> {
             ),
             Expanded(
               child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    showValueIndicator: ShowValueIndicator.always,
-                    trackHeight: Spacing.xSmall,
-                    trackShape: RoundedRectSliderTrackShape(),
-                    activeTrackColor: theme.colorScheme.secondary350,
-                    inactiveTrackColor: theme.colorScheme.neutral700,
-                    overlayColor: theme.colorScheme.neutralNeutral,
-                    thumbShape: _ThumbShape(),
-                    thumbColor: theme.colorScheme.secondary350,
-                    overlayShape: RoundSliderOverlayShape(overlayRadius: 5.0),
-                    tickMarkShape: RoundSliderTickMarkShape(),
-                    activeTickMarkColor: Colors.transparent,
-                    inactiveTickMarkColor: Colors.transparent,
-                    valueIndicatorColor: theme.colorScheme.secondary350,
-                    valueIndicatorTextStyle: theme.textTheme.footnote
-                        .copyWith(color: theme.colorScheme.neutral800),
-                  ),
+                  data: Theme.of(context).sliderTheme.sliderThemeData,
                   child: Slider(
                     min: widget.min,
                     max: widget.max,
-                    label: _value == 1.25 // TODO: Replace this with a constant
+                    label: _value == defaultGasEstimate
                         ? "$_value ${Strings.stakingConfirmDefault}"
                         : "$_value",
                     value: _value,
@@ -105,77 +84,6 @@ class _PwSliderState extends State<PwSlider> {
         ),
         VerticalSpacer.large()
       ],
-    );
-  }
-}
-
-class _ThumbShape extends RoundSliderThumbShape {
-  final _indicatorShape = const RectangularSliderValueIndicatorShape();
-  final _innerShape = const RoundSliderThumbShape(enabledThumbRadius: 12);
-
-  const _ThumbShape()
-      : super(
-          disabledThumbRadius: null,
-          elevation: 1.0,
-          enabledThumbRadius: 16,
-          pressedElevation: 8.0,
-        );
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    assert(sliderTheme.disabledThumbColor != null);
-    assert(sliderTheme.thumbColor != null);
-    super.paint(
-      context,
-      center,
-      activationAnimation: activationAnimation,
-      enableAnimation: enableAnimation,
-      isDiscrete: isDiscrete,
-      labelPainter: labelPainter,
-      parentBox: parentBox,
-      sliderTheme: sliderTheme,
-      textDirection: textDirection,
-      value: value,
-      textScaleFactor: textScaleFactor,
-      sizeWithOverflow: sizeWithOverflow,
-    );
-    _indicatorShape.paint(context, center,
-        activationAnimation: const AlwaysStoppedAnimation(1),
-        enableAnimation: enableAnimation,
-        isDiscrete: isDiscrete,
-        labelPainter: labelPainter,
-        parentBox: parentBox,
-        sliderTheme: sliderTheme,
-        textDirection: textDirection,
-        value: value,
-        textScaleFactor: textScaleFactor,
-        sizeWithOverflow: sizeWithOverflow);
-    _innerShape.paint(
-      context,
-      center,
-      activationAnimation: activationAnimation,
-      enableAnimation: enableAnimation,
-      isDiscrete: isDiscrete,
-      labelPainter: labelPainter,
-      parentBox: parentBox,
-      sliderTheme: sliderTheme.copyWith(thumbColor: Colors.white),
-      textDirection: textDirection,
-      value: value,
-      textScaleFactor: textScaleFactor,
-      sizeWithOverflow: sizeWithOverflow,
     );
   }
 }
