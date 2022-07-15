@@ -142,7 +142,7 @@ void main() {
       remoteId: 'remote-id',
       cosignerCount: 3,
       signaturesRequired: 2,
-      inviteLinks: [
+      inviteIds: [
         'https://provenance.io/invite/0',
         'https://provenance.io/invite/1',
       ],
@@ -175,7 +175,7 @@ void main() {
       remoteId: 'remote-id',
       cosignerCount: 3,
       signaturesRequired: 2,
-      inviteLinks: [
+      inviteIds: [
         'https://provenance.io/invite/0',
         'https://provenance.io/invite/1',
       ],
@@ -212,7 +212,7 @@ void main() {
       remoteId: 'remote-id',
       cosignerCount: 3,
       signaturesRequired: 2,
-      inviteLinks: [
+      inviteIds: [
         'https://provenance.io/invite/0',
         'https://provenance.io/invite/1',
       ],

@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -184,7 +185,7 @@ class ActionListBloc extends Disposable {
       return _WalletConnectActionGroup(
         queueGroup: queuedGroup,
         label: account!.name,
-        subLabel: queuedGroup.walletAddress.abbreviateAddress(),
+        subLabel: abbreviateAddress(queuedGroup.walletAddress),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
@@ -199,7 +200,9 @@ class ActionListBloc extends Disposable {
             label = Strings.actionListLabelUnknown;
           }
           return _WalletConnectActionItem(
-              label: label, subLabel: Strings.actionListSubLabelActionRequired, payload: entry.value);
+              label: label,
+              subLabel: Strings.actionListSubLabelActionRequired,
+              payload: entry.value);
         }).toList(),
       );
     }).toList();

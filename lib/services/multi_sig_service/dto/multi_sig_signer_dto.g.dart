@@ -8,20 +8,20 @@ part of 'multi_sig_signer_dto.dart';
 
 MultiSigSignerDto _$MultiSigSignerDtoFromJson(Map<String, dynamic> json) =>
     MultiSigSignerDto(
-      signerUuid: json['signerUuid'] as String,
       inviteUuid: json['inviteUuid'] as String,
-      originalSigner: json['originalSigner'] as bool,
-      publicKey: json['publicKey'] as String?,
+      signerUuid: json['signerUuid'] as String,
+      signerOrder: json['signerOrder'] as int,
       address: json['address'] as String?,
+      publicKey: json['publicKey'] as String?,
       redeemDate: json['redeemDate'] as String?,
     );
 
 Map<String, dynamic> _$MultiSigSignerDtoToJson(MultiSigSignerDto instance) =>
     <String, dynamic>{
-      'signerUuid': instance.signerUuid,
       'inviteUuid': instance.inviteUuid,
-      'originalSigner': instance.originalSigner,
-      'publicKey': instance.publicKey,
+      'signerUuid': instance.signerUuid,
+      'signerOrder': instance.signerOrder,
       'address': instance.address,
+      'publicKey': instance.publicKey,
       'redeemDate': instance.redeemDate,
     };

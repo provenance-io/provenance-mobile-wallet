@@ -28,16 +28,6 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return replaceAll(RegExp(r'[^\d]+'), '');
   }
-
-  String abbreviateAddress() {
-    const left = 3;
-    const right = 8;
-    const dots = '...';
-
-    return length > left + dots.length + right
-        ? '${substring(0, left)}$dots${substring(length - right)}'
-        : this;
-  }
 }
 
 class Strings {
@@ -170,6 +160,7 @@ class Strings {
   static const accountMenuItemViewInvite = 'View Invitation Details';
   static String numAssets(int numAssets) =>
       "$numAssets Asset${numAssets != 1 ? "s" : ""}";
+  static String accountLinkedTo(String name) => 'Linked to ‘$name’';
 
   // Account Item
   static const select = 'Select';
@@ -205,6 +196,9 @@ class Strings {
   static const accountTypeMultiSigJoinName = 'Join Multi-Signature Account';
   static const accountTypeMultiSigJoinDesc = 'Requires account invitation';
   static const accountTypeMultiSigJoinLink = 'Have an invitation link?';
+  static const accountTypeMultiSigRecoverName = 'Recover';
+  static const accountTypeMultiSigRecoverDesc =
+      'Using existing linked basic account';
 
   // Multi-Sig Invite Review Landing
 
@@ -239,7 +233,7 @@ class Strings {
   static const multiSigJoinLinkMessage =
       'Paste invitation code address you’ve received as an invitation';
   static const multiSigJoinLinkFieldLabel = 'Enter Invitation Link';
-  static const multiSigInvalidLink = 'Invalid link';
+  static const multiSigInvalidLink = 'Invalid link, please try again.';
 
   // Multi-Sig Connect
   static const multiSigConnectTitle = 'Connect to Individual Account';
@@ -278,6 +272,7 @@ class Strings {
   static const multiSigCreationStatusPending = 'Invitation Pending';
   static const multiSigCreationStatusActionRequired = 'Action Required';
   static const multiSigCreationStatusSelf = 'Self';
+  static const multiSigCreationStatusGetStatusError = 'Failed to get status';
 
   // Multi-Sig Invite
   static const multiSigInviteCosignerSelf = 'Self';
@@ -291,6 +286,10 @@ class Strings {
       'Provenance Blockchain Multi-sig Account Invitation';
   static const multiSigInviteMessage =
       '“You’re invited to join my Provenance Blockchain Multi-sig Account by clicking the link below.”';
+
+  // Multi-Sig Recover
+  static const multiSigRecoverLoadError = 'An error occured';
+  static const multiSigRecoverTitle = 'Recover Account';
 
   // Account Name
   static const nameYourAccount = 'Name Your Account';

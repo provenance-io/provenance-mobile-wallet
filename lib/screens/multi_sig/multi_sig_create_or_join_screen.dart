@@ -52,14 +52,55 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.create);
                       },
                     ),
-                    // VerticalSpacer.large(),
-                    // AccountButton(
-                    //   name: Strings.accountTypeMultiSigJoinName,
-                    //   desc: Strings.accountTypeMultiSigJoinDesc,
-                    //   onPressed: () {
-                    //     _bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
-                    //   },
-                    // ),
+                    VerticalSpacer.large(),
+                    AccountButton(
+                      name: Strings.accountTypeMultiSigJoinName,
+                      desc: Strings.accountTypeMultiSigJoinDesc,
+                      onPressed: () {
+                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
+                      },
+                    ),
+                    VerticalSpacer.large(),
+                    AccountButton(
+                        name: Strings.accountTypeMultiSigRecoverName,
+                        desc: Strings.accountTypeMultiSigRecoverDesc,
+                        onPressed: () {
+                          bloc.submitMultiSigCreateOrJoin(
+                              MultiSigAddKind.recover);
+                        }),
+                    StreamBuilder<String?>(
+                      stream: bloc.multiSigInviteLinkError,
+                      builder: (context, snapshot) {
+                        final error = snapshot.data;
+                        if (error == null) {
+                          return Container();
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.only(
+                            top: Spacing.large,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              PwIcon(
+                                PwIcons.warnCircle,
+                                color:
+                                    Theme.of(context).colorScheme.negative350,
+                              ),
+                              HorizontalSpacer.xSmall(),
+                              Expanded(
+                                child: PwText(
+                                  error,
+                                  color: PwColor.negative350,
+                                  style: PwTextStyle.body,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     Expanded(
                       child: SizedBox(),
                     ),

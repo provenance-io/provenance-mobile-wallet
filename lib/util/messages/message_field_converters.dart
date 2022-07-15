@@ -18,10 +18,6 @@ Object? convertAmount(Object? obj) {
   return amount;
 }
 
-String? convertAddress(Object? data) {
-  return data is String ? data.abbreviateAddress() : null;
-}
-
 String? convertPermissions(Object? data) {
   String? permissions;
   if (data is List<dynamic>) {

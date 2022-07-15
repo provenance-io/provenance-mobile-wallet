@@ -55,26 +55,31 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
     final isSelected = _account.id == accountService.events.selected.value?.id;
     final account = _account;
 
-    return AccountContainer(
-      rows: [
-        AccountTitleRow(
-          name: account.name,
-          kind: account.kind,
-          isSelected: isSelected,
+    return Container(
+      color: isSelected
+          ? Theme.of(context).colorScheme.secondary650
+          : Theme.of(context).colorScheme.neutral700,
+      child: AccountContainer(
+        rows: [
+          AccountTitleRow(
+            name: account.name,
+            kind: account.kind,
+            isSelected: isSelected,
+          ),
+          AccountDescriptionRow(
+            account: account,
+            isSelected: isSelected,
+          ),
+          AccountNetworkRow(
+            coin: account.publicKey.coin,
+          ),
+        ],
+        isSelected: isSelected,
+        onShowMenu: () => _showMenu(
+          context,
+          account,
+          isSelected,
         ),
-        AccountDescriptionRow(
-          account: account,
-          isSelected: isSelected,
-        ),
-        AccountNetworkRow(
-          coin: account.publicKey.coin,
-        ),
-      ],
-      isSelected: isSelected,
-      onShowMenu: () => _showMenu(
-        context,
-        account,
-        isSelected,
       ),
     );
   }

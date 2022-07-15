@@ -205,6 +205,7 @@ class ProvenanceThemeData {
   // Other
   static const Color _provenanceLogo = Color(0xFF3F80F3);
   static const Color _error = Color(0xFFED6E74);
+  static const Color _negative350 = Color(0xFFE01B25);
   static const Color _notice350 = Color(0xFFF4B601);
   static const Color _notice800 = Color(0xFF140F00);
 
@@ -460,6 +461,7 @@ extension CustomColorScheme on ColorScheme {
   Color get secondary300 => ProvenanceThemeData._secondary300;
   Color get secondary250 => ProvenanceThemeData._secondary250;
   Color get error => ProvenanceThemeData._error;
+  Color get negative350 => ProvenanceThemeData._negative350;
   Color get notice350 => ProvenanceThemeData._notice350;
   Color get notice800 => ProvenanceThemeData._notice800;
 }
