@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_legend.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_list.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -61,6 +62,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
                           },
                         ),
                       ),
+                      ProposalsLegend(),
                       ProposalsList(),
                     ],
                   );

@@ -588,6 +588,8 @@ class Strings {
   static String stakingConfirmHashAmount(String amount) => '$amount HASH';
 
   // Proposals Screen
+  static const proposalsScreenLegend = "Legend";
+  static const proposalsScreenMyStatus = "My Status:";
   static String proposalsScreenVoted(String formattedVote) =>
       "Voted $formattedVote";
 
@@ -615,7 +617,7 @@ class Strings {
   static const proposalDetailsTotalVotes = "Total Votes";
   static const proposalDetailsYes = "Yes";
   static const proposalDetailsNo = "No";
-  static const proposalDetailsNoWithVeto = "No With Veto";
+  static const proposalDetailsNoWithVeto = "No w/Veto";
   static const proposalDetailsAbstain = "Abstain";
   static const proposalDetailsProposalVoting = "Proposal Voting";
   static const proposalDetailsNeededDeposit = "Needed Deposit";

@@ -1,11 +1,12 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_list_item_status.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class ProposalListItem extends StatelessWidget {
+class ProposalListItem extends StatefulWidget {
   const ProposalListItem({
     Key? key,
     required this.item,
@@ -14,12 +15,20 @@ class ProposalListItem extends StatelessWidget {
 
   final Proposal item;
   final Vote? vote;
+
+  @override
+  State<ProposalListItem> createState() => _ProposalListItemState();
+}
+
+class _ProposalListItemState extends State<ProposalListItem> {
+  bool _isActive = false;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        get<ProposalsFlowBloc>().showProposalDetails(item);
+        get<ProposalsFlowBloc>().showProposalDetails(widget.item);
       },
       child: Padding(
         padding: EdgeInsets.zero,
@@ -33,62 +42,58 @@ class ProposalListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PwText(
-                      "${item.proposalId} ${item.title}",
+                      "${widget.item.proposalId} ${widget.item.title}",
                       style: PwTextStyle.bodyBold,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
-                    if (item.description.isNotEmpty)
-                      PwText(
-                        item.description,
-                        style: PwTextStyle.display1,
-                        overflow: TextOverflow.ellipsis,
-                        color: PwColor.neutral200,
-                        softWrap: false,
-                      ),
-                    VerticalSpacer.medium(),
-                    if (vote != null)
+                    if (widget.item.description.isNotEmpty)
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Flexible(
-                            child: PwText(
-                              item.status,
-                              style: PwTextStyle.footnote,
-                              overflow: TextOverflow.fade,
-                              color: PwColor.neutral200,
-                              softWrap: false,
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: Spacing.large,
-                            ),
-                            child: Chip(
-                              label: PwText(
-                                Strings.proposalsScreenVoted(
-                                  vote!.formattedVote,
-                                ),
+                          if (!_isActive)
+                            Flexible(
+                              child: PwText(
+                                widget.item.description,
                                 style: PwTextStyle.footnote,
-                                color: PwColor.primaryP500,
-                              ),
-                              side: BorderSide(
-                                color: Theme.of(context).colorScheme.primary550,
+                                overflow: TextOverflow.ellipsis,
+                                color: PwColor.neutral200,
+                                softWrap: true,
                               ),
                             ),
-                          ),
+                          if (_isActive)
+                            Expanded(
+                              child: PwText(
+                                widget.item.description,
+                                style: PwTextStyle.footnote,
+                                color: PwColor.neutral200,
+                                softWrap: true,
+                              ),
+                            ),
+                          if (widget.item.description.length > 30)
+                            GestureDetector(
+                              onTap: () async {
+                                setState(() {
+                                  _isActive = !_isActive;
+                                });
+                              },
+                              child: PwText(
+                                _isActive
+                                    ? Strings.stakingDetailsViewLess
+                                    : Strings.viewMore,
+                                color: PwColor.neutral200,
+                                style: PwTextStyle.footnote,
+                                underline: true,
+                                softWrap: false,
+                              ),
+                            ),
                         ],
                       ),
-                    if (vote == null)
-                      SizedBox(
-                        width: 180,
-                        child: PwText(
-                          item.status,
-                          color: PwColor.neutral200,
-                          style: PwTextStyle.footnote,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                        ),
-                      ),
+                    VerticalSpacer.medium(),
+                    ProposalListItemStatus(
+                      status: widget.item.status,
+                      vote: widget.vote,
+                    ),
                   ],
                 ),
               ),
