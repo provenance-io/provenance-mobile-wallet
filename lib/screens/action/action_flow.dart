@@ -10,9 +10,9 @@ import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ActionFlow extends FlowBase {
   const ActionFlow({required this.account, Key? key}) : super(key: key);
@@ -24,19 +24,6 @@ class ActionFlow extends FlowBase {
 }
 
 class ActionFlowState extends FlowBaseState implements ActionListNavigator {
-  @override
-  void initState() {
-    super.initState();
-
-    get.pushNewScope(scopeName: "ActionScope");
-  }
-
-  @override
-  void dispose() {
-    get.popScope();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -55,13 +42,16 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
   @override
   Widget createStartPage() {
-    if (!get.isRegistered<ActionListBloc>()) {
-      get.registerLazySingleton<ActionListBloc>(() {
-        return ActionListBloc(this)..init();
-      });
-    }
-
-    return ActionListScreen();
+    return Provider<ActionListBloc>(
+        create: (_) {
+          final bloc = ActionListBloc(this);
+          bloc.init();
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: ActionListScreen());
   }
 
   /* ActionListNavigator */

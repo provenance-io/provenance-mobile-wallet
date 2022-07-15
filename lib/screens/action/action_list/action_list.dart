@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 ///
 /// a widget that represents an action group's state
@@ -171,13 +171,15 @@ class ActionList extends StatelessWidget {
 
           return ActionListCell(
             group: group,
-            onItemCliecked: _handleOnItemClicked,
+            onItemCliecked: (ActionListGroup group, ActionListItem item) =>
+                _handleOnItemClicked(context, group, item),
           );
         });
   }
 
-  void _handleOnItemClicked(ActionListGroup group, ActionListItem item) {
-    final bloc = get<ActionListBloc>();
+  void _handleOnItemClicked(
+      BuildContext context, ActionListGroup group, ActionListItem item) {
+    final bloc = Provider.of<ActionListBloc>(context, listen: false);
     bloc.actionItemClicked(group, item);
   }
 }

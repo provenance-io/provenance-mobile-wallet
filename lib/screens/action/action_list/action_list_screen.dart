@@ -4,8 +4,8 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ActionListTab extends StatelessWidget {
   const ActionListTab({required this.label, required this.count, Key? key})
@@ -54,7 +54,7 @@ class ActionListScreenState extends State<ActionListScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<ActionListBloc>();
+    final bloc = Provider.of<ActionListBloc>(context, listen: false);
 
     return Scaffold(
         appBar: PwAppBar(),
@@ -113,7 +113,8 @@ class ActionListScreenState extends State<ActionListScreen>
     if (!delete) {
       return;
     }
-    final bloc = get<ActionListBloc>();
+
+    final bloc = Provider.of<ActionListBloc>(context, listen: false);
     return bloc.deleteNotifications(deletedItems);
   }
 }

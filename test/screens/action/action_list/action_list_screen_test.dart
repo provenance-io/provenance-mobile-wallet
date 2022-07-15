@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 import './action_list_screen_test.mocks.dart';
 
@@ -42,8 +42,10 @@ main() {
       await tester.pumpWidget(MaterialApp(
         theme: ProvenanceThemeData.themeData,
         home: Material(
+            child: Provider<ActionListBloc>(
+          create: (_) => mockBloc,
           child: ActionListScreen(),
-        ),
+        )),
       ));
     }
 
@@ -53,13 +55,9 @@ main() {
       mockBloc = MockActionListBloc();
       when(mockBloc.onDispose()).thenAnswer((_) => Future.value());
       when(mockBloc.stream).thenAnswer((_) => _streamController.stream);
-
-      get.pushNewScope();
-      get.registerSingleton<ActionListBloc>(mockBloc);
     });
 
     tearDown(() {
-      get.popScope();
       _streamController.close();
     });
 
