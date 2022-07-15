@@ -149,18 +149,6 @@ class AssetBarChart extends StatelessWidget {
       maxY *= 1.1;
     }
 
-    checkToShowTitle(
-      minValue,
-      maxValue,
-      sideTitles,
-      appliedInterval,
-      value,
-    ) {
-      final mod = value % appliedInterval;
-
-      return mod == 0.0;
-    }
-
     const microsecondsInAMinute = 1000000 * 60;
     double? interval;
     switch (details.value) {
