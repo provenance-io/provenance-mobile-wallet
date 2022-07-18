@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_slider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -91,7 +92,8 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               },
               child: PwText(
                 Strings.stakingConfirmData,
-                style: PwTextStyle.body,
+                style: PwTextStyle.footnote,
+                underline: true,
               ),
             ),
           ),
@@ -100,7 +102,18 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
           children: [
+            VerticalSpacer.largeX3(),
+            AddressCard(
+              title: Strings.proposalVoteConfirmProposerAddress,
+              address: widget.proposal.proposerAddress,
+            ),
+            VerticalSpacer.large(),
+            AddressCard(
+              title: Strings.proposalVoteConfirmVoterAddress,
+              address: widget.account.publicKey!.address,
+            ),
             DetailsItem(
               title: Strings.proposalVoteConfirmProposerAddress,
               endChild: PwText(
@@ -117,7 +130,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
             DetailsItem(
               title: Strings.proposalVoteConfirmVoterAddress,
               endChild: PwText(
-                abbreviateAddress(widget.account.id),
+                abbreviateAddress(widget.account.publicKey!.address),
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 color: PwColor.neutralNeutral,
