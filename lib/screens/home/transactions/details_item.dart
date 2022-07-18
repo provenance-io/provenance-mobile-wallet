@@ -38,6 +38,7 @@ class DetailsItem extends StatelessWidget {
     endChild = PwText(
       value,
       style: style,
+      textAlign: TextAlign.right,
     );
   }
 
