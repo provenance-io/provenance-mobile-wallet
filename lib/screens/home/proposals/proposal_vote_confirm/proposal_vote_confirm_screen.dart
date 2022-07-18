@@ -60,8 +60,8 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
         elevation: 0.0,
         centerTitle: true,
         title: PwText(
-          Strings.proposalVoteConfirmVoteConfirm,
-          style: PwTextStyle.subhead,
+          Strings.proposalVoteConfirmConfirmVote,
+          style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
         leading: Padding(
