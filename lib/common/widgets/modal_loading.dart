@@ -42,37 +42,27 @@ class ModalLoadingState extends State<ModalLoading> {
       loadingMessage = newMessage;
     });
   }
-
-//  void dismissLoading() async {
-//    Navigator.of(context)?.pop();
-//  }
 }
 
 const Duration _kDropdownMenuDuration = Duration(milliseconds: 300);
 
 class ModalLoadingRoute extends PopupRoute {
   ModalLoadingRoute({
-//    this.items,
     this.padding,
     this.buttonRect,
     this.selectedIndex,
     this.elevation = 8,
-    this.loadingMessage,
     this.theme,
     this.height,
-//    @required this.style,
     this.barrierLabel,
   });
 
   final double? height;
-//  final List<DropdownMenuItem<T>> items;
   final EdgeInsetsGeometry? padding;
   final Rect? buttonRect;
   final int? selectedIndex;
   final int? elevation;
   final ThemeData? theme;
-//  final TextStyle style;
-  String? loadingMessage;
 
   ScrollController? scrollController;
 
@@ -105,15 +95,16 @@ class ModalLoadingRoute extends PopupRoute {
   }
 
   static showLoading(
-    String message,
-    BuildContext context,
-  ) {
+    BuildContext context, {
+    Duration? minDisplayTime,
+  }) async {
     if (instance != null) {
-      instance?.loadingState.currentState?.updateMessage(message);
+      instance?.loadingState.currentState?.updateMessage("");
     } else {
-      instance =
-          ModalLoadingRoute(loadingMessage: message, theme: Theme.of(context));
+      instance = ModalLoadingRoute(theme: Theme.of(context));
       Navigator.of(context, rootNavigator: true).push(instance!);
+      if (minDisplayTime == null) return;
+      await Future.delayed(minDisplayTime);
     }
   }
 
@@ -130,7 +121,6 @@ class ModalLoadingRoute extends PopupRoute {
       ) {
         return ModalLoading(
           key: loadingState,
-          loadingMessage: loadingMessage,
         );
       },
     );

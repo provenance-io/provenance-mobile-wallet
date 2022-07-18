@@ -12,6 +12,7 @@ class PwDropDown<X> extends StatefulWidget {
     this.focusNode,
     this.itemHeight = kMinInteractiveDimension,
     this.dropdownColor,
+    this.icon,
   }) : super(key: key);
 
   final X value;
@@ -23,6 +24,7 @@ class PwDropDown<X> extends StatefulWidget {
   final FocusNode? focusNode;
   final double? itemHeight;
   final Color? dropdownColor;
+  final Widget? icon;
 
   @override
   State<PwDropDown> createState() => _PwDropDownState<X>();
@@ -80,13 +82,14 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
           widget.dropdownColor ?? Theme.of(context).colorScheme.neutral750,
       underline: Container(),
       value: _value,
-      icon: Padding(
-        padding: EdgeInsets.only(left: 16),
-        child: PwIcon(
-          PwIcons.chevron,
-          color: Theme.of(context).colorScheme.neutralNeutral,
-        ),
-      ),
+      icon: widget.icon ??
+          Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: PwIcon(
+              PwIcons.chevron,
+              color: Theme.of(context).colorScheme.neutralNeutral,
+            ),
+          ),
       onChanged: (e) => widget.onValueChanged.call(e!),
       items: widget.items.map<DropdownMenuItem<X>>((X value) {
         return DropdownMenuItem<X>(

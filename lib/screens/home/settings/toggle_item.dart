@@ -1,6 +1,6 @@
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/profile/item_label.dart';
+import 'package:provenance_wallet/screens/home/settings/item_label.dart';
 
 class ToggleItem extends StatelessWidget {
   const ToggleItem({
