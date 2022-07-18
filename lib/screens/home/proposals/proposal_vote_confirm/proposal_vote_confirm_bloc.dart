@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalVoteConfirmBloc {
   final Account _account;
@@ -76,5 +77,22 @@ class ProposalVoteConfirmBloc {
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
         .estimateGas(body, _account.publicKey!);
+  }
+
+  String getUserFriendlyVote() {
+    switch (_voteOption) {
+      case gov.VoteOption.VOTE_OPTION_ABSTAIN:
+        return Strings.proposalDetailsAbstain;
+      case gov.VoteOption.VOTE_OPTION_NO:
+        return Strings.proposalDetailsNo;
+      case gov.VoteOption.VOTE_OPTION_NO_WITH_VETO:
+        return Strings.proposalDetailsNoWithVeto;
+      case gov.VoteOption.VOTE_OPTION_UNSPECIFIED:
+        // Can't get here, we don't include this as an option.
+        return "";
+      case gov.VoteOption.VOTE_OPTION_YES:
+        return Strings.proposalDetailsYes;
+    }
+    return "";
   }
 }

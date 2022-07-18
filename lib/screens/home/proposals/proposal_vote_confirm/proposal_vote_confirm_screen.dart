@@ -8,10 +8,11 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -101,94 +102,78 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+        child: Column(
           children: [
-            VerticalSpacer.largeX3(),
-            AddressCard(
-              title: Strings.proposalVoteConfirmProposerAddress,
-              address: widget.proposal.proposerAddress,
-            ),
-            VerticalSpacer.large(),
-            AddressCard(
-              title: Strings.proposalVoteConfirmVoterAddress,
-              address: widget.account.publicKey!.address,
-            ),
-            DetailsItem(
-              title: Strings.proposalVoteConfirmProposerAddress,
-              endChild: PwText(
-                widget.proposal.proposalId.toString(),
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                color: PwColor.neutralNeutral,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.proposalVoteConfirmVoterAddress,
-              endChild: PwText(
-                abbreviateAddress(widget.account.publicKey!.address),
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                color: PwColor.neutralNeutral,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
-              title: Strings.proposalVoteConfirmVoteOption,
-              endChild: PwText(
-                widget.voteOption.name,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                color: PwColor.neutralNeutral,
-                style: PwTextStyle.body,
-              ),
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            PwSlider(
-              title: Strings.stakingConfirmGasAdjustment,
-              startingValue: defaultGasEstimate,
-              min: 0,
-              max: 5,
-              onValueChanged: (value) {
-                setState(() {
-                  _gasEstimate = value;
-                });
-              },
-            ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.largeX3,
-                  vertical: Spacing.xLarge,
-                ),
-                child: Flexible(
-                  child: PwButton(
-                    onPressed: () async {
-                      ModalLoadingRoute.showLoading('', context);
-                      // Give the loading modal time to display
-                      await Future.delayed(Duration(milliseconds: 500));
-                      await _sendVote(_gasEstimate, context);
-                    },
-                    child: PwText(
-                      Strings.proposalVoteConfirmVote,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.body,
-                    ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+                children: [
+                  VerticalSpacer.largeX3(),
+                  AddressCard(
+                    title: Strings.proposalVoteConfirmProposerAddress,
+                    address: widget.proposal.proposerAddress,
                   ),
-                )),
+                  VerticalSpacer.large(),
+                  AddressCard(
+                    title: Strings.proposalVoteConfirmVoterAddress,
+                    address: widget.account.publicKey!.address,
+                  ),
+                  DetailsHeader(
+                      title: Strings.proposalVoteConfirmVotingDetails),
+                  PwListDivider.alternate(),
+                  DetailsItem.alternateStrings(
+                    title: Strings.proposalVoteConfirmProposalId,
+                    value: widget.proposal.proposalId.toString(),
+                  ),
+                  PwListDivider.alternate(),
+                  DetailsItem.alternateStrings(
+                    title: Strings.proposalVoteConfirmTitle,
+                    value: widget.proposal.title,
+                  ),
+                  PwListDivider.alternate(),
+                  DetailsItem.alternateChild(
+                      title: Strings.proposalVoteConfirmVoteOption,
+                      endChild:
+                          ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),
+                  PwListDivider.alternate(),
+                  PwSlider(
+                    title: Strings.stakingConfirmGasAdjustment,
+                    startingValue: defaultGasEstimate,
+                    min: 0,
+                    max: 5,
+                    onValueChanged: (value) {
+                      setState(() {
+                        _gasEstimate = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            PwListDivider.alternate(),
+            VerticalSpacer.large(),
+            Padding(
+              padding: EdgeInsets.only(
+                left: Spacing.large,
+                right: Spacing.large,
+                bottom: Spacing.largeX3,
+              ),
+              child: PwButton(
+                onPressed: () async {
+                  ModalLoadingRoute.showLoading('', context);
+                  // Give the loading modal time to display
+                  await Future.delayed(Duration(milliseconds: 500));
+                  await _sendVote(_gasEstimate, context);
+                },
+                child: PwText(
+                  Strings.proposalVoteConfirmConfirmVote,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.body,
+                ),
+              ),
+            ),
           ],
         ),
       ),

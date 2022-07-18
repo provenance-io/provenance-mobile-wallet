@@ -60,8 +60,9 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     children: [
                       VerticalSpacer.largeX3(),
                       AddressCard(
-                          title: Strings.proposalVoteConfirmProposerAddress,
-                          address: widget.selectedProposal.proposerAddress),
+                        title: Strings.proposalVoteConfirmProposerAddress,
+                        address: widget.selectedProposal.proposerAddress,
+                      ),
                       DetailsHeader(
                         title: Strings.proposalDetailsProposalInformation,
                       ),

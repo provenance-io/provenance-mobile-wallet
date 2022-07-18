@@ -631,6 +631,9 @@ class Strings {
 
   // Proposal Vote Confirm Screen
   static const proposalVoteConfirmConfirmVote = "Confirm Vote";
+  static const proposalVoteConfirmVotingDetails = "Voting Details";
+  static const proposalVoteConfirmProposalId = "Proposal ID#";
+  static const proposalVoteConfirmTitle = "Title";
   static const proposalVoteConfirmProposerAddress = "Proposer Address";
   static const proposalVoteConfirmVoterAddress = "Voter Address";
   static const proposalVoteConfirmVoteOption = "Vote Option";
