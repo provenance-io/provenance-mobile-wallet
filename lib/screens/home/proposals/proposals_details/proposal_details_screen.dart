@@ -153,9 +153,23 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         value: _proposal.description,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.withRowChildren(
                         title: Strings.proposalDetailsStatus,
-                        value: _proposal.status,
+                        children: [
+                          Icon(
+                            Icons.brightness_1,
+                            color: get<ProposalsBloc>()
+                                .getColor(_proposal.status, context),
+                            size: 8,
+                          ),
+                          HorizontalSpacer.xSmall(),
+                          PwText(
+                            _proposal.status.capitalize(),
+                            style: PwTextStyle.footnote,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                          ),
+                        ],
                       ),
                       PwListDivider.alternate(),
                       if (widget.vote != null)
