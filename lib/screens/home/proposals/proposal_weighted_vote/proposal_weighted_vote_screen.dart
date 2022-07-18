@@ -52,6 +52,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
           children: [
             WeightedVoteSliders(),
             StreamBuilder<WeightedVoteDetails>(
@@ -63,38 +64,31 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                 if (details == null) {
                   return Container();
                 }
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: Spacing.largeX3,
-                    right: Spacing.largeX3,
-                    bottom: Spacing.largeX3,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: PwButton(
-                          enabled: details.abstainAmount +
-                                  details.noAmount +
-                                  details.noWithVetoAmount +
-                                  details.yesAmount ==
-                              100,
-                          onPressed: () {
-                            get<ProposalsFlowBloc>()
-                                .showWeightedVoteReview(widget.proposal);
-                          },
-                          child: PwText(
-                            Strings.continueName,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            color: PwColor.neutralNeutral,
-                            style: PwTextStyle.body,
-                          ),
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: PwButton(
+                        enabled: details.abstainAmount +
+                                details.noAmount +
+                                details.noWithVetoAmount +
+                                details.yesAmount ==
+                            100,
+                        onPressed: () {
+                          get<ProposalsFlowBloc>()
+                              .showWeightedVoteReview(widget.proposal);
+                        },
+                        child: PwText(
+                          Strings.continueName,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          color: PwColor.neutralNeutral,
+                          style: PwTextStyle.body,
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 );
               },
             ),

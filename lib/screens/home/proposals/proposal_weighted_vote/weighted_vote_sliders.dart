@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_slider.dart';
@@ -17,95 +18,158 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
   final List<double> _currentValues = [0, 0, 0, 0];
   final List<double> _startingValues = [0, 0, 0, 0];
   final _bloc = get<WeightedVoteBloc>();
+  String percentage = "0%";
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return Column(
       children: [
-        DetailsItem.fromStrings(
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: 1.3,
+              child: Card(
+                color: colors.neutral750,
+                child: Row(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: PieChart(
+                          PieChartData(
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 80,
+                              sections: [
+                                PieChartSectionData(
+                                  color: colors.neutral700,
+                                  value: _currentValues
+                                          .any((element) => element > 0)
+                                      ? 0
+                                      : 1,
+                                  title: "",
+                                  radius: 30,
+                                ),
+                                PieChartSectionData(
+                                  color: colors.primary550,
+                                  value: _currentValues[0],
+                                  title: "",
+                                  radius: 30,
+                                ),
+                                PieChartSectionData(
+                                  color: colors.error,
+                                  value: _currentValues[1],
+                                  title: "",
+                                  radius: 30,
+                                ),
+                                PieChartSectionData(
+                                  color: colors.notice350,
+                                  value: _currentValues[2],
+                                  title: "",
+                                  radius: 30,
+                                ),
+                                PieChartSectionData(
+                                  color: colors.neutral550,
+                                  value: _currentValues[3],
+                                  title: "",
+                                  radius: 30,
+                                ),
+                              ]),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                PwText(Strings.proposalWeightedVoteVotingStatus),
+                PwText(
+                  percentage,
+                  style: PwTextStyle.bodyBold,
+                ),
+              ],
+            ),
+          ],
+        ),
+        DetailsItem.alternateChild(
           padding: EdgeInsets.only(
             top: Spacing.xLarge,
-            left: Spacing.largeX3,
-            right: Spacing.largeX3,
+            bottom: Spacing.small,
           ),
           title: Strings.proposalDetailsYes,
-          value: "${_currentValues[0].toInt()}%",
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
-          ),
-          child: WeightedVoteSlider(
-            thumbColor: colors.primary550,
-            value: _currentValues[0],
-            label: "${_currentValues[0].toInt()}%",
-            onChanged: (value) => updateCurrentValue(0, value.toInt()),
-            onChangeEnd: (value) => updateSlider(0, value.toInt()),
-            onChangeStart: (value) => updateStartingValue(0, value.toInt()),
+          endChild: PwText(
+            "${_currentValues[0].toInt()}%",
+            style: PwTextStyle.subhead,
           ),
         ),
-        DetailsItem.fromStrings(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
+        WeightedVoteSlider(
+          thumbColor: colors.primary550,
+          value: _currentValues[0],
+          label: "${_currentValues[0].toInt()}%",
+          onChanged: (value) => updateCurrentValue(0, value.toInt()),
+          onChangeEnd: (value) => updateSlider(0, value.toInt()),
+          onChangeStart: (value) => updateStartingValue(0, value.toInt()),
+        ),
+        DetailsItem.alternateChild(
+          padding: EdgeInsets.only(
+            bottom: Spacing.small,
           ),
           title: Strings.proposalDetailsNo,
-          value: "${_currentValues[1].toInt()}%",
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
-          ),
-          child: WeightedVoteSlider(
-            thumbColor: colors.error,
-            value: _currentValues[1],
-            label: "${_currentValues[1].toInt()}%",
-            onChanged: (value) => updateCurrentValue(1, value.toInt()),
-            onChangeEnd: (value) => updateSlider(1, value.toInt()),
-            onChangeStart: (value) => updateStartingValue(1, value.toInt()),
+          endChild: PwText(
+            "${_currentValues[1].toInt()}%",
+            style: PwTextStyle.subhead,
           ),
         ),
-        DetailsItem.fromStrings(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
+        WeightedVoteSlider(
+          thumbColor: colors.error,
+          value: _currentValues[1],
+          label: "${_currentValues[1].toInt()}%",
+          onChanged: (value) => updateCurrentValue(1, value.toInt()),
+          onChangeEnd: (value) => updateSlider(1, value.toInt()),
+          onChangeStart: (value) => updateStartingValue(1, value.toInt()),
+        ),
+        DetailsItem.alternateChild(
+          padding: EdgeInsets.only(
+            bottom: Spacing.small,
           ),
           title: Strings.proposalDetailsNoWithVeto,
-          value: "${_currentValues[2].toInt()}%",
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.large,
-          ),
-          child: WeightedVoteSlider(
-            thumbColor: colors.notice350,
-            value: _currentValues[2],
-            label: "${_currentValues[2].toInt()}%",
-            onChanged: (value) => updateCurrentValue(2, value.toInt()),
-            onChangeEnd: (value) => updateSlider(2, value.toInt()),
-            onChangeStart: (value) => updateStartingValue(2, value.toInt()),
+          endChild: PwText(
+            "${_currentValues[2].toInt()}%",
+            style: PwTextStyle.subhead,
           ),
         ),
-        DetailsItem.fromStrings(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
-          ),
+        WeightedVoteSlider(
+          thumbColor: colors.notice350,
+          value: _currentValues[2],
+          label: "${_currentValues[2].toInt()}%",
+          onChanged: (value) => updateCurrentValue(2, value.toInt()),
+          onChangeEnd: (value) => updateSlider(2, value.toInt()),
+          onChangeStart: (value) => updateStartingValue(2, value.toInt()),
+        ),
+        DetailsItem.alternateChild(
+          padding: EdgeInsets.all(0),
           title: Strings.proposalDetailsAbstain,
-          value: "${_currentValues[3].toInt()}%",
+          endChild: PwText(
+            "${_currentValues[3].toInt()}%",
+            style: PwTextStyle.subhead,
+          ),
         ),
-        Padding(
-          padding: EdgeInsets.only(
-            left: Spacing.large,
-            right: Spacing.large,
-            bottom: Spacing.largeX3,
-          ),
-          child: WeightedVoteSlider(
-            thumbColor: colors.neutral550,
-            value: _currentValues[3],
-            label: "${_currentValues[3].toInt()}%",
-            onChanged: (value) => updateCurrentValue(3, value.toInt()),
-            onChangeEnd: (value) => updateSlider(3, value.toInt()),
-            onChangeStart: (value) => updateStartingValue(3, value.toInt()),
-          ),
+        WeightedVoteSlider(
+          thumbColor: colors.neutral550,
+          value: _currentValues[3],
+          label: "${_currentValues[3].toInt()}%",
+          onChanged: (value) => updateCurrentValue(3, value.toInt()),
+          onChangeEnd: (value) => updateSlider(3, value.toInt()),
+          onChangeStart: (value) => updateStartingValue(3, value.toInt()),
         ),
       ],
     );
@@ -221,5 +285,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
       noWithVetoAmount: _currentValues[2],
       abstainAmount: _currentValues[3],
     );
+    percentage =
+        "${_currentValues.reduce((value, element) => value + element).toInt()}%";
   }
 }

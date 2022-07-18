@@ -628,6 +628,7 @@ class Strings {
 
   // Weighted Vote Screen
   static const proposalWeightedVote = "Weighted Vote";
+  static const proposalWeightedVoteVotingStatus = "Voting Status";
 
   // Proposal Vote Confirm Screen
   static const proposalVoteConfirmConfirmVote = "Confirm Vote";
