@@ -15,7 +15,6 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
@@ -61,6 +60,9 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
@@ -242,6 +244,9 @@ void main() {
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
       get.registerLazySingleton<MultiSigService>(() => MultiSigService());
+
+      get.registerSingleton<WalletConnectQueueService>(
+          WalletConnectQueueService());
 
       runApp(
         Phoenix(
@@ -443,6 +448,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<PriceService>(
       () => PriceService(),
     );
+
+    get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
   }
 }
 
