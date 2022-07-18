@@ -28,6 +28,15 @@ extension StringExtension on String {
   String sanitizePhoneNumber() {
     return replaceAll(RegExp(r'[^\d]+'), '');
   }
+
+  String formatNumber() {
+    var sections = split('.');
+    sections[0] = sections[0].replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
+    return sections.join('.');
+  }
 }
 
 class Strings {
@@ -100,8 +109,11 @@ class Strings {
   static const noTransactionsText =
       'When you have transactions they will appear here.';
   static const transactionDetails = "Transaction Details";
-  static const profile = "Profile";
+  static const globalSettings = "Global Settings";
   static const errorDisconnected = 'Disconnected';
+  static const viewMore = "View More";
+  static const staking = "Staking";
+  static const proposals = "Proposals";
 
   // QR Scanner
   static const qrScannerTitle = 'Scan QR Code';
@@ -149,6 +161,7 @@ class Strings {
       'Please enter the new name you would like to call your account.';
   static const renameAccountAccountName = 'Account Name';
   static const required = 'Required';
+  static const starRequired = '*Required';
   static const confirm = 'Confirm';
 
   // Accounts Page
@@ -522,4 +535,153 @@ class Strings {
   static const cipherUnknownError = 'Unknown error.';
   static const cipherUpgradeError = 'An error occured during while upgrading.';
   static const cipherUnsupportedAlgorithmError = 'Unsupported algorithm.';
+
+  // Staking Tab
+  static const stakingTabMyDelegations = "My Delegations";
+  static const stakingTabStakingDefined =
+      "Staking is a process that involves committing your assets to support Provenance's network and to confirm transactions.";
+  static const stakingTabAvailableToSelect = "Available to Select";
+  static const stakingTabSortBy = "Sort by";
+  static const dropDownVotingPower = "Voting Power";
+  static const dropDownAlphabetically = "Name";
+  static String displayDenomFormatted(String displayDenom) =>
+      "$displayDenom delegated";
+  static String displayDelegatorsWithCommission(
+          int delegators, String commission) =>
+      "$delegators delegators • $commission commission";
+
+  // Staking Details
+  static const stakingDetailsDelegation = "Delegation";
+  static const stakingDetailsDelegationStatus = "Delegation Status";
+  static const stakingDetailsDelegating = "Delegating";
+  static const stakingDetailsStatus = "Status";
+  static const stakingDetailsCommissionInformation = "Commission Information";
+  static const stakingDetailsAdditionalDetails = "Additional Details";
+  static const stakingDetailsValidatorDetails = "Validator Details";
+  static const stakingDetailsButtonDelegate = "Delegate";
+  static const stakingDetailsAddresses = "Addresses";
+  static const stakingDetailsOperatorAddress = "Operator Address";
+  static const stakingDetailsOperatorAddressCopied = "Operator Address Copied";
+  static const stakingDetailsOwnerAddress = "Owner Address";
+  static const stakingDetailsOwnerAddressCopied = "Owner Address Copied";
+  static const stakingDetailsWithdrawAddress = "Withdraw Address";
+  static const stakingDetailsWithdrawAddressCopied = "Withdraw Address Copied";
+  static const stakingDetailsUnbondingHeight = "Unbonding Height";
+  static const stakingDetailsVotingPower = "Voting Power";
+  static const stakingDetailsUptime = "Uptime";
+  static const stakingDetailsMissedBlocks = "Missed Blocks";
+  static const stakingDetailsBondHeight = "Bond Height";
+  static const stakingDetailsConsensusPubkey = "Consensus Pubkey";
+  static const stakingDetailsConsensusPubkeyCopied = "Consensus Pubkey Copied";
+  static const stakingDetailsJailedUntil = "Jailed Until";
+  static const stakingDetailsCommissionInfo = "Commission Info";
+  static const stakingDetailsCommissionRate = "Commission Rate";
+  static const stakingDetailsDelegators = "Delegators";
+  static const stakingDetailsRewards = "Rewards";
+  static const stakingDetailsMaxChangeRate = "Max Change Rate";
+  static const stakingDetailsBonded = "Bonded";
+  static const stakingDetailsTotalShares = "Total Shares";
+  static const stakingDetailsCommissionRateRange = "Commission Rate Range";
+  static const stakingDetailsValidatorTransactions = "Validator Transactions";
+  static const stakingDetailsReward = "Reward";
+  static const stakingDetailsViewLess = "View Less";
+
+  // Staking Management
+  static const stakingManagementDescription = "Description";
+  static const stakingManagementMyDelegation = "My Delegation";
+  static const stakingManagementNoHash = "-- HASH";
+
+  // Staking Confirm
+  static const stakingConfirmDelegatorAddress = "Delegator Address";
+  static const stakingConfirmValidatorAddress = "Validator Address";
+  static const stakingConfirmValidatorSource = "Validator Source";
+  static const stakingConfirmValidatorDestination = "Validator Destination";
+  static const stakingConfirmDenom = "Denom";
+  static const stakingConfirmAmount = "Amount";
+  static const stakingConfirmHash = "hash";
+  static const stakingConfirmData = "Data";
+  static const stakingConfirmGasAdjustment = "Gas Adjustment";
+  static const stakingConfirmDefault = "(Default)";
+  static const stakingConfirmBack = "Back";
+  static const stakingConfirmSign = "Sign";
+  static const starPositiveNumber = '*Positive number';
+
+  // Staking delegate
+  static const stakingDelegateWarningAccountLockTitle =
+      "Warning: Account will lock";
+  static const stakingDelegateWarningAccountLockMessage =
+      "In order to undelegate funds back into this account, the account will need to be able to pay the required fees. Delegating the specified amount of funds from this account will result in it being locked until another account sends it funds.";
+  static const stakingDelegateWarningFundsLockTitle =
+      "Staking will lock your funds for 21+ days";
+  static const stakingDelegateWarningFundsLockMessage =
+      "You will need to undelegate in order for your staked assets to be liquid again. This process will take 21 days to complete.";
+  static const stakingDelegateAvailableBalance = "Available HASH Balance";
+  static const stakingDelegateAmountToDelegate = "Amount to Delegate*";
+  static const stakingDelegateConfirmHash = "HASH";
+  static const stakingDelegateCurrentDelegation = "Current Delegation";
+  static const stakingDelegateDetails = "Details";
+  static const stakingDelegateEnterAmountToDelegate =
+      "Enter Amount of HASH to delegate";
+
+  // Staking Redelegate
+  static const stakingRedelegateRedelegate = "Redelegate";
+  static const stakingRedelegateAvailableForRedelegation =
+      "Available for Redelegation";
+  static const stakingRedelegateSelectForRedelegation =
+      "Select Validator for Redelegation";
+  static const stakingRedelegateRedelegating = "Redelegating";
+  static const stakingRedelegateFrom = "From";
+  static const stakingRedelegateTo = "To";
+  static const stakingRedelegateValidatorNotSelected =
+      "Validator has not been selected yet";
+  static const stakingDelegateAmountToRedelegate = "Amount to Redelegate*";
+  static const stakingRedelegateEnterAmount =
+      "Enter Amount of HASH to redelegate";
+
+  // Staking Undelegate
+  static const stakingUndelegateUndelegate = "Undelegate";
+  static const stakingUndelegateUndelegating = "Undelegating";
+  static const stakingUndelegateUndelegationDetails = "Undelegation Details";
+  static const stakingUndelegateWarningUnbondingPeriodTitle =
+      "Once the unbonding period begins you will:";
+  static const stakingUndelegateWarningUnbondingPeriodMessage =
+      " • not receive staking reward\n • not be able to cancel the unbonding\n • need to wait 21 days for the amount to be liquid";
+  static const stakingUndelegateWarningSwitchValidators =
+      "Trying to switch validators? Instantly stake your assets to another validator by tapping here.";
+  static const stakingUndelegateAvailableForUndelegation =
+      "Available for Undelegation";
+  static const stakingUndelegateAmountToUndelegate = "Amount to Undelegate*";
+  static const stakingUndelegateEnterAmount =
+      "Enter Amount of HASH to undelegate";
+
+  // Staking Delegation Bloc
+  static const stakingDelegationBlocBack = "Back";
+  static const stakingDelegationBlocClaimRewards = "Claim Rewards";
+  static const stakingConfirmClaimRewardsDetails = "Claim Rewards Details";
+
+  // Staking Success Screen
+  static const stakingSuccessSuccess = "SUCCESS";
+  static String stakingSuccessSuccessful(String delegationType) =>
+      '$delegationType successful';
+  static const stakingSuccessBackToDashboard = "Back to Dashboard";
+
+  static String stakingConfirmHashAmount(String amount) => '$amount HASH';
+
+  // Staking Confirm Rewards Screen
+  static const stakingConfirmRewardClaim = "Claim";
+  static const stakingConfirmRewardsAvailable = "Rewards Available";
+
+  // Confirm Undelegate Screen
+  static const stakingConfirmUndelegationDetails = "Undelegation Details";
+  static const stakingConfirmAmountToUndelegate = "Amount to Undelegate";
+  static const stakingConfirmNewTotalDelegation = "New Total Delegation";
+
+  // Confirm Redelegate Screen
+  static const stakingConfirmRedelegationDetails = "Redelegation Details";
+  static const stakingConfirmAmountToRedelegate = "Amount to Redelegate";
+
+  // Confirm Delegate Screen
+  static const stakingConfirmDelegating = "Delegating";
+  static const stakingConfirmDelegationDetails = "Delegation Details";
+  static const stakingConfirmAmountToDelegate = "Amount to Delegate";
 }

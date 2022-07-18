@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/profile/item_count.dart';
-import 'package:provenance_wallet/screens/home/profile/item_label.dart';
+import 'package:provenance_wallet/screens/home/settings/item_count.dart';
+import 'package:provenance_wallet/screens/home/settings/item_label.dart';
 
 class LinkItem extends StatelessWidget {
   const LinkItem({

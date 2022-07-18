@@ -7,9 +7,9 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
-import 'package:provenance_wallet/screens/home/profile/profile_tab.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
+import 'package:provenance_wallet/screens/home/view_more/view_more_tab.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
@@ -73,7 +73,7 @@ class HomeScreenState extends State<HomeScreen>
   void initState() {
     _bloc.isLoading.listen((e) {
       if (e) {
-        ModalLoadingRoute.showLoading("", context);
+        ModalLoadingRoute.showLoading(context);
       } else {
         ModalLoadingRoute.dismiss(context);
       }
@@ -135,8 +135,8 @@ class HomeScreenState extends State<HomeScreen>
                 ),
                 TabItem(
                   2 == _currentTabIndex,
-                  Strings.profile,
-                  PwIcons.userAccount,
+                  Strings.viewMore,
+                  PwIcons.viewMore,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),
@@ -152,10 +152,17 @@ class HomeScreenState extends State<HomeScreen>
             child: TabBarView(
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
-              children: const [
+              children: [
                 DashboardTab(),
                 TransactionTab(),
-                ProfileTab(),
+                ViewMoreTab(
+                  onFlowCompletion: () {
+                    setState(() {
+                      _tabController.animateTo(0);
+                      _currentTabIndex = 0;
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -227,7 +234,7 @@ class HomeScreenState extends State<HomeScreen>
       },
     );
 
-    ModalLoadingRoute.showLoading("", context);
+    ModalLoadingRoute.showLoading(context);
 
     await get<HomeBloc>()
         .sendMessageFinish(
@@ -268,7 +275,7 @@ class HomeScreenState extends State<HomeScreen>
       },
     );
 
-    ModalLoadingRoute.showLoading("", context);
+    ModalLoadingRoute.showLoading(context);
 
     await get<HomeBloc>()
         .signTransactionFinish(

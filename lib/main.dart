@@ -61,6 +61,9 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
+import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
+import 'package:provenance_wallet/services/validator_service/validator_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
@@ -395,6 +398,16 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => isMockingTransactionService
           ? MockTransactionService()
           : DefaultTransactionService(),
+    );
+
+    final isMockingValidatorService =
+        await keyValueService.getBool(PrefKey.isMockingValidatorService) ??
+            false;
+
+    get.registerLazySingleton<ValidatorService>(
+      () => isMockingValidatorService
+          ? MockValidatorService()
+          : DefaultValidatorService(),
     );
     get.registerLazySingleton<ConnectivityService>(
       () => DefaultConnectivityService(),

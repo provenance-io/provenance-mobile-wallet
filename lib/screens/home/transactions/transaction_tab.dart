@@ -19,8 +19,6 @@ class TransactionTabState extends State<TransactionTab> {
   final _scrollController = ScrollController();
   late HomeBloc _bloc;
 
-  final textDivider = " • ";
-
   @override
   void initState() {
     super.initState();

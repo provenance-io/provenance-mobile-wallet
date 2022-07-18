@@ -46,6 +46,7 @@ enum PrefKey {
   httpClientDiagnostics500,
   isMockingAssetService,
   isMockingTransactionService,
+  isMockingValidatorService,
   isSubsequentRun,
   sessionData,
   sessionSuspendedTime,

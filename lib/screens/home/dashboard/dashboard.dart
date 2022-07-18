@@ -248,7 +248,7 @@ class _DashboardState extends State<Dashboard> {
             AccountPortfolio(
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
-            VerticalSpacer.xxLarge(),
+            VerticalSpacer.medium(),
             Padding(
               padding: EdgeInsets.only(
                 left: Spacing.xxLarge,
@@ -256,11 +256,13 @@ class _DashboardState extends State<Dashboard> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   PwText(
                     Strings.myAssets,
                     style: PwTextStyle.title,
                   ),
+                  Expanded(child: Container()),
                 ],
               ),
             ),

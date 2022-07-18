@@ -1,9 +1,22 @@
-import '../pw_design.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
-class PwListDivider extends StatelessWidget {
-  const PwListDivider({Key? key, this.indent}) : super(key: key);
+class PwListDivider extends StatelessWidget with PwColorMixin {
+  const PwListDivider({
+    Key? key,
+    this.indent,
+    this.color = PwColor.neutral600,
+  }) : super(key: key);
+
+  PwListDivider.alternate({
+    Key? key,
+    this.indent,
+  })  : color = PwColor.neutral700,
+        super(key: key);
 
   final double? indent;
+
+  @override
+  final PwColor color;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +25,7 @@ class PwListDivider extends StatelessWidget {
       thickness: 1,
       indent: indent,
       endIndent: indent,
-      color: Theme.of(context).colorScheme.neutral600,
+      color: getColor(context) ?? Theme.of(context).colorScheme.neutral600,
     );
   }
 }
