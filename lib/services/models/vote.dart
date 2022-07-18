@@ -37,10 +37,10 @@ class Vote {
   });
 
   final String voterAddress;
-  final int? answerYes;
-  final int? answerNo;
-  final int? answerNoWithVeto;
-  final int? answerAbstain;
+  final double? answerYes;
+  final double? answerNo;
+  final double? answerNoWithVeto;
+  final double? answerAbstain;
   final int blockHeight;
   final String txHash;
   final DateTime txTimestamp;

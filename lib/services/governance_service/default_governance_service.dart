@@ -9,6 +9,9 @@ import 'package:provenance_wallet/services/notification/client_notification_mixi
 
 class DefaultGovernanceService extends GovernanceService
     with ClientNotificationMixin, ClientCoinMixin {
+  String get _governanceServiceBasePath =>
+      '/service-mobile-wallet/external/api/v1/explorer';
+
   @override
   Future<List<Proposal>> getProposals(
     Coin coin,
@@ -16,8 +19,7 @@ class DefaultGovernanceService extends GovernanceService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/gov/proposals/all?count=50&page=$pageNumber',
+      '$_governanceServiceBasePath/proposals?count=50&page=$pageNumber',
       converter: (json) {
         if (json is String) {
           return <Proposal>[];
@@ -52,8 +54,7 @@ class DefaultGovernanceService extends GovernanceService
   ) async {
     final client = await getClient(coin);
     final data = await client.get(
-      // FIXME: Replace this URL with the service's URL
-      'https://service-explorer.test.provenance.io/api/v2/gov/address/$address/votes',
+      '$_governanceServiceBasePath/proposals/votes/$address',
       converter: (json) {
         if (json is String) {
           return <Vote>[];

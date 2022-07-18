@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/governance_service/governance_service.dart';
@@ -53,7 +54,7 @@ class ProposalsBloc extends PwPagingCache {
       );
 
       final myVotes = await _governanceService.getVotesForAddress(
-        _account.id,
+        _account.publicKey!.address,
         _account.publicKey!.coin,
       );
 
@@ -90,6 +91,18 @@ class ProposalsBloc extends PwPagingCache {
     );
 
     _isLoadingProposals.value = false;
+  }
+
+  Color getColor(String status, BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    switch (status.toLowerCase()) {
+      case "passed":
+        return colorScheme.positive300;
+      case "rejected":
+        return colorScheme.error;
+      default:
+        return colorScheme.neutral200;
+    }
   }
 }
 

@@ -149,18 +149,6 @@ class AssetBarChart extends StatelessWidget {
       maxY *= 1.1;
     }
 
-    checkToShowTitle(
-      minValue,
-      maxValue,
-      sideTitles,
-      appliedInterval,
-      value,
-    ) {
-      final mod = value % appliedInterval;
-
-      return mod == 0.0;
-    }
-
     const microsecondsInAMinute = 1000000 * 60;
     double? interval;
     switch (details.value) {
@@ -193,33 +181,49 @@ class AssetBarChart extends StatelessWidget {
         gridData: FlGridData(show: false),
         titlesData: FlTitlesData(
           show: false,
-          bottomTitles: SideTitles(
-            interval: interval,
-            textAlign: TextAlign.center,
-            showTitles: false,
-            reservedSize: bottomSize.height,
-            rotateAngle: xLabelAngle,
-            getTextStyles: (context, value) => labelStyle,
-            getTitles: (double value) {
-              final timeStamp = DateTime.fromMicrosecondsSinceEpoch(
-                (value + minX).toInt(),
-              );
+          bottomTitles: AxisTitles(
+            axisNameSize: bottomSize.height,
+            sideTitles: SideTitles(
+              interval: interval,
+              getTitlesWidget: (value, titleMeta) {
+                final timeStamp = DateTime.fromMicrosecondsSinceEpoch(
+                  (value + minX).toInt(),
+                );
 
-              return xFormatter.format(timeStamp);
-            },
-            checkToShowTitle: checkToShowTitle,
+                final data = xFormatter.format(timeStamp);
+                return Transform.rotate(
+                  angle: xLabelAngle,
+                  child: PwText(
+                    data,
+                    textAlign: TextAlign.center,
+                    style: PwTextStyle.bodyBold,
+                  ),
+                );
+              },
+              showTitles: false,
+              reservedSize: bottomSize.height,
+            ),
           ),
-          leftTitles: SideTitles(
-            showTitles: false,
-            textAlign: TextAlign.center,
-            reservedSize: leftSize.width,
-            rotateAngle: yLabelAngle,
-            getTextStyles: (context, value) => labelStyle,
-            getTitles: (double value) => yFormatter.format(value + minY),
-            checkToShowTitle: checkToShowTitle,
+          leftTitles: AxisTitles(
+            axisNameSize: leftSize.width,
+            sideTitles: SideTitles(
+              interval: interval,
+              getTitlesWidget: (value, titleMeta) {
+                return Transform.rotate(
+                  angle: yLabelAngle,
+                  child: PwText(
+                    yFormatter.format(value + minY),
+                    textAlign: TextAlign.center,
+                    style: PwTextStyle.bodyBold,
+                  ),
+                );
+              },
+              showTitles: false,
+              reservedSize: bottomSize.height,
+            ),
           ),
-          topTitles: SideTitles(showTitles: false),
-          rightTitles: SideTitles(showTitles: false),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(
           show: false,
@@ -283,7 +287,7 @@ class AssetBarChart extends StatelessWidget {
             ),
             preventCurveOverShooting: true,
             isCurved: true,
-            colors: [graphColor],
+            color: graphColor,
             spots: graphList
                 .map(
                   (element) => FlSpot(
@@ -297,12 +301,14 @@ class AssetBarChart extends StatelessWidget {
                 ? null
                 : BarAreaData(
                     show: true,
-                    gradientFrom: const Offset(0, 0),
-                    gradientTo: const Offset(0, 1),
-                    colors: [
-                      graphColor,
-                      graphFillColor!,
-                    ],
+                    gradient: LinearGradient(
+                      colors: [
+                        graphColor,
+                        graphFillColor!,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
                   ),
           ),
         ],

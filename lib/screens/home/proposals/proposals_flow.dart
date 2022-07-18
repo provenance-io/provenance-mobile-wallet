@@ -8,8 +8,8 @@ import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_tab/proposals_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
