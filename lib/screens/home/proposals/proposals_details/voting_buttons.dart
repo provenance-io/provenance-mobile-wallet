@@ -20,112 +20,82 @@ class VotingButtons extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PwListDivider(
-          indent: Spacing.largeX3,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
-            vertical: Spacing.xLarge,
-          ),
-          child: PwText(
-            Strings.proposalDetailsProposalVoting,
-            style: PwTextStyle.title,
-          ),
-        ),
-        PwListDivider(
-          indent: Spacing.largeX3,
+        PwListDivider.alternate(
+          indent: Spacing.large,
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Spacing.largeX3,
-            right: Spacing.largeX3,
-            top: Spacing.xLarge,
+            left: Spacing.large,
+            right: Spacing.large,
+            top: Spacing.large,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                child: PwButton(
+                child: PwOutlinedButton(
+                  Strings.proposalDetailsYes,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_YES,
                     );
                   },
-                  child: PwText(
-                    Strings.proposalDetailsYes,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
+                  fpTextColor: PwColor.neutralNeutral,
+                  fpTextStyle: PwTextStyle.bodyBold,
                 ),
               ),
               HorizontalSpacer.large(),
               Flexible(
-                child: PwButton(
+                child: PwOutlinedButton(
+                  Strings.proposalDetailsNo,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO,
                     );
                   },
-                  child: PwText(
-                    Strings.proposalDetailsNo,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
+                  fpTextColor: PwColor.neutralNeutral,
+                  fpTextStyle: PwTextStyle.bodyBold,
                 ),
               )
             ],
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
-            vertical: Spacing.xLarge,
+          padding: EdgeInsets.all(
+            Spacing.large,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                child: PwButton(
+                child: PwOutlinedButton(
+                  Strings.proposalDetailsNoWithVeto,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
                     );
                   },
-                  child: PwText(
-                    Strings.proposalDetailsNoWithVeto,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
+                  fpTextColor: PwColor.neutralNeutral,
+                  fpTextStyle: PwTextStyle.bodyBold,
                 ),
               ),
               HorizontalSpacer.large(),
               Flexible(
-                child: PwButton(
+                child: PwOutlinedButton(
+                  Strings.proposalDetailsAbstain,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_ABSTAIN,
                     );
                   },
-                  child: PwText(
-                    Strings.proposalDetailsAbstain,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
+                  fpTextColor: PwColor.neutralNeutral,
+                  fpTextStyle: PwTextStyle.bodyBold,
                 ),
               )
             ],
@@ -133,8 +103,8 @@ class VotingButtons extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Spacing.largeX3,
-            right: Spacing.largeX3,
+            left: Spacing.large,
+            right: Spacing.large,
             bottom: Spacing.largeX3,
           ),
           child: Row(
@@ -142,7 +112,7 @@ class VotingButtons extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                child: PwButton(
+                child: PwTextButton(
                   onPressed: () {
                     _bloc.showWeightedVote(proposal);
                   },
@@ -151,14 +121,13 @@ class VotingButtons extends StatelessWidget {
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
+                    style: PwTextStyle.bodyBold,
                   ),
                 ),
               )
             ],
           ),
         ),
-        HorizontalSpacer.largeX3(),
       ],
     );
   }
