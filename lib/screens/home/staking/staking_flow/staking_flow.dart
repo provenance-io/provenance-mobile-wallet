@@ -51,7 +51,7 @@ abstract class StakingFlowNavigator {
 
   Future<void> showRedelegationReview();
 
-  Future<void> showTransactionData(String data);
+  Future<void> showTransactionData(Object? data);
 
   Future<void> showTransactionSuccess(SelectedDelegationType selected);
 
@@ -202,7 +202,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showTransactionData(String data) async {
+  Future<void> showTransactionData(Object? data) async {
     showPage(
       (context) => StakingTransactionDataScreen(
         data: data,

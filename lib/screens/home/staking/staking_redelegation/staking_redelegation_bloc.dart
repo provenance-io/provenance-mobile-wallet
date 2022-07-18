@@ -102,8 +102,8 @@ class StakingRedelegationBloc extends Disposable {
         validatorDstAddress: details.toRedelegate?.addressId ?? "");
   }
 
-  String getRedelegateMessageJson() {
-    return _getRedelegateMessage().toProto3Json() as String;
+  Object? getRedelegateMessageJson() {
+    return _getRedelegateMessage().toProto3Json();
   }
 
   Future<void> doRedelegate(

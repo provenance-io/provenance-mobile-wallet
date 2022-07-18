@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
-import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -32,8 +31,8 @@ class ProposalVoteConfirmBloc {
     );
   }
 
-  String getMsgVoteJson() {
-    return prettyJson(_getMsgVote().toProto3Json());
+  Object? getMsgVoteJson() {
+    return _getMsgVote().toProto3Json();
   }
 
   gov.MsgVote _getMsgVote() {

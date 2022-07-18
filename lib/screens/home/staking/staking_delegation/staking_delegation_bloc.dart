@@ -149,16 +149,16 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  String getClaimRewardJson() {
-    return _getClaimRewardMessage().toProto3Json() as String;
+  Object? getClaimRewardJson() {
+    return _getClaimRewardMessage().toProto3Json();
   }
 
-  String getUndelegateMessageJson() {
-    return _getUndelegateMessage().toProto3Json() as String;
+  Object? getUndelegateMessageJson() {
+    return _getUndelegateMessage().toProto3Json();
   }
 
-  String getDelegateMessageJson() {
-    return _getDelegateMessage().toProto3Json() as String;
+  Object? getDelegateMessageJson() {
+    return _getDelegateMessage().toProto3Json();
   }
 
   Future<void> _sendMessage(
