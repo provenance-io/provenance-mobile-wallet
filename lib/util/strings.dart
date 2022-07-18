@@ -596,9 +596,9 @@ class Strings {
   // Proposal Details Screen
   static String proposalDetailsTitle(int proposalId) => "Proposal $proposalId";
   static const proposalDetailsProposalInformation = "Proposal Information";
-  static const proposalDetailsId = "ID";
+  static const proposalDetailsId = "ID#";
   static const proposalDetailsTitleString = "Title";
-  static const proposalDetailsStatus = "Status";
+  static const proposalDetailsStatus = "Global Status";
   static const proposalDetailsProposer = "Proposer";
   static const proposalDetailsDescription = "Description";
   static const proposalDetailsProposalTiming = "Proposal Timing";

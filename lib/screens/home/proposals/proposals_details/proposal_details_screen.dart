@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/home/proposals/proposals_details/color
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/deposit_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_buttons.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/address_util.dart';
@@ -123,44 +124,35 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           ],
                         ),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
+                      DetailsHeader(
+                        title: Strings.proposalDetailsProposalInformation,
                       ),
-                      DetailsItem.fromStrings(
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
                         title: Strings.proposalDetailsId,
                         value: "${_proposal.proposalId}",
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                      DetailsItem.fromStrings(
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
                         title: Strings.proposalDetailsTitleString,
                         value: _proposal.title,
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                      DetailsItem.fromStrings(
-                        title: Strings.proposalDetailsStatus,
-                        value: _proposal.status,
-                      ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                      DetailsItem.fromStrings(
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
                         title: Strings.proposalDetailsProposer,
                         value: abbreviateAddress(_proposal.proposerAddress),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
-                      DetailsItem.fromStrings(
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
                         title: Strings.proposalDetailsDescription,
                         value: _proposal.description,
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
+                        title: Strings.proposalDetailsStatus,
+                        value: _proposal.status,
                       ),
+                      PwListDivider.alternate(),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: Spacing.largeX3,
@@ -171,41 +163,31 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           style: PwTextStyle.title,
                         ),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsSubmitTime,
                         value: _formatter.format(_proposal.submitTime),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsDepositEndTime,
                         value: _formatter.format(_proposal.depositEndTime),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsVotingStartTime,
                         value: _proposal.startTime.year == 1
                             ? "--"
                             : _formatter.format(_proposal.startTime),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsVotingEndTime,
                         value: _proposal.endTime.year == 1
                             ? "--"
                             : _formatter.format(_proposal.endTime),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         padding: EdgeInsets.only(
                           left: Spacing.largeX3,
@@ -233,33 +215,25 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.currentDepositFormatted,
                         _proposal.neededDepositFormatted,
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsQuorumThreshold,
                         value:
                             "${(_proposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsPassThreshold,
                         value:
                             "${(_proposal.passThreshold * 100).toStringAsFixed(2)}%",
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsVetoThreshold,
                         value:
                             "${(_proposal.vetoThreshold * 100).toStringAsFixed(2)}%",
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         padding: EdgeInsets.only(
                           left: Spacing.largeX3,
@@ -273,9 +247,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.totalAmount.toDouble(),
                         _proposal.totalEligibleAmount.toDouble(),
                       ),
-                      PwListDivider(
-                        indent: Spacing.largeX3,
-                      ),
+                      PwListDivider.alternate(),
                       DetailsItem.fromStrings(
                         title: Strings.proposalDetailsTotalVotes,
                         value: _proposal.totalAmount
