@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
@@ -102,6 +103,15 @@ class ProposalsBloc extends PwPagingCache {
         return colorScheme.error;
       default:
         return colorScheme.neutral200;
+    }
+  }
+
+  String getExplorerUrl(String address) {
+    switch (_account.publicKey?.coin) {
+      case Coin.mainNet:
+        return "https://explorer.provenance.io/accounts/$address";
+      default:
+        return "https://explorer.test.provenance.io/accounts/$address";
     }
   }
 }

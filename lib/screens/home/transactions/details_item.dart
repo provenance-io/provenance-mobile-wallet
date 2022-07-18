@@ -42,6 +42,15 @@ class DetailsItem extends StatelessWidget {
     );
   }
 
+  DetailsItem.alternateChild({
+    Key? key,
+    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    required this.title,
+    required this.endChild,
+    this.color = PwColor.neutral200,
+    this.style = PwTextStyle.footnote,
+  }) : super(key: key);
+
   DetailsItem.withRowChildren({
     Key? key,
     this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
