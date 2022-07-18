@@ -25,7 +25,7 @@ class ProposalDetailsScreen extends StatefulWidget {
 
 class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
   final _formatter = DateFormat.yMMMd('en_US').add_Hms();
-
+  bool _isActive = false;
   late final Proposal _proposal;
   @override
   void initState() {
@@ -52,9 +52,76 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       horizontal: Spacing.large,
                     ),
                     children: [
-                      PwText(
-                        Strings.proposalDetailsProposalInformation,
-                        style: PwTextStyle.title,
+                      Container(
+                        padding: EdgeInsets.all(Spacing.large),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.neutral700,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                          color: Theme.of(context).colorScheme.neutral700,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            HorizontalSpacer.medium(),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  PwText(
+                                    Strings.proposalVoteConfirmProposerAddress,
+                                    style: PwTextStyle.body,
+                                    color: PwColor.neutralNeutral,
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                  HorizontalSpacer.xSmall(),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      setState(() {
+                                        _isActive = !_isActive;
+                                      });
+                                    },
+                                    child: PwText(
+                                      _isActive
+                                          ? abbreviateAddressAlt(widget
+                                              .selectedProposal.proposerAddress)
+                                          : widget
+                                              .selectedProposal.proposerAddress,
+                                      color: PwColor.neutral200,
+                                      style: PwTextStyle.footnote,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async {
+                                // final url = get<StakingDetailsBloc>().getProvUrl();
+                                // if (await canLaunch(url)) {
+                                //   await launch(url);
+                                // } else {
+                                //   throw 'Could not launch $url';
+                                // }
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Spacing.large),
+                                child: PwIcon(
+                                  PwIcons.newWindow,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .neutralNeutral,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       PwListDivider(
                         indent: Spacing.largeX3,
