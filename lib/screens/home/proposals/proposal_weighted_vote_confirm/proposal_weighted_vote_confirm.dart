@@ -2,8 +2,8 @@ import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/common/widgets/pw_slider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/weighted_vote_option_column.dart';
@@ -145,7 +145,7 @@ class _ProposalWeightedVoteConfirmScreenState
                     voteAmount: details.abstainAmount,
                     option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
                   ),
-                PwSlider(
+                PwGasAdjustmentSlider(
                   title: Strings.stakingConfirmGasAdjustment,
                   startingValue: defaultGasEstimate,
                   min: 0,
