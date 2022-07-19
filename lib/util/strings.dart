@@ -629,6 +629,10 @@ class Strings {
   // Weighted Vote Screen
   static const proposalWeightedVote = "Weighted Vote";
   static const proposalWeightedVoteVotingStatus = "Voting Status";
+  static const proposalWeightedVoteVoteYes = "Vote Yes";
+  static const proposalWeightedVoteVoteNo = "Vote No";
+  static const proposalWeightedVoteVoteNoWithVeto = "Vote No w/Veto";
+  static const proposalWeightedVoteVoteAbstain = "Vote Abstain";
 
   // Proposal Vote Confirm Screen
   static const proposalVoteConfirmConfirmVote = "Confirm Vote";

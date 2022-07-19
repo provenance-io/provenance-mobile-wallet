@@ -47,14 +47,21 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.proposalWeightedVote,
+        style: PwTextStyle.footnote,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+        child: Column(
           children: [
-            WeightedVoteSliders(),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+                children: const [
+                  WeightedVoteSliders(),
+                ],
+              ),
+            ),
             StreamBuilder<WeightedVoteDetails>(
               initialData: _bloc.weightedVoteDetails.value,
               stream: _bloc.weightedVoteDetails,
@@ -64,34 +71,32 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                 if (details == null) {
                   return Container();
                 }
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: PwButton(
-                        enabled: details.abstainAmount +
-                                details.noAmount +
-                                details.noWithVetoAmount +
-                                details.yesAmount ==
-                            100,
-                        onPressed: () {
-                          get<ProposalsFlowBloc>()
-                              .showWeightedVoteReview(widget.proposal);
-                        },
-                        child: PwText(
-                          Strings.continueName,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
-                      ),
-                    )
-                  ],
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.large,
+                  ),
+                  child: PwButton(
+                    enabled: details.abstainAmount +
+                            details.noAmount +
+                            details.noWithVetoAmount +
+                            details.yesAmount ==
+                        100,
+                    onPressed: () {
+                      get<ProposalsFlowBloc>()
+                          .showWeightedVoteReview(widget.proposal);
+                    },
+                    child: PwText(
+                      Strings.continueName,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                      color: PwColor.neutralNeutral,
+                      style: PwTextStyle.body,
+                    ),
+                  ),
                 );
               },
             ),
+            VerticalSpacer.largeX3()
           ],
         ),
       ),
