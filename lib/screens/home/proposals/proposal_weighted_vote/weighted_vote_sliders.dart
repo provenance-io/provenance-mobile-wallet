@@ -155,7 +155,6 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
     setState(() {
       final oldValue = _currentValues[index];
       final difference = newValue - oldValue;
-      print(difference);
 
       if (_sharedPoints == 0 && !difference.isNegative) {
         evenOutTotal(index, difference.toInt());
