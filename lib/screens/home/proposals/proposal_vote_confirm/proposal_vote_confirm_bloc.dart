@@ -40,7 +40,7 @@ class ProposalVoteConfirmBloc {
     return gov.MsgVote(
       option: _voteOption,
       proposalId: Int64.parseInt(_proposal.proposalId.toString()),
-      voter: _account.id,
+      voter: _account.publicKey!.address,
     );
   }
 
