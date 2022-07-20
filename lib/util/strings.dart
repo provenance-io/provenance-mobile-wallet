@@ -620,11 +620,13 @@ class Strings {
       "Voted $formattedVote";
 
   // Proposal Details Screen
-  static String proposalDetailsTitle(int proposalId) => "Proposal $proposalId";
+  static String proposalDetailsTitle(int proposalId) =>
+      "Governance Proposal $proposalId";
   static const proposalDetailsProposalInformation = "Proposal Information";
-  static const proposalDetailsId = "ID";
+  static const proposalDetailsId = "ID#";
   static const proposalDetailsTitleString = "Title";
-  static const proposalDetailsStatus = "Status";
+  static const proposalDetailsStatus = "Global Status";
+  static const proposalDetailsMyStatus = "My Status";
   static const proposalDetailsProposer = "Proposer";
   static const proposalDetailsDescription = "Description";
   static const proposalDetailsProposalTiming = "Proposal Timing";
@@ -634,8 +636,9 @@ class Strings {
   static const proposalDetailsVotingEndTime = "Voting End Time";
   static const proposalDetailsDeposits = "Deposits";
   static String proposalDetailsDepositsHash(
-          double deposited, String depositPercentage) =>
-      "$deposited hash ($depositPercentage)";
+          String deposited, String depositPercentage) =>
+      "$deposited HASH ($depositPercentage)";
+  static const proposalDetailsThresholdDetails = "Threshold Details";
   static const proposalDetailsQuorumThreshold = "Quorum Threshold";
   static const proposalDetailsPassThreshold = "Pass Threshold";
   static const proposalDetailsVetoThreshold = "Veto Threshold";
@@ -647,7 +650,7 @@ class Strings {
   static const proposalDetailsAbstain = "Abstain";
   static const proposalDetailsProposalVoting = "Proposal Voting";
   static const proposalDetailsNeededDeposit = "Needed Deposit";
-  static String proposalDetailsHashNeeded(double needed) => "$needed hash";
+  static String proposalDetailsHashNeeded(double needed) => "$needed HASH";
 
   // Weighted Vote Screen
   static const proposalWeightedVote = "Weighted Vote";
