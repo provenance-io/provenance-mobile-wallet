@@ -1,4 +1,3 @@
-import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -6,12 +5,13 @@ import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/weighted_vote_option_column.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -58,129 +58,147 @@ class _ProposalWeightedVoteConfirmScreenState
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.proposalWeightedVoteConfirmVoteConfirm,
-              style: PwTextStyle.subhead,
+              Strings.proposalVoteConfirmConfirmVote,
+              style: PwTextStyle.footnote,
               textAlign: TextAlign.left,
             ),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 21),
-              child: Flexible(
-                child: IconButton(
-                  icon: PwIcon(
-                    PwIcons.back,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+            leading: IconButton(
+              icon: PwIcon(
+                PwIcons.back,
               ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
             actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 21),
-                child: PwTextButton(
-                  minimumSize: Size(
-                    80,
-                    50,
-                  ),
-                  onPressed: () {
-                    final data = _bloc.getMsgVoteWeightedJson();
-                    get<ProposalsFlowBloc>().showTransactionData(data);
-                  },
-                  child: PwText(
-                    Strings.stakingConfirmData,
-                    style: PwTextStyle.body,
-                  ),
+              PwTextButton(
+                minimumSize: Size(
+                  80,
+                  50,
+                ),
+                onPressed: () {
+                  final data = _bloc.getMsgVoteWeightedJson();
+                  get<ProposalsFlowBloc>().showTransactionData(data);
+                },
+                child: PwText(
+                  Strings.stakingConfirmData,
+                  style: PwTextStyle.footnote,
+                  underline: true,
                 ),
               ),
             ],
           ),
           body: Container(
             color: Theme.of(context).colorScheme.neutral750,
-            child: ListView(
+            child: Column(
               children: [
-                DetailsItem(
-                  title: Strings.proposalVoteConfirmProposerAddress,
-                  endChild: PwText(
-                    widget.proposal.proposalId.toString(),
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+                    children: [
+                      VerticalSpacer.largeX3(),
+                      AddressCard(
+                        title: Strings.proposalVoteConfirmProposerAddress,
+                        address: widget.proposal.proposerAddress,
+                      ),
+                      VerticalSpacer.large(),
+                      AddressCard(
+                        title: Strings.proposalVoteConfirmVoterAddress,
+                        address: widget.account.publicKey!.address,
+                      ),
+                      DetailsHeader(
+                        title: Strings.proposalVoteConfirmVotingDetails,
+                      ),
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
+                        title: Strings.proposalWeightedVoteProposalId,
+                        value: widget.proposal.proposalId.toString(),
+                      ),
+                      PwListDivider.alternate(),
+                      DetailsItem.alternateStrings(
+                        title: Strings.proposalDetailsTitleString,
+                        value: widget.proposal.title,
+                      ),
+                      PwListDivider.alternate(),
+                      VerticalSpacer.large(),
+                      PwText(
+                        Strings.proposalVoteConfirmVoteOption,
+                        style: PwTextStyle.footnote,
+                        color: PwColor.neutral200,
+                      ),
+                      VerticalSpacer.large(),
+                      SinglePercentageBarChart(
+                        details.yesAmount,
+                        100,
+                        title: Strings.proposalDetailsYes,
+                        childStyle: PwTextStyle.footnote,
+                        showDecimal: false,
+                        color: Theme.of(context).colorScheme.primary500,
+                      ),
+                      VerticalSpacer.large(),
+                      SinglePercentageBarChart(
+                        details.noAmount,
+                        100,
+                        title: Strings.proposalDetailsNo,
+                        childStyle: PwTextStyle.footnote,
+                        showDecimal: false,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      VerticalSpacer.large(),
+                      SinglePercentageBarChart(
+                        details.noWithVetoAmount,
+                        100,
+                        title: Strings.proposalDetailsNoWithVeto,
+                        childStyle: PwTextStyle.footnote,
+                        showDecimal: false,
+                        color: Theme.of(context).colorScheme.notice350,
+                      ),
+                      VerticalSpacer.large(),
+                      SinglePercentageBarChart(
+                        details.abstainAmount,
+                        100,
+                        title: Strings.proposalDetailsAbstain,
+                        childStyle: PwTextStyle.footnote,
+                        showDecimal: false,
+                        color: Theme.of(context).colorScheme.neutral550,
+                      ),
+                      PwGasAdjustmentSlider(
+                        title: Strings.stakingConfirmGasAdjustment,
+                        startingValue: defaultGasEstimate,
+                        onValueChanged: (value) {
+                          setState(() {
+                            _gasEstimate = value;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                PwListDivider(
-                  indent: Spacing.largeX3,
-                ),
-                DetailsItem(
-                  title: Strings.proposalVoteConfirmVoterAddress,
-                  endChild: PwText(
-                    abbreviateAddress(widget.account.id),
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
-                ),
-                PwListDivider(
-                  indent: Spacing.largeX3,
-                ),
-                if (details.yesAmount > 0)
-                  WeightedVoteOptionColumn(
-                    voteAmount: details.yesAmount,
-                    option: gov.VoteOption.VOTE_OPTION_YES,
-                  ),
-                if (details.noAmount > 0)
-                  WeightedVoteOptionColumn(
-                    voteAmount: details.noAmount,
-                    option: gov.VoteOption.VOTE_OPTION_NO,
-                  ),
-                if (details.noWithVetoAmount > 0)
-                  WeightedVoteOptionColumn(
-                    voteAmount: details.noWithVetoAmount,
-                    option: gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
-                  ),
-                if (details.abstainAmount > 0)
-                  WeightedVoteOptionColumn(
-                    voteAmount: details.abstainAmount,
-                    option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
-                  ),
-                PwGasAdjustmentSlider(
-                  title: Strings.stakingConfirmGasAdjustment,
-                  startingValue: defaultGasEstimate,
-                  min: 0,
-                  max: 5,
-                  onValueChanged: (value) {
-                    setState(() {
-                      _gasEstimate = value;
-                    });
-                  },
-                ),
-                PwListDivider(
-                  indent: Spacing.largeX3,
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.largeX3,
-                      vertical: Spacing.xLarge,
-                    ),
-                    child: Flexible(
-                      child: PwButton(
-                        onPressed: () async {
-                          ModalLoadingRoute.showLoading('', context);
-                          // Give the loading modal time to display
-                          await Future.delayed(Duration(milliseconds: 500));
-                          await _sendWeightedVote(_gasEstimate, context);
-                        },
-                        child: PwText(
-                          Strings.proposalVoteConfirmVote,
-                          softWrap: false,
-                          overflow: TextOverflow.fade,
-                          color: PwColor.neutralNeutral,
-                          style: PwTextStyle.body,
-                        ),
+                  padding: EdgeInsets.only(
+                    top: Spacing.large,
+                    left: Spacing.large,
+                    right: Spacing.large,
+                    bottom: Spacing.largeX3,
+                  ),
+                  child: Flexible(
+                    child: PwButton(
+                      onPressed: () async {
+                        ModalLoadingRoute.showLoading('', context);
+                        // Give the loading modal time to display
+                        await Future.delayed(Duration(milliseconds: 500));
+                        await _sendWeightedVote(_gasEstimate, context);
+                      },
+                      child: PwText(
+                        Strings.proposalWeightedVoteConfirmWeightedVote,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        color: PwColor.neutralNeutral,
+                        style: PwTextStyle.body,
                       ),
-                    )),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
