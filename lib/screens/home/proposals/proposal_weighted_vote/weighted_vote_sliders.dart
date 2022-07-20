@@ -164,20 +164,18 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
       if (difference <= _sharedPoints) {
         _currentValues[index] = newValue.toDouble();
         _sharedPoints -= difference;
-        _updateWeight();
       } else {
         final remainder = difference - _sharedPoints;
         if (remainder <= 0) {
           _currentValues[index] = _sharedPoints;
           _sharedPoints = 0;
-          _updateWeight();
-          return;
         } else {
           _sharedPoints = 0;
           evenOutTotal(
             index,
             remainder.toInt(),
           );
+          return;
         }
       }
       if (_sharedPoints > 100) {
