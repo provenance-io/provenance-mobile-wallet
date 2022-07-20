@@ -680,6 +680,7 @@ class Strings {
   static const proposalVoteSuccessSuccess = "SUCCESS";
   static const proposalVoteSuccessVoteSuccessful = "Vote Successful";
   static const stakingConfirmRewardsAvailable = "Rewards Available";
+  static const proposalVoteSuccessBackToDashboard = "Back To Dashboard";
 
   // Confirm Undelegate Screen
   static const stakingConfirmUndelegationDetails = "Undelegation Details";
