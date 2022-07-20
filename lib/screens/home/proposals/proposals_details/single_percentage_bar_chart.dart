@@ -10,10 +10,8 @@ class SinglePercentageBarChart extends StatelessWidget {
     ),
     this.color,
     required this.title,
-    required this.endValue,
   }) : super(key: key);
   final String title;
-  final String endValue;
   final double total;
   final double current;
   final EdgeInsets padding;
