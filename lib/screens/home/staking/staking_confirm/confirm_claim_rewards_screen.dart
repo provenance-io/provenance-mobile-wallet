@@ -36,7 +36,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
                 .showTransactionData(bloc.getClaimRewardJson());
           },
           onTransactionSign: (gasAdjustment) async {
-            ModalLoadingRoute.showLoading('', context);
+            ModalLoadingRoute.showLoading(context);
             // Give the loading modal time to display
             await Future.delayed(Duration(milliseconds: 500));
             await _sendTransaction(

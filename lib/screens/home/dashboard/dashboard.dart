@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
+import 'package:provenance_wallet/screens/action/action_flow.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
@@ -17,6 +18,8 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -36,6 +39,23 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final _notificationBellNotifier = ValueNotifier<int>(0);
+  late WalletConnectQueueService _connectQueueService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _connectQueueService = get<WalletConnectQueueService>();
+    _connectQueueService.addListener(_connectQueueUpdated);
+  }
+
+  @override
+  void dispose() {
+    _connectQueueService.removeListener(_connectQueueUpdated);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -44,6 +64,7 @@ class _DashboardState extends State<Dashboard> {
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
     final _keyValueService = get<KeyValueService>();
+    final _walletConnectService = get<WalletConnectService>();
 
     return Container(
       decoration: BoxDecoration(
@@ -64,8 +85,8 @@ class _DashboardState extends State<Dashboard> {
               elevation: 0.0,
               actions: [
                 StreamBuilder<WalletConnectSessionState>(
-                  initialData: bloc.sessionEvents.state.value,
-                  stream: bloc.sessionEvents.state,
+                  initialData: _walletConnectService.sessionEvents.state.value,
+                  stream: _walletConnectService.sessionEvents.state,
                   builder: (context, snapshot) {
                     final connected = snapshot.data?.status ==
                         WalletConnectSessionStatus.connected;
@@ -129,8 +150,8 @@ class _DashboardState extends State<Dashboard> {
                             final accountId =
                                 accountService.events.selected.value?.id;
                             if (accountId != null) {
-                              final success =
-                                  await bloc.tryRestoreSession(accountId);
+                              final success = await _walletConnectService
+                                  .tryRestoreSession(accountId);
                               if (!success) {
                                 final addressData = await Navigator.of(
                                   context,
@@ -144,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                                 );
 
                                 if (addressData != null) {
-                                  bloc
+                                  _walletConnectService
                                       .connectSession(accountId, addressData)
                                       .catchError((err) {
                                     PwDialog.showError(
@@ -173,10 +194,15 @@ class _DashboardState extends State<Dashboard> {
                       return Container();
                     }
 
-                    return NotificationBell(
-                      notificationCount: 11,
-                      placeCount: 1,
-                    );
+                    return ValueListenableBuilder<int>(
+                        valueListenable: _notificationBellNotifier,
+                        builder: (context, value, child) {
+                          return NotificationBell(
+                            notificationCount: value,
+                            placeCount: 1,
+                            onClicked: _onNotificationBellClicked,
+                          );
+                        });
                   },
                 ),
               ],
@@ -202,12 +228,14 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Row(
                         children: [
-                          PwText(
-                            abbreviateAddress(accountAddress),
-                            key: Dashboard.keyAccountAddressText,
-                            style: PwTextStyle.body,
+                          Expanded(
+                            child: PwText(
+                              abbreviateAddress(accountAddress),
+                              key: Dashboard.keyAccountAddressText,
+                              style: PwTextStyle.body,
+                              overflow: TextOverflow.fade,
+                            ),
                           ),
-                          if (coin != null) HorizontalSpacer.large(),
                           if (coin != null)
                             PwText(
                               coin.displayName,
@@ -397,5 +425,22 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  void _onNotificationBellClicked() async {
+    final accountService = get<AccountService>();
+    final account = accountService.events.selected.value;
+    if (account == null) {
+      return;
+    }
+
+    Navigator.push(context, ActionFlow(account: account).route());
+  }
+
+  void _connectQueueUpdated() async {
+    final groups = await _connectQueueService.loadAllGroups();
+    final counts = groups.map((group) => group.actionLookup.length);
+    _notificationBellNotifier.value =
+        counts.reduce((value, element) => value + element);
   }
 }
