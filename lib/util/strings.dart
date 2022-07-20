@@ -651,7 +651,7 @@ class Strings {
   static const proposalWeightedVoteProposalId = "Proposal ID#";
 
   // Proposal Vote Success
-  static const proposalVoteSuccessSuccess = "Success";
+  static const proposalVoteSuccessSuccess = "SUCCESS";
   static const proposalVoteSuccessVoteSuccessful = "Vote Successful";
   static const stakingConfirmRewardsAvailable = "Rewards Available";
 

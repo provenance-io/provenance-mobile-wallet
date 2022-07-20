@@ -40,6 +40,8 @@ abstract class ProposalsFlowNavigator {
   Future<void> showTransactionSuccess();
 
   void onComplete();
+
+  void backToDashboard();
 }
 
 class ProposalsFlow extends FlowBase {
@@ -136,5 +138,10 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   @override
   void onComplete() {
     completeFlow(true);
+  }
+
+  @override
+  void backToDashboard() {
+    completeFlow(false);
   }
 }

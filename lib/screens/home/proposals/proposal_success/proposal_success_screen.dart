@@ -34,40 +34,50 @@ class ProposalSuccessScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(child: Container()),
+                  PwText(
+                    Strings.proposalVoteSuccessSuccess,
+                    style: PwTextStyle.headline2,
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                  ),
+                  VerticalSpacer.large(),
+                  PwText(
+                    Strings.proposalVoteSuccessVoteSuccessful,
+                    style: PwTextStyle.body,
+                    textAlign: TextAlign.center,
+                  ),
+                  VerticalSpacer.largeX3(),
                   Image.asset(
                     Assets.imagePaths.transactionComplete,
                     height: 80,
                     width: 80,
                   ),
-                  VerticalSpacer.medium(),
-                  PwText(
-                    Strings.proposalVoteSuccessSuccess,
-                    style: PwTextStyle.display2,
-                    textAlign: TextAlign.center,
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
+                  Expanded(child: Container()),
+                  PwButton(
+                    child: PwText(
+                      Strings.continueName,
+                      style: PwTextStyle.bodyBold,
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                      get<ProposalsFlowBloc>().onComplete();
+                    },
                   ),
-                  VerticalSpacer.medium(),
-                  PwText(
-                    Strings.proposalVoteSuccessVoteSuccessful,
-                    style: PwTextStyle.displayBody,
-                    textAlign: TextAlign.center,
-                  ),
-                  Expanded(flex: 2, child: Container()),
                   Padding(
                     padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
+                      top: Spacing.large,
                       bottom: Spacing.largeX4,
                     ),
-                    child: PwButton(
+                    child: PwTextButton(
                       child: PwText(
-                        Strings.sendDone,
-                        style: PwTextStyle.bodyBold,
+                        Strings.proposalVoteSuccessBackToDashboard,
+                        style: PwTextStyle.body,
                         textAlign: TextAlign.center,
+                        color: PwColor.neutralNeutral,
                       ),
                       onPressed: () {
-                        get<ProposalsFlowBloc>().onComplete();
+                        get<ProposalsFlowBloc>().backToDashboard();
                       },
                     ),
                   ),
