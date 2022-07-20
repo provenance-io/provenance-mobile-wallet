@@ -184,9 +184,8 @@ class _ProposalWeightedVoteConfirmScreenState
                   child: Flexible(
                     child: PwButton(
                       onPressed: () async {
-                        ModalLoadingRoute.showLoading('', context);
-                        // Give the loading modal time to display
-                        await Future.delayed(Duration(milliseconds: 500));
+                        await ModalLoadingRoute.showLoading(context,
+                            minDisplayTime: Duration(milliseconds: 500));
                         await _sendWeightedVote(_gasEstimate, context);
                       },
                       child: PwText(
