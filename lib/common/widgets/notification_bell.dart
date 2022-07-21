@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 class NotificationBell extends StatefulWidget {
   const NotificationBell(
       {required this.notificationCount,
+      required this.onClicked,
       Color? activeColor,
       Color? inactiveColor,
       int? placeCount,
@@ -25,6 +26,7 @@ class NotificationBell extends StatefulWidget {
   final Color inactiveColor;
   final int placeCount;
   final Duration animationDuration;
+  final VoidCallback? onClicked;
 
   @override
   State<StatefulWidget> createState() => NotificationBellState();
@@ -77,9 +79,7 @@ class NotificationBellState extends State<NotificationBell>
       child: IconButton(
           padding: EdgeInsets.zero,
           visualDensity: VisualDensity.compact,
-          onPressed: () {
-            _restartAnimation();
-          },
+          onPressed: widget.onClicked,
           icon: LayoutBuilder(
             builder: (context, constraints) {
               final dimen = max(constraints.maxHeight * (2 / 5), 24.0);

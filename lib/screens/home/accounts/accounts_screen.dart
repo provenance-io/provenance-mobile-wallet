@@ -159,7 +159,7 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   void _onLoading(BuildContext context, bool loading) {
     if (loading) {
-      ModalLoadingRoute.showLoading('', context);
+      ModalLoadingRoute.showLoading(context);
     } else {
       ModalLoadingRoute.dismiss(context);
     }
