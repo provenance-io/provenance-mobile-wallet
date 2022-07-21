@@ -57,7 +57,7 @@ class _ValidatorCardState extends State<ValidatorCard> {
         children: !widget.hasValidator
             ? [
                 PwText(
-                  Strings.stakingRedelegateValidatorNotSelected,
+                  Strings.of(context).stakingRedelegateValidatorNotSelected,
                   style: PwTextStyle.footnote,
                   color: PwColor.neutral200,
                 )
@@ -113,8 +113,8 @@ class _ValidatorCardState extends State<ValidatorCard> {
                           },
                           child: PwText(
                             _isActive
-                                ? Strings.stakingDetailsViewLess
-                                : Strings.viewMore,
+                                ? Strings.of(context).stakingDetailsViewLess
+                                : Strings.of(context).viewMore,
                             color: PwColor.neutral200,
                             style: PwTextStyle.footnote,
                             softWrap: false,

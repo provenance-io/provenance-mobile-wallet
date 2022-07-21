@@ -19,6 +19,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingDelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -44,11 +45,11 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
           },
           signButtonTitle: Strings.stakingDelegationBlocClaimRewards,
           children: [
-            DetailsHeader(title: Strings.stakingConfirmClaimRewardsDetails),
+            DetailsHeader(title: strings.stakingConfirmClaimRewardsDetails),
             PwListDivider.alternate(),
             VerticalSpacer.large(),
             PwText(
-              Strings.stakingRedelegateFrom,
+              strings.stakingRedelegateFrom,
               color: PwColor.neutral200,
             ),
             VerticalSpacer.small(),
@@ -60,16 +61,16 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             VerticalSpacer.largeX3(),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation?.displayDenom ??
-                  Strings.stakingManagementNoHash,
+                  strings.stakingManagementNoHash,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmRewardsAvailable,
+              title: strings.stakingConfirmRewardsAvailable,
               hashString: details.reward?.formattedAmount ??
-                  Strings.stakingManagementNoHash,
+                  strings.stakingManagementNoHash,
               context: context,
             ),
           ],

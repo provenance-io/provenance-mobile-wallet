@@ -34,7 +34,7 @@ class ProposalListItemStatus extends StatelessWidget {
         ),
         if (vote != null)
           ProposalVoteChip(
-            vote: vote!.formattedVote,
+            vote: vote!,
           ),
       ],
     );

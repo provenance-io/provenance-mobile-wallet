@@ -129,14 +129,15 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
     headers.add(
       createFieldTableRow(
-        Strings.transactionFieldPlatform,
+        Strings.of(context).transactionFieldPlatform,
         '$platformName\n$platformHost',
       ),
     );
 
     if (message != null) {
       headers.add(
-        createFieldTableRow(Strings.transactionFieldMessage, message),
+        createFieldTableRow(
+            Strings.of(context).transactionFieldMessage, message),
       );
     }
 
@@ -150,14 +151,14 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
           headers.add(
             createFieldTableRow(
-              Strings.transactionFieldFee,
+              Strings.of(context).transactionFieldFee,
               fee,
             ),
           );
         } else {
           headers.add(
             createFieldTableRow(
-              Strings.transactionFieldFee,
+              Strings.of(context).transactionFieldFee,
               '${coin.amount} ${coin.denom}',
             ),
           );

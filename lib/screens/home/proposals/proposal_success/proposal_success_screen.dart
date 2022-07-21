@@ -12,6 +12,7 @@ class ProposalSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -35,7 +36,7 @@ class ProposalSuccessScreen extends StatelessWidget {
                 children: [
                   Expanded(child: Container()),
                   PwText(
-                    Strings.proposalVoteSuccessSuccess,
+                    strings.proposalVoteSuccessSuccess,
                     style: PwTextStyle.headline2,
                     textAlign: TextAlign.center,
                     softWrap: false,
@@ -43,7 +44,7 @@ class ProposalSuccessScreen extends StatelessWidget {
                   ),
                   VerticalSpacer.large(),
                   PwText(
-                    Strings.proposalVoteSuccessVoteSuccessful,
+                    strings.proposalVoteSuccessVoteSuccessful,
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
                   ),
@@ -56,7 +57,7 @@ class ProposalSuccessScreen extends StatelessWidget {
                   Expanded(child: Container()),
                   PwButton(
                     child: PwText(
-                      Strings.continueName,
+                      strings.continueName,
                       style: PwTextStyle.bodyBold,
                       textAlign: TextAlign.center,
                     ),
@@ -71,7 +72,7 @@ class ProposalSuccessScreen extends StatelessWidget {
                     ),
                     child: PwTextButton(
                       child: PwText(
-                        Strings.proposalVoteSuccessBackToDashboard,
+                        strings.proposalVoteSuccessBackToDashboard,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                         color: PwColor.neutralNeutral,

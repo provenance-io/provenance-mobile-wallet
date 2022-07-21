@@ -56,7 +56,7 @@ class AccountsScreenState extends State<AccountsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.accounts,
+        title: Strings.of(context).accounts,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -114,7 +114,7 @@ class AccountsScreenState extends State<AccountsScreen> {
               right: Spacing.large,
             ),
             child: PwOutlinedButton(
-              Strings.addAccount,
+              Strings.of(context).addAccount,
               onPressed: () {
                 Navigator.of(context).push(
                   AddAccountFlow(

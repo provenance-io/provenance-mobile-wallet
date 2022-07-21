@@ -32,7 +32,7 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                     VerticalSpacer.largeX6(),
                     VerticalSpacer.xxLarge(),
                     PwText(
-                      Strings.successName.toUpperCase(),
+                      Strings.of(context).successName.toUpperCase(),
                       style: PwTextStyle.headline2,
                       textAlign: TextAlign.center,
                     ),
@@ -43,7 +43,7 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                         left: Spacing.xxLarge,
                       ),
                       child: PwText(
-                        Strings.pinCodeUpdated,
+                        Strings.of(context).pinCodeUpdated,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                       ),
@@ -61,7 +61,7 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
                         child: PwText(
-                          Strings.continueName,
+                          Strings.of(context).continueName,
                           style: PwTextStyle.subhead,
                           color: PwColor.neutralNeutral,
                         ),

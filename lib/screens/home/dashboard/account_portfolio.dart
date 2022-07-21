@@ -31,7 +31,7 @@ class AccountPortfolio extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PwText(
-            Strings.portfolioValue,
+            Strings.of(context).portfolioValue,
             color: PwColor.neutralNeutral,
             style: PwTextStyle.subhead,
           ),
@@ -79,7 +79,7 @@ class AccountPortfolio extends StatelessWidget {
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
-                      Strings.send,
+                      Strings.of(context).send,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),
@@ -110,7 +110,7 @@ class AccountPortfolio extends StatelessWidget {
                     ),
                     VerticalSpacer.xSmall(),
                     PwText(
-                      Strings.receive,
+                      Strings.of(context).receive,
                       color: PwColor.neutralNeutral,
                       style: PwTextStyle.bodyBold,
                     ),

@@ -23,13 +23,15 @@ class MultiSigConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
+
     const divider = Divider(
       thickness: 1,
     );
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.multiSigConfirmTitle,
+        title: strings.multiSigConfirmTitle,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           currentStep,
@@ -50,7 +52,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                 children: [
                   VerticalSpacer.largeX3(),
                   PwText(
-                    Strings.multiSigConfirmMessage,
+                    strings.multiSigConfirmMessage,
                     style: PwTextStyle.body,
                     color: PwColor.neutralNeutral,
                   ),
@@ -62,7 +64,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                         final name = snapshot.data ?? '';
 
                         return MultiSigField(
-                          name: Strings.multiSigConfirmAccountNameLabel,
+                          name: strings.multiSigConfirmAccountNameLabel,
                           value: name,
                           onEdit: () {
                             Navigator.of(context).push(
@@ -70,6 +72,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                 fullscreenDialog: true,
                                 builder: (context) {
                                   return AccountNameScreen.multi(
+                                    message: strings.accountNameMultiSigMessage,
                                     mode: FieldMode.edit,
                                     leadingIcon: PwIcons.close,
                                     bloc: _bloc,
@@ -88,7 +91,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                         final count = snapshot.data?.value ?? 0;
 
                         return MultiSigField(
-                          name: Strings.multiSigConfirmCosignersLabel,
+                          name: strings.multiSigConfirmCosignersLabel,
                           value: count.toString(),
                           onEdit: () {
                             Navigator.of(context).push(
@@ -96,6 +99,10 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                 fullscreenDialog: true,
                                 builder: (context) {
                                   return MultiSigCountScreen.cosigners(
+                                    title: strings.multiSigCosignersTitle,
+                                    message: strings.multiSigCosignersMessage,
+                                    description:
+                                        strings.multiSigCosignersDescription,
                                     bloc: _bloc,
                                     mode: FieldMode.edit,
                                   );
@@ -113,7 +120,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                         final count = snapshot.data?.value ?? 0;
 
                         return MultiSigField(
-                          name: Strings.multiSigConfirmSignaturesLabel,
+                          name: strings.multiSigConfirmSignaturesLabel,
                           value: count.toString(),
                           onEdit: () {
                             Navigator.of(context).push(
@@ -121,6 +128,10 @@ class MultiSigConfirmScreen extends StatelessWidget {
                                 fullscreenDialog: true,
                                 builder: (context) {
                                   return MultiSigCountScreen.signatures(
+                                    title: strings.multiSigSignaturesTitle,
+                                    message: strings.multiSigSignaturesMessage,
+                                    description:
+                                        strings.multiSigSignaturesDescription,
                                     bloc: _bloc,
                                     mode: FieldMode.edit,
                                   );
@@ -137,7 +148,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
                   PwButton(
                     autofocus: true,
                     child: PwText(
-                      Strings.multiSigNextButton,
+                      strings.multiSigNextButton,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),

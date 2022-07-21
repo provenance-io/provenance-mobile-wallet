@@ -18,10 +18,11 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PwAppBar(
-        title: Strings.accountTypeMultiSigTitle,
+        title: strings.accountTypeMultiSigTitle,
         leadingIcon: PwIcons.back,
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
@@ -40,30 +41,30 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                   children: [
                     VerticalSpacer.largeX3(),
                     PwText(
-                      Strings.accountTypeMultiSigDesc,
+                      strings.accountTypeMultiSigDesc,
                       style: PwTextStyle.body,
                       color: PwColor.neutralNeutral,
                     ),
                     VerticalSpacer.largeX3(),
                     AccountButton(
-                      name: Strings.accountTypeMultiSigCreateName,
-                      desc: Strings.accountTypeMultiSigCreateDesc,
+                      name: strings.accountTypeMultiSigCreateName,
+                      desc: strings.accountTypeMultiSigCreateDesc,
                       onPressed: () {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.create);
                       },
                     ),
                     VerticalSpacer.large(),
                     AccountButton(
-                      name: Strings.accountTypeMultiSigJoinName,
-                      desc: Strings.accountTypeMultiSigJoinDesc,
+                      name: strings.accountTypeMultiSigJoinName,
+                      desc: strings.accountTypeMultiSigJoinDesc,
                       onPressed: () {
                         bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
                       },
                     ),
                     VerticalSpacer.large(),
                     AccountButton(
-                        name: Strings.accountTypeMultiSigRecoverName,
-                        desc: Strings.accountTypeMultiSigRecoverDesc,
+                        name: strings.accountTypeMultiSigRecoverName,
+                        desc: strings.accountTypeMultiSigRecoverDesc,
                         onPressed: () {
                           bloc.submitMultiSigCreateOrJoin(
                               MultiSigAddKind.recover);
@@ -113,7 +114,7 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                           Spacing.medium,
                         ),
                         child: PwText(
-                          Strings.accountTypeMultiSigJoinLink,
+                          strings.accountTypeMultiSigJoinLink,
                           style: PwTextStyle.body,
                           textAlign: TextAlign.center,
                           underline: true,

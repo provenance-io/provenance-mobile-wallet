@@ -60,7 +60,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
               widget.onDataClick();
             },
             child: PwText(
-              Strings.stakingConfirmData,
+              Strings.of(context).stakingConfirmData,
               style: PwTextStyle.footnote,
               underline: true,
             ),
@@ -75,7 +75,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             ...widget.children,
             PwListDivider.alternate(),
             PwGasAdjustmentSlider(
-              title: Strings.stakingConfirmGasAdjustment,
+              title: Strings.of(context).stakingConfirmGasAdjustment,
               startingValue: defaultGasEstimate,
               min: 0,
               max: 5,

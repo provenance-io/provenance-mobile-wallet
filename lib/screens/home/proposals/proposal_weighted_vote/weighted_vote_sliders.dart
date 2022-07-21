@@ -21,6 +21,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final strings = Strings.of(context);
 
     return Column(
       children: [
@@ -72,7 +73,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
             ),
             Column(
               children: [
-                PwText(Strings.proposalWeightedVoteVotingStatus),
+                PwText(strings.proposalWeightedVoteVotingStatus),
                 PwText(
                   percentage,
                   style: PwTextStyle.bodyBold,
@@ -85,7 +86,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
-          title: Strings.proposalWeightedVoteVoteYes,
+          title: strings.proposalWeightedVoteVoteYes,
           endChild: PwText(
             "${_currentValues[0].toInt()}%",
             style: PwTextStyle.subhead,
@@ -102,7 +103,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
-          title: Strings.proposalWeightedVoteVoteNo,
+          title: strings.proposalWeightedVoteVoteNo,
           endChild: PwText(
             "${_currentValues[1].toInt()}%",
             style: PwTextStyle.subhead,
@@ -119,7 +120,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
-          title: Strings.proposalWeightedVoteVoteNoWithVeto,
+          title: strings.proposalWeightedVoteVoteNoWithVeto,
           endChild: PwText(
             "${_currentValues[2].toInt()}%",
             style: PwTextStyle.subhead,
@@ -134,7 +135,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
         VerticalSpacer.large(),
         DetailsItem.alternateChild(
           padding: EdgeInsets.all(0),
-          title: Strings.proposalWeightedVoteVoteAbstain,
+          title: strings.proposalWeightedVoteVoteAbstain,
           endChild: PwText(
             "${_currentValues[3].toInt()}%",
             style: PwTextStyle.subhead,

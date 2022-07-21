@@ -25,6 +25,7 @@ import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 abstract class AddAccountFlowNavigator {
   AddAccountFlowNavigator._();
@@ -107,6 +108,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
         totalSteps: totalSteps,
         mode: FieldMode.initial,
         leadingIcon: PwIcons.close,
+        message: Strings.of(context).accountNameMessage,
       ),
     );
   }
@@ -238,6 +240,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   void showMultiSigAccountName(int currentStep, int totalSteps) {
     showPage(
       (context) => AccountNameScreen.multi(
+        message: Strings.of(context).accountNameMultiSigMessage,
         currentStep: currentStep,
         totalSteps: totalSteps,
         mode: FieldMode.initial,
@@ -307,6 +310,9 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
       [int? currentStep, int? totalSteps]) {
     showPage(
       (context) => MultiSigCountScreen.cosigners(
+        title: Strings.of(context).multiSigCosignersTitle,
+        message: Strings.of(context).multiSigCosignersMessage,
+        description: Strings.of(context).multiSigCosignersDescription,
         bloc: _bloc,
         mode: mode,
         currentStep: currentStep,
@@ -320,6 +326,9 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
       [int? currentStep, int? totalSteps]) {
     showPage(
       (context) => MultiSigCountScreen.signatures(
+        title: Strings.of(context).multiSigSignaturesTitle,
+        message: Strings.of(context).multiSigSignaturesMessage,
+        description: Strings.of(context).multiSigSignaturesDescription,
         bloc: _bloc,
         mode: mode,
         currentStep: currentStep,

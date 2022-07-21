@@ -35,6 +35,20 @@ class Vote {
     this.answerAbstain,
   });
 
+  Vote.demo({
+    this.proposalId = 0,
+    this.proposalTitle = "",
+    this.proposalStatus = "",
+    this.voterAddress = "",
+    this.blockHeight = 0,
+    this.txHash = "",
+    DateTime? txTimestamp,
+    this.answerYes,
+    this.answerNo,
+    this.answerNoWithVeto,
+    this.answerAbstain,
+  }) : txTimestamp = txTimestamp ?? DateTime.now();
+
   final String voterAddress;
   final double? answerYes;
   final double? answerNo;

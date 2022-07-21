@@ -47,7 +47,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: PwAppBar(
-        title: Strings.recoveryPassphrase,
+        title: Strings.of(context).recoveryPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           widget.currentStep,
@@ -64,7 +64,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
               right: Spacing.xxLarge,
             ),
             child: PwText(
-              Strings.recordTheseWordsInTheCorrectOrder,
+              Strings.of(context).recordTheseWordsInTheCorrectOrder,
               style: PwTextStyle.body,
               textAlign: TextAlign.center,
             ),
@@ -104,7 +104,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            Strings.passphraseCopied,
+                            Strings.of(context).passphraseCopied,
                           ),
                           backgroundColor:
                               Theme.of(context).colorScheme.neutral700,
@@ -122,7 +122,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                             color: Theme.of(context).colorScheme.neutralNeutral,
                           ),
                         ),
-                        PwText(Strings.copyPassphrase),
+                        PwText(Strings.of(context).copyPassphrase),
                       ],
                     ),
                   ),
@@ -137,7 +137,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
               child: PwText(
-                Strings.continueName,
+                Strings.of(context).continueName,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),

@@ -20,6 +20,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingRedelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingRedelegationDetails>(
       initialData: bloc.stakingRedelegationDetails.value,
@@ -49,14 +50,14 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
-            DetailsHeader(title: Strings.stakingConfirmRedelegationDetails),
+            DetailsHeader(title: strings.stakingConfirmRedelegationDetails),
             PwListDivider.alternate(),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: Spacing.small,
               ),
               child: PwText(
-                Strings.stakingRedelegateFrom,
+                strings.stakingRedelegateFrom,
                 color: PwColor.neutral200,
               ),
             ),
@@ -70,7 +71,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
                 vertical: Spacing.small,
               ),
               child: PwText(
-                Strings.stakingRedelegateTo,
+                strings.stakingRedelegateTo,
                 color: PwColor.neutral200,
               ),
             ),
@@ -81,20 +82,20 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             VerticalSpacer.largeX3(),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation.displayDenom,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmAmountToRedelegate,
+              title: strings.stakingConfirmAmountToRedelegate,
               hashString: Strings.stakingConfirmHashAmount(
                   details.hashRedelegated.toString()),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmNewTotalDelegation,
+              title: strings.stakingConfirmNewTotalDelegation,
               hashString: Strings.stakingConfirmHashAmount(
                   (details.delegation.hashAmount - details.hashRedelegated)
                       .toString()),

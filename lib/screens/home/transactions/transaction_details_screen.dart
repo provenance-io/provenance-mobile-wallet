@@ -22,10 +22,11 @@ class TransactionDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accountService = get<AccountService>();
+    final strings = Strings.of(context);
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.transactionDetails,
+        title: strings.transactionDetails,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
@@ -33,7 +34,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         child: ListView(
           children: [
             DetailsItem(
-              title: Strings.tradeDetailsAccount,
+              title: strings.tradeDetailsAccount,
               endChild: StreamBuilder<Account?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
@@ -51,7 +52,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsMessageType,
+              title: strings.tradeDetailsMessageType,
               endChild: PwText(
                 transaction.messageType,
                 style: PwTextStyle.body,
@@ -61,9 +62,11 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsAssetName,
+              title: strings.tradeDetailsAssetName,
               endChild: PwText(
-                transaction.displayDenom,
+                transaction.displayDenom.isEmpty
+                    ? strings.assetChartNotAvailable
+                    : transaction.displayDenom,
                 style: PwTextStyle.body,
               ),
             ),
@@ -71,7 +74,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsTimeStamp,
+              title: strings.tradeDetailsTimeStamp,
               endChild: PwText(
                 transaction.formattedTime,
                 style: PwTextStyle.body,
@@ -81,7 +84,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsFee,
+              title: strings.tradeDetailsFee,
               endChild: PwText(
                 transaction.displayFee,
                 style: PwTextStyle.body,
@@ -91,7 +94,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsResult,
+              title: strings.tradeDetailsResult,
               endChild: PwText(
                 transaction.status,
                 style: PwTextStyle.body,
@@ -101,7 +104,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsBlock,
+              title: strings.tradeDetailsBlock,
               endChild: PwText(
                 transaction.block.toString(),
               ),
@@ -110,7 +113,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               indent: Spacing.largeX3,
             ),
             DetailsItem(
-              title: Strings.tradeDetailsTransaction,
+              title: strings.tradeDetailsTransaction,
               endChild: Row(
                 children: [
                   PwText(

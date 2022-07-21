@@ -86,9 +86,9 @@ class HomeScreenState extends State<HomeScreen>
     _walletConnectService.delegateEvents.signRequest
         .listen(_onSignRequest)
         .addTo(_subscriptions);
-    _walletConnectService.delegateEvents.sessionRequest
-        .listen(_onSessionRequest)
-        .addTo(_subscriptions);
+    _walletConnectService.delegateEvents.sessionRequest.listen((event) {
+      _onSessionRequest(context, event);
+    }).addTo(_subscriptions);
     _walletConnectService.sessionEvents.error
         .listen(_onError)
         .addTo(_subscriptions);
@@ -110,6 +110,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = (mediaQuery.size.height > 600);
 
@@ -129,21 +130,21 @@ class HomeScreenState extends State<HomeScreen>
               tabs: [
                 TabItem(
                   0 == _currentTabIndex,
-                  Strings.dashboard,
+                  strings.dashboard,
                   PwIcons.dashboard,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),
                 TabItem(
                   1 == _currentTabIndex,
-                  Strings.transactions,
+                  strings.transactions,
                   PwIcons.staking,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),
                 TabItem(
                   2 == _currentTabIndex,
-                  Strings.viewMore,
+                  strings.viewMore,
                   PwIcons.viewMore,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
@@ -186,15 +187,17 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _onSessionRequest(
+    BuildContext context,
     WalletConnectSessionRequestData details,
   ) async {
+    final strings = Strings.of(context);
     final name = details.data.clientMeta.name;
     final allowed = await PwModalScreen.showConfirm(
       context: context,
-      approveText: Strings.sessionApprove,
-      declineText: Strings.sessionReject,
-      title: Strings.dashboardConnectionRequestTitle,
-      message: Strings.dashboardConnectionRequestDetails(name),
+      approveText: strings.sessionApprove,
+      declineText: strings.sessionReject,
+      title: strings.dashboardConnectionRequestTitle,
+      message: Strings.dashboardConnectionRequestDetails(context, name),
       icon: Image.asset(
         Assets.imagePaths.connectionRequest,
       ),
@@ -212,7 +215,7 @@ class HomeScreenState extends State<HomeScreen>
     final clientDetails =
         _walletConnectService.sessionEvents.state.value.details;
     if (clientDetails == null) {
-      _onError(Strings.errorDisconnected);
+      _onError(Strings.of(context).errorDisconnected);
 
       return;
     }
@@ -234,7 +237,7 @@ class HomeScreenState extends State<HomeScreen>
 
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
-          title: Strings.confirmTransactionTitle,
+          title: Strings.of(context).confirmTransactionTitle,
           requestId: sendRequest.id,
           clientMeta: clientDetails,
           data: data,
@@ -257,7 +260,7 @@ class HomeScreenState extends State<HomeScreen>
     final clientDetails =
         _walletConnectService.sessionEvents.state.value.details;
     if (clientDetails == null) {
-      _onError(Strings.errorDisconnected);
+      _onError(Strings.of(context).errorDisconnected);
 
       return;
     }
@@ -271,7 +274,7 @@ class HomeScreenState extends State<HomeScreen>
       ) {
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
-          title: Strings.confirmSignTitle,
+          title: Strings.of(context).confirmSignTitle,
           requestId: signRequest.id,
           subTitle: signRequest.description,
           clientMeta: clientDetails,
@@ -301,9 +304,9 @@ class HomeScreenState extends State<HomeScreen>
       useSafeArea: true,
       context: context,
       builder: (context) => ErrorDialog(
-        title: Strings.serviceErrorTitle,
+        title: Strings.of(context).serviceErrorTitle,
         error: message,
-        buttonText: Strings.continueName,
+        buttonText: Strings.of(context).continueName,
       ),
     );
   }
@@ -312,7 +315,7 @@ class HomeScreenState extends State<HomeScreen>
     final clientDetails =
         _walletConnectService.sessionEvents.state.value.details;
     if (clientDetails == null) {
-      _onError(Strings.errorDisconnected);
+      _onError(Strings.of(context).errorDisconnected);
 
       return;
     }
@@ -320,8 +323,8 @@ class HomeScreenState extends State<HomeScreen>
     const statusCodeOk = 0;
 
     final title = response.code == statusCodeOk
-        ? Strings.transactionSuccessTitle
-        : Strings.transactionErrorTitle;
+        ? Strings.of(context).transactionSuccessTitle
+        : Strings.of(context).transactionErrorTitle;
 
     final data = <String, dynamic>{};
     if (response.tx?.body.messages.isNotEmpty ?? false) {

@@ -51,11 +51,11 @@ class StakingTextFormField extends StatelessWidget {
           : AutovalidateMode.disabled,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return Strings.starRequired;
+          return Strings.of(context).starRequired;
         }
         final number = num.tryParse(value);
         return null == number || number.isNegative
-            ? Strings.starPositiveNumber
+            ? Strings.of(context).starPositiveNumber
             : null;
       },
       decoration: InputDecoration(

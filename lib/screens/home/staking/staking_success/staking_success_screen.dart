@@ -39,7 +39,7 @@ class StakingSuccessScreen extends StatelessWidget {
                 children: [
                   Expanded(child: Container()),
                   PwText(
-                    Strings.stakingSuccessSuccess.toUpperCase(),
+                    Strings.of(context).stakingSuccessSuccess,
                     style: PwTextStyle.headline2,
                     textAlign: TextAlign.center,
                     softWrap: false,
@@ -48,6 +48,7 @@ class StakingSuccessScreen extends StatelessWidget {
                   VerticalSpacer.large(),
                   PwText(
                     Strings.stakingSuccessSuccessful(
+                      context,
                       selected.dropDownTitle,
                     ),
                     style: PwTextStyle.body,
@@ -62,7 +63,7 @@ class StakingSuccessScreen extends StatelessWidget {
                   Expanded(child: Container()),
                   PwButton(
                     child: PwText(
-                      Strings.continueName,
+                      Strings.of(context).continueName,
                       style: PwTextStyle.bodyBold,
                       textAlign: TextAlign.center,
                     ),
@@ -77,7 +78,7 @@ class StakingSuccessScreen extends StatelessWidget {
                     ),
                     child: PwTextButton(
                       child: PwText(
-                        Strings.stakingSuccessBackToDashboard,
+                        Strings.of(context).stakingSuccessBackToDashboard,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                         color: PwColor.neutralNeutral,

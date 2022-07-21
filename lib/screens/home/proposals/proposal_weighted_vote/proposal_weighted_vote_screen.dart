@@ -46,7 +46,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.proposalWeightedVote,
+        title: Strings.of(context).proposalWeightedVote,
         style: PwTextStyle.footnote,
         leadingIcon: PwIcons.back,
       ),
@@ -86,7 +86,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                           .showWeightedVoteReview(widget.proposal);
                     },
                     child: PwText(
-                      Strings.continueName,
+                      Strings.of(context).continueName,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       color: PwColor.neutralNeutral,

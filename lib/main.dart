@@ -437,8 +437,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (!isConnected) {
         notificationService.notify(NotificationInfo(
           id: networkDisconnectedId,
-          title: Strings.notifyNetworkErrorTitle,
-          message: Strings.notifyNetworkErrorMessage,
+          title: Strings.of(context).notifyNetworkErrorTitle,
+          message: Strings.of(context).notifyNetworkErrorMessage,
           kind: NotificationKind.warn,
         ));
       } else {
@@ -471,40 +471,40 @@ void showCipherServiceError(BuildContext context, CipherServiceError error) {
   String message;
   switch (error.code) {
     case CipherServiceErrorCode.accessError:
-      message = Strings.cipherAccessError;
+      message = Strings.of(context).cipherAccessError;
       break;
     case CipherServiceErrorCode.accountKeyNotFound:
-      message = Strings.cipherAccountKeyNotFoundError;
+      message = Strings.of(context).cipherAccountKeyNotFoundError;
       break;
     case CipherServiceErrorCode.addSecItem:
-      message = Strings.cipherAddSecItemError;
+      message = Strings.of(context).cipherAddSecItemError;
       break;
     case CipherServiceErrorCode.dataPersistence:
-      message = Strings.cipherDataPersistenceError;
+      message = Strings.of(context).cipherDataPersistenceError;
       break;
     case CipherServiceErrorCode.invalidArgument:
-      message = Strings.cipherInvalidArgumentError;
+      message = Strings.of(context).cipherInvalidArgumentError;
       break;
     case CipherServiceErrorCode.publicKeyError:
-      message = Strings.cipherPublicKeyError;
+      message = Strings.of(context).cipherPublicKeyError;
       break;
     case CipherServiceErrorCode.secKeyNotFound:
-      message = Strings.cipherSecKeyNotFoundError;
+      message = Strings.of(context).cipherSecKeyNotFoundError;
       break;
     case CipherServiceErrorCode.unknown:
-      message = Strings.cipherUnknownError;
+      message = Strings.of(context).cipherUnknownError;
       break;
     case CipherServiceErrorCode.upgradeError:
-      message = Strings.cipherUpgradeError;
+      message = Strings.of(context).cipherUpgradeError;
       break;
     case CipherServiceErrorCode.unsupportedAlgorithm:
-      message = Strings.cipherUnsupportedAlgorithmError;
+      message = Strings.of(context).cipherUnsupportedAlgorithmError;
       break;
   }
 
   PwDialog.showError(
     context,
-    title: Strings.cipherErrorTitle,
+    title: Strings.of(context).cipherErrorTitle,
     message: message,
   );
 }

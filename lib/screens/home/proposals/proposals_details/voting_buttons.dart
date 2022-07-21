@@ -17,6 +17,7 @@ class VotingButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _bloc = get<ProposalsFlowBloc>();
+    final strings = Strings.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,7 +36,7 @@ class VotingButtons extends StatelessWidget {
             children: [
               Flexible(
                 child: PwOutlinedButton(
-                  Strings.proposalDetailsYes,
+                  strings.proposalDetailsYes,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
@@ -49,7 +50,7 @@ class VotingButtons extends StatelessWidget {
               HorizontalSpacer.large(),
               Flexible(
                 child: PwOutlinedButton(
-                  Strings.proposalDetailsNo,
+                  strings.proposalDetailsNo,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
@@ -73,7 +74,7 @@ class VotingButtons extends StatelessWidget {
             children: [
               Flexible(
                 child: PwOutlinedButton(
-                  Strings.proposalDetailsNoWithVeto,
+                  strings.proposalDetailsNoWithVeto,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
@@ -87,7 +88,7 @@ class VotingButtons extends StatelessWidget {
               HorizontalSpacer.large(),
               Flexible(
                 child: PwOutlinedButton(
-                  Strings.proposalDetailsAbstain,
+                  strings.proposalDetailsAbstain,
                   onPressed: () {
                     _bloc.showVoteReview(
                       proposal,
@@ -117,7 +118,7 @@ class VotingButtons extends StatelessWidget {
                     _bloc.showWeightedVote(proposal);
                   },
                   child: PwText(
-                    Strings.proposalWeightedVote,
+                    strings.proposalWeightedVote,
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     color: PwColor.neutralNeutral,

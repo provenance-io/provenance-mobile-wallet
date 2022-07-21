@@ -44,7 +44,7 @@ mixin TransactionMessageMixin<T extends StatefulWidget> on State<T> {
             vertical: Spacing.large,
           ),
           child: TransactionFieldTitle(
-            text: Strings.transactionFieldPlatform,
+            text: Strings.of(context).transactionFieldPlatform,
           ),
         ),
         Container(

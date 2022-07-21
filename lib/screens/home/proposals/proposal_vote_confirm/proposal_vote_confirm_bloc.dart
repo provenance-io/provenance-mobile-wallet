@@ -8,9 +8,9 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class ProposalVoteConfirmBloc {
   final Account _account;
@@ -79,20 +79,19 @@ class ProposalVoteConfirmBloc {
         .estimateGas(body, _account.publicKey!);
   }
 
-  String getUserFriendlyVote() {
+  Vote getUserFriendlyVote() {
     switch (_voteOption) {
       case gov.VoteOption.VOTE_OPTION_ABSTAIN:
-        return Strings.proposalDetailsAbstain;
+        return Vote.demo(answerAbstain: 1);
       case gov.VoteOption.VOTE_OPTION_NO:
-        return Strings.proposalDetailsNo;
+        return Vote.demo(answerNo: 1);
       case gov.VoteOption.VOTE_OPTION_NO_WITH_VETO:
-        return Strings.proposalDetailsNoWithVeto;
-      case gov.VoteOption.VOTE_OPTION_UNSPECIFIED:
-        // Can't get here, we don't include this as an option.
-        return "";
+        return Vote.demo(answerNoWithVeto: 1);
       case gov.VoteOption.VOTE_OPTION_YES:
-        return Strings.proposalDetailsYes;
+        return Vote.demo(answerYes: 1);
+      default:
+        // Won't get here, but I have to have this for safety reasons.
+        return Vote.demo();
     }
-    return "";
   }
 }

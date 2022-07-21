@@ -21,6 +21,7 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     final keyValueService = get<KeyValueService>();
     final mockingAssetStream =
         keyValueService.stream<bool>(PrefKey.isMockingAssetService);
@@ -35,15 +36,15 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
           textDirection: TextDirection.ltr,
           children: [
             PwAppBar(
-              title: Strings.profileDeveloperServiceMocks,
+              title: strings.profileDeveloperServiceMocks,
               leadingIconOnPress: () async {
                 if (_didChange) {
                   var shouldRestart = await PwDialog.showConfirmation(
                     context,
-                    title: Strings.developerMocksServiceUpdate,
-                    message: Strings.developerMocksRestartTheAppMessage,
-                    confirmText: Strings.developerMocksRestart,
-                    cancelText: Strings.cancel,
+                    title: strings.developerMocksServiceUpdate,
+                    message: strings.developerMocksRestartTheAppMessage,
+                    confirmText: strings.developerMocksRestart,
+                    cancelText: strings.cancel,
                   );
                   if (shouldRestart) {
                     try {
@@ -63,7 +64,7 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                 }
               },
             ),
-            CategoryLabel(Strings.profileDeveloperServiceMocks),
+            CategoryLabel(strings.profileDeveloperServiceMocks),
             PwListDivider(),
             StreamBuilder<KeyValueData<bool>>(
               initialData: mockingAssetStream.valueOrNull,
@@ -76,7 +77,7 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                 final data = snapshot.data?.data ?? false;
 
                 return ToggleItem(
-                  text: Strings.developerMocksMockAssetService,
+                  text: strings.developerMocksMockAssetService,
                   value: data,
                   onChanged: (value) async {
                     _didChange = true;
@@ -100,7 +101,7 @@ class ServiceMocksScreenState extends State<ServiceMocksScreen> {
                 final data = snapshot.data?.data ?? false;
 
                 return ToggleItem(
-                  text: Strings.developerMocksMockTransactionService,
+                  text: strings.developerMocksMockTransactionService,
                   value: data,
                   onChanged: (value) async {
                     _didChange = true;

@@ -14,7 +14,7 @@ class StakingTransactionDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.stakingConfirmData,
+        title: Strings.of(context).stakingConfirmData,
         leadingIcon: PwIcons.back,
         style: PwTextStyle.footnote,
       ),

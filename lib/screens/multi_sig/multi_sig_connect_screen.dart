@@ -82,10 +82,11 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
     final currentStep = widget.currentStep;
     final totalSteps = widget.totalSteps;
     final items = _items;
+    final strings = Strings.of(context);
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.multiSigConnectTitle,
+        title: strings.multiSigConnectTitle,
         leadingIcon: PwIcons.back,
         bottom: currentStep == null || totalSteps == null
             ? null
@@ -108,7 +109,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                       horizontal: Spacing.xxLarge,
                     ),
                     child: PwText(
-                      Strings.multiSigConnectDesc,
+                      strings.multiSigConnectDesc,
                       style: PwTextStyle.body,
                       color: PwColor.neutral200,
                       textAlign: TextAlign.center,
@@ -122,7 +123,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                           horizontal: Spacing.xxLarge,
                         ),
                         child: PwText(
-                          Strings.multiSigConnectSelectionLabel,
+                          strings.multiSigConnectSelectionLabel,
                           style: PwTextStyle.body,
                           color: PwColor.neutralNeutral,
                         ),
@@ -196,7 +197,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                       focusNode: _focusNext,
                       enabled: _value != _defaultValue,
                       child: PwText(
-                        Strings.multiSigNextButton,
+                        strings.multiSigNextButton,
                         key: _keyNextButton,
                         style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,
@@ -227,7 +228,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                           }
                         },
                         child: PwText(
-                          Strings.multiSigConnectCreateButton,
+                          strings.multiSigConnectCreateButton,
                           key: _keyNextButton,
                           style: PwTextStyle.body,
                           color: PwColor.neutralNeutral,

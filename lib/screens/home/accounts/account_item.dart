@@ -34,7 +34,7 @@ class AccountTitleRow extends StatelessWidget {
         ),
         Chip(
           label: PwText(
-            _accountKindName(kind),
+            _accountKindName(context, kind),
             style: PwTextStyle.footnote,
             color: isSelected ? PwColor.secondary350 : PwColor.neutral250,
           ),
@@ -46,15 +46,15 @@ class AccountTitleRow extends StatelessWidget {
     );
   }
 
-  String _accountKindName(AccountKind kind) {
+  String _accountKindName(BuildContext context, AccountKind kind) {
     String name;
 
     switch (kind) {
       case AccountKind.basic:
-        name = Strings.accountKindBasic;
+        name = Strings.of(context).accountKindBasic;
         break;
       case AccountKind.multi:
-        name = Strings.accountKindMulti;
+        name = Strings.of(context).accountKindMulti;
         break;
     }
 
@@ -132,7 +132,7 @@ class AccountDescriptionRow extends StatelessWidget {
 
         var text = '';
         if (isSelected) {
-          text += Strings.selectedAccountLabel;
+          text += Strings.of(context).selectedAccountLabel;
         }
 
         if (numAssets != null) {
@@ -140,7 +140,7 @@ class AccountDescriptionRow extends StatelessWidget {
             text += ' • ';
           }
 
-          text += Strings.numAssets(numAssets);
+          text += Strings.numAssets(context, numAssets);
         }
 
         return Container(
@@ -211,7 +211,7 @@ class LinkedAccount extends StatelessWidget {
           HorizontalSpacer.large(),
           Expanded(
             child: PwText(
-              Strings.accountLinkedTo(name),
+              Strings.accountLinkedTo(context, name),
               style: PwTextStyle.footnote,
               color: PwColor.neutralNeutral,
             ),

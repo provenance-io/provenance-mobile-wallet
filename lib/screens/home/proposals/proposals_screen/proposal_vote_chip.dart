@@ -40,6 +40,7 @@ class ProposalVoteChip extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         child: PwText(
           Strings.proposalsScreenVoted(
+            context,
             _vote,
           ),
           style: PwTextStyle.footnote,

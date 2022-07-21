@@ -28,6 +28,7 @@ class AccountNameScreen extends StatefulWidget {
     required FieldMode mode,
     required String leadingIcon,
     required AddAccountFlowBloc bloc,
+    required String message,
     int? currentStep,
     int? totalSteps,
     Key? key,
@@ -35,7 +36,7 @@ class AccountNameScreen extends StatefulWidget {
     return AccountNameScreen(
       mode: mode,
       leadingIcon: leadingIcon,
-      message: Strings.accountNameMessage,
+      message: message,
       name: bloc.name,
       submit: bloc.submitAccountName,
       popOnSubmit: false,
@@ -48,6 +49,7 @@ class AccountNameScreen extends StatefulWidget {
     required FieldMode mode,
     required String leadingIcon,
     required AddAccountFlowBloc bloc,
+    required String message,
     int? currentStep,
     int? totalSteps,
     Key? key,
@@ -69,7 +71,7 @@ class AccountNameScreen extends StatefulWidget {
     return AccountNameScreen(
       mode: mode,
       leadingIcon: leadingIcon,
-      message: Strings.accountNameMultiSigMessage,
+      message: message,
       name: bloc.multiSigName,
       submit: submit,
       popOnSubmit: pop,
@@ -117,20 +119,21 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     String buttonLabel;
 
     switch (widget.mode) {
       case FieldMode.initial:
-        buttonLabel = Strings.continueName;
+        buttonLabel = strings.continueName;
         break;
       case FieldMode.edit:
-        buttonLabel = Strings.multiSigSaveButton;
+        buttonLabel = strings.multiSigSaveButton;
         break;
     }
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.nameYourAccount,
+        title: strings.nameYourAccount,
         leadingIcon: widget.leadingIcon,
         bottom: (widget.currentStep != null && widget.totalSteps != null)
             ? ProgressStepper(
@@ -167,11 +170,11 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                   ),
                   child: PwTextFormField(
                     key: AccountNameScreen.keyNameTextField,
-                    label: Strings.accountName,
+                    label: strings.accountName,
                     autofocus: true,
                     validator: (value) {
                       return value == null || value.isEmpty
-                          ? Strings.required
+                          ? strings.required
                           : null;
                     },
                     controller: _textEditingController,

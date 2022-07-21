@@ -287,7 +287,7 @@ class _DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   PwText(
-                    Strings.myAssets,
+                    Strings.of(context).myAssets,
                     style: PwTextStyle.title,
                   ),
                   Expanded(child: Container()),
