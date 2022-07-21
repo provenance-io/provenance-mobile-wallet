@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/services/governance_service/dtos/vote_dto.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class Vote {
   Vote({required VoteDto dto})
@@ -47,21 +46,4 @@ class Vote {
   final int proposalId;
   final String proposalTitle;
   final String proposalStatus;
-
-  String get formattedVote {
-    var answers = <String>[];
-    if (answerYes != null) {
-      answers.add(Strings.proposalDetailsYes);
-    }
-    if (answerNo != null) {
-      answers.add(Strings.proposalDetailsNo);
-    }
-    if (answerNoWithVeto != null) {
-      answers.add(Strings.proposalDetailsNoWithVeto);
-    }
-    if (answerAbstain != null) {
-      answers.add(Strings.proposalDetailsAbstain);
-    }
-    return answers.join(", ");
-  }
 }
