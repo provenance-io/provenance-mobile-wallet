@@ -1,5 +1,8 @@
 // ignore_for_file: member-ordering
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+
 extension StringExtension on String {
   String capitalize() {
     return '${this[0].toUpperCase()}${substring(1)}';
@@ -29,6 +32,9 @@ class Strings {
   static const faceId = 'Face ID';
   static const touchId = 'Touch ID';
   static const cancel = 'Cancel';
+  static AppLocalizations of(BuildContext context) {
+    return AppLocalizations.of(context);
+  }
 
   // Notifications
   static const String notifyServiceErrorTitle = 'Service Error';

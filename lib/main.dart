@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -62,12 +63,12 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
@@ -302,12 +303,14 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: Strings.appName,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: StartScreen(),
       navigatorKey: _navigatorKey,
     );
