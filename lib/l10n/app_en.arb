@@ -430,5 +430,6 @@
   "stakingConfirmAmountToRedelegate": "Amount to Redelegate",
   "stakingConfirmDelegating": "Delegating",
   "stakingConfirmDelegationDetails": "Delegation Details",
-  "stakingConfirmAmountToDelegate": "Amount to Delegate"
+  "stakingConfirmAmountToDelegate": "Amount to Delegate",
+  "numAssets": "Asset"
 }
