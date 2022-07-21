@@ -2,9 +2,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -13,7 +13,7 @@ class ConnectionDetailsModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<HomeBloc>();
+    final walletConnectService = get<WalletConnectService>();
 
     return Scaffold(
       appBar: PwAppBar(
@@ -22,8 +22,8 @@ class ConnectionDetailsModal extends StatelessWidget {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: StreamBuilder<WalletConnectSessionState>(
-          initialData: bloc.sessionEvents.state.value,
-          stream: bloc.sessionEvents.state,
+          initialData: walletConnectService.sessionEvents.state.value,
+          stream: walletConnectService.sessionEvents.state,
           builder: (context, snapshot) {
             final name = snapshot.data?.details?.name ?? Strings.unknown;
             final address =
@@ -75,7 +75,8 @@ class ConnectionDetailsModal extends StatelessWidget {
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: () async {
-                      bloc.disconnectSession();
+                      final walletConnectSession = get<WalletConnectService>();
+                      walletConnectSession.disconnectSession();
                       Navigator.of(context).pop(null);
                     },
                   ),

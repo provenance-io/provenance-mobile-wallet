@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
@@ -42,6 +43,7 @@ class WalletConnectSessionEvents {
 class WalletConnectSession {
   WalletConnectSession({
     required this.accountId,
+    required this.coin,
     required WalletConnection connection,
     required WalletConnectSessionDelegate delegate,
     required RemoteNotificationService remoteNotificationService,
@@ -56,6 +58,8 @@ class WalletConnectSession {
 
   static const _inactivityTimeout = Duration(minutes: 30);
   Timer? _inactivityTimer;
+
+  final Coin coin;
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
   final RemoteNotificationService _remoteNotificationService;

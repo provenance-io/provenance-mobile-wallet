@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -12,7 +12,6 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
@@ -21,9 +20,9 @@ import 'package:provenance_wallet/services/key_value_service/memory_key_value_st
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:sembast/sembast_memory.dart';
@@ -34,7 +33,7 @@ import 'home_mocks.dart';
 const walletConnectAddress =
     'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
 
-@GenerateMocks([RemoteNotificationService])
+@GenerateMocks([RemoteNotificationService, WalletConnectService])
 void main() {
   tearDown(() async {
     await get<SembastAccountStorageService>().deleteDatabase();
@@ -156,60 +155,6 @@ void main() {
 
     expect((await walletService.events.selected.first), isNull);
   });
-
-  test('Connect wallet requests session', () async {
-    final state = await TestState.create(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    WalletConnectSessionRequestData? details;
-    bloc.delegateEvents.sessionRequest.listen((e) async {
-      details = e;
-    });
-
-    await bloc.connectSession(state.accountIds[0], walletConnectAddress);
-
-    await pumpEventQueue();
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.connecting,
-    );
-
-    expect(details, isNotNull);
-  });
-
-  test('Approve session connects session', () async {
-    final state = await TestState.createConnected(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.connected,
-    );
-  });
-
-  test('Disconnect session disconnects session', () async {
-    final state = await TestState.createConnected(
-      maxWalletId: 0,
-    );
-
-    final bloc = state.bloc;
-
-    await bloc.disconnectSession();
-
-    await pumpEventQueue();
-
-    expect(
-      bloc.sessionEvents.state.value.status,
-      WalletConnectSessionStatus.disconnected,
-    );
-  });
 }
 
 class TestState {
@@ -234,22 +179,7 @@ class TestState {
   }) async {
     final state = await create(maxWalletId: maxWalletId);
 
-    final bloc = state.bloc;
-    final walletService = state.walletService;
-
     final connectedCompleter = Completer();
-
-    bloc.delegateEvents.sessionRequest.listen((e) async {
-      await bloc.approveSession(details: e, allowed: true);
-
-      await pumpEventQueue();
-
-      connectedCompleter.complete();
-    });
-
-    final walletId = (await walletService.events.selected.first)!.id;
-
-    await bloc.connectSession(walletId, walletConnectAddress);
 
     await pumpEventQueue();
 
@@ -349,6 +279,10 @@ class TestState {
     await accountService.selectFirstAccount();
 
     final mockRemoteNotificationService = MockRemoteNotificationService();
+    final mockWalletConnectService = MockWalletConnectService();
+    when(mockWalletConnectService.tryRestoreSession(any))
+        .thenAnswer((_) => Future.value(true));
+
     final deepLinkService = MockDeepLinkService();
     final assetService = MockAssetService(assets);
     final transactionService =
@@ -357,9 +291,6 @@ class TestState {
     final keyValueService = DefaultKeyValueService(
       store: MemoryKeyValueStore(),
     );
-    walletConnectionFactory(WalletConnectAddress address) {
-      return MockWalletConnection(address);
-    }
 
     get.registerSingleton<AccountService>(accountService);
 
@@ -369,10 +300,10 @@ class TestState {
     get.registerSingleton<TransactionService>(transactionService);
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<KeyValueService>(keyValueService);
-    get.registerSingleton<WalletConnectionFactory>(walletConnectionFactory);
     get.registerSingleton<RemoteNotificationService>(
       mockRemoteNotificationService,
     );
+    get.registerSingleton<WalletConnectService>(mockWalletConnectService);
 
     get.registerSingleton(authHelper);
     get.registerSingleton<TransactionHandler>(

@@ -45,6 +45,7 @@ main() {
 
       session = WalletConnectSession(
         accountId: "WalletId",
+        coin: wallet.Coin.mainNet,
         connection: mockWalletConnection!,
         delegate: mockWalletConnectSessionDelegate!,
         remoteNotificationService: mockRemoteNotificationService!,
