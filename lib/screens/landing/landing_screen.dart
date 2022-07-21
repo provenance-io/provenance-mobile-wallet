@@ -129,9 +129,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: PwPrimaryButton.fromString(
                       text: Strings.refresh,
                       onPressed: () async {
-                        ModalLoadingRoute.showLoading('', context);
-                        // Give the loading modal time to display
-                        await Future.delayed(Duration(milliseconds: 500));
+                        ModalLoadingRoute.showLoading(
+                          context,
+                          minDisplayTime: Duration(milliseconds: 500),
+                        );
                         ModalLoadingRoute.dismiss(context);
                       },
                     ),

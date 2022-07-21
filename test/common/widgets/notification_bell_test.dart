@@ -6,7 +6,8 @@ const _goldenRoot = "../../goldens/common/widgets/notification_bell";
 
 main() {
   Future<void> _build(WidgetTester tester, int notificationCount,
-      {Color? activeColor,
+      {required VoidCallback onclicked,
+      Color? activeColor,
       Color? inactiveColor,
       int? placeCount,
       Duration? animationDuration}) async {
@@ -18,6 +19,7 @@ main() {
           child: RepaintBoundary(
             child: NotificationBell(
               notificationCount: notificationCount,
+              onClicked: onclicked,
               activeColor: activeColor,
               inactiveColor: inactiveColor,
               placeCount: placeCount,
@@ -30,7 +32,7 @@ main() {
   }
 
   testWidgets("Verify defaults", (tester) async {
-    await _build(tester, 0);
+    await _build(tester, 0, onclicked: () {});
     final bellFind = find.byType(NotificationBell);
     final bell = tester.widget<NotificationBell>(bellFind);
 
@@ -41,13 +43,14 @@ main() {
   });
 
   testWidgets("verify assertions work", (tester) async {
-    expect(() => _build(tester, -1), throwsAssertionError);
-    expect(() => _build(tester, 1, placeCount: 0), throwsAssertionError);
+    expect(() => _build(tester, -1, onclicked: () {}), throwsAssertionError);
+    expect(() => _build(tester, 1, onclicked: () {}, placeCount: 0),
+        throwsAssertionError);
   });
 
   group("notification count label", () {
     testWidgets('no notification should not show a badge', (tester) async {
-      await _build(tester, 0);
+      await _build(tester, 0, onclicked: () {});
       final badgeFind = find.byWidgetPredicate(
           (widget) => widget is Container && widget.decoration != null);
       expect(badgeFind, findsNothing);
@@ -55,7 +58,7 @@ main() {
     });
 
     testWidgets('badge appears when a notifiction exists', (tester) async {
-      await _build(tester, 1);
+      await _build(tester, 1, onclicked: () {});
       final badgeFind = find.byWidgetPredicate(
           (widget) => widget is Container && widget.decoration != null);
       expect(badgeFind, findsOneWidget);
@@ -63,7 +66,7 @@ main() {
     });
 
     testWidgets('badge count exceeds placeCount', (tester) async {
-      await _build(tester, 101, placeCount: 2);
+      await _build(tester, 101, placeCount: 2, onclicked: () {});
       final badgeFind = find.byWidgetPredicate(
           (widget) => widget is Container && widget.decoration != null);
       expect(badgeFind, findsOneWidget);
@@ -73,27 +76,31 @@ main() {
 
   group("colors", () {
     testWidgets('default active and interactive colors', (tester) async {
-      await _build(tester, 0);
+      await _build(tester, 0, onclicked: () {});
 
       final bellFind = find.byType(NotificationBell);
       await expectLater(bellFind,
           matchesGoldenFile("$_goldenRoot/inactive-defaultColor.png"));
 
-      await _build(tester, 1);
+      await _build(tester, 1, onclicked: () {});
       await expectLater(
           bellFind, matchesGoldenFile("$_goldenRoot/active-defaultColor.png"));
     });
 
     testWidgets('custom active and interactive colors', (tester) async {
       await _build(tester, 0,
-          activeColor: Colors.blue, inactiveColor: Colors.pink);
+          activeColor: Colors.blue,
+          inactiveColor: Colors.pink,
+          onclicked: () {});
 
       final bellFind = find.byType(NotificationBell);
       await expectLater(
           bellFind, matchesGoldenFile("$_goldenRoot/inactive-customColor.png"));
 
       await _build(tester, 1,
-          activeColor: Colors.blue, inactiveColor: Colors.pink);
+          activeColor: Colors.blue,
+          inactiveColor: Colors.pink,
+          onclicked: () {});
       await expectLater(
           bellFind, matchesGoldenFile("$_goldenRoot/active-customColor.png"));
     });
@@ -101,9 +108,9 @@ main() {
 
   group("animation", () {
     testWidgets("animate on value change", (tester) async {
-      await _build(tester, 0);
+      await _build(tester, 0, onclicked: () {});
 
-      await _build(tester, 1);
+      await _build(tester, 1, onclicked: () {});
       final bellFind = find.byType(NotificationBell);
       final bell = tester.widget<NotificationBell>(bellFind);
 

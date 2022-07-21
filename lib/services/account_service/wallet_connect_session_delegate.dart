@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
@@ -68,13 +69,19 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     required PrivateKey privateKey,
     required WalletInfo walletInfo,
     required TransactionHandler transactionHandler,
+    required WalletConnectQueueService queueService,
+    required WalletConnectAddress address,
   })  : _privateKey = privateKey,
         _transactionHandler = transactionHandler,
-        _walletInfo = walletInfo;
+        _walletInfo = walletInfo,
+        _queueService = queueService,
+        _address = address;
 
   final PrivateKey _privateKey;
   final TransactionHandler _transactionHandler;
   final WalletInfo _walletInfo;
+  final WalletConnectQueueService _queueService;
+  final WalletConnectAddress _address;
 
   final _completerLookup = <String, CompleterDelegate>{};
 
@@ -96,7 +103,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   ) async {
     final id = Uuid().v1().toString();
 
-    _completerLookup[id] = (bool approve) {
+    _completerLookup[id] = (bool approve) async {
       SessionApprovalData? sessionApproval;
       final chainId = ChainId.forCoin(_privateKey.publicKey.coin);
       if (approve) {
@@ -107,11 +114,14 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      return callback(sessionApproval, null);
+      await callback(sessionApproval, null);
+      _queueService.removeRequest(_address, id);
     };
 
-    final details = WalletConnectSessionRequestData(id, data);
+    await _queueService.createWalletConnectSessionGroup(
+        _address, _privateKey.defaultKey().publicKey.address, data.clientMeta);
 
+    final details = WalletConnectSessionRequestData(id, data);
     events._sessionRequest.add(details);
   }
 
@@ -125,14 +135,15 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final id = Uuid().v1().toString();
     log("Approve sign");
 
-    _completerLookup[id] = (bool accept) {
+    _completerLookup[id] = (bool accept) async {
       List<int>? signedData;
       if (accept) {
         signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))
           ..removeLast();
       }
 
-      return callback(signedData, null);
+      await callback(signedData, null);
+      _queueService.removeRequest(_address, id);
     };
 
     final signRequest = SignRequest(
@@ -142,7 +153,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       address: address,
     );
 
-    events._signRequest.add(signRequest);
+    _queueService.addWalletConnectSignRequest(_address, signRequest);
   }
 
   @override
@@ -214,10 +225,11 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         );
       }
 
-      return callback(response, null);
+      await callback(response, null);
+      _queueService.removeRequest(_address, id);
     };
 
-    events._sendRequest.add(sendRequest);
+    _queueService.addWalletConnectSendRequest(_address, sendRequest);
   }
 
   @override
@@ -228,6 +240,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     _completerLookup.clear();
     events._onClose.add(null);
+    _queueService.removeWalletConnectSessionGroup(_address);
   }
 
   @override

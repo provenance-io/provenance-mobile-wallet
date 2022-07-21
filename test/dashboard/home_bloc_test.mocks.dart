@@ -2,11 +2,20 @@
 // in provenance_wallet/test/dashboard/home_bloc_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i3;
+import 'dart:async' as _i5;
+import 'dart:ui' as _i8;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
+import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart'
     as _i2;
+import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart'
+    as _i3;
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
+    as _i7;
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
+    as _i4;
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart'
+    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -18,23 +27,90 @@ import 'package:provenance_wallet/services/remote_notification/remote_notificati
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
+class _FakeWalletConnectSessionEvents_0 extends _i1.Fake
+    implements _i2.WalletConnectSessionEvents {}
+
+class _FakeWalletConnectSessionDelegateEvents_1 extends _i1.Fake
+    implements _i3.WalletConnectSessionDelegateEvents {}
+
 /// A class which mocks [RemoteNotificationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoteNotificationService extends _i1.Mock
-    implements _i2.RemoteNotificationService {
+    implements _i4.RemoteNotificationService {
   MockRemoteNotificationService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> registerForPushNotifications(String? topic) => (super
+  _i5.Future<void> registerForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#registerForPushNotifications, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
   @override
-  _i3.Future<void> unregisterForPushNotifications(String? topic) => (super
+  _i5.Future<void> unregisterForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#unregisterForPushNotifications, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+}
+
+/// A class which mocks [WalletConnectService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWalletConnectService extends _i1.Mock
+    implements _i6.WalletConnectService {
+  MockWalletConnectService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.WalletConnectSessionEvents get sessionEvents =>
+      (super.noSuchMethod(Invocation.getter(#sessionEvents),
+              returnValue: _FakeWalletConnectSessionEvents_0())
+          as _i2.WalletConnectSessionEvents);
+  @override
+  _i3.WalletConnectSessionDelegateEvents get delegateEvents =>
+      (super.noSuchMethod(Invocation.getter(#delegateEvents),
+              returnValue: _FakeWalletConnectSessionDelegateEvents_1())
+          as _i3.WalletConnectSessionDelegateEvents);
+  @override
+  _i5.Future<bool> disconnectSession() =>
+      (super.noSuchMethod(Invocation.method(#disconnectSession, []),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> approveSession(
+          {_i7.WalletConnectSessionRequestData? details, bool? allowed}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #approveSession, [], {#details: details, #allowed: allowed}),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> connectSession(String? accountId, String? addressData) =>
+      (super.noSuchMethod(
+          Invocation.method(#connectSession, [accountId, addressData]),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> signTransactionFinish({String? requestId, bool? allowed}) =>
+      (super.noSuchMethod(
+          Invocation.method(#signTransactionFinish, [],
+              {#requestId: requestId, #allowed: allowed}),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> sendMessageFinish({String? requestId, bool? allowed}) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendMessageFinish, [],
+              {#requestId: requestId, #allowed: allowed}),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> tryRestoreSession(String? accountId) =>
+      (super.noSuchMethod(Invocation.method(#tryRestoreSession, [accountId]),
+          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
+  @override
+  void addListener(_i8.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void removeListener(_i8.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+          returnValueForMissingStub: null);
 }

@@ -36,9 +36,10 @@ class ConfirmDelegateScreen extends StatelessWidget {
                 .showTransactionData(bloc.getDelegateMessageJson());
           },
           onTransactionSign: (gasAdjustment) async {
-            ModalLoadingRoute.showLoading('', context);
-            // Give the loading modal time to display
-            await Future.delayed(Duration(milliseconds: 500));
+            ModalLoadingRoute.showLoading(
+              context,
+              minDisplayTime: Duration(milliseconds: 500),
+            );
             await _sendTransaction(bloc, details, gasAdjustment, context);
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,

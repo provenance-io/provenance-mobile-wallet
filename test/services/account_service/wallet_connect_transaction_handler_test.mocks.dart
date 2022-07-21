@@ -2,12 +2,12 @@
 // in provenance_wallet/test/services/account_service/wallet_connect_transaction_handler_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i27;
+import 'dart:async' as _i26;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i25;
+import 'package:provenance_dart/proto.dart' as _i2;
 import 'package:provenance_dart/src/proto/proto_gen/cosmos/auth/v1beta1/auth.pb.dart'
-    as _i26;
+    as _i25;
 import 'package:provenance_dart/src/proto/proto_gen/cosmos/auth/v1beta1/query.pbgrpc.dart'
     as _i5;
 import 'package:provenance_dart/src/proto/proto_gen/cosmos/authz/v1beta1/query.pbgrpc.dart'
@@ -32,8 +32,6 @@ import 'package:provenance_dart/src/proto/proto_gen/cosmos/slashing/v1beta1/quer
     as _i20;
 import 'package:provenance_dart/src/proto/proto_gen/cosmos/staking/v1beta1/query.pbgrpc.dart'
     as _i21;
-import 'package:provenance_dart/src/proto/proto_gen/cosmos/tx/v1beta1/service.pbgrpc.dart'
-    as _i2;
 import 'package:provenance_dart/src/proto/proto_gen/cosmos/upgrade/v1beta1/query.pbgrpc.dart'
     as _i23;
 import 'package:provenance_dart/src/proto/proto_gen/cosmwasm/wasm/v1/query.pbgrpc.dart'
@@ -54,12 +52,12 @@ import 'package:provenance_dart/src/proto/proto_gen/provenance/msgfees/v1/query.
     as _i15;
 import 'package:provenance_dart/src/proto/proto_gen/provenance/name/v1/query.pbgrpc.dart'
     as _i18;
-import 'package:provenance_dart/src/wallet/keys.dart' as _i28;
-import 'package:provenance_dart/src/wallet/private_key.dart' as _i29;
-import 'package:provenance_dart/wallet.dart' as _i32;
+import 'package:provenance_dart/src/wallet/keys.dart' as _i27;
+import 'package:provenance_dart/src/wallet/private_key.dart' as _i28;
+import 'package:provenance_dart/wallet.dart' as _i31;
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart'
-    as _i30;
-import 'package:provenance_wallet/services/models/gas_fee.dart' as _i31;
+    as _i29;
+import 'package:provenance_wallet/services/models/gas_fee.dart' as _i30;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -117,19 +115,19 @@ class _FakeQueryClient_21 extends _i1.Fake implements _i23.QueryClient {}
 
 class _FakeQueryClient_22 extends _i1.Fake implements _i24.QueryClient {}
 
-class _FakeBaseReq_23 extends _i1.Fake implements _i25.BaseReq {}
+class _FakeBaseReq_23 extends _i1.Fake implements _i2.BaseReq {}
 
-class _FakeGasEstimate_24 extends _i1.Fake implements _i25.GasEstimate {}
+class _FakeGasEstimate_24 extends _i1.Fake implements _i2.GasEstimate {}
 
 class _FakeRawTxResponsePair_25 extends _i1.Fake
-    implements _i25.RawTxResponsePair {}
+    implements _i2.RawTxResponsePair {}
 
-class _FakeBaseAccount_26 extends _i1.Fake implements _i26.BaseAccount {}
+class _FakeBaseAccount_26 extends _i1.Fake implements _i25.BaseAccount {}
 
 /// A class which mocks [PbClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPbClient extends _i1.Mock implements _i25.PbClient {
+class MockPbClient extends _i1.Mock implements _i2.PbClient {
   MockPbClient() {
     _i1.throwOnMissingStub(this);
   }
@@ -231,37 +229,36 @@ class MockPbClient extends _i1.Mock implements _i25.PbClient {
       (super.noSuchMethod(Invocation.getter(#wasmClient),
           returnValue: _FakeQueryClient_22()) as _i24.QueryClient);
   @override
-  _i27.Future<void> dispose() => (super.noSuchMethod(
+  _i26.Future<void> dispose() => (super.noSuchMethod(
       Invocation.method(#dispose, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i27.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i26.Future<void>);
   @override
-  _i27.Future<_i25.BaseReq> baseRequest(
-          _i25.TxBody? txBody, List<_i25.BaseReqSigner>? signers,
+  _i26.Future<_i2.BaseReq> baseRequest(
+          _i2.TxBody? txBody, List<_i2.BaseReqSigner>? signers,
           {double? gasAdjustment, String? feeGranter}) =>
       (super.noSuchMethod(
               Invocation.method(#baseRequest, [txBody, signers],
                   {#gasAdjustment: gasAdjustment, #feeGranter: feeGranter}),
-              returnValue: Future<_i25.BaseReq>.value(_FakeBaseReq_23()))
-          as _i27.Future<_i25.BaseReq>);
+              returnValue: Future<_i2.BaseReq>.value(_FakeBaseReq_23()))
+          as _i26.Future<_i2.BaseReq>);
   @override
-  _i27.Future<_i25.GasEstimate> estimateTx(_i25.BaseReq? baseReq) =>
+  _i26.Future<_i2.GasEstimate> estimateTx(_i2.BaseReq? baseReq) =>
       (super.noSuchMethod(Invocation.method(#estimateTx, [baseReq]),
-              returnValue:
-                  Future<_i25.GasEstimate>.value(_FakeGasEstimate_24()))
-          as _i27.Future<_i25.GasEstimate>);
+              returnValue: Future<_i2.GasEstimate>.value(_FakeGasEstimate_24()))
+          as _i26.Future<_i2.GasEstimate>);
   @override
-  _i27.Future<_i25.RawTxResponsePair> broadcastTx(
-          _i25.BaseReq? baseReq, _i25.GasEstimate? gasEstimate,
+  _i26.Future<_i2.RawTxResponsePair> broadcastTx(
+          _i2.BaseReq? baseReq, _i2.GasEstimate? gasEstimate,
           [_i2.BroadcastMode? mode = _i2.BroadcastMode.BROADCAST_MODE_SYNC]) =>
       (super.noSuchMethod(
               Invocation.method(#broadcastTx, [baseReq, gasEstimate, mode]),
-              returnValue: Future<_i25.RawTxResponsePair>.value(
+              returnValue: Future<_i2.RawTxResponsePair>.value(
                   _FakeRawTxResponsePair_25()))
-          as _i27.Future<_i25.RawTxResponsePair>);
+          as _i26.Future<_i2.RawTxResponsePair>);
   @override
-  _i27.Future<_i25.RawTxResponsePair> estimateAndBroadcastTx(
-          _i25.TxBody? txBody, List<_i25.BaseReqSigner>? signers,
+  _i26.Future<_i2.RawTxResponsePair> estimateAndBroadcastTx(
+          _i2.TxBody? txBody, List<_i2.BaseReqSigner>? signers,
           {_i2.BroadcastMode? mode = _i2.BroadcastMode.BROADCAST_MODE_SYNC,
           double? gasAdjustment,
           String? feeGranter}) =>
@@ -274,55 +271,54 @@ class MockPbClient extends _i1.Mock implements _i25.PbClient {
                 #gasAdjustment: gasAdjustment,
                 #feeGranter: feeGranter
               }),
-              returnValue: Future<_i25.RawTxResponsePair>.value(
+              returnValue: Future<_i2.RawTxResponsePair>.value(
                   _FakeRawTxResponsePair_25()))
-          as _i27.Future<_i25.RawTxResponsePair>);
+          as _i26.Future<_i2.RawTxResponsePair>);
   @override
-  _i27.Future<_i26.BaseAccount> getBaseAccount(String? bech32Address) =>
+  _i26.Future<_i25.BaseAccount> getBaseAccount(String? bech32Address) =>
       (super.noSuchMethod(Invocation.method(#getBaseAccount, [bech32Address]),
               returnValue:
-                  Future<_i26.BaseAccount>.value(_FakeBaseAccount_26()))
-          as _i27.Future<_i26.BaseAccount>);
+                  Future<_i25.BaseAccount>.value(_FakeBaseAccount_26()))
+          as _i26.Future<_i25.BaseAccount>);
   @override
-  _i27.Future<_i25.GasEstimate> estimateTransactionFees(
-          _i25.TxBody? transactionBody, Iterable<_i28.IPubKey>? signers,
+  _i26.Future<_i2.GasEstimate> estimateTransactionFees(
+          _i2.TxBody? transactionBody, Iterable<_i27.IPubKey>? signers,
           {double? gasAdjustment}) =>
       (super.noSuchMethod(
               Invocation.method(#estimateTransactionFees,
                   [transactionBody, signers], {#gasAdjustment: gasAdjustment}),
-              returnValue:
-                  Future<_i25.GasEstimate>.value(_FakeGasEstimate_24()))
-          as _i27.Future<_i25.GasEstimate>);
+              returnValue: Future<_i2.GasEstimate>.value(_FakeGasEstimate_24()))
+          as _i26.Future<_i2.GasEstimate>);
   @override
-  _i27.Future<_i25.RawTxResponsePair> estimateAndBroadcastTransaction(
-          _i25.TxBody? transactionBody, List<_i28.IPrivKey>? signers,
+  _i26.Future<_i2.RawTxResponsePair> estimateAndBroadcastTransaction(
+          _i2.TxBody? transactionBody, List<_i27.IPrivKey>? signers,
           {double? gasAdjustment, String? feeGranter}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #estimateAndBroadcastTransaction,
                   [transactionBody, signers],
                   {#gasAdjustment: gasAdjustment, #feeGranter: feeGranter}),
-              returnValue: Future<_i25.RawTxResponsePair>.value(
+              returnValue: Future<_i2.RawTxResponsePair>.value(
                   _FakeRawTxResponsePair_25()))
-          as _i27.Future<_i25.RawTxResponsePair>);
+          as _i26.Future<_i2.RawTxResponsePair>);
   @override
-  _i27.Future<_i25.RawTxResponsePair> broadcastTransaction(
-          _i25.TxBody? transactionBody,
-          Iterable<_i28.IPrivKey>? signers,
-          _i25.Fee? fee,
+  _i26.Future<_i2.RawTxResponsePair> broadcastTransaction(
+          _i2.TxBody? transactionBody,
+          Iterable<_i27.IPrivKey>? signers,
+          _i2.Fee? fee,
           [_i2.BroadcastMode? mode = _i2.BroadcastMode.BROADCAST_MODE_SYNC]) =>
       (super.noSuchMethod(
               Invocation.method(
                   #broadcastTransaction, [transactionBody, signers, fee, mode]),
-              returnValue: Future<_i25.RawTxResponsePair>.value(
+              returnValue: Future<_i2.RawTxResponsePair>.value(
                   _FakeRawTxResponsePair_25()))
-          as _i27.Future<_i25.RawTxResponsePair>);
+          as _i26.Future<_i2.RawTxResponsePair>);
   @override
   List<int> generateMultiSigAuthorization(
-          _i29.PrivateKey? pk,
-          _i25.TxBody? txBody,
-          _i25.Fee? fee,
-          _i26.BaseAccount? multiSigAccount) =>
+          _i28.PrivateKey? pk,
+          _i2.TxBody? txBody,
+          _i2.Fee? fee,
+          _i25.BaseAccount? multiSigAccount) =>
       (super.noSuchMethod(
           Invocation.method(#generateMultiSigAuthorization,
               [pk, txBody, fee, multiSigAccount]),
@@ -332,13 +328,13 @@ class MockPbClient extends _i1.Mock implements _i25.PbClient {
 /// A class which mocks [GasFeeService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGasFeeService extends _i1.Mock implements _i30.GasFeeService {
+class MockGasFeeService extends _i1.Mock implements _i29.GasFeeService {
   MockGasFeeService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i27.Future<_i31.GasFee?> getGasFee(_i32.Coin? coin) => (super.noSuchMethod(
+  _i26.Future<_i30.GasFee?> getGasFee(_i31.Coin? coin) => (super.noSuchMethod(
       Invocation.method(#getGasFee, [coin]),
-      returnValue: Future<_i31.GasFee?>.value()) as _i27.Future<_i31.GasFee?>);
+      returnValue: Future<_i30.GasFee?>.value()) as _i26.Future<_i30.GasFee?>);
 }
