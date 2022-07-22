@@ -113,17 +113,7 @@ class Strings {
   // TODO: Remove these. Everything was requiring BuildContext
   // TODO: and I'm not sure that's what we want. These Strings have
   // TODO: already been localized, so we just need to remove them.
-  static const notifyServiceErrorTitle = 'Service Error';
-  static const notifyNetworkErrorTitle = 'Network Disconnected';
-  static const notifyServiceErrorMessage =
-      'Unfortunately our services are down at the moment';
-  static const notifyNetworkErrorMessage =
-      'It appears as though no network is connected.';
 
-  static const multiSigInvalidLink = 'Invalid link, please try again.';
-
-  static const dropDownAllMessageTypes = "All Message Types";
-  static const dropDownAllStatuses = "All Statuses";
   static const dropDownVotingPower = "Voting Power";
   static const dropDownAlphabetically = "Name";
 
