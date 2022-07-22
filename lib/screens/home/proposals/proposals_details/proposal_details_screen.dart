@@ -158,7 +158,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.currentDepositFormatted,
                         _proposal.neededDepositFormatted,
                         title: Strings.proposalDetailsDeposits,
-                        endValue: _proposal.depositPercentage,
                       ),
                       DetailsHeader(
                         title: Strings.proposalDetailsThresholdDetails,
@@ -187,7 +186,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.totalAmount,
                         _proposal.totalEligibleAmount,
                         title: Strings.proposalDetailsPercentVoted,
-                        endValue: _proposal.votePercentage,
                       ),
                       DetailsHeader(
                         title: Strings.proposalDetailsProposalVoting,
@@ -199,7 +197,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
                             Strings.proposalDetailsYes),
-                        endValue: _proposal.votePercentage,
                       ),
                       VerticalSpacer.large(),
                       SinglePercentageBarChart(
@@ -207,7 +204,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
                             Strings.proposalDetailsNo),
-                        endValue: _proposal.votePercentage,
                         color: Theme.of(context).colorScheme.error,
                       ),
                       VerticalSpacer.large(),
@@ -216,7 +212,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
                             Strings.proposalDetailsNoWithVeto),
-                        endValue: _proposal.votePercentage,
                         color: Theme.of(context).colorScheme.notice350,
                       ),
                       VerticalSpacer.large(),
@@ -224,7 +219,6 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           _proposal.abstainAmount, _proposal.totalAmount,
                           title: Strings.proposalsScreenVoted(
                               Strings.proposalDetailsAbstain),
-                          endValue: _proposal.votePercentage,
                           color: Theme.of(context).colorScheme.neutral600),
                       DetailsItem.alternateChild(
                         title: Strings.proposalDetailsTotalVotes,

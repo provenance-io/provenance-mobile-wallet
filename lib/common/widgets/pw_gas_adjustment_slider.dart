@@ -9,8 +9,8 @@ class PwGasAdjustmentSlider extends StatefulWidget {
     this.padding,
     required this.title,
     required this.startingValue,
-    required this.min,
-    required this.max,
+    this.min = 0,
+    this.max = 5,
     required this.onValueChanged,
     this.headerStyle = PwTextStyle.body,
   }) : super(key: key);

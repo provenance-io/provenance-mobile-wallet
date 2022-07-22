@@ -10,17 +10,20 @@ class SinglePercentageBarChart extends StatelessWidget {
     ),
     this.color,
     required this.title,
-    required this.endValue,
+    this.childStyle,
+    this.showDecimal = true,
   }) : super(key: key);
   final String title;
-  final String endValue;
   final double total;
   final double current;
   final EdgeInsets padding;
   final Color? color;
+  final PwTextStyle? childStyle;
+  final bool showDecimal;
 
   @override
   Widget build(BuildContext context) {
+    final endValue = ((current / total) * 100);
     return Column(
       children: [
         Row(
@@ -42,10 +45,12 @@ class SinglePercentageBarChart extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: PwText(
-                  "${((current / total) * 100).toStringAsFixed(2)}%",
+                  showDecimal
+                      ? "${endValue.toStringAsFixed(2)}%"
+                      : "${endValue.toInt()}%",
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  style: PwTextStyle.bodyBold,
+                  style: childStyle ?? PwTextStyle.bodyBold,
                 ),
               ),
             ),

@@ -667,12 +667,14 @@ class Strings {
   static const proposalVoteConfirmTitle = "Title";
   static const proposalVoteConfirmProposerAddress = "Proposer Address";
   static const proposalVoteConfirmVoterAddress = "Voter Address";
-  static const proposalVoteConfirmVoteOption = "Vote Option";
+  static const proposalVoteConfirmVoteOption = "Vote Option:";
   static const proposalVoteConfirmVote = "Vote";
   static const proposalVoteConfirmWeight = "Weight";
 
   // Proposal Vote Confirm Screen
-  static const proposalWeightedVoteConfirmVoteConfirm = "Weighted Vote Confirm";
+  static const proposalWeightedVoteConfirmWeightedVote =
+      "Confirm Weighted Vote";
+  static const proposalWeightedVoteProposalId = "Proposal ID#";
 
   // Proposal Vote Success
   static const proposalVoteSuccessSuccess = "Success";
