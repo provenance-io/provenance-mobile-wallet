@@ -120,8 +120,6 @@ class Strings {
   static const notifyNetworkErrorMessage =
       'It appears as though no network is connected.';
 
-  static const transactionFieldTrue = 'Yes';
-  static const transactionFieldFalse = 'No';
   static const multiSigInvalidLink = 'Invalid link, please try again.';
 
   static const dropDownAllMessageTypes = "All Message Types";

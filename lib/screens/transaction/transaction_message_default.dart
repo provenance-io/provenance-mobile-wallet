@@ -37,17 +37,7 @@ class TransactionMessageDefault extends StatefulWidget {
 
 class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
-  final _processor = MessageFieldProcessor(
-    converters: {
-      MessageFieldName.fromAddress: convertAddress,
-      MessageFieldName.toAddress: convertAddress,
-      MessageFieldName.address: convertAddress,
-      MessageFieldName.manager: convertAddress,
-      MessageFieldName.delegatorAddress: convertAddress,
-      MessageFieldName.validatorAddress: convertAddress,
-      MessageFieldName.amount: convertAmount,
-    },
-  );
+  late final MessageFieldProcessor _processor;
 
   late final PageController _pageController;
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
@@ -62,6 +52,19 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     _pageController.addListener(() {
       _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
     });
+    _processor = MessageFieldProcessor(
+      transactionFieldTrue: Strings.of(context).transactionFieldTrue,
+      transactionFieldFalse: Strings.of(context).transactionFieldFalse,
+      converters: {
+        MessageFieldName.fromAddress: convertAddress,
+        MessageFieldName.toAddress: convertAddress,
+        MessageFieldName.address: convertAddress,
+        MessageFieldName.manager: convertAddress,
+        MessageFieldName.delegatorAddress: convertAddress,
+        MessageFieldName.validatorAddress: convertAddress,
+        MessageFieldName.amount: convertAmount,
+      },
+    );
   }
 
   @override
