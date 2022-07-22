@@ -79,8 +79,8 @@ class _ProposalListItemState extends State<ProposalListItem> {
                               },
                               child: PwText(
                                 _isActive
-                                    ? Strings.stakingDetailsViewLess
-                                    : Strings.viewMore,
+                                    ? Strings.of(context).stakingDetailsViewLess
+                                    : Strings.of(context).viewMore,
                                 color: PwColor.neutral200,
                                 style: PwTextStyle.footnote,
                                 underline: true,

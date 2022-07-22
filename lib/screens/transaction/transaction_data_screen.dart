@@ -16,7 +16,7 @@ class TransactionDataScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.neutral750,
       appBar: PwAppBar(
-        title: Strings.transactionDataTitle,
+        title: Strings.of(context).transactionDataTitle,
         leadingIcon: PwIcons.back,
       ),
       body: SafeArea(

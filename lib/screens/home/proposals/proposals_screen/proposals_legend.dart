@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_list_item_status.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
+import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -17,6 +18,8 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
+
     return Container(
       padding: EdgeInsets.all(Spacing.large),
       margin: EdgeInsets.symmetric(horizontal: Spacing.large),
@@ -32,7 +35,7 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PwText(
-                Strings.proposalsScreenLegend,
+                strings.proposalsScreenLegend,
                 style: PwTextStyle.bodyBold,
               ),
               GestureDetector(
@@ -44,8 +47,8 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
                   },
                   child: PwText(
                     _isActive
-                        ? Strings.stakingDetailsViewLess
-                        : Strings.viewMore,
+                        ? strings.stakingDetailsViewLess
+                        : strings.viewMore,
                     color: PwColor.neutral200,
                     style: PwTextStyle.footnote,
                     underline: true,
@@ -81,7 +84,7 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 PwText(
-                  Strings.proposalsScreenMyStatus,
+                  strings.proposalsScreenMyStatus,
                   style: PwTextStyle.body,
                 ),
                 Column(
@@ -89,14 +92,16 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
+                      children: [
                         ProposalVoteChip(
-                          vote: Strings.proposalDetailsYes,
+                          vote: Vote.demo(answerYes: 1),
                           margin: EdgeInsets.only(bottom: Spacing.small),
                         ),
                         ProposalVoteChip(
-                          vote:
-                              "${Strings.proposalDetailsYes}, ${Strings.proposalDetailsAbstain}",
+                          vote: Vote.demo(
+                            answerYes: 1,
+                            answerAbstain: 1,
+                          ),
                           margin: EdgeInsets.only(
                               bottom: Spacing.small, left: Spacing.small),
                         ),
@@ -104,26 +109,34 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
+                      children: [
                         ProposalVoteChip(
-                          vote: Strings.proposalDetailsNo,
+                          vote: Vote.demo(
+                            answerNo: 1,
+                          ),
                           margin: EdgeInsets.only(bottom: Spacing.small),
                         ),
                         ProposalVoteChip(
-                          vote:
-                              "${Strings.proposalDetailsNo}, ${Strings.proposalDetailsAbstain}",
+                          vote: Vote.demo(
+                            answerNo: 1,
+                            answerAbstain: 1,
+                          ),
                           margin: EdgeInsets.only(
                               bottom: Spacing.small, left: Spacing.small),
                         ),
                       ],
                     ),
                     ProposalVoteChip(
-                      vote:
-                          "${Strings.proposalDetailsNoWithVeto}, ${Strings.proposalDetailsAbstain}",
+                      vote: Vote.demo(
+                        answerNoWithVeto: 1,
+                        answerAbstain: 1,
+                      ),
                       margin: EdgeInsets.only(bottom: Spacing.small),
                     ),
                     ProposalVoteChip(
-                      vote: Strings.proposalDetailsNoWithVeto,
+                      vote: Vote.demo(
+                        answerNoWithVeto: 1,
+                      ),
                       margin: EdgeInsets.only(bottom: Spacing.small),
                     ),
                   ],

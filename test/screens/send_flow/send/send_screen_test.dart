@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +14,6 @@ import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_screen_test.mocks.dart';
@@ -45,6 +45,8 @@ main() {
     Future<void> _build(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Material(
             child: SendScreen(),
           ),
@@ -72,6 +74,8 @@ main() {
     Future<void> _build(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Material(
             child: SendPage(),
           ),
@@ -82,9 +86,9 @@ main() {
     testWidgets("Contents", (tester) async {
       await _build(tester);
 
-      expect(find.text(Strings.sendPageSelectAsset), findsOneWidget);
-      expect(find.text(Strings.sendPageScanQrCode), findsOneWidget);
-      expect(find.text(Strings.sendPageSendToAddressLabel), findsOneWidget);
+      expect(find.text("Select Asset"), findsOneWidget);
+      expect(find.text("paste or scan QR code"), findsOneWidget);
+      expect(find.text("Send to Address"), findsOneWidget);
       expect(find.byType(SendAssetList), findsOneWidget);
       expect(find.byType(RecentSendList), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);

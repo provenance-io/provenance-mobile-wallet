@@ -58,7 +58,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     return Scaffold(
       appBar: PwAppBar(
         leadingIcon: PwIcons.back,
-        title: Strings.multiSigJoinLinkTitle,
+        title: Strings.of(context).multiSigJoinLinkTitle,
       ),
       body: CustomScrollView(
         slivers: [
@@ -79,14 +79,14 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                     child: Column(
                       children: [
                         PwText(
-                          Strings.multiSigJoinLinkMessage,
+                          Strings.of(context).multiSigJoinLinkMessage,
                           style: PwTextStyle.body,
                           color: PwColor.neutralNeutral,
                           textAlign: TextAlign.center,
                         ),
                         VerticalSpacer.largeX4(),
                         PwTextFormField(
-                          label: Strings.multiSigJoinLinkFieldLabel,
+                          label: Strings.of(context).multiSigJoinLinkFieldLabel,
                           validator: _validate,
                           controller: _textController,
                           autofocus: true,
@@ -109,7 +109,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                   child: PwButton(
                     enabled: _valid,
                     child: PwText(
-                      Strings.continueName,
+                      Strings.of(context).continueName,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
@@ -144,7 +144,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     String? error;
 
     if (text == null || text.isEmpty) {
-      error = Strings.required;
+      error = Strings.of(context).required;
     }
 
     return error;
@@ -154,7 +154,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     String? error;
 
     if (text == null || text.isEmpty) {
-      error = Strings.required;
+      error = Strings.of(context).required;
     } else {
       final valid = parseInviteLinkData(text) != null;
       if (!valid) {

@@ -56,7 +56,7 @@ class TransactionTabState extends State<TransactionTab> {
                   backgroundColor: Theme.of(context).colorScheme.neutral750,
                   elevation: 0.0,
                   title: PwText(
-                    Strings.transactionDetails,
+                    Strings.of(context).transactionDetails,
                     style: PwTextStyle.subhead,
                   ),
                   leading: Container(),

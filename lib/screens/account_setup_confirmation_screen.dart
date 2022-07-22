@@ -18,6 +18,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
         hasIcon: false,
@@ -37,7 +38,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                     VerticalSpacer.largeX6(),
                     VerticalSpacer.xxLarge(),
                     PwText(
-                      Strings.accountCreated,
+                      strings.accountCreated,
                       style: PwTextStyle.headline2,
                       textAlign: TextAlign.center,
                     ),
@@ -48,7 +49,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                         left: Spacing.xxLarge,
                       ),
                       child: PwText(
-                        Strings.theOnlyWayToRecoverYourAccount,
+                        strings.theOnlyWayToRecoverYourAccount,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                       ),
@@ -72,7 +73,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                         key: keyContinueButton,
                         autofocus: true,
                         child: PwText(
-                          Strings.continueName,
+                          strings.continueName,
                           style: PwTextStyle.subhead,
                           color: PwColor.neutralNeutral,
                         ),

@@ -67,7 +67,7 @@ class AssetBarChart extends StatelessWidget {
                     ? _buildGraph(context, details!)
                     : Center(
                         child: PwText(
-                          Strings.assetChartNoDataAvailable,
+                          Strings.of(context).assetChartNoDataAvailable,
                           style: PwTextStyle.body,
                         ),
                       )

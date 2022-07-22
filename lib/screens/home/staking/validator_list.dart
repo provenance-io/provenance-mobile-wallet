@@ -45,7 +45,7 @@ class ValidatorListState extends State<ValidatorList> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PwText(
-              Strings.stakingTabAvailableToSelect,
+              Strings.of(context).stakingTabAvailableToSelect,
               color: PwColor.neutralNeutral,
               style: PwTextStyle.bodyBold,
             ),
@@ -55,7 +55,7 @@ class ValidatorListState extends State<ValidatorList> {
               child: Row(
                 children: [
                   PwText(
-                    Strings.stakingTabSortBy,
+                    Strings.of(context).stakingTabSortBy,
                     color: PwColor.neutralNeutral,
                     style: PwTextStyle.body,
                   ),
@@ -92,6 +92,7 @@ class ValidatorListState extends State<ValidatorList> {
                       return StakingListItem(
                         validator: item,
                         listItemText: Strings.displayDelegatorsWithCommission(
+                          context,
                           item.delegators,
                           item.commission,
                         ),

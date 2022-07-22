@@ -20,6 +20,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingDelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -44,7 +45,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
           },
           signButtonTitle: details.selectedDelegationType.dropDownTitle,
           children: [
-            DetailsHeader(title: Strings.stakingConfirmDelegating),
+            DetailsHeader(title: strings.stakingConfirmDelegating),
             PwListDivider.alternate(),
             VerticalSpacer.large(),
             ValidatorCard(
@@ -52,24 +53,24 @@ class ConfirmDelegateScreen extends StatelessWidget {
               imgUrl: details.validator.imgUrl,
               description: details.validator.description,
             ),
-            DetailsHeader(title: Strings.stakingConfirmDelegationDetails),
+            DetailsHeader(title: strings.stakingConfirmDelegationDetails),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation?.displayDenom ??
                   Strings.stakingConfirmHashAmount("0"),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmAmountToDelegate,
+              title: strings.stakingConfirmAmountToDelegate,
               hashString: Strings.stakingConfirmHashAmount(
                   details.hashDelegated.toString()),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmNewTotalDelegation,
+              title: strings.stakingConfirmNewTotalDelegation,
               hashString: Strings.stakingConfirmHashAmount(
                   ((details.delegation?.hashAmount ?? Decimal.zero) +
                           details.hashDelegated)

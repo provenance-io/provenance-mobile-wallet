@@ -45,7 +45,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
             ),
             child: PwTextButton.shrinkWrap(
               child: PwText(
-                Strings.multiSigInviteReviewDetailsDeclineButton,
+                Strings.of(context).multiSigInviteReviewDetailsDeclineButton,
                 style: PwTextStyle.body,
                 color: PwColor.primaryP500,
                 textAlign: TextAlign.end,
@@ -74,31 +74,33 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                   child: Column(
                     children: [
                       PwText(
-                        Strings.multiSigInviteReviewDetailsTitle,
+                        Strings.of(context).multiSigInviteReviewDetailsTitle,
                         color: PwColor.neutralNeutral,
                         style: PwTextStyle.title,
                         textAlign: TextAlign.center,
                       ),
                       VerticalSpacer.small(),
                       PwText(
-                        Strings.multiSigInviteReviewDetailsDesc,
+                        Strings.of(context).multiSigInviteReviewDetailsDesc,
                         color: PwColor.neutralNeutral,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                       ),
                       VerticalSpacer.largeX4(),
                       MultiSigField(
-                        name: Strings.multiSigConfirmAccountNameLabel,
+                        name:
+                            Strings.of(context).multiSigConfirmAccountNameLabel,
                         value: name,
                       ),
                       divider,
                       MultiSigField(
-                        name: Strings.multiSigConfirmCosignersLabel,
+                        name: Strings.of(context).multiSigConfirmCosignersLabel,
                         value: cosignerCount.toString(),
                       ),
                       divider,
                       MultiSigField(
-                        name: Strings.multiSigConfirmSignaturesLabel,
+                        name:
+                            Strings.of(context).multiSigConfirmSignaturesLabel,
                         value: signaturesRequired.toString(),
                       ),
                       divider,
@@ -117,7 +119,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                     children: [
                       PwTextButton.primaryAction(
                         context: context,
-                        text: Strings
+                        text: Strings.of(context)
                             .multiSigInviteReviewDetailsChooseAccountButton,
                         onPressed: () {
                           _bloc.showChooseAccount();
@@ -126,8 +128,8 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                       VerticalSpacer.large(),
                       PwTextButton.secondaryAction(
                         context: context,
-                        text:
-                            Strings.multiSigInviteReviewDetailsMaybeLaterButton,
+                        text: Strings.of(context)
+                            .multiSigInviteReviewDetailsMaybeLaterButton,
                         onPressed: () {
                           _bloc.submitMaybeLater();
                         },

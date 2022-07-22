@@ -49,7 +49,7 @@ class SendReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.sendReviewTitle,
+        title: Strings.of(context).sendReviewTitle,
         leadingIcon: PwIcons.back,
       ),
       body: Padding(
@@ -103,8 +103,8 @@ class SendReviewPageState extends State<SendReviewPage> {
                     padding: EdgeInsets.symmetric(
                       horizontal: Spacing.large,
                     ),
-                    child: const PwText(
-                      Strings.sendReviewConfirmYourInfo,
+                    child: PwText(
+                      Strings.of(context).sendReviewConfirmYourInfo,
                       style: PwTextStyle.title,
                     ),
                   ),
@@ -113,14 +113,14 @@ class SendReviewPageState extends State<SendReviewPage> {
                     padding: EdgeInsets.symmetric(
                       horizontal: Spacing.large,
                     ),
-                    child: const PwText(
-                      Strings.sendReviewSendPleaseReview,
+                    child: PwText(
+                      Strings.of(context).sendReviewSendPleaseReview,
                       style: PwTextStyle.body,
                     ),
                   ),
                   VerticalSpacer.largeX4(),
                   SendReviewCell(
-                    Strings.sendTo,
+                    Strings.of(context).sendTo,
                     abbreviateAddress(state.receivingAddress),
                   ),
                   PwDivider(
@@ -128,7 +128,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    Strings.sendReviewSending,
+                    Strings.of(context).sendReviewSending,
                     "${state.sendingAsset.displayAmount} ${state.sendingAsset.displayDenom}",
                   ),
                   PwDivider(
@@ -136,7 +136,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    Strings.sendReviewTransactionFee,
+                    Strings.of(context).sendReviewTransactionFee,
                     state.fee.displayAmount,
                   ),
                   PwDivider(
@@ -144,7 +144,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    Strings.sendReviewTotal,
+                    Strings.of(context).sendReviewTotal,
                     state.total,
                   ),
                   Expanded(
@@ -152,7 +152,7 @@ class SendReviewPageState extends State<SendReviewPage> {
                   ),
                   PwButton(
                     child: PwText(
-                      Strings.sendReviewSendButtonTitle,
+                      Strings.of(context).sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () async {

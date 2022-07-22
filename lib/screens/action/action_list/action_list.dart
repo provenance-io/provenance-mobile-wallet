@@ -180,6 +180,9 @@ class ActionList extends StatelessWidget {
   void _handleOnItemClicked(
       BuildContext context, ActionListGroup group, ActionListItem item) {
     final bloc = Provider.of<ActionListBloc>(context, listen: false);
-    bloc.actionItemClicked(group, item);
+    bloc.actionItemClicked(
+      group,
+      item,
+    );
   }
 }

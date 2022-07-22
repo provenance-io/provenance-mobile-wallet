@@ -110,7 +110,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
                     );
                   },
                   child: PwText(
-                    Strings.transactionDataButton,
+                    Strings.of(context).transactionDataButton,
                     color: PwColor.primaryP500,
                     style: PwTextStyle.body,
                   ),
@@ -194,7 +194,7 @@ class _NotifyActions extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).pop();
       },
-      text: Strings.transactionBackToDashboard,
+      text: Strings.of(context).transactionBackToDashboard,
     );
   }
 }
@@ -212,12 +212,12 @@ class _ApproveActions extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop(true);
           },
-          text: Strings.transactionApprove,
+          text: Strings.of(context).transactionApprove,
         ),
         VerticalSpacer.large(),
         PwTextButton.secondaryAction(
           context: context,
-          text: Strings.transactionDecline,
+          text: Strings.of(context).transactionDecline,
           onPressed: () {
             Navigator.of(context).pop(false);
           },

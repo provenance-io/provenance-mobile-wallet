@@ -8,14 +8,15 @@ class AssetChartStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     final bloc = get<AssetChartBloc>();
 
     return Column(
       children: [
         Row(
-          children: const [
+          children: [
             PwText(
-              Strings.statistics,
+              strings.statistics,
               style: PwTextStyle.headline4,
             ),
           ],
@@ -49,13 +50,13 @@ class AssetChartStatistics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PwText(
-                        Strings.dayVolume,
+                        strings.dayVolume,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '${asset.dailyVolume ?? Strings.assetChartNotAvailable}',
+                        '${asset.dailyVolume ?? strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -65,7 +66,7 @@ class AssetChartStatistics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PwText(
-                        Strings.currentPrice,
+                        strings.currentPrice,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
@@ -81,13 +82,13 @@ class AssetChartStatistics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PwText(
-                        Strings.dayHigh,
+                        strings.dayHigh,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${asset.dailyHigh ?? Strings.assetChartNotAvailable}',
+                        '\$${asset.dailyHigh ?? strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],
@@ -97,13 +98,13 @@ class AssetChartStatistics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PwText(
-                        Strings.dayLow,
+                        strings.dayLow,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
                       VerticalSpacer.xSmall(),
                       PwText(
-                        '\$${asset.dailyLow ?? Strings.assetChartNotAvailable}',
+                        '\$${asset.dailyLow ?? strings.assetChartNotAvailable}',
                         color: PwColor.neutralNeutral,
                       ),
                     ],

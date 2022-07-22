@@ -38,7 +38,7 @@ class MultiAccountItem extends StatelessWidget {
               ),
               if (_account.publicKey == null)
                 PwText(
-                  Strings.accountStatusPending,
+                  Strings.of(context).accountStatusPending,
                   style: PwTextStyle.bodySmall,
                   color: PwColor.neutralNeutral,
                 ),
@@ -70,6 +70,8 @@ class MultiAccountItem extends StatelessWidget {
     MultiAccount item,
     bool isSelected,
   ) async {
+    final strings = Strings.of(context);
+
     var result = await showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
       context: context,
@@ -78,14 +80,14 @@ class MultiAccountItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PwGreyButton(
-              text: Strings.accountMenuItemViewInvite,
+              text: strings.accountMenuItemViewInvite,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.viewInvite);
               },
             ),
             PwListDivider(),
             PwGreyButton(
-              text: Strings.remove,
+              text: strings.remove,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
@@ -110,9 +112,9 @@ class MultiAccountItem extends StatelessWidget {
       case MenuOperation.delete:
         final dialogResult = await PwDialog.showConfirmation(
           context,
-          message: Strings.removeThisAccount,
-          confirmText: Strings.yes,
-          cancelText: Strings.cancel,
+          message: strings.removeThisAccount,
+          confirmText: strings.yes,
+          cancelText: strings.cancel,
         );
         if (dialogResult) {
           await get<AccountService>().removeAccount(id: item.id);

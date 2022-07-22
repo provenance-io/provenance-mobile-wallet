@@ -49,7 +49,7 @@ class ErrorDialog extends StatelessWidget {
                       horizontal: Spacing.xxLarge,
                     ),
                     child: PwText(
-                      title ?? Strings.unknownErrorTitle,
+                      title ?? Strings.of(context).unknownErrorTitle,
                       style: PwTextStyle.headline2,
                       textAlign: TextAlign.center,
                       color: PwColor.neutralNeutral,
@@ -61,7 +61,7 @@ class ErrorDialog extends StatelessWidget {
                       horizontal: Spacing.xxLarge,
                     ),
                     child: PwText(
-                      error ?? Strings.somethingWentWrong,
+                      error ?? Strings.of(context).somethingWentWrong,
                       style: PwTextStyle.body,
                       textAlign: TextAlign.center,
                       color: PwColor.neutralNeutral,
@@ -83,7 +83,7 @@ class ErrorDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwPrimaryButton.fromString(
-                text: buttonText ?? Strings.okay,
+                text: buttonText ?? Strings.of(context).okay,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

@@ -44,6 +44,7 @@ class _ProposalWeightedVoteConfirmScreenState
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return StreamBuilder<WeightedVoteDetails>(
       stream: _bloc.weightedVoteDetails,
       builder: (context, snapshot) {
@@ -58,7 +59,7 @@ class _ProposalWeightedVoteConfirmScreenState
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.proposalVoteConfirmConfirmVote,
+              strings.proposalVoteConfirmConfirmVote,
               style: PwTextStyle.footnote,
               textAlign: TextAlign.left,
             ),
@@ -81,7 +82,7 @@ class _ProposalWeightedVoteConfirmScreenState
                   get<ProposalsFlowBloc>().showTransactionData(data);
                 },
                 child: PwText(
-                  Strings.stakingConfirmData,
+                  strings.stakingConfirmData,
                   style: PwTextStyle.footnote,
                   underline: true,
                 ),
@@ -98,31 +99,31 @@ class _ProposalWeightedVoteConfirmScreenState
                     children: [
                       VerticalSpacer.largeX3(),
                       AddressCard(
-                        title: Strings.proposalVoteConfirmProposerAddress,
+                        title: strings.proposalVoteConfirmProposerAddress,
                         address: widget.proposal.proposerAddress,
                       ),
                       VerticalSpacer.large(),
                       AddressCard(
-                        title: Strings.proposalVoteConfirmVoterAddress,
+                        title: strings.proposalVoteConfirmVoterAddress,
                         address: widget.account.publicKey!.address,
                       ),
                       DetailsHeader(
-                        title: Strings.proposalVoteConfirmVotingDetails,
+                        title: strings.proposalVoteConfirmVotingDetails,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalWeightedVoteProposalId,
+                        title: strings.proposalWeightedVoteProposalId,
                         value: widget.proposal.proposalId.toString(),
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsTitleString,
+                        title: strings.proposalDetailsTitleString,
                         value: widget.proposal.title,
                       ),
                       PwListDivider.alternate(),
                       VerticalSpacer.large(),
                       PwText(
-                        Strings.proposalVoteConfirmVoteOption,
+                        strings.proposalVoteConfirmVoteOption,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutral200,
                       ),
@@ -130,7 +131,7 @@ class _ProposalWeightedVoteConfirmScreenState
                       SinglePercentageBarChart(
                         details.yesAmount,
                         100,
-                        title: Strings.proposalDetailsYes,
+                        title: strings.proposalDetailsYes,
                         childStyle: PwTextStyle.footnote,
                         showDecimal: false,
                         color: Theme.of(context).colorScheme.primary500,
@@ -139,7 +140,7 @@ class _ProposalWeightedVoteConfirmScreenState
                       SinglePercentageBarChart(
                         details.noAmount,
                         100,
-                        title: Strings.proposalDetailsNo,
+                        title: strings.proposalDetailsNo,
                         childStyle: PwTextStyle.footnote,
                         showDecimal: false,
                         color: Theme.of(context).colorScheme.error,
@@ -148,7 +149,7 @@ class _ProposalWeightedVoteConfirmScreenState
                       SinglePercentageBarChart(
                         details.noWithVetoAmount,
                         100,
-                        title: Strings.proposalDetailsNoWithVeto,
+                        title: strings.proposalDetailsNoWithVeto,
                         childStyle: PwTextStyle.footnote,
                         showDecimal: false,
                         color: Theme.of(context).colorScheme.notice350,
@@ -157,13 +158,13 @@ class _ProposalWeightedVoteConfirmScreenState
                       SinglePercentageBarChart(
                         details.abstainAmount,
                         100,
-                        title: Strings.proposalDetailsAbstain,
+                        title: strings.proposalDetailsAbstain,
                         childStyle: PwTextStyle.footnote,
                         showDecimal: false,
                         color: Theme.of(context).colorScheme.neutral550,
                       ),
                       PwGasAdjustmentSlider(
-                        title: Strings.stakingConfirmGasAdjustment,
+                        title: strings.stakingConfirmGasAdjustment,
                         startingValue: defaultGasEstimate,
                         onValueChanged: (value) {
                           setState(() {
@@ -191,7 +192,7 @@ class _ProposalWeightedVoteConfirmScreenState
                         await _sendWeightedVote(_gasEstimate, context);
                       },
                       child: PwText(
-                        Strings.proposalWeightedVoteConfirmWeightedVote,
+                        strings.proposalWeightedVoteConfirmWeightedVote,
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         color: PwColor.neutralNeutral,

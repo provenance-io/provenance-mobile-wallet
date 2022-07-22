@@ -50,7 +50,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
                             Theme.of(context).colorScheme.neutral750,
                         elevation: 0.0,
                         title: PwText(
-                          Strings.governanceProposals,
+                          Strings.of(context).governanceProposals,
                           style: PwTextStyle.footnote,
                         ),
                         leading: IconButton(

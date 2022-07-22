@@ -84,6 +84,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return StreamBuilder<StakingDelegationDetails>(
       initialData: _bloc.stakingDelegationDetails.value,
       stream: _bloc.stakingDelegationDetails,
@@ -100,7 +101,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.stakingDetailsButtonDelegate,
+              strings.stakingDetailsButtonDelegate,
               style: PwTextStyle.footnote,
             ),
             leading: Padding(
@@ -122,25 +123,25 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
               VerticalSpacer.largeX3(),
               if (details.hashInsufficient)
                 WarningSection(
-                  title: Strings.stakingDelegateWarningAccountLockTitle,
-                  message: Strings.stakingDelegateWarningAccountLockMessage,
+                  title: strings.stakingDelegateWarningAccountLockTitle,
+                  message: strings.stakingDelegateWarningAccountLockMessage,
                   background: Theme.of(context).colorScheme.error,
                 ),
               ValidatorDetails(validator: details.validator),
               PwListDivider.alternate(),
               DetailsHeader(
-                title: Strings.stakingDelegateDetails,
+                title: strings.stakingDelegateDetails,
               ),
               PwListDivider.alternate(),
               DetailsItem.withHash(
-                title: Strings.stakingDelegateCurrentDelegation,
+                title: strings.stakingDelegateCurrentDelegation,
                 hashString: details.delegation?.displayDenom ??
-                    Strings.stakingManagementNoHash,
+                    strings.stakingManagementNoHash,
                 context: context,
               ),
               PwListDivider.alternate(),
               DetailsItem.withHash(
-                title: Strings.stakingDelegateAvailableBalance,
+                title: strings.stakingDelegateAvailableBalance,
                 hashString: Strings.stakingConfirmHashAmount(stringNHashToHash(
                         details.asset?.amount ?? "",
                         fractionDigits: 7)
@@ -151,13 +152,15 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
               VerticalSpacer.largeX3(),
               Padding(
                 padding: EdgeInsets.only(bottom: 10),
-                child: PwText(Strings.stakingDelegateAmountToDelegate),
+                child:
+                    PwText(Strings.of(context).stakingDelegateAmountToDelegate),
               ),
               Flexible(
                 child: Form(
                   key: _formKey,
                   child: StakingTextFormField(
-                    hint: Strings.stakingDelegateEnterAmountToDelegate,
+                    hint: Strings.of(context)
+                        .stakingDelegateEnterAmountToDelegate,
                     textEditingController: _textEditingController,
                     scrollController: _scrollController,
                   ),
@@ -177,7 +180,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                     get<StakingFlowBloc>().showDelegationReview();
                   },
                   child: PwText(
-                    Strings.continueName,
+                    Strings.of(context).continueName,
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     color: PwColor.neutralNeutral,

@@ -67,7 +67,7 @@ class _PwGasAdjustmentSliderState extends State<PwGasAdjustmentSlider> {
                     min: widget.min,
                     max: widget.max,
                     label: _value == defaultGasEstimate
-                        ? "$_value ${Strings.stakingConfirmDefault}"
+                        ? "$_value ${Strings.of(context).stakingConfirmDefault}"
                         : "$_value",
                     value: _value,
                     divisions: 20,

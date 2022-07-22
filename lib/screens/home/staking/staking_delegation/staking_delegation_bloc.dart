@@ -15,6 +15,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -91,8 +92,6 @@ class StakingDelegationBloc extends Disposable {
   Future<void> doDelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
-
     await _sendMessage(
       gasAdjustment,
       _getDelegateMessage().toAny(),
@@ -121,7 +120,7 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     return staking.MsgDelegate(
       amount: proto.Coin(
-        denom: details.asset?.denom ?? 'nhash',
+        denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
       delegatorAddress: _account.publicKey!.address,
@@ -133,7 +132,7 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     return staking.MsgUndelegate(
       amount: proto.Coin(
-        denom: details.asset?.denom ?? 'nhash',
+        denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
       delegatorAddress: _account.publicKey!.address,

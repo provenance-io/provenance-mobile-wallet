@@ -17,7 +17,7 @@ class ConnectionDetailsModal extends StatelessWidget {
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.connectionDetails,
+        title: Strings.of(context).connectionDetails,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -25,16 +25,17 @@ class ConnectionDetailsModal extends StatelessWidget {
           initialData: walletConnectService.sessionEvents.state.value,
           stream: walletConnectService.sessionEvents.state,
           builder: (context, snapshot) {
-            final name = snapshot.data?.details?.name ?? Strings.unknown;
-            final address =
-                snapshot.data?.details?.url.toString() ?? Strings.unknown;
+            final name =
+                snapshot.data?.details?.name ?? Strings.of(context).unknown;
+            final address = snapshot.data?.details?.url.toString() ??
+                Strings.of(context).unknown;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 DetailsItem(
-                  title: Strings.platform,
+                  title: Strings.of(context).platform,
                   padding: EdgeInsets.symmetric(
                     horizontal: Spacing.xxLarge,
                     vertical: Spacing.xLarge,
@@ -52,7 +53,7 @@ class ConnectionDetailsModal extends StatelessWidget {
                   indent: Spacing.xxLarge,
                 ),
                 DetailsItem(
-                  title: Strings.url,
+                  title: Strings.of(context).url,
                   padding: EdgeInsets.symmetric(
                     horizontal: Spacing.xxLarge,
                     vertical: Spacing.xLarge,
@@ -70,7 +71,7 @@ class ConnectionDetailsModal extends StatelessWidget {
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwButton(
                     child: PwText(
-                      Strings.disconnect,
+                      Strings.of(context).disconnect,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),

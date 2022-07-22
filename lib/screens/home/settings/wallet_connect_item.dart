@@ -38,7 +38,7 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
         vertical: Spacing.large,
       ),
       child: PwTextFormField(
-        label: Strings.profileDeveloperConnectLabel,
+        label: Strings.of(context).profileDeveloperConnectLabel,
         validator: _validate,
         onFieldSubmitted: _onSubmitted,
       ),
@@ -51,7 +51,7 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
     }
 
     if (WalletConnectAddress.create(value) == null) {
-      return Strings.profileDeveloperConnectInvalidAddress;
+      return Strings.of(context).profileDeveloperConnectInvalidAddress;
     }
 
     return null;

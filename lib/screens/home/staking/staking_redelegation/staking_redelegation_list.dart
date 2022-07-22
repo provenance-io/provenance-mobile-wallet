@@ -42,7 +42,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PwText(
-              Strings.stakingTabAvailableToSelect,
+              Strings.of(context).stakingTabAvailableToSelect,
               color: PwColor.neutralNeutral,
               style: PwTextStyle.bodyBold,
             ),
@@ -52,7 +52,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
               child: Row(
                 children: [
                   PwText(
-                    Strings.stakingTabSortBy,
+                    Strings.of(context).stakingTabSortBy,
                     color: PwColor.neutralNeutral,
                     style: PwTextStyle.body,
                   ),
@@ -89,6 +89,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                       return StakingListItem(
                         validator: item,
                         listItemText: Strings.displayDelegatorsWithCommission(
+                          context,
                           item.delegators,
                           item.commission,
                         ),

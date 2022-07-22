@@ -56,13 +56,14 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
         centerTitle: true,
         title: PwText(
-          Strings.proposalVoteConfirmConfirmVote,
+          strings.proposalVoteConfirmConfirmVote,
           style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
@@ -92,7 +93,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 get<ProposalsFlowBloc>().showTransactionData(data);
               },
               child: PwText(
-                Strings.stakingConfirmData,
+                strings.stakingConfirmData,
                 style: PwTextStyle.footnote,
                 underline: true,
               ),
@@ -110,37 +111,35 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 children: [
                   VerticalSpacer.largeX3(),
                   AddressCard(
-                    title: Strings.proposalVoteConfirmProposerAddress,
+                    title: strings.proposalVoteConfirmProposerAddress,
                     address: widget.proposal.proposerAddress,
                   ),
                   VerticalSpacer.large(),
                   AddressCard(
-                    title: Strings.proposalVoteConfirmVoterAddress,
+                    title: strings.proposalVoteConfirmVoterAddress,
                     address: widget.account.publicKey!.address,
                   ),
                   DetailsHeader(
-                      title: Strings.proposalVoteConfirmVotingDetails),
+                      title: strings.proposalVoteConfirmVotingDetails),
                   PwListDivider.alternate(),
                   DetailsItem.alternateStrings(
-                    title: Strings.proposalVoteConfirmProposalId,
+                    title: strings.proposalVoteConfirmProposalId,
                     value: widget.proposal.proposalId.toString(),
                   ),
                   PwListDivider.alternate(),
                   DetailsItem.alternateStrings(
-                    title: Strings.proposalVoteConfirmTitle,
+                    title: strings.proposalVoteConfirmTitle,
                     value: widget.proposal.title,
                   ),
                   PwListDivider.alternate(),
                   DetailsItem.alternateChild(
-                      title: Strings.proposalVoteConfirmVoteOption,
+                      title: strings.proposalVoteConfirmVoteOption,
                       endChild:
                           ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),
                   PwListDivider.alternate(),
                   PwGasAdjustmentSlider(
-                    title: Strings.stakingConfirmGasAdjustment,
+                    title: strings.stakingConfirmGasAdjustment,
                     startingValue: defaultGasEstimate,
-                    min: 0,
-                    max: 5,
                     onValueChanged: (value) {
                       setState(() {
                         _gasEstimate = value;
@@ -167,7 +166,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   await _sendVote(_gasEstimate, context);
                 },
                 child: PwText(
-                  Strings.proposalVoteConfirmConfirmVote,
+                  strings.proposalVoteConfirmConfirmVote,
                   softWrap: false,
                   overflow: TextOverflow.fade,
                   color: PwColor.neutralNeutral,

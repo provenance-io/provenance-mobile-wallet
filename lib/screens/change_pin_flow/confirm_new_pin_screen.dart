@@ -20,7 +20,7 @@ class ConfirmNewPinScreenState extends State<ConfirmNewPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.verifyPinCode,
+        title: Strings.of(context).verifyPinCode,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
@@ -33,7 +33,7 @@ class ConfirmNewPinScreenState extends State<ConfirmNewPinScreen> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
+                  subTitle: Strings.of(context).setAPinCodeToUnlockYourAccount,
                   onFinish: _onFinish,
                 ),
               ),

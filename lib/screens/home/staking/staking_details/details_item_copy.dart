@@ -61,8 +61,8 @@ class _DetailsItemCopyState extends State<DetailsItemCopy> {
                     if (!_isActive) HorizontalSpacer.xSmall(),
                     PwText(
                       _isActive
-                          ? Strings.stakingDetailsViewLess
-                          : Strings.viewMore,
+                          ? Strings.of(context).stakingDetailsViewLess
+                          : Strings.of(context).viewMore,
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       underline: true,

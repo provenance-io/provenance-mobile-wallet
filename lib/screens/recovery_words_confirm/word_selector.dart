@@ -38,8 +38,8 @@ class WordSelectorState extends State<WordSelector> {
 
               return PwText(
                 (trueWordIndex == null || trueWordIndex == -1)
-                    ? Strings.selectWord
-                    : Strings.selectWordIndex('${trueWordIndex + 1}'),
+                    ? Strings.of(context).selectWord
+                    : Strings.selectWordIndex(context, '${trueWordIndex + 1}'),
                 style: PwTextStyle.body,
               );
             },

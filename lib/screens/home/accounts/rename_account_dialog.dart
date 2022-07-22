@@ -17,9 +17,10 @@ class RenameAccountDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.renameAccount,
+        title: strings.renameAccount,
         leadingIcon: PwIcons.close,
         leadingIconOnPress: () {
           Navigator.of(context).pop(null);
@@ -38,7 +39,7 @@ class RenameAccountDialog extends StatelessWidget {
                   Spacing.xxLarge,
                 ),
                 child: PwText(
-                  Strings.renameAccountDescription,
+                  strings.renameAccountDescription,
                   style: PwTextStyle.body,
                   textAlign: TextAlign.center,
                   color: PwColor.neutralNeutral,
@@ -51,11 +52,11 @@ class RenameAccountDialog extends StatelessWidget {
                   bottom: Spacing.small,
                 ),
                 child: PwTextFormField(
-                  label: Strings.accountName,
+                  label: strings.accountName,
                   autofocus: true,
                   validator: (value) {
                     return value == null || value.isEmpty
-                        ? Strings.required
+                        ? strings.required
                         : null;
                   },
                   controller: _nameController,
@@ -66,7 +67,7 @@ class RenameAccountDialog extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: PwButton(
                   child: PwText(
-                    Strings.confirm,
+                    strings.confirm,
                     style: PwTextStyle.bodyBold,
                     color: PwColor.neutralNeutral,
                   ),

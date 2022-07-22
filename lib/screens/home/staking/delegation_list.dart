@@ -64,8 +64,10 @@ class DelegationListState extends State<DelegationList> {
 
                     return StakingListItem(
                       validator: validator,
-                      listItemText:
-                          Strings.displayDenomFormatted(item.displayDenom),
+                      listItemText: Strings.displayDenomFormatted(
+                        context,
+                        item.displayDenom,
+                      ),
                       onTouch: () async {
                         final account =
                             await get<AccountService>().getSelectedAccount();

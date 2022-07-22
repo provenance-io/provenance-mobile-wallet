@@ -39,13 +39,15 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Stack(
       children: [
         Container(
           color: Theme.of(context).colorScheme.neutral750,
           child: Scaffold(
             appBar: PwAppBar(
-              title: Strings.proposalDetailsTitle(_proposal.proposalId),
+              title:
+                  Strings.proposalDetailsTitle(context, _proposal.proposalId),
               leadingIcon: PwIcons.back,
               style: PwTextStyle.footnote,
             ),
@@ -59,30 +61,30 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     children: [
                       VerticalSpacer.largeX3(),
                       AddressCard(
-                        title: Strings.proposalVoteConfirmProposerAddress,
+                        title: strings.proposalVoteConfirmProposerAddress,
                         address: widget.selectedProposal.proposerAddress,
                       ),
                       DetailsHeader(
-                        title: Strings.proposalDetailsProposalInformation,
+                        title: strings.proposalDetailsProposalInformation,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsId,
+                        title: strings.proposalDetailsId,
                         value: "${_proposal.proposalId}",
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsTitleString,
+                        title: strings.proposalDetailsTitleString,
                         value: _proposal.title,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsDescription,
+                        title: strings.proposalDetailsDescription,
                         value: _proposal.description,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.withRowChildren(
-                        title: Strings.proposalDetailsStatus,
+                        title: strings.proposalDetailsStatus,
                         children: [
                           Icon(
                             Icons.brightness_1,
@@ -102,42 +104,42 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       PwListDivider.alternate(),
                       if (widget.vote != null)
                         DetailsItem.alternateChild(
-                          title: Strings.proposalDetailsMyStatus,
+                          title: strings.proposalDetailsMyStatus,
                           endChild: ProposalVoteChip(
-                            vote: widget.vote!.formattedVote,
+                            vote: widget.vote!,
                           ),
                         ),
                       if (widget.vote != null) PwListDivider.alternate(),
                       DetailsHeader(
-                        title: Strings.proposalDetailsProposalTiming,
+                        title: strings.proposalDetailsProposalTiming,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsSubmitTime,
+                        title: strings.proposalDetailsSubmitTime,
                         value: _formatter.format(_proposal.submitTime),
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsDepositEndTime,
+                        title: strings.proposalDetailsDepositEndTime,
                         value: _formatter.format(_proposal.depositEndTime),
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsVotingStartTime,
+                        title: strings.proposalDetailsVotingStartTime,
                         value: _proposal.startTime.year == 1
                             ? "--"
                             : _formatter.format(_proposal.startTime),
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsVotingEndTime,
+                        title: strings.proposalDetailsVotingEndTime,
                         value: _proposal.endTime.year == 1
                             ? "--"
                             : _formatter.format(_proposal.endTime),
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.withHash(
-                        title: Strings.proposalDetailsDeposits,
+                        title: strings.proposalDetailsDeposits,
                         hashString: Strings.proposalDetailsDepositsHash(
                           _proposal.currentDepositFormatted
                               .toString()
@@ -148,7 +150,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       ),
                       DetailsItem.withHash(
                         padding: EdgeInsets.only(bottom: Spacing.large),
-                        title: Strings.proposalDetailsNeededDeposit,
+                        title: strings.proposalDetailsNeededDeposit,
                         hashString: Strings.proposalDetailsHashNeeded(
                           _proposal.neededDepositFormatted,
                         ),
@@ -157,26 +159,26 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.currentDepositFormatted,
                         _proposal.neededDepositFormatted,
-                        title: Strings.proposalDetailsDeposits,
+                        title: strings.proposalDetailsDeposits,
                       ),
                       DetailsHeader(
-                        title: Strings.proposalDetailsThresholdDetails,
+                        title: strings.proposalDetailsThresholdDetails,
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsQuorumThreshold,
+                        title: strings.proposalDetailsQuorumThreshold,
                         value:
                             "${(_proposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsPassThreshold,
+                        title: strings.proposalDetailsPassThreshold,
                         value:
                             "${(_proposal.passThreshold * 100).toStringAsFixed(2)}%",
                       ),
                       PwListDivider.alternate(),
                       DetailsItem.alternateStrings(
-                        title: Strings.proposalDetailsVetoThreshold,
+                        title: strings.proposalDetailsVetoThreshold,
                         value:
                             "${(_proposal.vetoThreshold * 100).toStringAsFixed(2)}%",
                       ),
@@ -185,10 +187,10 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.totalAmount,
                         _proposal.totalEligibleAmount,
-                        title: Strings.proposalDetailsPercentVoted,
+                        title: strings.proposalDetailsPercentVoted,
                       ),
                       DetailsHeader(
-                        title: Strings.proposalDetailsProposalVoting,
+                        title: strings.proposalDetailsProposalVoting,
                       ),
                       PwListDivider.alternate(),
                       VerticalSpacer.large(),
@@ -196,14 +198,18 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.yesAmount,
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
-                            Strings.proposalDetailsYes),
+                          context,
+                          strings.proposalDetailsYes,
+                        ),
                       ),
                       VerticalSpacer.large(),
                       SinglePercentageBarChart(
                         _proposal.noAmount,
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
-                            Strings.proposalDetailsNo),
+                          context,
+                          strings.proposalDetailsNo,
+                        ),
                         color: Theme.of(context).colorScheme.error,
                       ),
                       VerticalSpacer.large(),
@@ -211,23 +217,30 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.noWithVetoAmount,
                         _proposal.totalAmount,
                         title: Strings.proposalsScreenVoted(
-                            Strings.proposalDetailsNoWithVeto),
+                          context,
+                          strings.proposalDetailsNoWithVeto,
+                        ),
                         color: Theme.of(context).colorScheme.notice350,
                       ),
                       VerticalSpacer.large(),
                       SinglePercentageBarChart(
-                          _proposal.abstainAmount, _proposal.totalAmount,
-                          title: Strings.proposalsScreenVoted(
-                              Strings.proposalDetailsAbstain),
-                          color: Theme.of(context).colorScheme.neutral600),
+                        _proposal.abstainAmount,
+                        _proposal.totalAmount,
+                        title: Strings.proposalsScreenVoted(
+                          context,
+                          strings.proposalDetailsAbstain,
+                        ),
+                        color: Theme.of(context).colorScheme.neutral600,
+                      ),
                       DetailsItem.alternateChild(
-                        title: Strings.proposalDetailsTotalVotes,
+                        title: strings.proposalDetailsTotalVotes,
                         endChild: PwText(
-                            _proposal.totalAmount
-                                .toInt()
-                                .toString()
-                                .formatNumber(),
-                            style: PwTextStyle.bodyBold),
+                          _proposal.totalAmount
+                              .toInt()
+                              .toString()
+                              .formatNumber(),
+                          style: PwTextStyle.bodyBold,
+                        ),
                       ),
                     ],
                   ),

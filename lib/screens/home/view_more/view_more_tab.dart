@@ -20,9 +20,10 @@ class ViewMoreTab extends StatefulWidget {
 class _ViewMoreTabState extends State<ViewMoreTab> {
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.viewMore,
+        title: strings.viewMore,
         hasIcon: false,
         style: PwTextStyle.footnote,
       ),
@@ -43,19 +44,19 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                       children: [
                         _getLink(
                           PwIcons.coinsOutline,
-                          Strings.staking,
+                          strings.staking,
                           StakingScreen(
                             onFlowCompletion: widget.onFlowCompletion,
                           ),
                         ),
                         _getLink(
                           PwIcons.copy,
-                          Strings.governanceProposals,
+                          strings.governanceProposals,
                           ProposalsFlow(),
                         ),
                         _getLink(
                           PwIcons.gear,
-                          Strings.globalSettings,
+                          strings.globalSettings,
                           SettingsScreen(),
                         ),
                       ],

@@ -34,7 +34,7 @@ class ViewAllTransactionsScreen extends StatelessWidget {
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.allTransactions,
+              Strings.of(context).allTransactions,
               style: PwTextStyle.subhead,
             ),
             leading: Padding(
