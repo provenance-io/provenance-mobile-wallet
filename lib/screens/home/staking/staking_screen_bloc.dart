@@ -258,18 +258,6 @@ enum ValidatorStatus {
 }
 
 extension ValidatorSortingStateExtension on ValidatorSortingState {
-  String get dropDownTitle {
-    switch (this) {
-      case ValidatorSortingState.votingPower:
-        return Strings.dropDownVotingPower;
-      case ValidatorSortingState.delegators:
-      case ValidatorSortingState.commission:
-        return name.capitalize();
-      case ValidatorSortingState.alphabetically:
-        return Strings.dropDownAlphabetically;
-    }
-  }
-
   List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
     switch (this) {
       case ValidatorSortingState.votingPower:

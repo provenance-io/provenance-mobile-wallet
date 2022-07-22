@@ -49,7 +49,7 @@ class StakingSuccessScreen extends StatelessWidget {
                   PwText(
                     Strings.stakingSuccessSuccessful(
                       context,
-                      selected.dropDownTitle,
+                      selected.getDropDownTitle(context),
                     ),
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
