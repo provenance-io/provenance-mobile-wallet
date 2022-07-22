@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
@@ -6,6 +7,10 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 final item = ActionListItem(label: "Main Label", subLabel: "Sub Label");
 final item2 = ActionListItem(label: "Main Label2", subLabel: "Sub Label2");
 final item3 = ActionListItem(label: "Main Label3", subLabel: "Sub Label3");
+
+const actionListSelected = "Selected";
+const actionListBasicAccount = "Basic";
+const actionListMultiSigAccount = "Multi-Sig";
 
 final basicGroup = ActionListGroup(
     label: "Test Label",
@@ -51,6 +56,9 @@ main() {
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionItemGroupStatus(
+            selectedLabel: actionListSelected,
+            basicLabel: actionListBasicAccount,
+            multiSigLabel: actionListMultiSigAccount,
             group: group,
           ),
         ),
@@ -65,11 +73,11 @@ main() {
       expect(
           status,
           _StatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionNotListSelectedColor,
-              ActionItemGroupStatus.basicLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionNotListSelectedColor,
+            actionListBasicAccount,
+          ));
     });
 
     testWidgets("multiSig account settings", (tester) async {
@@ -80,11 +88,11 @@ main() {
       expect(
           status,
           _StatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionNotListSelectedColor,
-              ActionItemGroupStatus.multiSigLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionNotListSelectedColor,
+            actionListMultiSigAccount,
+          ));
     });
 
     testWidgets("isSelected account settings", (tester) async {
@@ -95,11 +103,11 @@ main() {
       expect(
           status,
           _StatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionListSelectedColor,
-              ActionItemGroupStatus.selectedLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionListSelectedColor,
+            actionListSelected,
+          ));
     });
   });
 
@@ -127,6 +135,8 @@ main() {
   group("ActionGroupHeaderCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionGroupHeaderCell(
@@ -166,6 +176,8 @@ main() {
   group("ActionListCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionListCell(
@@ -198,6 +210,8 @@ main() {
     Future<void> _build(
         WidgetTester tester, List<ActionListGroup> groups) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionList(

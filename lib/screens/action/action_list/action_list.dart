@@ -7,12 +7,13 @@ import 'package:provider/provider.dart';
 /// a widget that represents an action group's state
 ///
 class ActionItemGroupStatus extends StatelessWidget {
-  static const selectedLabel = Strings.actionListSelected;
-  static const basicLabel = Strings.actionListBasicAccount;
-  static const multiSigLabel = Strings.actionListMultiSigAccount;
-
-  ActionItemGroupStatus({required this.group, Key? key})
-      : label = (group.isSelected)
+  ActionItemGroupStatus({
+    required String selectedLabel,
+    required String basicLabel,
+    required String multiSigLabel,
+    required this.group,
+    Key? key,
+  })  : label = (group.isSelected)
             ? selectedLabel
             : (group.isBasicAccount)
                 ? basicLabel
@@ -93,6 +94,7 @@ class ActionGroupHeaderCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Spacing.medium),
       child: Row(
@@ -113,6 +115,9 @@ class ActionGroupHeaderCell extends StatelessWidget {
             ],
           )),
           ActionItemGroupStatus(
+            selectedLabel: strings.actionListSelected,
+            basicLabel: strings.actionListBasicAccount,
+            multiSigLabel: strings.actionListMultiSigAccount,
             group: group,
           )
         ],

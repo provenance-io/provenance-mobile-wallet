@@ -114,12 +114,6 @@ class Strings {
   // TODO: and I'm not sure that's what we want. These Strings have
   // TODO: already been localized, so we just need to remove them.
 
-  static const yourPinDoesNotMatchPleaseTryAgain =
-      "Your pin doesn't match. Please try again or go back and re-enter your pin.";
-
-  static const actionListSelected = "Selected";
-  static const actionListBasicAccount = "Basic";
-  static const actionListMultiSigAccount = "Multi-Sig";
   static const actionListAction = "Action";
   static const actionListActions = "Actions";
   static const actionListLabelApproveSession = 'Approve Session';
