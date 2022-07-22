@@ -21,12 +21,12 @@ class WeightedVoteSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        valueIndicatorColor: Theme.of(context).colorScheme.neutral700,
-        thumbColor: thumbColor,
-        activeTrackColor: thumbColor,
-        inactiveTrackColor: thumbColor.withAlpha(100),
-      ),
+      data: Theme.of(context).sliderTheme.sliderThemeData.copyWith(
+            valueIndicatorColor: Theme.of(context).colorScheme.neutral700,
+            thumbColor: thumbColor,
+            activeTrackColor: thumbColor,
+            inactiveTrackColor: Theme.of(context).colorScheme.neutral700,
+          ),
       child: Slider(
         value: value,
         onChanged: onChanged,

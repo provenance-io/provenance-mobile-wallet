@@ -2,8 +2,8 @@ import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/common/widgets/pw_slider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
@@ -136,7 +136,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                       endChild:
                           ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),
                   PwListDivider.alternate(),
-                  PwSlider(
+                  PwGasAdjustmentSlider(
                     title: Strings.stakingConfirmGasAdjustment,
                     startingValue: defaultGasEstimate,
                     min: 0,
@@ -160,9 +160,10 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               ),
               child: PwButton(
                 onPressed: () async {
-                  ModalLoadingRoute.showLoading('', context);
-                  // Give the loading modal time to display
-                  await Future.delayed(Duration(milliseconds: 500));
+                  ModalLoadingRoute.showLoading(
+                    context,
+                    minDisplayTime: Duration(milliseconds: 500),
+                  );
                   await _sendVote(_gasEstimate, context);
                 },
                 child: PwText(

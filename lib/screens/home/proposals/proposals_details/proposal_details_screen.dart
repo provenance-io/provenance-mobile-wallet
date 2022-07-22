@@ -11,7 +11,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
-import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -239,10 +238,10 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     ],
                   ),
                 ),
-                if (_proposal.status.toLowerCase() == votingPeriod)
-                  VotingButtons(
-                    proposal: _proposal,
-                  ),
+                // if (_proposal.status.toLowerCase() == votingPeriod)
+                VotingButtons(
+                  proposal: _proposal,
+                ),
               ],
             ),
           ),

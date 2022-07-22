@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/common/widgets/pw_slider.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -74,7 +74,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
           children: [
             ...widget.children,
             PwListDivider.alternate(),
-            PwSlider(
+            PwGasAdjustmentSlider(
               title: Strings.stakingConfirmGasAdjustment,
               startingValue: defaultGasEstimate,
               min: 0,

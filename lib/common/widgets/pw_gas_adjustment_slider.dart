@@ -1,9 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_thumb_shape.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class PwSlider extends StatefulWidget {
-  const PwSlider({
+class PwGasAdjustmentSlider extends StatefulWidget {
+  const PwGasAdjustmentSlider({
     Key? key,
     this.padding,
     required this.title,
@@ -23,10 +24,10 @@ class PwSlider extends StatefulWidget {
   final Function(double) onValueChanged;
 
   @override
-  State<StatefulWidget> createState() => _PwSliderState();
+  State<StatefulWidget> createState() => _PwGasAdjustmentSliderState();
 }
 
-class _PwSliderState extends State<PwSlider> {
+class _PwGasAdjustmentSliderState extends State<PwGasAdjustmentSlider> {
   late double _value;
   @override
   void initState() {
@@ -58,7 +59,10 @@ class _PwSliderState extends State<PwSlider> {
             ),
             Expanded(
               child: SliderTheme(
-                  data: Theme.of(context).sliderTheme.sliderThemeData,
+                  data: Theme.of(context)
+                      .sliderTheme
+                      .sliderThemeData
+                      .copyWith(thumbShape: PwGasAdjustmentThumbShape()),
                   child: Slider(
                     min: widget.min,
                     max: widget.max,

@@ -1,13 +1,14 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
-class PwThumbShape extends RoundSliderThumbShape {
-  final _innerShape = const RoundSliderThumbShape(enabledThumbRadius: 8);
+class PwGasAdjustmentThumbShape extends RoundSliderThumbShape {
+  final _indicatorShape = const RectangularSliderValueIndicatorShape();
+  final _innerShape = const RoundSliderThumbShape(enabledThumbRadius: 12);
 
-  PwThumbShape()
+  PwGasAdjustmentThumbShape()
       : super(
           disabledThumbRadius: null,
           elevation: 1.0,
-          enabledThumbRadius: 12,
+          enabledThumbRadius: 16,
           pressedElevation: 8.0,
         );
 
@@ -42,6 +43,17 @@ class PwThumbShape extends RoundSliderThumbShape {
       textScaleFactor: textScaleFactor,
       sizeWithOverflow: sizeWithOverflow,
     );
+    _indicatorShape.paint(context, center,
+        activationAnimation: const AlwaysStoppedAnimation(1),
+        enableAnimation: enableAnimation,
+        isDiscrete: isDiscrete,
+        labelPainter: labelPainter,
+        parentBox: parentBox,
+        sliderTheme: sliderTheme,
+        textDirection: textDirection,
+        value: value,
+        textScaleFactor: textScaleFactor,
+        sizeWithOverflow: sizeWithOverflow);
     _innerShape.paint(
       context,
       center,
