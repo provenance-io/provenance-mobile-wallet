@@ -160,7 +160,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               ),
               child: PwButton(
                 onPressed: () async {
-                  ModalLoadingRoute.showLoading(
+                  await ModalLoadingRoute.showLoading(
                     context,
                     minDisplayTime: Duration(milliseconds: 500),
                   );

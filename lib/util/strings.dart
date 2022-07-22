@@ -553,6 +553,7 @@ class Strings {
   static const stakingConfirmData = "Data";
   static const stakingConfirmGasAdjustment = "Gas Adjustment";
   static const stakingConfirmDefault = "(Default)";
+  static const stakingConfirmRewardsAvailable = "Rewards Available";
   static const starPositiveNumber = '*Positive number';
 
   // Staking delegate
@@ -627,7 +628,6 @@ class Strings {
   static const proposalDetailsTitleString = "Title";
   static const proposalDetailsStatus = "Global Status";
   static const proposalDetailsMyStatus = "My Status";
-  static const proposalDetailsProposer = "Proposer";
   static const proposalDetailsDescription = "Description";
   static const proposalDetailsProposalTiming = "Proposal Timing";
   static const proposalDetailsSubmitTime = "Submit Time";
@@ -669,7 +669,6 @@ class Strings {
   static const proposalVoteConfirmVoterAddress = "Voter Address";
   static const proposalVoteConfirmVoteOption = "Vote Option:";
   static const proposalVoteConfirmVote = "Vote";
-  static const proposalVoteConfirmWeight = "Weight";
 
   // Proposal Vote Confirm Screen
   static const proposalWeightedVoteConfirmWeightedVote =
@@ -677,9 +676,9 @@ class Strings {
   static const proposalWeightedVoteProposalId = "Proposal ID#";
 
   // Proposal Vote Success
-  static const proposalVoteSuccessSuccess = "Success";
+  static const proposalVoteSuccessSuccess = "SUCCESS";
   static const proposalVoteSuccessVoteSuccessful = "Vote Successful";
-  static const stakingConfirmRewardsAvailable = "Rewards Available";
+  static const proposalVoteSuccessBackToDashboard = "Back To Dashboard";
 
   // Confirm Undelegate Screen
   static const stakingConfirmUndelegationDetails = "Undelegation Details";

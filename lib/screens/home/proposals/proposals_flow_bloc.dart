@@ -45,4 +45,9 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   Future<void> showWeightedVoteReview(Proposal proposal) async {
     await _navigator.showWeightedVoteReview(proposal);
   }
+
+  @override
+  void backToDashboard() {
+    _navigator.backToDashboard();
+  }
 }
