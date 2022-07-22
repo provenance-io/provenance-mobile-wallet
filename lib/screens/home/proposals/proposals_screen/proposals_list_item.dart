@@ -44,7 +44,7 @@ class _ProposalListItemState extends State<ProposalListItem> {
                     PwText(
                       "${widget.item.proposalId} ${widget.item.title}",
                       style: PwTextStyle.bodyBold,
-                      overflow: TextOverflow.fade,
+                      overflow: TextOverflow.ellipsis,
                       softWrap: false,
                     ),
                     if (widget.item.description.isNotEmpty)
