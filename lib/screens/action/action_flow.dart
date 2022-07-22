@@ -43,8 +43,17 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   @override
   Widget createStartPage() {
     return Provider<ActionListBloc>(
-        create: (_) {
-          final bloc = ActionListBloc(this);
+        create: (context) {
+          final strings = Strings.of(context);
+          final bloc = ActionListBloc(
+            this,
+            approveSessionLabel: strings.actionListLabelApproveSession,
+            signatureRequestedLabel: strings.actionListLabelSignatureRequested,
+            transactionRequestedLabel:
+                strings.actionListLabelTransactionRequested,
+            unknownLabel: strings.actionListLabelUnknown,
+            actionRequiredSubLabel: strings.actionListSubLabelActionRequired,
+          );
           bloc.init();
           return bloc;
         },

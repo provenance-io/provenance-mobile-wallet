@@ -56,10 +56,7 @@ main() {
   BasicNotificationService? notificationService;
 
   setUp(() {
-    notificationService = BasicNotificationService(
-      errorMessage: _notifyServiceErrorMessage,
-      errorTitle: _notifyServiceErrorTitle,
-    );
+    notificationService = BasicNotificationService();
   });
 
   group("notify", () {

@@ -86,7 +86,6 @@ class Strings {
   ) =>
       "$delegators ${Strings.of(context).displayDelegators} $dotSeparator $commission ${Strings.of(context).displayCommission}";
 
-  // TODO: The delegation type needs to be localized too.
   static String stakingSuccessSuccessful(
           BuildContext context, String delegationType) =>
       '$delegationType ${Strings.of(context).stakingSuccessSuccessful}';
@@ -114,13 +113,9 @@ class Strings {
   // TODO: and I'm not sure that's what we want. These Strings have
   // TODO: already been localized, so we just need to remove them.
 
-  static const actionListAction = "Action";
-  static const actionListActions = "Actions";
-  static const actionListLabelApproveSession = 'Approve Session';
-  static const actionListLabelSignatureRequested = 'Signature Requested';
-  static const actionListLabelTransactionRequested = 'Transaction Requested';
-  static const actionListLabelUnknown = 'Unknown';
-  static const actionListSubLabelActionRequired = 'Action Required';
+  static const notifyServiceErrorTitle = 'Service Error';
+  static const notifyServiceErrorMessage =
+      'Unfortunately our services are down at the moment';
 
   static const required = 'Required';
   static const sendAmountErrorInsufficient = "Insufficient";

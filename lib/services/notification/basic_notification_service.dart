@@ -3,19 +3,13 @@ import 'package:provenance_wallet/services/notification/notification_group.dart'
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BasicNotificationService implements NotificationService, Disposable {
   final _grouped = <String, Set<String>>{};
   final _map = <String, NotificationInfo>{};
   final _stream = BehaviorSubject<List<NotificationInfo>>.seeded([]);
-  final String errorTitle;
-  final String errorMessage;
-
-  BasicNotificationService({
-    required this.errorTitle,
-    required this.errorMessage,
-  });
 
   @override
   ValueStream<List<NotificationInfo>> get notifications => _stream;
@@ -78,8 +72,8 @@ class BasicNotificationService implements NotificationService, Disposable {
       case NotificationGroup.serviceError:
         info = NotificationInfo(
           id: group.name,
-          title: errorTitle,
-          message: errorMessage,
+          title: Strings.notifyServiceErrorTitle,
+          message: Strings.notifyServiceErrorMessage,
           kind: NotificationKind.warn,
           count: count,
         );

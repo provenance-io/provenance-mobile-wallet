@@ -317,8 +317,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   }
 
   Future<void> _setup() async {
-    final strings = await AppLocalizations.delegate.load(Locale("en"));
-
     final keyValueService = get<KeyValueService>();
 
     get<CipherService>().error.listen((e) {
@@ -449,10 +447,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     }).addTo(_subscriptions);
 
     get.registerLazySingleton<NotificationService>(
-      () => BasicNotificationService(
-        errorTitle: strings.notifyServiceErrorTitle,
-        errorMessage: strings.notifyServiceErrorMessage,
-      ),
+      () => BasicNotificationService(),
     );
     get.registerLazySingleton<GasFeeService>(
       () => DefaultGasFeeService(),

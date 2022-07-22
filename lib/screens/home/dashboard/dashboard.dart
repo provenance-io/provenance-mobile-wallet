@@ -298,7 +298,12 @@ class _DashboardState extends State<Dashboard> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await bloc.load(showLoading: false);
+                  await bloc.load(
+                    showLoading: false,
+                    allMessageTypes:
+                        Strings.of(context).dropDownAllMessageTypes,
+                    allStatuses: Strings.of(context).dropDownAllStatuses,
+                  );
                 },
                 color: Theme.of(context).colorScheme.indicatorActive,
                 child: StreamBuilder<List<Asset>?>(

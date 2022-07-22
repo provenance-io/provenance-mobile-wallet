@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -34,10 +32,6 @@ class HomeBloc extends Disposable {
         .distinct()
         .listen(_onSelected)
         .addTo(_subscriptions);
-    AppLocalizations.delegate.load(Locale("en")).then((strings) {
-      _allMessageTypes = strings.dropDownAllMessageTypes;
-      _allStatuses = strings.dropDownAllStatuses;
-    });
   }
 
   final _transactionDetails = BehaviorSubject.seeded(
@@ -65,9 +59,6 @@ class HomeBloc extends Disposable {
   final _transactionService = get<TransactionService>();
   final _walletConnectService = get<WalletConnectService>();
 
-  late final String _allMessageTypes;
-  late final String _allStatuses;
-
   var _isFirstLoad = true;
 
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
@@ -77,7 +68,11 @@ class HomeBloc extends Disposable {
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 
-  Future<void> load({bool showLoading = true}) async {
+  Future<void> load({
+    required String allMessageTypes,
+    required String allStatuses,
+    bool showLoading = true,
+  }) async {
     if (showLoading) {
       _isLoading.tryAdd(true);
     }
@@ -113,10 +108,10 @@ class HomeBloc extends Disposable {
 
       _transactionDetails.tryAdd(
         TransactionDetails(
-          selectedStatus: _allMessageTypes,
-          selectedType: _allStatuses,
-          allMessageTypes: _allMessageTypes,
-          allStatuses: _allStatuses,
+          selectedStatus: allMessageTypes,
+          selectedType: allStatuses,
+          allMessageTypes: allMessageTypes,
+          allStatuses: allStatuses,
           address: account?.publicKey?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
@@ -152,8 +147,8 @@ class HomeBloc extends Disposable {
 
     _transactionDetails.tryAdd(
       TransactionDetails(
-        allMessageTypes: _allMessageTypes,
-        allStatuses: _allStatuses,
+        allMessageTypes: oldDetails.allMessageTypes,
+        allStatuses: oldDetails.allStatuses,
         selectedStatus: oldDetails.selectedStatus,
         selectedType: oldDetails.selectedType,
         address: account?.publicKey?.address ?? '',
@@ -168,13 +163,16 @@ class HomeBloc extends Disposable {
 
   void filterTransactions(String messageType, String status) {
     final stopwatch = Stopwatch()..start();
+    final allMessageTypes = _transactionDetails.value.allMessageTypes;
+    final allStatuses = _transactionDetails.value.allStatuses;
+
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
-    if (messageType == _allMessageTypes && status == _allStatuses) {
+    if (messageType == allMessageTypes && status == allStatuses) {
       filtered = transactions.toList();
-    } else if (messageType == _allMessageTypes) {
+    } else if (messageType == allMessageTypes) {
       filtered = transactions.where((t) => t.status == status).toList();
-    } else if (status == _allStatuses) {
+    } else if (status == allStatuses) {
       filtered =
           transactions.where((t) => t.messageType == messageType).toList();
     } else {
@@ -183,8 +181,8 @@ class HomeBloc extends Disposable {
           .toList();
     }
     _transactionDetails.tryAdd(TransactionDetails(
-      allMessageTypes: _allMessageTypes,
-      allStatuses: _allStatuses,
+      allMessageTypes: allMessageTypes,
+      allStatuses: allStatuses,
       address: _accountService.events.selected.value?.publicKey?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
@@ -242,11 +240,17 @@ class HomeBloc extends Disposable {
   }
 
   void _onSelected(Account? details) {
-    load();
+    final details = _transactionDetails.value;
+    load(
+        allMessageTypes: details.allMessageTypes,
+        allStatuses: details.allStatuses);
   }
 
   void _onTransaction(TransactionResponse response) {
-    load();
+    final details = _transactionDetails.value;
+    load(
+        allMessageTypes: details.allMessageTypes,
+        allStatuses: details.allStatuses);
   }
 
   Future<bool> _clearSessionData() async {
