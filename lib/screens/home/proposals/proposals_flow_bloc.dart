@@ -18,7 +18,7 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionData(String data) async {
+  Future<void> showTransactionData(Object? data) async {
     await _navigator.showTransactionData(data);
   }
 

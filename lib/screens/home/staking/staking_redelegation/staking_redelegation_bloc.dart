@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -94,7 +95,7 @@ class StakingRedelegationBloc extends Disposable {
     final details = _stakingRedelegationDetails.value;
     return staking.MsgBeginRedelegate(
         amount: proto.Coin(
-          denom: 'nhash',
+          denom: nHashDenom,
           amount: hashToNHash(details.hashRedelegated).toString(),
         ),
         delegatorAddress: _account.publicKey!.address,
@@ -102,8 +103,8 @@ class StakingRedelegationBloc extends Disposable {
         validatorDstAddress: details.toRedelegate?.addressId ?? "");
   }
 
-  String getRedelegateMessageJson() {
-    return _getRedelegateMessage().toProto3Json() as String;
+  Object? getRedelegateMessageJson() {
+    return _getRedelegateMessage().toProto3Json();
   }
 
   Future<void> doRedelegate(

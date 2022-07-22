@@ -3,13 +3,13 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_success/proposal_success_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposal_voting_data/proposal_voting_data_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
@@ -34,7 +34,7 @@ abstract class ProposalsFlowNavigator {
   );
 
   Future<void> showTransactionData(
-    String data,
+    Object? data,
   );
 
   Future<void> showTransactionSuccess();
@@ -110,9 +110,9 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Future<void> showTransactionData(String data) async {
+  Future<void> showTransactionData(Object? data) async {
     showPage(
-      (context) => ProposalVotingDataScreen(data: data),
+      (context) => StakingTransactionDataScreen(data: data),
     );
   }
 

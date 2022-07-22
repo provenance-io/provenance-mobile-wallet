@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_buttons.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
@@ -10,11 +11,9 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProposalDetailsScreen extends StatefulWidget {
   const ProposalDetailsScreen({
@@ -32,7 +31,6 @@ class ProposalDetailsScreen extends StatefulWidget {
 
 class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
   final _formatter = DateFormat.yMMMd('en_US').add_Hms();
-  bool _isActive = false;
   late final Proposal _proposal;
   @override
   void initState() {
@@ -61,78 +59,9 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     ),
                     children: [
                       VerticalSpacer.largeX3(),
-                      Container(
-                        padding: EdgeInsets.all(Spacing.large),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.neutral700,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                          color: Theme.of(context).colorScheme.neutral700,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            HorizontalSpacer.medium(),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  PwText(
-                                    Strings.proposalVoteConfirmProposerAddress,
-                                    style: PwTextStyle.body,
-                                    color: PwColor.neutralNeutral,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                  HorizontalSpacer.xSmall(),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        _isActive = !_isActive;
-                                      });
-                                    },
-                                    child: PwText(
-                                      _isActive
-                                          ? widget
-                                              .selectedProposal.proposerAddress
-                                          : abbreviateAddressAlt(widget
-                                              .selectedProposal
-                                              .proposerAddress),
-                                      color: PwColor.neutral200,
-                                      style: PwTextStyle.footnote,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () async {
-                                final url = get<ProposalsBloc>()
-                                    .getExplorerUrl(_proposal.proposerAddress);
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Spacing.large),
-                                child: PwIcon(
-                                  PwIcons.newWindow,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .neutralNeutral,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      AddressCard(
+                        title: Strings.proposalVoteConfirmProposerAddress,
+                        address: widget.selectedProposal.proposerAddress,
                       ),
                       DetailsHeader(
                         title: Strings.proposalDetailsProposalInformation,
