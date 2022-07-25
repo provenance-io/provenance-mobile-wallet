@@ -58,24 +58,21 @@ class ConfirmDelegateScreen extends StatelessWidget {
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingDelegateCurrentDelegation,
-              hashString: details.delegation?.displayDenom ??
-                  Strings.stakingConfirmHashAmount("0"),
+              hashString: details.delegation?.displayDenom ?? "0",
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingConfirmAmountToDelegate,
-              hashString: Strings.stakingConfirmHashAmount(
-                  details.hashDelegated.toString()),
+              hashString: details.hashDelegated.toString(),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingConfirmNewTotalDelegation,
-              hashString: Strings.stakingConfirmHashAmount(
-                  ((details.delegation?.hashAmount ?? Decimal.zero) +
-                          details.hashDelegated)
-                      .toString()),
+              hashString: ((details.delegation?.hashAmount ?? Decimal.zero) +
+                      details.hashDelegated)
+                  .toString(),
               context: context,
             ),
           ],

@@ -64,8 +64,7 @@ class DelegationListState extends State<DelegationList> {
 
                     return StakingListItem(
                       validator: validator,
-                      listItemText: Strings.displayDenomFormatted(
-                        context,
+                      listItemText: Strings.of(context).displayDelegated(
                         item.displayDenom,
                       ),
                       onTouch: () async {

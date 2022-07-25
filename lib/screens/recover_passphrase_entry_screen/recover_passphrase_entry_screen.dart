@@ -131,8 +131,8 @@ class RecoverPassphraseEntryScreenState
                         bottom: Spacing.medium,
                       ),
                       child: PwText(
-                        Strings.recoverPassphraseNetwork(
-                            context, coin.displayName),
+                        Strings.of(context)
+                            .recoverPassphraseNetwork(coin.displayName),
                         key: RecoverPassphraseEntryScreen.networkName,
                         style: PwTextStyle.body,
                       ),
@@ -164,8 +164,8 @@ class RecoverPassphraseEntryScreenState
                           child: Row(
                             children: [
                               PwText(
-                                Strings.recoverPassphraseWord(
-                                    context, index + 1),
+                                Strings.of(context)
+                                    .recoverPassphraseWord(index + 1),
                               ),
                             ],
                           ),

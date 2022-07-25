@@ -87,8 +87,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
                       return StakingListItem(
                         validator: item,
-                        listItemText: Strings.displayDelegatorsWithCommission(
-                          context,
+                        listItemText: Strings.of(context).displayDelegators(
                           item.delegators,
                           item.commission,
                         ),

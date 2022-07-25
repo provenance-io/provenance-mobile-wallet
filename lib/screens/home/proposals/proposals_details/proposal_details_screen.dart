@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
+import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -46,8 +47,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
           color: Theme.of(context).colorScheme.neutral750,
           child: Scaffold(
             appBar: PwAppBar(
-              title:
-                  Strings.proposalDetailsTitle(context, _proposal.proposalId),
+              title: Strings.of(context)
+                  .proposalDetailsTitle(_proposal.proposalId),
               leadingIcon: PwIcons.back,
               style: PwTextStyle.footnote,
             ),
@@ -138,22 +139,32 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                             : _formatter.format(_proposal.endTime),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.withHash(
+                      DetailsItem.withRowChildren(
                         title: strings.proposalDetailsDeposits,
-                        hashString: Strings.proposalDetailsDepositsHash(
-                          _proposal.currentDepositFormatted
-                              .toString()
-                              .formatNumber(),
-                          _proposal.depositPercentage,
-                        ),
-                        context: context,
+                        children: [
+                          PwIcon(
+                            PwIcons.hashLogo,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                          ),
+                          HorizontalSpacer.small(),
+                          PwText(
+                            Strings.of(context).hashDeposited(
+                              _proposal.currentDepositFormatted
+                                  .toString()
+                                  .formatNumber(),
+                              _proposal.depositPercentage,
+                            ),
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: PwTextStyle.footnote,
+                          ),
+                        ],
                       ),
                       DetailsItem.withHash(
                         padding: EdgeInsets.only(bottom: Spacing.large),
                         title: strings.proposalDetailsNeededDeposit,
-                        hashString: Strings.proposalDetailsHashNeeded(
-                          _proposal.neededDepositFormatted,
-                        ),
+                        hashString: _proposal.neededDepositFormatted.toString(),
                         context: context,
                       ),
                       SinglePercentageBarChart(
@@ -197,8 +208,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.yesAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsYes,
                         ),
                       ),
@@ -206,8 +216,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.noAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsNo,
                         ),
                         color: Theme.of(context).colorScheme.error,
@@ -216,8 +225,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.noWithVetoAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsNoWithVeto,
                         ),
                         color: Theme.of(context).colorScheme.notice350,
@@ -226,8 +234,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.abstainAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsAbstain,
                         ),
                         color: Theme.of(context).colorScheme.neutral600,

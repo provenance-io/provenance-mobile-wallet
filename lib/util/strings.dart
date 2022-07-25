@@ -3,21 +3,6 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
-extension StringExtension on String {
-  String capitalize() {
-    return '${this[0].toUpperCase()}${substring(1)}';
-  }
-
-  String formatNumber() {
-    var sections = split('.');
-    sections[0] = sections[0].replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    );
-    return sections.join('.');
-  }
-}
-
 class Strings {
   // For devs only
   static const notImplementedMessage = "Not Implemented";
@@ -36,84 +21,4 @@ class Strings {
   static AppLocalizations of(BuildContext context) {
     return AppLocalizations.of(context)!;
   }
-
-  static String dashboardConnectionRequestDetails(
-    BuildContext context,
-    String name,
-  ) =>
-      "${of(context).dashboardConnectionRequestAllowConnectionTo} $name";
-
-  static String numAssets(
-    BuildContext context,
-    int numAssets,
-  ) =>
-      "$numAssets ${Strings.of(context).numAssets}${numAssets != 1 ? "s" : ""}";
-
-  static String accountLinkedTo(
-    BuildContext context,
-    String name,
-  ) =>
-      "${Strings.of(context).accountLinkedTo} '$name'";
-
-  static String multiSigInviteReviewLandingDesc(
-    BuildContext context,
-    String accountName,
-  ) =>
-      '${Strings.of(context).multiSigInviteReviewLandingDesc} "$accountName" ${Strings.of(context).multiSigInviteReviewLandingMultiSigAccount}';
-
-  static String recoverPassphraseNetwork(BuildContext context, String name) =>
-      '${Strings.of(context).recoverPassphraseNetwork} $name';
-
-  static String recoverPassphraseWord(BuildContext context, int number) =>
-      '${Strings.of(context).recoverPassphraseWord} $number';
-
-  static String selectWordIndex(
-    BuildContext context,
-    String index,
-  ) =>
-      '${Strings.of(context).selectWord} #$index';
-
-  static String displayDenomFormatted(
-    BuildContext context,
-    String displayDenom,
-  ) =>
-      "$displayDenom ${Strings.of(context).displayDelegated}";
-
-  static String displayDelegatorsWithCommission(
-    BuildContext context,
-    int delegators,
-    String commission,
-  ) =>
-      "$delegators ${Strings.of(context).displayDelegators} $dotSeparator $commission ${Strings.of(context).displayCommission}";
-
-  static String stakingSuccessSuccessful(
-          BuildContext context, String delegationType) =>
-      '$delegationType ${Strings.of(context).stakingSuccessSuccessful}';
-
-  static String stakingConfirmHashAmount(String amount) =>
-      '$amount ${Strings.displayHASH}';
-
-  static String proposalsScreenVoted(
-          BuildContext context, String formattedVote) =>
-      "${Strings.of(context).proposalsScreenVoted} $formattedVote";
-
-  static String proposalDetailsTitle(BuildContext context, int proposalId) =>
-      "${Strings.of(context).proposalDetailsTitle} $proposalId";
-
-  static String proposalDetailsDepositsHash(
-    String deposited,
-    String depositPercentage,
-  ) =>
-      "$deposited ${Strings.displayHASH} ($depositPercentage)";
-
-  static String proposalDetailsHashNeeded(double needed) =>
-      "$needed ${Strings.displayHASH}";
-
-  // TODO: Remove these. Everything was requiring BuildContext
-  // TODO: and I'm not sure that's what we want. These Strings have
-  // TODO: already been localized, so we just need to remove them.
-
-  static const notifyServiceErrorTitle = 'Service Error';
-  static const notifyServiceErrorMessage =
-      'Unfortunately our services are down at the moment';
 }

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 final item = ActionListItem(label: "Main Label", subLabel: "Sub Label");
 final item2 = ActionListItem(label: "Main Label2", subLabel: "Sub Label2");
@@ -150,7 +151,9 @@ main() {
       await _build(tester, basicGroup);
 
       expect(find.text(basicGroup.label), findsOneWidget);
-      expect(find.text("${basicGroup.subLabel} • 1 Action"), findsOneWidget);
+      expect(
+          find.text("${basicGroup.subLabel} ${Strings.dotSeparator} 1 Action"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
 
@@ -159,7 +162,9 @@ main() {
 
       expect(find.text(multiSigGroup.label), findsOneWidget);
       expect(
-          find.text("${multiSigGroup.subLabel} • 0 Actions"), findsOneWidget);
+          find.text(
+              "${multiSigGroup.subLabel} ${Strings.dotSeparator} 0 Actions"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
 
@@ -168,7 +173,9 @@ main() {
 
       expect(find.text(isSelectedGroup.label), findsOneWidget);
       expect(
-          find.text("${isSelectedGroup.subLabel} • 2 Actions"), findsOneWidget);
+          find.text(
+              "${isSelectedGroup.subLabel} ${Strings.dotSeparator} 2 Actions"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
   });

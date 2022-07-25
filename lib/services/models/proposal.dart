@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/services/governance_service/dtos/proposal_dto.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 
 class Proposal {
   Proposal({required ProposalDto dto})

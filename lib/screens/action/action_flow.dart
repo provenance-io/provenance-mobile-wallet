@@ -74,7 +74,8 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
       approveText: Strings.of(context).sessionApprove,
       declineText: Strings.of(context).sessionReject,
       title: Strings.of(context).dashboardConnectionRequestTitle,
-      message: Strings.dashboardConnectionRequestDetails(context, name),
+      message:
+          Strings.of(context).dashboardConnectionRequestAllowConnectionTo(name),
       icon: Image.asset(
         Assets.imagePaths.connectionRequest,
       ),

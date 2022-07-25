@@ -197,7 +197,8 @@ class HomeScreenState extends State<HomeScreen>
       approveText: strings.sessionApprove,
       declineText: strings.sessionReject,
       title: strings.dashboardConnectionRequestTitle,
-      message: Strings.dashboardConnectionRequestDetails(context, name),
+      message:
+          Strings.of(context).dashboardConnectionRequestAllowConnectionTo(name),
       icon: Image.asset(
         Assets.imagePaths.connectionRequest,
       ),
