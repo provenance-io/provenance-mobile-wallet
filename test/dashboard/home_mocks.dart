@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -68,7 +66,7 @@ class MockTransactionService implements TransactionService {
   ) =>
       Future.value(_sendTransactions[provenanceAddress] ?? []);
 }
-
+/*
 class MockWalletConnection extends ValueListenable<WalletConnectState>
     implements WalletConnection {
   MockWalletConnection(this.address);
@@ -145,3 +143,4 @@ class MockWalletConnection extends ValueListenable<WalletConnectState>
     }
   }
 }
+*/

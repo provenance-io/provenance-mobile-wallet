@@ -3,10 +3,10 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i5;
-import 'dart:ui' as _i6;
+import 'dart:ui' as _i7;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i7;
+import 'package:provenance_dart/proto.dart' as _i6;
 import 'package:provenance_dart/wallet_connect.dart' as _i2;
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart'
     as _i3;
@@ -68,11 +68,44 @@ class MockWalletConnection extends _i1.Mock implements _i2.WalletConnection {
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
   @override
-  void addListener(_i6.VoidCallback? listener) =>
+  _i5.Future<void> sendError(int? requestId, String? error) =>
+      (super.noSuchMethod(Invocation.method(#sendError, [requestId, error]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  @override
+  _i5.Future<void> reject(int? requestId) =>
+      (super.noSuchMethod(Invocation.method(#reject, [requestId]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  @override
+  _i5.Future<void> sendTransactionResult(
+          int? requestId, _i6.RawTxResponsePair? txResponsePair) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #sendTransactionResult, [requestId, txResponsePair]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  @override
+  _i5.Future<void> sendSignResult(int? requestId, List<int>? signedData) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendSignResult, [requestId, signedData]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  @override
+  _i5.Future<void> sendApproveSession(
+          int? requestId, _i2.SessionApprovalData? clientMeta,
+          [_i2.ClientMeta? peerMeta]) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #sendApproveSession, [requestId, clientMeta, peerMeta]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
+  @override
+  void addListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i6.VoidCallback? listener) =>
+  void removeListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
@@ -96,26 +129,22 @@ class MockWalletConnectSessionDelegate extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#complete, [requestId, allowed]),
           returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  void onApproveSession(_i2.SessionRequestData? data,
-          _i2.AcceptCallback<_i2.SessionApprovalData?>? callback) =>
-      super.noSuchMethod(Invocation.method(#onApproveSession, [data, callback]),
+  void onApproveSession(int? requestId, _i2.SessionRequestData? data) => super
+      .noSuchMethod(Invocation.method(#onApproveSession, [requestId, data]),
           returnValueForMissingStub: null);
   @override
-  void onApproveSign(String? description, String? address, List<int>? msg,
-          _i2.AcceptCallback<List<int>?>? callback) =>
+  void onApproveSign(int? requestId, String? description, String? address,
+          List<int>? msg) =>
       super.noSuchMethod(
           Invocation.method(
-              #onApproveSign, [description, address, msg, callback]),
+              #onApproveSign, [requestId, description, address, msg]),
           returnValueForMissingStub: null);
   @override
-  void onApproveTransaction(
-          String? description,
-          String? address,
-          _i2.SignTransactionData? signTransactionData,
-          _i2.AcceptCallback<_i7.RawTxResponsePair?>? callback) =>
+  void onApproveTransaction(int? requestId, String? description,
+          String? address, _i2.SignTransactionData? signTransactionData) =>
       super.noSuchMethod(
           Invocation.method(#onApproveTransaction,
-              [description, address, signTransactionData, callback]),
+              [requestId, description, address, signTransactionData]),
           returnValueForMissingStub: null);
   @override
   void onClose() => super.noSuchMethod(Invocation.method(#onClose, []),

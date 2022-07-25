@@ -65,89 +65,121 @@ class WalletConnectSessionDelegateEvents {
 }
 
 class WalletConnectSessionDelegate implements WalletConnectionDelegate {
-  WalletConnectSessionDelegate({
-    required PrivateKey privateKey,
-    required WalletInfo walletInfo,
-    required TransactionHandler transactionHandler,
-    required WalletConnectQueueService queueService,
-    required WalletConnectAddress address,
-  })  : _privateKey = privateKey,
+  WalletConnectSessionDelegate(
+      {required PrivateKey privateKey,
+      required WalletInfo walletInfo,
+      required TransactionHandler transactionHandler,
+      required WalletConnectQueueService queueService,
+      required WalletConnectAddress address,
+      required WalletConnection connection})
+      : _privateKey = privateKey,
         _transactionHandler = transactionHandler,
         _walletInfo = walletInfo,
         _queueService = queueService,
-        _address = address;
+        _address = address,
+        _connection = connection;
 
   final PrivateKey _privateKey;
   final TransactionHandler _transactionHandler;
   final WalletInfo _walletInfo;
   final WalletConnectQueueService _queueService;
   final WalletConnectAddress _address;
-
-  final _completerLookup = <String, CompleterDelegate>{};
+  final WalletConnection _connection;
 
   final events = WalletConnectSessionDelegateEvents();
 
-  Future<bool> complete(String requestId, bool allowed) {
-    final completer = _completerLookup.remove(requestId);
-    if (completer == null) {
-      return Future.value(false);
+  Future<bool> complete(String requestId, bool allowed) async {
+    final action = await _queueService.loadQueuedAction(_address, requestId);
+    if (action == null) {
+      return false;
     }
 
-    return completer(allowed).then((_) => true);
+    final wcRequestId = action.requestId;
+    if (!allowed) {
+      await _connection.reject(wcRequestId);
+      return true;
+    }
+
+    if (action is WalletConnectSessionRequestData) {
+      final chainId = ChainId.forCoin(_privateKey.publicKey.coin);
+
+      SessionApprovalData sessionApproval = SessionApprovalData(
+        _privateKey,
+        chainId,
+        _walletInfo,
+      );
+
+      await _connection.sendApproveSession(wcRequestId, sessionApproval);
+
+      await _queueService.removeRequest(_address, action.id);
+      return true;
+    } else if (action is SignRequest) {
+      final bytes = action.message.codeUnits;
+      List<int>? signedData;
+      signedData = _privateKey.defaultKey().signData(Hash.sha256(bytes))
+        ..removeLast();
+
+      await _connection.sendSignResult(wcRequestId, signedData);
+      await _queueService.removeRequest(_address, action.id);
+    } else if (action is SendRequest) {
+      final txBody = proto.TxBody(
+        messages: action.messages.map((msg) => msg.toAny()).toList(),
+      );
+
+      proto.RawTxResponsePair response =
+          await _transactionHandler.executeTransaction(
+        txBody,
+        _privateKey,
+        action.gasEstimate,
+      );
+
+      final txResponse = response.txResponse;
+
+      await _connection.sendTransactionResult(wcRequestId, response);
+
+      events._onResponse.add(
+        WalletConnectTxResponse(
+          code: txResponse.code,
+          requestId: action.requestId.toString(),
+          message: txResponse.rawLog,
+          gasWanted: txResponse.gasWanted.toInt(),
+          gasUsed: txResponse.gasUsed.toInt(),
+          height: txResponse.height.toInt(),
+          txHash: txResponse.txhash,
+          fees: action.gasEstimate.feeCalculated,
+          codespace: txResponse.codespace,
+        ),
+      );
+
+      _queueService.removeRequest(_address, action.id);
+    }
+    return false;
   }
 
   @override
   void onApproveSession(
+    int requestId,
     SessionRequestData data,
-    AcceptCallback<SessionApprovalData?> callback,
   ) async {
     final id = Uuid().v1().toString();
-
-    _completerLookup[id] = (bool approve) async {
-      SessionApprovalData? sessionApproval;
-      final chainId = ChainId.forCoin(_privateKey.publicKey.coin);
-      if (approve) {
-        sessionApproval = SessionApprovalData(
-          _privateKey,
-          chainId,
-          _walletInfo,
-        );
-      }
-
-      await callback(sessionApproval, null);
-      _queueService.removeRequest(_address, id);
-    };
 
     await _queueService.createWalletConnectSessionGroup(
         _address, _privateKey.defaultKey().publicKey.address, data.clientMeta);
 
-    final details = WalletConnectSessionRequestData(id, data);
+    final details = WalletConnectSessionRequestData(id, requestId, data);
     events._sessionRequest.add(details);
+    await _queueService.addWalletApproveRequest(_address, details);
   }
 
   @override
   void onApproveSign(
-    String description,
-    String address,
-    List<int> msg,
-    AcceptCallback<List<int>?> callback,
-  ) async {
+      int requestId, String description, String address, List<int> msg) async {
     final id = Uuid().v1().toString();
     log("Approve sign");
 
-    _completerLookup[id] = (bool accept) async {
-      List<int>? signedData;
-      if (accept) {
-        signedData = _privateKey.defaultKey().signData(Hash.sha256(msg))
-          ..removeLast();
-      }
-
-      await callback(signedData, null);
-      _queueService.removeRequest(_address, id);
-    };
-
     final signRequest = SignRequest(
       id: id,
+      requestId: requestId,
       message: utf8.decode(msg),
       description: description,
       address: address,
@@ -158,10 +190,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
   @override
   void onApproveTransaction(
+    int requestId,
     String description,
     String address,
     SignTransactionData signTransactionData,
-    AcceptCallback<proto.RawTxResponsePair?> callback,
   ) async {
     log("Approve trans");
     final txBody = proto.TxBody(
@@ -186,59 +218,23 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       }
     } on GrpcError catch (e) {
       events._onDidError.add(e.message ?? e.codeName);
-      callback(null, e.message);
 
       return null;
     }
 
     final sendRequest = SendRequest(
       id: id,
+      requestId: requestId,
       description: description,
       messages: signTransactionData.proposedMessages,
       gasEstimate: gasEstimate,
     );
-
-    _completerLookup[id] = (bool approve) async {
-      proto.RawTxResponsePair? response;
-
-      if (approve) {
-        response = await _transactionHandler.executeTransaction(
-          txBody,
-          _privateKey,
-          gasEstimate,
-        );
-
-        final txResponse = response.txResponse;
-
-        events._onResponse.add(
-          WalletConnectTxResponse(
-            code: txResponse.code,
-            requestId: sendRequest.id,
-            message: txResponse.rawLog,
-            gasWanted: txResponse.gasWanted.toInt(),
-            gasUsed: txResponse.gasUsed.toInt(),
-            height: txResponse.height.toInt(),
-            txHash: txResponse.txhash,
-            fees: gasEstimate.feeCalculated,
-            codespace: txResponse.codespace,
-          ),
-        );
-      }
-
-      await callback(response, null);
-      _queueService.removeRequest(_address, id);
-    };
 
     _queueService.addWalletConnectSendRequest(_address, sendRequest);
   }
 
   @override
   void onClose() {
-    for (var completer in _completerLookup.values) {
-      completer(false);
-    }
-
-    _completerLookup.clear();
     events._onClose.add(null);
     _queueService.removeWalletConnectSessionGroup(_address);
   }

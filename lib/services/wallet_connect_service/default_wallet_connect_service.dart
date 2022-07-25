@@ -146,6 +146,7 @@ class DefaultWalletConnectService extends WalletConnectService
       transactionHandler: _transactionHandler,
       address: address,
       queueService: _queueServce,
+      connection: connection,
       walletInfo: WalletInfo(
         accountDetails.id,
         accountDetails.name,

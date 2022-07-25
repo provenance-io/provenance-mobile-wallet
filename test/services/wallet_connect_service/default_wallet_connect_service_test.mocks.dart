@@ -230,6 +230,10 @@ class MockWalletConnectQueueService extends _i1.Mock
   }
 
   @override
+  _i8.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
   _i8.Future<void> createWalletConnectSessionGroup(
           _i6.WalletConnectAddress? address,
           String? walletAddress,
@@ -380,6 +384,39 @@ class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
   @override
   _i8.Future<void> disconnect() =>
       (super.noSuchMethod(Invocation.method(#disconnect, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
+  _i8.Future<void> sendError(int? requestId, String? error) =>
+      (super.noSuchMethod(Invocation.method(#sendError, [requestId, error]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
+  _i8.Future<void> reject(int? requestId) =>
+      (super.noSuchMethod(Invocation.method(#reject, [requestId]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
+  _i8.Future<void> sendTransactionResult(
+          int? requestId, _i5.RawTxResponsePair? txResponsePair) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #sendTransactionResult, [requestId, txResponsePair]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
+  _i8.Future<void> sendSignResult(int? requestId, List<int>? signedData) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendSignResult, [requestId, signedData]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+  @override
+  _i8.Future<void> sendApproveSession(
+          int? requestId, _i6.SessionApprovalData? clientMeta,
+          [_i6.ClientMeta? peerMeta]) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #sendApproveSession, [requestId, clientMeta, peerMeta]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override

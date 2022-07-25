@@ -46,7 +46,7 @@ dependencies:
   provenance_dart:
     git:
       url: https://github.com/provenance-io/provenance-dart.git
-      ref: develop
+      ref: WalletConnect/NoCallbacks
   provider: ^6.0.3
   qr_flutter: ^4.0.0
   rxdart: ^0.27.3

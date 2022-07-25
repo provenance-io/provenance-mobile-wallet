@@ -120,6 +120,8 @@ void main() {
 
     mockRemoteNotificationService = MockRemoteNotificationService();
     mockWalletConnectQueueService = MockWalletConnectQueueService();
+    when(mockWalletConnectQueueService.onDispose())
+        .thenAnswer((_) => Future.value());
     mockTransactionHandler = MockTransactionHandler();
 
     get.registerSingleton<KeyValueService>(mockKeyValueService);

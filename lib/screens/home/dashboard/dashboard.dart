@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
@@ -48,6 +49,10 @@ class _DashboardState extends State<Dashboard> {
 
     _connectQueueService = get<WalletConnectQueueService>();
     _connectQueueService.addListener(_connectQueueUpdated);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _connectQueueUpdated();
+    });
   }
 
   @override

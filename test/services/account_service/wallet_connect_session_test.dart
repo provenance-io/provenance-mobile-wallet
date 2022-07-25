@@ -155,6 +155,7 @@ main() {
             .thenAnswer((_) => Future.value(true));
         final details = WalletConnectSessionRequestData(
           "ABC",
+          1,
           SessionRequestData(
             "PeerId",
             "RemoteId",
