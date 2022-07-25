@@ -78,9 +78,9 @@ class ConfirmUndelegateScreen extends StatelessWidget {
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingConfirmNewTotalDelegation,
-              hashString: Strings.stakingConfirmHashAmount(
+              hashString:
                   (details.delegation!.hashAmount - details.hashDelegated)
-                      .toString()),
+                      .toString(),
               context: context,
             ),
           ],

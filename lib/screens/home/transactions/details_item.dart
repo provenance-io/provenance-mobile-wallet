@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DetailsItem extends StatelessWidget {
   DetailsItem({
@@ -84,7 +85,7 @@ class DetailsItem extends StatelessWidget {
         ),
         HorizontalSpacer.small(),
         PwText(
-          hashString,
+          Strings.of(context).hashAmount(hashString),
           overflow: TextOverflow.fade,
           softWrap: false,
           style: PwTextStyle.footnote,

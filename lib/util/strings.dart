@@ -36,24 +36,4 @@ class Strings {
   static AppLocalizations of(BuildContext context) {
     return AppLocalizations.of(context)!;
   }
-
-  static String displayDenomFormatted(
-    BuildContext context,
-    String displayDenom,
-  ) =>
-      "$displayDenom ${Strings.of(context).displayDelegated}";
-
-  static String stakingSuccessSuccessful(
-          BuildContext context, String delegationType) =>
-      '$delegationType ${Strings.of(context).stakingSuccessSuccessful}';
-
-  static String stakingConfirmHashAmount(String amount) =>
-      '$amount ${Strings.displayHASH}';
-
-  static String proposalsScreenVoted(
-          BuildContext context, String formattedVote) =>
-      "${Strings.of(context).proposalsScreenVoted} $formattedVote";
-
-  static String proposalDetailsTitle(BuildContext context, int proposalId) =>
-      "${Strings.of(context).proposalDetailsTitle} $proposalId";
 }

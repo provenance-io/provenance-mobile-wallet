@@ -86,7 +86,7 @@ class TransactionDetailsScreen extends StatelessWidget {
             DetailsItem(
               title: strings.tradeDetailsFee,
               endChild: PwText(
-                transaction.displayFee,
+                Strings.of(context).hashAmount(transaction.displayFee),
                 style: PwTextStyle.body,
               ),
             ),

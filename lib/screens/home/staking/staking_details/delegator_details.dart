@@ -86,7 +86,8 @@ class DelegatorDetails extends StatelessWidget {
               PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: strings.stakingDetailsBonded,
-                hashString: commission.formattedBondedTokens,
+                hashString: Strings.of(context)
+                    .hashAmount(commission.formattedBondedTokens),
                 context: context,
               ),
               PwListDivider.alternate(),
@@ -117,7 +118,8 @@ class DelegatorDetails extends StatelessWidget {
               PwListDivider.alternate(),
               DetailsItem.alternateStrings(
                 title: strings.stakingDetailsRewards,
-                value: commission.formattedRewards,
+                value:
+                    Strings.of(context).hashAmount(commission.formattedRewards),
               ),
               PwListDivider.alternate(),
               DetailsItem.alternateStrings(

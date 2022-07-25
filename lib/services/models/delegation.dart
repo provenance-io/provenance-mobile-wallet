@@ -47,8 +47,7 @@ class Delegation {
   final String? shares;
 
   String get displayDenom {
-    return Strings.stakingConfirmHashAmount(
-        stringNHashToHash(amount).toString());
+    return stringNHashToHash(amount).toString();
   }
 
   Decimal get hashAmount {

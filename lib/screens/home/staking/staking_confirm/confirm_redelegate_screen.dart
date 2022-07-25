@@ -90,16 +90,15 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingConfirmAmountToRedelegate,
-              hashString: Strings.stakingConfirmHashAmount(
-                  details.hashRedelegated.toString()),
+              hashString: details.hashRedelegated.toString(),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
               title: strings.stakingConfirmNewTotalDelegation,
-              hashString: Strings.stakingConfirmHashAmount(
+              hashString:
                   (details.delegation.hashAmount - details.hashRedelegated)
-                      .toString()),
+                      .toString(),
               context: context,
             ),
           ],

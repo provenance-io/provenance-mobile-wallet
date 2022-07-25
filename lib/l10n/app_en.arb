@@ -362,7 +362,16 @@
   "menuDelegate": "Delegate",
   "menuRedelegate": "Redelegate",
   "menuUndelegate": "Undelegate",
-  "displayDelegated": " delegated",
+  "displayDelegated": "{amount} delegated",
+  "@displayDelegated": {
+    "description": "Displays the amount of the denom that was delegated.",
+    "placeholders": {
+      "amount": {
+         "type": "String",
+         "example": "100000"
+      }
+    }
+  },
   "displayDelegators": "{delegators} delegators • {commission} commission",
   "@displayDelegators": {
     "description": "Displays the number of delegators and commission percentage.",
@@ -446,13 +455,40 @@
   "stakingDelegationBlocClaimRewards": "Claim Rewards",
   "stakingConfirmClaimRewardsDetails": "Claim Rewards Details",
   "stakingSuccessSuccess": "SUCCESS",
-  "stakingSuccessSuccessful": "successful",
+  "stakingSuccessSuccessful": "{delegationType} successful",
+  "@stakingSuccessSuccessful": {
+    "description": "Message displayed when the delegation type is successful.",
+    "placeholders": {
+    "delegationType": {
+       "type": "String",
+       "example": "Delegation"
+      }
+    }
+  },
   "stakingSuccessBackToDashboard": "Back to Dashboard",
   "stakingConfirmHash": "HASH",
   "proposalsScreenLegend": "Legend",
   "proposalsScreenMyStatus": "My Status:",
-  "proposalsScreenVoted": "Voted",
-  "proposalDetailsTitle": "Governance Proposal",
+  "proposalsScreenVoted": "Voted {formattedVote}",
+  "@proposalsScreenVoted": {
+    "description": "Title that displays the vote with 'Voted' prepended.",
+    "placeholders": {
+    "formattedVote": {
+       "type": "String",
+       "example": "No w/ Veto"
+      }
+    }
+  },
+  "proposalDetailsTitle": "Governance Proposal {proposalId}",
+  "@proposalDetailsTitle": {
+    "description": "Title that displays the proposal ID",
+    "placeholders": {
+    "proposalId": {
+       "type": "int",
+       "example": "55"
+      }
+    }
+  },
   "proposalDetailsProposalInformation": "Proposal Information",
   "proposalDetailsId": "ID#",
   "proposalDetailsTitleString": "Title",

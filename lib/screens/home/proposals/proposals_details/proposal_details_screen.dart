@@ -46,8 +46,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
           color: Theme.of(context).colorScheme.neutral750,
           child: Scaffold(
             appBar: PwAppBar(
-              title:
-                  Strings.proposalDetailsTitle(context, _proposal.proposalId),
+              title: Strings.of(context)
+                  .proposalDetailsTitle(_proposal.proposalId),
               leadingIcon: PwIcons.back,
               style: PwTextStyle.footnote,
             ),
@@ -197,8 +197,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.yesAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsYes,
                         ),
                       ),
@@ -206,8 +205,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.noAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsNo,
                         ),
                         color: Theme.of(context).colorScheme.error,
@@ -216,8 +214,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.noWithVetoAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsNoWithVeto,
                         ),
                         color: Theme.of(context).colorScheme.notice350,
@@ -226,8 +223,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       SinglePercentageBarChart(
                         _proposal.abstainAmount,
                         _proposal.totalAmount,
-                        title: Strings.proposalsScreenVoted(
-                          context,
+                        title: strings.proposalsScreenVoted(
                           strings.proposalDetailsAbstain,
                         ),
                         color: Theme.of(context).colorScheme.neutral600,

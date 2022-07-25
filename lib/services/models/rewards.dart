@@ -40,7 +40,8 @@ class Reward {
   final String totalBalancePrice;
 
   String get formattedAmount {
-    return Strings.stakingConfirmHashAmount(
-        stringNHashToHash(amount, fractionDigits: 7).toString().formatNumber());
+    return stringNHashToHash(amount, fractionDigits: 7)
+        .toString()
+        .formatNumber();
   }
 }

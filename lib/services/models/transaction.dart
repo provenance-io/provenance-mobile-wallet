@@ -59,7 +59,6 @@ class Transaction {
   }
 
   String get displayFee {
-    return Strings.stakingConfirmHashAmount(
-        stringNHashToHash(feeAmount).toString());
+    return stringNHashToHash(feeAmount).toString();
   }
 }
