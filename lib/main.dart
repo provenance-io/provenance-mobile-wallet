@@ -255,19 +255,13 @@ void main() {
       );
     },
     (error, stack) {
-      // TODO: Replace with unified logging once stacktraces can print.
-      final logger = Logger();
-      logger.e(
-        'Error',
-        error,
-        stack,
-      );
-
       if (get.isRegistered<CrashReportingService>()) {
         get<CrashReportingService>().recordError(
           error,
           stack: stack,
         );
+      } else {
+        logStatic('main', Level.error, 'Error: $error\n Stack: $stack');
       }
     },
   );
