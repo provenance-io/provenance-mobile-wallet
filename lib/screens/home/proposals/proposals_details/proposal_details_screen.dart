@@ -140,7 +140,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       PwListDivider.alternate(),
                       DetailsItem.withHash(
                         title: strings.proposalDetailsDeposits,
-                        hashString: Strings.proposalDetailsDepositsHash(
+                        hashString: Strings.of(context).hashDeposited(
                           _proposal.currentDepositFormatted
                               .toString()
                               .formatNumber(),
@@ -151,8 +151,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       DetailsItem.withHash(
                         padding: EdgeInsets.only(bottom: Spacing.large),
                         title: strings.proposalDetailsNeededDeposit,
-                        hashString: Strings.proposalDetailsHashNeeded(
-                          _proposal.neededDepositFormatted,
+                        hashString: strings.hashAmount(
+                          _proposal.neededDepositFormatted.toString(),
                         ),
                         context: context,
                       ),

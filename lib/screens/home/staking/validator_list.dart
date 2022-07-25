@@ -90,8 +90,7 @@ class ValidatorListState extends State<ValidatorList> {
 
                       return StakingListItem(
                         validator: item,
-                        listItemText: Strings.displayDelegatorsWithCommission(
-                          context,
+                        listItemText: Strings.of(context).displayDelegators(
                           item.delegators,
                           item.commission,
                         ),

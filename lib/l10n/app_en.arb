@@ -25,7 +25,16 @@
   "provenanceTitle": "PROVENANCE BLOCKCHAIN\nWALLET",
   "provenanceWalletDescription": "A wallet provides an easy way to manage multiple blockchain accounts.",
   "dashboardConnectionRequestTitle": "Connection Request",
-  "dashboardConnectionRequestAllowConnectionTo": "Allow connection to",
+  "dashboardConnectionRequestAllowConnectionTo": "Allow connection to {name}",
+  "@dashboardConnectionRequestAllowConnectionTo": {
+  "description": "Connection message with a single parameter",
+  "placeholders": {
+    "name": {
+       "type": "String",
+       "example": "Wallet Connect"
+     }
+   }
+ },
   "dashboard": "Dashboard",
   "portfolioValue": "Portfolio Value",
   "send": "Send",
@@ -74,7 +83,16 @@
   "selectedAccountLabel": "Selected Account",
   "accountStatusPending": "Pending",
   "accountMenuItemViewInvite": "View Invitation Details",
-  "accountLinkedTo": "Linked to ",
+  "accountLinkedTo": "Linked to '{name}'",
+  "@accountLinkedTo": {
+  "description": "Account linked message with a single parameter",
+  "placeholders": {
+    "name": {
+       "type": "String",
+       "example": "Wallet Connect"
+     }
+   }
+ },
   "select": "Select",
   "rename": "Rename",
   "remove": "Remove",
@@ -100,7 +118,16 @@
   "accountTypeMultiSigJoinLink": "Have an invitation link?",
   "accountTypeMultiSigRecoverName": "Recover",
   "accountTypeMultiSigRecoverDesc": "Using existing linked basic account",
-  "multiSigInviteReviewLandingDesc":"You’re invited to join the ",
+  "multiSigInviteReviewLandingDesc":"You’re invited to join the \"{name}\" Multi-Sig Account",
+  "@multiSigInviteReviewLandingDesc": {
+  "description": "Invite message with a single parameter",
+  "placeholders": {
+    "name": {
+       "type": "String",
+       "example": "SuperCoolBeans"
+     }
+   }
+ },
   "multiSigInviteReviewLandingMultiSigAccount":" Multi-Sig Account",
   "multiSigInviteReviewLandingLearnMoreButton": "Learn More",
   "multiSigInviteReviewDetailsTitle": "Review Invitation",
@@ -170,9 +197,37 @@
   "theOnlyWayToRecoverYourAccount": "The only way to recover your account is with this recovery passphrase.",
   "warningDoNotShare": "Do not share this passphrase with anyone as it grants full access to your account.",
   "enterRecoveryPassphrase": "Enter recovery passphrase",
-  "recoverPassphraseNetwork": "Network: ",
+  "recoverPassphraseNetwork": "Network: {name}",
+  "@recoverPassphraseNetwork": {
+  "description": "Network type with a single parameter",
+  "placeholders": {
+    "name": {
+       "type": "String",
+       "example": "Mainnet"
+     }
+   }
+ },
   "invalidWord": "Invalid word",
-  "recoverPassphraseWord": "Word ",
+  "recoverPassphraseWord": "Word {num}",
+  "@recoverPassphraseWord": {
+  "description": "Numbered word",
+  "placeholders": {
+    "num": {
+       "type": "int",
+       "example": "5"
+     }
+   }
+ },
+ "selectWordIndex": "Word #{index}",
+ "@selectWordIndex": {
+  "description": "Numbered word",
+  "placeholders": {
+    "index": {
+       "type": "int",
+       "example": "5"
+     }
+   }
+ },
   "verifyPassphrase": "Verify Passphrase",
   "next": "Next",
   "pleaseMakeASelection": "Please make a selection for the 4 rows.",
@@ -308,7 +363,20 @@
   "menuRedelegate": "Redelegate",
   "menuUndelegate": "Undelegate",
   "displayDelegated": " delegated",
-  "displayDelegators": "delegators",
+  "displayDelegators": "{delegators} delegators • {commission} commission",
+  "@displayDelegators": {
+    "description": "Displays the number of delegators and commission percentage.",
+    "placeholders": {
+      "delegators": {
+         "type": "int",
+         "example": "5"
+      },
+      "comission": {
+         "type": "String",
+         "example": "100%"
+      }
+    }
+  },
   "displayCommission": "commission",
   "stakingDetailsDelegation": "Delegation",
   "stakingDetailsDelegationStatus": "Delegation Status",
@@ -436,5 +504,37 @@
   "stakingConfirmDelegating": "Delegating",
   "stakingConfirmDelegationDetails": "Delegation Details",
   "stakingConfirmAmountToDelegate": "Amount to Delegate",
-  "numAssets": "Asset"
+  "nAssets": "{count,plural, =1{Asset} other{Assets}}",
+  "@nAssets": {
+  "description": "A plural label for assets.",
+  "placeholders": {
+    "count": {
+      "type": "int"
+      }
+    }
+  },
+  "hashAmount": "{amount} HASH",
+  "@hashAmount": {
+  "description": "A String for how much HASH coin there is",
+  "placeholders": {
+    "amount": {
+       "type": "String",
+       "example": "5"
+      }
+    }
+  },
+  "hashDeposited": "{deposited} HASH ({percentage})",
+  "@hashDeposited": {
+  "description": "A String for how much HASH coin was deposited",
+  "placeholders": {
+    "deposited": {
+       "type": "String",
+       "example": "5"
+      },
+      "percentage": {
+       "type": "String",
+       "example": "100%"
+      }
+    }
+  }
 }

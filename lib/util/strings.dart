@@ -37,54 +37,11 @@ class Strings {
     return AppLocalizations.of(context)!;
   }
 
-  static String dashboardConnectionRequestDetails(
-    BuildContext context,
-    String name,
-  ) =>
-      "${AppLocalizations.of(context)!.dashboardConnectionRequestAllowConnectionTo} $name";
-
-  static String numAssets(
-    BuildContext context,
-    int numAssets,
-  ) =>
-      "$numAssets ${Strings.of(context).numAssets}${numAssets != 1 ? "s" : ""}";
-
-  static String accountLinkedTo(
-    BuildContext context,
-    String name,
-  ) =>
-      "${Strings.of(context).accountLinkedTo} '$name'";
-
-  static String multiSigInviteReviewLandingDesc(
-    BuildContext context,
-    String accountName,
-  ) =>
-      '${Strings.of(context).multiSigInviteReviewLandingDesc} "$accountName" ${Strings.of(context).multiSigInviteReviewLandingMultiSigAccount}';
-
-  static String recoverPassphraseNetwork(BuildContext context, String name) =>
-      '${Strings.of(context).recoverPassphraseNetwork} $name';
-
-  static String recoverPassphraseWord(BuildContext context, int number) =>
-      '${Strings.of(context).recoverPassphraseWord} $number';
-
-  static String selectWordIndex(
-    BuildContext context,
-    String index,
-  ) =>
-      '${Strings.of(context).selectWord} #$index';
-
   static String displayDenomFormatted(
     BuildContext context,
     String displayDenom,
   ) =>
       "$displayDenom ${Strings.of(context).displayDelegated}";
-
-  static String displayDelegatorsWithCommission(
-    BuildContext context,
-    int delegators,
-    String commission,
-  ) =>
-      "$delegators ${Strings.of(context).displayDelegators} $dotSeparator $commission ${Strings.of(context).displayCommission}";
 
   static String stakingSuccessSuccessful(
           BuildContext context, String delegationType) =>
@@ -99,13 +56,4 @@ class Strings {
 
   static String proposalDetailsTitle(BuildContext context, int proposalId) =>
       "${Strings.of(context).proposalDetailsTitle} $proposalId";
-
-  static String proposalDetailsDepositsHash(
-    String deposited,
-    String depositPercentage,
-  ) =>
-      "$deposited ${Strings.displayHASH} ($depositPercentage)";
-
-  static String proposalDetailsHashNeeded(double needed) =>
-      "$needed ${Strings.displayHASH}";
 }

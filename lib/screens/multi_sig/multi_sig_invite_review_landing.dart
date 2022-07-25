@@ -53,8 +53,7 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                         ),
                         VerticalSpacer.largeX3(),
                         PwText(
-                          Strings.multiSigInviteReviewLandingDesc(
-                            context,
+                          Strings.of(context).multiSigInviteReviewLandingDesc(
                             name,
                           ),
                           style: PwTextStyle.body,

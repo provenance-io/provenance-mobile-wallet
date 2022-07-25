@@ -140,7 +140,7 @@ class AccountDescriptionRow extends StatelessWidget {
             text += ' • ';
           }
 
-          text += Strings.numAssets(context, numAssets);
+          text += Strings.of(context).nAssets(numAssets);
         }
 
         return Container(
@@ -211,7 +211,7 @@ class LinkedAccount extends StatelessWidget {
           HorizontalSpacer.large(),
           Expanded(
             child: PwText(
-              Strings.accountLinkedTo(context, name),
+              Strings.of(context).accountLinkedTo(name),
               style: PwTextStyle.footnote,
               color: PwColor.neutralNeutral,
             ),
