@@ -101,7 +101,9 @@ void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    get<CrashReportingService>().recordFlutterError(errorDetails);
+    if (get.isRegistered<CrashReportingService>()) {
+      get<CrashReportingService>().recordFlutterError(errorDetails);
+    }
   };
   runZonedGuarded(
     () async {
