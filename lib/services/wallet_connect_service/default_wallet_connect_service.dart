@@ -323,7 +323,7 @@ class DefaultWalletConnectService extends WalletConnectService
         if (accountId != null &&
             sessionStatus == WalletConnectSessionStatus.disconnected &&
             authStatus == AuthStatus.authenticated) {
-          this.tryRestoreSession(accountId);
+          tryRestoreSession(accountId);
         }
         break;
     }

@@ -1,3 +1,4 @@
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -25,7 +26,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = 1.25; // TODO: Replace this with a constant
+  double _gasEstimate = proto.defaultFeeAdjustment;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             PwListDivider.alternate(),
             PwSlider(
               title: Strings.stakingConfirmGasAdjustment,
-              startingValue: 1.25, // TODO: Replace this with a constant
+              startingValue: proto.defaultFeeAdjustment,
               min: 0,
               max: 5,
               onValueChanged: (value) {

@@ -60,12 +60,12 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/push_notification_helper.dart';
@@ -255,19 +255,13 @@ void main() {
       );
     },
     (error, stack) {
-      // TODO: Replace with unified logging once stacktraces can print.
-      final logger = Logger();
-      logger.e(
-        'Error',
-        error,
-        stack,
-      );
-
       if (get.isRegistered<CrashReportingService>()) {
         get<CrashReportingService>().recordError(
           error,
           stack: stack,
         );
+      } else {
+        logStatic('main', Level.error, 'Error: $error\n Stack: $stack');
       }
     },
   );
