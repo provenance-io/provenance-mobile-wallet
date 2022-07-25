@@ -305,7 +305,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+      onGenerateTitle: (context) => Strings.of(context).appName,
       theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
