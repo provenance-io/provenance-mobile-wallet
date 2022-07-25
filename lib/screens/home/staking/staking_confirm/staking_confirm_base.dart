@@ -79,6 +79,9 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
               startingValue: proto.defaultFeeAdjustment,
               min: 0,
               max: 5,
+              createLabel: (value) => value == proto.defaultFeeAdjustment
+                  ? "$value ${Strings.stakingConfirmDefault}"
+                  : "$value",
               onValueChanged: (value) {
                 setState(() {
                   _gasEstimate = value;
