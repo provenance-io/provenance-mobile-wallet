@@ -91,8 +91,6 @@ class StakingDelegationBloc extends Disposable {
   Future<void> doDelegate(
     double? gasAdjustment,
   ) async {
-    final details = _stakingDelegationDetails.value;
-
     await _sendMessage(
       gasAdjustment,
       _getDelegateMessage().toAny(),
