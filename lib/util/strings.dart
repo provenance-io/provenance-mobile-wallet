@@ -116,10 +116,4 @@ class Strings {
   static const notifyServiceErrorTitle = 'Service Error';
   static const notifyServiceErrorMessage =
       'Unfortunately our services are down at the moment';
-
-  static const required = 'Required';
-  static const sendAmountErrorInsufficient = "Insufficient";
-  static const sendAmountErrorTooManyDecimalPlaces = "too many decimal places";
-  static const sendAmountErrorGasEstimateNotReady =
-      "The estimated fee is not ready";
 }
