@@ -2,7 +2,6 @@ import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class Delegation {
   Delegation({required DelegationDto dto})

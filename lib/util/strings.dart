@@ -3,21 +3,6 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 
-extension StringExtension on String {
-  String capitalize() {
-    return '${this[0].toUpperCase()}${substring(1)}';
-  }
-
-  String formatNumber() {
-    var sections = split('.');
-    sections[0] = sections[0].replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    );
-    return sections.join('.');
-  }
-}
-
 class Strings {
   // For devs only
   static const notImplementedMessage = "Not Implemented";
