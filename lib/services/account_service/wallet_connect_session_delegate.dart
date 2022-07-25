@@ -48,19 +48,21 @@ class WalletConnectSessionDelegateEvents {
     other.onClose.listen(_onClose.add).addTo(_subscriptions);
   }
 
-  void clear() {
-    _subscriptions.clear();
+  Future<void> clear() async {
+    await _subscriptions.clear();
   }
 
-  void dispose() {
-    _subscriptions.dispose();
+  Future<void> dispose() async {
+    await _subscriptions.dispose();
 
-    _sessionRequest.close();
-    _signRequest.close();
-    _sendRequest.close();
-    _onDidError.close();
-    _onResponse.close();
-    _onClose.close();
+    await Future.wait([
+      _sessionRequest.close(),
+      _signRequest.close(),
+      _sendRequest.close(),
+      _onDidError.close(),
+      _onResponse.close(),
+      _onClose.close()
+    ]);
   }
 }
 

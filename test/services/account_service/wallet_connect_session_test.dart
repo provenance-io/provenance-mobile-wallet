@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 
+import '../../test_helpers.dart';
 import 'wallet_connect_session_test.mocks.dart';
 
 const coin = wallet.Coin.testNet;
@@ -26,6 +27,51 @@ final publicKey = privateKey.defaultKey().publicKey;
   KeyValueService,
 ])
 main() {
+  group("WalletConnectSessionEvents", () {
+    late WalletConnectSessionEvents source;
+    late WalletConnectSessionEvents listener;
+
+    setUp(() {
+      source = WalletConnectSessionEvents();
+      listener = WalletConnectSessionEvents();
+    });
+
+    test("Listeners are attached properly", () {
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+
+      listener.listen(source);
+
+      expect(source.state, StreamHasListener(true));
+      expect(source.error, StreamHasListener(true));
+    });
+
+    test("Listeners are removed on clear", () async {
+      listener.listen(source);
+
+      await listener.clear();
+
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+    });
+
+    test('dispose', () async {
+      listener.listen(source);
+
+      await listener.dispose();
+
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+
+      // ensure source stream is still open
+      expect(source.state, StreamClosed(false));
+      expect(source.error, StreamClosed(false));
+
+      expect(listener.state, StreamClosed(true));
+      expect(listener.error, StreamClosed(true));
+    });
+  });
+
   group("WalletConnectSession", () {
     MockWalletConnection? mockWalletConnection;
     MockWalletConnectSessionDelegate? mockWalletConnectSessionDelegate;

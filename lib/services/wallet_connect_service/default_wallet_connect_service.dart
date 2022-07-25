@@ -73,11 +73,14 @@ class DefaultWalletConnectService extends WalletConnectService
   Future<void> _setCurrentSession(WalletConnectSession? newSession) async {
     if (_currentSession != null) {
       try {
-        _currentSession!.delegateEvents.clear();
-        _currentSession!.sessionEvents.clear();
+        await Future.value([
+          _currentSession!.delegateEvents.clear(),
+          _currentSession!.sessionEvents.clear()
+        ]);
 
         await _queueServce
             .removeWalletConnectSessionGroup(_currentSession!.address);
+
         await _currentSession!.disconnect();
         await _currentSession!.dispose();
       } catch (e) {
@@ -243,6 +246,7 @@ class DefaultWalletConnectService extends WalletConnectService
       privateKey: privateKey,
       transactionHandler: _transactionHandler,
       address: address,
+      connection: connection,
       queueService: _queueServce,
       walletInfo: WalletInfo(
         accountDetails.id,

@@ -29,14 +29,13 @@ class WalletConnectSessionEvents {
     other.error.listen(_error.add).addTo(_subscriptions);
   }
 
-  void clear() {
-    _subscriptions.clear();
+  Future<void> clear() async {
+    await _subscriptions.clear();
   }
 
-  void dispose() {
-    _subscriptions.dispose();
-    _state.close();
-    _error.close();
+  Future<void> dispose() async {
+    await _subscriptions.dispose();
+    await Future.wait([_state.close(), _error.close()]);
   }
 }
 
@@ -129,8 +128,7 @@ class WalletConnectSession {
     // Keep socket open on the web by not disconnecting.
     // Allows restoration of connection when app is restarted.
     _connection.removeListener(_statusListener);
-    delegateEvents.dispose();
-    sessionEvents.dispose();
+    await Future.wait([delegateEvents.dispose(), sessionEvents.dispose()]);
   }
 
   Future<bool> signTransactionFinish({
