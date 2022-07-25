@@ -23,7 +23,6 @@ enum PwColor {
   negative,
   negative350,
   positive,
-  positive2,
   neutral,
   graphLine,
   graphFill,
@@ -88,9 +87,6 @@ mixin PwColorMixin on Widget {
           return (theme.colorScheme as ProvenanceColorScheme).graphPositive;
         }
         return null;
-      case PwColor.positive2:
-        // TODO: Put in theme.dart.
-        return Color(0XFF28CEA8);
       case PwColor.neutral:
         if (theme.colorScheme is ProvenanceColorScheme) {
           return (theme.colorScheme as ProvenanceColorScheme).graphNeutral;
