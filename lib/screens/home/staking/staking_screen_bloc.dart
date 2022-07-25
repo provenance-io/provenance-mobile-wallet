@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -171,6 +173,59 @@ class StakingScreenBloc extends PwPagingCache {
         return colorScheme.error;
     }
   }
+
+  Future<void> showMenu(
+    BuildContext context,
+  ) async {
+    var result = await showModalBottomSheet<ValidatorSortingState>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            PwGreyButton(
+              text: Strings.of(context).menuAlphabetically,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.alphabetically);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: Strings.of(context).menuCommission,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.commission);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: Strings.of(context).menuDelegators,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.delegators);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              text: Strings.of(context).menuVotingPower,
+              onPressed: () {
+                Navigator.of(context).pop(ValidatorSortingState.votingPower);
+              },
+            ),
+            PwListDivider(),
+            PwGreyButton(
+              enabled: false,
+              text: "",
+              // ignore: no-empty-block
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+    if (result != null) {
+      updateSort(result);
+    }
+  }
 }
 
 class StakingDetails {
@@ -203,18 +258,6 @@ enum ValidatorStatus {
 }
 
 extension ValidatorSortingStateExtension on ValidatorSortingState {
-  String get dropDownTitle {
-    switch (this) {
-      case ValidatorSortingState.votingPower:
-        return Strings.dropDownVotingPower;
-      case ValidatorSortingState.delegators:
-      case ValidatorSortingState.commission:
-        return name.capitalize();
-      case ValidatorSortingState.alphabetically:
-        return Strings.dropDownAlphabetically;
-    }
-  }
-
   List<ProvenanceValidator> sort(List<ProvenanceValidator> validators) {
     switch (this) {
       case ValidatorSortingState.votingPower:

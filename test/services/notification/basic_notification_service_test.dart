@@ -3,7 +3,10 @@ import 'package:provenance_wallet/services/notification/basic_notification_servi
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
-import 'package:provenance_wallet/util/strings.dart';
+
+const _notifyServiceErrorTitle = 'Service Error';
+const _notifyServiceErrorMessage =
+    'Unfortunately our services are down at the moment';
 
 Matcher _notificationMatcher(int count) {
   return predicate((args) {
@@ -14,11 +17,11 @@ Matcher _notificationMatcher(int count) {
     );
     expect(
       notificationInfo.title,
-      Strings.notifyServiceErrorTitle,
+      _notifyServiceErrorTitle,
     );
     expect(
       notificationInfo.message,
-      Strings.notifyServiceErrorMessage,
+      _notifyServiceErrorMessage,
     );
     expect(
       notificationInfo.kind,

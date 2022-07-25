@@ -86,7 +86,6 @@ class Strings {
   ) =>
       "$delegators ${Strings.of(context).displayDelegators} $dotSeparator $commission ${Strings.of(context).displayCommission}";
 
-  // TODO: The delegation type needs to be localized too.
   static String stakingSuccessSuccessful(
           BuildContext context, String delegationType) =>
       '$delegationType ${Strings.of(context).stakingSuccessSuccessful}';
@@ -113,42 +112,8 @@ class Strings {
   // TODO: Remove these. Everything was requiring BuildContext
   // TODO: and I'm not sure that's what we want. These Strings have
   // TODO: already been localized, so we just need to remove them.
+
   static const notifyServiceErrorTitle = 'Service Error';
-  static const notifyNetworkErrorTitle = 'Network Disconnected';
   static const notifyServiceErrorMessage =
       'Unfortunately our services are down at the moment';
-  static const notifyNetworkErrorMessage =
-      'It appears as though no network is connected.';
-
-  static const transactionFieldTrue = 'Yes';
-  static const transactionFieldFalse = 'No';
-  static const multiSigInvalidLink = 'Invalid link, please try again.';
-
-  static const dropDownAllMessageTypes = "All Message Types";
-  static const dropDownAllStatuses = "All Statuses";
-  static const dropDownVotingPower = "Voting Power";
-  static const dropDownAlphabetically = "Name";
-
-  static const stakingDelegationBlocBack = "Back";
-  static const stakingDelegationBlocClaimRewards = "Claim Rewards";
-
-  static const yourPinDoesNotMatchPleaseTryAgain =
-      "Your pin doesn't match. Please try again or go back and re-enter your pin.";
-
-  static const actionListSelected = "Selected";
-  static const actionListBasicAccount = "Basic";
-  static const actionListMultiSigAccount = "Multi-Sig";
-  static const actionListAction = "Action";
-  static const actionListActions = "Actions";
-  static const actionListLabelApproveSession = 'Approve Session';
-  static const actionListLabelSignatureRequested = 'Signature Requested';
-  static const actionListLabelTransactionRequested = 'Transaction Requested';
-  static const actionListLabelUnknown = 'Unknown';
-  static const actionListSubLabelActionRequired = 'Action Required';
-
-  static const required = 'Required';
-  static const sendAmountErrorInsufficient = "Insufficient";
-  static const sendAmountErrorTooManyDecimalPlaces = "too many decimal places";
-  static const sendAmountErrorGasEstimateNotReady =
-      "The estimated fee is not ready";
 }

@@ -31,19 +31,21 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         }
 
         return StakingConfirmBase(
-          appBarTitle: details.selectedDelegationType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
             get<StakingFlowBloc>()
                 .showTransactionData(bloc.getClaimRewardJson());
           },
           onTransactionSign: (gasAdjustment) async {
-            ModalLoadingRoute.showLoading(context);
-            // Give the loading modal time to display
-            await Future.delayed(Duration(milliseconds: 500));
+            ModalLoadingRoute.showLoading(
+              context,
+              minDisplayTime: Duration(milliseconds: 500),
+            );
             await _sendTransaction(
                 gasAdjustment, details.selectedDelegationType, context);
           },
-          signButtonTitle: Strings.stakingDelegationBlocClaimRewards,
+          signButtonTitle:
+              Strings.of(context).stakingDelegationBlocClaimRewards,
           children: [
             DetailsHeader(title: strings.stakingConfirmClaimRewardsDetails),
             PwListDivider.alternate(),

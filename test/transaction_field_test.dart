@@ -47,13 +47,18 @@ final messages = [
 
 const address = 'abcdefghijklmnop';
 
+final processor = MessageFieldProcessor(
+  transactionFieldTrue: "Yes",
+  transactionFieldFalse: "No",
+);
+
 void main() {
   test('Finds address', () {
     final send = MsgSend(
       fromAddress: address,
     );
     final json = send.toProto3Json() as Map<String, dynamic>;
-    final processor = MessageFieldProcessor();
+
     final group = processor.findFields(json);
     expect(group.fields[0] is MessageField, isTrue);
 
@@ -73,7 +78,6 @@ void main() {
       ],
     );
     final json = send.toProto3Json() as Map<String, dynamic>;
-    final processor = MessageFieldProcessor();
     final group = processor.findFields(json);
     expect(group.fields[0] is MessageFieldGroup, isTrue);
 

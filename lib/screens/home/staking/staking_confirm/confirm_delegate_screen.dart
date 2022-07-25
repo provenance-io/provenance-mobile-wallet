@@ -31,7 +31,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
           return Container();
         }
         return StakingConfirmBase(
-          appBarTitle: details.selectedDelegationType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
             get<StakingFlowBloc>()
                 .showTransactionData(bloc.getDelegateMessageJson());
@@ -43,7 +43,8 @@ class ConfirmDelegateScreen extends StatelessWidget {
             );
             await _sendTransaction(bloc, details, gasAdjustment, context);
           },
-          signButtonTitle: details.selectedDelegationType.dropDownTitle,
+          signButtonTitle:
+              details.selectedDelegationType.getDropDownTitle(context),
           children: [
             DetailsHeader(title: strings.stakingConfirmDelegating),
             PwListDivider.alternate(),

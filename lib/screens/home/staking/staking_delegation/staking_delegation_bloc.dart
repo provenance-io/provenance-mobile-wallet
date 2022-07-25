@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -241,16 +242,18 @@ enum SelectedDelegationType {
 }
 
 extension SelectedDelegationTypeExtension on SelectedDelegationType {
-  String get dropDownTitle {
+  String getDropDownTitle(BuildContext context) {
     switch (this) {
       case SelectedDelegationType.initial:
-        return Strings.stakingDelegationBlocBack;
+        return Strings.of(context).stakingDelegationBlocBack;
       case SelectedDelegationType.delegate:
+        return Strings.of(context).menuDelegate;
       case SelectedDelegationType.redelegate:
+        return Strings.of(context).menuRedelegate;
       case SelectedDelegationType.undelegate:
-        return name.capitalize();
+        return Strings.of(context).menuUndelegate;
       case SelectedDelegationType.claimRewards:
-        return Strings.stakingDelegationBlocClaimRewards;
+        return Strings.of(context).stakingDelegationBlocClaimRewards;
     }
   }
 }

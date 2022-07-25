@@ -115,6 +115,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   Future<void> showSelectAmount(String address, SendAsset asset) {
     _asset = asset;
     _receivingAddress = address;
+    final strings = Strings.of(context);
 
     final bloc = SendAmountBloc(
       widget.accountDetails,
@@ -122,6 +123,10 @@ class SendFlowState extends FlowBaseState<SendFlow>
       _asset!,
       get<PriceService>(),
       this,
+      gasEstimateNotReadyString: strings.sendAmountErrorGasEstimateNotReady,
+      insufficientString: strings.sendAmountErrorInsufficient,
+      requiredString: strings.required,
+      tooManyDecimalPlacesString: strings.sendAmountErrorTooManyDecimalPlaces,
     )..init();
 
     get.registerSingleton(bloc);

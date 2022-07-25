@@ -75,6 +75,7 @@ class AddAccountFlow extends FlowBase {
 class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
     implements AddAccountFlowNavigator {
   late final AddAccountFlowBloc _bloc;
+  late final String _multiSigInvalidLink;
 
   @override
   void initState() {
@@ -84,6 +85,8 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
       navigator: this,
       origin: widget.origin,
     );
+
+    _multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
   }
 
   @override
@@ -278,6 +281,7 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
 
     if (link != null) {
       await _bloc.submitMultiSigJoinLink(
+        _multiSigInvalidLink,
         link,
         AddAccountScreen.multiSigJoinScanQrCode,
       );

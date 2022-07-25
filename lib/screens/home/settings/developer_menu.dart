@@ -46,7 +46,10 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.httpClientDiagnostics500,
                   !data,
                 );
-                get<HomeBloc>().load();
+                get<HomeBloc>().load(
+                  allMessageTypes: Strings.of(context).dropDownAllMessageTypes,
+                  allStatuses: Strings.of(context).dropDownAllStatuses,
+                );
               },
             );
           },
@@ -71,7 +74,10 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.enableMultiSig,
                   !data,
                 );
-                get<HomeBloc>().load();
+                get<HomeBloc>().load(
+                  allMessageTypes: Strings.of(context).dropDownAllMessageTypes,
+                  allStatuses: Strings.of(context).dropDownAllStatuses,
+                );
               },
             );
           },
