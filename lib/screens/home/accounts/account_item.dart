@@ -137,7 +137,7 @@ class AccountDescriptionRow extends StatelessWidget {
 
         if (numAssets != null) {
           if (isSelected) {
-            text += ' • ';
+            text += ' ${Strings.dotSeparator} ';
           }
 
           text += Strings.of(context).nAssets(numAssets);

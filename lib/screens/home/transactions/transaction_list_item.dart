@@ -13,7 +13,6 @@ class TransactionListItem extends StatelessWidget {
 
   final String address;
   final Transaction item;
-  final textDivider = " • ";
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -52,7 +51,9 @@ class TransactionListItem extends StatelessWidget {
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      item.messageType + textDivider + item.formattedTime,
+                      item.messageType +
+                          " ${Strings.dotSeparator} " +
+                          item.formattedTime,
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,

@@ -111,7 +111,7 @@ class ActionGroupHeaderCell extends StatelessWidget {
               Text(group.label),
               VerticalSpacer.xSmall(),
               Text(
-                "${group.subLabel} • ${group.items.length} ${group.items.length != 1 ? Strings.of(context).actionListActions : Strings.of(context).actionListAction}",
+                "${group.subLabel} ${Strings.dotSeparator} ${group.items.length} ${Strings.of(context).nActionListActions(group.items.length)}",
               ),
             ],
           )),

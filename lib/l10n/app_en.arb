@@ -339,8 +339,15 @@
   "actionListSelected": "Selected",
   "actionListBasicAccount": "Basic",
   "actionListMultiSigAccount": "Multi-Sig",
-  "actionListAction": "Action",
-  "actionListActions": "Actions",
+  "nActionListActions": "{count,plural, =1{Action} other{Actions}}",
+  "@nActionListActions": {
+  "description": "A plural label for actions.",
+  "placeholders": {
+    "count": {
+      "type": "int"
+      }
+    }
+  },
   "actionListActionsCellTitle": "Actions",
   "actionListNotificationsCellTitle": "Notifications",
   "actionListLabelApproveSession": "Approve Session",
