@@ -101,7 +101,9 @@ void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    get<CrashReportingService>().recordFlutterError(errorDetails);
+    if (get.isRegistered<CrashReportingService>()) {
+      get<CrashReportingService>().recordFlutterError(errorDetails);
+    }
   };
   runZonedGuarded(
     () async {
@@ -303,7 +305,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+      onGenerateTitle: (context) => Strings.of(context).appName,
       theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
