@@ -139,22 +139,32 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                             : _formatter.format(_proposal.endTime),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.withHash(
+                      DetailsItem.withRowChildren(
                         title: strings.proposalDetailsDeposits,
-                        hashString: Strings.of(context).hashDeposited(
-                          _proposal.currentDepositFormatted
-                              .toString()
-                              .formatNumber(),
-                          _proposal.depositPercentage,
-                        ),
-                        context: context,
+                        children: [
+                          PwIcon(
+                            PwIcons.hashLogo,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                          ),
+                          HorizontalSpacer.small(),
+                          PwText(
+                            Strings.of(context).hashDeposited(
+                              _proposal.currentDepositFormatted
+                                  .toString()
+                                  .formatNumber(),
+                              _proposal.depositPercentage,
+                            ),
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: PwTextStyle.footnote,
+                          ),
+                        ],
                       ),
                       DetailsItem.withHash(
                         padding: EdgeInsets.only(bottom: Spacing.large),
                         title: strings.proposalDetailsNeededDeposit,
-                        hashString: strings.hashAmount(
-                          _proposal.neededDepositFormatted.toString(),
-                        ),
+                        hashString: _proposal.neededDepositFormatted.toString(),
                         context: context,
                       ),
                       SinglePercentageBarChart(

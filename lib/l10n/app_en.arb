@@ -380,7 +380,7 @@
          "type": "int",
          "example": "5"
       },
-      "comission": {
+      "commission": {
          "type": "String",
          "example": "100%"
       }
