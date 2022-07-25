@@ -77,8 +77,6 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             PwGasAdjustmentSlider(
               title: Strings.of(context).stakingConfirmGasAdjustment,
               startingValue: defaultGasEstimate,
-              min: 0,
-              max: 5,
               onValueChanged: (value) {
                 setState(() {
                   _gasEstimate = value;

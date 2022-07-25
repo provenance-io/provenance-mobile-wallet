@@ -36,7 +36,7 @@ final isSelectedGroup = ActionListGroup(
 
 main() {
   group("ActionItemGroupStatus", () {
-    Matcher _StatusMatcher(
+    Matcher createStatusMatcher(
         WidgetTester widgetTester, Color color, String label) {
       return predicate((arg) {
         final statusWidget = arg as ActionItemGroupStatus;
@@ -73,7 +73,7 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(
+          createStatusMatcher(
             tester,
             (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
                 .actionNotListSelectedColor,
@@ -88,7 +88,7 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(
+          createStatusMatcher(
             tester,
             (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
                 .actionNotListSelectedColor,
@@ -103,7 +103,7 @@ main() {
 
       expect(
           status,
-          _StatusMatcher(
+          createStatusMatcher(
             tester,
             (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
                 .actionListSelectedColor,

@@ -8,7 +8,6 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -251,16 +250,6 @@ class HomeBloc extends Disposable {
     load(
         allMessageTypes: details.allMessageTypes,
         allStatuses: details.allStatuses);
-  }
-
-  Future<bool> _clearSessionData() async {
-    final keyValueService = get<KeyValueService>();
-    final sessionDataRemoved =
-        await keyValueService.removeString(PrefKey.sessionData);
-    final timeStampRemoved =
-        await keyValueService.removeString(PrefKey.sessionSuspendedTime);
-
-    return sessionDataRemoved && timeStampRemoved;
   }
 
   Future<void> _handleDynamicLink(Uri link) async {

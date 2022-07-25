@@ -104,8 +104,6 @@ void main() {
   late MockAccountServiceEvents accountServiceEvents;
   late MockConnectionFactory mockConnectionFactory;
 
-  late WalletConnectionDelegate capturedDelegate;
-
   setUp(() {
     mockWalletConnection = MockWalletConnection();
 
