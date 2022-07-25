@@ -303,7 +303,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
       theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
@@ -437,8 +437,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (!isConnected) {
         notificationService.notify(NotificationInfo(
           id: networkDisconnectedId,
-          title: Strings.of(context).notifyNetworkErrorTitle,
-          message: Strings.of(context).notifyNetworkErrorMessage,
+          title: BasicNotificationServiceStrings.notifyNetworkErrorTitle,
+          message: BasicNotificationServiceStrings.notifyNetworkErrorMessage,
           kind: NotificationKind.warn,
         ));
       } else {

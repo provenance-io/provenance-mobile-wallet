@@ -34,14 +34,14 @@ class Strings {
   // Import for 'AppLocalizations' doesn't show up in the autocomplete,
   // so this makes it easier to use localizations.
   static AppLocalizations of(BuildContext context) {
-    return AppLocalizations.of(context);
+    return AppLocalizations.of(context)!;
   }
 
   static String dashboardConnectionRequestDetails(
     BuildContext context,
     String name,
   ) =>
-      "${AppLocalizations.of(context).dashboardConnectionRequestAllowConnectionTo} $name";
+      "${AppLocalizations.of(context)!.dashboardConnectionRequestAllowConnectionTo} $name";
 
   static String numAssets(
     BuildContext context,
@@ -108,12 +108,4 @@ class Strings {
 
   static String proposalDetailsHashNeeded(double needed) =>
       "$needed ${Strings.displayHASH}";
-
-  // TODO: Remove these. Everything was requiring BuildContext
-  // TODO: and I'm not sure that's what we want. These Strings have
-  // TODO: already been localized, so we just need to remove them.
-
-  static const notifyServiceErrorTitle = 'Service Error';
-  static const notifyServiceErrorMessage =
-      'Unfortunately our services are down at the moment';
 }
