@@ -32,7 +32,7 @@ class AccountPortfolio extends StatelessWidget {
           PwText(
             Strings.of(context).portfolioValue,
             color: PwColor.neutralNeutral,
-            style: PwTextStyle.subhead,
+            style: PwTextStyle.title,
           ),
           StreamBuilder<List<Asset>?>(
             initialData: bloc.assetList.value,

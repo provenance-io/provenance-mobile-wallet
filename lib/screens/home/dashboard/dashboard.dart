@@ -224,23 +224,23 @@ class _DashboardState extends State<Dashboard> {
                       PwText(
                         name,
                         key: Dashboard.keyAccountNameText,
-                        style: PwTextStyle.subhead,
+                        style: PwTextStyle.footnote,
                         overflow: TextOverflow.fade,
                       ),
                       Row(
                         children: [
                           Expanded(
                             child: PwText(
-                              abbreviateAddress(accountAddress),
+                              "(${abbreviateAddress(accountAddress)})",
                               key: Dashboard.keyAccountAddressText,
-                              style: PwTextStyle.body,
+                              style: PwTextStyle.footnote,
                               overflow: TextOverflow.fade,
                             ),
                           ),
                           if (coin != null)
                             PwText(
                               coin.displayName,
-                              style: PwTextStyle.body,
+                              style: PwTextStyle.footnote,
                             ),
                         ],
                       ),
@@ -275,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
             AccountPortfolio(
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
-            VerticalSpacer.medium(),
+            VerticalSpacer.xxLarge(),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: Spacing.large,
@@ -286,7 +286,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   PwText(
                     Strings.of(context).myAssets,
-                    style: PwTextStyle.title,
+                    style: PwTextStyle.subhead,
                   ),
                   Expanded(child: Container()),
                 ],
