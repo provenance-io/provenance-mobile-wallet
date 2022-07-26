@@ -547,7 +547,7 @@
   "stakingConfirmDelegating": "Delegating",
   "stakingConfirmDelegationDetails": "Delegation Details",
   "stakingConfirmAmountToDelegate": "Amount to Delegate",
-  "nAssets": "{count,plural, =1{Asset} other{Assets}}",
+  "nAssets": "{count,plural, =1{{count} Asset} other{{count} Assets}}",
   "@nAssets": {
   "description": "A plural label for assets.",
   "placeholders": {
