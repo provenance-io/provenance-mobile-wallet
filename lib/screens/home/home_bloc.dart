@@ -19,7 +19,12 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeBloc extends Disposable {
-  HomeBloc() {
+  HomeBloc({
+    required String allMessageTypes,
+    required String allStatuses,
+  }) {
+    _allMessageTypes = allMessageTypes;
+    _allStatuses = allStatuses;
     get<DeepLinkService>()
         .link
         .listen(_handleDynamicLink)
@@ -57,6 +62,8 @@ class HomeBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
   final _walletConnectService = get<WalletConnectService>();
+  late final String _allMessageTypes;
+  late final String _allStatuses;
 
   var _isFirstLoad = true;
 
@@ -68,8 +75,6 @@ class HomeBloc extends Disposable {
   Stream<String> get error => _error;
 
   Future<void> load({
-    required String allMessageTypes,
-    required String allStatuses,
     bool showLoading = true,
   }) async {
     if (showLoading) {
@@ -107,10 +112,10 @@ class HomeBloc extends Disposable {
 
       _transactionDetails.tryAdd(
         TransactionDetails(
-          selectedStatus: allMessageTypes,
-          selectedType: allStatuses,
-          allMessageTypes: allMessageTypes,
-          allStatuses: allStatuses,
+          selectedStatus: _allStatuses,
+          selectedType: _allMessageTypes,
+          allMessageTypes: _allMessageTypes,
+          allStatuses: _allStatuses,
           address: account?.publicKey?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
@@ -239,17 +244,11 @@ class HomeBloc extends Disposable {
   }
 
   void _onSelected(Account? details) {
-    final details = _transactionDetails.value;
-    load(
-        allMessageTypes: details.allMessageTypes,
-        allStatuses: details.allStatuses);
+    load();
   }
 
   void _onTransaction(TransactionResponse response) {
-    final details = _transactionDetails.value;
-    load(
-        allMessageTypes: details.allMessageTypes,
-        allStatuses: details.allStatuses);
+    load();
   }
 
   Future<void> _handleDynamicLink(Uri link) async {
