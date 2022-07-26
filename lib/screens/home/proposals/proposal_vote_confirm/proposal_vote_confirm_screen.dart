@@ -132,7 +132,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                     value: widget.proposal.title,
                   ),
                   PwListDivider.alternate(),
-                  DetailsItem.alternateChild(
+                  DetailsItem(
                       title: strings.proposalVoteConfirmVoteOption,
                       endChild:
                           ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),

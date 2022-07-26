@@ -28,15 +28,6 @@ class DetailsItem extends StatelessWidget {
     );
   }
 
-  DetailsItem.alternateChild({
-    Key? key,
-    this.padding,
-    required this.title,
-    required this.endChild,
-    this.color = PwColor.neutral200,
-    this.style = PwTextStyle.footnote,
-  }) : super(key: key);
-
   DetailsItem.withRowChildren({
     Key? key,
     this.padding,

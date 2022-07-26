@@ -104,7 +104,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       ),
                       PwListDivider.alternate(),
                       if (widget.vote != null)
-                        DetailsItem.alternateChild(
+                        DetailsItem(
                           title: strings.proposalDetailsMyStatus,
                           endChild: ProposalVoteChip(
                             vote: widget.vote!,
@@ -239,7 +239,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         ),
                         color: Theme.of(context).colorScheme.neutral600,
                       ),
-                      DetailsItem.alternateChild(
+                      DetailsItem(
                         title: strings.proposalDetailsTotalVotes,
                         endChild: PwText(
                           _proposal.totalAmount
