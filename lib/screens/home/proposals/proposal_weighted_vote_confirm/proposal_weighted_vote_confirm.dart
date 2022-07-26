@@ -111,12 +111,12 @@ class _ProposalWeightedVoteConfirmScreenState
                         title: strings.proposalVoteConfirmVotingDetails,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalWeightedVoteProposalId,
                         value: widget.proposal.proposalId.toString(),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsTitleString,
                         value: widget.proposal.title,
                       ),

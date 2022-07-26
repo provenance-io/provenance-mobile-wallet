@@ -122,12 +122,12 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   DetailsHeader(
                       title: strings.proposalVoteConfirmVotingDetails),
                   PwListDivider.alternate(),
-                  DetailsItem.alternateStrings(
+                  DetailsItem.fromStrings(
                     title: strings.proposalVoteConfirmProposalId,
                     value: widget.proposal.proposalId.toString(),
                   ),
                   PwListDivider.alternate(),
-                  DetailsItem.alternateStrings(
+                  DetailsItem.fromStrings(
                     title: strings.proposalVoteConfirmTitle,
                     value: widget.proposal.title,
                   ),
