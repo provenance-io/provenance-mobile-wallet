@@ -85,8 +85,6 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
       navigator: this,
       origin: widget.origin,
     );
-
-    _multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
   }
 
   @override
@@ -97,10 +95,13 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   }
 
   @override
-  Widget createStartPage() => AccountTypeScreen(
-        bloc: _bloc,
-        includeMultiSig: widget.includeMultiSig,
-      );
+  Widget createStartPage() {
+    _multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
+    return AccountTypeScreen(
+      bloc: _bloc,
+      includeMultiSig: widget.includeMultiSig,
+    );
+  }
 
   @override
   void showAccountName(int currentStep, int totalSteps) {
