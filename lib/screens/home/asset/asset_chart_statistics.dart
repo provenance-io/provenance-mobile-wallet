@@ -42,7 +42,7 @@ class AssetChartStatistics extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 0.0,
                 crossAxisCount: 2,
-                mainAxisSpacing: Spacing.xxLarge,
+                mainAxisSpacing: Spacing.large,
                 childAspectRatio: 2.8,
                 children: [
                   Column(

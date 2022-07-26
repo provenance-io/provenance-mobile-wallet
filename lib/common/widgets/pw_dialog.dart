@@ -40,7 +40,7 @@ class PwDialog {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +127,7 @@ class PwDialog {
               children: [
                 Padding(
                   padding: EdgeInsets.all(
-                    Spacing.xxLarge,
+                    Spacing.large,
                   ),
                   child: content ??
                       PwText(

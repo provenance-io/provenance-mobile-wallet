@@ -25,7 +25,9 @@ class WordSelectorState extends State<WordSelector> {
     final bloc = widget.bloc;
 
     return Padding(
-      padding: EdgeInsets.only(left: Spacing.xxLarge, right: Spacing.xxLarge),
+      padding: EdgeInsets.symmetric(
+        horizontal: Spacing.large,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

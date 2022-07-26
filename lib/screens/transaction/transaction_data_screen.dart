@@ -26,7 +26,7 @@ class TransactionDataScreen extends StatelessWidget {
               VerticalSpacer.xxLarge(),
               Container(
                 margin: EdgeInsets.symmetric(
-                  horizontal: Spacing.xxLarge,
+                  horizontal: Spacing.large,
                 ),
                 child: TransactionData(
                   data: data,

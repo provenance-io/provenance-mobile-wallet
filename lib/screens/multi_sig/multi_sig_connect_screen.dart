@@ -106,7 +106,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                   VerticalSpacer.xxLarge(),
                   Container(
                     margin: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
+                      horizontal: Spacing.large,
                     ),
                     child: PwText(
                       strings.multiSigConnectDesc,
@@ -120,7 +120,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                     children: [
                       Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                         ),
                         child: PwText(
                           strings.multiSigConnectSelectionLabel,
@@ -143,7 +143,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(
-                        horizontal: Spacing.xxLarge,
+                        horizontal: Spacing.large,
                       ),
                       padding: EdgeInsets.symmetric(
                         horizontal: Spacing.medium,

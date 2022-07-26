@@ -63,7 +63,7 @@ class TransactionTabState extends State<TransactionTab> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Column(
                     children: [
@@ -119,7 +119,7 @@ class TransactionTabState extends State<TransactionTab> {
                     children: [
                       ListView.separated(
                         padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                           vertical: 20,
                         ),
                         controller: _scrollController,

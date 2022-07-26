@@ -29,7 +29,7 @@ class MultiSigInviteScreen extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Column(
                     children: [

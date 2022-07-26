@@ -42,9 +42,8 @@ class NotificationBar extends StatelessWidget {
                 top: Spacing.large,
                 bottom: Spacing.large,
               ),
-              padding: EdgeInsets.symmetric(
-                vertical: Spacing.large,
-                horizontal: Spacing.xxLarge,
+              padding: EdgeInsets.all(
+                Spacing.large,
               ),
               color: backgroundColor,
               child: Row(

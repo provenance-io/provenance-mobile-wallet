@@ -37,7 +37,7 @@ class ConnectionDetailsModal extends StatelessWidget {
                 DetailsItem(
                   title: Strings.of(context).platform,
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                     vertical: Spacing.xLarge,
                   ),
                   endChild: Row(
@@ -55,7 +55,7 @@ class ConnectionDetailsModal extends StatelessWidget {
                 DetailsItem(
                   title: Strings.of(context).url,
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                     vertical: Spacing.xLarge,
                   ),
                   endChild: Flexible(

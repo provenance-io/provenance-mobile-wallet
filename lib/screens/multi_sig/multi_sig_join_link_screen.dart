@@ -72,7 +72,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Form(
                     key: _formKey,

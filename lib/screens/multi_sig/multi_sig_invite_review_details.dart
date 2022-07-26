@@ -41,7 +41,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
         actions: [
           Container(
             padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
+              right: Spacing.large,
             ),
             child: PwTextButton.shrinkWrap(
               child: PwText(
@@ -69,7 +69,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                 VerticalSpacer.largeX4(),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Column(
                     children: [
