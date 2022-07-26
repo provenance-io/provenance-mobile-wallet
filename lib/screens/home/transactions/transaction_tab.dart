@@ -57,7 +57,7 @@ class TransactionTabState extends State<TransactionTab> {
                   elevation: 0.0,
                   title: PwText(
                     Strings.of(context).transactionDetails,
-                    style: PwTextStyle.subhead,
+                    style: PwTextStyle.footnote,
                   ),
                   leading: Container(),
                 ),
