@@ -114,7 +114,7 @@ class PwDialog {
             title: header ??
                 PwText(
                   title ?? Strings.of(context).appName,
-                  style: PwTextStyle.subhead,
+                  style: PwTextStyle.footnote,
                   textAlign: TextAlign.left,
                 ),
             leading: Container(),

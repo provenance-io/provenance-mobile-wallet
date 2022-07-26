@@ -64,8 +64,8 @@ class AccountsScreenState extends State<AccountsScreen> {
           Expanded(
             child: Container(
               padding: EdgeInsets.only(
-                left: Spacing.xxLarge,
-                right: Spacing.xxLarge,
+                left: Spacing.large,
+                right: Spacing.large,
                 top: Spacing.medium,
               ),
               child: StreamBuilder<int>(
