@@ -5,14 +5,13 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
-class WalletConnectSessionEvents {
+class WalletConnectSessionEvents { 
   final _subscriptions = CompositeSubscription();
 
   final _state = BehaviorSubject.seeded(
@@ -39,21 +38,56 @@ class WalletConnectSessionEvents {
   }
 }
 
+class WalletConnectSessionCapturingDelegate
+    implements WalletConnectionDelegate {
+  WalletConnectSessionCapturingDelegate(this.session, this.childDelegte);
+
+  final WalletConnectionDelegate childDelegte;
+  final WalletConnectSession session;
+
+  @override
+  void onApproveSession(int requestId, SessionRequestData data) {
+    session._startSession(data.peerId, data.remotePeerId, data.clientMeta);
+    childDelegte.onApproveSession(requestId, data);
+  }
+
+  @override
+  void onApproveSign(
+      int requestId, String description, String address, List<int> msg) {
+    childDelegte.onApproveSign(requestId, description, address, msg);
+  }
+
+  @override
+  void onApproveTransaction(int requestId, String description, String address,
+      SignTransactionData signTransactionData) {
+    childDelegte.onApproveTransaction(
+        requestId, description, address, signTransactionData);
+  }
+
+  @override
+  void onClose() {
+    childDelegte.onClose();
+  }
+
+  @override
+  void onError(Exception exception) {
+    childDelegte.onError(exception);
+  }
+}
+
 class WalletConnectSession {
-  WalletConnectSession({
-    required this.accountId,
-    required this.coin,
-    required WalletConnection connection,
-    required WalletConnectSessionDelegate delegate,
-    required RemoteNotificationService remoteNotificationService,
-    required KeyValueService keyValueService,
-  })  : _connection = connection,
+  WalletConnectSession(
+      {required this.accountId,
+      required this.coin,
+      required WalletConnection connection,
+      required WalletConnectSessionDelegate delegate,
+      required RemoteNotificationService remoteNotificationService})
+      : _connection = connection,
         _remoteNotificationService = remoteNotificationService,
         _delegate = delegate,
         sessionEvents = WalletConnectSessionEvents(),
         delegateEvents = WalletConnectSessionDelegateEvents()
-          ..listen(delegate.events),
-        _keyValueService = keyValueService;
+          ..listen(delegate.events);
 
   static const inactivityTimeout = Duration(minutes: 30);
   Timer? _inactivityTimer;
@@ -62,14 +96,31 @@ class WalletConnectSession {
   final WalletConnection _connection;
   final WalletConnectSessionDelegate _delegate;
   final RemoteNotificationService _remoteNotificationService;
-  final KeyValueService _keyValueService;
   final String accountId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
 
-  String? topic;
+  String? _peerId;
+  String? _remotePeerId;
+  ClientMeta? _clientMeta;
 
   WalletConnectAddress get address => _connection.address;
+  String? get peerId => _peerId;
+  String? get remotePeerId => _remotePeerId;
+  ClientMeta? get clientMeta => _clientMeta;
+
+  void _startSession(
+      String peerId, String remotePeerId, ClientMeta clientMeta) {
+    _peerId = peerId;
+    _remotePeerId = remotePeerId;
+    _clientMeta = clientMeta;
+  }
+
+  void _endSession() {
+    _peerId = null;
+    _remotePeerId = null;
+    _clientMeta = null;
+  }
 
   Future<bool> connect([
     WalletConnectSessionRestoreData? restoreData,
@@ -80,7 +131,10 @@ class WalletConnectSession {
     try {
       _connection.addListener(_statusListener);
 
-      await _connection.connect(_delegate, restoreData?.data);
+      final wrapperDelegate =
+          WalletConnectSessionCapturingDelegate(this, _delegate);
+
+      await _connection.connect(wrapperDelegate, restoreData?.data);
 
       success = true;
 
@@ -88,12 +142,12 @@ class WalletConnectSession {
         _startInactivityTimer(timeout);
 
         log("Restored session: ${restoreData.data}");
+
+        _startSession(restoreData.data.peerId, restoreData.data.remotePeerId,
+            restoreData.clientMeta);
+
         sessionEvents._state.value =
             WalletConnectSessionState.connected(restoreData.clientMeta);
-
-        topic = restoreData.data.peerId;
-
-        _remoteNotificationService.registerForPushNotifications(topic!);
       }
     } on Exception catch (e) {
       _inactivityTimer?.cancel();
@@ -118,8 +172,10 @@ class WalletConnectSession {
     if (_connection.value != WalletConnectState.disconnected) {
       await _connection.disconnect();
 
-      _remoteNotificationService.unregisterForPushNotifications(topic!);
+      _remoteNotificationService.unregisterForPushNotifications(_peerId!);
     }
+
+    _endSession();
 
     return true;
   }
@@ -159,17 +215,13 @@ class WalletConnectSession {
       sessionEvents._state.value =
           WalletConnectSessionState.connected(details.data.clientMeta);
 
-      topic = details.data.peerId;
-      _remoteNotificationService.registerForPushNotifications(topic!);
+      _remoteNotificationService.registerForPushNotifications(_peerId!);
     }
 
     return success;
   }
 
   void _disconnect() {
-    _keyValueService.removeString(
-      PrefKey.sessionSuspendedTime,
-    );
     _inactivityTimer?.cancel();
     _inactivityTimer = null;
     _connection.removeListener(_statusListener);
@@ -190,10 +242,6 @@ class WalletConnectSession {
   }
 
   void _startInactivityTimer(Duration inactivityTimeout) {
-    _keyValueService.setString(
-      PrefKey.sessionSuspendedTime,
-      DateTime.now().toIso8601String(),
-    );
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(inactivityTimeout, () {
       disconnect();

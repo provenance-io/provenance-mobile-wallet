@@ -71,6 +71,10 @@ class DefaultWalletConnectService extends WalletConnectService
   }
 
   Future<void> _setCurrentSession(WalletConnectSession? newSession) async {
+    if (_currentSession == newSession) {
+      return;
+    }
+
     if (_currentSession != null) {
       try {
         await Future.value([
@@ -163,7 +167,6 @@ class DefaultWalletConnectService extends WalletConnectService
       delegate: delegate,
       coin: accountDetails.publicKey!.coin,
       remoteNotificationService: _remoteNotificationService,
-      keyValueService: _keyValueService,
     );
 
     WalletConnectSessionRestoreData? restoreData;
@@ -208,8 +211,12 @@ class DefaultWalletConnectService extends WalletConnectService
     }
 
     if (data == null || suspensionTime == null) {
+      final wcAddress = (data?.address.isNotEmpty ?? false)
+          ? WalletConnectAddress.create(data!.address)
+          : null;
+
       _log("No WalletConnect session to restore");
-      await _removeSessionData();
+      await _removeSessionData(wcAddress);
       return false;
     }
 
@@ -261,7 +268,6 @@ class DefaultWalletConnectService extends WalletConnectService
       delegate: delegate,
       coin: accountDetails.publicKey!.coin,
       remoteNotificationService: _remoteNotificationService,
-      keyValueService: _keyValueService,
     );
 
     WalletConnectSessionRestoreData restoreData =
@@ -286,7 +292,7 @@ class DefaultWalletConnectService extends WalletConnectService
           await session.dispose();
 
           _log("The stored session has expired");
-          await _removeSessionData();
+          await _removeSessionData(connection.address);
           return false;
         } else {
           _log("Previous session has been restored");
@@ -319,37 +325,20 @@ class DefaultWalletConnectService extends WalletConnectService
       return false;
     }
 
-    bool success = false;
-    final approved = await session.approveSession(
+    final success = await session.approveSession(
       details: details,
       allowed: allowed,
     );
 
-    if (approved) {
-      final remotePeerId = details.data.remotePeerId;
-      final peerId = details.data.peerId;
-      final address = details.data.address.raw;
-
-      final data = SessionData(
-        session.accountId,
-        peerId,
-        remotePeerId,
-        address,
-        details.data.clientMeta,
-      );
-
-      _keyValueService.setString(
-          PrefKey.sessionData, jsonEncode(data.toJson()));
-      success = true;
-    }
     return success;
   }
 
   @override
   Future<bool> disconnectSession() async {
+    final currentAddress = _currentSession?.address;
     await _setCurrentSession(null);
 
-    await _removeSessionData();
+    await _removeSessionData(currentAddress);
 
     return true;
   }
@@ -411,12 +400,50 @@ class DefaultWalletConnectService extends WalletConnectService
     }
   }
 
-  Future<void> _removeSessionData() {
+  Future<void> _removeSessionData([WalletConnectAddress? address]) {
+    Future<void> removeSessionGroupFuture;
+
+    if (address != null) {
+      removeSessionGroupFuture =
+          _queueServce.removeWalletConnectSessionGroup(address);
+    } else {
+      removeSessionGroupFuture = Future.value();
+    }
+
     _log("Removing session data");
     return Future.wait([
       _keyValueService.removeString(PrefKey.sessionData),
-      _keyValueService.removeString(PrefKey.sessionSuspendedTime)
+      _keyValueService.removeString(PrefKey.sessionSuspendedTime),
+      removeSessionGroupFuture
     ]);
+  }
+
+  Future<void> _tryStoreSession(WalletConnectSession session) async {
+    final remotePeerId = session.remotePeerId;
+    final peerId = session.peerId;
+    final address = session.address.raw;
+    final clientMeta = session.clientMeta;
+
+    if (remotePeerId != null && peerId != null && clientMeta != null) {
+      final data = SessionData(
+        session.accountId,
+        peerId,
+        remotePeerId,
+        address,
+        clientMeta,
+      );
+
+      final sessionJson = jsonEncode(data.toJson());
+      final suspensionTime = DateTime.now().toIso8601String();
+
+      _log("Storing session state: $sessionJson");
+
+      await Future.wait([
+        _keyValueService.setString(PrefKey.sessionData, sessionJson),
+        _keyValueService.setString(
+            PrefKey.sessionSuspendedTime, suspensionTime),
+      ]);
+    }
   }
 
   /* WidgetsBindingObserver */
@@ -429,8 +456,12 @@ class DefaultWalletConnectService extends WalletConnectService
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
         if (_currentSession != null) {
-          _currentSession!.closeButRetainSession();
+          final session = _currentSession!;
           _currentSession = null;
+
+          _tryStoreSession(session).whenComplete(() async {
+            await session.closeButRetainSession();
+          });
         }
         break;
       case AppLifecycleState.resumed:
