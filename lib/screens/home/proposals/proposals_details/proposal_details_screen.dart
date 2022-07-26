@@ -250,6 +250,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           style: PwTextStyle.bodyBold,
                         ),
                       ),
+                      if (_proposal.status.toLowerCase() != votingPeriod)
+                        VerticalSpacer.largeX3(),
                     ],
                   ),
                 ),
