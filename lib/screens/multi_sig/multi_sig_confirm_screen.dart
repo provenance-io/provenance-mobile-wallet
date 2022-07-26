@@ -44,7 +44,7 @@ class MultiSigConfirmScreen extends StatelessWidget {
             hasScrollBody: false,
             child: Container(
               margin: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Column(
                 textDirection: TextDirection.ltr,

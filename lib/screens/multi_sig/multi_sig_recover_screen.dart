@@ -50,7 +50,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
             hasScrollBody: false,
             child: Container(
               margin: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Column(
                 children: [

@@ -40,7 +40,7 @@ class PwDialog {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +114,7 @@ class PwDialog {
             title: header ??
                 PwText(
                   title ?? Strings.of(context).appName,
-                  style: PwTextStyle.subhead,
+                  style: PwTextStyle.footnote,
                   textAlign: TextAlign.left,
                 ),
             leading: Container(),
@@ -127,7 +127,7 @@ class PwDialog {
               children: [
                 Padding(
                   padding: EdgeInsets.all(
-                    Spacing.xxLarge,
+                    Spacing.large,
                   ),
                   child: content ??
                       PwText(

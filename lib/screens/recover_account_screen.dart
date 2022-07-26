@@ -52,9 +52,8 @@ class RecoverAccountScreen extends StatelessWidget {
                 ),
                 VerticalSpacer.large(),
                 Padding(
-                  padding: EdgeInsets.only(
-                    right: Spacing.xxLarge,
-                    left: Spacing.xxLarge,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     strings.inTheFollowingStepsText,

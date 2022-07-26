@@ -82,7 +82,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
             ),
           ],
         ),
-        DetailsItem.alternateChild(
+        DetailsItem(
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
@@ -99,7 +99,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           onChangeEnd: (value) => _updateWeight(),
         ),
         VerticalSpacer.large(),
-        DetailsItem.alternateChild(
+        DetailsItem(
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
@@ -116,7 +116,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           onChangeEnd: (value) => _updateWeight(),
         ),
         VerticalSpacer.large(),
-        DetailsItem.alternateChild(
+        DetailsItem(
           padding: EdgeInsets.only(
             bottom: Spacing.small,
           ),
@@ -133,7 +133,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
           onChangeEnd: (value) => _updateWeight(),
         ),
         VerticalSpacer.large(),
-        DetailsItem.alternateChild(
+        DetailsItem(
           padding: EdgeInsets.all(0),
           title: strings.proposalWeightedVoteVoteAbstain,
           endChild: PwText(

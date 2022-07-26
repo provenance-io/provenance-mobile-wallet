@@ -34,7 +34,7 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
               hasScrollBody: false,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.xxLarge,
+                  horizontal: Spacing.large,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

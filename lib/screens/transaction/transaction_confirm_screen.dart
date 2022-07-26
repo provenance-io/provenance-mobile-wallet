@@ -125,7 +125,7 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
             if (widget.subTitle != null)
               Container(
                 margin: EdgeInsets.only(
-                  left: Spacing.xxLarge,
+                  left: Spacing.large,
                   top: Spacing.xxLarge,
                 ),
                 alignment: Alignment.centerLeft,

@@ -22,6 +22,7 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_c
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -134,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
 
                     return Padding(
                       padding: EdgeInsets.only(
-                        right: Spacing.xxLarge,
+                        right: Spacing.large,
                       ),
                       child: GestureDetector(
                         onTap: () async {
@@ -223,23 +224,23 @@ class _DashboardState extends State<Dashboard> {
                       PwText(
                         name,
                         key: Dashboard.keyAccountNameText,
-                        style: PwTextStyle.subhead,
+                        style: PwTextStyle.footnote,
                         overflow: TextOverflow.fade,
                       ),
                       Row(
                         children: [
                           Expanded(
                             child: PwText(
-                              abbreviateAddress(accountAddress),
+                              "(${abbreviateAddress(accountAddress)})",
                               key: Dashboard.keyAccountAddressText,
-                              style: PwTextStyle.body,
+                              style: PwTextStyle.footnote,
                               overflow: TextOverflow.fade,
                             ),
                           ),
                           if (coin != null)
                             PwText(
                               coin.displayName,
-                              style: PwTextStyle.body,
+                              style: PwTextStyle.footnote,
                             ),
                         ],
                       ),
@@ -259,10 +260,8 @@ class _DashboardState extends State<Dashboard> {
                   );
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: Spacing.large,
-                    top: 18,
-                    bottom: 18,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 18,
                   ),
                   child: PwIcon(
                     PwIcons.ellipsis,
@@ -276,11 +275,10 @@ class _DashboardState extends State<Dashboard> {
             AccountPortfolio(
               labelHeight: (isTallScreen) ? 45 : 30,
             ),
-            VerticalSpacer.medium(),
+            VerticalSpacer.xxLarge(),
             Padding(
-              padding: EdgeInsets.only(
-                left: Spacing.xxLarge,
-                right: Spacing.xxLarge,
+              padding: EdgeInsets.symmetric(
+                horizontal: Spacing.large,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -288,7 +286,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   PwText(
                     Strings.of(context).myAssets,
-                    style: PwTextStyle.title,
+                    style: PwTextStyle.subhead,
                   ),
                   Expanded(child: Container()),
                 ],
@@ -300,9 +298,6 @@ class _DashboardState extends State<Dashboard> {
                 onRefresh: () async {
                   await bloc.load(
                     showLoading: false,
-                    allMessageTypes:
-                        Strings.of(context).dropDownAllMessageTypes,
-                    allStatuses: Strings.of(context).dropDownAllStatuses,
                   );
                 },
                 color: Theme.of(context).colorScheme.indicatorActive,
@@ -314,10 +309,10 @@ class _DashboardState extends State<Dashboard> {
 
                     if (assets.isEmpty) {
                       assets.add(Asset.fake(
-                        denom: "nhash",
+                        denom: nHashDenom,
                         amount: "0",
                         description: "",
-                        display: "HASH",
+                        display: Strings.displayHASH,
                         displayAmount: "0",
                         exponent: 9,
                         usdPrice: 0,
@@ -325,9 +320,8 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     return ListView.separated(
-                      padding: EdgeInsets.only(
-                        left: Spacing.xxLarge,
-                        right: Spacing.xxLarge,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Spacing.large,
                       ),
                       itemBuilder: (context, index) {
                         final item = assets[index];

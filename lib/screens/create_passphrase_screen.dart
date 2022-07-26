@@ -41,9 +41,8 @@ class CreatePassphraseScreen extends StatelessWidget {
           ),
           VerticalSpacer.large(),
           Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
               strings.prepareToWriteDownYourRecoveryPhrase,
@@ -54,9 +53,8 @@ class CreatePassphraseScreen extends StatelessWidget {
           ),
           VerticalSpacer.large(),
           Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
               strings.theOnlyWayToRecoverYourAccount,
@@ -79,9 +77,8 @@ class CreatePassphraseScreen extends StatelessWidget {
             child: Container(),
           ),
           Padding(
-            padding: EdgeInsets.only(
-              left: Spacing.xxLarge,
-              right: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
               strings.warningDoNotShare,

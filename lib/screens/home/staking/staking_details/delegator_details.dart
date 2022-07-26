@@ -92,38 +92,38 @@ class DelegatorDetails extends StatelessWidget {
                 context: context,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsCommissionRateRange,
                 value: "0 ~ ${commission.commissionMaxRate}",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsCommissionRate,
                 value: commission.commissionMaxRate,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsDelegators,
                 value: commission.delegatorCount.toString(),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsMaxChangeRate,
                 value: commission.commissionMaxChangeRate,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsMissedBlocks,
                 value: "${validator.blockCount} in ${validator.blockTotal}",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsRewards,
                 value:
                     Strings.of(context).hashAmount(commission.formattedRewards),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsTotalShares,
                 value: commission.formattedTotalShares,
               ),
@@ -181,31 +181,31 @@ class DelegatorDetails extends StatelessWidget {
               PwListDivider.alternate(),
               DetailsHeader(title: strings.stakingDetailsAdditionalDetails),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsBondHeight,
                 value: validator.bondHeight.toString(),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsUptime,
                 value: "${validator.uptime}%",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
+              DetailsItem.fromStrings(
                 title: strings.stakingDetailsVotingPower,
                 value: validator.formattedVotingPower,
               ),
               if (ValidatorStatus.jailed == validator.status)
                 PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
-                DetailsItem.alternateStrings(
+                DetailsItem.fromStrings(
                   title: strings.stakingDetailsJailedUntil,
                   value: validator.formattedJailedUntil,
                 ),
               if (ValidatorStatus.jailed == validator.status)
                 PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
-                DetailsItem.alternateStrings(
+                DetailsItem.fromStrings(
                   title: strings.stakingDetailsUnbondingHeight,
                   value: (validator.unbondingHeight ?? 0).toString(),
                 ),

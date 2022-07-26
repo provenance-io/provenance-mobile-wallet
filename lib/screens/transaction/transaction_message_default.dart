@@ -38,8 +38,6 @@ class TransactionMessageDefault extends StatefulWidget {
 
 class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
-  late final MessageFieldProcessor _processor;
-
   late final PageController _pageController;
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
 
@@ -53,19 +51,6 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     _pageController.addListener(() {
       _pageIndexNotifier.value = _pageController.page?.round() ?? 0;
     });
-    _processor = MessageFieldProcessor(
-      transactionFieldTrue: Strings.of(context).transactionFieldTrue,
-      transactionFieldFalse: Strings.of(context).transactionFieldFalse,
-      converters: {
-        MessageFieldName.fromAddress: convertAddress,
-        MessageFieldName.toAddress: convertAddress,
-        MessageFieldName.address: convertAddress,
-        MessageFieldName.manager: convertAddress,
-        MessageFieldName.delegatorAddress: convertAddress,
-        MessageFieldName.validatorAddress: convertAddress,
-        MessageFieldName.amount: convertAmount,
-      },
-    );
   }
 
   @override
@@ -78,6 +63,19 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
   @override
   Widget build(BuildContext context) {
+    final processor = MessageFieldProcessor(
+      transactionFieldTrue: Strings.of(context).transactionFieldTrue,
+      transactionFieldFalse: Strings.of(context).transactionFieldFalse,
+      converters: {
+        MessageFieldName.fromAddress: convertAddress,
+        MessageFieldName.toAddress: convertAddress,
+        MessageFieldName.address: convertAddress,
+        MessageFieldName.manager: convertAddress,
+        MessageFieldName.delegatorAddress: convertAddress,
+        MessageFieldName.validatorAddress: convertAddress,
+        MessageFieldName.amount: convertAmount,
+      },
+    );
     return CustomScrollView(
       slivers: [
         _buildHeaders(),
@@ -87,7 +85,7 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
             itemCount: widget.data?.length ?? 0,
             itemBuilder: (context, index) {
               final map = widget.data![index];
-              final group = _processor.findFields(map);
+              final group = processor.findFields(map);
               final contents = <Widget>[];
 
               final ungrouped = group.fields

@@ -169,7 +169,7 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
                 VerticalSpacer.large(),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     widget.message,
@@ -181,7 +181,7 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
                 VerticalSpacer.large(),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     widget.description,

@@ -39,7 +39,9 @@ class _ValidatorCardState extends State<ValidatorCard> {
       padding: widget.hasValidator
           ? EdgeInsets.all(Spacing.large)
           : EdgeInsets.symmetric(
-              horizontal: Spacing.large, vertical: Spacing.xxLarge),
+              horizontal: Spacing.large,
+              vertical: Spacing.xxLarge,
+            ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme.of(context).colorScheme.neutral700,

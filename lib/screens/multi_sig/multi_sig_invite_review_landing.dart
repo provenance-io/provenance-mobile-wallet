@@ -36,7 +36,7 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
+                      horizontal: Spacing.large,
                     ),
                     child: Column(
                       children: [

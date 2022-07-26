@@ -27,7 +27,6 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
 
   late String? Function(String? text) _validate;
   var _mode = AutovalidateMode.disabled;
-  late String _multiSigInvalidLink;
 
   @override
   void initState() {
@@ -45,8 +44,6 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
         });
       }
     });
-
-    _multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
   }
 
   @override
@@ -75,7 +72,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Form(
                     key: _formKey,
@@ -94,7 +91,9 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                           controller: _textController,
                           autofocus: true,
                           autovalidateMode: _mode,
-                          onFieldSubmitted: _submit,
+                          onFieldSubmitted: (e) {
+                            _submit(context, e);
+                          },
                         ),
                         VerticalSpacer.large(),
                       ],
@@ -116,7 +115,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
-                    onPressed: () => _submit(_textController.text),
+                    onPressed: () => _submit(context, _textController.text),
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -128,10 +127,10 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     );
   }
 
-  Future<void> _submit(String text) async {
+  Future<void> _submit(BuildContext context, String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
       final success = await widget.bloc.submitMultiSigJoinLink(
-        _multiSigInvalidLink,
+        Strings.of(context).multiSigInvalidLink,
         _textController.text.trim(),
         AddAccountScreen.multiSigJoinLink,
       );
@@ -162,7 +161,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     } else {
       final valid = parseInviteLinkData(text) != null;
       if (!valid) {
-        error = _multiSigInvalidLink;
+        error = Strings.of(context).multiSigInvalidLink;
       }
     }
 
@@ -170,6 +169,6 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
   }
 
   String? _validateInvalid(String? text) {
-    return _multiSigInvalidLink;
+    return Strings.of(context).multiSigInvalidLink;
   }
 }

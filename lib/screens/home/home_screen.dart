@@ -27,8 +27,12 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String allMessageTypes;
+  final String allStatuses;
   const HomeScreen({
     Key? key,
+    required this.allMessageTypes,
+    required this.allStatuses,
   }) : super(key: key);
 
   @override
@@ -42,7 +46,10 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  final _bloc = HomeBloc();
+  late final _bloc = HomeBloc(
+    allMessageTypes: widget.allMessageTypes,
+    allStatuses: widget.allStatuses,
+  );
   final _walletConnectService = get<WalletConnectService>();
 
   List<Asset> assets = [];

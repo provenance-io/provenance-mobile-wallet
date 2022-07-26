@@ -32,6 +32,7 @@ class TransactionDetailsScreen extends StatelessWidget {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: Spacing.large),
           children: [
             DetailsItem(
               title: strings.tradeDetailsAccount,
@@ -43,118 +44,86 @@ class TransactionDetailsScreen extends StatelessWidget {
 
                   return PwText(
                     accountName,
-                    style: PwTextStyle.body,
+                    style: PwTextStyle.footnote,
                   );
                 },
               ),
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.fromStrings(
               title: strings.tradeDetailsMessageType,
-              endChild: PwText(
-                transaction.messageType,
-                style: PwTextStyle.body,
-              ),
+              value: transaction.messageType,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.fromStrings(
               title: strings.tradeDetailsAssetName,
-              endChild: PwText(
-                transaction.displayDenom.isEmpty
-                    ? strings.assetChartNotAvailable
-                    : transaction.displayDenom,
-                style: PwTextStyle.body,
-              ),
+              value: transaction.displayDenom.isEmpty
+                  ? strings.assetChartNotAvailable
+                  : transaction.displayDenom,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.fromStrings(
               title: strings.tradeDetailsTimeStamp,
-              endChild: PwText(
-                transaction.formattedTime,
-                style: PwTextStyle.body,
-              ),
+              value: transaction.formattedTime,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.withHash(
               title: strings.tradeDetailsFee,
-              endChild: PwText(
-                Strings.of(context).hashAmount(transaction.displayFee),
-                style: PwTextStyle.body,
-              ),
+              hashString: transaction.displayFee,
+              context: context,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.fromStrings(
               title: strings.tradeDetailsResult,
-              endChild: PwText(
-                transaction.status,
-                style: PwTextStyle.body,
-              ),
+              value: transaction.status,
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.fromStrings(
               title: strings.tradeDetailsBlock,
-              endChild: PwText(
-                transaction.block.toString(),
-              ),
+              value: transaction.block.toString(),
             ),
-            PwListDivider(
-              indent: Spacing.largeX3,
-            ),
-            DetailsItem(
+            PwListDivider(),
+            DetailsItem.withRowChildren(
               title: strings.tradeDetailsTransaction,
-              endChild: Row(
-                children: [
-                  PwText(
-                    abbreviateAddress(transaction.hash),
-                    style: PwTextStyle.body,
-                  ),
-                  HorizontalSpacer.large(),
-                  GestureDetector(
-                    onTap: () async {
-                      final account = await accountService.getSelectedAccount();
-                      String url;
-                      switch (account?.publicKey?.coin) {
-                        case Coin.testNet:
-                          url =
-                              'https://explorer.test.provenance.io/tx/${transaction.hash}';
-                          break;
-                        case Coin.mainNet:
-                          url =
-                              'https://explorer.provenance.io/tx/${transaction.hash}';
-                          break;
-                        default:
-                          url = "";
-                      }
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: PwIcon(
-                        PwIcons.newWindow,
-                        color: Theme.of(context).colorScheme.neutralNeutral,
-                        size: 20,
-                      ),
+              children: [
+                PwText(
+                  abbreviateAddress(transaction.hash),
+                  style: PwTextStyle.footnote,
+                ),
+                HorizontalSpacer.large(),
+                GestureDetector(
+                  onTap: () async {
+                    final account = await accountService.getSelectedAccount();
+                    String url;
+                    switch (account?.publicKey?.coin) {
+                      case Coin.testNet:
+                        url =
+                            'https://explorer.test.provenance.io/tx/${transaction.hash}';
+                        break;
+                      case Coin.mainNet:
+                        url =
+                            'https://explorer.provenance.io/tx/${transaction.hash}';
+                        break;
+                      default:
+                        url = "";
+                    }
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: PwIcon(
+                      PwIcons.newWindow,
+                      color: Theme.of(context).colorScheme.neutralNeutral,
+                      size: 20,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

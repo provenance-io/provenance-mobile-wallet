@@ -46,7 +46,7 @@ class ErrorDialog extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
+                      horizontal: Spacing.large,
                     ),
                     child: PwText(
                       title ?? Strings.of(context).unknownErrorTitle,
@@ -58,7 +58,7 @@ class ErrorDialog extends StatelessWidget {
                   VerticalSpacer.large(),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
+                      horizontal: Spacing.large,
                     ),
                     child: PwText(
                       error ?? Strings.of(context).somethingWentWrong,

@@ -59,9 +59,8 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
         children: [
           VerticalSpacer.largeX3(),
           Padding(
-            padding: EdgeInsets.only(
-              left: Spacing.xxLarge,
-              right: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
               Strings.of(context).recordTheseWordsInTheCorrectOrder,
@@ -71,20 +70,16 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
           ),
           VerticalSpacer.xLarge(),
           Container(
-            margin: EdgeInsets.only(
-              left: Spacing.xxLarge,
-              right: Spacing.xxLarge,
+            margin: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(4)),
               color: Theme.of(context).colorScheme.neutral700,
             ),
             child: Padding(
-              padding: EdgeInsets.only(
-                left: Spacing.xxLarge,
-                right: Spacing.xxLarge,
-                top: Spacing.large,
-                bottom: Spacing.large,
+              padding: EdgeInsets.all(
+                Spacing.large,
               ),
               child: Column(
                 children: [

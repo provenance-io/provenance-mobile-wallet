@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_h
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -69,17 +70,17 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         title: strings.proposalDetailsProposalInformation,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsId,
                         value: "${_proposal.proposalId}",
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsTitleString,
                         value: _proposal.title,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsDescription,
                         value: _proposal.description,
                       ),
@@ -104,7 +105,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                       ),
                       PwListDivider.alternate(),
                       if (widget.vote != null)
-                        DetailsItem.alternateChild(
+                        DetailsItem(
                           title: strings.proposalDetailsMyStatus,
                           endChild: ProposalVoteChip(
                             vote: widget.vote!,
@@ -115,24 +116,24 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         title: strings.proposalDetailsProposalTiming,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsSubmitTime,
                         value: _formatter.format(_proposal.submitTime),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsDepositEndTime,
                         value: _formatter.format(_proposal.depositEndTime),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsVotingStartTime,
                         value: _proposal.startTime.year == 1
                             ? "--"
                             : _formatter.format(_proposal.startTime),
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsVotingEndTime,
                         value: _proposal.endTime.year == 1
                             ? "--"
@@ -176,19 +177,19 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         title: strings.proposalDetailsThresholdDetails,
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsQuorumThreshold,
                         value:
                             "${(_proposal.quorumThreshold * 100).toStringAsFixed(2)}%",
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsPassThreshold,
                         value:
                             "${(_proposal.passThreshold * 100).toStringAsFixed(2)}%",
                       ),
                       PwListDivider.alternate(),
-                      DetailsItem.alternateStrings(
+                      DetailsItem.fromStrings(
                         title: strings.proposalDetailsVetoThreshold,
                         value:
                             "${(_proposal.vetoThreshold * 100).toStringAsFixed(2)}%",
@@ -239,7 +240,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         ),
                         color: Theme.of(context).colorScheme.neutral600,
                       ),
-                      DetailsItem.alternateChild(
+                      DetailsItem(
                         title: strings.proposalDetailsTotalVotes,
                         endChild: PwText(
                           _proposal.totalAmount
@@ -249,13 +250,15 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                           style: PwTextStyle.bodyBold,
                         ),
                       ),
+                      if (_proposal.status.toLowerCase() != votingPeriod)
+                        VerticalSpacer.largeX3(),
                     ],
                   ),
                 ),
-                // if (_proposal.status.toLowerCase() == votingPeriod)
-                VotingButtons(
-                  proposal: _proposal,
-                ),
+                if (_proposal.status.toLowerCase() == votingPeriod)
+                  VotingButtons(
+                    proposal: _proposal,
+                  ),
               ],
             ),
           ),

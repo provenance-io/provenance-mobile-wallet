@@ -33,9 +33,8 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: Spacing.xxLarge,
-        vertical: Spacing.large,
+      margin: EdgeInsets.all(
+        Spacing.large,
       ),
       child: PwTextFormField(
         label: Strings.of(context).profileDeveloperConnectLabel,

@@ -73,8 +73,8 @@ class RecoveryWordsConfirmScreenState
                 ? Padding(
                     padding: EdgeInsets.only(
                       bottom: Spacing.xLarge,
-                      right: Spacing.xxLarge,
-                      left: Spacing.xxLarge,
+                      right: Spacing.large,
+                      left: Spacing.large,
                     ),
                     child: PwText(
                       _error,
@@ -106,7 +106,7 @@ class RecoveryWordsConfirmScreenState
             VerticalSpacer.largeX3(),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -22,9 +22,8 @@ class AccountPortfolio extends StatelessWidget {
     final bloc = get<HomeBloc>();
 
     return Padding(
-      padding: EdgeInsets.only(
-        left: Spacing.xxLarge,
-        right: Spacing.xxLarge,
+      padding: EdgeInsets.symmetric(
+        horizontal: Spacing.large,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -33,7 +32,7 @@ class AccountPortfolio extends StatelessWidget {
           PwText(
             Strings.of(context).portfolioValue,
             color: PwColor.neutralNeutral,
-            style: PwTextStyle.subhead,
+            style: PwTextStyle.title,
           ),
           StreamBuilder<List<Asset>?>(
             initialData: bloc.assetList.value,
@@ -66,66 +65,70 @@ class AccountPortfolio extends StatelessWidget {
           VerticalSpacer.xLarge(),
           Row(
             children: [
-              PwButton(
-                minimumWidth: 150,
-                minimumHeight: 66,
-                child: Column(
-                  children: [
-                    PwIcon.only(
-                      PwIcons.upArrow,
-                      width: 14,
-                      height: 16,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
-                    VerticalSpacer.xSmall(),
-                    PwText(
-                      Strings.of(context).send,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.bodyBold,
-                    ),
-                  ],
+              Flexible(
+                child: PwButton(
+                  //minimumWidth: 150,
+                  minimumHeight: 66,
+                  child: Column(
+                    children: [
+                      PwIcon.only(
+                        PwIcons.upArrow,
+                        width: 14,
+                        height: 16,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
+                      VerticalSpacer.xSmall(),
+                      PwText(
+                        Strings.of(context).send,
+                        color: PwColor.neutralNeutral,
+                        style: PwTextStyle.bodyBold,
+                      ),
+                    ],
+                  ),
+                  onPressed: () async {
+                    final accountDetails =
+                        await get<AccountService>().getSelectedAccount();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SendFlow(accountDetails!),
+                      ),
+                    );
+                  },
                 ),
-                onPressed: () async {
-                  final accountDetails =
-                      await get<AccountService>().getSelectedAccount();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SendFlow(accountDetails!),
-                    ),
-                  );
-                },
               ),
               HorizontalSpacer.small(),
-              PwButton(
-                minimumWidth: 150,
-                minimumHeight: 66,
-                child: Column(
-                  children: [
-                    PwIcon.only(
-                      PwIcons.downArrow,
-                      width: 14,
-                      height: 16,
-                      color: Theme.of(context).colorScheme.neutralNeutral,
-                    ),
-                    VerticalSpacer.xSmall(),
-                    PwText(
-                      Strings.of(context).receive,
-                      color: PwColor.neutralNeutral,
-                      style: PwTextStyle.bodyBold,
-                    ),
-                  ],
+              Flexible(
+                child: PwButton(
+                  //minimumWidth: 150,
+                  minimumHeight: 66,
+                  child: Column(
+                    children: [
+                      PwIcon.only(
+                        PwIcons.downArrow,
+                        width: 14,
+                        height: 16,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
+                      VerticalSpacer.xSmall(),
+                      PwText(
+                        Strings.of(context).receive,
+                        color: PwColor.neutralNeutral,
+                        style: PwTextStyle.bodyBold,
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    final accountDetails =
+                        get<AccountService>().events.selected.value;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReceiveFlow(accountDetails!),
+                      ),
+                    );
+                  },
                 ),
-                onPressed: () {
-                  final accountDetails =
-                      get<AccountService>().events.selected.value;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReceiveFlow(accountDetails!),
-                    ),
-                  );
-                },
               ),
             ],
           ),

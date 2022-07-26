@@ -57,13 +57,13 @@ class TransactionTabState extends State<TransactionTab> {
                   elevation: 0.0,
                   title: PwText(
                     Strings.of(context).transactionDetails,
-                    style: PwTextStyle.subhead,
+                    style: PwTextStyle.footnote,
                   ),
                   leading: Container(),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Column(
                     children: [
@@ -119,7 +119,7 @@ class TransactionTabState extends State<TransactionTab> {
                     children: [
                       ListView.separated(
                         padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                           vertical: 20,
                         ),
                         controller: _scrollController,

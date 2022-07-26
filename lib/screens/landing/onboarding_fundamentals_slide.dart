@@ -35,7 +35,7 @@ class _OnboardingFundamentalsSlideState
         physics: NeverScrollableScrollPhysics(),
         crossAxisSpacing: 0.0,
         crossAxisCount: 2,
-        mainAxisSpacing: Spacing.xxLarge,
+        mainAxisSpacing: Spacing.large,
         childAspectRatio: 1.89,
         children: [
           Column(

@@ -152,7 +152,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                 VerticalSpacer.largeX3(),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     widget.message,
@@ -164,8 +164,8 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                 VerticalSpacer.xxLarge(),
                 Padding(
                   padding: EdgeInsets.only(
-                    left: Spacing.xxLarge,
-                    right: Spacing.xxLarge,
+                    left: Spacing.large,
+                    right: Spacing.large,
                     bottom: Spacing.small,
                   ),
                   child: PwTextFormField(

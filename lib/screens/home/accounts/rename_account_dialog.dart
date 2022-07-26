@@ -36,7 +36,7 @@ class RenameAccountDialog extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.all(
-                  Spacing.xxLarge,
+                  Spacing.large,
                 ),
                 child: PwText(
                   strings.renameAccountDescription,
@@ -47,8 +47,8 @@ class RenameAccountDialog extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  left: Spacing.xxLarge,
-                  right: Spacing.xxLarge,
+                  left: Spacing.large,
+                  right: Spacing.large,
                   bottom: Spacing.small,
                 ),
                 child: PwTextFormField(

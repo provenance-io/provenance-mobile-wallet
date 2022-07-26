@@ -12,7 +12,7 @@ class CategoryLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.xxLarge,
+        horizontal: Spacing.large,
       ),
       padding: EdgeInsets.only(
         top: Spacing.xxLarge,
