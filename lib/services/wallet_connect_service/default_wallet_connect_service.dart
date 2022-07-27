@@ -45,7 +45,7 @@ class DefaultWalletConnectService extends WalletConnectService
 
   WalletConnectSession? _currentSession;
 
-  final _subscriptions = CompositeSubscription();
+  final _accountServiceSubscriptions = CompositeSubscription();
   final _keyValueService = get<KeyValueService>();
   final _accountService = get<AccountService>();
   final _connectionFactory = get<WalletConnectionFactory>();
@@ -67,7 +67,9 @@ class DefaultWalletConnectService extends WalletConnectService
       _tryRestoreCurrentUserSession();
     }
 
-    _accountService.events.selected.listen(callback).addTo(_subscriptions);
+    _accountService.events.selected
+        .listen(callback)
+        .addTo(_accountServiceSubscriptions);
   }
 
   Future<void> _setCurrentSession(WalletConnectSession? newSession) async {
@@ -102,6 +104,10 @@ class DefaultWalletConnectService extends WalletConnectService
     notifyListeners();
   }
 
+  void _onRemoveSessionClosed() {
+    _currentSession = null;
+    notifyListeners();
+  }
   /* Disposable */
 
   @override
@@ -109,7 +115,7 @@ class DefaultWalletConnectService extends WalletConnectService
     WidgetsBinding.instance.removeObserver(this);
 
     await _setCurrentSession(null);
-    await _subscriptions.dispose();
+    await _accountServiceSubscriptions.dispose();
     await _authSubscription.cancel();
   }
 
@@ -162,12 +168,12 @@ class DefaultWalletConnectService extends WalletConnectService
     );
 
     final session = WalletConnectSession(
-      accountId: accountId,
-      connection: connection,
-      delegate: delegate,
-      coin: accountDetails.publicKey!.coin,
-      remoteNotificationService: _remoteNotificationService,
-    );
+        accountId: accountId,
+        connection: connection,
+        delegate: delegate,
+        coin: accountDetails.publicKey!.coin,
+        remoteNotificationService: _remoteNotificationService,
+        onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
 
     WalletConnectSessionRestoreData? restoreData;
     if (sessionData != null) {
@@ -263,12 +269,12 @@ class DefaultWalletConnectService extends WalletConnectService
     );
 
     final session = WalletConnectSession(
-      accountId: accountId,
-      connection: connection,
-      delegate: delegate,
-      coin: accountDetails.publicKey!.coin,
-      remoteNotificationService: _remoteNotificationService,
-    );
+        accountId: accountId,
+        connection: connection,
+        delegate: delegate,
+        coin: accountDetails.publicKey!.coin,
+        remoteNotificationService: _remoteNotificationService,
+        onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
 
     WalletConnectSessionRestoreData restoreData =
         WalletConnectSessionRestoreData(

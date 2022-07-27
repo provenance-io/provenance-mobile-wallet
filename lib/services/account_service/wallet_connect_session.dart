@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
@@ -11,7 +12,7 @@ import 'package:provenance_wallet/services/remote_notification/remote_notificati
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
-class WalletConnectSessionEvents { 
+class WalletConnectSessionEvents {
   final _subscriptions = CompositeSubscription();
 
   final _state = BehaviorSubject.seeded(
@@ -81,13 +82,15 @@ class WalletConnectSession {
       required this.coin,
       required WalletConnection connection,
       required WalletConnectSessionDelegate delegate,
-      required RemoteNotificationService remoteNotificationService})
+      required RemoteNotificationService remoteNotificationService,
+      required VoidCallback onSessionClosedRemotelyDelegate})
       : _connection = connection,
         _remoteNotificationService = remoteNotificationService,
         _delegate = delegate,
         sessionEvents = WalletConnectSessionEvents(),
         delegateEvents = WalletConnectSessionDelegateEvents()
-          ..listen(delegate.events);
+          ..listen(delegate.events),
+        onSessionClosedRemotely = onSessionClosedRemotelyDelegate;
 
   static const inactivityTimeout = Duration(minutes: 30);
   Timer? _inactivityTimer;
@@ -99,6 +102,7 @@ class WalletConnectSession {
   final String accountId;
   final WalletConnectSessionEvents sessionEvents;
   final WalletConnectSessionDelegateEvents delegateEvents;
+  final VoidCallback onSessionClosedRemotely;
 
   String? _peerId;
   String? _remotePeerId;
@@ -236,6 +240,7 @@ class WalletConnectSession {
     // so the session is still connecting.
     if (status == WalletConnectState.disconnected) {
       _disconnect();
+      onSessionClosedRemotely();
     } else if (status == WalletConnectState.connecting) {
       sessionEvents._state.value = WalletConnectSessionState.connecting();
     }
@@ -244,7 +249,10 @@ class WalletConnectSession {
   void _startInactivityTimer(Duration inactivityTimeout) {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(inactivityTimeout, () {
-      disconnect();
+      if (_connection.value == WalletConnectState.connected) {
+        disconnect();
+      }
+      onSessionClosedRemotely();
     });
   }
 }
