@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// All the Icons for Provenance Blockchain Wallet. Imported from Figma SVGs.
-///
-/// TODO: Remove these classes in favor of icon data:
-/// Ideally, we can deprecate [PwIcon] by creating a custom font using
-/// http://fluttericon.com and simply using the icons as IconData, like so:
-/// ```dart
-/// Icon(ProvenanceIcons.account);
-/// ```
-///
 
 class PwIcons {
   static const String account = 'account';
