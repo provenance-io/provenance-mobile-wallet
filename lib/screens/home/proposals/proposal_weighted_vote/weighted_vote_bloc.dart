@@ -35,7 +35,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_YES,
-          weight: "${details.yesAmount.toInt()}%",
+          weight: "${details.yesAmount.toInt()}0000000000000000",
         ),
       );
     }
@@ -44,7 +44,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_NO,
-          weight: "${details.noAmount.toInt()}%",
+          weight: "${details.noAmount.toInt()}0000000000000000",
         ),
       );
     }
@@ -53,7 +53,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
-          weight: "${details.noWithVetoAmount.toInt()}%",
+          weight: "${details.noWithVetoAmount.toInt()}0000000000000000",
         ),
       );
     }
@@ -62,7 +62,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
-          weight: "${details.abstainAmount.toInt()}%",
+          weight: "${details.abstainAmount.toInt()}0000000000000000",
         ),
       );
     }
