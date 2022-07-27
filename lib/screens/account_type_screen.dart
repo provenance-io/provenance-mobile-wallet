@@ -14,7 +14,10 @@ class AccountTypeScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  static final keyBasicAccount = ValueKey('$AccountTypeScreen.basic_button');
+  static final keyBasicAccountButton =
+      ValueKey('$AccountTypeScreen.basic_button');
+  static final keyRecoverAccountButton =
+      ValueKey('$AccountTypeScreen.recover_account_button');
 
   final _keyValueService = get<KeyValueService>();
   final bool includeMultiSig;
@@ -44,7 +47,7 @@ class AccountTypeScreen extends StatelessWidget {
                   children: [
                     VerticalSpacer.largeX3(),
                     AccountButton(
-                      key: keyBasicAccount,
+                      key: keyBasicAccountButton,
                       name: Strings.accountTypeOptionBasicName,
                       desc: Strings.accountTypeOptionBasicDesc,
                       onPressed: () {
@@ -55,6 +58,7 @@ class AccountTypeScreen extends StatelessWidget {
                     ),
                     VerticalSpacer.large(),
                     AccountButton(
+                      key: keyRecoverAccountButton,
                       name: Strings.accountTypeOptionImportName,
                       desc: Strings.accountTypeOptionImportDesc,
                       onPressed: () {
