@@ -151,7 +151,7 @@ class HomeScreenState extends State<HomeScreen>
                 ),
                 TabItem(
                   2 == _currentTabIndex,
-                  strings.viewMore,
+                  strings.homeScreenMore,
                   PwIcons.viewMore,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
