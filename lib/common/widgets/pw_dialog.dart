@@ -115,8 +115,9 @@ class PwDialog {
                 PwText(
                   title,
                   style: PwTextStyle.subhead,
-                  textAlign: TextAlign.left,
+                  textAlign: TextAlign.center,
                 ),
+            centerTitle: true,
             leading: Container(),
           ),
           body: Container(
