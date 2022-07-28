@@ -10,25 +10,15 @@ class StakingCompleteScreen extends StatelessWidget {
   const StakingCompleteScreen({
     Key? key,
     required this.selected,
-    required this.message,
+    required this.response,
   }) : super(key: key);
 
   final SelectedDelegationType selected;
-  final String message;
+  final Object? response;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: PwIcon(
-            PwIcons.back,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -49,6 +39,18 @@ class StakingCompleteScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      color: Theme.of(context).colorScheme.neutralNeutral,
+                      icon: PwIcon(
+                        PwIcons.back,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                   Expanded(child: Container()),
                   PwText(
                     selected.getCompletionMessage(context),
@@ -58,11 +60,15 @@ class StakingCompleteScreen extends StatelessWidget {
                     overflow: TextOverflow.fade,
                   ),
                   VerticalSpacer.large(),
-                  PwText(
-                    message,
-                    style: PwTextStyle.body,
-                    textAlign: TextAlign.center,
-                  ),
+                  PwTextButton(
+                      child: PwText(
+                        Strings.of(context).stakingCompleteTapToSeeResponse,
+                        style: PwTextStyle.body,
+                        textAlign: TextAlign.center,
+                      ),
+                      onPressed: () {
+                        get<StakingFlowBloc>().showTransactionData(response);
+                      }),
                   VerticalSpacer.largeX3(),
                   Image.asset(
                     Assets.imagePaths.transactionComplete,

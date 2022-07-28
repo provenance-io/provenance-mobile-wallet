@@ -90,7 +90,7 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  Future<String> doDelegate(
+  Future<Object?> doDelegate(
     double? gasAdjustment,
   ) async {
     return await _sendMessage(
@@ -99,7 +99,7 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  Future<String> doUndelegate(
+  Future<Object?> doUndelegate(
     double? gasAdjustment,
   ) async {
     return await _sendMessage(
@@ -108,7 +108,7 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  Future<String> claimRewards(
+  Future<Object?> claimRewards(
     double? gasAdjustment,
   ) async {
     return await _sendMessage(
@@ -161,7 +161,7 @@ class StakingDelegationBloc extends Disposable {
     return _getDelegateMessage().toProto3Json();
   }
 
-  Future<String> _sendMessage(
+  Future<Object?> _sendMessage(
     double? gasAdjustment,
     proto.Any message,
   ) async {
@@ -188,9 +188,8 @@ class StakingDelegationBloc extends Disposable {
       estimate,
     );
 
-    final stringifiedResponse = response.asJsonString();
-    log(stringifiedResponse);
-    return stringifiedResponse;
+    log(response.asJsonString());
+    return response.txResponse.toProto3Json();
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {

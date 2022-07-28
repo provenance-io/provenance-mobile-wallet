@@ -54,7 +54,9 @@ abstract class StakingFlowNavigator {
   Future<void> showTransactionData(Object? data);
 
   Future<void> showTransactionComplete(
-      String message, SelectedDelegationType selected);
+    Object? response,
+    SelectedDelegationType selected,
+  );
 
   void onComplete();
 
@@ -213,10 +215,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
 
   @override
   Future<void> showTransactionComplete(
-      String message, SelectedDelegationType selected) async {
+      Object? response, SelectedDelegationType selected) async {
     showPage(
       (context) => StakingCompleteScreen(
-        message: message,
+        response: response,
         selected: selected,
       ),
     );
