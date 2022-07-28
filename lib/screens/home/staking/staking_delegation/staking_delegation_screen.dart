@@ -142,10 +142,9 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
               PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: strings.stakingDelegateAvailableBalance,
-                hashString: Strings.of(context).hashAmount(stringNHashToHash(
-                        details.asset?.amount ?? "",
+                hashString: stringNHashToHash(details.asset?.amount ?? "",
                         fractionDigits: 7)
-                    .toString()),
+                    .toString(),
                 context: context,
               ),
               PwListDivider.alternate(),

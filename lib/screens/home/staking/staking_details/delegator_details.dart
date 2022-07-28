@@ -50,16 +50,28 @@ class DelegatorDetails extends StatelessWidget {
                   details.rewards?.rewards.isEmpty == true)
                 DetailsItem.withHash(
                   title: strings.stakingDetailsRewards,
-                  hashString: strings.stakingManagementNoHash,
+                  hashString: "--",
                   context: context,
                 ),
               if (details.rewards != null &&
                   details.rewards!.rewards.isNotEmpty)
                 for (var reward in details.rewards!.rewards)
-                  DetailsItem.withHash(
-                    title: strings.stakingDetailsRewards,
-                    hashString: '${reward.amount} ${reward.denom}',
-                    context: context,
+                  DetailsItem.withRowChildren(
+                    title: strings.proposalDetailsDeposits,
+                    children: [
+                      PwIcon(
+                        PwIcons.hashLogo,
+                        size: 24,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
+                      HorizontalSpacer.small(),
+                      PwText(
+                        '${reward.amount} ${reward.denom}',
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: PwTextStyle.footnote,
+                      ),
+                    ],
                   ),
               PwListDivider.alternate(),
               DetailsItem.withRowChildren(

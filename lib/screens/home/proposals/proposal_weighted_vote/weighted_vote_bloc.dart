@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
+import 'package:provenance_wallet/util/extensions/double_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -35,7 +36,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_YES,
-          weight: "${details.yesAmount.toInt()}%",
+          weight: details.yesAmount.toVoteWeight(),
         ),
       );
     }
@@ -44,7 +45,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_NO,
-          weight: "${details.noAmount.toInt()}%",
+          weight: details.noAmount.toVoteWeight(),
         ),
       );
     }
@@ -53,7 +54,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
-          weight: "${details.noWithVetoAmount.toInt()}%",
+          weight: details.noWithVetoAmount.toVoteWeight(),
         ),
       );
     }
@@ -62,7 +63,7 @@ class WeightedVoteBloc extends Disposable {
       options.add(
         gov.WeightedVoteOption(
           option: gov.VoteOption.VOTE_OPTION_ABSTAIN,
-          weight: "${details.abstainAmount.toInt()}%",
+          weight: details.abstainAmount.toVoteWeight(),
         ),
       );
     }
