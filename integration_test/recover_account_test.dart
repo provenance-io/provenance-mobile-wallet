@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/account_name_screen.dart';
@@ -13,8 +12,8 @@ import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
+import 'util/key_extension.dart';
 import 'util/widget_tester_extension.dart';
 
 void main() {
@@ -29,58 +28,33 @@ void main() {
 
       await tester.pumpAndSettle(Duration(seconds: 1));
 
-      await tester.tapKeyAndSettle(
-        LandingScreen.keyAddAccountButton,
-      );
-
-      await tester.tapKeyAndSettle(
-        AccountTypeScreen.keyRecoverAccountButton,
-      );
-
-      await tester.tapKeyAndSettle(
-        AccountNameScreen.keyNameTextField,
-      );
+      await LandingScreen.keyAddAccountButton.tap(tester);
+      await AccountTypeScreen.keyRecoverAccountButton.tap(tester);
+      await AccountNameScreen.keyNameTextField.tap(tester);
 
       const accountName = 'one';
-      await tester.enterTextAndSettle(
-        AccountNameScreen.keyNameTextField,
-        accountName,
-      );
+      await AccountNameScreen.keyNameTextField.enterText(accountName, tester);
 
-      await tester.tapKeyAndSettle(
-        AccountNameScreen.keyContinueButton,
-      );
+      await AccountNameScreen.keyContinueButton.tap(tester);
+      await RecoverAccountScreen.keyContinueButton.tap(tester);
 
-      await tester.tapKeyAndSettle(
-        RecoverAccountScreen.keyContinueButton,
-      );
+      const taps = RecoverPassphraseEntryScreenState.toggleAdvancedUICount + 2;
+      await RecoverPassphraseEntryScreen.keyAppBar.tap(tester, times: taps);
 
-      await tester.tapKeyAndSettle(
-        RecoverPassphraseEntryScreen.keyAppBar,
-        times: RecoverPassphraseEntryScreenState.toggleAdvancedUICount + 2,
-      );
+      RecoverPassphraseEntryScreen.networkName.expect(tester);
 
-      tester.expectKey(
-        RecoverPassphraseEntryScreen.networkName,
-      );
+      final testNet = Coin.testNet.displayName;
+      final mainNet = Coin.mainNet.displayName;
 
-      var networkName = tester.widgetWithKey<PwText>(
-        RecoverPassphraseEntryScreen.networkName,
-      );
+      final actualNetwork =
+          RecoverPassphraseEntryScreen.networkName.pwText(tester);
 
-      final network = networkName.data;
-      if (network ==
-          Strings.recoverPassphraseNetwork(Coin.mainNet.displayName)) {
-        await tester.tapKeyAndSettle(
-          RecoverPassphraseEntryScreen.networkToggle,
-        );
+      if (actualNetwork.endsWith(mainNet)) {
+        await RecoverPassphraseEntryScreen.networkToggle.tap(tester);
       }
 
-      networkName = tester.widgetWithKey<PwText>(
-        RecoverPassphraseEntryScreen.networkName,
-      );
-      expect(networkName.data,
-          Strings.recoverPassphraseNetwork(Coin.testNet.displayName));
+      RecoverPassphraseEntryScreen.networkName
+          .expectPwTextEndsWith(testNet, tester);
 
       const wordOneIndex = 0;
       final keyWordOne =
@@ -88,41 +62,29 @@ void main() {
 
       final phrase = testData.recoverWalletTest!.recoveryPhrase!;
 
-      await tester.tapKeyAndSettle(keyWordOne);
-      await tester.enterTextAndSettle(keyWordOne, phrase);
+      await keyWordOne.tap(tester);
+      await keyWordOne.enterText(phrase, tester);
 
       await tester.unfocusAndSettle();
 
-      await tester.scrollUntilVisibleAndSettle(
-        key: RecoverPassphraseEntryScreen.keyContinueButton,
+      await RecoverPassphraseEntryScreen.keyContinueButton.scrollUntilVisible(
+        tester,
         scrollable: RecoverPassphraseEntryScreen.wordList,
       );
 
-      await tester.tapKeyAndSettle(
-        RecoverPassphraseEntryScreen.keyContinueButton,
-      );
+      await RecoverPassphraseEntryScreen.keyContinueButton.tap(tester);
 
       final keyZero = keyPinPadNumber(0);
 
       // Initial pin
-      await tester.tapKeyAndSettle(keyZero, times: 6);
+      await keyZero.tap(tester, times: 6);
 
       // Verify pin
-      await tester.tapKeyAndSettle(keyZero, times: 6);
+      await keyZero.tap(tester, times: 6);
 
-      await tester.tapKeyAndSettle(
-        EnableFaceIdScreen.keyEnableButton,
-      );
-
-      await tester.tapKeyAndSettle(
-        AccountSetupConfirmationScreen.keyContinueButton,
-      );
-
-      final nameWidget = tester.widgetWithKey<PwText>(
-        Dashboard.keyAccountNameText,
-      );
-
-      expect(nameWidget.data, accountName);
+      await EnableFaceIdScreen.keyEnableButton.tap(tester);
+      await AccountSetupConfirmationScreen.keyContinueButton.tap(tester);
+      Dashboard.keyAccountNameText.expectPwText(accountName, tester);
     },
   );
 }
