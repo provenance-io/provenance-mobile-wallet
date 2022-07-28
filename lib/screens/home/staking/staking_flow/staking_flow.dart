@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_complete/staking_complete_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_redelegate_screen.dart';
@@ -12,7 +13,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -213,7 +213,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
     showPage(
-      (context) => StakingSuccessScreen(
+      (context) => StakingCompleteScreen(
         selected: selected,
       ),
     );

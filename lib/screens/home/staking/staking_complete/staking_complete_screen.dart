@@ -6,8 +6,8 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class StakingSuccessScreen extends StatelessWidget {
-  const StakingSuccessScreen({
+class StakingCompleteScreen extends StatelessWidget {
+  const StakingCompleteScreen({
     Key? key,
     required this.selected,
     this.message,
