@@ -426,7 +426,7 @@
   "stakingDetailsValidatorTransactions": "Validator Transactions",
   "stakingDetailsViewLess": "View Less",
   "stakingManagementMyDelegation": "My Delegation",
-  "stakingManagementNoHash": "-- HASH",
+  "stakingManagementNoHash": "--",
   "stakingConfirmData": "Data",
   "stakingConfirmGasAdjustment": "Gas Adjustment",
   "stakingConfirmDefault": "(Default)",

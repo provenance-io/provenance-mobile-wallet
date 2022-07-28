@@ -50,7 +50,7 @@ class DelegatorDetails extends StatelessWidget {
                   details.rewards?.rewards.isEmpty == true)
                 DetailsItem.withHash(
                   title: strings.stakingDetailsRewards,
-                  hashString: "--",
+                  hashString: strings.stakingManagementNoHash,
                   context: context,
                 ),
               if (details.rewards != null &&
@@ -99,8 +99,7 @@ class DelegatorDetails extends StatelessWidget {
               PwListDivider.alternate(),
               DetailsItem.withHash(
                 title: strings.stakingDetailsBonded,
-                hashString: Strings.of(context)
-                    .hashAmount(commission.formattedBondedTokens),
+                hashString: commission.formattedBondedTokens,
                 context: context,
               ),
               PwListDivider.alternate(),
