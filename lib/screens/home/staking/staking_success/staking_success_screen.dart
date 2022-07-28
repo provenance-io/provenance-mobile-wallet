@@ -19,6 +19,16 @@ class StakingSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: PwIcon(
+            PwIcons.back,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
