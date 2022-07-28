@@ -69,7 +69,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                 }
                 return Scaffold(
                   appBar: AppBar(
-                    //toolbarHeight: 22,
                     primary: false,
                     backgroundColor: Theme.of(context).colorScheme.neutral750,
                     elevation: 0.0,
@@ -78,11 +77,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                       strings.stakingRedelegateRedelegate,
                       style: PwTextStyle.footnote,
                     ),
-                    leading:
-                        // Padding(
-                        //   padding: EdgeInsets.only(left: 21),
-                        //   child:
-                        IconButton(
+                    leading: IconButton(
                       icon: PwIcon(
                         PwIcons.back,
                       ),
@@ -90,7 +85,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         Navigator.of(context).pop();
                       },
                     ),
-                    // ),
                   ),
                   body: ListView(
                     padding: EdgeInsets.symmetric(horizontal: Spacing.large),
