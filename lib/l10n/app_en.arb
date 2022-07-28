@@ -461,18 +461,11 @@
   "stakingDelegationBlocBack": "Back",
   "stakingDelegationBlocClaimRewards": "Claim Rewards",
   "stakingConfirmClaimRewardsDetails": "Claim Rewards Details",
-  "stakingSuccessSuccess": "SUCCESS",
-  "stakingSuccessSuccessful": "{delegationType} successful",
-  "@stakingSuccessSuccessful": {
-    "description": "Message displayed when the delegation type is successful.",
-    "placeholders": {
-    "delegationType": {
-       "type": "String",
-       "example": "Delegation"
-      }
-    }
-  },
-  "stakingSuccessBackToDashboard": "Back to Dashboard",
+  "stakingCompleteBackToDashboard": "Back to Dashboard",
+  "stakingCompleteDelegationComplete": "DELEGATION\nCOMPLETE",
+  "stakingCompleteRedelegationComplete": "REDELEGATION\nCOMPLETE",
+  "stakingCompleteUndelegationComplete": "UNDELEGATION\nCOMPLETE",
+  "stakingCompleteClaimRewardsComplete": "CLAIM REWARDS\nCOMPLETE",
   "stakingConfirmHash": "HASH",
   "proposalsScreenLegend": "Legend",
   "proposalsScreenMyStatus": "My Status:",

@@ -39,7 +39,7 @@ class StakingSuccessScreen extends StatelessWidget {
                 children: [
                   Expanded(child: Container()),
                   PwText(
-                    Strings.of(context).stakingSuccessSuccess,
+                    selected.getCompletionMessage(context),
                     style: PwTextStyle.headline2,
                     textAlign: TextAlign.center,
                     softWrap: false,
@@ -77,7 +77,7 @@ class StakingSuccessScreen extends StatelessWidget {
                     ),
                     child: PwTextButton(
                       child: PwText(
-                        Strings.of(context).stakingSuccessBackToDashboard,
+                        Strings.of(context).stakingCompleteBackToDashboard,
                         style: PwTextStyle.body,
                         textAlign: TextAlign.center,
                         color: PwColor.neutralNeutral,

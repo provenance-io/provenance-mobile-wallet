@@ -256,4 +256,22 @@ extension SelectedDelegationTypeExtension on SelectedDelegationType {
         return Strings.of(context).stakingDelegationBlocClaimRewards;
     }
   }
+
+  String getCompletionMessage(BuildContext context) {
+    // There is no way programmatically to get here with the 'initial' type.
+    assert(this != SelectedDelegationType.initial);
+    final strings = Strings.of(context);
+    switch (this) {
+      case SelectedDelegationType.initial:
+        return "";
+      case SelectedDelegationType.delegate:
+        return strings.stakingCompleteDelegationComplete;
+      case SelectedDelegationType.redelegate:
+        return strings.stakingCompleteRedelegationComplete;
+      case SelectedDelegationType.undelegate:
+        return strings.stakingCompleteUndelegationComplete;
+      case SelectedDelegationType.claimRewards:
+        return strings.stakingCompleteClaimRewardsComplete;
+    }
+  }
 }
