@@ -10,9 +10,11 @@ class StakingSuccessScreen extends StatelessWidget {
   const StakingSuccessScreen({
     Key? key,
     required this.selected,
+    this.message,
   }) : super(key: key);
 
   final SelectedDelegationType selected;
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +49,7 @@ class StakingSuccessScreen extends StatelessWidget {
                   ),
                   VerticalSpacer.large(),
                   PwText(
-                    Strings.of(context).stakingSuccessSuccessful(
-                      selected.getDropDownTitle(context),
-                    ),
+                    message ?? "",
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
                   ),
