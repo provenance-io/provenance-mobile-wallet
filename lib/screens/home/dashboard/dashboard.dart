@@ -149,31 +149,28 @@ class _DashboardState extends State<Dashboard> {
                           } else {
                             final accountId =
                                 accountService.events.selected.value?.id;
-                            if (accountId != null) {
-                              final success = await _walletConnectService
-                                  .tryRestoreSession(accountId);
-                              if (!success) {
-                                final addressData = await Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).push(
-                                  QRCodeScanner(
-                                    isValidCallback: (input) {
-                                      return Future.value(input.isNotEmpty);
-                                    },
-                                  ).route(),
-                                );
 
-                                if (addressData != null) {
-                                  _walletConnectService
-                                      .connectSession(accountId, addressData)
-                                      .catchError((err) {
-                                    PwDialog.showError(
-                                      context,
-                                      exception: err,
-                                    );
-                                  });
-                                }
+                            if (accountId != null) {
+                              final addressData = await Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).push(
+                                QRCodeScanner(
+                                  isValidCallback: (input) {
+                                    return Future.value(input.isNotEmpty);
+                                  },
+                                ).route(),
+                              );
+
+                              if (addressData != null) {
+                                _walletConnectService
+                                    .connectSession(accountId, addressData)
+                                    .catchError((err) {
+                                  PwDialog.showError(
+                                    context,
+                                    exception: err,
+                                  );
+                                });
                               }
                             }
                           }
