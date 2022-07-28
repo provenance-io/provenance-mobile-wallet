@@ -437,7 +437,8 @@ class _DashboardState extends State<Dashboard> {
   void _connectQueueUpdated() async {
     final groups = await _connectQueueService.loadAllGroups();
     final counts = groups.map((group) => group.actionLookup.length);
-    _notificationBellNotifier.value =
-        counts.reduce((value, element) => value + element);
+    _notificationBellNotifier.value = (counts.isEmpty)
+        ? 0
+        : counts.reduce((value, element) => value + element);
   }
 }
