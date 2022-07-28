@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -8,6 +9,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/warnin
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -61,6 +63,44 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     get.registerSingleton<StakingDelegationBloc>(_bloc);
     _bloc.load();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (ValidatorStatus.jailed == widget.validator.status) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: PwText("Before you continue"),
+              content: PwText(
+                "Delegation to a jailed validator will not add your delegation to the validator until they are unjailed.\nDo you wish to continue?",
+              ),
+              actions: [
+                PwTextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: PwText(
+                    'Yes',
+                    style: PwTextStyle.bodyBold,
+                  ),
+                ),
+                PwTextButton(
+                  onPressed: () {
+                    final navigator = Navigator.of(context);
+                    navigator.pop();
+                    navigator.pop();
+                  },
+                  child: PwText(
+                    'Cancel',
+                  ),
+                ),
+              ],
+            );
+          });
+    }
+    super.didChangeDependencies();
   }
 
   @override
