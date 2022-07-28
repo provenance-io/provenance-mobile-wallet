@@ -6,4 +6,8 @@ extension DoubleExtensions on double {
           .format(this);
 
   int toCoinAmount() => (this * 100).round();
+
+  String toVoteWeight() {
+    return "${toInt()}0000000000000000";
+  }
 }
