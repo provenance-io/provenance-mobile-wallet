@@ -6,12 +6,14 @@ import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
+import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/screens/recover_account_screen.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_entry_screen.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 import 'util/widget_tester_extension.dart';
 
@@ -28,7 +30,11 @@ void main() {
       await tester.pumpAndSettle(Duration(seconds: 1));
 
       await tester.tapKeyAndSettle(
-        LandingScreen.keyRecoverAccountButton,
+        LandingScreen.keyAddAccountButton,
+      );
+
+      await tester.tapKeyAndSettle(
+        AccountTypeScreen.keyRecoverAccountButton,
       );
 
       await tester.tapKeyAndSettle(
@@ -61,16 +67,20 @@ void main() {
       var networkName = tester.widgetWithKey<PwText>(
         RecoverPassphraseEntryScreen.networkName,
       );
-      expect(networkName.data.contains(Coin.mainNet.displayName), isTrue);
 
-      await tester.tapKeyAndSettle(
-        RecoverPassphraseEntryScreen.networkName,
-      );
+      final network = networkName.data;
+      if (network ==
+          Strings.recoverPassphraseNetwork(Coin.mainNet.displayName)) {
+        await tester.tapKeyAndSettle(
+          RecoverPassphraseEntryScreen.networkToggle,
+        );
+      }
 
       networkName = tester.widgetWithKey<PwText>(
         RecoverPassphraseEntryScreen.networkName,
       );
-      expect(networkName.data.contains(Coin.testNet.displayName), isTrue);
+      expect(networkName.data,
+          Strings.recoverPassphraseNetwork(Coin.testNet.displayName));
 
       const wordOneIndex = 0;
       final keyWordOne =
