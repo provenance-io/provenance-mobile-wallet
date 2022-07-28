@@ -10,11 +10,11 @@ class StakingCompleteScreen extends StatelessWidget {
   const StakingCompleteScreen({
     Key? key,
     required this.selected,
-    this.message,
+    required this.message,
   }) : super(key: key);
 
   final SelectedDelegationType selected;
-  final String? message;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class StakingCompleteScreen extends StatelessWidget {
                   ),
                   VerticalSpacer.large(),
                   PwText(
-                    message ?? "",
+                    message,
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
                   ),

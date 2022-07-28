@@ -55,8 +55,9 @@ class StakingFlowBloc implements StakingFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
-    _navigator.showTransactionSuccess(selected);
+  Future<void> showTransactionComplete(
+      String message, SelectedDelegationType selected) async {
+    _navigator.showTransactionComplete(message, selected);
   }
 
   @override

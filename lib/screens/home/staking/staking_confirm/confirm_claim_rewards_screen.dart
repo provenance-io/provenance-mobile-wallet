@@ -87,9 +87,10 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
+      final message =
+          await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

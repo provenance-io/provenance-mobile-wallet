@@ -88,10 +88,10 @@ class ConfirmDelegateScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await bloc.doDelegate(gasAdjustment);
+      final message = await bloc.doDelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
       get<StakingFlowBloc>()
-          .showTransactionSuccess(details.selectedDelegationType);
+          .showTransactionComplete(message, details.selectedDelegationType);
     } catch (err) {
       await _showErrorModal(err, context);
     }

@@ -114,9 +114,10 @@ class ConfirmRedelegateScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
+      final message =
+          await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

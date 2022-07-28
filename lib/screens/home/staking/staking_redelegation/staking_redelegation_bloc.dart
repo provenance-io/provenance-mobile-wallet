@@ -107,7 +107,7 @@ class StakingRedelegationBloc extends Disposable {
     return _getRedelegateMessage().toProto3Json();
   }
 
-  Future<void> doRedelegate(
+  Future<String> doRedelegate(
     double? gasAdjustment,
   ) async {
     final body = proto.TxBody(
@@ -132,7 +132,9 @@ class StakingRedelegationBloc extends Disposable {
       estimate,
     );
 
-    log(response.asJsonString());
+    final stringifiedResponse = response.asJsonString();
+    log(stringifiedResponse);
+    return stringifiedResponse;
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
