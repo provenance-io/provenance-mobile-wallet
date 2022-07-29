@@ -66,44 +66,6 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    if (ValidatorStatus.jailed == widget.validator.status) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: PwText("Before you continue"),
-              content: PwText(
-                "Delegation to a jailed validator will not add your delegation to the validator until they are unjailed.\nDo you wish to continue?",
-              ),
-              actions: [
-                PwTextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: PwText(
-                    'Yes',
-                    style: PwTextStyle.bodyBold,
-                  ),
-                ),
-                PwTextButton(
-                  onPressed: () {
-                    final navigator = Navigator.of(context);
-                    navigator.pop();
-                    navigator.pop();
-                  },
-                  child: PwText(
-                    'Cancel',
-                  ),
-                ),
-              ],
-            );
-          });
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
@@ -216,7 +178,47 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                         details.hashDelegated <= Decimal.zero) {
                       return;
                     }
-                    get<StakingFlowBloc>().showDelegationReview();
+                    if (ValidatorStatus.jailed == widget.validator.status) {
+                      final strings = Strings.of(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: PwText(
+                              strings.stakingDelegateBeforeYouContinue,
+                              textAlign: TextAlign.center,
+                              style: PwTextStyle.bodyBold,
+                            ),
+                            content: PwText(
+                              strings.stakingDelegateValidatorJailedWarning,
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              PwTextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  get<StakingFlowBloc>().showDelegationReview();
+                                },
+                                child: PwText(
+                                  strings.stakingDelegateYesResponse,
+                                  style: PwTextStyle.bodyBold,
+                                ),
+                              ),
+                              PwTextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: PwText(
+                                  strings.stakingDelegateNoResponse,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      get<StakingFlowBloc>().showDelegationReview();
+                    }
                   },
                   child: PwText(
                     Strings.of(context).continueName,
