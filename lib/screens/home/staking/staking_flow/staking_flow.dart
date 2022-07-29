@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_complete/staking_complete_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
+import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_redelegate_screen.dart';
@@ -224,9 +224,12 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   Future<void> showTransactionComplete(
       Object? response, SelectedDelegationType selected) async {
     showPage(
-      (context) => StakingCompleteScreen(
+      (context) => PwTransactionCompleteScreen(
+        title: selected.getCompletionMessage(context),
+        onBackToDashboard: backToDashboard,
         response: response,
-        selected: selected,
+        onComplete: onComplete,
+        onPressed: () => showTransactionData(response, "Response"),
       ),
     );
   }

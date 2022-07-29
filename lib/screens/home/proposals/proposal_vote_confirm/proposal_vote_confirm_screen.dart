@@ -188,9 +188,9 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      await _bloc.doVote(gasEstimate);
+      final response = await _bloc.doVote(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionSuccess();
+      get<ProposalsFlowBloc>().showTransactionComplete(response);
     } catch (err) {
       await _showErrorModal(err, context);
     }

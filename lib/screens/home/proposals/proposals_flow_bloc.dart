@@ -23,8 +23,8 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionSuccess() async {
-    await _navigator.showTransactionSuccess();
+  Future<void> showTransactionComplete(Object? response) async {
+    await _navigator.showTransactionComplete(response);
   }
 
   @override

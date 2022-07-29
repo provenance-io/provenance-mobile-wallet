@@ -101,7 +101,7 @@ class WeightedVoteBloc extends Disposable {
     return _getMsgVoteWeighted().toProto3Json();
   }
 
-  Future<void> doWeightedVote(
+  Future<Object?> doWeightedVote(
     double? gasAdjustment,
   ) async {
     final body = proto.TxBody(
@@ -129,6 +129,7 @@ class WeightedVoteBloc extends Disposable {
     );
 
     log(response.asJsonString());
+    return response.txResponse.toProto3Json();
   }
 }
 

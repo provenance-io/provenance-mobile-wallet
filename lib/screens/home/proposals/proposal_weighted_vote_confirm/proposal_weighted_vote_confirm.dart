@@ -217,9 +217,9 @@ class _ProposalWeightedVoteConfirmScreenState
     BuildContext context,
   ) async {
     try {
-      await _bloc.doWeightedVote(gasEstimate);
+      final response = await _bloc.doWeightedVote(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionSuccess();
+      get<ProposalsFlowBloc>().showTransactionComplete(response);
     } catch (err) {
       await _showErrorModal(err, context);
     }
