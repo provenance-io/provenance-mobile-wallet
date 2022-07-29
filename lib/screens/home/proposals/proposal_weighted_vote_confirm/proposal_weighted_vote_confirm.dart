@@ -79,7 +79,10 @@ class _ProposalWeightedVoteConfirmScreenState
                 ),
                 onPressed: () {
                   final data = _bloc.getMsgVoteWeightedJson();
-                  get<ProposalsFlowBloc>().showTransactionData(data);
+                  get<ProposalsFlowBloc>().showTransactionData(
+                    data,
+                    Strings.of(context).stakingConfirmData,
+                  );
                 },
                 child: PwText(
                   strings.stakingConfirmData,

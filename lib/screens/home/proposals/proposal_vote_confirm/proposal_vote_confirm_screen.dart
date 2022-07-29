@@ -90,7 +90,10 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               ),
               onPressed: () {
                 final data = _bloc.getMsgVoteJson();
-                get<ProposalsFlowBloc>().showTransactionData(data);
+                get<ProposalsFlowBloc>().showTransactionData(
+                  data,
+                  Strings.of(context).stakingConfirmData,
+                );
               },
               child: PwText(
                 strings.stakingConfirmData,

@@ -50,8 +50,8 @@ class StakingFlowBloc implements StakingFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionData(Object? data) async {
-    _navigator.showTransactionData(data);
+  Future<void> showTransactionData(Object? data, String screenTitle) async {
+    _navigator.showTransactionData(data, screenTitle);
   }
 
   @override

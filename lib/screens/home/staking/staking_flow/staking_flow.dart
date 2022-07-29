@@ -1,11 +1,11 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_complete/staking_complete_screen.dart';
+import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_redelegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_undelegate_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
@@ -51,7 +51,10 @@ abstract class StakingFlowNavigator {
 
   Future<void> showRedelegationReview();
 
-  Future<void> showTransactionData(Object? data);
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  );
 
   Future<void> showTransactionComplete(
     Object? response,
@@ -205,9 +208,13 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showTransactionData(Object? data) async {
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  ) async {
     showPage(
-      (context) => StakingTransactionDataScreen(
+      (context) => PwDataScreen(
+        title: screenTitle,
         data: data,
       ),
     );

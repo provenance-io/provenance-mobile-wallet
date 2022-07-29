@@ -33,8 +33,10 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>()
-                .showTransactionData(bloc.getClaimRewardJson());
+            get<StakingFlowBloc>().showTransactionData(
+              bloc.getClaimRewardJson(),
+              Strings.of(context).stakingConfirmData,
+            );
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading(
