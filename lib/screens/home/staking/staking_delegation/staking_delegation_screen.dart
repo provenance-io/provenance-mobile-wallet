@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -182,38 +184,81 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       final strings = Strings.of(context);
                       showDialog(
                         context: context,
+                        barrierDismissible: false,
                         builder: (context) {
-                          return CupertinoAlertDialog(
-                            title: PwText(
-                              strings.stakingDelegateBeforeYouContinue,
-                              textAlign: TextAlign.center,
-                              style: PwTextStyle.bodyBold,
-                            ),
-                            content: PwText(
-                              strings.stakingDelegateValidatorJailedWarning,
-                              textAlign: TextAlign.center,
-                            ),
-                            actions: [
-                              PwTextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  get<StakingFlowBloc>().showDelegationReview();
-                                },
-                                child: PwText(
-                                  strings.stakingDelegateYesResponse,
-                                  style: PwTextStyle.bodyBold,
+                          if (Platform.isIOS || Platform.isMacOS) {
+                            return CupertinoAlertDialog(
+                              title: Text(
+                                strings.stakingDelegateBeforeYouContinue,
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text(
+                                strings.stakingDelegateValidatorJailedWarning,
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: [
+                                PwTextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    get<StakingFlowBloc>()
+                                        .showDelegationReview();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateYesResponse,
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                ),
+                                PwTextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateNoResponse,
+                                    style: PwTextStyle.body,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            final theme = Theme.of(context);
+                            return AlertDialog(
+                              title: Text(
+                                strings.stakingDelegateBeforeYouContinue,
+                                style: theme.textTheme.bodyBold.copyWith(
+                                  color: theme.colorScheme.neutral800,
                                 ),
                               ),
-                              PwTextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: PwText(
-                                  strings.stakingDelegateNoResponse,
+                              content: Text(
+                                  strings.stakingDelegateValidatorJailedWarning,
+                                  style: theme.textTheme.body.copyWith(
+                                    color: theme.colorScheme.neutral800,
+                                  )),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateNoResponse
+                                        .toUpperCase(),
+                                    style: PwTextStyle.bodyBold,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    get<StakingFlowBloc>()
+                                        .showDelegationReview();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateYesResponse
+                                        .toUpperCase(),
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
                         },
                       );
                     } else {
