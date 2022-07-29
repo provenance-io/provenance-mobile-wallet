@@ -181,10 +181,11 @@ class DefaultWalletConnectService extends WalletConnectService
       );
     }
 
-    return session.connect(restoreData, remainingTime).then((value) async {
-      await _setCurrentSession(session);
-      return value;
-    });
+    final success = await session.connect(restoreData, remainingTime);
+
+    await _setCurrentSession(session);
+
+    return success;
   }
 
   @override
