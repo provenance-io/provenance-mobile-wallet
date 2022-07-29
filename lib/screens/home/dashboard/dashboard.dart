@@ -170,8 +170,11 @@ class _DashboardState extends State<Dashboard> {
                                       .catchError((err) {
                                     PwDialog.showError(
                                       context,
-                                      exception: err,
+                                      message: Strings.walletConnectFailed,
+                                      error: err,
                                     );
+
+                                    return false;
                                   });
                                 }
                               }
