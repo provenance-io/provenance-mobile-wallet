@@ -12,7 +12,11 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
     String topic,
   ) async {
     logDebug("Registering for $topic");
-    await _pushNotificationHelper.registerForTopic(topic);
+    try {
+      await _pushNotificationHelper.registerForTopic(topic);
+    } catch (e) {
+      logDebug('Failed to register for topic: $topic');
+    }
   }
 
   @override
@@ -20,6 +24,10 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
     String topic,
   ) async {
     logDebug("Unregistering for $topic");
-    await _pushNotificationHelper.unregisterForTopic(topic);
+    try {
+      await _pushNotificationHelper.unregisterForTopic(topic);
+    } catch (e) {
+      logDebug('Failed to unregister for topic: $topic');
+    }
   }
 }
