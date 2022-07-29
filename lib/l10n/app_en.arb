@@ -572,5 +572,6 @@
       }
     }
   },
-  "homeScreenMore": "More"
+  "homeScreenMore": "More",
+  "transactionResponse": "Response"
 }

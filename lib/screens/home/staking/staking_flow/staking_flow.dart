@@ -19,6 +19,7 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 abstract class StakingFlowNavigator {
   Future<void> showDelegationScreen(
@@ -229,7 +230,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
-        onPressed: () => showTransactionData(response, "Response"),
+        onPressed: () => showTransactionData(
+          response,
+          Strings.of(context).transactionResponse,
+        ),
       ),
     );
   }

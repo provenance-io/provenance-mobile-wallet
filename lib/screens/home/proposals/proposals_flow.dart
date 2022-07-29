@@ -131,7 +131,10 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
-        onPressed: () => showTransactionData(response, "Response"),
+        onPressed: () => showTransactionData(
+          response,
+          Strings.of(context).transactionResponse,
+        ),
       ),
     );
   }
