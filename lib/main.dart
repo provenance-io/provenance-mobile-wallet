@@ -441,6 +441,54 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
 
     get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
+
+    final accountService = get<AccountService>();
+    final remoteNotificationService = get<RemoteNotificationService>();
+
+    final accounts = await accountService.getAccounts();
+    for (var account in accounts) {
+      final address = account.publicKey?.address;
+      if (address != null) {
+        await remoteNotificationService.registerForPushNotifications(address);
+      }
+    }
+
+    accountService.events.added.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.removed.listen((e) {
+      for (var account in e) {
+        final address = account.publicKey?.address;
+        if (address != null) {
+          remoteNotificationService
+              .unregisterForPushNotifications(address)
+              .onError(
+                (error, stackTrace) => logDebug(
+                  'Failed to unregister push notifications for account: $address',
+                ),
+              );
+        }
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.updated.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null && !remoteNotificationService.isRegistered(address)) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
   }
 }
 
