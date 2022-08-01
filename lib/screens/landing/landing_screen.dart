@@ -18,8 +18,8 @@ class LandingScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static final keyRecoverAccountButton =
-      ValueKey('$LandingScreen.recover_account_button');
+  static final keyAddAccountButton =
+      ValueKey('$LandingScreen.add_account_button');
 
   @override
   State<StatefulWidget> createState() {
@@ -97,6 +97,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   var hasAccount = status != AuthStatus.noAccount;
 
                   return PwPrimaryButton.fromString(
+                    key: LandingScreen.keyAddAccountButton,
                     text:
                         hasAccount ? strings.continueName : strings.addAccount,
                     onPressed: () {

@@ -441,6 +441,13 @@
   "stakingDelegateCurrentDelegation": "Current Delegation",
   "stakingDelegateDetails": "Details",
   "stakingDelegateEnterAmountToDelegate": "Enter Amount of HASH to delegate",
+  "stakingDelegateBeforeYouContinue": "Before you continue",
+  "stakingDelegateValidatorJailedWarning": "Delegation to a jailed validator will not add your delegation to the validator until they are unjailed.\n\nDo you wish to continue?",
+  "@stakingDelegateValidatorJailedWarning": {
+    "description": "This is displayed in an AlertDialog when trying to delegate to a jailed validator, warning the user about the risks involved."
+  },
+  "stakingDelegateYesResponse": "Yes",
+  "stakingDelegateNoResponse": "No, nevermind",
   "stakingRedelegateRedelegate": "Redelegate",
   "stakingRedelegateAvailableForRedelegation": "Available for Redelegation",
   "stakingRedelegateRedelegating": "Redelegating",
