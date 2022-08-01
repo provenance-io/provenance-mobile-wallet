@@ -1,4 +1,6 @@
 abstract class RemoteNotificationService {
+  bool isRegistered(String topic);
+
   Future<void> registerForPushNotifications(
     String topic,
   );

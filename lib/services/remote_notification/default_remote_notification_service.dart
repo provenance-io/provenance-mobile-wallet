@@ -5,7 +5,11 @@ import 'package:provenance_wallet/util/push_notification_helper.dart';
 class DefaultRemoteNotificationService extends RemoteNotificationService {
   DefaultRemoteNotificationService(this._pushNotificationHelper);
 
+  final Set<String> _registrations = {};
   final PushNotificationHelper _pushNotificationHelper;
+
+  @override
+  bool isRegistered(String topic) => _registrations.contains(topic);
 
   @override
   Future<void> registerForPushNotifications(
@@ -13,6 +17,8 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
   ) async {
     logDebug("Registering for $topic");
     await _pushNotificationHelper.registerForTopic(topic);
+
+    _registrations.add(topic);
   }
 
   @override
@@ -21,5 +27,7 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
   ) async {
     logDebug("Unregistering for $topic");
     await _pushNotificationHelper.unregisterForTopic(topic);
+
+    _registrations.remove(topic);
   }
 }
