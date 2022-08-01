@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:decimal/decimal.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -8,6 +11,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/warnin
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -176,7 +180,90 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                         details.hashDelegated <= Decimal.zero) {
                       return;
                     }
-                    get<StakingFlowBloc>().showDelegationReview();
+                    if (ValidatorStatus.jailed == widget.validator.status) {
+                      final strings = Strings.of(context);
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          if (Platform.isIOS || Platform.isMacOS) {
+                            return CupertinoAlertDialog(
+                              title: Text(
+                                strings.stakingDelegateBeforeYouContinue,
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text(
+                                strings.stakingDelegateValidatorJailedWarning,
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: [
+                                PwTextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    get<StakingFlowBloc>()
+                                        .showDelegationReview();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateYesResponse,
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                ),
+                                PwTextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateNoResponse,
+                                    style: PwTextStyle.body,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            final theme = Theme.of(context);
+                            return AlertDialog(
+                              title: Text(
+                                strings.stakingDelegateBeforeYouContinue,
+                                style: theme.textTheme.bodyBold.copyWith(
+                                  color: theme.colorScheme.neutral800,
+                                ),
+                              ),
+                              content: Text(
+                                  strings.stakingDelegateValidatorJailedWarning,
+                                  style: theme.textTheme.body.copyWith(
+                                    color: theme.colorScheme.neutral800,
+                                  )),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateNoResponse
+                                        .toUpperCase(),
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    get<StakingFlowBloc>()
+                                        .showDelegationReview();
+                                  },
+                                  child: PwText(
+                                    strings.stakingDelegateYesResponse
+                                        .toUpperCase(),
+                                    style: PwTextStyle.bodyBold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    } else {
+                      get<StakingFlowBloc>().showDelegationReview();
+                    }
                   },
                   child: PwText(
                     Strings.of(context).continueName,

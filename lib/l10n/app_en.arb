@@ -27,14 +27,14 @@
   "dashboardConnectionRequestTitle": "Connection Request",
   "dashboardConnectionRequestAllowConnectionTo": "Allow connection to {name}",
   "@dashboardConnectionRequestAllowConnectionTo": {
-  "description": "Connection message with a single parameter",
-  "placeholders": {
-    "name": {
-       "type": "String",
-       "example": "Wallet Connect"
-     }
-   }
- },
+    "description": "Connection message with a single parameter",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Wallet Connect"
+      }
+    }
+  },
   "dashboard": "Dashboard",
   "portfolioValue": "Portfolio Value",
   "send": "Send",
@@ -85,14 +85,14 @@
   "accountMenuItemViewInvite": "View Invitation Details",
   "accountLinkedTo": "Linked to '{name}'",
   "@accountLinkedTo": {
-  "description": "Account linked message with a single parameter",
-  "placeholders": {
-    "name": {
-       "type": "String",
-       "example": "Wallet Connect"
-     }
-   }
- },
+    "description": "Account linked message with a single parameter",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Wallet Connect"
+      }
+    }
+  },
   "select": "Select",
   "rename": "Rename",
   "remove": "Remove",
@@ -118,17 +118,17 @@
   "accountTypeMultiSigJoinLink": "Have an invitation link?",
   "accountTypeMultiSigRecoverName": "Recover",
   "accountTypeMultiSigRecoverDesc": "Using existing linked basic account",
-  "multiSigInviteReviewLandingDesc":"You’re invited to join the \"{name}\" Multi-Sig Account",
+  "multiSigInviteReviewLandingDesc": "You’re invited to join the \"{name}\" Multi-Sig Account",
   "@multiSigInviteReviewLandingDesc": {
-  "description": "Invite message with a single parameter",
-  "placeholders": {
-    "name": {
-       "type": "String",
-       "example": "SuperCoolBeans"
-     }
-   }
- },
-  "multiSigInviteReviewLandingMultiSigAccount":" Multi-Sig Account",
+    "description": "Invite message with a single parameter",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "SuperCoolBeans"
+      }
+    }
+  },
+  "multiSigInviteReviewLandingMultiSigAccount": " Multi-Sig Account",
   "multiSigInviteReviewLandingLearnMoreButton": "Learn More",
   "multiSigInviteReviewDetailsTitle": "Review Invitation",
   "multiSigInviteReviewDetailsDesc": "Review the multi-sig account information.",
@@ -199,35 +199,35 @@
   "enterRecoveryPassphrase": "Enter recovery passphrase",
   "recoverPassphraseNetwork": "Network: {name}",
   "@recoverPassphraseNetwork": {
-  "description": "Network type with a single parameter",
-  "placeholders": {
-    "name": {
-       "type": "String",
-       "example": "Mainnet"
-     }
-   }
- },
+    "description": "Network type with a single parameter",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Mainnet"
+      }
+    }
+  },
   "invalidWord": "Invalid word",
   "recoverPassphraseWord": "Word {num}",
   "@recoverPassphraseWord": {
-  "description": "Numbered word",
-  "placeholders": {
-    "num": {
-       "type": "int",
-       "example": "5"
-     }
-   }
- },
- "selectWordIndex": "Word #{index}",
- "@selectWordIndex": {
-  "description": "Numbered word",
-  "placeholders": {
-    "index": {
-       "type": "int",
-       "example": "5"
-     }
-   }
- },
+    "description": "Numbered word",
+    "placeholders": {
+      "num": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "selectWordIndex": "Word #{index}",
+  "@selectWordIndex": {
+    "description": "Numbered word",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
   "verifyPassphrase": "Verify Passphrase",
   "next": "Next",
   "pleaseMakeASelection": "Please make a selection for the 4 rows.",
@@ -341,10 +341,10 @@
   "actionListMultiSigAccount": "Multi-Sig",
   "nActionListActions": "{count,plural, =1{Action} other{Actions}}",
   "@nActionListActions": {
-  "description": "A plural label for actions.",
-  "placeholders": {
-    "count": {
-      "type": "int"
+    "description": "A plural label for actions.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
     }
   },
@@ -374,8 +374,8 @@
     "description": "Displays the amount of the denom that was delegated.",
     "placeholders": {
       "amount": {
-         "type": "String",
-         "example": "100000"
+        "type": "String",
+        "example": "100000"
       }
     }
   },
@@ -384,12 +384,12 @@
     "description": "Displays the number of delegators and commission percentage.",
     "placeholders": {
       "delegators": {
-         "type": "int",
-         "example": "5"
+        "type": "int",
+        "example": "5"
       },
       "commission": {
-         "type": "String",
-         "example": "100%"
+        "type": "String",
+        "example": "100%"
       }
     }
   },
@@ -426,7 +426,7 @@
   "stakingDetailsValidatorTransactions": "Validator Transactions",
   "stakingDetailsViewLess": "View Less",
   "stakingManagementMyDelegation": "My Delegation",
-  "stakingManagementNoHash": "-- HASH",
+  "stakingManagementNoHash": "--",
   "stakingConfirmData": "Data",
   "stakingConfirmGasAdjustment": "Gas Adjustment",
   "stakingConfirmDefault": "(Default)",
@@ -441,6 +441,13 @@
   "stakingDelegateCurrentDelegation": "Current Delegation",
   "stakingDelegateDetails": "Details",
   "stakingDelegateEnterAmountToDelegate": "Enter Amount of HASH to delegate",
+  "stakingDelegateBeforeYouContinue": "Before you continue",
+  "stakingDelegateValidatorJailedWarning": "Delegation to a jailed validator will not add your delegation to the validator until they are unjailed.\n\nDo you wish to continue?",
+  "@stakingDelegateValidatorJailedWarning": {
+    "description": "This is displayed in an AlertDialog when trying to delegate to a jailed validator, warning the user about the risks involved."
+  },
+  "stakingDelegateYesResponse": "Yes",
+  "stakingDelegateNoResponse": "No, nevermind",
   "stakingRedelegateRedelegate": "Redelegate",
   "stakingRedelegateAvailableForRedelegation": "Available for Redelegation",
   "stakingRedelegateRedelegating": "Redelegating",
@@ -461,18 +468,12 @@
   "stakingDelegationBlocBack": "Back",
   "stakingDelegationBlocClaimRewards": "Claim Rewards",
   "stakingConfirmClaimRewardsDetails": "Claim Rewards Details",
-  "stakingSuccessSuccess": "SUCCESS",
-  "stakingSuccessSuccessful": "{delegationType} successful",
-  "@stakingSuccessSuccessful": {
-    "description": "Message displayed when the delegation type is successful.",
-    "placeholders": {
-    "delegationType": {
-       "type": "String",
-       "example": "Delegation"
-      }
-    }
-  },
-  "stakingSuccessBackToDashboard": "Back to Dashboard",
+  "stakingCompleteTapToSeeResponse": "Tap here to see response.",
+  "stakingCompleteBackToDashboard": "Back to Dashboard",
+  "stakingCompleteDelegationComplete": "DELEGATION\nCOMPLETE",
+  "stakingCompleteRedelegationComplete": "REDELEGATION\nCOMPLETE",
+  "stakingCompleteUndelegationComplete": "UNDELEGATION\nCOMPLETE",
+  "stakingCompleteClaimRewardsComplete": "CLAIM REWARDS\nCOMPLETE",
   "stakingConfirmHash": "HASH",
   "proposalsScreenLegend": "Legend",
   "proposalsScreenMyStatus": "My Status:",
@@ -480,9 +481,9 @@
   "@proposalsScreenVoted": {
     "description": "Title that displays the vote with 'Voted' prepended.",
     "placeholders": {
-    "formattedVote": {
-       "type": "String",
-       "example": "No w/ Veto"
+      "formattedVote": {
+        "type": "String",
+        "example": "No w/ Veto"
       }
     }
   },
@@ -490,9 +491,9 @@
   "@proposalDetailsTitle": {
     "description": "Title that displays the proposal ID",
     "placeholders": {
-    "proposalId": {
-       "type": "int",
-       "example": "55"
+      "proposalId": {
+        "type": "int",
+        "example": "55"
       }
     }
   },
@@ -536,9 +537,7 @@
   "proposalVoteConfirmVote": "Vote",
   "proposalWeightedVoteConfirmWeightedVote": "Confirm Weighted Vote",
   "proposalWeightedVoteProposalId": "Proposal ID#",
-  "proposalVoteSuccessSuccess": "SUCCESS",
-  "proposalVoteSuccessVoteSuccessful": "Vote Successful",
-  "proposalVoteSuccessBackToDashboard": "Back To Dashboard",
+  "proposalVoteComplete": "VOTE COMPLETE",
   "stakingConfirmUndelegationDetails": "Undelegation Details",
   "stakingConfirmAmountToUndelegate": "Amount to Undelegate",
   "stakingConfirmNewTotalDelegation": "New Total Delegation",
@@ -549,36 +548,37 @@
   "stakingConfirmAmountToDelegate": "Amount to Delegate",
   "nAssets": "{count,plural, =1{{count} Asset} other{{count} Assets}}",
   "@nAssets": {
-  "description": "A plural label for assets.",
-  "placeholders": {
-    "count": {
-      "type": "int"
+    "description": "A plural label for assets.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
     }
   },
   "hashAmount": "{amount} HASH",
   "@hashAmount": {
-  "description": "A String for how much HASH coin there is",
-  "placeholders": {
-    "amount": {
-       "type": "String",
-       "example": "5"
+    "description": "A String for how much HASH coin there is",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "5"
       }
     }
   },
   "hashDeposited": "{deposited} HASH ({percentage})",
   "@hashDeposited": {
-  "description": "A String for how much HASH coin was deposited",
-  "placeholders": {
-    "deposited": {
-       "type": "String",
-       "example": "5"
+    "description": "A String for how much HASH coin was deposited",
+    "placeholders": {
+      "deposited": {
+        "type": "String",
+        "example": "5"
       },
       "percentage": {
-       "type": "String",
-       "example": "100%"
+        "type": "String",
+        "example": "100%"
       }
     }
   },
-  "homeScreenMore": "More"
+  "homeScreenMore": "More",
+  "transactionResponse": "Response"
 }

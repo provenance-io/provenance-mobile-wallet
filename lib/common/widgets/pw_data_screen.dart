@@ -1,20 +1,22 @@
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
-class StakingTransactionDataScreen extends StatelessWidget {
-  const StakingTransactionDataScreen({
+class PwDataScreen extends StatelessWidget {
+  const PwDataScreen({
     Key? key,
+    required this.title,
     required this.data,
   }) : super(key: key);
+
+  final String title;
   final Object? data;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.of(context).stakingConfirmData,
+        title: title,
         leadingIcon: PwIcons.back,
         style: PwTextStyle.footnote,
       ),
