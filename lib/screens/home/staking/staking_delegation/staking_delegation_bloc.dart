@@ -90,28 +90,28 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  Future<void> doDelegate(
+  Future<Object?> doDelegate(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getDelegateMessage().toAny(),
     );
   }
 
-  Future<void> doUndelegate(
+  Future<Object?> doUndelegate(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getUndelegateMessage().toAny(),
     );
   }
 
-  Future<void> claimRewards(
+  Future<Object?> claimRewards(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getClaimRewardMessage().toAny(),
     );
@@ -161,7 +161,7 @@ class StakingDelegationBloc extends Disposable {
     return _getDelegateMessage().toProto3Json();
   }
 
-  Future<void> _sendMessage(
+  Future<Object?> _sendMessage(
     double? gasAdjustment,
     proto.Any message,
   ) async {
@@ -189,6 +189,7 @@ class StakingDelegationBloc extends Disposable {
     );
 
     log(response.asJsonString());
+    return response.txResponse.toProto3Json();
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
@@ -254,6 +255,24 @@ extension SelectedDelegationTypeExtension on SelectedDelegationType {
         return Strings.of(context).menuUndelegate;
       case SelectedDelegationType.claimRewards:
         return Strings.of(context).stakingDelegationBlocClaimRewards;
+    }
+  }
+
+  String getCompletionMessage(BuildContext context) {
+    // There is no way programmatically to get here with the 'initial' type.
+    assert(this != SelectedDelegationType.initial);
+    final strings = Strings.of(context);
+    switch (this) {
+      case SelectedDelegationType.initial:
+        return "";
+      case SelectedDelegationType.delegate:
+        return strings.stakingCompleteDelegationComplete;
+      case SelectedDelegationType.redelegate:
+        return strings.stakingCompleteRedelegationComplete;
+      case SelectedDelegationType.undelegate:
+        return strings.stakingCompleteUndelegationComplete;
+      case SelectedDelegationType.claimRewards:
+        return strings.stakingCompleteClaimRewardsComplete;
     }
   }
 }

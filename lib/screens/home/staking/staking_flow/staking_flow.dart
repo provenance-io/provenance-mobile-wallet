@@ -1,10 +1,11 @@
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
+import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_claim_rewards_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_delegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_redelegate_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_undelegate_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_transaction_data_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
@@ -12,13 +13,13 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_success/staking_success_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 abstract class StakingFlowNavigator {
   Future<void> showDelegationScreen(
@@ -51,9 +52,15 @@ abstract class StakingFlowNavigator {
 
   Future<void> showRedelegationReview();
 
-  Future<void> showTransactionData(Object? data);
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  );
 
-  Future<void> showTransactionSuccess(SelectedDelegationType selected);
+  Future<void> showTransactionComplete(
+    Object? response,
+    SelectedDelegationType selected,
+  );
 
   void onComplete();
 
@@ -202,19 +209,31 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
-  Future<void> showTransactionData(Object? data) async {
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  ) async {
     showPage(
-      (context) => StakingTransactionDataScreen(
+      (context) => PwDataScreen(
+        title: screenTitle,
         data: data,
       ),
     );
   }
 
   @override
-  Future<void> showTransactionSuccess(SelectedDelegationType selected) async {
+  Future<void> showTransactionComplete(
+      Object? response, SelectedDelegationType selected) async {
     showPage(
-      (context) => StakingSuccessScreen(
-        selected: selected,
+      (context) => PwTransactionCompleteScreen(
+        title: selected.getCompletionMessage(context),
+        onBackToDashboard: backToDashboard,
+        response: response,
+        onComplete: onComplete,
+        onPressed: () => showTransactionData(
+          response,
+          Strings.of(context).transactionResponse,
+        ),
       ),
     );
   }

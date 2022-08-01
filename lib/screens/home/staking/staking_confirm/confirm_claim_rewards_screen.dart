@@ -33,8 +33,10 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>()
-                .showTransactionData(bloc.getClaimRewardJson());
+            get<StakingFlowBloc>().showTransactionData(
+              bloc.getClaimRewardJson(),
+              Strings.of(context).stakingConfirmData,
+            );
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading(
@@ -87,9 +89,10 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
+      final message =
+          await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

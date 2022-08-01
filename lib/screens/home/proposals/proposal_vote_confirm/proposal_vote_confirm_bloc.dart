@@ -23,10 +23,10 @@ class ProposalVoteConfirmBloc {
     this._voteOption,
   );
 
-  Future<void> doVote(
+  Future<Object?> doVote(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getMsgVote().toAny(),
     );
@@ -44,7 +44,7 @@ class ProposalVoteConfirmBloc {
     );
   }
 
-  Future<void> _sendMessage(
+  Future<Object?> _sendMessage(
     double? gasAdjustment,
     proto.Any message,
   ) async {
@@ -72,6 +72,7 @@ class ProposalVoteConfirmBloc {
     );
 
     log(response.asJsonString());
+    return response.txResponse.toProto3Json();
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {

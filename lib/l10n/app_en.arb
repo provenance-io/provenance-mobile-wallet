@@ -426,7 +426,7 @@
   "stakingDetailsValidatorTransactions": "Validator Transactions",
   "stakingDetailsViewLess": "View Less",
   "stakingManagementMyDelegation": "My Delegation",
-  "stakingManagementNoHash": "-- HASH",
+  "stakingManagementNoHash": "--",
   "stakingConfirmData": "Data",
   "stakingConfirmGasAdjustment": "Gas Adjustment",
   "stakingConfirmDefault": "(Default)",
@@ -468,18 +468,12 @@
   "stakingDelegationBlocBack": "Back",
   "stakingDelegationBlocClaimRewards": "Claim Rewards",
   "stakingConfirmClaimRewardsDetails": "Claim Rewards Details",
-  "stakingSuccessSuccess": "SUCCESS",
-  "stakingSuccessSuccessful": "{delegationType} successful",
-  "@stakingSuccessSuccessful": {
-    "description": "Message displayed when the delegation type is successful.",
-    "placeholders": {
-      "delegationType": {
-        "type": "String",
-        "example": "Delegation"
-      }
-    }
-  },
-  "stakingSuccessBackToDashboard": "Back to Dashboard",
+  "stakingCompleteTapToSeeResponse": "Tap here to see response.",
+  "stakingCompleteBackToDashboard": "Back to Dashboard",
+  "stakingCompleteDelegationComplete": "DELEGATION\nCOMPLETE",
+  "stakingCompleteRedelegationComplete": "REDELEGATION\nCOMPLETE",
+  "stakingCompleteUndelegationComplete": "UNDELEGATION\nCOMPLETE",
+  "stakingCompleteClaimRewardsComplete": "CLAIM REWARDS\nCOMPLETE",
   "stakingConfirmHash": "HASH",
   "proposalsScreenLegend": "Legend",
   "proposalsScreenMyStatus": "My Status:",
@@ -543,9 +537,7 @@
   "proposalVoteConfirmVote": "Vote",
   "proposalWeightedVoteConfirmWeightedVote": "Confirm Weighted Vote",
   "proposalWeightedVoteProposalId": "Proposal ID#",
-  "proposalVoteSuccessSuccess": "SUCCESS",
-  "proposalVoteSuccessVoteSuccessful": "Vote Successful",
-  "proposalVoteSuccessBackToDashboard": "Back To Dashboard",
+  "proposalVoteComplete": "VOTE COMPLETE",
   "stakingConfirmUndelegationDetails": "Undelegation Details",
   "stakingConfirmAmountToUndelegate": "Amount to Undelegate",
   "stakingConfirmNewTotalDelegation": "New Total Delegation",
@@ -587,5 +579,6 @@
       }
     }
   },
-  "homeScreenMore": "More"
+  "homeScreenMore": "More",
+  "transactionResponse": "Response"
 }
