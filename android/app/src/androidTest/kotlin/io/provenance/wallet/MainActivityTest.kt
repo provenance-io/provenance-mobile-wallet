@@ -7,6 +7,6 @@ import org.junit.runner.RunWith
 
 @RunWith(FlutterTestRunner::class)
 class MainActivityTest {
-    @Rule
-    var rule = ActivityTestRule(MainActivity::class.java, true, false)
+    @Rule @JvmField
+    val rule = ActivityTestRule(MainActivity::class.java, true, false)
 }

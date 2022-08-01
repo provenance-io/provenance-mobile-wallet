@@ -82,7 +82,7 @@ void main() {
       // Verify pin
       await keyZero.tap(tester, times: 6);
 
-      await EnableFaceIdScreen.keyEnableButton.tap(tester);
+      await EnableFaceIdScreen.keySkipButton.tap(tester);
       await AccountSetupConfirmationScreen.keyContinueButton.tap(tester);
       Dashboard.keyAccountNameText.expectPwText(accountName, tester);
     },
