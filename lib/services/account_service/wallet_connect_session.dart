@@ -56,7 +56,7 @@ class WalletConnectSession {
           ..listen(delegate.events),
         _keyValueService = keyValueService;
 
-  static const _inactivityTimeout = Duration(minutes: 30);
+  static const inactivityTimeout = Duration(minutes: 30);
   Timer? _inactivityTimer;
 
   final Coin coin;
@@ -70,12 +70,14 @@ class WalletConnectSession {
 
   String? topic;
 
+  WalletConnectAddress get address => _connection.address;
+
   Future<bool> connect([
     WalletConnectSessionRestoreData? restoreData,
     Duration? timeoutDuration,
   ]) async {
     var success = false;
-    var inactivityTimeout = timeoutDuration ?? _inactivityTimeout;
+    var timeout = timeoutDuration ?? inactivityTimeout;
     try {
       _connection.addListener(_statusListener);
 
@@ -84,7 +86,7 @@ class WalletConnectSession {
       success = true;
 
       if (restoreData != null) {
-        _startInactivityTimer(inactivityTimeout);
+        _startInactivityTimer(timeout);
 
         log("Restored session: ${restoreData.data}");
         sessionEvents._state.value =
@@ -135,7 +137,7 @@ class WalletConnectSession {
     required String requestId,
     required bool allowed,
   }) async {
-    _startInactivityTimer(_inactivityTimeout);
+    _startInactivityTimer(inactivityTimeout);
 
     return _delegate.complete(requestId, allowed);
   }
@@ -144,7 +146,7 @@ class WalletConnectSession {
     required requestId,
     required bool allowed,
   }) async {
-    _startInactivityTimer(_inactivityTimeout);
+    _startInactivityTimer(inactivityTimeout);
 
     return _delegate.complete(requestId, allowed);
   }
@@ -153,7 +155,7 @@ class WalletConnectSession {
     required WalletConnectSessionRequestData details,
     required bool allowed,
   }) async {
-    _startInactivityTimer(_inactivityTimeout);
+    _startInactivityTimer(inactivityTimeout);
     final success = await _delegate.complete(details.id, allowed);
     if (success) {
       sessionEvents._state.value =
