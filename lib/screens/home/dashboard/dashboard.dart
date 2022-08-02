@@ -23,6 +23,7 @@ import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Dashboard extends StatefulWidget {
@@ -170,8 +171,16 @@ class _DashboardState extends State<Dashboard> {
                                       .catchError((err) {
                                     PwDialog.showError(
                                       context,
-                                      exception: err,
+                                      message: Strings.walletConnectFailed,
+                                      error: err,
                                     );
+
+                                    logError(
+                                      'Failed to connect session',
+                                      error: err,
+                                    );
+
+                                    return false;
                                   });
                                 }
                               }

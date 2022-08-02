@@ -1,170 +1,86 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 
-import 'package:logger/logger.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:flutter/foundation.dart';
 
-export 'package:logger/logger.dart';
+extension LogExtension on Object {
+  void log(dynamic message) => Log.instance.info(message, tag: '$runtimeType');
 
-final _log = _Logger(
-  printer: _SimpleScopedPrinter(
-    printTime: true,
-    prettyJson: false, // set to true as needed for development
-  ),
-  output: _Output(),
-  filter: _LogFilter(),
-);
-
-/// Extension on Object to use `runtimeType`
-extension Log on Object {
-  void log(dynamic message) => _log.info(message, tag: '$runtimeType');
-
-  void logDebug(dynamic message) => _log.debug(message, tag: '$runtimeType');
+  void logDebug(dynamic message) =>
+      Log.instance.debug(message, tag: '$runtimeType');
 
   void logError(
     dynamic message, {
-    dynamic error,
+    Object? error,
     StackTrace? stackTrace,
   }) =>
-      _log.error(
+      Log.instance.error(
         message,
         tag: '$runtimeType',
         error: error,
-        stackTrace: stackTrace,
+        stack: stackTrace,
       );
 }
 
-/// For calling from static methods
-void logStatic(
-  String tag,
-  Level level,
-  dynamic message, {
-  dynamic error,
-}) {
-  if (level == Level.error) {
-    _log.error(
-      message,
-      tag: tag,
-      error: error,
-    );
-  } else if (level == Level.debug) {
-    _log.debug(message, tag: tag);
-  } else {
-    _log.info(message, tag: tag);
-  }
-}
+class Log {
+  static final instance = Log();
 
-class _Logger extends Logger {
-  _Logger({
-    required LogPrinter printer,
-    LogOutput? output,
-    LogFilter? filter,
-  }) : super(
-          printer: printer,
-          output: output,
-          filter: filter,
-        );
+  static const _encoder = JsonEncoder.withIndent(kDebugMode ? '   ' : null);
 
-  void info(
-    dynamic message, {
-    required String tag,
-  }) =>
-      log(
-        Level.info,
-        [tag, message],
-        null,
-        null,
-      );
+  static const _white = '\x1B[37m';
+  static const _blue = '\x1B[34m';
+  static const _red = '\x1B[31m';
+  static const _reset = '\x1B[0m';
 
   void debug(
     dynamic message, {
     required String tag,
-  }) =>
-      _log.log(
-        Level.debug,
-        [tag, message],
-        null,
-        null,
-      );
+  }) {
+    final messageStr = _stringifyMessage(message);
+
+    dev.log(
+      '$_white[$tag] [d] $messageStr$_reset',
+    );
+  }
+
+  void info(
+    dynamic message, {
+    required String tag,
+  }) {
+    final messageStr = _stringifyMessage(message);
+
+    dev.log(
+      '$_blue[$tag] [i] $messageStr$_reset',
+    );
+  }
 
   void error(
     dynamic message, {
     required String tag,
-    dynamic error,
-    StackTrace? stackTrace,
-  }) =>
-      _log.log(
-        Level.error,
-        [tag, message],
-        error,
-        stackTrace,
-      );
-}
+    Object? error,
+    StackTrace? stack,
+  }) {
+    var stackTrace = stack;
 
-class _SimpleScopedPrinter extends SimplePrinter {
-  _SimpleScopedPrinter({bool printTime = true, bool prettyJson = false})
-      : _encoder = JsonEncoder.withIndent(prettyJson ? '   ' : null),
-        super(printTime: printTime);
+    if (stackTrace == null && error is Error) {
+      stackTrace = error.stackTrace;
+    }
+    final messageStr = _stringifyMessage(message);
 
-  /// If `prettyJson`, a `Map` or `Iterable` will be indented
-  final JsonEncoder _encoder;
-
-  /// Adding emoji prefixes for visual cues because intellij doesn't support
-  /// ANSI escape codes for non Java based projects yet
-  static final levelPrefixes = {
-    Level.verbose: '[v]',
-    Level.debug: '[d]',
-    Level.info: '[i]',
-    Level.warning: '🟡',
-    Level.error: '🔴',
-    Level.wtf: '🆘',
-  };
-
-  @override
-  List<String> log(LogEvent event) {
-    var map = event.message as List<dynamic>;
-    var scope = map[0];
-    var messageStr = _stringifyMessage(map[1]);
-    var errorStr = event.error != null ? '  ERROR: ${event.error}' : '';
-    var timeStr = printTime ? '[${DateTime.now().toIso8601String()}]' : '';
-
-    return [
-      scope,
-      timeStr,
-      '${_labelFor(event.level)} $messageStr$errorStr',
-    ];
-  }
-
-  String _labelFor(Level level) {
-    return levelPrefixes[level]!;
+    dev.log(
+      '$_red[$tag] [e] $messageStr$_reset',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
   String _stringifyMessage(dynamic message) {
+    if (message is String) {
+      return message;
+    }
+
     return message is Map || message is Iterable
         ? _encoder.convert(message)
         : message.toString();
-  }
-}
-
-class _Output extends LogOutput {
-  @override
-  void output(OutputEvent event) {
-    dev.log('${event.lines[1]} ${event.lines[2]}', name: event.lines[0]);
-
-    if (event.level != Level.debug) {
-      if (get.isRegistered<CrashReportingService>()) {
-        // no need to add time
-        get<CrashReportingService>()
-            .log('[${event.lines[0]}] ${event.lines[2]}');
-      }
-    }
-  }
-}
-
-class _LogFilter extends LogFilter {
-  @override
-  bool shouldLog(LogEvent event) {
-    return true; // log everything
   }
 }
