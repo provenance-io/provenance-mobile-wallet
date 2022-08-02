@@ -9,6 +9,7 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i5;
 import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_dart/wallet_connect.dart' as _i6;
+import 'package:provenance_wallet/common/pw_design.dart' as _i19;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
@@ -28,6 +29,7 @@ import 'package:provenance_wallet/services/remote_notification/remote_notificati
     as _i11;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
     as _i12;
+import 'package:provenance_wallet/util/local_auth_helper.dart' as _i18;
 import 'package:rxdart/streams.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -426,5 +428,77 @@ class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
   @override
   void removeListener(_i16.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+          returnValueForMissingStub: null);
+}
+
+/// A class which mocks [LocalAuthHelper].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLocalAuthHelper extends _i1.Mock implements _i18.LocalAuthHelper {
+  MockLocalAuthHelper() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.ValueStream<_i18.AuthStatus> get status =>
+      (super.noSuchMethod(Invocation.getter(#status),
+              returnValue: _FakeValueStream_0<_i18.AuthStatus>())
+          as _i2.ValueStream<_i18.AuthStatus>);
+  @override
+  void reset() => super.noSuchMethod(Invocation.method(#reset, []),
+      returnValueForMissingStub: null);
+  @override
+  _i8.Future<bool> enroll(String? code, String? accountName, bool? useBiometry,
+          _i19.BuildContext? context) =>
+      (super.noSuchMethod(
+          Invocation.method(#enroll, [code, accountName, useBiometry, context]),
+          returnValue: Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<_i18.AuthStatus> auth(_i19.BuildContext? context) =>
+      (super.noSuchMethod(Invocation.method(#auth, [context]),
+              returnValue:
+                  Future<_i18.AuthStatus>.value(_i18.AuthStatus.noAccount))
+          as _i8.Future<_i18.AuthStatus>);
+  @override
+  void didChangeAppLifecycleState(_i16.AppLifecycleState? state) => super
+      .noSuchMethod(Invocation.method(#didChangeAppLifecycleState, [state]),
+          returnValueForMissingStub: null);
+  @override
+  _i8.Future<bool> didPopRoute() =>
+      (super.noSuchMethod(Invocation.method(#didPopRoute, []),
+          returnValue: Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> didPushRoute(String? route) =>
+      (super.noSuchMethod(Invocation.method(#didPushRoute, [route]),
+          returnValue: Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> didPushRouteInformation(
+          _i19.RouteInformation? routeInformation) =>
+      (super.noSuchMethod(
+          Invocation.method(#didPushRouteInformation, [routeInformation]),
+          returnValue: Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  void didChangeMetrics() =>
+      super.noSuchMethod(Invocation.method(#didChangeMetrics, []),
+          returnValueForMissingStub: null);
+  @override
+  void didChangeTextScaleFactor() =>
+      super.noSuchMethod(Invocation.method(#didChangeTextScaleFactor, []),
+          returnValueForMissingStub: null);
+  @override
+  void didChangePlatformBrightness() =>
+      super.noSuchMethod(Invocation.method(#didChangePlatformBrightness, []),
+          returnValueForMissingStub: null);
+  @override
+  void didChangeLocales(List<_i16.Locale>? locales) =>
+      super.noSuchMethod(Invocation.method(#didChangeLocales, [locales]),
+          returnValueForMissingStub: null);
+  @override
+  void didHaveMemoryPressure() =>
+      super.noSuchMethod(Invocation.method(#didHaveMemoryPressure, []),
+          returnValueForMissingStub: null);
+  @override
+  void didChangeAccessibilityFeatures() =>
+      super.noSuchMethod(Invocation.method(#didChangeAccessibilityFeatures, []),
           returnValueForMissingStub: null);
 }

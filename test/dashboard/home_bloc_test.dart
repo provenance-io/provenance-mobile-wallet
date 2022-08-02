@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -280,8 +279,6 @@ class TestState {
 
     final mockRemoteNotificationService = MockRemoteNotificationService();
     final mockWalletConnectService = MockWalletConnectService();
-    when(mockWalletConnectService.tryRestoreSession(any))
-        .thenAnswer((_) => Future.value(true));
 
     final deepLinkService = MockDeepLinkService();
     final assetService = MockAssetService(assets);

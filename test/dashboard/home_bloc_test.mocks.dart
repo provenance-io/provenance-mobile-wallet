@@ -102,10 +102,6 @@ class MockWalletConnectService extends _i1.Mock
               {#requestId: requestId, #allowed: allowed}),
           returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  _i5.Future<bool> tryRestoreSession(String? accountId) =>
-      (super.noSuchMethod(Invocation.method(#tryRestoreSession, [accountId]),
-          returnValue: Future<bool>.value(false)) as _i5.Future<bool>);
-  @override
   void addListener(_i8.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);

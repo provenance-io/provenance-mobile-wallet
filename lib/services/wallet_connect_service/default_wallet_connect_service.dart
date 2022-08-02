@@ -288,7 +288,7 @@ class DefaultWalletConnectService extends WalletConnectService
     );
 
     try {
-      final success =
+      bool success =
           await session.connect(restoreData, sessionExpired.difference(now));
 
       if (success) {
@@ -296,19 +296,11 @@ class DefaultWalletConnectService extends WalletConnectService
           _log("Disconnecting expired previous session");
           await session.disconnect();
           await session.dispose();
-
-          _log("The stored session has expired");
           await _removeSessionData(connection.address);
           return false;
         } else {
           _log("Previous session has been restored");
           await _setCurrentSession(session);
-        }
-
-        if (!success) {
-          final walletConnectQueue = get<WalletConnectQueueService>();
-          final address = WalletConnectAddress.create(data.address)!;
-          await walletConnectQueue.removeWalletConnectSessionGroup(address);
         }
       }
 
@@ -406,7 +398,7 @@ class DefaultWalletConnectService extends WalletConnectService
     }
   }
 
-  Future<void> _removeSessionData([WalletConnectAddress? address]) {
+  Future<void> _removeSessionData([WalletConnectAddress? address]) async {
     Future<void> removeSessionGroupFuture;
 
     if (address != null) {
@@ -417,7 +409,7 @@ class DefaultWalletConnectService extends WalletConnectService
     }
 
     _log("Removing session data");
-    return Future.wait([
+    await Future.wait([
       _keyValueService.removeString(PrefKey.sessionData),
       _keyValueService.removeString(PrefKey.sessionSuspendedTime),
       removeSessionGroupFuture

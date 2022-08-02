@@ -90,13 +90,12 @@ main() {
       when(mockWalletConnectSessionDelegate!.events).thenReturn(events!);
 
       session = WalletConnectSession(
-        accountId: "WalletId",
-        coin: wallet.Coin.mainNet,
-        connection: mockWalletConnection!,
-        delegate: mockWalletConnectSessionDelegate!,
-        remoteNotificationService: mockRemoteNotificationService!,
-        keyValueService: mockKeyValueService!,
-      );
+          accountId: "WalletId",
+          coin: wallet.Coin.mainNet,
+          connection: mockWalletConnection!,
+          delegate: mockWalletConnectSessionDelegate!,
+          remoteNotificationService: mockRemoteNotificationService!,
+          onSessionClosedRemotelyDelegate: () {});
     });
 
     test('closeButRetainSession', () async {
@@ -116,8 +115,13 @@ main() {
 
         final result = await session!.connect();
 
-        verify(mockWalletConnection!
-            .connect(mockWalletConnectSessionDelegate!, null));
+        verify(mockWalletConnection!.connect(argThat(predicate((arg) {
+          final capturingDelegate =
+              arg as WalletConnectSessionCapturingDelegate;
+          expect(capturingDelegate.childDelegte,
+              mockWalletConnectSessionDelegate!);
+          return true;
+        })), null));
 
         expect(result, true);
       });
@@ -141,8 +145,13 @@ main() {
 
         final result = await session!.connect(restore);
 
-        verify(mockWalletConnection!
-            .connect(mockWalletConnectSessionDelegate!, restore.data));
+        verify(mockWalletConnection!.connect(argThat(predicate((arg) {
+          final capturingDelegate =
+              arg as WalletConnectSessionCapturingDelegate;
+          expect(capturingDelegate.childDelegte,
+              mockWalletConnectSessionDelegate!);
+          return true;
+        })), restore.data));
 
         verify(
           mockRemoteNotificationService!
@@ -199,6 +208,9 @@ main() {
             .thenAnswer((_) => Future.value(true));
         when(mockKeyValueService!.setString(any, any))
             .thenAnswer((_) => Future.value(true));
+        when(mockWalletConnection!.connect(any, any))
+            .thenAnswer((_) => Future.value(null));
+
         final details = WalletConnectSessionRequestData(
           "ABC",
           1,
@@ -211,6 +223,13 @@ main() {
             )!,
           ),
         );
+
+        final restoreData = WalletConnectSessionRestoreData(
+            details.data.clientMeta,
+            SessionRestoreData(privateKey, "ChainID", details.data.peerId,
+                details.data.remotePeerId));
+
+        await session!.connect(restoreData);
 
         final result =
             await session!.approveSession(details: details, allowed: true);

@@ -152,6 +152,8 @@ class WalletConnectSession {
 
         sessionEvents._state.value =
             WalletConnectSessionState.connected(restoreData.clientMeta);
+
+        _remoteNotificationService.registerForPushNotifications(_peerId!);
       }
     } on Exception catch (e) {
       _inactivityTimer?.cancel();
@@ -176,7 +178,9 @@ class WalletConnectSession {
     if (_connection.value != WalletConnectState.disconnected) {
       await _connection.disconnect();
 
-      _remoteNotificationService.unregisterForPushNotifications(_peerId!);
+      if (_peerId != null) {
+        _remoteNotificationService.unregisterForPushNotifications(_peerId!);
+      }
     }
 
     _endSession();
