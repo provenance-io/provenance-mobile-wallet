@@ -106,9 +106,10 @@ class MockAccountStorageServiceCore extends _i1.Mock
                   Future<List<_i4.MultiAccount>>.value(<_i4.MultiAccount>[]))
           as _i3.Future<List<_i4.MultiAccount>>);
   @override
-  _i3.Future<_i4.Account?> getSelectedAccount() => (super.noSuchMethod(
-      Invocation.method(#getSelectedAccount, []),
-      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
+  _i3.Future<_i4.TransactableAccount?> getSelectedAccount() =>
+      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
+              returnValue: Future<_i4.TransactableAccount?>.value())
+          as _i3.Future<_i4.TransactableAccount?>);
   @override
   _i3.Future<int> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
