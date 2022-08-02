@@ -17,10 +17,7 @@ DetailedValidatorDto _$DetailedValidatorDtoFromJson(
       description: json['description'] as String?,
       identity: json['identity'] as String?,
       imgUrl: json['imgUrl'] as String?,
-      jailedUntil: json['jailedUntil'] == null
-          ? null
-          : JailedUntilDto.fromJson(
-              json['jailedUntil'] as Map<String, dynamic>),
+      jailedUntil: json['jailedUntil'] as String?,
       moniker: json['moniker'] as String?,
       operatorAddress: json['operatorAddress'] as String?,
       ownerAddress: json['ownerAddress'] as String?,

@@ -24,7 +24,7 @@ class DetailedValidator {
         identity = dto.identity!,
         imgUrl = dto.imgUrl,
         jailedUntil = dto.jailedUntil != null
-            ? DateTime.fromMillisecondsSinceEpoch(dto.jailedUntil!.millis!)
+            ? DateTime.fromMillisecondsSinceEpoch(int.parse(dto.jailedUntil!))
             : null,
         moniker = dto.moniker!,
         operatorAddress = dto.operatorAddress!,

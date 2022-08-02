@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/block_count_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/jailed_until_dto.dart';
 import 'package:provenance_wallet/services/validator_service/dtos/voting_power_dto.dart';
 
 part 'detailed_validator_dto.g.dart';
@@ -31,7 +30,7 @@ class DetailedValidatorDto {
   final String? description;
   final String? identity;
   final String? imgUrl;
-  final JailedUntilDto? jailedUntil;
+  final String? jailedUntil;
   final String? moniker;
   final String? operatorAddress;
   final String? ownerAddress;
