@@ -104,6 +104,7 @@ class Strings {
   static const walletConnect = 'WalletConnect';
   static const myAssets = 'My Assets';
   static String walletConnected(String? data) => 'Wallet connected: $data';
+  static const walletConnectFailed = 'Failed to connect';
   static const disconnect = 'Disconnect';
   static const loadingTransactions = 'Loading Transactions';
   static const noTransactionsText =

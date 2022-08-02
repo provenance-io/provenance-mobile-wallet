@@ -201,14 +201,14 @@ class HttpClient {
         setJwt: setJwt,
       );
     } on DioError catch (e) {
-      logError('error parsing');
+      logError('error parsing', error: e);
 
       return BaseResponse<T>.error(
         e,
         ignore403: ignore403,
       );
     } catch (e) {
-      logError('error parsing');
+      logError('error parsing', error: e);
 
       return BaseResponse<T>.error(
         DioError(

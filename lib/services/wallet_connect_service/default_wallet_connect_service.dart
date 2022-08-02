@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -182,10 +181,11 @@ class DefaultWalletConnectService extends WalletConnectService
       );
     }
 
-    return session.connect(restoreData, remainingTime).then((value) async {
-      await _setCurrentSession(session);
-      return value;
-    });
+    final success = await session.connect(restoreData, remainingTime);
+
+    await _setCurrentSession(session);
+
+    return success;
   }
 
   @override
@@ -308,6 +308,7 @@ class DefaultWalletConnectService extends WalletConnectService
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
         if (_currentSession != null) {
+          log('Saving session');
           _currentSession!.closeButRetainSession();
           _currentSession = null;
         }
@@ -319,7 +320,7 @@ class DefaultWalletConnectService extends WalletConnectService
             _currentSession?.sessionEvents.state.value.status ??
                 WalletConnectSessionStatus.disconnected;
         final authStatus = get<LocalAuthHelper>().status.value;
-        log("accountId = $accountId, sessionStatus = $sessionStatus, authStatus = $authStatus");
+        log('Attempting to restore session: accountId = $accountId, sessionStatus = $sessionStatus, authStatus = $authStatus');
         if (accountId != null &&
             sessionStatus == WalletConnectSessionStatus.disconnected &&
             authStatus == AuthStatus.authenticated) {
