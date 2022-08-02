@@ -72,5 +72,17 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
         error: e,
       );
     }
+
+    FirebaseMessaging.onMessage.listen(_onMessage);
+    FirebaseMessaging.onBackgroundMessage(_onMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage);
+  }
+
+  Future<void> _onMessage(RemoteMessage message) async {
+    // TODO-Roy:
+    // 1. Create a new message class that encompasses our data
+    // 2. Transform RemoteMessage to that message
+    // 3. Expose via a stream on this class
+    logDebug('Received firebase message: $message');
   }
 }
