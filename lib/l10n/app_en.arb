@@ -580,5 +580,6 @@
     }
   },
   "homeScreenMore": "More",
-  "transactionResponse": "Response"
+  "transactionResponse": "Response",
+  "walletConnectFailed": "Failed to connect"
 }

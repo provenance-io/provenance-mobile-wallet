@@ -97,6 +97,8 @@ const _enableFirebase = bool.fromEnvironment(
   defaultValue: true,
 );
 
+final _log = Log.instance;
+
 void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
@@ -123,22 +125,14 @@ void main() {
       final config = await localConfigService.getConfig();
       get.registerSingleton<LocalConfig>(config);
 
-      logStatic(
-        _tag,
-        Level.info,
-        'Initializing: $config',
-      );
+      _log.info('Initializing: $config', tag: _tag);
 
       CrashReportingService crashReportingService;
       RemoteNotificationService remoteNotificationService;
       RemoteConfigService remoteConfigService;
       DeepLinkService deepLinkService;
 
-      logStatic(
-        _tag,
-        Level.info,
-        'Enable Firebase: $_enableFirebase',
-      );
+      _log.info('Enable Firebase: $_enableFirebase', tag: _tag);
 
       if (_enableFirebase) {
         await Firebase.initializeApp();
@@ -198,10 +192,9 @@ void main() {
       }
 
       get.registerSingleton<CipherService>(cipherService);
-      logStatic(
-        _tag,
-        Level.info,
+      _log.info(
         '$CipherService implementation: ${cipherService.runtimeType}',
+        tag: _tag,
       );
 
       var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
@@ -238,10 +231,9 @@ void main() {
           break;
       }
 
-      logStatic(
-        _tag,
-        Level.info,
+      _log.info(
         '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
+        tag: _tag,
       );
 
       final accountService = AccountService(storage: accountStorageService);
@@ -266,7 +258,12 @@ void main() {
           stack: stack,
         );
       } else {
-        logStatic('main', Level.error, 'Error: $error\n Stack: $stack');
+        _log.error(
+          'Error occurred',
+          tag: _tag,
+          error: error,
+          stack: stack,
+        );
       }
     },
   );
@@ -509,7 +506,7 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
     CipherService cipherService) async {
   final sqliteDb = await SqliteAccountStorageService.getDatabase();
   if (await sqliteDb.exists()) {
-    logStatic(_tag, Level.debug, 'Migrating sqlite db');
+    _log.debug('Migrating sqlite db', tag: _tag);
 
     var success = true;
     final sqliteStorage = SqliteAccountStorageService();
@@ -568,10 +565,9 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
       await sqliteDb.delete();
     }
 
-    logStatic(
-      _tag,
-      Level.debug,
+    _log.debug(
       'Migrate sqlite db success: $success, $migrated account(s)',
+      tag: _tag,
     );
   }
 }

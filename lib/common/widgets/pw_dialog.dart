@@ -164,12 +164,11 @@ class PwDialog {
     BuildContext context, {
     String title = 'Oops!',
     String? message,
-    Exception? exception,
     dynamic error,
     VoidCallback? okAction,
     bool showCancel = false,
   }) {
-    final msg = message ??= exception?.toString().replaceFirst(
+    final msg = message ??= error?.toString().replaceFirst(
           RegExp("^.*: "),
           "",
         );

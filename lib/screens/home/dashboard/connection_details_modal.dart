@@ -40,13 +40,9 @@ class ConnectionDetailsModal extends StatelessWidget {
                     horizontal: Spacing.large,
                     vertical: Spacing.xLarge,
                   ),
-                  endChild: Row(
-                    children: [
-                      PwText(
-                        name,
-                        style: PwTextStyle.body,
-                      ),
-                    ],
+                  endChild: PwText(
+                    name,
+                    style: PwTextStyle.body,
                   ),
                 ),
                 PwListDivider(
@@ -58,12 +54,10 @@ class ConnectionDetailsModal extends StatelessWidget {
                     horizontal: Spacing.large,
                     vertical: Spacing.xLarge,
                   ),
-                  endChild: Flexible(
-                    child: PwText(
-                      address,
-                      maxLines: 2,
-                      textAlign: TextAlign.end,
-                    ),
+                  endChild: PwText(
+                    address,
+                    maxLines: 2,
+                    textAlign: TextAlign.end,
                   ),
                 ),
                 Expanded(child: Container()),
