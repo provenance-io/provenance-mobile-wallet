@@ -452,7 +452,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (address != null) {
         remoteNotificationService.registerForPushNotifications(address).onError(
               (error, stackTrace) => logDebug(
-                'Failed to register for push notifications for account: $address',
+                'Add event failed to register for push notifications for account: $address',
               ),
             );
       }
@@ -466,7 +466,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
               .unregisterForPushNotifications(address)
               .onError(
                 (error, stackTrace) => logDebug(
-                  'Failed to unregister push notifications for account: $address',
+                  'Remove event failed to unregister push notifications for account: $address',
                 ),
               );
         }
@@ -478,7 +478,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (address != null && !remoteNotificationService.isRegistered(address)) {
         remoteNotificationService.registerForPushNotifications(address).onError(
               (error, stackTrace) => logDebug(
-                'Failed to register for push notifications for account: $address',
+                'Update event failed to register for push notifications for account: $address',
               ),
             );
       }
