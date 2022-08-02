@@ -92,7 +92,8 @@ class WalletConnectSession {
           ..listen(delegate.events),
         onSessionClosedRemotely = onSessionClosedRemotelyDelegate;
 
-  static const inactivityTimeout = Duration(minutes: 30);
+  static const inactivityTimeout =
+      Duration(minutes: 1); // Duration(minutes: 30);
   Timer? _inactivityTimer;
 
   final Coin coin;

@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
@@ -72,6 +73,70 @@ class DefaultWalletConnectService extends WalletConnectService
         .addTo(_accountServiceSubscriptions);
   }
 
+  Future<WalletConnectSession?> _doCreateConnection(
+      Account accountDetails, String wcAddress,
+      {String? peerId,
+      String? remotePeerId,
+      ClientMeta? clientMeta,
+      Duration? timeout}) async {
+    final privateKey = await _accountService.loadKey(accountDetails.id);
+    if (privateKey == null) {
+      logError('Failed to locate the private key');
+      return null;
+    }
+
+    final address = WalletConnectAddress.create(wcAddress);
+    if (address == null) {
+      logError('Invalid wallet connect address: $wcAddress');
+
+      return null;
+    }
+
+    final connection = _connectionFactory(address);
+
+    final delegate = WalletConnectSessionDelegate(
+      privateKey: privateKey,
+      transactionHandler: _transactionHandler,
+      address: address,
+      connection: connection,
+      queueService: _queueServce,
+      walletInfo: WalletInfo(
+        accountDetails.id,
+        accountDetails.name,
+        accountDetails.publicKey!.coin,
+      ),
+    );
+
+    final session = WalletConnectSession(
+        accountId: accountDetails.id,
+        connection: connection,
+        delegate: delegate,
+        coin: accountDetails.publicKey!.coin,
+        remoteNotificationService: _remoteNotificationService,
+        onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
+
+    WalletConnectSessionRestoreData? restoreData;
+    if (clientMeta != null && peerId != null && remotePeerId != null) {
+      restoreData = WalletConnectSessionRestoreData(
+        clientMeta,
+        SessionRestoreData(
+          privateKey,
+          ChainId.forCoin(privateKey.coin),
+          peerId,
+          remotePeerId,
+        ),
+      );
+    }
+
+    final connected = await session.connect(restoreData, timeout);
+    if (!connected) {
+      session.dispose();
+      return null;
+    } else {
+      return session;
+    }
+  }
+
   Future<void> _setCurrentSession(WalletConnectSession? newSession) async {
     if (_currentSession == newSession) {
       return;
@@ -108,6 +173,7 @@ class DefaultWalletConnectService extends WalletConnectService
     _currentSession = null;
     notifyListeners();
   }
+
   /* Disposable */
 
   @override
@@ -126,76 +192,19 @@ class DefaultWalletConnectService extends WalletConnectService
     SessionData? sessionData,
     Duration? remainingTime,
   }) async {
-    // final oldSession = _currentSession;
-    // if (oldSession != null) {
-    //   await oldSession.dispose();
-    // }
-
-    final privateKey = await _accountService.loadKey(accountId);
-    if (privateKey == null) {
-      logError('Failed to locate the private key');
-
-      return false;
-    }
-
-    final address = WalletConnectAddress.create(addressData);
-    if (address == null) {
-      logError('Invalid wallet connect address: $addressData');
-
-      return false;
-    }
-
     final accountDetails = _accountService.events.selected.value;
     if (accountDetails == null) {
       logError('No account currently selected');
 
       return false;
     }
-
-    final connection = _connectionFactory(address);
-
-    final delegate = WalletConnectSessionDelegate(
-      privateKey: privateKey,
-      transactionHandler: _transactionHandler,
-      address: address,
-      queueService: _queueServce,
-      connection: connection,
-      walletInfo: WalletInfo(
-        accountDetails.id,
-        accountDetails.name,
-        accountDetails.publicKey!.coin,
-      ),
-    );
-
-    final session = WalletConnectSession(
-        accountId: accountId,
-        connection: connection,
-        delegate: delegate,
-        coin: accountDetails.publicKey!.coin,
-        remoteNotificationService: _remoteNotificationService,
-        onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
-
-    WalletConnectSessionRestoreData? restoreData;
-    if (sessionData != null) {
-      final peerId = sessionData.peerId;
-      final remotePeerId = sessionData.remotePeerId;
-      final chainId = ChainId.forCoin(privateKey.publicKey.coin);
-
-      restoreData = WalletConnectSessionRestoreData(
-        sessionData.clientMeta,
-        SessionRestoreData(
-          privateKey,
-          chainId,
-          peerId,
-          remotePeerId,
-        ),
-      );
+    final wcConnection = await _doCreateConnection(accountDetails, addressData);
+    if (wcConnection == null) {
+      return false;
+    } else {
+      await _setCurrentSession(wcConnection);
+      return true;
     }
-
-    return session.connect(restoreData, remainingTime).then((value) async {
-      await _setCurrentSession(session);
-      return value;
-    });
   }
 
   Future<bool> tryRestoreSession(String accountId) async {
@@ -231,21 +240,6 @@ class DefaultWalletConnectService extends WalletConnectService
 
     final now = DateTime.now();
 
-    _log("The existing session expires at ${sessionExpired.toIso8601String()}");
-
-    final privateKey = await _accountService.loadKey(accountId);
-    if (privateKey == null) {
-      logError('Failed to locate the private key');
-      return false;
-    }
-
-    final address = WalletConnectAddress.create(data.address);
-    if (address == null) {
-      logError('Invalid wallet connect address: $data.address');
-
-      return false;
-    }
-
     final accountDetails = await _accountService.getAccount(accountId);
     if (accountDetails == null) {
       logError('No account currently selected');
@@ -253,62 +247,26 @@ class DefaultWalletConnectService extends WalletConnectService
       return false;
     }
 
-    final connection = _connectionFactory(address);
+    _log("The existing session expires at ${sessionExpired.toIso8601String()}");
+    final session = await _doCreateConnection(accountDetails, data.address,
+        clientMeta: data.clientMeta,
+        peerId: data.peerId,
+        remotePeerId: data.remotePeerId);
 
-    final delegate = WalletConnectSessionDelegate(
-      privateKey: privateKey,
-      transactionHandler: _transactionHandler,
-      address: address,
-      connection: connection,
-      queueService: _queueServce,
-      walletInfo: WalletInfo(
-        accountDetails.id,
-        accountDetails.name,
-        accountDetails.publicKey!.coin,
-      ),
-    );
+    if (session == null) {
+      return false;
+    }
 
-    final session = WalletConnectSession(
-        accountId: accountId,
-        connection: connection,
-        delegate: delegate,
-        coin: accountDetails.publicKey!.coin,
-        remoteNotificationService: _remoteNotificationService,
-        onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
-
-    WalletConnectSessionRestoreData restoreData =
-        WalletConnectSessionRestoreData(
-      data.clientMeta,
-      SessionRestoreData(
-        privateKey,
-        ChainId.forCoin(privateKey.coin),
-        data.peerId,
-        data.remotePeerId,
-      ),
-    );
-
-    try {
-      bool success =
-          await session.connect(restoreData, sessionExpired.difference(now));
-
-      if (success) {
-        if (now.isAfter(sessionExpired)) {
-          _log("Disconnecting expired previous session");
-          await session.disconnect();
-          await session.dispose();
-          await _removeSessionData(connection.address);
-          return false;
-        } else {
-          _log("Previous session has been restored");
-          await _setCurrentSession(session);
-        }
-      }
-
-      return success;
-    } catch (err) {
-      logError("Error restoring session: ${err.toString()}");
-      session.dispose();
-      rethrow;
+    if (now.isAfter(sessionExpired)) {
+      _log("Disconnecting expired previous session");
+      await session.disconnect();
+      await session.dispose();
+      await _removeSessionData(session.address);
+      return false;
+    } else {
+      _log("Previous session has been restored");
+      await _setCurrentSession(session);
+      return true;
     }
   }
 

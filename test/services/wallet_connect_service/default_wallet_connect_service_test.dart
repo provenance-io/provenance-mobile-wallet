@@ -114,6 +114,9 @@ void main() {
   final BehaviorSubject<AuthStatus> _authStatus =
       BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
 
+  final accountDetails = BasicAccount(
+      id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
+
   setUp(() {
     mockLocalAuthHelper = MockLocalAuthHelper();
     when(mockLocalAuthHelper.onDispose()).thenAnswer((_) => Future.value());
@@ -131,6 +134,8 @@ void main() {
     mockAccountService = MockAccountService();
     when(mockAccountService.events).thenReturn(accountServiceEvents);
     when(mockAccountService.onDispose()).thenAnswer((_) => Future.value());
+    when(mockAccountService.getAccount(any))
+        .thenAnswer((_) => Future.value(accountDetails));
 
     mockRemoteNotificationService = MockRemoteNotificationService();
     mockWalletConnectQueueService = MockWalletConnectQueueService();
@@ -206,12 +211,17 @@ void main() {
     });
 
     testWidgets("verify calls", (_) async {
+      final accountDetails = mockAccountService.events.selected.value!;
+
+      when(mockAccountService.getAccount(any))
+          .thenAnswer((_) => Future.value(accountDetails));
+
       final success = await _walletConnectService.connectSession(
           "AccountId", walletConnectAddress);
 
       expect(success, true);
 
-      verify(mockAccountService.loadKey("AccountId"));
+      verify(mockAccountService.loadKey(accountDetails.id));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);
@@ -339,17 +349,13 @@ void main() {
     });
 
     testWidgets("verify calls", (_) async {
-      final accountDetails = BasicAccount(
-          id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
-
-      when(mockAccountService.getAccount(any))
-          .thenAnswer((_) => Future.value(accountDetails));
       final success =
           await _walletConnectService.tryRestoreSession("AccountId");
 
       expect(success, true);
 
-      verify(mockAccountService.loadKey("AccountId"));
+      verify(mockAccountService.getAccount("AccountId"));
+      verify(mockAccountService.loadKey(accountDetails.id));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);
