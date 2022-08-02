@@ -30,7 +30,7 @@ class DetailedValidatorDto {
   final String? description;
   final String? identity;
   final String? imgUrl;
-  final int? jailedUntil;
+  final String? jailedUntil;
   final String? moniker;
   final String? operatorAddress;
   final String? ownerAddress;

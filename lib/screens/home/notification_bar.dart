@@ -3,6 +3,7 @@ import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class NotificationBar extends StatelessWidget {
   const NotificationBar({Key? key}) : super(key: key);
@@ -24,8 +25,8 @@ class NotificationBar extends StatelessWidget {
           child = Container();
         } else {
           final id = notification.id;
-          final title = notification.title;
-          final message = notification.message;
+          final title = _getString(context, notification.title);
+          final message = _getString(context, notification.message);
           final kind = notification.kind;
           final count = notification.count;
 
@@ -41,9 +42,8 @@ class NotificationBar extends StatelessWidget {
                 top: Spacing.large,
                 bottom: Spacing.large,
               ),
-              padding: EdgeInsets.symmetric(
-                vertical: Spacing.large,
-                horizontal: Spacing.xxLarge,
+              padding: EdgeInsets.all(
+                Spacing.large,
               ),
               color: backgroundColor,
               child: Row(
@@ -57,7 +57,7 @@ class NotificationBar extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             PwText(
-                              title,
+                              title!,
                               style: PwTextStyle.subhead,
                               color: PwColor.notice800,
                               textAlign: TextAlign.left,
@@ -123,6 +123,26 @@ class NotificationBar extends StatelessWidget {
         );
       },
     );
+  }
+
+  String? _getString(
+    BuildContext context,
+    BasicNotificationServiceStrings? value,
+  ) {
+    final strings = Strings.of(context);
+
+    switch (value) {
+      case BasicNotificationServiceStrings.notifyServiceErrorTitle:
+        return strings.notifyServiceErrorTitle;
+      case BasicNotificationServiceStrings.notifyNetworkErrorTitle:
+        return strings.notifyNetworkErrorTitle;
+      case BasicNotificationServiceStrings.notifyNetworkErrorMessage:
+        return strings.notifyNetworkErrorMessage;
+      case BasicNotificationServiceStrings.notifyServiceErrorMessage:
+        return strings.notifyServiceErrorMessage;
+      default:
+        return null;
+    }
   }
 
   Color _getBackgroundColor(BuildContext context, NotificationKind kind) {

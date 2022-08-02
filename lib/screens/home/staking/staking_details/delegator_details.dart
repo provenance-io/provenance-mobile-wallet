@@ -5,6 +5,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/details_i
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
+import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,6 +21,7 @@ class DelegatorDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _bloc = get<StakingDetailsBloc>();
+    final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
         initialData: _bloc.validatorDetails.value,
         stream: _bloc.validatorDetails,
@@ -34,34 +36,46 @@ class DelegatorDetails extends StatelessWidget {
           return Column(
             children: [
               DetailsHeader(
-                title: Strings.stakingDetailsDelegationStatus,
+                title: strings.stakingDetailsDelegationStatus,
               ),
               PwListDivider.alternate(),
               DetailsItem.withHash(
-                title: Strings.stakingManagementMyDelegation,
+                title: strings.stakingManagementMyDelegation,
                 hashString: details.delegation?.displayDenom ??
-                    Strings.stakingManagementNoHash,
+                    strings.stakingManagementNoHash,
                 context: context,
               ),
               PwListDivider.alternate(),
               if (details.rewards == null ||
                   details.rewards?.rewards.isEmpty == true)
                 DetailsItem.withHash(
-                  title: Strings.stakingDetailsRewards,
-                  hashString: Strings.stakingManagementNoHash,
+                  title: strings.stakingDetailsRewards,
+                  hashString: strings.stakingManagementNoHash,
                   context: context,
                 ),
               if (details.rewards != null &&
                   details.rewards!.rewards.isNotEmpty)
                 for (var reward in details.rewards!.rewards)
-                  DetailsItem.withHash(
-                    title: Strings.stakingDetailsRewards,
-                    hashString: '${reward.amount} ${reward.denom}',
-                    context: context,
+                  DetailsItem.withRowChildren(
+                    title: strings.proposalDetailsDeposits,
+                    children: [
+                      PwIcon(
+                        PwIcons.hashLogo,
+                        size: 24,
+                        color: Theme.of(context).colorScheme.neutralNeutral,
+                      ),
+                      HorizontalSpacer.small(),
+                      PwText(
+                        '${reward.amount} ${reward.denom}',
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: PwTextStyle.footnote,
+                      ),
+                    ],
                   ),
               PwListDivider.alternate(),
               DetailsItem.withRowChildren(
-                title: Strings.stakingDetailsStatus,
+                title: strings.stakingDetailsStatus,
                 children: [
                   Icon(
                     Icons.brightness_1,
@@ -80,52 +94,53 @@ class DelegatorDetails extends StatelessWidget {
               ),
               PwListDivider.alternate(),
               DetailsHeader(
-                title: Strings.stakingDetailsCommissionInformation,
+                title: strings.stakingDetailsCommissionInformation,
               ),
               PwListDivider.alternate(),
               DetailsItem.withHash(
-                title: Strings.stakingDetailsBonded,
+                title: strings.stakingDetailsBonded,
                 hashString: commission.formattedBondedTokens,
                 context: context,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsCommissionRateRange,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsCommissionRateRange,
                 value: "0 ~ ${commission.commissionMaxRate}",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsCommissionRate,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsCommissionRate,
                 value: commission.commissionMaxRate,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsDelegators,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsDelegators,
                 value: commission.delegatorCount.toString(),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsMaxChangeRate,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsMaxChangeRate,
                 value: commission.commissionMaxChangeRate,
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsMissedBlocks,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsMissedBlocks,
                 value: "${validator.blockCount} in ${validator.blockTotal}",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsRewards,
-                value: commission.formattedRewards,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsRewards,
+                value:
+                    Strings.of(context).hashAmount(commission.formattedRewards),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsTotalShares,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsTotalShares,
                 value: commission.formattedTotalShares,
               ),
               PwListDivider.alternate(),
               DetailsItem.withRowChildren(
-                title: Strings.stakingDetailsValidatorTransactions,
+                title: strings.stakingDetailsValidatorTransactions,
                 children: [
                   GestureDetector(
                     onTap: () async {
@@ -149,60 +164,60 @@ class DelegatorDetails extends StatelessWidget {
                 ],
               ),
               PwListDivider.alternate(),
-              DetailsHeader(title: Strings.stakingDetailsAddresses),
+              DetailsHeader(title: strings.stakingDetailsAddresses),
               PwListDivider.alternate(),
               DetailsItemCopy(
-                displayTitle: Strings.stakingDetailsOperatorAddress,
+                displayTitle: strings.stakingDetailsOperatorAddress,
                 dataToCopy: validator.operatorAddress,
-                snackBarTitle: Strings.stakingDetailsOperatorAddressCopied,
+                snackBarTitle: strings.stakingDetailsOperatorAddressCopied,
               ),
               PwListDivider.alternate(),
               DetailsItemCopy(
-                displayTitle: Strings.stakingDetailsOwnerAddress,
+                displayTitle: strings.stakingDetailsOwnerAddress,
                 dataToCopy: validator.ownerAddress,
-                snackBarTitle: Strings.stakingDetailsOwnerAddressCopied,
+                snackBarTitle: strings.stakingDetailsOwnerAddressCopied,
               ),
               PwListDivider.alternate(),
               DetailsItemCopy(
-                displayTitle: Strings.stakingDetailsWithdrawAddress,
+                displayTitle: strings.stakingDetailsWithdrawAddress,
                 dataToCopy: validator.withdrawalAddress,
-                snackBarTitle: Strings.stakingDetailsWithdrawAddressCopied,
+                snackBarTitle: strings.stakingDetailsWithdrawAddressCopied,
               ),
               PwListDivider.alternate(),
               DetailsItemCopy(
-                displayTitle: Strings.stakingDetailsConsensusPubkey,
+                displayTitle: strings.stakingDetailsConsensusPubkey,
                 dataToCopy: validator.consensusPubKey,
-                snackBarTitle: Strings.stakingDetailsConsensusPubkeyCopied,
+                snackBarTitle: strings.stakingDetailsConsensusPubkeyCopied,
               ),
               PwListDivider.alternate(),
-              DetailsHeader(title: Strings.stakingDetailsAdditionalDetails),
+              DetailsHeader(title: strings.stakingDetailsAdditionalDetails),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsBondHeight,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsBondHeight,
                 value: validator.bondHeight.toString(),
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsUptime,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsUptime,
                 value: "${validator.uptime}%",
               ),
               PwListDivider.alternate(),
-              DetailsItem.alternateStrings(
-                title: Strings.stakingDetailsVotingPower,
+              DetailsItem.fromStrings(
+                title: strings.stakingDetailsVotingPower,
                 value: validator.formattedVotingPower,
               ),
               if (ValidatorStatus.jailed == validator.status)
                 PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
-                DetailsItem.alternateStrings(
-                  title: Strings.stakingDetailsJailedUntil,
+                DetailsItem.fromStrings(
+                  title: strings.stakingDetailsJailedUntil,
                   value: validator.formattedJailedUntil,
                 ),
               if (ValidatorStatus.jailed == validator.status)
                 PwListDivider.alternate(),
               if (ValidatorStatus.jailed == validator.status)
-                DetailsItem.alternateStrings(
-                  title: Strings.stakingDetailsUnbondingHeight,
+                DetailsItem.fromStrings(
+                  title: strings.stakingDetailsUnbondingHeight,
                   value: (validator.unbondingHeight ?? 0).toString(),
                 ),
             ],

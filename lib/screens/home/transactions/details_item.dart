@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DetailsItem extends StatelessWidget {
   DetailsItem({
@@ -8,8 +9,8 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required this.endChild,
-    this.color,
-    this.style = PwTextStyle.body,
+    this.color = PwColor.neutral200,
+    this.style = PwTextStyle.footnote,
   }) : super(key: key);
 
   DetailsItem.fromStrings({
@@ -17,32 +18,19 @@ class DetailsItem extends StatelessWidget {
     this.padding,
     required this.title,
     required String value,
-    this.color,
-    this.style = PwTextStyle.body,
-  }) : super(key: key) {
-    endChild = PwText(
-      value,
-      style: style,
-    );
-  }
-
-  DetailsItem.alternateStrings({
-    Key? key,
-    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
-    required this.title,
-    required String value,
     this.color = PwColor.neutral200,
     this.style = PwTextStyle.footnote,
   }) : super(key: key) {
     endChild = PwText(
       value,
+      textAlign: TextAlign.end,
       style: style,
     );
   }
 
   DetailsItem.withRowChildren({
     Key? key,
-    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    this.padding,
     required this.title,
     required List<Widget> children,
     this.color = PwColor.neutral200,
@@ -56,7 +44,7 @@ class DetailsItem extends StatelessWidget {
 
   DetailsItem.withHash({
     Key? key,
-    this.padding = const EdgeInsets.symmetric(vertical: Spacing.large),
+    this.padding,
     required this.title,
     required String hashString,
     required BuildContext context,
@@ -73,7 +61,7 @@ class DetailsItem extends StatelessWidget {
         ),
         HorizontalSpacer.small(),
         PwText(
-          hashString,
+          Strings.of(context).hashAmount(hashString),
           overflow: TextOverflow.fade,
           softWrap: false,
           style: PwTextStyle.footnote,
@@ -94,8 +82,7 @@ class DetailsItem extends StatelessWidget {
     return Container(
       padding: padding ??
           EdgeInsets.symmetric(
-            horizontal: Spacing.largeX3,
-            vertical: Spacing.xLarge,
+            vertical: Spacing.large,
           ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

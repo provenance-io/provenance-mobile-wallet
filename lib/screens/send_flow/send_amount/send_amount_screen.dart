@@ -45,7 +45,7 @@ class SendAmountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.sendAmountTitle,
+        title: Strings.of(context).sendAmountTitle,
         leadingIcon: PwIcons.back,
       ),
       body: Padding(
@@ -148,7 +148,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                   DecimalPointFormatter(asset.exponent),
                 ],
                 decoration: InputDecoration(
-                  hintText: Strings.sendAmountHint,
+                  hintText: Strings.of(context).sendAmountHint,
                   hintStyle: Theme.of(context).textTheme.displayBody.copyWith(
                         color: Theme.of(context).colorScheme.neutralNeutral,
                       ),
@@ -159,7 +159,7 @@ class SendAmountPageState extends State<SendAmountPage> {
               ),
               VerticalSpacer.medium(),
               PwText(
-                "${asset.displayAmount} ${asset.displayDenom} ${Strings.sendAmountAvailable}",
+                "${asset.displayAmount} ${asset.displayDenom} ${Strings.of(context).sendAmountAvailable}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: PwTextStyle.displayBody,
@@ -199,7 +199,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                           border: blankInputBorder,
                           enabledBorder: blankInputBorder,
                           focusedBorder: blankInputBorder,
-                          hintText: Strings.sendAmountNoteHint,
+                          hintText: Strings.of(context).sendAmountNoteHint,
                           hintStyle: Theme.of(context).textTheme.body.copyWith(
                                 color: Theme.of(context)
                                     .colorScheme
@@ -219,7 +219,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                         return (!hasFocus && _noteController.text.isEmpty)
                             ? GestureDetector(
                                 child: PwText(
-                                  Strings.sendAmountNoteSuffix,
+                                  Strings.of(context).sendAmountNoteSuffix,
                                   style: PwTextStyle.body,
                                 ),
                                 onTap: () {
@@ -251,13 +251,14 @@ class SendAmountPageState extends State<SendAmountPage> {
                     fee,
                     child,
                   ) {
-                    final msg = fee ?? Strings.sendAmountLoadingFeeEstimate;
+                    final msg =
+                        fee ?? Strings.of(context).sendAmountLoadingFeeEstimate;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        PwText(Strings.sendAmountTransactionLabel),
+                        PwText(Strings.of(context).sendAmountTransactionLabel),
                         Expanded(
                           child: PwText(
                             msg,
@@ -281,11 +282,11 @@ class SendAmountPageState extends State<SendAmountPage> {
                 ) =>
                     PwButton(
                   child: PwText(
-                    Strings.sendAmountNextButton,
+                    Strings.of(context).sendAmountNextButton,
                     style: PwTextStyle.bodyBold,
                   ),
                   enabled: value != null,
-                  onPressed: _next,
+                  onPressed: () => _next(context),
                 ),
               ),
               VerticalSpacer.large(),
@@ -296,7 +297,7 @@ class SendAmountPageState extends State<SendAmountPage> {
     );
   }
 
-  Future<void> _next() async {
+  Future<void> _next(BuildContext context) async {
     try {
       await _bloc!.showNext(_noteController.text, _amountController.text);
     } catch (error) {

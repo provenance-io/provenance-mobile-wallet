@@ -12,7 +12,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     return PwOnboardingView(children: [
       PwText(
-        Strings.powerfulCustomization,
+        Strings.of(context).powerfulCustomization,
         style: PwTextStyle.headline1,
         textAlign: TextAlign.center,
         color: PwColor.neutralNeutral,
@@ -29,7 +29,7 @@ class OnboardingCustomizationSlide extends StatelessWidget {
       ),
       VerticalSpacer.largeX5(),
       PwText(
-        Strings.customizationDescription,
+        Strings.of(context).customizationDescription,
         style: PwTextStyle.m,
         textAlign: TextAlign.center,
         color: PwColor.neutralNeutral,

@@ -55,6 +55,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
@@ -74,7 +75,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                 elevation: 0.0,
                 centerTitle: true,
                 title: PwText(
-                  Strings.stakingRedelegateRedelegate,
+                  strings.stakingRedelegateRedelegate,
                   style: PwTextStyle.footnote,
                 ),
                 leading: Padding(
@@ -98,14 +99,15 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DetailsHeader(
-                          title: Strings.stakingRedelegateRedelegating),
+                        title: strings.stakingRedelegateRedelegating,
+                      ),
                       PwListDivider.alternate(),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           vertical: Spacing.small,
                         ),
                         child: PwText(
-                          Strings.stakingRedelegateFrom,
+                          strings.stakingRedelegateFrom,
                           color: PwColor.neutral200,
                         ),
                       ),
@@ -119,7 +121,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                           vertical: Spacing.small,
                         ),
                         child: PwText(
-                          Strings.stakingRedelegateTo,
+                          strings.stakingRedelegateTo,
                           color: PwColor.neutral200,
                         ),
                       ),
@@ -127,11 +129,11 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                         moniker: details.toRedelegate?.moniker,
                         imgUrl: details.toRedelegate?.imgUrl,
                       ),
-                      DetailsHeader(title: Strings.stakingDelegateDetails),
+                      DetailsHeader(title: strings.stakingDelegateDetails),
                       PwListDivider.alternate(),
                       DetailsItem.withHash(
                         title:
-                            Strings.stakingRedelegateAvailableForRedelegation,
+                            strings.stakingRedelegateAvailableForRedelegation,
                         hashString: details.delegation.displayDenom,
                         context: context,
                       ),
@@ -140,13 +142,13 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                       Padding(
                         padding: EdgeInsets.only(bottom: 10),
                         child:
-                            PwText(Strings.stakingDelegateAmountToRedelegate),
+                            PwText(strings.stakingDelegateAmountToRedelegate),
                       ),
                       Flexible(
                         child: Form(
                           key: _formKey,
                           child: StakingTextFormField(
-                            hint: Strings.stakingRedelegateEnterAmount,
+                            hint: strings.stakingRedelegateEnterAmount,
                             textEditingController: _textEditingController,
                             scrollController: _scrollController,
                           ),
@@ -166,7 +168,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                             get<StakingFlowBloc>().showRedelegationReview();
                           },
                           child: PwText(
-                            Strings.continueName,
+                            strings.continueName,
                             overflow: TextOverflow.fade,
                             softWrap: false,
                             color: PwColor.neutralNeutral,

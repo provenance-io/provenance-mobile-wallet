@@ -21,7 +21,6 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AddAccountScreen {
@@ -502,7 +501,10 @@ class AddAccountFlowBloc implements Disposable {
   }
 
   Future<bool> submitMultiSigJoinLink(
-      String link, AddAccountScreen current) async {
+    String multiSigInvalidLink,
+    String link,
+    AddAccountScreen current,
+  ) async {
     var success = false;
 
     final redirectedLink = await tryFollowRedirect(link);
@@ -523,7 +525,9 @@ class AddAccountFlowBloc implements Disposable {
     }
 
     if (!success) {
-      _multiSigInviteLinkError.tryAdd(Strings.multiSigInvalidLink);
+      _multiSigInviteLinkError.tryAdd(
+        multiSigInvalidLink,
+      );
     }
 
     return success;

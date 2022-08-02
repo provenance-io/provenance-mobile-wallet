@@ -16,7 +16,7 @@ class ReceiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.receiveTitle,
+        title: Strings.of(context).receiveTitle,
         leadingIcon: PwIcons.back,
       ),
       body: Padding(
@@ -61,7 +61,7 @@ class ReceivePageState extends State<ReceivePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               PwText(
-                Strings.receiveMessage,
+                Strings.of(context).receiveMessage,
                 textAlign: TextAlign.center,
                 style: PwTextStyle.title,
               ),
@@ -87,7 +87,7 @@ class ReceivePageState extends State<ReceivePage> {
               ),
               VerticalSpacer.large(),
               PwText(
-                Strings.receiveAccountAddressTitle,
+                Strings.of(context).receiveAccountAddressTitle,
                 style: PwTextStyle.caption,
               ),
               VerticalSpacer.medium(),
@@ -144,7 +144,7 @@ class ReceivePageState extends State<ReceivePage> {
       await _bloc!.copyAddressToClipboard();
       PwDialog.showMessage(
         context,
-        message: Strings.receiveAccountAddressCopiedMessage,
+        message: Strings.of(context).receiveAccountAddressCopiedMessage,
       );
     } catch (e) {
       PwDialog.showError(

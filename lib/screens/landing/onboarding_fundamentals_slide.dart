@@ -23,7 +23,7 @@ class _OnboardingFundamentalsSlideState
 
     return PwOnboardingView(children: [
       PwText(
-        Strings.strongFundamentals,
+        Strings.of(context).strongFundamentals,
         style: PwTextStyle.headline1,
         textAlign: TextAlign.center,
         color: PwColor.neutralNeutral,
@@ -35,7 +35,7 @@ class _OnboardingFundamentalsSlideState
         physics: NeverScrollableScrollPhysics(),
         crossAxisSpacing: 0.0,
         crossAxisCount: 2,
-        mainAxisSpacing: Spacing.xxLarge,
+        mainAxisSpacing: Spacing.large,
         childAspectRatio: 1.89,
         children: [
           Column(
@@ -70,7 +70,7 @@ class _OnboardingFundamentalsSlideState
                 },
               ),
               PwText(
-                Strings.marketCap,
+                Strings.of(context).marketCap,
                 style: PwTextStyle.m,
                 color: PwColor.neutralNeutral,
               ),
@@ -94,7 +94,7 @@ class _OnboardingFundamentalsSlideState
                 },
               ),
               PwText(
-                Strings.validators,
+                Strings.of(context).validators,
                 style: PwTextStyle.m,
                 color: PwColor.neutralNeutral,
               ),
@@ -135,7 +135,7 @@ class _OnboardingFundamentalsSlideState
                 },
               ),
               PwText(
-                Strings.transactions,
+                Strings.of(context).transactions,
                 style: PwTextStyle.m,
                 color: PwColor.neutralNeutral,
               ),
@@ -176,7 +176,7 @@ class _OnboardingFundamentalsSlideState
                 },
               ),
               PwText(
-                Strings.avgBlockTime,
+                Strings.of(context).avgBlockTime,
                 style: PwTextStyle.m,
                 color: PwColor.neutralNeutral,
               ),
@@ -186,7 +186,7 @@ class _OnboardingFundamentalsSlideState
       ),
       VerticalSpacer.largeX5(),
       PwText(
-        Strings.fundamentalsDescription,
+        Strings.of(context).fundamentalsDescription,
         style: PwTextStyle.m,
         color: PwColor.neutralNeutral,
         textAlign: TextAlign.center,

@@ -38,26 +38,23 @@ class _PwAppBarState extends State<PwAppBar> {
       centerTitle: true,
       title: PwText(
         widget.title ?? "",
-        style: widget.style ?? PwTextStyle.subhead,
+        style: widget.style ?? PwTextStyle.footnote,
         textAlign: TextAlign.left,
         color: widget.textColor,
       ),
       bottom: widget.bottom,
       leading: (widget.hasIcon ?? true)
-          ? Padding(
-              padding: EdgeInsets.only(left: 21),
-              child: IconButton(
-                icon: PwIcon(
-                  widget.leadingIcon ?? PwIcons.close,
-                ),
-                onPressed: () {
-                  if (widget.leadingIconOnPress != null) {
-                    widget.leadingIconOnPress!();
-                  } else {
-                    Navigator.of(context).pop();
-                  }
-                },
+          ? IconButton(
+              icon: PwIcon(
+                widget.leadingIcon ?? PwIcons.close,
               ),
+              onPressed: () {
+                if (widget.leadingIconOnPress != null) {
+                  widget.leadingIconOnPress!();
+                } else {
+                  Navigator.of(context).pop();
+                }
+              },
             )
           : Container(),
     );

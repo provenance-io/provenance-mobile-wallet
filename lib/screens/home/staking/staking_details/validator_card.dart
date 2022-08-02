@@ -39,7 +39,9 @@ class _ValidatorCardState extends State<ValidatorCard> {
       padding: widget.hasValidator
           ? EdgeInsets.all(Spacing.large)
           : EdgeInsets.symmetric(
-              horizontal: Spacing.large, vertical: Spacing.xxLarge),
+              horizontal: Spacing.large,
+              vertical: Spacing.xxLarge,
+            ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme.of(context).colorScheme.neutral700,
@@ -57,7 +59,7 @@ class _ValidatorCardState extends State<ValidatorCard> {
         children: !widget.hasValidator
             ? [
                 PwText(
-                  Strings.stakingRedelegateValidatorNotSelected,
+                  Strings.of(context).stakingRedelegateValidatorNotSelected,
                   style: PwTextStyle.footnote,
                   color: PwColor.neutral200,
                 )
@@ -113,8 +115,8 @@ class _ValidatorCardState extends State<ValidatorCard> {
                           },
                           child: PwText(
                             _isActive
-                                ? Strings.stakingDetailsViewLess
-                                : Strings.viewMore,
+                                ? Strings.of(context).stakingDetailsViewLess
+                                : Strings.of(context).viewMore,
                             color: PwColor.neutral200,
                             style: PwTextStyle.footnote,
                             softWrap: false,

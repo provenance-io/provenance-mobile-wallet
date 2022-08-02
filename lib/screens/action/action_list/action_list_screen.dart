@@ -77,10 +77,12 @@ class ActionListScreenState extends State<ActionListScreen>
                     TabBar(
                       tabs: [
                         ActionListTab(
-                            label: Strings.actionListActionsCellTitle,
+                            label:
+                                Strings.of(context).actionListActionsCellTitle,
                             count: state.actionGroups.length),
                         ActionListTab(
-                            label: Strings.actionListNotificationsCellTitle,
+                            label: Strings.of(context)
+                                .actionListNotificationsCellTitle,
                             count: state.notificationGroups.length),
                       ],
                       controller: _tabController,
@@ -91,7 +93,8 @@ class ActionListScreenState extends State<ActionListScreen>
                       ActionList(groups: state.actionGroups),
                       NotificationList(
                         items: state.notificationGroups,
-                        onItemsDeleted: _onDeleteNotificationItems,
+                        onItemsDeleted: (v) =>
+                            _onDeleteNotificationItems(context, v),
                       )
                     ]))
                   ],
@@ -101,13 +104,13 @@ class ActionListScreenState extends State<ActionListScreen>
   }
 
   Future<void> _onDeleteNotificationItems(
-      List<NotificationItem> deletedItems) async {
+      BuildContext context, List<NotificationItem> deletedItems) async {
     final delete = await PwDialog.showConfirmation(
       context,
-      cancelText: Strings.cancel,
-      confirmText: Strings.deleteConfirmationDeleteTitle,
-      header: PwText(Strings.deleteConfirmationTitle),
-      content: PwText(Strings.deleteConfirmationMessage),
+      cancelText: Strings.of(context).cancel,
+      confirmText: Strings.of(context).deleteConfirmationDeleteTitle,
+      header: PwText(Strings.of(context).deleteConfirmationTitle),
+      content: PwText(Strings.of(context).deleteConfirmationMessage),
     );
 
     if (!delete) {

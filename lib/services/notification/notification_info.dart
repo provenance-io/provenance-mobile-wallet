@@ -10,8 +10,15 @@ class NotificationInfo {
   });
 
   final String id;
-  final String title;
+  final BasicNotificationServiceStrings title;
   final NotificationKind kind;
-  final String? message;
+  final BasicNotificationServiceStrings? message;
   final int? count;
+}
+
+enum BasicNotificationServiceStrings {
+  notifyServiceErrorTitle,
+  notifyNetworkErrorTitle,
+  notifyNetworkErrorMessage,
+  notifyServiceErrorMessage,
 }

@@ -19,6 +19,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingDelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -30,25 +31,29 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         }
 
         return StakingConfirmBase(
-          appBarTitle: details.selectedDelegationType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>()
-                .showTransactionData(bloc.getClaimRewardJson());
+            get<StakingFlowBloc>().showTransactionData(
+              bloc.getClaimRewardJson(),
+              Strings.of(context).stakingConfirmData,
+            );
           },
           onTransactionSign: (gasAdjustment) async {
-            ModalLoadingRoute.showLoading(context);
-            // Give the loading modal time to display
-            await Future.delayed(Duration(milliseconds: 500));
+            ModalLoadingRoute.showLoading(
+              context,
+              minDisplayTime: Duration(milliseconds: 500),
+            );
             await _sendTransaction(
                 gasAdjustment, details.selectedDelegationType, context);
           },
-          signButtonTitle: Strings.stakingDelegationBlocClaimRewards,
+          signButtonTitle:
+              Strings.of(context).stakingDelegationBlocClaimRewards,
           children: [
-            DetailsHeader(title: Strings.stakingConfirmClaimRewardsDetails),
+            DetailsHeader(title: strings.stakingConfirmClaimRewardsDetails),
             PwListDivider.alternate(),
             VerticalSpacer.large(),
             PwText(
-              Strings.stakingRedelegateFrom,
+              strings.stakingRedelegateFrom,
               color: PwColor.neutral200,
             ),
             VerticalSpacer.small(),
@@ -60,16 +65,16 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
             VerticalSpacer.largeX3(),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation?.displayDenom ??
-                  Strings.stakingManagementNoHash,
+                  strings.stakingManagementNoHash,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmRewardsAvailable,
+              title: strings.stakingConfirmRewardsAvailable,
               hashString: details.reward?.formattedAmount ??
-                  Strings.stakingManagementNoHash,
+                  strings.stakingManagementNoHash,
               context: context,
             ),
           ],
@@ -84,9 +89,10 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
+      final message =
+          await (get<StakingDelegationBloc>()).claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

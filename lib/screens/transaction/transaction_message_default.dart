@@ -3,7 +3,8 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_mixin.dart';
 import 'package:provenance_wallet/util/address_util.dart';
-import 'package:provenance_wallet/util/denom.dart';
+import 'package:provenance_wallet/util/constants.dart';
+import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_converters.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
@@ -37,18 +38,6 @@ class TransactionMessageDefault extends StatefulWidget {
 
 class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     with TransactionMessageMixin {
-  final _processor = MessageFieldProcessor(
-    converters: {
-      MessageFieldName.fromAddress: convertAddress,
-      MessageFieldName.toAddress: convertAddress,
-      MessageFieldName.address: convertAddress,
-      MessageFieldName.manager: convertAddress,
-      MessageFieldName.delegatorAddress: convertAddress,
-      MessageFieldName.validatorAddress: convertAddress,
-      MessageFieldName.amount: convertAmount,
-    },
-  );
-
   late final PageController _pageController;
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier(0);
 
@@ -74,6 +63,19 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
   @override
   Widget build(BuildContext context) {
+    final processor = MessageFieldProcessor(
+      transactionFieldTrue: Strings.of(context).transactionFieldTrue,
+      transactionFieldFalse: Strings.of(context).transactionFieldFalse,
+      converters: {
+        MessageFieldName.fromAddress: convertAddress,
+        MessageFieldName.toAddress: convertAddress,
+        MessageFieldName.address: convertAddress,
+        MessageFieldName.manager: convertAddress,
+        MessageFieldName.delegatorAddress: convertAddress,
+        MessageFieldName.validatorAddress: convertAddress,
+        MessageFieldName.amount: convertAmount,
+      },
+    );
     return CustomScrollView(
       slivers: [
         _buildHeaders(),
@@ -83,7 +85,7 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
             itemCount: widget.data?.length ?? 0,
             itemBuilder: (context, index) {
               final map = widget.data![index];
-              final group = _processor.findFields(map);
+              final group = processor.findFields(map);
               final contents = <Widget>[];
 
               final ungrouped = group.fields
@@ -129,14 +131,15 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
     headers.add(
       createFieldTableRow(
-        Strings.transactionFieldPlatform,
+        Strings.of(context).transactionFieldPlatform,
         '$platformName\n$platformHost',
       ),
     );
 
     if (message != null) {
       headers.add(
-        createFieldTableRow(Strings.transactionFieldMessage, message),
+        createFieldTableRow(
+            Strings.of(context).transactionFieldMessage, message),
       );
     }
 
@@ -150,14 +153,14 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
 
           headers.add(
             createFieldTableRow(
-              Strings.transactionFieldFee,
+              Strings.of(context).transactionFieldFee,
               fee,
             ),
           );
         } else {
           headers.add(
             createFieldTableRow(
-              Strings.transactionFieldFee,
+              Strings.of(context).transactionFieldFee,
               '${coin.amount} ${coin.denom}',
             ),
           );

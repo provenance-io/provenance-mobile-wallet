@@ -156,16 +156,16 @@ class NotificationListState extends State<NotificationList>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: const PwText(
-                                Strings.notificationListStatusLabel)),
+                            child: PwText(Strings.of(context)
+                                .notificationListStatusLabel)),
                         ValueListenableBuilder<bool>(
                             valueListenable: _isEdittingController,
                             builder: (context, value, child) {
                               return (value)
                                   ? Container()
                                   : PwTextButton.shrinkWrap(
-                                      child: const PwText(
-                                          Strings.notificationListEditLabel),
+                                      child: PwText(Strings.of(context)
+                                          .notificationListEditLabel),
                                       onPressed: () {
                                         _isEdittingController.value =
                                             !_isEdittingController.value;

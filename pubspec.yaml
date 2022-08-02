@@ -21,8 +21,10 @@ dependencies:
   firebase_dynamic_links: ^4.2.2
   firebase_messaging: ^11.3.0
   firebase_remote_config: ^2.0.6
-  fl_chart: ^0.45.1
+  fl_chart: ^0.55.0
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_hooks: ^0.17.0
   flutter_native_splash: ^1.2.1
@@ -86,6 +88,7 @@ flutter_native_splash:
   fullscreen: true
 
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:

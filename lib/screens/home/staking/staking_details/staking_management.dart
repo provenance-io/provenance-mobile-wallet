@@ -40,7 +40,7 @@ class StakingManagement extends StatelessWidget {
                 );
               },
               child: PwText(
-                SelectedDelegationType.delegate.dropDownTitle,
+                SelectedDelegationType.delegate.getDropDownTitle(context),
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 color: PwColor.neutralNeutral,
@@ -69,7 +69,8 @@ class StakingManagement extends StatelessWidget {
                           );
                         },
                         child: PwText(
-                          SelectedDelegationType.delegate.dropDownTitle,
+                          SelectedDelegationType.delegate
+                              .getDropDownTitle(context),
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           color: PwColor.neutralNeutral,
@@ -80,7 +81,8 @@ class StakingManagement extends StatelessWidget {
                     HorizontalSpacer.large(),
                     Flexible(
                       child: PwOutlinedButton(
-                        SelectedDelegationType.redelegate.dropDownTitle,
+                        SelectedDelegationType.redelegate
+                            .getDropDownTitle(context),
                         onPressed: () {
                           get<StakingFlowBloc>().showRedelegationScreen(
                             validator,
@@ -104,7 +106,8 @@ class StakingManagement extends StatelessWidget {
                   children: [
                     Flexible(
                       child: PwOutlinedButton(
-                        SelectedDelegationType.undelegate.dropDownTitle,
+                        SelectedDelegationType.undelegate
+                            .getDropDownTitle(context),
                         onPressed: () {
                           get<StakingFlowBloc>().showUndelegationScreen(
                             validator,
@@ -115,7 +118,8 @@ class StakingManagement extends StatelessWidget {
                     HorizontalSpacer.large(),
                     Flexible(
                       child: PwOutlinedButton(
-                        SelectedDelegationType.claimRewards.dropDownTitle,
+                        SelectedDelegationType.claimRewards
+                            .getDropDownTitle(context),
                         onPressed: () {
                           Reward? reward;
                           if (rewards != null) {

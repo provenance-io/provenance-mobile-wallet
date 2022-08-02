@@ -3,7 +3,6 @@ import 'package:provenance_wallet/services/notification/notification_group.dart'
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BasicNotificationService implements NotificationService, Disposable {
@@ -72,8 +71,8 @@ class BasicNotificationService implements NotificationService, Disposable {
       case NotificationGroup.serviceError:
         info = NotificationInfo(
           id: group.name,
-          title: Strings.notifyServiceErrorTitle,
-          message: Strings.notifyServiceErrorMessage,
+          title: BasicNotificationServiceStrings.notifyServiceErrorTitle,
+          message: BasicNotificationServiceStrings.notifyServiceErrorMessage,
           kind: NotificationKind.warn,
           count: count,
         );

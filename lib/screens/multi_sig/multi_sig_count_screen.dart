@@ -22,6 +22,9 @@ class MultiSigCountScreen extends StatefulWidget {
   factory MultiSigCountScreen.signatures({
     required AddAccountFlowBloc bloc,
     required FieldMode mode,
+    required String title,
+    required String message,
+    required String description,
     int? currentStep,
     int? totalSteps,
     Key? key,
@@ -38,9 +41,9 @@ class MultiSigCountScreen extends StatefulWidget {
     }
 
     return MultiSigCountScreen._(
-      title: Strings.multiSigSignaturesTitle,
-      message: Strings.multiSigSignaturesMessage,
-      description: Strings.multiSigSignaturesDescription,
+      title: title,
+      message: message,
+      description: description,
       mode: mode,
       currentStep: currentStep,
       totalSteps: totalSteps,
@@ -52,6 +55,9 @@ class MultiSigCountScreen extends StatefulWidget {
   factory MultiSigCountScreen.cosigners({
     required AddAccountFlowBloc bloc,
     required FieldMode mode,
+    required String title,
+    required String message,
+    required String description,
     int? currentStep,
     int? totalSteps,
     Key? key,
@@ -68,9 +74,9 @@ class MultiSigCountScreen extends StatefulWidget {
     }
 
     return MultiSigCountScreen._(
-      title: Strings.multiSigCosignersTitle,
-      message: Strings.multiSigCosignersMessage,
-      description: Strings.multiSigCosignersDescription,
+      title: title,
+      message: message,
+      description: description,
       mode: mode,
       currentStep: currentStep,
       totalSteps: totalSteps,
@@ -129,12 +135,12 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
     switch (widget.mode) {
       case FieldMode.initial:
         leadingIcon = PwIcons.back;
-        confirmButtonLabel = Strings.multiSigNextButton;
+        confirmButtonLabel = Strings.of(context).multiSigNextButton;
         pop = false;
         break;
       case FieldMode.edit:
         leadingIcon = PwIcons.close;
-        confirmButtonLabel = Strings.multiSigSaveButton;
+        confirmButtonLabel = Strings.of(context).multiSigSaveButton;
         pop = true;
         break;
     }
@@ -163,7 +169,7 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
                 VerticalSpacer.large(),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     widget.message,
@@ -175,7 +181,7 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
                 VerticalSpacer.large(),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
                     widget.description,

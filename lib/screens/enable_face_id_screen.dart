@@ -29,22 +29,22 @@ class EnableFaceIdScreen extends StatelessWidget {
 
     switch (bloc.biometryType) {
       case BiometryType.faceId:
-        header = Strings.faceId;
-        title = Strings.useFaceIdTitle;
-        message = Strings.useYourFaceId;
+        header = Strings.of(context).faceId;
+        title = Strings.of(context).useFaceIdTitle;
+        message = Strings.of(context).useYourFaceId;
         icon = PwIcons.faceId;
         break;
       case BiometryType.touchId:
-        header = Strings.touchId;
-        title = Strings.useTouchIdTitle;
-        message = Strings.useYourFingerPrint;
+        header = Strings.of(context).touchId;
+        title = Strings.of(context).useTouchIdTitle;
+        message = Strings.of(context).useYourFingerPrint;
         icon = PwIcons.touchId;
         break;
       case BiometryType.unknown:
       case BiometryType.none:
-        header = Strings.useBiometryTitle;
-        title = Strings.useBiometryTitle;
-        message = Strings.useBiometryMessage;
+        header = Strings.of(context).useBiometryTitle;
+        title = Strings.of(context).useBiometryTitle;
+        message = Strings.of(context).useBiometryMessage;
         icon = PwIcons.faceId;
         break;
     }
@@ -57,12 +57,12 @@ class EnableFaceIdScreen extends StatelessWidget {
             onPressed: () async {
               _submit(context, useBiometry: false);
             },
-            text: Strings.skipForNow,
+            text: Strings.of(context).skipForNow,
           )
         : PwTextButton(
             key: keySkipButton,
             child: PwText(
-              Strings.skipForNow,
+              Strings.of(context).skipForNow,
               style: PwTextStyle.subhead,
               color: PwColor.neutralNeutral,
             ),
@@ -135,7 +135,7 @@ class EnableFaceIdScreen extends StatelessWidget {
                         key: keyEnableButton,
                         autofocus: true,
                         child: PwText(
-                          Strings.enable,
+                          Strings.of(context).enable,
                           style: PwTextStyle.bodyBold,
                           color: PwColor.neutralNeutral,
                         ),

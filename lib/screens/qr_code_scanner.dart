@@ -36,7 +36,7 @@ class QRCodeScannerState extends State<QRCodeScanner> {
       appBar: PwAppBar(
         leadingIcon: PwIcons.close,
         color: background,
-        title: Strings.qrScannerTitle,
+        title: Strings.of(context).qrScannerTitle,
       ),
       backgroundColor: background,
       body: Container(

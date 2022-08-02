@@ -34,24 +34,21 @@ class ViewAllTransactionsScreen extends StatelessWidget {
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.allTransactions,
-              style: PwTextStyle.subhead,
+              Strings.of(context).allTransactions,
+              style: PwTextStyle.footnote,
             ),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 21),
-              child: IconButton(
-                icon: PwIcon(
-                  PwIcons.back,
-                ),
-                onPressed: () {
-                  get<DashboardTabBloc>().closeViewAllTransactions();
-                },
+            leading: IconButton(
+              icon: PwIcon(
+                PwIcons.back,
               ),
+              onPressed: () {
+                get<DashboardTabBloc>().closeViewAllTransactions();
+              },
             ),
           ),
           body: Container(
             padding: EdgeInsets.symmetric(
-              horizontal: Spacing.xLarge,
+              horizontal: Spacing.large,
             ),
             color: Colors.transparent,
             child: Column(
@@ -60,7 +57,6 @@ class ViewAllTransactionsScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
                       vertical: 20,
                     ),
                     itemBuilder: (context, index) {

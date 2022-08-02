@@ -27,6 +27,26 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
   }
 
   @override
+  String get approveSessionLabel =>
+      (super.noSuchMethod(Invocation.getter(#approveSessionLabel),
+          returnValue: '') as String);
+  @override
+  String get signatureRequestedLabel =>
+      (super.noSuchMethod(Invocation.getter(#signatureRequestedLabel),
+          returnValue: '') as String);
+  @override
+  String get transactionRequestedLabel =>
+      (super.noSuchMethod(Invocation.getter(#transactionRequestedLabel),
+          returnValue: '') as String);
+  @override
+  String get unknownLabel =>
+      (super.noSuchMethod(Invocation.getter(#unknownLabel), returnValue: '')
+          as String);
+  @override
+  String get actionRequiredSubLabel =>
+      (super.noSuchMethod(Invocation.getter(#actionRequiredSubLabel),
+          returnValue: '') as String);
+  @override
   List<_i2.NotificationItem> get notifications =>
       (super.noSuchMethod(Invocation.getter(#notifications),
           returnValue: <_i2.NotificationItem>[]) as List<_i2.NotificationItem>);

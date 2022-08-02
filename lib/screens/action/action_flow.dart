@@ -43,8 +43,17 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   @override
   Widget createStartPage() {
     return Provider<ActionListBloc>(
-        create: (_) {
-          final bloc = ActionListBloc(this);
+        create: (context) {
+          final strings = Strings.of(context);
+          final bloc = ActionListBloc(
+            this,
+            approveSessionLabel: strings.actionListLabelApproveSession,
+            signatureRequestedLabel: strings.actionListLabelSignatureRequested,
+            transactionRequestedLabel:
+                strings.actionListLabelTransactionRequested,
+            unknownLabel: strings.actionListLabelUnknown,
+            actionRequiredSubLabel: strings.actionListSubLabelActionRequired,
+          );
           bloc.init();
           return bloc;
         },
@@ -62,10 +71,11 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
     return PwModalScreen.showConfirm(
       context: context,
-      approveText: Strings.sessionApprove,
-      declineText: Strings.sessionReject,
-      title: Strings.dashboardConnectionRequestTitle,
-      message: Strings.dashboardConnectionRequestDetails(name),
+      approveText: Strings.of(context).sessionApprove,
+      declineText: Strings.of(context).sessionReject,
+      title: Strings.of(context).dashboardConnectionRequestTitle,
+      message:
+          Strings.of(context).dashboardConnectionRequestAllowConnectionTo(name),
       icon: Image.asset(
         Assets.imagePaths.connectionRequest,
       ),
@@ -84,7 +94,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
       ) {
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
-          title: Strings.confirmSignTitle,
+          title: Strings.of(context).confirmSignTitle,
           requestId: signRequest.id,
           subTitle: signRequest.description,
           clientMeta: clientMeta,
@@ -119,7 +129,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
-          title: Strings.confirmTransactionTitle,
+          title: Strings.of(context).confirmTransactionTitle,
           requestId: sendRequest.id,
           clientMeta: clientMeta,
           data: data,

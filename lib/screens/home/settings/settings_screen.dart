@@ -52,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -65,11 +66,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 PwAppBarGestureDetector(
                   onTap: _tapCounter.increment,
                   child: PwAppBar(
-                    title: Strings.globalSettings,
+                    title: strings.globalSettings,
                     leadingIcon: PwIcons.back,
                   ),
                 ),
-                CategoryLabel(Strings.security),
+                CategoryLabel(strings.security),
                 _divider,
                 FutureBuilder<BiometryType>(
                   future: get<CipherService>().getBiometryType(),
@@ -85,13 +86,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       case BiometryType.none:
                         break;
                       case BiometryType.faceId:
-                        label = Strings.faceId;
+                        label = strings.faceId;
                         break;
                       case BiometryType.touchId:
-                        label = Strings.touchId;
+                        label = strings.touchId;
                         break;
                       case BiometryType.unknown:
-                        label = Strings.biometry;
+                        label = strings.biometry;
                         break;
                     }
 
@@ -119,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     var accountName = snapshot.data?.name ?? "";
 
                     return LinkItem(
-                      text: Strings.pinCode,
+                      text: strings.pinCode,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -133,14 +134,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 _divider,
                 LinkItem(
-                  text: Strings.resetAccounts,
+                  text: strings.resetAccounts,
                   onTap: () async {
                     bool shouldReset = await PwDialog.showConfirmation(
                       context,
-                      title: Strings.resetAccounts,
-                      message: Strings.resetAccountsAreYouSure,
-                      cancelText: Strings.cancel,
-                      confirmText: Strings.resetAccounts,
+                      title: strings.resetAccounts,
+                      message: strings.resetAccountsAreYouSure,
+                      cancelText: strings.cancel,
+                      confirmText: strings.resetAccounts,
                     );
                     if (shouldReset) {
                       await get<HomeBloc>().resetAccounts();
@@ -148,17 +149,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 _divider,
-                CategoryLabel(Strings.general),
+                CategoryLabel(strings.general),
                 _divider,
                 LinkItem(
-                  text: Strings.aboutProvenanceBlockchain,
+                  text: strings.aboutProvenanceBlockchain,
                   onTap: () {
                     launchUrl('https://provenance.io/');
                   },
                 ),
                 _divider,
                 LinkItem(
-                  text: Strings.moreInformation,
+                  text: strings.moreInformation,
                   onTap: () {
                     launchUrl('https://docs.provenance.io/');
                   },
@@ -178,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     final show = streamData.data ?? false;
 
                     return ToggleItem(
-                      text: Strings.profileShowAdvancedUI,
+                      text: strings.profileShowAdvancedUI,
                       value: show,
                       onChanged: (value) => _keyValueService.setBool(
                           PrefKey.showAdvancedUI, value),
@@ -201,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     final show = streamData.data ?? true;
 
                     return ToggleItem(
-                      text: Strings.profileAllowCrashlitics,
+                      text: strings.profileAllowCrashlitics,
                       value: show,
                       onChanged: (value) async {
                         await _keyValueService.setBool(

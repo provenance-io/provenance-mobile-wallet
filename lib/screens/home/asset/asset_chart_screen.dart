@@ -89,17 +89,14 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                   ),
                 ],
               ),
-              leading: Padding(
-                padding: EdgeInsets.only(left: 21),
-                child: IconButton(
-                  icon: PwIcon(
-                    PwIcons.back,
-                  ),
-                  onPressed: () {
-                    get.unregister<AssetChartBloc>();
-                    get<DashboardTabBloc>().closeAsset();
-                  },
+              leading: IconButton(
+                icon: PwIcon(
+                  PwIcons.back,
                 ),
+                onPressed: () {
+                  get.unregister<AssetChartBloc>();
+                  get<DashboardTabBloc>().closeAsset();
+                },
               ),
             ),
             body: SingleChildScrollView(

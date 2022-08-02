@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
@@ -122,6 +123,8 @@ main() {
     Future<void> _build(WidgetTester tester, List<NotificationItem> items,
         NotificationItemsDelegate itemsDeletedDelegate) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Material(
           child: NotificationList(
             items: items,

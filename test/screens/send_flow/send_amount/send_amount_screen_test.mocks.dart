@@ -45,6 +45,22 @@ class MockSendAmountBloc extends _i1.Mock implements _i4.SendAmountBloc {
       (super.noSuchMethod(Invocation.getter(#receivingAddress), returnValue: '')
           as String);
   @override
+  String get requiredString =>
+      (super.noSuchMethod(Invocation.getter(#requiredString), returnValue: '')
+          as String);
+  @override
+  String get insufficientString => (super
+          .noSuchMethod(Invocation.getter(#insufficientString), returnValue: '')
+      as String);
+  @override
+  String get tooManyDecimalPlacesString =>
+      (super.noSuchMethod(Invocation.getter(#tooManyDecimalPlacesString),
+          returnValue: '') as String);
+  @override
+  String get gasEstimateNotReadyString =>
+      (super.noSuchMethod(Invocation.getter(#gasEstimateNotReadyString),
+          returnValue: '') as String);
+  @override
   _i5.Stream<_i4.SendAmountBlocState> get stream =>
       (super.noSuchMethod(Invocation.getter(#stream),
               returnValue: Stream<_i4.SendAmountBlocState>.empty())

@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
@@ -45,17 +44,17 @@ class ValidatorListState extends State<ValidatorList> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PwText(
-              Strings.stakingTabAvailableToSelect,
+              Strings.of(context).stakingTabAvailableToSelect,
               color: PwColor.neutralNeutral,
               style: PwTextStyle.bodyBold,
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _showMenu(context),
+              onTap: () => _bloc.showMenu(context),
               child: Row(
                 children: [
                   PwText(
-                    Strings.stakingTabSortBy,
+                    Strings.of(context).stakingTabSortBy,
                     color: PwColor.neutralNeutral,
                     style: PwTextStyle.body,
                   ),
@@ -91,7 +90,7 @@ class ValidatorListState extends State<ValidatorList> {
 
                       return StakingListItem(
                         validator: item,
-                        listItemText: Strings.displayDelegatorsWithCommission(
+                        listItemText: Strings.of(context).displayDelegators(
                           item.delegators,
                           item.commission,
                         ),
@@ -166,59 +165,6 @@ class ValidatorListState extends State<ValidatorList> {
         ),
       ],
     );
-  }
-
-  Future<void> _showMenu(
-    BuildContext context,
-  ) async {
-    var result = await showModalBottomSheet<ValidatorSortingState>(
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            PwGreyButton(
-              text: ValidatorSortingState.alphabetically.dropDownTitle,
-              onPressed: () {
-                Navigator.of(context).pop(ValidatorSortingState.alphabetically);
-              },
-            ),
-            PwListDivider(),
-            PwGreyButton(
-              text: ValidatorSortingState.commission.dropDownTitle,
-              onPressed: () {
-                Navigator.of(context).pop(ValidatorSortingState.commission);
-              },
-            ),
-            PwListDivider(),
-            PwGreyButton(
-              text: ValidatorSortingState.delegators.dropDownTitle,
-              onPressed: () {
-                Navigator.of(context).pop(ValidatorSortingState.delegators);
-              },
-            ),
-            PwListDivider(),
-            PwGreyButton(
-              text: ValidatorSortingState.votingPower.dropDownTitle,
-              onPressed: () {
-                Navigator.of(context).pop(ValidatorSortingState.votingPower);
-              },
-            ),
-            PwListDivider(),
-            PwGreyButton(
-              enabled: false,
-              text: "",
-              // ignore: no-empty-block
-              onPressed: () {},
-            ),
-          ],
-        );
-      },
-    );
-    if (result != null) {
-      _bloc.updateSort(result);
-    }
   }
 
   void _onScrollEnd() {

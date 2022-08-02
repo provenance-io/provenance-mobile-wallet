@@ -52,6 +52,7 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
@@ -68,20 +69,15 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                 }
                 return Scaffold(
                   appBar: AppBar(
-                    //toolbarHeight: 22,
                     primary: false,
                     backgroundColor: Theme.of(context).colorScheme.neutral750,
                     elevation: 0.0,
                     centerTitle: true,
                     title: PwText(
-                      Strings.stakingRedelegateRedelegate,
+                      strings.stakingRedelegateRedelegate,
                       style: PwTextStyle.footnote,
                     ),
-                    leading:
-                        // Padding(
-                        //   padding: EdgeInsets.only(left: 21),
-                        //   child:
-                        IconButton(
+                    leading: IconButton(
                       icon: PwIcon(
                         PwIcons.back,
                       ),
@@ -89,7 +85,6 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         Navigator.of(context).pop();
                       },
                     ),
-                    // ),
                   ),
                   body: ListView(
                     padding: EdgeInsets.symmetric(horizontal: Spacing.large),
@@ -99,14 +94,15 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DetailsHeader(
-                              title: Strings.stakingRedelegateRedelegating),
+                            title: strings.stakingRedelegateRedelegating,
+                          ),
                           PwListDivider.alternate(),
                           Padding(
                             padding: EdgeInsets.symmetric(
                               vertical: Spacing.small,
                             ),
                             child: PwText(
-                              Strings.stakingRedelegateFrom,
+                              strings.stakingRedelegateFrom,
                               color: PwColor.neutral200,
                             ),
                           ),
@@ -120,20 +116,20 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
                               vertical: Spacing.small,
                             ),
                             child: PwText(
-                              Strings.stakingRedelegateTo,
+                              strings.stakingRedelegateTo,
                               color: PwColor.neutral200,
                             ),
                           ),
                           ValidatorCard(),
                           VerticalSpacer.xLarge(),
                           PwText(
-                            Strings.stakingDelegateDetails,
+                            strings.stakingDelegateDetails,
                             style: PwTextStyle.subhead,
                           ),
                           VerticalSpacer.large(),
                           PwListDivider.alternate(),
                           DetailsItem.withHash(
-                            title: Strings
+                            title: strings
                                 .stakingRedelegateAvailableForRedelegation,
                             hashString: details.delegation.displayDenom,
                             context: context,

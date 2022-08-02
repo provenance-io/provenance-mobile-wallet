@@ -9,7 +9,6 @@ import 'package:provenance_wallet/services/account_service/transaction_handler.d
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 abstract class SendAmountBlocNavigator {
   Future<void> showReviewSend(
@@ -31,8 +30,12 @@ class SendAmountBloc extends Disposable {
     this.receivingAddress,
     this.asset,
     this._priceService,
-    this._navigator,
-  );
+    this._navigator, {
+    required this.requiredString,
+    required this.insufficientString,
+    required this.tooManyDecimalPlacesString,
+    required this.gasEstimateNotReadyString,
+  });
 
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
@@ -43,6 +46,10 @@ class SendAmountBloc extends Disposable {
   final Account accountDetails;
   final SendAsset asset;
   final String receivingAddress;
+  final String requiredString;
+  final String insufficientString;
+  final String tooManyDecimalPlacesString;
+  final String gasEstimateNotReadyString;
 
   Stream<SendAmountBlocState> get stream => _streamController.stream;
 
@@ -103,20 +110,20 @@ class SendAmountBloc extends Disposable {
     proposedAmount ??= "";
     final val = Decimal.tryParse(proposedAmount);
     if (val == null) {
-      return Strings.required;
+      return requiredString;
     }
 
     final scaledValue = (val * Decimal.fromInt(10).pow(asset.exponent));
 
     if (asset.amount < scaledValue) {
-      return "${Strings.sendAmountErrorInsufficient} ${asset.displayDenom}";
+      return "$insufficientString ${asset.displayDenom}";
     }
 
     final dotIndex = proposedAmount.indexOf(".");
     if (dotIndex >= 0) {
       final decimalDigits = (proposedAmount.length - dotIndex - 1);
       if (decimalDigits > asset.exponent) {
-        return Strings.sendAmountErrorTooManyDecimalPlaces;
+        return tooManyDecimalPlacesString;
       }
     }
 
@@ -131,7 +138,7 @@ class SendAmountBloc extends Disposable {
   Future<void> showNext(String note, String amount) {
     if (_fee == null) {
       return Future.error(Exception(
-        Strings.sendAmountErrorGasEstimateNotReady,
+        gasEstimateNotReadyString,
       ));
     }
 

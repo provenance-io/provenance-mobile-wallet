@@ -28,7 +28,7 @@ class CreatePinState extends State<CreatePin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.setPinCode,
+        title: Strings.of(context).setPinCode,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           widget.currentStep,
@@ -45,7 +45,7 @@ class CreatePinState extends State<CreatePin> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
+                  subTitle: Strings.of(context).setAPinCodeToUnlockYourAccount,
                   onFinish: _onFinish,
                 ),
               ),

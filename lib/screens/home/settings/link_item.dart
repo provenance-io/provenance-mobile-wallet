@@ -22,7 +22,7 @@ class LinkItem extends StatelessWidget {
       child: Container(
         height: 64,
         margin: EdgeInsets.symmetric(
-          horizontal: Spacing.xxLarge,
+          horizontal: Spacing.large,
         ),
         child: Row(
           children: [

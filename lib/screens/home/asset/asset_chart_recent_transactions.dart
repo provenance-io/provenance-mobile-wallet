@@ -20,9 +20,9 @@ class AssetChartRecentTransactions extends StatelessWidget {
       children: [
         VerticalSpacer.medium(),
         Row(
-          children: const [
+          children: [
             PwText(
-              Strings.recentTransactions,
+              Strings.of(context).recentTransactions,
               style: PwTextStyle.headline4,
             ),
           ],
@@ -69,7 +69,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           PwText(
-                            Strings.viewAllLabel,
+                            Strings.of(context).viewAllLabel,
                             style: PwTextStyle.bodyBold,
                           ),
                           Expanded(child: Container()),

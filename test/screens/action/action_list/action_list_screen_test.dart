@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -39,6 +40,8 @@ main() {
 
     Future<void> _build(WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
             child: Provider<ActionListBloc>(

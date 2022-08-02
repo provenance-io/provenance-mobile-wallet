@@ -50,7 +50,7 @@ class ChangePinBloc extends Disposable {
         useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
-          error: Strings.yourPinDoesNotMatchPleaseTryAgain,
+          error: Strings.of(context).yourPinDoesNotMatchPleaseTryAgain,
         ),
       );
     } else {

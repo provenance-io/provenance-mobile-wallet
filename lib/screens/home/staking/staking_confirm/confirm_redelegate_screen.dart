@@ -20,6 +20,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingRedelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingRedelegationDetails>(
       initialData: bloc.stakingRedelegationDetails.value,
@@ -30,10 +31,12 @@ class ConfirmRedelegateScreen extends StatelessWidget {
           return Container();
         }
         return StakingConfirmBase(
-          appBarTitle: details.selectedDelegationType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>()
-                .showTransactionData(bloc.getRedelegateMessageJson());
+            get<StakingFlowBloc>().showTransactionData(
+              bloc.getRedelegateMessageJson(),
+              Strings.of(context).stakingConfirmData,
+            );
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading(
@@ -47,16 +50,17 @@ class ConfirmRedelegateScreen extends StatelessWidget {
               context,
             );
           },
-          signButtonTitle: details.selectedDelegationType.dropDownTitle,
+          signButtonTitle:
+              details.selectedDelegationType.getDropDownTitle(context),
           children: [
-            DetailsHeader(title: Strings.stakingConfirmRedelegationDetails),
+            DetailsHeader(title: strings.stakingConfirmRedelegationDetails),
             PwListDivider.alternate(),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: Spacing.small,
               ),
               child: PwText(
-                Strings.stakingRedelegateFrom,
+                strings.stakingRedelegateFrom,
                 color: PwColor.neutral200,
               ),
             ),
@@ -70,7 +74,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
                 vertical: Spacing.small,
               ),
               child: PwText(
-                Strings.stakingRedelegateTo,
+                strings.stakingRedelegateTo,
                 color: PwColor.neutral200,
               ),
             ),
@@ -81,23 +85,22 @@ class ConfirmRedelegateScreen extends StatelessWidget {
             VerticalSpacer.largeX3(),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation.displayDenom,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmAmountToRedelegate,
-              hashString: Strings.stakingConfirmHashAmount(
-                  details.hashRedelegated.toString()),
+              title: strings.stakingConfirmAmountToRedelegate,
+              hashString: details.hashRedelegated.toString(),
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmNewTotalDelegation,
-              hashString: Strings.stakingConfirmHashAmount(
+              title: strings.stakingConfirmNewTotalDelegation,
+              hashString:
                   (details.delegation.hashAmount - details.hashRedelegated)
-                      .toString()),
+                      .toString(),
               context: context,
             ),
           ],
@@ -113,9 +116,10 @@ class ConfirmRedelegateScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
+      final message =
+          await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(

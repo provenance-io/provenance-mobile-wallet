@@ -32,7 +32,7 @@ class PwModalMessage extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: EdgeInsets.symmetric(
-                  horizontal: Spacing.xxLarge,
+                  horizontal: Spacing.large,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

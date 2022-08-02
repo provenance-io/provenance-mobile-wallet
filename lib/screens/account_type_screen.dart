@@ -25,10 +25,12 @@ class AccountTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PwAppBar(
-        title: Strings.accountTypeTitle,
+        title: strings.accountTypeTitle,
         leadingIcon: PwIcons.back,
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
@@ -40,7 +42,7 @@ class AccountTypeScreen extends StatelessWidget {
               hasScrollBody: false,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.xxLarge,
+                  horizontal: Spacing.large,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -48,8 +50,8 @@ class AccountTypeScreen extends StatelessWidget {
                     VerticalSpacer.largeX3(),
                     AccountButton(
                       key: keyBasicAccountButton,
-                      name: Strings.accountTypeOptionBasicName,
-                      desc: Strings.accountTypeOptionBasicDesc,
+                      name: strings.accountTypeOptionBasicName,
+                      desc: strings.accountTypeOptionBasicDesc,
                       onPressed: () {
                         bloc.submitAccountType(
                           AccountAddKind.createSingle,
@@ -59,8 +61,8 @@ class AccountTypeScreen extends StatelessWidget {
                     VerticalSpacer.large(),
                     AccountButton(
                       key: keyRecoverAccountButton,
-                      name: Strings.accountTypeOptionImportName,
-                      desc: Strings.accountTypeOptionImportDesc,
+                      name: strings.accountTypeOptionImportName,
+                      desc: strings.accountTypeOptionImportDesc,
                       onPressed: () {
                         bloc.submitAccountType(
                           AccountAddKind.recover,
@@ -82,8 +84,8 @@ class AccountTypeScreen extends StatelessWidget {
                                   top: Spacing.large,
                                 ),
                                 child: AccountButton(
-                                  name: Strings.accountTypeOptionMultiName,
-                                  desc: Strings.accountTypeOptionMultiDesc,
+                                  name: strings.accountTypeOptionMultiName,
+                                  desc: strings.accountTypeOptionMultiDesc,
                                   onPressed: () {
                                     bloc.submitAccountType(
                                       AccountAddKind.createMulti,

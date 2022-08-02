@@ -39,7 +39,7 @@ class PwDialog {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: Spacing.xxLarge,
+                          horizontal: Spacing.large,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +92,7 @@ class PwDialog {
   static Future<T?> show<T>(
     BuildContext context, {
     Widget? header,
-    String title = Strings.appName,
+    String? title,
     String? message,
     Widget? content,
     Widget? bottom,
@@ -112,9 +112,9 @@ class PwDialog {
             elevation: 0.0,
             title: header ??
                 PwText(
-                  title,
-                  style: PwTextStyle.subhead,
-                  textAlign: TextAlign.center,
+                  title ?? Strings.of(context).appName,
+                  style: PwTextStyle.footnote,
+                  textAlign: TextAlign.left,
                 ),
             centerTitle: true,
             leading: Container(),
@@ -127,7 +127,7 @@ class PwDialog {
               children: [
                 Padding(
                   padding: EdgeInsets.all(
-                    Spacing.xxLarge,
+                    Spacing.large,
                   ),
                   child: content ??
                       PwText(
@@ -142,7 +142,7 @@ class PwDialog {
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: PwButton(
                         child: PwText(
-                          Strings.confirm,
+                          Strings.of(context).confirm,
                           style: PwTextStyle.bodyBold,
                           color: PwColor.neutralNeutral,
                         ),
@@ -185,7 +185,7 @@ class PwDialog {
               horizontal: Spacing.xLarge,
             ),
             child: PwPrimaryButton.fromString(
-              text: Strings.okay,
+              text: Strings.of(context).okay,
               onPressed: () {
                 Navigator.of(context).pop();
                 okAction?.call();
@@ -199,7 +199,7 @@ class PwDialog {
                 horizontal: Spacing.xLarge,
               ),
               child: PwTextButton(
-                child: PwText(Strings.cancel),
+                child: PwText(Strings.of(context).cancel),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -218,14 +218,14 @@ class PwDialog {
     String? message,
     Widget? content,
     String? confirmText,
-    String cancelText = Strings.cancel,
+    String? cancelText,
     Widget? footer,
   }) async {
     final result = await show<bool>(
       context,
       barrierDismissible: false,
       header: header,
-      title: title ?? Strings.appName,
+      title: title ?? Strings.of(context).appName,
       message: message,
       content: content,
       bottom: Padding(
@@ -233,13 +233,13 @@ class PwDialog {
         child: Column(
           children: [
             PwPrimaryButton.fromString(
-              text: confirmText ?? cancelText,
+              text: confirmText ?? cancelText ?? Strings.of(context).cancel,
               onPressed: () => Navigator.of(context).pop(true),
             ),
             const VerticalSpacer.small(),
             if (confirmText != null) ...[
               PwTextButton(
-                child: PwText(cancelText),
+                child: PwText(cancelText ?? Strings.of(context).cancel),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               if (footer != null) ...[
@@ -261,7 +261,7 @@ class PwDialog {
     BuildContext context, {
     Widget? header,
     String? title,
-    String closeText = Strings.continueName,
+    String? closeText,
     required String message,
   }) {
     return showConfirmation(
@@ -269,7 +269,7 @@ class PwDialog {
       header: header,
       title: title,
       message: message,
-      cancelText: closeText,
+      cancelText: closeText ?? Strings.of(context).continueName,
     );
   }
 }

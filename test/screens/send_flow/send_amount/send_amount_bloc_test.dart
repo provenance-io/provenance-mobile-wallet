@@ -10,7 +10,6 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -36,6 +35,7 @@ const feeAmount = AccountGasEstimate(
 ])
 main() {
   const receivingAddress = "ReceivingAdress";
+  const requiredString = "Required";
 
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
@@ -71,6 +71,10 @@ main() {
       hashAsset,
       mockPriceService!,
       mockNavigator!,
+      gasEstimateNotReadyString: "The estimated fee is not ready",
+      insufficientString: "Insufficient",
+      requiredString: requiredString,
+      tooManyDecimalPlacesString: "too many decimal places",
     );
   });
 
@@ -112,9 +116,9 @@ main() {
   });
 
   test("validateAmount", () {
-    expect(bloc!.validateAmount(null), Strings.required);
-    expect(bloc!.validateAmount(""), Strings.required);
-    expect(bloc!.validateAmount("abc"), Strings.required);
+    expect(bloc!.validateAmount(null), requiredString);
+    expect(bloc!.validateAmount(""), requiredString);
+    expect(bloc!.validateAmount("abc"), requiredString);
     expect(bloc!.validateAmount("1.1234567890"), "too many decimal places");
     expect(bloc!.validateAmount("100.000000001"), "Insufficient Hash");
     expect(bloc!.validateAmount("1.00"), null);
@@ -132,13 +136,13 @@ main() {
     expect(
       () => bloc!.showNext("", ""),
       throwsExceptionWithText(
-        Strings.required,
+        requiredString,
       ),
     );
     expect(
       () => bloc!.showNext("", "abc"),
       throwsExceptionWithText(
-        Strings.required,
+        requiredString,
       ),
     );
     // expect(() => bloc!.showNext("","1.1234567890"), throwsExceptionWithText("too many decimal places"));

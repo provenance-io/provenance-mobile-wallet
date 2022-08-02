@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_distribution.dart';
 import 'package:provenance_dart/proto_staking.dart' as staking;
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -15,6 +16,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -88,28 +90,28 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  Future<void> doDelegate(
+  Future<Object?> doDelegate(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getDelegateMessage().toAny(),
     );
   }
 
-  Future<void> doUndelegate(
+  Future<Object?> doUndelegate(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getUndelegateMessage().toAny(),
     );
   }
 
-  Future<void> claimRewards(
+  Future<Object?> claimRewards(
     double? gasAdjustment,
   ) async {
-    await _sendMessage(
+    return await _sendMessage(
       gasAdjustment,
       _getClaimRewardMessage().toAny(),
     );
@@ -119,7 +121,7 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     return staking.MsgDelegate(
       amount: proto.Coin(
-        denom: details.asset?.denom ?? 'nhash',
+        denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
       delegatorAddress: _account.publicKey!.address,
@@ -131,7 +133,7 @@ class StakingDelegationBloc extends Disposable {
     final details = _stakingDelegationDetails.value;
     return staking.MsgUndelegate(
       amount: proto.Coin(
-        denom: details.asset?.denom ?? 'nhash',
+        denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
       delegatorAddress: _account.publicKey!.address,
@@ -147,19 +149,19 @@ class StakingDelegationBloc extends Disposable {
     );
   }
 
-  String getClaimRewardJson() {
-    return _getClaimRewardMessage().toProto3Json() as String;
+  Object? getClaimRewardJson() {
+    return _getClaimRewardMessage().toProto3Json();
   }
 
-  String getUndelegateMessageJson() {
-    return _getUndelegateMessage().toProto3Json() as String;
+  Object? getUndelegateMessageJson() {
+    return _getUndelegateMessage().toProto3Json();
   }
 
-  String getDelegateMessageJson() {
-    return _getDelegateMessage().toProto3Json() as String;
+  Object? getDelegateMessageJson() {
+    return _getDelegateMessage().toProto3Json();
   }
 
-  Future<void> _sendMessage(
+  Future<Object?> _sendMessage(
     double? gasAdjustment,
     proto.Any message,
   ) async {
@@ -187,6 +189,7 @@ class StakingDelegationBloc extends Disposable {
     );
 
     log(response.asJsonString());
+    return response.txResponse.toProto3Json();
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
@@ -227,7 +230,7 @@ class StakingDelegationDetails {
   }
 
   String get hashFormatted {
-    return Strings.stakingConfirmHashAmount(hashDelegated.toString());
+    return hashDelegated.toString();
   }
 }
 
@@ -240,16 +243,36 @@ enum SelectedDelegationType {
 }
 
 extension SelectedDelegationTypeExtension on SelectedDelegationType {
-  String get dropDownTitle {
+  String getDropDownTitle(BuildContext context) {
     switch (this) {
       case SelectedDelegationType.initial:
-        return Strings.stakingDelegationBlocBack;
+        return Strings.of(context).stakingDelegationBlocBack;
       case SelectedDelegationType.delegate:
+        return Strings.of(context).menuDelegate;
       case SelectedDelegationType.redelegate:
+        return Strings.of(context).menuRedelegate;
       case SelectedDelegationType.undelegate:
-        return name.capitalize();
+        return Strings.of(context).menuUndelegate;
       case SelectedDelegationType.claimRewards:
-        return Strings.stakingDelegationBlocClaimRewards;
+        return Strings.of(context).stakingDelegationBlocClaimRewards;
+    }
+  }
+
+  String getCompletionMessage(BuildContext context) {
+    // There is no way programmatically to get here with the 'initial' type.
+    assert(this != SelectedDelegationType.initial);
+    final strings = Strings.of(context);
+    switch (this) {
+      case SelectedDelegationType.initial:
+        return "";
+      case SelectedDelegationType.delegate:
+        return strings.stakingCompleteDelegationComplete;
+      case SelectedDelegationType.redelegate:
+        return strings.stakingCompleteRedelegationComplete;
+      case SelectedDelegationType.undelegate:
+        return strings.stakingCompleteUndelegationComplete;
+      case SelectedDelegationType.claimRewards:
+        return strings.stakingCompleteClaimRewardsComplete;
     }
   }
 }

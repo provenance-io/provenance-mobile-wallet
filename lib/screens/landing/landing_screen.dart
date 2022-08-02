@@ -53,6 +53,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     final authHelper = get<LocalAuthHelper>();
+    final strings = Strings.of(context);
 
     return Scaffold(
       body: Container(
@@ -88,7 +89,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   final status = snapshot.data;
                   if (status == AuthStatus.noLockScreen) {
                     return PwText(
-                      Strings.lockScreenRequired,
+                      strings.lockScreenRequired,
                       textAlign: TextAlign.center,
                     );
                   }
@@ -98,7 +99,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   return PwPrimaryButton.fromString(
                     key: LandingScreen.keyAddAccountButton,
                     text:
-                        hasAccount ? Strings.continueName : Strings.addAccount,
+                        hasAccount ? strings.continueName : strings.addAccount,
                     onPressed: () {
                       if (hasAccount) {
                         _bloc.doAuth(context);
@@ -128,7 +129,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       right: 20,
                     ),
                     child: PwPrimaryButton.fromString(
-                      text: Strings.refresh,
+                      text: strings.refresh,
                       onPressed: () async {
                         ModalLoadingRoute.showLoading(
                           context,

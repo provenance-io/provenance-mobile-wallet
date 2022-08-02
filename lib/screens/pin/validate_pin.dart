@@ -26,7 +26,7 @@ class ValidatePinState extends State<ValidatePin> {
     return Scaffold(
       appBar: PwAppBar(
         leadingIconOnPress: () => Navigator.of(context).pop(false),
-        title: Strings.enterPin,
+        title: Strings.of(context).enterPin,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -36,7 +36,7 @@ class ValidatePinState extends State<ValidatePin> {
           children: [
             Expanded(
               child: PinPad(
-                subTitle: Strings.enterPinToVerifyYourIdentity,
+                subTitle: Strings.of(context).enterPinToVerifyYourIdentity,
                 onFinish: _onFinish,
               ),
             ),
@@ -53,7 +53,7 @@ class ValidatePinState extends State<ValidatePin> {
         useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
-          error: Strings.yourPinDoesNotMatch,
+          error: Strings.of(context).yourPinDoesNotMatch,
         ),
       );
     } else {

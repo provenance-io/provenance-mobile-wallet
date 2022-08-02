@@ -19,6 +19,7 @@ class ConfirmUndelegateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingDelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -29,10 +30,12 @@ class ConfirmUndelegateScreen extends StatelessWidget {
           return Container();
         }
         return StakingConfirmBase(
-          appBarTitle: details.selectedDelegationType.dropDownTitle,
+          appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>()
-                .showTransactionData(bloc.getUndelegateMessageJson());
+            get<StakingFlowBloc>().showTransactionData(
+              bloc.getUndelegateMessageJson(),
+              Strings.of(context).stakingConfirmData,
+            );
           },
           onTransactionSign: (gasAdjustment) async {
             ModalLoadingRoute.showLoading(
@@ -41,16 +44,17 @@ class ConfirmUndelegateScreen extends StatelessWidget {
             );
             await _sendTransaction(bloc, details, gasAdjustment, context);
           },
-          signButtonTitle: details.selectedDelegationType.dropDownTitle,
+          signButtonTitle:
+              details.selectedDelegationType.getDropDownTitle(context),
           children: [
-            DetailsHeader(title: Strings.stakingConfirmUndelegationDetails),
+            DetailsHeader(title: strings.stakingConfirmUndelegationDetails),
             PwListDivider.alternate(),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: Spacing.small,
               ),
               child: PwText(
-                Strings.stakingRedelegateFrom,
+                strings.stakingRedelegateFrom,
                 color: PwColor.neutral200,
               ),
             ),
@@ -62,23 +66,23 @@ class ConfirmUndelegateScreen extends StatelessWidget {
             VerticalSpacer.largeX3(),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingDelegateCurrentDelegation,
+              title: strings.stakingDelegateCurrentDelegation,
               hashString: details.delegation?.displayDenom ??
-                  Strings.stakingManagementNoHash,
+                  strings.stakingManagementNoHash,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmAmountToUndelegate,
+              title: strings.stakingConfirmAmountToUndelegate,
               hashString: details.hashFormatted,
               context: context,
             ),
             PwListDivider.alternate(),
             DetailsItem.withHash(
-              title: Strings.stakingConfirmNewTotalDelegation,
-              hashString: Strings.stakingConfirmHashAmount(
+              title: strings.stakingConfirmNewTotalDelegation,
+              hashString:
                   (details.delegation!.hashAmount - details.hashDelegated)
-                      .toString()),
+                      .toString(),
               context: context,
             ),
           ],
@@ -95,9 +99,9 @@ class ConfirmUndelegateScreen extends StatelessWidget {
   ) async {
     final selected = details.selectedDelegationType;
     try {
-      await bloc.doUndelegate(gasAdjustment);
+      final message = await bloc.doUndelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionSuccess(selected);
+      get<StakingFlowBloc>().showTransactionComplete(message, selected);
     } catch (err) {
       await _showErrorModal(err, context);
     }

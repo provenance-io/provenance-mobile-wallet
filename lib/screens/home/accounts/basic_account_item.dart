@@ -89,6 +89,8 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
     BasicAccount item,
     bool isSelected,
   ) async {
+    final strings = Strings.of(context);
+
     final showAdvancedUI =
         await get<KeyValueService>().getBool(PrefKey.showAdvancedUI) ?? false;
     var result = await showModalBottomSheet<MenuOperation>(
@@ -99,14 +101,14 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PwGreyButton(
-              text: Strings.copyAccountAddress,
+              text: strings.copyAccountAddress,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.copy);
               },
             ),
             PwListDivider(),
             PwGreyButton(
-              text: Strings.rename,
+              text: strings.rename,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.rename);
               },
@@ -114,7 +116,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             if (item.linkedAccountIds.isEmpty) PwListDivider(),
             if (item.linkedAccountIds.isEmpty)
               PwGreyButton(
-                text: Strings.remove,
+                text: strings.remove,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.delete);
                 },
@@ -122,7 +124,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             if (!isSelected) PwListDivider(),
             if (!isSelected)
               PwGreyButton(
-                text: Strings.select,
+                text: strings.select,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.select);
                 },
@@ -131,8 +133,8 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             if (showAdvancedUI)
               PwGreyButton(
                 text: item.publicKey.coin == Coin.mainNet
-                    ? Strings.profileMenuUseTestnet
-                    : Strings.profileMenuUseMainnet,
+                    ? strings.profileMenuUseTestnet
+                    : strings.profileMenuUseMainnet,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.switchCoin);
                 },
@@ -178,7 +180,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              Strings.addressCopied,
+              strings.addressCopied,
             ),
             backgroundColor: Theme.of(context).colorScheme.neutral700,
           ),
@@ -187,9 +189,9 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       case MenuOperation.delete:
         final dialogResult = await PwDialog.showConfirmation(
           context,
-          message: Strings.removeThisAccount,
-          confirmText: Strings.yes,
-          cancelText: Strings.cancel,
+          message: strings.removeThisAccount,
+          confirmText: strings.yes,
+          cancelText: strings.cancel,
         );
         if (dialogResult) {
           await get<AccountService>().removeAccount(id: item.id);

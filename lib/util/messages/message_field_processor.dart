@@ -2,15 +2,17 @@ import 'package:protobuf/protobuf.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
 import 'package:provenance_wallet/util/messages/message_field_key.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 typedef MessageFieldConverter = Object? Function(Object? obj);
 
 class MessageFieldProcessor {
   MessageFieldProcessor({
     Map<String, MessageFieldConverter?> converters = const {},
+    required this.transactionFieldTrue,
+    required this.transactionFieldFalse,
   }) : _converters = converters;
-
+  final String transactionFieldTrue;
+  final String transactionFieldFalse;
   final Map<String, MessageFieldConverter?> _converters;
 
   MessageFieldGroup findFields(Map<String, dynamic> data) {
@@ -88,7 +90,7 @@ class MessageFieldProcessor {
         parent.fields.add(
           MessageField(
             key,
-            obj ? Strings.transactionFieldTrue : Strings.transactionFieldFalse,
+            obj ? transactionFieldTrue : transactionFieldFalse,
           ),
         );
       }

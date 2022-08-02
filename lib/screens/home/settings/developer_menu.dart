@@ -15,6 +15,7 @@ class DeveloperMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     final keyValueService = get<KeyValueService>();
     final diagnostics500Stream =
         keyValueService.stream<bool>(PrefKey.httpClientDiagnostics500);
@@ -23,7 +24,7 @@ class DeveloperMenu extends StatelessWidget {
       textDirection: TextDirection.ltr,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CategoryLabel(Strings.profileDeveloperCategoryTitle),
+        CategoryLabel(strings.profileDeveloperCategoryTitle),
         PwListDivider(),
         WalletConnectItem(),
         PwListDivider(),
@@ -38,7 +39,7 @@ class DeveloperMenu extends StatelessWidget {
             final data = snapshot.data?.data ?? false;
 
             return ToggleItem(
-              text: Strings.profileDeveloperHttpClients500,
+              text: strings.profileDeveloperHttpClients500,
               value: data,
               onChanged: (value) async {
                 await keyValueService.setBool(
@@ -63,7 +64,7 @@ class DeveloperMenu extends StatelessWidget {
             final data = snapshot.data?.data ?? false;
 
             return ToggleItem(
-              text: Strings.profileDeveloperEnableMultiSig,
+              text: strings.profileDeveloperEnableMultiSig,
               value: data,
               onChanged: (value) async {
                 await keyValueService.setBool(
@@ -77,7 +78,7 @@ class DeveloperMenu extends StatelessWidget {
         ),
         PwListDivider(),
         LinkItem(
-          text: Strings.profileDeveloperServiceMocks,
+          text: strings.profileDeveloperServiceMocks,
           onTap: () {
             showDialog(
               context: context,

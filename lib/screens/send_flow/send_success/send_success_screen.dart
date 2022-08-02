@@ -56,12 +56,12 @@ class SendSuccessScreen extends StatelessWidget {
                   ),
                   VerticalSpacer.medium(),
                   PwText(
-                    Strings.sendSuccessTransferDetailsBelow,
+                    Strings.of(context).sendSuccessTransferDetailsBelow,
                     style: PwTextStyle.displayBody,
                   ),
                   VerticalSpacer.largeX5(),
                   SendReviewCell(
-                    Strings.sendDate,
+                    Strings.of(context).sendDate,
                     date.toIso8601String(),
                   ),
                   PwDivider(
@@ -69,7 +69,7 @@ class SendSuccessScreen extends StatelessWidget {
                     endIndent: Spacing.xLarge,
                   ),
                   SendReviewCell(
-                    Strings.sendTo,
+                    Strings.of(context).sendTo,
                     addressTo,
                   ),
                   PwDivider(
@@ -79,7 +79,7 @@ class SendSuccessScreen extends StatelessWidget {
                   Expanded(child: Container()),
                   PwButton(
                     child: PwText(
-                      Strings.sendDone,
+                      Strings.of(context).sendDone,
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () {

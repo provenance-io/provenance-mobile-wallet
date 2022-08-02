@@ -70,7 +70,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
               return Scaffold(
                 appBar: PwAppBar(
                   title: details.delegation == null
-                      ? Strings.stakingDetailsDelegation
+                      ? Strings.of(context).stakingDetailsDelegation
                       : validator.moniker,
                   leadingIcon: PwIcons.back,
                   style: PwTextStyle.footnote,

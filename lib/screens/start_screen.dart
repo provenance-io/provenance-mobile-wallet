@@ -3,6 +3,7 @@ import 'package:provenance_wallet/screens/home/home_screen.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({Key? key}) : super(key: key);
@@ -29,9 +30,13 @@ class StartScreenState extends State<StartScreen> {
         if (snapshot.connectionState != ConnectionState.active) {
           return Container();
         }
+        var strings = Strings.of(context);
 
         return (snapshot.data == AuthStatus.authenticated)
-            ? HomeScreen()
+            ? HomeScreen(
+                allMessageTypes: strings.dropDownAllMessageTypes,
+                allStatuses: strings.dropDownAllStatuses,
+              )
             : LandingScreen();
       },
     );

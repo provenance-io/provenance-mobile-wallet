@@ -2,8 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/pw_avatar.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
+import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class StakingListItem extends StatelessWidget {
   StakingListItem({

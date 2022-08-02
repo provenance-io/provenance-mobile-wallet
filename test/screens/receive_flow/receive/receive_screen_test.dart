@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
@@ -40,6 +41,8 @@ main() {
     Future<void> _build(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: ReceiveScreen(),
         ),
       );
@@ -56,6 +59,8 @@ main() {
     Future<void> _build(WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Material(child: ReceivePage()),
         ),
       );
