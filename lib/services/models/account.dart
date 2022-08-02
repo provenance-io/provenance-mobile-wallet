@@ -15,7 +15,23 @@ abstract class Account {
   abstract final PublicKey? publicKey;
 }
 
-class BasicAccount with Diagnosticable implements Account {
+abstract class TransactableAccount implements Account {
+  TransactableAccount._();
+
+  @override
+  abstract final String id;
+
+  @override
+  abstract final String name;
+
+  @override
+  abstract final AccountKind kind;
+
+  @override
+  PublicKey get publicKey;
+}
+
+class BasicAccount with Diagnosticable implements Account, TransactableAccount {
   const BasicAccount({
     required this.id,
     required this.name,
@@ -133,4 +149,30 @@ class MultiAccount with Diagnosticable implements Account {
     properties.add(StringProperty('address', publicKey?.address));
     properties.add(StringProperty('name', name));
   }
+}
+
+class MultiTransactableAccount extends MultiAccount
+    implements TransactableAccount {
+  const MultiTransactableAccount({
+    required String id,
+    required String name,
+    required PublicKey publicKey,
+    required BasicAccount linkedAccount,
+    required String remoteId,
+    required int cosignerCount,
+    required int signaturesRequired,
+    required List<String> inviteIds,
+  }) : super(
+          id: id,
+          name: name,
+          publicKey: publicKey,
+          linkedAccount: linkedAccount,
+          remoteId: remoteId,
+          cosignerCount: cosignerCount,
+          signaturesRequired: signaturesRequired,
+          inviteIds: inviteIds,
+        );
+
+  @override
+  PublicKey get publicKey => super.publicKey!;
 }

@@ -42,7 +42,7 @@ abstract class AccountStorageServiceCore {
 
   Future<List<MultiAccount>> getMultiAccounts();
 
-  Future<Account?> getSelectedAccount();
+  Future<TransactableAccount?> getSelectedAccount();
 
   Future<int> removeAccount({
     required String id,

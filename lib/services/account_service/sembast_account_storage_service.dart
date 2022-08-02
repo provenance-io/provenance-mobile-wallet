@@ -166,13 +166,13 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<Account?> getSelectedAccount() async {
+  Future<TransactableAccount?> getSelectedAccount() async {
     final db = await _db;
     final selectedId = await _main.record(_keySelectedAccountId).get(db);
 
-    Account? account;
+    TransactableAccount? account;
     if (selectedId != null && selectedId.isNotEmpty) {
-      account = await getAccount(id: selectedId);
+      account = await getAccount(id: selectedId) as TransactableAccount;
     }
 
     return account;
@@ -504,28 +504,38 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
     final linkedAccount = await getBasicAccount(id: model.linkedAccountId);
 
-    var hex = '';
+    PublicKey? publicKey;
 
     if (model.publicKeys.isNotEmpty) {
       final selectedKey = model.publicKeys
           .firstWhere((e) => e.chainId == model.selectedChainId);
 
-      hex = selectedKey.hex;
+      final coin = ChainId.toCoin(chainId);
+      final hex = selectedKey.hex;
+      publicKey = PublicKey.fromCompressPublicHex(
+          convert.hex.decoder.convert(hex), coin);
     }
 
-    final coin = ChainId.toCoin(chainId);
-    final publicKey =
-        PublicKey.fromCompressPublicHex(convert.hex.decoder.convert(hex), coin);
-
-    return MultiAccount(
-      id: id,
-      name: model.name,
-      publicKey: publicKey,
-      linkedAccount: linkedAccount!,
-      remoteId: model.remoteId,
-      cosignerCount: model.cosignerCount,
-      signaturesRequired: model.signaturesRequired,
-      inviteIds: model.inviteIds,
-    );
+    return publicKey != null
+        ? MultiTransactableAccount(
+            id: id,
+            name: model.name,
+            publicKey: publicKey,
+            linkedAccount: linkedAccount!,
+            remoteId: model.remoteId,
+            cosignerCount: model.cosignerCount,
+            signaturesRequired: model.signaturesRequired,
+            inviteIds: model.inviteIds,
+          )
+        : MultiAccount(
+            id: id,
+            name: model.name,
+            publicKey: publicKey,
+            linkedAccount: linkedAccount!,
+            remoteId: model.remoteId,
+            cosignerCount: model.cosignerCount,
+            signaturesRequired: model.signaturesRequired,
+            inviteIds: model.inviteIds,
+          );
   }
 }

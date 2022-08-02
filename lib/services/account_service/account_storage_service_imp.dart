@@ -91,7 +91,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<Account?> getSelectedAccount() {
+  Future<TransactableAccount?> getSelectedAccount() {
     return _serviceCore.getSelectedAccount();
   }
 

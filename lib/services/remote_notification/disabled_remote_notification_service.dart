@@ -6,4 +6,7 @@ class DisabledRemoteNotificationService implements RemoteNotificationService {
 
   @override
   Future<void> unregisterForPushNotifications(String topic) => Future.value();
+
+  @override
+  bool isRegistered(String topic) => false;
 }
