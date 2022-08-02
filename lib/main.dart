@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,7 +67,6 @@ import 'package:provenance_wallet/services/wallet_connect_service/default_wallet
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/push_notification_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -134,11 +132,7 @@ void main() {
 
         crashReportingService = FirebaseCrashReportingService();
 
-        final firebaseMessaging = FirebaseMessaging.instance;
-        final pushNotificationHelper =
-            PushNotificationHelper(firebaseMessaging);
-        remoteNotificationService =
-            DefaultRemoteNotificationService(pushNotificationHelper);
+        remoteNotificationService = DefaultRemoteNotificationService();
         remoteConfigService = FirebaseRemoteConfigService(
           keyValueService: keyValueService,
           localConfigService: localConfigService,
