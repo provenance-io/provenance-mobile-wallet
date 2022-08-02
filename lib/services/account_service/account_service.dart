@@ -84,7 +84,8 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<Account?> getSelectedAccount() => _storage.getSelectedAccount();
+  Future<TransactableAccount?> getSelectedAccount() =>
+      _storage.getSelectedAccount();
 
   Future<List<Account>> getAccounts() async {
     final accounts = await _storage.getAccounts();
@@ -93,6 +94,12 @@ class AccountService implements Disposable {
   }
 
   Future<List<BasicAccount>> getBasicAccounts() => _storage.getBasicAccounts();
+
+  Future<List<TransactableAccount>> getTransactableAccounts() async {
+    final accounts = await _storage.getAccounts();
+
+    return accounts.whereType<TransactableAccount>().toList();
+  }
 
   Future<Account?> renameAccount({
     required String id,

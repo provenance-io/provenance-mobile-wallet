@@ -122,7 +122,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                     onTap: () async {
                       final account = await accountService.getSelectedAccount();
                       String url;
-                      switch (account?.publicKey?.coin) {
+                      switch (account?.publicKey.coin) {
                         case Coin.testNet:
                           url =
                               'https://explorer.test.provenance.io/tx/${transaction.hash}';
