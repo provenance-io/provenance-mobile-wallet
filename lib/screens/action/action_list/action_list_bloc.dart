@@ -186,9 +186,13 @@ class ActionListBloc extends Disposable {
   Future<List<ActionListGroup>> _buildActionGroups() async {
     final currentAccount = _accountService.events.selected.value;
     final accounts = await _accountService.getAccounts();
-    final accountLookup = Map<String, Account>.fromIterable(accounts,
-        key: (account) => account.publicKey.address,
-        value: (account) => account);
+
+    final accountLookup = accounts.asMap().map(
+          (key, value) => MapEntry(
+            value.publicKey!.address,
+            value,
+          ),
+        );
 
     final queuedItems = await _connectQueueService.loadAllGroups();
 

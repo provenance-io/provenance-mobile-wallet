@@ -75,9 +75,10 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
       Invocation.method(#selectAccount, [], {#id: id}),
       returnValue: Future<_i7.Account?>.value()) as _i6.Future<_i7.Account?>);
   @override
-  _i6.Future<_i7.Account?> getSelectedAccount() => (super.noSuchMethod(
-      Invocation.method(#getSelectedAccount, []),
-      returnValue: Future<_i7.Account?>.value()) as _i6.Future<_i7.Account?>);
+  _i6.Future<_i7.TransactableAccount?> getSelectedAccount() =>
+      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
+              returnValue: Future<_i7.TransactableAccount?>.value())
+          as _i6.Future<_i7.TransactableAccount?>);
   @override
   _i6.Future<List<_i7.Account>> getAccounts() =>
       (super.noSuchMethod(Invocation.method(#getAccounts, []),
@@ -89,6 +90,12 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue:
                   Future<List<_i7.BasicAccount>>.value(<_i7.BasicAccount>[]))
           as _i6.Future<List<_i7.BasicAccount>>);
+  @override
+  _i6.Future<List<_i7.TransactableAccount>> getTransactableAccounts() =>
+      (super.noSuchMethod(Invocation.method(#getTransactableAccounts, []),
+              returnValue: Future<List<_i7.TransactableAccount>>.value(
+                  <_i7.TransactableAccount>[]))
+          as _i6.Future<List<_i7.TransactableAccount>>);
   @override
   _i6.Future<_i7.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(

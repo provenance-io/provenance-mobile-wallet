@@ -71,7 +71,11 @@ Future<String?> tryFollowRedirect(String? uri) async {
       result = Uri.tryParse(location);
     }
   } on Exception catch (e) {
-    logStatic('invite_link_util', Level.debug, 'Failed to follow redirect: $e');
+    Log.instance.error(
+      'Failed to follow redirect',
+      tag: 'invite_link_util',
+      error: e,
+    );
   } finally {
     baseClient.close();
   }

@@ -1,5 +1,4 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class PwSlider extends StatefulWidget {
   const PwSlider({
@@ -10,6 +9,7 @@ class PwSlider extends StatefulWidget {
     required this.min,
     required this.max,
     required this.onValueChanged,
+    this.createLabel = _defaultCreateLabel,
     this.headerStyle = PwTextStyle.body,
   }) : super(key: key);
 
@@ -19,10 +19,15 @@ class PwSlider extends StatefulWidget {
   final double startingValue;
   final double min;
   final double max;
+  final Function(double) createLabel;
   final Function(double) onValueChanged;
 
   @override
   State<StatefulWidget> createState() => _PwSliderState();
+
+  static String _defaultCreateLabel(double value) {
+    return "$value";
+  }
 }
 
 class _PwSliderState extends State<PwSlider> {
@@ -83,9 +88,7 @@ class _PwSliderState extends State<PwSlider> {
                   child: Slider(
                     min: widget.min,
                     max: widget.max,
-                    label: _value == 1.25 // TODO: Replace this with a constant
-                        ? "$_value ${Strings.stakingConfirmDefault}"
-                        : "$_value",
+                    label: widget.createLabel(_value),
                     value: _value,
                     divisions: 20,
                     onChanged: (value) {

@@ -36,7 +36,7 @@ abstract class AccountStorageService {
 
   Future<Account?> getAccount(String id);
 
-  Future<Account?> getSelectedAccount();
+  Future<TransactableAccount?> getSelectedAccount();
 
   Future<Account?> selectAccount({
     String? id,

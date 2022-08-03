@@ -165,6 +165,10 @@ class MockRemoteNotificationService extends _i1.Mock
   }
 
   @override
+  bool isRegistered(String? topic) =>
+      (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
+          returnValue: false) as bool);
+  @override
   _i5.Future<void> registerForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#registerForPushNotifications, [topic]),
           returnValue: Future<void>.value(),

@@ -190,7 +190,7 @@ class ActionList extends StatelessWidget {
       ModalLoadingRoute.dismiss(context);
     } catch (e) {
       ModalLoadingRoute.dismiss(context);
-      PwDialog.showError(context, exception: e as Exception);
+      PwDialog.showError(context, error: e as Exception);
     }
   }
 }

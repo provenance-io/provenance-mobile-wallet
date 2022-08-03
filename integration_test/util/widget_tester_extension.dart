@@ -20,18 +20,7 @@ extension WidgetTesterExtension on WidgetTester {
   }
 
   void expectKey(Key key) {
-    try {
-      expect(find.byKey(key), findsOneWidget);
-    } on Exception catch (_) {
-      print('===== Start widget dump =====');
-
-      final app = WidgetsBinding.instance.renderViewElement?.toStringDeep();
-      print(app);
-
-      print('===== End widget dump =======');
-
-      rethrow;
-    }
+    expect(find.byKey(key), findsOneWidget);
   }
 
   Future<void> unfocusAndSettle() async {

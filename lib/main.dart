@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,15 +59,14 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/push_notification_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -94,6 +92,8 @@ const _enableFirebase = bool.fromEnvironment(
   defaultValue: true,
 );
 
+final _log = Log.instance;
+
 void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
@@ -118,33 +118,21 @@ void main() {
       final config = await localConfigService.getConfig();
       get.registerSingleton<LocalConfig>(config);
 
-      logStatic(
-        _tag,
-        Level.info,
-        'Initializing: $config',
-      );
+      _log.info('Initializing: $config', tag: _tag);
 
       CrashReportingService crashReportingService;
       RemoteNotificationService remoteNotificationService;
       RemoteConfigService remoteConfigService;
       DeepLinkService deepLinkService;
 
-      logStatic(
-        _tag,
-        Level.info,
-        'Enable Firebase: $_enableFirebase',
-      );
+      _log.info('Enable Firebase: $_enableFirebase', tag: _tag);
 
       if (_enableFirebase) {
         await Firebase.initializeApp();
 
         crashReportingService = FirebaseCrashReportingService();
 
-        final firebaseMessaging = FirebaseMessaging.instance;
-        final pushNotificationHelper =
-            PushNotificationHelper(firebaseMessaging);
-        remoteNotificationService =
-            DefaultRemoteNotificationService(pushNotificationHelper);
+        remoteNotificationService = DefaultRemoteNotificationService();
         remoteConfigService = FirebaseRemoteConfigService(
           keyValueService: keyValueService,
           localConfigService: localConfigService,
@@ -193,10 +181,9 @@ void main() {
       }
 
       get.registerSingleton<CipherService>(cipherService);
-      logStatic(
-        _tag,
-        Level.info,
+      _log.info(
         '$CipherService implementation: ${cipherService.runtimeType}',
+        tag: _tag,
       );
 
       var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
@@ -233,10 +220,9 @@ void main() {
           break;
       }
 
-      logStatic(
-        _tag,
-        Level.info,
+      _log.info(
         '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
+        tag: _tag,
       );
 
       final accountService = AccountService(storage: accountStorageService);
@@ -260,17 +246,16 @@ void main() {
       );
     },
     (error, stack) {
-      // TODO: Replace with unified logging once stacktraces can print.
-      final logger = Logger();
-      logger.e(
-        'Error',
-        error,
-        stack,
-      );
-
       if (get.isRegistered<CrashReportingService>()) {
         get<CrashReportingService>().recordError(
           error,
+          stack: stack,
+        );
+      } else {
+        _log.error(
+          'Error occurred',
+          tag: _tag,
+          error: error,
           stack: stack,
         );
       }
@@ -455,6 +440,54 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
 
     get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
+
+    final accountService = get<AccountService>();
+    final remoteNotificationService = get<RemoteNotificationService>();
+
+    final accounts = await accountService.getAccounts();
+    for (var account in accounts) {
+      final address = account.publicKey?.address;
+      if (address != null) {
+        await remoteNotificationService.registerForPushNotifications(address);
+      }
+    }
+
+    accountService.events.added.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Add event failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.removed.listen((e) {
+      for (var account in e) {
+        final address = account.publicKey?.address;
+        if (address != null) {
+          remoteNotificationService
+              .unregisterForPushNotifications(address)
+              .onError(
+                (error, stackTrace) => logDebug(
+                  'Remove event failed to unregister push notifications for account: $address',
+                ),
+              );
+        }
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.updated.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null && !remoteNotificationService.isRegistered(address)) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Update event failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
   }
 }
 
@@ -504,7 +537,7 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
     CipherService cipherService) async {
   final sqliteDb = await SqliteAccountStorageService.getDatabase();
   if (await sqliteDb.exists()) {
-    logStatic(_tag, Level.debug, 'Migrating sqlite db');
+    _log.debug('Migrating sqlite db', tag: _tag);
 
     var success = true;
     final sqliteStorage = SqliteAccountStorageService();
@@ -563,10 +596,9 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
       await sqliteDb.delete();
     }
 
-    logStatic(
-      _tag,
-      Level.debug,
+    _log.debug(
       'Migrate sqlite db success: $success, $migrated account(s)',
+      tag: _tag,
     );
   }
 }

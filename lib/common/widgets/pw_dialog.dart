@@ -1,4 +1,3 @@
-import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -115,8 +114,9 @@ class PwDialog {
                 PwText(
                   title,
                   style: PwTextStyle.subhead,
-                  textAlign: TextAlign.left,
+                  textAlign: TextAlign.center,
                 ),
+            centerTitle: true,
             leading: Container(),
           ),
           body: Container(
@@ -164,12 +164,11 @@ class PwDialog {
     BuildContext context, {
     String title = 'Oops!',
     String? message,
-    Exception? exception,
     dynamic error,
     VoidCallback? okAction,
     bool showCancel = false,
   }) {
-    final msg = message ??= exception?.toString().replaceFirst(
+    final msg = message ??= error?.toString().replaceFirst(
           RegExp("^.*: "),
           "",
         );
@@ -272,44 +271,5 @@ class PwDialog {
       message: message,
       cancelText: closeText,
     );
-  }
-
-  static Future<bool> showSessionConfirmation(
-    BuildContext context,
-    SessionRequestData data,
-  ) async {
-    final result = await show<bool>(
-      context,
-      barrierDismissible: false,
-      title: data.clientMeta.name,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (data.clientMeta.icons.isNotEmpty)
-            Image.network(
-              data.clientMeta.icons.first,
-            ),
-          PwText(
-            data.clientMeta.description,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-      bottom: Column(
-        children: [
-          PwPrimaryButton.fromString(
-            text: Strings.sessionApprove,
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-          const VerticalSpacer.small(),
-          PwTextButton(
-            child: PwText(Strings.sessionReject),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-        ],
-      ),
-    );
-
-    return result ?? false;
   }
 }
