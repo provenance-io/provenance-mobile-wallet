@@ -3,7 +3,6 @@ import 'package:provenance_wallet/services/notification/basic_notification_servi
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 Matcher _notificationMatcher(int count) {
   return predicate((args) {
@@ -14,11 +13,11 @@ Matcher _notificationMatcher(int count) {
     );
     expect(
       notificationInfo.title,
-      Strings.notifyServiceErrorTitle,
+      BasicNotificationServiceStrings.notifyServiceErrorTitle,
     );
     expect(
       notificationInfo.message,
-      Strings.notifyServiceErrorMessage,
+      BasicNotificationServiceStrings.notifyServiceErrorMessage,
     );
     expect(
       notificationInfo.kind,
@@ -36,17 +35,17 @@ Matcher _notificationMatcher(int count) {
 main() {
   final notification1 = NotificationInfo(
     id: "1",
-    title: "Title1",
+    title: BasicNotificationServiceStrings.notifyServiceErrorTitle,
     kind: NotificationKind.warn,
   );
   final notification2 = NotificationInfo(
     id: "2",
-    title: "TitleB",
+    title: BasicNotificationServiceStrings.notifyServiceErrorTitle,
     kind: NotificationKind.warn,
   );
   final notification3 = NotificationInfo(
     id: "1",
-    title: "Title2",
+    title: BasicNotificationServiceStrings.notifyServiceErrorTitle,
     kind: NotificationKind.warn,
   );
 

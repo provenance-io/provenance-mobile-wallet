@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_details_screen.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
@@ -12,7 +13,6 @@ class TransactionListItem extends StatelessWidget {
 
   final String address;
   final Transaction item;
-  final textDivider = " • ";
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,14 +42,18 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwText(
-                    item.displayDenom,
+                    item.displayDenom.isEmpty
+                        ? Strings.of(context).assetChartNotAvailable
+                        : item.displayDenom,
                     style: PwTextStyle.bodyBold,
                   ),
                   VerticalSpacer.xSmall(),
                   SizedBox(
                     width: 180,
                     child: PwText(
-                      item.messageType + textDivider + item.formattedTime,
+                      item.messageType +
+                          " ${Strings.dotSeparator} " +
+                          item.formattedTime,
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
                       overflow: TextOverflow.fade,

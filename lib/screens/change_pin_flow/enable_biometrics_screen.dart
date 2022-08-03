@@ -14,9 +14,10 @@ class EnableBiometricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.faceId,
+        title: strings.faceId,
         leadingIcon: PwIcons.back,
       ),
       body: Container(
@@ -46,7 +47,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwText(
-                      Strings.useFaceIdTitle,
+                      strings.useFaceIdTitle,
                       style: PwTextStyle.title,
                       textAlign: TextAlign.center,
                     ),
@@ -55,7 +56,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwText(
-                      Strings.useYourFaceId,
+                      strings.useYourFaceId,
                       style: PwTextStyle.body,
                       textAlign: TextAlign.center,
                     ),
@@ -68,7 +69,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwButton(
                       child: PwText(
-                        Strings.enable,
+                        strings.enable,
                         style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,
                       ),
@@ -82,7 +83,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: PwTextButton(
                       child: PwText(
-                        Strings.skipForNow,
+                        strings.skipForNow,
                         style: PwTextStyle.subhead,
                         color: PwColor.neutralNeutral,
                       ),

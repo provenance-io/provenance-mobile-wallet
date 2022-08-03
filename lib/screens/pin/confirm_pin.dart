@@ -30,7 +30,7 @@ class ConfirmPinState extends State<ConfirmPin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.verifyPinCode,
+        title: Strings.of(context).verifyPinCode,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           widget.currentStep,
@@ -47,7 +47,7 @@ class ConfirmPinState extends State<ConfirmPin> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
+                  subTitle: Strings.of(context).setAPinCodeToUnlockYourAccount,
                   onFinish: _onFinish,
                 ),
               ),
@@ -65,7 +65,7 @@ class ConfirmPinState extends State<ConfirmPin> {
         useSafeArea: true,
         context: context,
         builder: (context) => ErrorDialog(
-          error: Strings.yourPinDoesNotMatchPleaseTryAgain,
+          error: Strings.of(context).yourPinDoesNotMatchPleaseTryAgain,
         ),
       );
     } else {

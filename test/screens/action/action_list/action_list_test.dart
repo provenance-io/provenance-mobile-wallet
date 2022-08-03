@@ -1,11 +1,17 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 final item = ActionListItem(label: "Main Label", subLabel: "Sub Label");
 final item2 = ActionListItem(label: "Main Label2", subLabel: "Sub Label2");
 final item3 = ActionListItem(label: "Main Label3", subLabel: "Sub Label3");
+
+const actionListSelected = "Selected";
+const actionListBasicAccount = "Basic";
+const actionListMultiSigAccount = "Multi-Sig";
 
 final basicGroup = ActionListGroup(
     label: "Test Label",
@@ -51,6 +57,9 @@ main() {
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionItemGroupStatus(
+            selectedLabel: actionListSelected,
+            basicLabel: actionListBasicAccount,
+            multiSigLabel: actionListMultiSigAccount,
             group: group,
           ),
         ),
@@ -65,11 +74,11 @@ main() {
       expect(
           status,
           createStatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionNotListSelectedColor,
-              ActionItemGroupStatus.basicLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionNotListSelectedColor,
+            actionListBasicAccount,
+          ));
     });
 
     testWidgets("multiSig account settings", (tester) async {
@@ -80,11 +89,11 @@ main() {
       expect(
           status,
           createStatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionNotListSelectedColor,
-              ActionItemGroupStatus.multiSigLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionNotListSelectedColor,
+            actionListMultiSigAccount,
+          ));
     });
 
     testWidgets("isSelected account settings", (tester) async {
@@ -95,11 +104,11 @@ main() {
       expect(
           status,
           createStatusMatcher(
-              tester,
-              (ProvenanceThemeData.themeData.colorScheme
-                      as ProvenanceColorScheme)
-                  .actionListSelectedColor,
-              ActionItemGroupStatus.selectedLabel));
+            tester,
+            (ProvenanceThemeData.themeData.colorScheme as ProvenanceColorScheme)
+                .actionListSelectedColor,
+            actionListSelected,
+          ));
     });
   });
 
@@ -127,6 +136,8 @@ main() {
   group("ActionGroupHeaderCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionGroupHeaderCell(
@@ -140,7 +151,9 @@ main() {
       await _build(tester, basicGroup);
 
       expect(find.text(basicGroup.label), findsOneWidget);
-      expect(find.text("${basicGroup.subLabel} • 1 Action"), findsOneWidget);
+      expect(
+          find.text("${basicGroup.subLabel} ${Strings.dotSeparator} 1 Action"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
 
@@ -149,7 +162,9 @@ main() {
 
       expect(find.text(multiSigGroup.label), findsOneWidget);
       expect(
-          find.text("${multiSigGroup.subLabel} • 0 Actions"), findsOneWidget);
+          find.text(
+              "${multiSigGroup.subLabel} ${Strings.dotSeparator} 0 Actions"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
 
@@ -158,7 +173,9 @@ main() {
 
       expect(find.text(isSelectedGroup.label), findsOneWidget);
       expect(
-          find.text("${isSelectedGroup.subLabel} • 2 Actions"), findsOneWidget);
+          find.text(
+              "${isSelectedGroup.subLabel} ${Strings.dotSeparator} 2 Actions"),
+          findsOneWidget);
       expect(find.byType(ActionItemGroupStatus), findsOneWidget);
     });
   });
@@ -166,6 +183,8 @@ main() {
   group("ActionListCell", () {
     Future<void> _build(WidgetTester tester, ActionListGroup group) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionListCell(
@@ -198,6 +217,8 @@ main() {
     Future<void> _build(
         WidgetTester tester, List<ActionListGroup> groups) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ProvenanceThemeData.themeData,
         home: Material(
           child: ActionList(

@@ -16,11 +16,15 @@ import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeBloc extends Disposable {
-  HomeBloc() {
+  HomeBloc({
+    required String allMessageTypes,
+    required String allStatuses,
+  }) {
+    _allMessageTypes = allMessageTypes;
+    _allStatuses = allStatuses;
     get<DeepLinkService>()
         .link
         .listen(_handleDynamicLink)
@@ -36,6 +40,10 @@ class HomeBloc extends Disposable {
 
   final _transactionDetails = BehaviorSubject.seeded(
     TransactionDetails(
+      allMessageTypes: "",
+      allStatuses: "",
+      selectedStatus: "",
+      selectedType: "",
       address: "",
       filteredTransactions: [],
       transactions: [],
@@ -54,6 +62,8 @@ class HomeBloc extends Disposable {
   final _assetService = get<AssetService>();
   final _transactionService = get<TransactionService>();
   final _walletConnectService = get<WalletConnectService>();
+  late final String _allMessageTypes;
+  late final String _allStatuses;
 
   var _isFirstLoad = true;
 
@@ -64,7 +74,9 @@ class HomeBloc extends Disposable {
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
 
-  Future<void> load({bool showLoading = true}) async {
+  Future<void> load({
+    bool showLoading = true,
+  }) async {
     if (showLoading) {
       _isLoading.tryAdd(true);
     }
@@ -100,6 +112,10 @@ class HomeBloc extends Disposable {
 
       _transactionDetails.tryAdd(
         TransactionDetails(
+          selectedStatus: _allStatuses,
+          selectedType: _allMessageTypes,
+          allMessageTypes: _allMessageTypes,
+          allStatuses: _allStatuses,
           address: account?.publicKey?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
@@ -135,6 +151,10 @@ class HomeBloc extends Disposable {
 
     _transactionDetails.tryAdd(
       TransactionDetails(
+        allMessageTypes: oldDetails.allMessageTypes,
+        allStatuses: oldDetails.allStatuses,
+        selectedStatus: oldDetails.selectedStatus,
+        selectedType: oldDetails.selectedType,
         address: account?.publicKey?.address ?? '',
         filteredTransactions: oldDetails.filteredTransactions,
         transactions: transactions.toList(),
@@ -147,14 +167,16 @@ class HomeBloc extends Disposable {
 
   void filterTransactions(String messageType, String status) {
     final stopwatch = Stopwatch()..start();
+    final allMessageTypes = _transactionDetails.value.allMessageTypes;
+    final allStatuses = _transactionDetails.value.allStatuses;
+
     var transactions = _transactionDetails.value.transactions;
     List<Transaction> filtered = [];
-    if (messageType == Strings.dropDownAllMessageTypes &&
-        status == Strings.dropDownAllStatuses) {
+    if (messageType == allMessageTypes && status == allStatuses) {
       filtered = transactions.toList();
-    } else if (messageType == Strings.dropDownAllMessageTypes) {
+    } else if (messageType == allMessageTypes) {
       filtered = transactions.where((t) => t.status == status).toList();
-    } else if (status == Strings.dropDownAllStatuses) {
+    } else if (status == allStatuses) {
       filtered =
           transactions.where((t) => t.messageType == messageType).toList();
     } else {
@@ -163,6 +185,8 @@ class HomeBloc extends Disposable {
           .toList();
     }
     _transactionDetails.tryAdd(TransactionDetails(
+      allMessageTypes: allMessageTypes,
+      allStatuses: allStatuses,
       address: _accountService.events.selected.value?.publicKey?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
@@ -258,10 +282,12 @@ class HomeBloc extends Disposable {
 
 class TransactionDetails {
   TransactionDetails({
+    required this.allMessageTypes,
+    required this.allStatuses,
     required this.filteredTransactions,
     required this.transactions,
-    this.selectedType = Strings.dropDownAllMessageTypes,
-    this.selectedStatus = Strings.dropDownAllStatuses,
+    required this.selectedType,
+    required this.selectedStatus,
     required this.address,
   });
   List<String> _types = [];
@@ -269,6 +295,8 @@ class TransactionDetails {
 
   List<Transaction> filteredTransactions;
   List<Transaction> transactions;
+  String allMessageTypes;
+  String allStatuses;
   String selectedType;
   String selectedStatus;
   String address;
@@ -277,7 +305,7 @@ class TransactionDetails {
       return _types;
     }
     _types = [
-      Strings.dropDownAllMessageTypes,
+      allMessageTypes,
       ...transactions.map((e) => e.messageType).toSet().toList(),
     ];
 
@@ -289,7 +317,7 @@ class TransactionDetails {
       return _statuses;
     }
     _statuses = [
-      Strings.dropDownAllStatuses,
+      allStatuses,
       ...transactions
           .map(
             (e) => e.status,

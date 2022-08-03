@@ -57,7 +57,7 @@ class RecoveryWordsConfirmScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.verifyPassphrase,
+        title: Strings.of(context).verifyPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           widget.currentStep,
@@ -73,8 +73,8 @@ class RecoveryWordsConfirmScreenState
                 ? Padding(
                     padding: EdgeInsets.only(
                       bottom: Spacing.xLarge,
-                      right: Spacing.xxLarge,
-                      left: Spacing.xxLarge,
+                      right: Spacing.large,
+                      left: Spacing.large,
                     ),
                     child: PwText(
                       _error,
@@ -106,7 +106,7 @@ class RecoveryWordsConfirmScreenState
             VerticalSpacer.largeX3(),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +121,7 @@ class RecoveryWordsConfirmScreenState
                   HorizontalSpacer.large(),
                   Expanded(
                     child: PwText(
-                      Strings.iAmResponsibleForMyAccountText,
+                      Strings.of(context).iAmResponsibleForMyAccountText,
                       style: PwTextStyle.body,
                     ),
                   ),
@@ -135,12 +135,12 @@ class RecoveryWordsConfirmScreenState
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwButton(
                 child: PwText(
-                  Strings.continueName,
+                  Strings.of(context).continueName,
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),
                 onPressed: () {
-                  _validation();
+                  _validation(context);
                 },
               ),
             ),
@@ -151,19 +151,19 @@ class RecoveryWordsConfirmScreenState
     );
   }
 
-  void _validation() async {
+  void _validation(BuildContext context) async {
     final selectedWords = bloc.selectedWords.value;
     final trueWords = bloc.trueWords.value;
 
     if (selectedWords.any((element) => element == null)) {
-      setError(Strings.pleaseMakeASelection);
+      setError(Strings.of(context).pleaseMakeASelection);
     } else if (selectedWords[0] != trueWords[0] ||
         selectedWords[1] != trueWords[1] ||
         selectedWords[2] != trueWords[2] ||
         selectedWords[3] != trueWords[3]) {
-      setError(Strings.yourSelectionsDoNotMatch);
+      setError(Strings.of(context).yourSelectionsDoNotMatch);
     } else if (!_isResponsible) {
-      setError(Strings.youMustAgreeToThePassphraseTerms);
+      setError(Strings.of(context).youMustAgreeToThePassphraseTerms);
     } else {
       widget.addAccountBloc.submitRecoveryWordsConfirm();
 

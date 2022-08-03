@@ -17,7 +17,7 @@ class SendScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.sendTitle,
+        title: Strings.of(context).sendTitle,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -78,7 +78,7 @@ class SendPageState extends State<SendPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PwText(Strings.sendPageSelectAsset),
+          PwText(Strings.of(context).sendPageSelectAsset),
           VerticalSpacer.small(),
           ValueListenableBuilder<List<SendAsset>>(
             valueListenable: _assets,
@@ -109,9 +109,9 @@ class SendPageState extends State<SendPage> {
             children: [
               Expanded(
                 child: PwTextFormField(
-                  label: Strings.sendPageSendToAddressLabel,
+                  label: Strings.of(context).sendPageSendToAddressLabel,
                   controller: _addressController,
-                  hint: Strings.sendPageScanQrCode,
+                  hint: Strings.of(context).sendPageScanQrCode,
                 ),
               ),
               HorizontalSpacer.medium(),
@@ -142,7 +142,7 @@ class SendPageState extends State<SendPage> {
             ],
           ),
           VerticalSpacer.xxLarge(),
-          PwText(Strings.sendPageRecentAddress),
+          PwText(Strings.of(context).sendPageRecentAddress),
           VerticalSpacer.small(),
           Expanded(
             child: ValueListenableBuilder<List<RecentAddress>>(
@@ -162,7 +162,7 @@ class SendPageState extends State<SendPage> {
           ),
           VerticalSpacer.xxLarge(),
           PwButton(
-            child: PwText(Strings.nextButtonLabel),
+            child: PwText(Strings.of(context).nextButtonLabel),
             onPressed: _next,
           ),
           VerticalSpacer.large(),

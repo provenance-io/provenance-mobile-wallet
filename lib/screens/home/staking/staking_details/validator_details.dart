@@ -19,11 +19,11 @@ class ValidatorDetails extends StatelessWidget {
     return Column(
       children: [
         WarningSection(
-          title: Strings.stakingDelegateWarningFundsLockTitle,
-          message: Strings.stakingDelegateWarningFundsLockMessage,
+          title: Strings.of(context).stakingDelegateWarningFundsLockTitle,
+          message: Strings.of(context).stakingDelegateWarningFundsLockMessage,
         ),
         DetailsHeader(
-          title: Strings.stakingDetailsDelegating,
+          title: Strings.of(context).stakingDetailsDelegating,
         ),
         PwListDivider.alternate(),
         VerticalSpacer.large(),

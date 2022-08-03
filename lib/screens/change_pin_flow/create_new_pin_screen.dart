@@ -24,7 +24,7 @@ class CreateNewPinState extends State<CreateNewPinScreen> {
 
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.setPinCode,
+        title: Strings.of(context).setPinCode,
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -36,7 +36,7 @@ class CreateNewPinState extends State<CreateNewPinScreen> {
               child: Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
-                  subTitle: Strings.setAPinCodeToUnlockYourAccount,
+                  subTitle: Strings.of(context).setAPinCodeToUnlockYourAccount,
                   onFinish: bloc.confirmPin,
                 ),
               ),

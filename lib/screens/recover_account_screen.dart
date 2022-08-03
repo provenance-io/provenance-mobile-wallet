@@ -23,10 +23,11 @@ class RecoverAccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PwAppBar(
-        title: Strings.recoverAccount,
+        title: strings.recoverAccount,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           currentStep,
@@ -45,18 +46,17 @@ class RecoverAccountScreen extends StatelessWidget {
                 ),
                 VerticalSpacer.large(),
                 PwText(
-                  Strings.recoverAccount.toUpperCase(),
+                  strings.recoverAccount.toUpperCase(),
                   style: PwTextStyle.headline2,
                   textAlign: TextAlign.center,
                 ),
                 VerticalSpacer.large(),
                 Padding(
-                  padding: EdgeInsets.only(
-                    right: Spacing.xxLarge,
-                    left: Spacing.xxLarge,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.large,
                   ),
                   child: PwText(
-                    Strings.inTheFollowingStepsText,
+                    strings.inTheFollowingStepsText,
                     style: PwTextStyle.body,
                     textAlign: TextAlign.center,
                   ),
@@ -77,7 +77,7 @@ class RecoverAccountScreen extends StatelessWidget {
                   child: PwButton(
                     autofocus: true,
                     child: PwText(
-                      Strings.continueName,
+                      strings.continueName,
                       key: RecoverAccountScreen.keyContinueButton,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,

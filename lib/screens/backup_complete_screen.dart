@@ -20,9 +20,11 @@ class BackupCompleteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
+
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.backupComplete,
+        title: strings.backupComplete,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           currentStep,
@@ -34,18 +36,17 @@ class BackupCompleteScreen extends StatelessWidget {
           VerticalSpacer.largeX6(),
           VerticalSpacer.largeX5(),
           PwText(
-            Strings.backupComplete.toUpperCase(),
+            strings.backupComplete.toUpperCase(),
             style: PwTextStyle.headline2,
             textAlign: TextAlign.center,
           ),
           VerticalSpacer.large(),
           Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
-              Strings.theOnlyWayToRecoverYourAccount,
+              strings.theOnlyWayToRecoverYourAccount,
               style: PwTextStyle.body,
               textAlign: TextAlign.center,
             ),
@@ -66,7 +67,7 @@ class BackupCompleteScreen extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
               child: PwText(
-                Strings.continueName,
+                strings.continueName,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),

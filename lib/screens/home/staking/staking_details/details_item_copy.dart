@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/address_util.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 class DetailsItemCopy extends StatefulWidget {
   final String displayTitle;
@@ -38,12 +37,6 @@ class _DetailsItemCopyState extends State<DetailsItemCopy> {
                 color: PwColor.neutral200,
                 style: PwTextStyle.footnote,
               ),
-              if (_isActive)
-                PwText(
-                  widget.dataToCopy,
-                  color: PwColor.neutral200,
-                  style: PwTextStyle.footnote,
-                ),
               GestureDetector(
                 onTap: () async {
                   setState(() {
@@ -52,20 +45,12 @@ class _DetailsItemCopyState extends State<DetailsItemCopy> {
                 },
                 child: Row(
                   children: [
-                    if (!_isActive)
-                      PwText(
-                        abbreviateAddress(widget.dataToCopy),
-                        color: PwColor.neutral200,
-                        style: PwTextStyle.footnote,
-                      ),
-                    if (!_isActive) HorizontalSpacer.xSmall(),
                     PwText(
                       _isActive
-                          ? Strings.stakingDetailsViewLess
-                          : Strings.viewMore,
+                          ? widget.dataToCopy
+                          : abbreviateAddressAlt(widget.dataToCopy),
                       color: PwColor.neutral200,
                       style: PwTextStyle.footnote,
-                      underline: true,
                     ),
                   ],
                 ),

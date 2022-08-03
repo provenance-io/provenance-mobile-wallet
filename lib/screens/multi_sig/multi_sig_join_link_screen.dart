@@ -58,7 +58,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     return Scaffold(
       appBar: PwAppBar(
         leadingIcon: PwIcons.back,
-        title: Strings.multiSigJoinLinkTitle,
+        title: Strings.of(context).multiSigJoinLinkTitle,
       ),
       body: CustomScrollView(
         slivers: [
@@ -72,26 +72,28 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       children: [
                         PwText(
-                          Strings.multiSigJoinLinkMessage,
+                          Strings.of(context).multiSigJoinLinkMessage,
                           style: PwTextStyle.body,
                           color: PwColor.neutralNeutral,
                           textAlign: TextAlign.center,
                         ),
                         VerticalSpacer.largeX4(),
                         PwTextFormField(
-                          label: Strings.multiSigJoinLinkFieldLabel,
+                          label: Strings.of(context).multiSigJoinLinkFieldLabel,
                           validator: _validate,
                           controller: _textController,
                           autofocus: true,
                           autovalidateMode: _mode,
-                          onFieldSubmitted: _submit,
+                          onFieldSubmitted: (e) {
+                            _submit(context, e);
+                          },
                         ),
                         VerticalSpacer.large(),
                       ],
@@ -109,11 +111,11 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
                   child: PwButton(
                     enabled: _valid,
                     child: PwText(
-                      Strings.continueName,
+                      Strings.of(context).continueName,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
-                    onPressed: () => _submit(_textController.text),
+                    onPressed: () => _submit(context, _textController.text),
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -125,9 +127,10 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     );
   }
 
-  Future<void> _submit(String text) async {
+  Future<void> _submit(BuildContext context, String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
       final success = await widget.bloc.submitMultiSigJoinLink(
+        Strings.of(context).multiSigInvalidLink,
         _textController.text.trim(),
         AddAccountScreen.multiSigJoinLink,
       );
@@ -144,7 +147,7 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     String? error;
 
     if (text == null || text.isEmpty) {
-      error = Strings.required;
+      error = Strings.of(context).required;
     }
 
     return error;
@@ -154,11 +157,11 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     String? error;
 
     if (text == null || text.isEmpty) {
-      error = Strings.required;
+      error = Strings.of(context).required;
     } else {
       final valid = parseInviteLinkData(text) != null;
       if (!valid) {
-        error = Strings.multiSigInvalidLink;
+        error = Strings.of(context).multiSigInvalidLink;
       }
     }
 
@@ -166,6 +169,6 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
   }
 
   String? _validateInvalid(String? text) {
-    return Strings.multiSigInvalidLink;
+    return Strings.of(context).multiSigInvalidLink;
   }
 }
