@@ -117,18 +117,16 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                 message: strings.stakingUndelegateWarningUnbondingPeriodMessage,
               ),
               VerticalSpacer.large(),
-              Flexible(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    get<StakingFlowBloc>()
-                        .redirectToRedelegation(widget.validator);
-                  },
-                  child: PwText(
-                    strings.stakingUndelegateWarningSwitchValidators,
-                    style: PwTextStyle.footnote,
-                    underline: true,
-                  ),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  get<StakingFlowBloc>()
+                      .redirectToRedelegation(widget.validator);
+                },
+                child: PwText(
+                  strings.stakingUndelegateWarningSwitchValidators,
+                  style: PwTextStyle.footnote,
+                  underline: true,
                 ),
               ),
               DetailsHeader(title: strings.stakingUndelegateUndelegating),
@@ -163,14 +161,12 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                 padding: EdgeInsets.only(bottom: 10),
                 child: PwText(strings.stakingUndelegateAmountToUndelegate),
               ),
-              Flexible(
-                child: Form(
-                  key: _formKey,
-                  child: StakingTextFormField(
-                    hint: strings.stakingUndelegateEnterAmount,
-                    textEditingController: _textEditingController,
-                    scrollController: _scrollController,
-                  ),
+              Form(
+                key: _formKey,
+                child: StakingTextFormField(
+                  hint: strings.stakingUndelegateEnterAmount,
+                  textEditingController: _textEditingController,
+                  scrollController: _scrollController,
                 ),
               ),
               VerticalSpacer.largeX3(),

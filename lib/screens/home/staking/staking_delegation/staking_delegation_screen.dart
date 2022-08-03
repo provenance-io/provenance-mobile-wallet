@@ -155,84 +155,79 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 child:
                     PwText(Strings.of(context).stakingDelegateAmountToDelegate),
               ),
-              Flexible(
-                child: Form(
-                  key: _formKey,
-                  child: StakingTextFormField(
-                    hint: Strings.of(context)
-                        .stakingDelegateEnterAmountToDelegate,
-                    textEditingController: _textEditingController,
-                    scrollController: _scrollController,
-                  ),
+              Form(
+                key: _formKey,
+                child: StakingTextFormField(
+                  hint:
+                      Strings.of(context).stakingDelegateEnterAmountToDelegate,
+                  textEditingController: _textEditingController,
+                  scrollController: _scrollController,
                 ),
               ),
               VerticalSpacer.largeX3(),
               PwListDivider.alternate(),
-              Flexible(
-                child: PwButton(
-                  enabled: _formKey.currentState?.validate() == true &&
-                      details.hashDelegated > Decimal.zero,
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() == false ||
-                        details.hashDelegated <= Decimal.zero) {
-                      return;
-                    }
-                    if (ValidatorStatus.jailed == widget.validator.status) {
-                      final strings = Strings.of(context);
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          final theme = Theme.of(context);
-                          return AlertDialog(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.neutral750,
-                            title: Text(
-                              strings.stakingDelegateBeforeYouContinue,
-                              style: theme.textTheme.footnote,
-                              textAlign: TextAlign.center,
-                            ),
-                            content: Text(
-                              strings.stakingDelegateValidatorJailedWarning,
-                              style: theme.textTheme.body,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: PwText(
-                                  strings.stakingDelegateNoResponse
-                                      .toUpperCase(),
-                                  style: PwTextStyle.bodyBold,
-                                ),
+              PwButton(
+                enabled: _formKey.currentState?.validate() == true &&
+                    details.hashDelegated > Decimal.zero,
+                onPressed: () {
+                  if (_formKey.currentState?.validate() == false ||
+                      details.hashDelegated <= Decimal.zero) {
+                    return;
+                  }
+                  if (ValidatorStatus.jailed == widget.validator.status) {
+                    final strings = Strings.of(context);
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        final theme = Theme.of(context);
+                        return AlertDialog(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.neutral750,
+                          title: Text(
+                            strings.stakingDelegateBeforeYouContinue,
+                            style: theme.textTheme.footnote,
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Text(
+                            strings.stakingDelegateValidatorJailedWarning,
+                            style: theme.textTheme.body,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: PwText(
+                                strings.stakingDelegateNoResponse.toUpperCase(),
+                                style: PwTextStyle.bodyBold,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  get<StakingFlowBloc>().showDelegationReview();
-                                },
-                                child: PwText(
-                                  strings.stakingDelegateYesResponse
-                                      .toUpperCase(),
-                                  style: PwTextStyle.bodyBold,
-                                ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                get<StakingFlowBloc>().showDelegationReview();
+                              },
+                              child: PwText(
+                                strings.stakingDelegateYesResponse
+                                    .toUpperCase(),
+                                style: PwTextStyle.bodyBold,
                               ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      get<StakingFlowBloc>().showDelegationReview();
-                    }
-                  },
-                  child: PwText(
-                    Strings.of(context).continueName,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    color: PwColor.neutralNeutral,
-                    style: PwTextStyle.body,
-                  ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    get<StakingFlowBloc>().showDelegationReview();
+                  }
+                },
+                child: PwText(
+                  Strings.of(context).continueName,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  color: PwColor.neutralNeutral,
+                  style: PwTextStyle.body,
                 ),
               ),
               VerticalSpacer.largeX3(),
