@@ -29,19 +29,20 @@ class MultiSigInviteScreen extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(
-                    horizontal: Spacing.xxLarge,
+                    horizontal: Spacing.large,
                   ),
                   child: Column(
                     children: [
                       PwText(
-                        Strings.multiSigInviteTitlePrefix + number.toString(),
+                        Strings.of(context).multiSigInviteTitlePrefix +
+                            number.toString(),
                         style: PwTextStyle.title,
                         color: PwColor.neutralNeutral,
                         textAlign: TextAlign.center,
                       ),
                       VerticalSpacer.small(),
                       PwText(
-                        Strings.multiSigInviteDescription,
+                        Strings.of(context).multiSigInviteDescription,
                         style: PwTextStyle.body,
                         color: PwColor.neutralNeutral,
                         textAlign: TextAlign.center,
@@ -69,8 +70,8 @@ class MultiSigInviteScreen extends StatelessWidget {
                       ),
                       VerticalSpacer.xLarge(),
                       PwText(
-                        Strings.multiSigInviteMessagePrefix +
-                            Strings.multiSigInviteMessage,
+                        Strings.of(context).multiSigInviteMessagePrefix +
+                            Strings.of(context).multiSigInviteMessage,
                         style: PwTextStyle.footnote,
                         color: PwColor.neutralNeutral,
                         textAlign: TextAlign.center,
@@ -89,13 +90,15 @@ class MultiSigInviteScreen extends StatelessWidget {
                   child: Builder(builder: (context) {
                     return PwTextButton.primaryAction(
                       context: context,
-                      text: Strings.multiSigInviteShareButtonLabel,
+                      text: Strings.of(context).multiSigInviteShareButtonLabel,
                       onPressed: () {
                         final box = context.findRenderObject() as RenderBox;
 
                         Share.share(
-                          Strings.multiSigInviteMessage + '\n' + url,
-                          subject: Strings.multiSigInviteSubject,
+                          Strings.of(context).multiSigInviteMessage +
+                              '\n' +
+                              url,
+                          subject: Strings.of(context).multiSigInviteSubject,
                           sharePositionOrigin:
                               box.localToGlobal(Offset.zero) & box.size,
                         );

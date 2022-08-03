@@ -43,6 +43,7 @@ class _StakingScreenState extends State<StakingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Material(
       child: Stack(
         children: [
@@ -68,7 +69,7 @@ class _StakingScreenState extends State<StakingScreen>
                             Theme.of(context).colorScheme.neutral750,
                         elevation: 0.0,
                         title: PwText(
-                          Strings.staking,
+                          strings.staking,
                           style: PwTextStyle.footnote,
                         ),
                         leading: Padding(
@@ -89,7 +90,7 @@ class _StakingScreenState extends State<StakingScreen>
                           vertical: Spacing.largeX3,
                         ),
                         child: PwText(
-                          Strings.stakingTabStakingDefined,
+                          strings.stakingTabStakingDefined,
                           color: PwColor.neutral250,
                           style: PwTextStyle.body,
                           textAlign: TextAlign.center,
@@ -106,7 +107,7 @@ class _StakingScreenState extends State<StakingScreen>
                             Padding(
                               padding: EdgeInsets.only(bottom: Spacing.small),
                               child: PwText(
-                                Strings.stakingTabMyDelegations,
+                                strings.stakingTabMyDelegations,
                                 color: _currentTabIndex == 0
                                     ? PwColor.neutralNeutral
                                     : PwColor.neutral250,
@@ -116,7 +117,7 @@ class _StakingScreenState extends State<StakingScreen>
                             Padding(
                               padding: EdgeInsets.only(bottom: Spacing.small),
                               child: PwText(
-                                Strings.validators,
+                                strings.validators,
                                 color: _currentTabIndex == 1
                                     ? PwColor.neutralNeutral
                                     : PwColor.neutral250,

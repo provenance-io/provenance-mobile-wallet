@@ -36,7 +36,7 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(
-                      horizontal: Spacing.xxLarge,
+                      horizontal: Spacing.large,
                     ),
                     child: Column(
                       children: [
@@ -46,14 +46,16 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                         ),
                         VerticalSpacer.largeX3(),
                         PwText(
-                          Strings.appName,
+                          Strings.of(context).appName,
                           style: PwTextStyle.headline2,
                           color: PwColor.neutralNeutral,
                           textAlign: TextAlign.center,
                         ),
                         VerticalSpacer.largeX3(),
                         PwText(
-                          Strings.multiSigInviteReviewLandingDesc(name),
+                          Strings.of(context).multiSigInviteReviewLandingDesc(
+                            name,
+                          ),
                           style: PwTextStyle.body,
                           color: PwColor.neutralNeutral,
                           textAlign: TextAlign.center,
@@ -72,7 +74,8 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                       children: [
                         PwTextButton.primaryAction(
                           context: context,
-                          text: Strings.multiSigInviteReviewDetailsTitle,
+                          text: Strings.of(context)
+                              .multiSigInviteReviewDetailsTitle,
                           onPressed: () {
                             get<MultiSigInviteReviewFlowNavigator>()
                                 .showReviewInvitationDetails();
@@ -81,7 +84,7 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                         VerticalSpacer.large(),
                         PwTextButton.secondaryAction(
                           context: context,
-                          text: Strings
+                          text: Strings.of(context)
                               .multiSigInviteReviewLandingLearnMoreButton,
                           onPressed: () async {
                             const url = 'https://provenance.io';

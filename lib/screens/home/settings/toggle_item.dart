@@ -19,7 +19,7 @@ class ToggleItem extends StatelessWidget {
     return Container(
       height: 64,
       margin: EdgeInsets.symmetric(
-        horizontal: Spacing.xxLarge,
+        horizontal: Spacing.large,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

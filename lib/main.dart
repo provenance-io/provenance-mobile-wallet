@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
@@ -40,6 +41,8 @@ import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/governance_service/default_governance_service.dart';
+import 'package:provenance_wallet/services/governance_service/governance_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -98,7 +101,9 @@ void main() {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    get<CrashReportingService>().recordFlutterError(errorDetails);
+    if (get.isRegistered<CrashReportingService>()) {
+      get<CrashReportingService>().recordFlutterError(errorDetails);
+    }
   };
   runZonedGuarded(
     () async {
@@ -290,12 +295,14 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: Strings.appName,
+      onGenerateTitle: (context) => Strings.of(context).appName,
       theme: ProvenanceThemeData.themeData,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [
         RouterObserver.instance.routeObserver,
       ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: StartScreen(),
       navigatorKey: _navigatorKey,
     );
@@ -404,6 +411,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
           ? MockValidatorService()
           : DefaultValidatorService(),
     );
+
+    // final isMockingGovernanceService =
+    //     await keyValueService.getBool(PrefKey.isMockingGovernanceService) ??
+    //         false;
+    get.registerLazySingleton<GovernanceService>(
+      () => //isMockingGovernanceService
+          //? MockGovernanceService() :
+          DefaultGovernanceService(),
+    );
     get.registerLazySingleton<ConnectivityService>(
       () => DefaultConnectivityService(),
     );
@@ -413,8 +429,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (!isConnected) {
         notificationService.notify(NotificationInfo(
           id: networkDisconnectedId,
-          title: Strings.notifyNetworkErrorTitle,
-          message: Strings.notifyNetworkErrorMessage,
+          title: BasicNotificationServiceStrings.notifyNetworkErrorTitle,
+          message: BasicNotificationServiceStrings.notifyNetworkErrorMessage,
           kind: NotificationKind.warn,
         ));
       } else {
@@ -495,40 +511,40 @@ void showCipherServiceError(BuildContext context, CipherServiceError error) {
   String message;
   switch (error.code) {
     case CipherServiceErrorCode.accessError:
-      message = Strings.cipherAccessError;
+      message = Strings.of(context).cipherAccessError;
       break;
     case CipherServiceErrorCode.accountKeyNotFound:
-      message = Strings.cipherAccountKeyNotFoundError;
+      message = Strings.of(context).cipherAccountKeyNotFoundError;
       break;
     case CipherServiceErrorCode.addSecItem:
-      message = Strings.cipherAddSecItemError;
+      message = Strings.of(context).cipherAddSecItemError;
       break;
     case CipherServiceErrorCode.dataPersistence:
-      message = Strings.cipherDataPersistenceError;
+      message = Strings.of(context).cipherDataPersistenceError;
       break;
     case CipherServiceErrorCode.invalidArgument:
-      message = Strings.cipherInvalidArgumentError;
+      message = Strings.of(context).cipherInvalidArgumentError;
       break;
     case CipherServiceErrorCode.publicKeyError:
-      message = Strings.cipherPublicKeyError;
+      message = Strings.of(context).cipherPublicKeyError;
       break;
     case CipherServiceErrorCode.secKeyNotFound:
-      message = Strings.cipherSecKeyNotFoundError;
+      message = Strings.of(context).cipherSecKeyNotFoundError;
       break;
     case CipherServiceErrorCode.unknown:
-      message = Strings.cipherUnknownError;
+      message = Strings.of(context).cipherUnknownError;
       break;
     case CipherServiceErrorCode.upgradeError:
-      message = Strings.cipherUpgradeError;
+      message = Strings.of(context).cipherUpgradeError;
       break;
     case CipherServiceErrorCode.unsupportedAlgorithm:
-      message = Strings.cipherUnsupportedAlgorithmError;
+      message = Strings.of(context).cipherUnsupportedAlgorithmError;
       break;
   }
 
   PwDialog.showError(
     context,
-    title: Strings.cipherErrorTitle,
+    title: Strings.of(context).cipherErrorTitle,
     message: message,
   );
 }

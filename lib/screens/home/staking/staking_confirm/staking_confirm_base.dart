@@ -1,8 +1,8 @@
-import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/common/widgets/pw_slider.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class StakingConfirmBase extends StatefulWidget {
@@ -26,7 +26,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = proto.defaultFeeAdjustment;
+  double _gasEstimate = defaultGasEstimate;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
               widget.onDataClick();
             },
             child: PwText(
-              Strings.stakingConfirmData,
+              Strings.of(context).stakingConfirmData,
               style: PwTextStyle.footnote,
               underline: true,
             ),
@@ -74,14 +74,9 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
           children: [
             ...widget.children,
             PwListDivider.alternate(),
-            PwSlider(
-              title: Strings.stakingConfirmGasAdjustment,
-              startingValue: proto.defaultFeeAdjustment,
-              min: 0,
-              max: 5,
-              createLabel: (value) => value == proto.defaultFeeAdjustment
-                  ? "$value ${Strings.stakingConfirmDefault}"
-                  : "$value",
+            PwGasAdjustmentSlider(
+              title: Strings.of(context).stakingConfirmGasAdjustment,
+              startingValue: defaultGasEstimate,
               onValueChanged: (value) {
                 setState(() {
                   _gasEstimate = value;

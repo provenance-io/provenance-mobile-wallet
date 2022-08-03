@@ -47,6 +47,7 @@ enum PrefKey {
   isMockingAssetService,
   isMockingTransactionService,
   isMockingValidatorService,
+  isMockingGovernanceService,
   isSubsequentRun,
   sessionData,
   sessionSuspendedTime,

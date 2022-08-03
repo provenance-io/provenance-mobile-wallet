@@ -41,7 +41,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.multiSigRecoverTitle,
+        title: Strings.of(context).multiSigRecoverTitle,
         leadingIcon: PwIcons.back,
       ),
       body: CustomScrollView(
@@ -50,7 +50,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
             hasScrollBody: false,
             child: Container(
               margin: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Column(
                 children: [
@@ -65,7 +65,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
 
                       if (loadData.error) {
                         return PwText(
-                          Strings.multiSigRecoverLoadError,
+                          Strings.of(context).multiSigRecoverLoadError,
                           color: PwColor.neutralNeutral,
                           style: PwTextStyle.body,
                         );
@@ -104,7 +104,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                     child: SizedBox(),
                   ),
                   PwButton(
-                    child: PwText(Strings.next),
+                    child: PwText(Strings.of(context).next),
                     enabled: selectedData != null,
                     onPressed: () {
                       widget.bloc.submitRecoverFromAccount(

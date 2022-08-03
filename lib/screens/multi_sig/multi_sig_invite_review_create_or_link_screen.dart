@@ -20,7 +20,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PwAppBar(
-        title: Strings.multiSigInviteReviewCreateOrLinkTitle,
+        title: Strings.of(context).multiSigInviteReviewCreateOrLinkTitle,
         leadingIcon: PwIcons.back,
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
@@ -32,7 +32,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
               hasScrollBody: false,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.xxLarge,
+                  horizontal: Spacing.large,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -40,8 +40,10 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                     VerticalSpacer.largeX3(),
                     AccountButton(
                       icon: PwIcons.account,
-                      name: Strings.multiSigInviteReviewCreateOrLinkCreate,
-                      desc: Strings.multiSigInviteReviewCreateOrLinkCreateDesc,
+                      name: Strings.of(context)
+                          .multiSigInviteReviewCreateOrLinkCreate,
+                      desc: Strings.of(context)
+                          .multiSigInviteReviewCreateOrLinkCreateDesc,
                       onPressed: () async {
                         await _bloc.showCreateNewAccount();
                       },
@@ -49,9 +51,9 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                     VerticalSpacer.large(),
                     AccountButton(
                       icon: PwIcons.link,
-                      name:
-                          Strings.multiSigInviteReviewCreateOrLinkLinkExisting,
-                      desc: Strings
+                      name: Strings.of(context)
+                          .multiSigInviteReviewCreateOrLinkLinkExisting,
+                      desc: Strings.of(context)
                           .multiSigInviteReviewCreateOrLinkLinkExistingDesc,
                       onPressed: () {
                         _bloc.showLinkExistingAccount();

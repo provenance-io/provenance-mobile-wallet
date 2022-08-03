@@ -25,7 +25,9 @@ class WordSelectorState extends State<WordSelector> {
     final bloc = widget.bloc;
 
     return Padding(
-      padding: EdgeInsets.only(left: Spacing.xxLarge, right: Spacing.xxLarge),
+      padding: EdgeInsets.symmetric(
+        horizontal: Spacing.large,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,8 +40,8 @@ class WordSelectorState extends State<WordSelector> {
 
               return PwText(
                 (trueWordIndex == null || trueWordIndex == -1)
-                    ? Strings.selectWord
-                    : Strings.selectWordIndex('${trueWordIndex + 1}'),
+                    ? Strings.of(context).selectWord
+                    : Strings.of(context).selectWordIndex(trueWordIndex + 1),
                 style: PwTextStyle.body,
               );
             },

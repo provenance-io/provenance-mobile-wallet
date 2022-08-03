@@ -87,7 +87,7 @@ class RecoverPassphraseEntryScreenState
         key: RecoverPassphraseEntryScreen.keyAppBar,
         onTap: _tapCounter.increment,
         child: PwAppBar(
-          title: Strings.enterRecoveryPassphrase,
+          title: Strings.of(context).enterRecoveryPassphrase,
           leadingIcon: PwIcons.back,
           bottom: ProgressStepper(
             widget.currentStep,
@@ -131,7 +131,8 @@ class RecoverPassphraseEntryScreenState
                         bottom: Spacing.medium,
                       ),
                       child: PwText(
-                        Strings.recoverPassphraseNetwork(coin.displayName),
+                        Strings.of(context)
+                            .recoverPassphraseNetwork(coin.displayName),
                         key: RecoverPassphraseEntryScreen.networkName,
                         style: PwTextStyle.body,
                       ),
@@ -163,7 +164,8 @@ class RecoverPassphraseEntryScreenState
                           child: Row(
                             children: [
                               PwText(
-                                Strings.recoverPassphraseWord(index + 1),
+                                Strings.of(context)
+                                    .recoverPassphraseWord(index + 1),
                               ),
                             ],
                           ),
@@ -189,7 +191,7 @@ class RecoverPassphraseEntryScreenState
                                   key: RecoverPassphraseEntryScreen
                                       .keyContinueButton,
                                   child: PwText(
-                                    Strings.continueName,
+                                    Strings.of(context).continueName,
                                     style: PwTextStyle.bodyBold,
                                   ),
                                   onPressed: _submit,
@@ -291,10 +293,10 @@ class _TextFormField extends StatelessWidget {
           textInputAction: inputAction,
           validator: (word) {
             if (word == null || word.isEmpty) {
-              return Strings.required;
+              return Strings.of(context).required;
             }
             if (!Mnemonic.searchFor(word).any((element) => element == word)) {
-              return Strings.invalidWord;
+              return Strings.of(context).invalidWord;
             }
 
             return null;

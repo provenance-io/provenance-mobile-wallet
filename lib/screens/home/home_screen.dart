@@ -25,8 +25,12 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String allMessageTypes;
+  final String allStatuses;
   const HomeScreen({
     Key? key,
+    required this.allMessageTypes,
+    required this.allStatuses,
   }) : super(key: key);
 
   @override
@@ -40,7 +44,10 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  final _bloc = HomeBloc();
+  late final _bloc = HomeBloc(
+    allMessageTypes: widget.allMessageTypes,
+    allStatuses: widget.allStatuses,
+  );
   final _walletConnectService = get<WalletConnectService>();
 
   List<Asset> assets = [];
@@ -81,6 +88,7 @@ class HomeScreenState extends State<HomeScreen>
     _walletConnectService.delegateEvents.sessionRequest
         .listen(_onSessionRequest)
         .addTo(_subscriptions);
+
     _walletConnectService.sessionEvents.error
         .listen(_onError)
         .addTo(_subscriptions);
@@ -102,6 +110,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = (mediaQuery.size.height > 600);
 
@@ -121,21 +130,21 @@ class HomeScreenState extends State<HomeScreen>
               tabs: [
                 TabItem(
                   0 == _currentTabIndex,
-                  Strings.dashboard,
+                  strings.dashboard,
                   PwIcons.dashboard,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),
                 TabItem(
                   1 == _currentTabIndex,
-                  Strings.transactions,
+                  strings.transactions,
                   PwIcons.staking,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
                 ),
                 TabItem(
                   2 == _currentTabIndex,
-                  Strings.viewMore,
+                  strings.homeScreenMore,
                   PwIcons.viewMore,
                   topPadding: topPadding,
                   bottomPadding: bottomPadding,
@@ -180,13 +189,15 @@ class HomeScreenState extends State<HomeScreen>
   Future<void> _onSessionRequest(
     WalletConnectSessionRequestData details,
   ) async {
+    final strings = Strings.of(context);
     final name = details.data.clientMeta.name;
     final allowed = await PwModalScreen.showConfirm(
       context: context,
-      approveText: Strings.sessionApprove,
-      declineText: Strings.sessionReject,
-      title: Strings.dashboardConnectionRequestTitle,
-      message: Strings.dashboardConnectionRequestDetails(name),
+      approveText: strings.sessionApprove,
+      declineText: strings.sessionReject,
+      title: strings.dashboardConnectionRequestTitle,
+      message:
+          Strings.of(context).dashboardConnectionRequestAllowConnectionTo(name),
       icon: Image.asset(
         Assets.imagePaths.connectionRequest,
       ),
@@ -204,9 +215,9 @@ class HomeScreenState extends State<HomeScreen>
       useSafeArea: true,
       context: context,
       builder: (context) => ErrorDialog(
-        title: Strings.serviceErrorTitle,
+        title: Strings.of(context).serviceErrorTitle,
         error: message,
-        buttonText: Strings.continueName,
+        buttonText: Strings.of(context).continueName,
       ),
     );
   }
@@ -215,7 +226,7 @@ class HomeScreenState extends State<HomeScreen>
     final clientDetails =
         _walletConnectService.sessionEvents.state.value.details;
     if (clientDetails == null) {
-      _onError(Strings.errorDisconnected);
+      _onError(Strings.of(context).errorDisconnected);
 
       return;
     }
@@ -223,8 +234,8 @@ class HomeScreenState extends State<HomeScreen>
     const statusCodeOk = 0;
 
     final title = response.code == statusCodeOk
-        ? Strings.transactionSuccessTitle
-        : Strings.transactionErrorTitle;
+        ? Strings.of(context).transactionSuccessTitle
+        : Strings.of(context).transactionErrorTitle;
 
     final data = <String, dynamic>{};
     if (response.tx?.body.messages.isNotEmpty ?? false) {

@@ -48,7 +48,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
     return Scaffold(
       appBar: PwAppBar(
         leadingIcon: PwIcons.close,
-        title: Strings.multiSigCreationStatusTitle,
+        title: Strings.of(context).multiSigCreationStatusTitle,
       ),
       body: CustomScrollView(
         slivers: [
@@ -56,7 +56,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
             hasScrollBody: false,
             child: Container(
               margin: EdgeInsets.symmetric(
-                horizontal: Spacing.xxLarge,
+                horizontal: Spacing.large,
               ),
               child: Column(
                 textDirection: TextDirection.ltr,
@@ -74,21 +74,21 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                   ),
                   VerticalSpacer.large(),
                   PwText(
-                    Strings.multiSigCreationStatusMessage,
+                    Strings.of(context).multiSigCreationStatusMessage,
                     style: PwTextStyle.h4,
                     color: PwColor.neutralNeutral,
                     textAlign: TextAlign.left,
                   ),
                   VerticalSpacer.large(),
                   PwText(
-                    Strings.multiSigCreationStatusDescription,
+                    Strings.of(context).multiSigCreationStatusDescription,
                     style: PwTextStyle.body,
                     color: PwColor.neutralNeutral,
                     textAlign: TextAlign.left,
                   ),
                   VerticalSpacer.largeX3(),
                   PwText(
-                    Strings.multiSigCreationStatusListHeading,
+                    Strings.of(context).multiSigCreationStatusListHeading,
                     style: PwTextStyle.bodyBold,
                     color: PwColor.neutralNeutral,
                     textAlign: TextAlign.left,
@@ -108,7 +108,8 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
 
                       if (cosigners.isEmpty) {
                         return PwText(
-                          Strings.multiSigCreationStatusGetStatusError,
+                          Strings.of(context)
+                              .multiSigCreationStatusGetStatusError,
                           style: PwTextStyle.body,
                           color: PwColor.negative350,
                         );
@@ -120,7 +121,8 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
 
                         String? description;
                         if (cosigner.isSelf) {
-                          description = Strings.multiSigInviteCosignerSelf;
+                          description =
+                              Strings.of(context).multiSigInviteCosignerSelf;
                         } else if (cosigner.address != null) {
                           description = abbreviateAddress(cosigner.address!);
                         }
@@ -146,7 +148,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                   VerticalSpacer.xxLarge(),
                   PwButton.alternate(
                     child: PwText(
-                      Strings.transactionBackToDashboard,
+                      Strings.of(context).transactionBackToDashboard,
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
@@ -270,7 +272,8 @@ class _CoSigner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PwText(
-                  Strings.multiSigInviteCosignerPrefix + number.toString(),
+                  Strings.of(context).multiSigInviteCosignerPrefix +
+                      number.toString(),
                   style: PwTextStyle.bodyBold,
                   color: PwColor.neutralNeutral,
                 ),

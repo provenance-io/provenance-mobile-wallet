@@ -76,6 +76,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
   @override
   Widget build(BuildContext context) {
     final bloc = get<StakingDelegationBloc>();
+    final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -91,7 +92,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
             elevation: 0.0,
             centerTitle: true,
             title: PwText(
-              Strings.stakingUndelegateUndelegate,
+              strings.stakingUndelegateUndelegate,
               style: PwTextStyle.footnote,
             ),
             leading: Padding(
@@ -112,8 +113,8 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
             children: [
               VerticalSpacer.largeX3(),
               WarningSection(
-                title: Strings.stakingUndelegateWarningUnbondingPeriodTitle,
-                message: Strings.stakingUndelegateWarningUnbondingPeriodMessage,
+                title: strings.stakingUndelegateWarningUnbondingPeriodTitle,
+                message: strings.stakingUndelegateWarningUnbondingPeriodMessage,
               ),
               VerticalSpacer.large(),
               Flexible(
@@ -124,20 +125,20 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                         .redirectToRedelegation(widget.validator);
                   },
                   child: PwText(
-                    Strings.stakingUndelegateWarningSwitchValidators,
+                    strings.stakingUndelegateWarningSwitchValidators,
                     style: PwTextStyle.footnote,
                     underline: true,
                   ),
                 ),
               ),
-              DetailsHeader(title: Strings.stakingUndelegateUndelegating),
+              DetailsHeader(title: strings.stakingUndelegateUndelegating),
               PwListDivider.alternate(),
               Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: Spacing.small,
                 ),
                 child: PwText(
-                  Strings.stakingRedelegateFrom,
+                  strings.stakingRedelegateFrom,
                   color: PwColor.neutral200,
                 ),
               ),
@@ -147,26 +148,26 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                 description: details.validator.description,
               ),
               DetailsHeader(
-                title: Strings.stakingUndelegateUndelegationDetails,
+                title: strings.stakingUndelegateUndelegationDetails,
               ),
               PwListDivider.alternate(),
               DetailsItem.withHash(
-                title: Strings.stakingUndelegateAvailableForUndelegation,
+                title: strings.stakingUndelegateAvailableForUndelegation,
                 hashString: details.delegation?.displayDenom ??
-                    Strings.stakingManagementNoHash,
+                    strings.stakingManagementNoHash,
                 context: context,
               ),
               PwListDivider.alternate(),
               VerticalSpacer.largeX3(),
               Padding(
                 padding: EdgeInsets.only(bottom: 10),
-                child: PwText(Strings.stakingUndelegateAmountToUndelegate),
+                child: PwText(strings.stakingUndelegateAmountToUndelegate),
               ),
               Flexible(
                 child: Form(
                   key: _formKey,
                   child: StakingTextFormField(
-                    hint: Strings.stakingUndelegateEnterAmount,
+                    hint: strings.stakingUndelegateEnterAmount,
                     textEditingController: _textEditingController,
                     scrollController: _scrollController,
                   ),
@@ -187,7 +188,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                   get<StakingFlowBloc>().showUndelegationReview();
                 },
                 child: PwText(
-                  Strings.continueName,
+                  strings.continueName,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   color: PwColor.neutralNeutral,

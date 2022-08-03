@@ -27,7 +27,7 @@ class RecentSendCell extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _buildChild(),
+            child: _buildChild(context),
           ),
           Center(
             child: PwIcon(
@@ -41,9 +41,9 @@ class RecentSendCell extends StatelessWidget {
     );
   }
 
-  Widget _buildChild() {
+  Widget _buildChild(BuildContext context) {
     return (recentAddress == null)
-        ? PwText(Strings.viewAllLabel)
+        ? PwText(Strings.of(context).viewAllLabel)
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -83,7 +83,7 @@ class RecentSendList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (recentAddresses.isEmpty) {
       return Center(
-        child: PwText(Strings.noRecentSends),
+        child: PwText(Strings.of(context).noRecentSends),
       );
     }
 

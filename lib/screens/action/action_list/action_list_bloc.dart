@@ -12,7 +12,6 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_c
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 abstract class ActionListNavigator {
   Future<bool> showApproveSession(
@@ -98,11 +97,22 @@ class ActionListBloc extends Disposable {
   final ActionListNavigator _navigator;
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
+  final String approveSessionLabel;
+  final String signatureRequestedLabel;
+  final String transactionRequestedLabel;
+  final String unknownLabel;
+  final String actionRequiredSubLabel;
 
   final _streamController = StreamController<ActionListBlocState>();
 
-  ActionListBloc(this._navigator)
-      : _connectQueueService = get<WalletConnectQueueService>(),
+  ActionListBloc(
+    this._navigator, {
+    required this.approveSessionLabel,
+    required this.signatureRequestedLabel,
+    required this.transactionRequestedLabel,
+    required this.unknownLabel,
+    required this.actionRequiredSubLabel,
+  })  : _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>();
 
   var notifications = [
@@ -209,18 +219,19 @@ class ActionListBloc extends Disposable {
         items: queuedGroup.actionLookup.entries.map((entry) {
           String label;
           if (entry.value is WalletConnectSessionRequestData) {
-            label = Strings.actionListLabelApproveSession;
+            label = approveSessionLabel;
           } else if (entry.value is SignRequest) {
-            label = Strings.actionListLabelSignatureRequested;
+            label = signatureRequestedLabel;
           } else if (entry.value is SendRequest) {
-            label = Strings.actionListLabelTransactionRequested;
+            label = transactionRequestedLabel;
           } else {
-            label = Strings.actionListLabelUnknown;
+            label = unknownLabel;
           }
           return _WalletConnectActionItem(
-              label: label,
-              subLabel: Strings.actionListSubLabelActionRequired,
-              payload: entry.value);
+            label: label,
+            subLabel: actionRequiredSubLabel,
+            payload: entry.value,
+          );
         }).toList(),
       );
     }).toList();

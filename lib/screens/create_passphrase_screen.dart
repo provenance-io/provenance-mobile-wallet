@@ -20,9 +20,10 @@ class CreatePassphraseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: Strings.createPassphrase,
+        title: strings.createPassphrase,
         leadingIcon: PwIcons.back,
         bottom: ProgressStepper(
           currentStep,
@@ -34,18 +35,17 @@ class CreatePassphraseScreen extends StatelessWidget {
           VerticalSpacer.largeX6(),
           VerticalSpacer.xxLarge(),
           PwText(
-            Strings.savePassphrase,
+            strings.savePassphrase,
             style: PwTextStyle.headline2,
             textAlign: TextAlign.center,
           ),
           VerticalSpacer.large(),
           Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
-              Strings.prepareToWriteDownYourRecoveryPhrase,
+              strings.prepareToWriteDownYourRecoveryPhrase,
               style: PwTextStyle.body,
               textAlign: TextAlign.center,
               color: PwColor.neutral50,
@@ -53,12 +53,11 @@ class CreatePassphraseScreen extends StatelessWidget {
           ),
           VerticalSpacer.large(),
           Padding(
-            padding: EdgeInsets.only(
-              right: Spacing.xxLarge,
-              left: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
-              Strings.theOnlyWayToRecoverYourAccount,
+              strings.theOnlyWayToRecoverYourAccount,
               style: PwTextStyle.body,
               textAlign: TextAlign.center,
               color: PwColor.neutral50,
@@ -78,12 +77,11 @@ class CreatePassphraseScreen extends StatelessWidget {
             child: Container(),
           ),
           Padding(
-            padding: EdgeInsets.only(
-              left: Spacing.xxLarge,
-              right: Spacing.xxLarge,
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.large,
             ),
             child: PwText(
-              Strings.warningDoNotShare,
+              strings.warningDoNotShare,
               style: PwTextStyle.body,
               textAlign: TextAlign.center,
               color: PwColor.error,
@@ -94,7 +92,7 @@ class CreatePassphraseScreen extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
               child: PwText(
-                Strings.continueName,
+                strings.continueName,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),
