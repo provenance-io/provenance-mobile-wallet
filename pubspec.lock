@@ -924,8 +924,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: "7525566cb5f2227f863b471a6dfe8fc41fc3c2ba"
+      ref: "WalletConnect/NoCallbacks"
+      resolved-ref: "20500f0496ab951f786dc88752ca0eb80a63daa4"
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
     version: "0.0.1"

@@ -1,4 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
@@ -184,11 +186,17 @@ class ActionList extends StatelessWidget {
   }
 
   void _handleOnItemClicked(
-      BuildContext context, ActionListGroup group, ActionListItem item) {
+      BuildContext context, ActionListGroup group, ActionListItem item) async {
     final bloc = Provider.of<ActionListBloc>(context, listen: false);
-    bloc.actionItemClicked(
-      group,
-      item,
-    );
+
+    try {
+      final approved = await bloc.requestApproval(group, item);
+      ModalLoadingRoute.showLoading(context);
+      await bloc.processWalletConnectQueue(approved, group, item);
+      ModalLoadingRoute.dismiss(context);
+    } catch (e) {
+      ModalLoadingRoute.dismiss(context);
+      PwDialog.showError(context, error: e as Exception);
+    }
   }
 }

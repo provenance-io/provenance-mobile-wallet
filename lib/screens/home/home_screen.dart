@@ -12,8 +12,6 @@ import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart
 import 'package:provenance_wallet/screens/home/view_more/view_more_tab.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
@@ -87,15 +85,10 @@ class HomeScreenState extends State<HomeScreen>
         ModalLoadingRoute.dismiss(context);
       }
     }).addTo(_subscriptions);
-    _walletConnectService.delegateEvents.sendRequest
-        .listen(_onSendRequest)
+    _walletConnectService.delegateEvents.sessionRequest
+        .listen(_onSessionRequest)
         .addTo(_subscriptions);
-    _walletConnectService.delegateEvents.signRequest
-        .listen(_onSignRequest)
-        .addTo(_subscriptions);
-    _walletConnectService.delegateEvents.sessionRequest.listen((event) {
-      _onSessionRequest(context, event);
-    }).addTo(_subscriptions);
+
     _walletConnectService.sessionEvents.error
         .listen(_onError)
         .addTo(_subscriptions);
@@ -194,7 +187,6 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _onSessionRequest(
-    BuildContext context,
     WalletConnectSessionRequestData details,
   ) async {
     final strings = Strings.of(context);
@@ -215,95 +207,6 @@ class HomeScreenState extends State<HomeScreen>
       details: details,
       allowed: allowed,
     );
-  }
-
-  Future<void> _onSendRequest(
-    SendRequest sendRequest,
-  ) async {
-    final clientDetails =
-        _walletConnectService.sessionEvents.state.value.details;
-    if (clientDetails == null) {
-      _onError(Strings.of(context).errorDisconnected);
-
-      return;
-    }
-
-    final approved = await showGeneralDialog<bool?>(
-      context: context,
-      pageBuilder: (
-        context,
-        animation,
-        secondaryAnimation,
-      ) {
-        final messages = sendRequest.messages;
-        final data = messages.map((message) {
-          return <String, dynamic>{
-            MessageFieldName.type: message.info_.qualifiedMessageName,
-            ...message.toProto3Json() as Map<String, dynamic>,
-          };
-        }).toList();
-
-        return TransactionConfirmScreen(
-          kind: TransactionConfirmKind.approve,
-          title: Strings.of(context).confirmTransactionTitle,
-          requestId: sendRequest.id,
-          clientMeta: clientDetails,
-          data: data,
-          fees: sendRequest.gasEstimate.feeCalculated,
-        );
-      },
-    );
-
-    ModalLoadingRoute.showLoading(context);
-
-    await get<WalletConnectService>()
-        .sendMessageFinish(
-          requestId: sendRequest.id,
-          allowed: approved ?? false,
-        )
-        .whenComplete(() => ModalLoadingRoute.dismiss(context));
-  }
-
-  Future<void> _onSignRequest(SignRequest signRequest) async {
-    final clientDetails =
-        _walletConnectService.sessionEvents.state.value.details;
-    if (clientDetails == null) {
-      _onError(Strings.of(context).errorDisconnected);
-
-      return;
-    }
-
-    final approved = await showGeneralDialog<bool>(
-      context: context,
-      pageBuilder: (
-        context,
-        animation,
-        secondaryAnimation,
-      ) {
-        return TransactionConfirmScreen(
-          kind: TransactionConfirmKind.approve,
-          title: Strings.of(context).confirmSignTitle,
-          requestId: signRequest.id,
-          subTitle: signRequest.description,
-          clientMeta: clientDetails,
-          message: signRequest.message,
-          data: [
-            {
-              MessageFieldName.address: signRequest.address,
-            },
-          ],
-        );
-      },
-    );
-
-    ModalLoadingRoute.showLoading(context);
-
-    await get<WalletConnectService>()
-        .signTransactionFinish(
-          requestId: signRequest.id,
-          allowed: approved ?? false,
-        )
-        .whenComplete(() => ModalLoadingRoute.dismiss(context));
   }
 
   void _onError(String message) {

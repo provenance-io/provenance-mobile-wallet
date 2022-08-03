@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
@@ -50,6 +51,10 @@ class _DashboardState extends State<Dashboard> {
 
     _connectQueueService = get<WalletConnectQueueService>();
     _connectQueueService.addListener(_connectQueueUpdated);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _connectQueueUpdated();
+    });
   }
 
   @override
@@ -151,40 +156,37 @@ class _DashboardState extends State<Dashboard> {
                           } else {
                             final accountId =
                                 accountService.events.selected.value?.id;
+
                             if (accountId != null) {
-                              final success = await _walletConnectService
-                                  .tryRestoreSession(accountId);
-                              if (!success) {
-                                final addressData = await Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).push(
-                                  QRCodeScanner(
-                                    isValidCallback: (input) {
-                                      return Future.value(input.isNotEmpty);
-                                    },
-                                  ).route(),
-                                );
+                              final addressData = await Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).push(
+                                QRCodeScanner(
+                                  isValidCallback: (input) {
+                                    return Future.value(input.isNotEmpty);
+                                  },
+                                ).route(),
+                              );
 
-                                if (addressData != null) {
-                                  _walletConnectService
-                                      .connectSession(accountId, addressData)
-                                      .catchError((err) {
-                                    PwDialog.showError(
-                                      context,
-                                      message: Strings.of(context)
-                                          .walletConnectFailed,
-                                      error: err,
-                                    );
+                              if (addressData != null) {
+                                _walletConnectService
+                                    .connectSession(accountId, addressData)
+                                    .catchError((err) {
+                                  PwDialog.showError(
+                                    context,
+                                    message:
+                                        Strings.of(context).walletConnectFailed,
+                                    error: err,
+                                  );
 
-                                    logError(
-                                      'Failed to connect session',
-                                      error: err,
-                                    );
+                                  logError(
+                                    'Failed to connect session',
+                                    error: err,
+                                  );
 
-                                    return false;
-                                  });
-                                }
+                                  return false;
+                                });
                               }
                             }
                           }
@@ -449,7 +451,8 @@ class _DashboardState extends State<Dashboard> {
   void _connectQueueUpdated() async {
     final groups = await _connectQueueService.loadAllGroups();
     final counts = groups.map((group) => group.actionLookup.length);
-    _notificationBellNotifier.value =
-        counts.reduce((value, element) => value + element);
+    _notificationBellNotifier.value = (counts.isEmpty)
+        ? 0
+        : counts.reduce((value, element) => value + element);
   }
 }

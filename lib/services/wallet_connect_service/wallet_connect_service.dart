@@ -30,6 +30,4 @@ abstract class WalletConnectService extends Listenable {
     required String requestId,
     required bool allowed,
   });
-
-  Future<bool> tryRestoreSession(String accountId);
 }

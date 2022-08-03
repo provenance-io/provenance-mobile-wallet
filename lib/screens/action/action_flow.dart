@@ -42,9 +42,12 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
   @override
   Widget createStartPage() {
+    // this must be accessed outside of the provider
+    final strings = Strings.of(context);
+
     return Provider<ActionListBloc>(
+        lazy: true,
         create: (context) {
-          final strings = Strings.of(context);
           final bloc = ActionListBloc(
             this,
             approveSessionLabel: strings.actionListLabelApproveSession,
