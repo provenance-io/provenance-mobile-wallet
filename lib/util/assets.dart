@@ -48,4 +48,5 @@ class ImagePaths {
   final String inu = 'assets/images/inu.svg';
   final String warning = 'assets/images/warning.png';
   final String bigHash = 'assets/images/bigHash.png';
+  final String warningDialogIcon = 'assets/images/warning-dialog-icon.svg';
 }
