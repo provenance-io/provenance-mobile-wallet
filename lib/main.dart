@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,7 +70,6 @@ import 'package:provenance_wallet/services/wallet_connect_service/default_wallet
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/push_notification_helper.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -139,11 +137,7 @@ void main() {
 
         crashReportingService = FirebaseCrashReportingService();
 
-        final firebaseMessaging = FirebaseMessaging.instance;
-        final pushNotificationHelper =
-            PushNotificationHelper(firebaseMessaging);
-        remoteNotificationService =
-            DefaultRemoteNotificationService(pushNotificationHelper);
+        remoteNotificationService = DefaultRemoteNotificationService();
         remoteConfigService = FirebaseRemoteConfigService(
           keyValueService: keyValueService,
           localConfigService: localConfigService,
@@ -457,6 +451,54 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
 
     get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
+
+    final accountService = get<AccountService>();
+    final remoteNotificationService = get<RemoteNotificationService>();
+
+    final accounts = await accountService.getAccounts();
+    for (var account in accounts) {
+      final address = account.publicKey?.address;
+      if (address != null) {
+        await remoteNotificationService.registerForPushNotifications(address);
+      }
+    }
+
+    accountService.events.added.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Add event failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.removed.listen((e) {
+      for (var account in e) {
+        final address = account.publicKey?.address;
+        if (address != null) {
+          remoteNotificationService
+              .unregisterForPushNotifications(address)
+              .onError(
+                (error, stackTrace) => logDebug(
+                  'Remove event failed to unregister push notifications for account: $address',
+                ),
+              );
+        }
+      }
+    }).addTo(_subscriptions);
+
+    accountService.events.updated.listen((e) {
+      final address = e.publicKey?.address;
+      if (address != null && !remoteNotificationService.isRegistered(address)) {
+        remoteNotificationService.registerForPushNotifications(address).onError(
+              (error, stackTrace) => logDebug(
+                'Update event failed to register for push notifications for account: $address',
+              ),
+            );
+      }
+    }).addTo(_subscriptions);
   }
 }
 

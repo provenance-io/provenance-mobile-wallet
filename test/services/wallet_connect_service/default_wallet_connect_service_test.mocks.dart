@@ -122,9 +122,10 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
       Invocation.method(#selectAccount, [], {#id: id}),
       returnValue: Future<_i9.Account?>.value()) as _i8.Future<_i9.Account?>);
   @override
-  _i8.Future<_i9.Account?> getSelectedAccount() => (super.noSuchMethod(
-      Invocation.method(#getSelectedAccount, []),
-      returnValue: Future<_i9.Account?>.value()) as _i8.Future<_i9.Account?>);
+  _i8.Future<_i9.TransactableAccount?> getSelectedAccount() =>
+      (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
+              returnValue: Future<_i9.TransactableAccount?>.value())
+          as _i8.Future<_i9.TransactableAccount?>);
   @override
   _i8.Future<List<_i9.Account>> getAccounts() =>
       (super.noSuchMethod(Invocation.method(#getAccounts, []),
@@ -136,6 +137,12 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
               returnValue:
                   Future<List<_i9.BasicAccount>>.value(<_i9.BasicAccount>[]))
           as _i8.Future<List<_i9.BasicAccount>>);
+  @override
+  _i8.Future<List<_i9.TransactableAccount>> getTransactableAccounts() =>
+      (super.noSuchMethod(Invocation.method(#getTransactableAccounts, []),
+              returnValue: Future<List<_i9.TransactableAccount>>.value(
+                  <_i9.TransactableAccount>[]))
+          as _i8.Future<List<_i9.TransactableAccount>>);
   @override
   _i8.Future<_i9.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
@@ -208,6 +215,10 @@ class MockRemoteNotificationService extends _i1.Mock
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  bool isRegistered(String? topic) =>
+      (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
+          returnValue: false) as bool);
   @override
   _i8.Future<void> registerForPushNotifications(String? topic) => (super
       .noSuchMethod(Invocation.method(#registerForPushNotifications, [topic]),
