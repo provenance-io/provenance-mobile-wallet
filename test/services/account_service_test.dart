@@ -87,7 +87,11 @@ Future<AccountService> createService({
   final accounts = await service.getAccounts();
   expect(accounts.length, dataCount);
 
-  get.registerSingleton(serviceCore);
+  get.registerSingleton(serviceCore,
+      dispose: (SembastAccountStorageService serviceCore) {
+    return serviceCore.deleteDatabase();
+  });
+
   get.registerSingleton(service);
 
   await pumpEventQueue();

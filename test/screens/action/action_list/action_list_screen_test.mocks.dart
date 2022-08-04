@@ -70,9 +70,16 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
   @override
-  _i3.Future<void> actionItemClicked(
+  _i3.Future<bool> requestApproval(
           _i2.ActionListGroup? group, _i2.ActionListItem? item) =>
-      (super.noSuchMethod(Invocation.method(#actionItemClicked, [group, item]),
+      (super.noSuchMethod(Invocation.method(#requestApproval, [group, item]),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
+  _i3.Future<void> processWalletConnectQueue(bool? approved,
+          _i2.ActionListGroup? group, _i2.ActionListItem? item) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #processWalletConnectQueue, [approved, group, item]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
 }

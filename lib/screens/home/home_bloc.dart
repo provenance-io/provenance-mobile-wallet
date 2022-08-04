@@ -65,8 +65,6 @@ class HomeBloc extends Disposable {
   late final String _allMessageTypes;
   late final String _allStatuses;
 
-  var _isFirstLoad = true;
-
   ValueStream<TransactionDetails> get transactionDetails => _transactionDetails;
   ValueStream<int> get transactionPages => _transactionPages;
   ValueStream<bool> get isLoading => _isLoading;
@@ -88,14 +86,6 @@ class HomeBloc extends Disposable {
       var transactions = <Transaction>[];
 
       if (account != null) {
-        final isFirstLoad = _isFirstLoad;
-        _isFirstLoad = false;
-
-        final accountId = account.id;
-        if (isFirstLoad) {
-          _walletConnectService.tryRestoreSession(accountId);
-        }
-
         assetList = await _assetService.getAssets(
           account.publicKey!.coin,
           account.publicKey!.address,

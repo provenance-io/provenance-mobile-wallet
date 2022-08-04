@@ -5,8 +5,10 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
@@ -14,6 +16,7 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_c
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './default_wallet_connect_service_test.mocks.dart';
@@ -89,7 +92,8 @@ final account = BasicAccount(
   RemoteNotificationService,
   WalletConnectQueueService,
   TransactionHandler,
-  WalletConnection
+  WalletConnection,
+  LocalAuthHelper,
 ])
 void main() {
   late MockKeyValueService mockKeyValueService;
@@ -98,14 +102,29 @@ void main() {
   late MockWalletConnectQueueService mockWalletConnectQueueService;
   late MockTransactionHandler mockTransactionHandler;
   late MockWalletConnection mockWalletConnection;
+  late MockLocalAuthHelper mockLocalAuthHelper;
 
   late DefaultWalletConnectService _walletConnectService;
 
   late MockAccountServiceEvents accountServiceEvents;
   late MockConnectionFactory mockConnectionFactory;
 
+  late WalletConnectionDelegate capturedDelegate;
+
+  final BehaviorSubject<AuthStatus> _authStatus =
+      BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
+
+  final accountDetails = BasicAccount(
+      id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
+
   setUp(() {
+    mockLocalAuthHelper = MockLocalAuthHelper();
+    when(mockLocalAuthHelper.onDispose()).thenAnswer((_) => Future.value());
+    when(mockLocalAuthHelper.status).thenAnswer((_) => _authStatus);
+
     mockWalletConnection = MockWalletConnection();
+    when(mockWalletConnection.address)
+        .thenReturn(WalletConnectAddress.create(walletConnectAddress)!);
 
     mockConnectionFactory = MockConnectionFactory(mockWalletConnection);
 
@@ -115,9 +134,13 @@ void main() {
     mockAccountService = MockAccountService();
     when(mockAccountService.events).thenReturn(accountServiceEvents);
     when(mockAccountService.onDispose()).thenAnswer((_) => Future.value());
+    when(mockAccountService.getAccount(any))
+        .thenAnswer((_) => Future.value(accountDetails));
 
     mockRemoteNotificationService = MockRemoteNotificationService();
     mockWalletConnectQueueService = MockWalletConnectQueueService();
+    when(mockWalletConnectQueueService.onDispose())
+        .thenAnswer((_) => Future.value());
     mockTransactionHandler = MockTransactionHandler();
 
     get.registerSingleton<KeyValueService>(mockKeyValueService);
@@ -126,6 +149,7 @@ void main() {
     when(mockKeyValueService.setString(any, any))
         .thenAnswer((_) => Future.value(true));
 
+    get.registerSingleton<LocalAuthHelper>(mockLocalAuthHelper);
     get.registerSingleton<AccountService>(mockAccountService);
     get.registerSingleton<RemoteNotificationService>(
         mockRemoteNotificationService);
@@ -158,9 +182,9 @@ void main() {
   });
 
   testWidgets("register accountService event listeners", (tester) async {
-    expect(accountServiceEvents.addedStreamController.hasListener, true);
-    expect(accountServiceEvents.removeStreamController.hasListener, true);
-    expect(accountServiceEvents.updatedStreamController.hasListener, true);
+    expect(accountServiceEvents.addedStreamController.hasListener, false);
+    expect(accountServiceEvents.removeStreamController.hasListener, false);
+    expect(accountServiceEvents.updatedStreamController.hasListener, false);
     expect(accountServiceEvents.selectedStreamController.hasListener, true);
   });
 
@@ -187,12 +211,17 @@ void main() {
     });
 
     testWidgets("verify calls", (_) async {
+      final accountDetails = mockAccountService.events.selected.value!;
+
+      when(mockAccountService.getAccount(any))
+          .thenAnswer((_) => Future.value(accountDetails));
+
       final success = await _walletConnectService.connectSession(
           "AccountId", walletConnectAddress);
 
       expect(success, true);
 
-      verify(mockAccountService.loadKey("AccountId"));
+      verify(mockAccountService.loadKey(accountDetails.id));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);
@@ -261,17 +290,45 @@ void main() {
       expect(success, false);
     });
 
-    testWidgets("return false on suspendedTime > 30", (_) async {
-      final newExpiredTime =
-          DateTime.now().subtract(Duration(minutes: 30, seconds: 1));
+    testWidgets("return false on suspendedTime > 30", (tester) async {
+      await tester.runAsync(() async {
+        // for som
+        final accountDetails = BasicAccount(
+            id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
 
-      when(mockKeyValueService.getString(PrefKey.sessionSuspendedTime))
-          .thenAnswer((_) => Future.value(newExpiredTime.toIso8601String()));
+        when(mockAccountService.getAccount(any))
+            .thenAnswer((_) => Future.value(accountDetails));
 
-      final success =
-          await _walletConnectService.tryRestoreSession("AccountId");
+        final newExpiredTime = DateTime.now().subtract(
+            WalletConnectSession.inactivityTimeout + Duration(seconds: 1));
 
-      expect(success, false);
+        when(mockKeyValueService.getString(PrefKey.sessionSuspendedTime))
+            .thenAnswer((_) => Future.value(newExpiredTime.toIso8601String()));
+
+        when(mockWalletConnectQueueService.removeWalletConnectSessionGroup(any))
+            .thenAnswer((_) => Future.value());
+
+        when(mockWalletConnection.connect(any, any))
+            .thenAnswer((_) => Future.value());
+
+        // verify previous connection is closed properly
+        when(mockWalletConnection.disconnect())
+            .thenAnswer((_) => Future.value());
+        when(mockWalletConnection.dispose()).thenAnswer((_) => Future.value());
+
+        final success =
+            await _walletConnectService.tryRestoreSession("AccountId");
+
+        verify(mockKeyValueService.removeString(PrefKey.sessionData));
+        verify(mockKeyValueService.removeString(PrefKey.sessionSuspendedTime));
+        verify(mockWalletConnectQueueService
+            .removeWalletConnectSessionGroup(argThat(predicate((arg) {
+          final wcAddress = arg as WalletConnectAddress;
+          return wcAddress.fullUriString == walletConnectAddress;
+        }))));
+
+        expect(success, false);
+      });
     });
 
     testWidgets("return false on private key not found", (_) async {
@@ -283,6 +340,8 @@ void main() {
     });
 
     testWidgets("return false on no account selected", (_) async {
+      when(mockAccountService.getAccount(any))
+          .thenAnswer((_) => Future.value(null));
       accountServiceEvents.selectedStreamController.add(null);
       final success =
           await _walletConnectService.tryRestoreSession("AccountId");
@@ -295,7 +354,8 @@ void main() {
 
       expect(success, true);
 
-      verify(mockAccountService.loadKey("AccountId"));
+      verify(mockAccountService.getAccount("AccountId"));
+      verify(mockAccountService.loadKey(accountDetails.id));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);

@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 
+import '../../test_helpers.dart';
 import 'wallet_connect_session_test.mocks.dart';
 
 const coin = wallet.Coin.testNet;
@@ -26,6 +27,51 @@ final publicKey = privateKey.defaultKey().publicKey;
   KeyValueService,
 ])
 main() {
+  group("WalletConnectSessionEvents", () {
+    late WalletConnectSessionEvents source;
+    late WalletConnectSessionEvents listener;
+
+    setUp(() {
+      source = WalletConnectSessionEvents();
+      listener = WalletConnectSessionEvents();
+    });
+
+    test("Listeners are attached properly", () {
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+
+      listener.listen(source);
+
+      expect(source.state, StreamHasListener(true));
+      expect(source.error, StreamHasListener(true));
+    });
+
+    test("Listeners are removed on clear", () async {
+      listener.listen(source);
+
+      await listener.clear();
+
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+    });
+
+    test('dispose', () async {
+      listener.listen(source);
+
+      await listener.dispose();
+
+      expect(source.state, StreamHasListener(false));
+      expect(source.error, StreamHasListener(false));
+
+      // ensure source stream is still open
+      expect(source.state, StreamClosed(false));
+      expect(source.error, StreamClosed(false));
+
+      expect(listener.state, StreamClosed(true));
+      expect(listener.error, StreamClosed(true));
+    });
+  });
+
   group("WalletConnectSession", () {
     MockWalletConnection? mockWalletConnection;
     MockWalletConnectSessionDelegate? mockWalletConnectSessionDelegate;
@@ -44,13 +90,12 @@ main() {
       when(mockWalletConnectSessionDelegate!.events).thenReturn(events!);
 
       session = WalletConnectSession(
-        accountId: "WalletId",
-        coin: wallet.Coin.mainNet,
-        connection: mockWalletConnection!,
-        delegate: mockWalletConnectSessionDelegate!,
-        remoteNotificationService: mockRemoteNotificationService!,
-        keyValueService: mockKeyValueService!,
-      );
+          accountId: "WalletId",
+          coin: wallet.Coin.mainNet,
+          connection: mockWalletConnection!,
+          delegate: mockWalletConnectSessionDelegate!,
+          remoteNotificationService: mockRemoteNotificationService!,
+          onSessionClosedRemotelyDelegate: () {});
     });
 
     test('closeButRetainSession', () async {
@@ -70,8 +115,13 @@ main() {
 
         final result = await session!.connect();
 
-        verify(mockWalletConnection!
-            .connect(mockWalletConnectSessionDelegate!, null));
+        verify(mockWalletConnection!.connect(argThat(predicate((arg) {
+          final capturingDelegate =
+              arg as WalletConnectSessionCapturingDelegate;
+          expect(capturingDelegate.childDelegte,
+              mockWalletConnectSessionDelegate!);
+          return true;
+        })), null));
 
         expect(result, true);
       });
@@ -95,8 +145,13 @@ main() {
 
         final result = await session!.connect(restore);
 
-        verify(mockWalletConnection!
-            .connect(mockWalletConnectSessionDelegate!, restore.data));
+        verify(mockWalletConnection!.connect(argThat(predicate((arg) {
+          final capturingDelegate =
+              arg as WalletConnectSessionCapturingDelegate;
+          expect(capturingDelegate.childDelegte,
+              mockWalletConnectSessionDelegate!);
+          return true;
+        })), restore.data));
 
         verify(
           mockRemoteNotificationService!
@@ -153,8 +208,12 @@ main() {
             .thenAnswer((_) => Future.value(true));
         when(mockKeyValueService!.setString(any, any))
             .thenAnswer((_) => Future.value(true));
+        when(mockWalletConnection!.connect(any, any))
+            .thenAnswer((_) => Future.value(null));
+
         final details = WalletConnectSessionRequestData(
           "ABC",
+          1,
           SessionRequestData(
             "PeerId",
             "RemoteId",
@@ -164,6 +223,13 @@ main() {
             )!,
           ),
         );
+
+        final restoreData = WalletConnectSessionRestoreData(
+            details.data.clientMeta,
+            SessionRestoreData(privateKey, "ChainID", details.data.peerId,
+                details.data.remotePeerId));
+
+        await session!.connect(restoreData);
 
         final result =
             await session!.approveSession(details: details, allowed: true);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet_connect.dart';
@@ -157,12 +158,25 @@ class ActionListBloc extends Disposable {
     });
   }
 
-  Future<void> actionItemClicked(
+  Future<bool> requestApproval(
       ActionListGroup group, ActionListItem item) async {
-    if (group is _WalletConnectActionGroup) {
-      return _processWalletConnectQueue(
-          group, item as _WalletConnectActionItem);
+    if (group is! _WalletConnectActionGroup) {
+      log("Unknown actionType ${group.runtimeType}");
+      return false;
     }
+
+    return _approveWalletConnectGroup(group, item as _WalletConnectActionItem);
+  }
+
+  Future<void> processWalletConnectQueue(
+      bool approved, ActionListGroup group, ActionListItem item) async {
+    if (group is! _WalletConnectActionGroup) {
+      log("Unknown actionType ${group.runtimeType}");
+      return;
+    }
+
+    return _processWalletConnectGroup(
+        approved, group, item as _WalletConnectActionItem);
   }
 
   void _onActionQueueUpdated() {
@@ -223,29 +237,37 @@ class ActionListBloc extends Disposable {
     }).toList();
   }
 
-  Future<void> _processWalletConnectQueue(
+  Future<bool> _approveWalletConnectGroup(
+      _WalletConnectActionGroup group, _WalletConnectActionItem item) {
+    final payload = item.payload;
+
+    if (payload is WalletConnectSessionRequestData) {
+      return _navigator.showApproveSession(payload);
+    } else if (payload is SignRequest) {
+      return _navigator.showApproveSign(payload, group._queueGroup.clientMeta!);
+    } else if (payload is SendRequest) {
+      return _navigator.showApproveTransaction(
+          payload, group._queueGroup.clientMeta!);
+    } else {
+      throw Exception("Unknown action type ${item.runtimeType}");
+    }
+  }
+
+  Future<void> _processWalletConnectGroup(bool approved,
       _WalletConnectActionGroup group, _WalletConnectActionItem item) async {
     final walletConnectService = get<WalletConnectService>();
 
     final payload = item.payload;
 
     if (payload is WalletConnectSessionRequestData) {
-      final approved = await _navigator.showApproveSession(payload);
-
       await walletConnectService.approveSession(
         details: payload,
         allowed: approved,
       );
     } else if (payload is SignRequest) {
-      final approved = await _navigator.showApproveSign(
-          payload, group._queueGroup.clientMeta!);
-
       await walletConnectService.sendMessageFinish(
           requestId: payload.id, allowed: approved);
     } else if (payload is SendRequest) {
-      final approved = await _navigator.showApproveTransaction(
-          payload, group._queueGroup.clientMeta!);
-
       await walletConnectService.sendMessageFinish(
           requestId: payload.id, allowed: approved);
     } else {
