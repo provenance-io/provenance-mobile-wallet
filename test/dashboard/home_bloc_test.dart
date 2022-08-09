@@ -51,8 +51,13 @@ void main() {
 
       await pumpEventQueue();
 
-      expect(walletService.events.selected.value?.id, state.accountIds[0]);
-      expect(bloc.assetList.value!.first.amount, '0');
+      final selectedAccount = await walletService.getSelectedAccount();
+      final publicKey = selectedAccount!.publicKey;
+      final assets =
+          await state.assetService.getAssets(publicKey.coin, publicKey.address);
+
+      expect(walletService.events.selected.value?.id, selectedAccount.id);
+      expect(bloc.assetList.value!.first.amount, assets.first.amount);
     },
   );
 
