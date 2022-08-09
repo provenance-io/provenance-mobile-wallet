@@ -68,7 +68,6 @@ class AccountStorageServiceImp implements AccountStorageService {
   @override
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required Coin selectedCoin,
     required String linkedAccountId,
     required String remoteId,
@@ -78,7 +77,6 @@ class AccountStorageServiceImp implements AccountStorageService {
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
-      publicKeys: publicKeys,
       selectedChainId: ChainId.forCoin(selectedCoin),
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
@@ -88,6 +86,17 @@ class AccountStorageServiceImp implements AccountStorageService {
     );
 
     return details;
+  }
+
+  @override
+  Future<MultiAccount?> setMultiAccountPublicKeys({
+    required String id,
+    required List<PublicKey> publicKeys,
+  }) {
+    return _serviceCore.setMultiAccountPublicKeys(
+      id: id,
+      publicKeys: publicKeys,
+    );
   }
 
   @override

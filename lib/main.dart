@@ -47,6 +47,7 @@ import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
@@ -230,11 +231,15 @@ void main() {
         tag: _tag,
       );
 
-      final accountService = AccountService(storage: accountStorageService);
+      final multiSigService = MultiSigService();
+      get.registerSingleton<MultiSigService>(multiSigService);
+
+      final accountService = AccountService(
+        storage: accountStorageService,
+      );
       get.registerSingleton<AccountService>(accountService);
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
-      get.registerLazySingleton<MultiSigService>(() => MultiSigService());
 
       final directory = await getApplicationDocumentsDirectory();
       await directory.create(recursive: true);
@@ -504,6 +509,45 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
             );
       }
     }).addTo(_subscriptions);
+
+    await _activatePendingMultiAccounts();
+  }
+
+  Future<void> _activatePendingMultiAccounts() async {
+    final accountService = get<AccountService>();
+    final multiSigService = get<MultiSigService>();
+
+    final accounts = await accountService.getAccounts();
+    final pendingAccounts = accounts
+        .whereType<MultiAccount>()
+        .where((e) => e.publicKey == null)
+        .toList();
+
+    for (var pendingAccount in pendingAccounts) {
+      final remoteAccount = await multiSigService.getAccount(
+        remoteId: pendingAccount.remoteId,
+        signerPublicKey: pendingAccount.linkedAccount.publicKey,
+      );
+
+      if (remoteAccount != null) {
+        final isActive = !remoteAccount.signers.any((e) => e.publicKey == null);
+        if (isActive) {
+          final publicKeys =
+              remoteAccount.signers.map((e) => e.publicKey!).toList();
+          final account = await accountService.activateMultiAccount(
+            id: pendingAccount.id,
+            publicKeys: publicKeys,
+          );
+
+          if (account == null) {
+            logError(
+                'Failed to activate multi sig account: ${pendingAccount.name}');
+          } else {
+            logDebug('Activated multi sig account: ${pendingAccount.name}');
+          }
+        }
+      }
+    }
   }
 }
 

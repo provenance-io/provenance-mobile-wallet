@@ -77,6 +77,7 @@ Future<AccountService> createService({
     import: export,
   );
   final cipherService = MemoryCipherService();
+
   final service = AccountService(
     storage: AccountStorageServiceImp(
       serviceCore,
@@ -108,6 +109,7 @@ Future<Map<String, Object?>> createDatabaseExport({
     directory: sembastInMemoryDatabasePath,
   );
   final cipherService = MemoryCipherService();
+
   final service = AccountService(
     storage: AccountStorageServiceImp(
       serviceCore,

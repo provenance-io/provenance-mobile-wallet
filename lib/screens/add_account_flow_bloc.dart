@@ -548,7 +548,6 @@ class AddAccountFlowBloc implements Disposable {
       MultiSigRemoteAccount account, BasicAccount linkedAccount) async {
     final multiAccount = await _accountService.addMultiAccount(
       name: account.name,
-      publicKeys: [],
       coin: account.coin,
       linkedAccountId: linkedAccount.id,
       remoteId: account.remoteId,
@@ -594,7 +593,6 @@ class AddAccountFlowBloc implements Disposable {
       final account = await _accountService.addMultiAccount(
         name: _multiSigName.value,
         coin: _multiSigLinkedAccount!.publicKey!.coin,
-        publicKeys: [],
         remoteId: registration.remoteId,
         inviteIds: registration.signers.map((e) => e.inviteId).toList(),
         linkedAccountId: _multiSigLinkedAccount!.id,

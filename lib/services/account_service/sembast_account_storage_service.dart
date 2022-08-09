@@ -385,7 +385,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   @override
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required String selectedChainId,
     required String linkedAccountId,
     required String remoteId,
@@ -396,12 +395,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
       name: name,
-      publicKeys: publicKeys
-          .map((e) => v1.SembastPublicKeyModel(
-                hex: e.compressedPublicKeyHex,
-                chainId: ChainId.forCoin(e.coin),
-              ))
-          .toList(),
+      publicKeys: [],
       selectedChainId: selectedChainId,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
@@ -440,6 +434,26 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
       return multiAccountId;
     });
+
+    return getMultiAccount(id: id);
+  }
+
+  @override
+  Future<MultiAccount?> setMultiAccountPublicKeys({
+    required String id,
+    required List<PublicKey> publicKeys,
+  }) async {
+    final db = await _db;
+    final ref = _multiAccounts.record(id);
+    final rec = await ref.get(db);
+    if (rec != null) {
+      final model = v1.SembastMultiAccountModel.fromRecord(rec);
+      final updatedModel = model.copyWith(
+        publicKeys: _toSembastPublicKeys(publicKeys),
+      );
+
+      await ref.update(db, updatedModel.toRecord());
+    }
 
     return getMultiAccount(id: id);
   }
@@ -537,5 +551,15 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             signaturesRequired: model.signaturesRequired,
             inviteIds: model.inviteIds,
           );
+  }
+
+  List<v1.SembastPublicKeyModel> _toSembastPublicKeys(
+      List<PublicKey> publicKeys) {
+    return publicKeys
+        .map((e) => v1.SembastPublicKeyModel(
+              hex: e.compressedPublicKeyHex,
+              chainId: ChainId.forCoin(e.coin),
+            ))
+        .toList();
   }
 }

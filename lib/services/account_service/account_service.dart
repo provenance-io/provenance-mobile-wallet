@@ -168,7 +168,6 @@ class AccountService implements Disposable {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required Coin coin,
     required String linkedAccountId,
     required String remoteId,
@@ -178,7 +177,6 @@ class AccountService implements Disposable {
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
-      publicKeys: publicKeys,
       selectedCoin: coin,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
@@ -197,6 +195,22 @@ class AccountService implements Disposable {
     }
 
     return details;
+  }
+
+  Future<MultiTransactableAccount?> activateMultiAccount({
+    required String id,
+    required List<PublicKey> publicKeys,
+  }) async {
+    final account = await _storage.setMultiAccountPublicKeys(
+      id: id,
+      publicKeys: publicKeys,
+    );
+
+    if (account != null) {
+      events._updated.add(account);
+    }
+
+    return account is MultiTransactableAccount ? account : null;
   }
 
   Future<Account?> removeAccount({required String id}) async {

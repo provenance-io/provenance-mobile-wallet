@@ -61,7 +61,6 @@ class MultiSigInviteReviewFlowBloc {
       if (signer != null) {
         multiAccount = await _accountService.addMultiAccount(
           name: _remoteAccount.name,
-          publicKeys: [],
           coin: account.publicKey.coin,
           linkedAccountId: account.id,
           remoteId: _remoteAccount.remoteId,

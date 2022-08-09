@@ -129,14 +129,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',
@@ -162,14 +156,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',
@@ -199,14 +187,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',

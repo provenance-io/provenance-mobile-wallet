@@ -55,13 +55,17 @@ abstract class AccountStorageService {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required Coin selectedCoin,
     required String linkedAccountId,
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+  });
+
+  Future<MultiAccount?> setMultiAccountPublicKeys({
+    required String id,
+    required List<PublicKey> publicKeys,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);
