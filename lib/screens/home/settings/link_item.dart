@@ -35,9 +35,6 @@ class LinkItem extends StatelessWidget {
             Expanded(
               child: Container(
                 alignment: Alignment.centerRight,
-                margin: EdgeInsets.only(
-                  right: Spacing.large,
-                ),
                 child: PwIcon(
                   icon ?? PwIcons.caret,
                   color: Theme.of(context).colorScheme.neutralNeutral,

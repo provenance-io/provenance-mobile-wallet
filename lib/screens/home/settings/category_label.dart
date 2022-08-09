@@ -20,7 +20,7 @@ class CategoryLabel extends StatelessWidget {
       ),
       child: PwText(
         text,
-        style: PwTextStyle.title,
+        style: PwTextStyle.subhead,
         overflow: TextOverflow.ellipsis,
       ),
     );
