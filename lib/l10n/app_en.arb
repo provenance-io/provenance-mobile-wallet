@@ -581,5 +581,8 @@
   },
   "homeScreenMore": "More",
   "transactionResponse": "Response",
-  "walletConnectFailed": "Failed to connect"
+  "walletConnectFailed": "Failed to connect",
+  "viewMoreScreenEcosystem": "Ecosystem",
+  "viewMoreScreenGeneral": "General",
+  "viewMoreScreenInformation": "Information"
 }

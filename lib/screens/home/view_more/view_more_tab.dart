@@ -23,14 +23,13 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
     final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: strings.viewMore,
+        title: strings.homeScreenMore,
         hasIcon: false,
         style: PwTextStyle.footnote,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          VerticalSpacer.large(),
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -41,7 +40,14 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        PwText(
+                          strings.viewMoreScreenEcosystem,
+                          style: PwTextStyle.subhead,
+                          textAlign: TextAlign.start,
+                        ),
+                        VerticalSpacer.large(),
                         _getLink(
                           PwIcons.coinsOutline,
                           strings.staking,
@@ -53,6 +59,18 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           PwIcons.copy,
                           strings.governanceProposals,
                           ProposalsFlow(),
+                        ),
+                        VerticalSpacer.xxLarge(),
+                        PwText(
+                          strings.viewMoreScreenGeneral,
+                          style: PwTextStyle.subhead,
+                          textAlign: TextAlign.start,
+                        ),
+                        VerticalSpacer.large(),
+                        _getLink(
+                          PwIcons.information,
+                          strings.viewMoreScreenInformation,
+                          SettingsScreen(),
                         ),
                         _getLink(
                           PwIcons.gear,
