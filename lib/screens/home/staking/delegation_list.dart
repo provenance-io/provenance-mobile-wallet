@@ -34,100 +34,97 @@ class DelegationListState extends State<DelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
-          StreamBuilder<StakingDetails>(
-              initialData: _bloc.stakingDetails.value,
-              stream: _bloc.stakingDetails,
-              builder: (context, snapshot) {
-                final stakingDetails = snapshot.data;
-                if (stakingDetails == null) {
-                  return Container();
-                }
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.large,
-                    vertical: 20,
-                  ),
-                  controller: _scrollController,
-                  itemBuilder: (context, index) {
-                    if (stakingDetails.delegates.isEmpty) {
-                      return Container();
-                    }
-                    final item = stakingDetails.delegates[index];
-                    final validator = stakingDetails.validators
-                        .where(
-                          (element) => element.addressId == item.sourceAddress,
-                        )
-                        .first;
-
-                    return StakingListItem(
-                      validator: validator,
-                      listItemText: Strings.of(context).displayDelegated(
-                        item.displayDenom,
-                      ),
-                      onTouch: () async {
-                        final account =
-                            await get<AccountService>().getSelectedAccount();
-                        if (account == null) {
-                          return;
-                        }
-                        final rewards = stakingDetails.rewards.firstWhere(
-                            (element) =>
-                                element.validatorAddress ==
-                                validator.addressId);
-                        final response = await Navigator.of(context).push(
-                          StakingFlow(
-                            validator.addressId,
-                            account,
-                            item,
-                            rewards,
-                          ).route(),
-                        );
-                        if (response == true) {
-                          await _bloc.load();
-                        } else if (response == false) {
-                          Navigator.pop(context);
-                          _bloc.onFlowCompletion();
-                        }
-                      },
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return PwListDivider(
-                      color: PwColor.neutral750,
-                    );
-                  },
-                  itemCount: stakingDetails.delegates.length,
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                );
-              }),
-          StreamBuilder<bool>(
-            initialData: _bloc.isLoadingDelegations.value,
-            stream: _bloc.isLoadingDelegations,
+    return Stack(
+      children: [
+        StreamBuilder<StakingDetails>(
+            initialData: _bloc.stakingDetails.value,
+            stream: _bloc.stakingDetails,
             builder: (context, snapshot) {
-              final isLoading = snapshot.data ?? false;
-              if (isLoading) {
-                return Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: SizedBox(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                );
+              final stakingDetails = snapshot.data;
+              if (stakingDetails == null) {
+                return Container();
               }
+              return ListView.separated(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.large,
+                  vertical: 20,
+                ),
+                controller: _scrollController,
+                itemBuilder: (context, index) {
+                  if (stakingDetails.delegates.isEmpty) {
+                    return Container();
+                  }
+                  final item = stakingDetails.delegates[index];
+                  final validator = stakingDetails.validators
+                      .where(
+                        (element) => element.addressId == item.sourceAddress,
+                      )
+                      .first;
 
-              return Container();
-            },
-          ),
-        ],
-      ),
+                  return StakingListItem(
+                    validator: validator,
+                    listItemText: Strings.of(context).displayDelegated(
+                      item.displayDenom,
+                    ),
+                    onTouch: () async {
+                      final account =
+                          await get<AccountService>().getSelectedAccount();
+                      if (account == null) {
+                        return;
+                      }
+                      final rewards = stakingDetails.rewards.firstWhere(
+                          (element) =>
+                              element.validatorAddress == validator.addressId);
+                      final response = await Navigator.of(context).push(
+                        StakingFlow(
+                          validator.addressId,
+                          account,
+                          item,
+                          rewards,
+                        ).route(),
+                      );
+                      if (response == true) {
+                        await _bloc.load();
+                      } else if (response == false) {
+                        Navigator.pop(context);
+                        _bloc.onFlowCompletion();
+                      }
+                    },
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return PwListDivider(
+                    color: PwColor.neutral750,
+                  );
+                },
+                itemCount: stakingDetails.delegates.length,
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+              );
+            }),
+        StreamBuilder<bool>(
+          initialData: _bloc.isLoadingDelegations.value,
+          stream: _bloc.isLoadingDelegations,
+          builder: (context, snapshot) {
+            final isLoading = snapshot.data ?? false;
+            if (isLoading) {
+              return Positioned(
+                bottom: 0,
+                left: 0,
+                child: SizedBox(
+                  height: 80,
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+            }
+
+            return Container();
+          },
+        ),
+      ],
     );
   }
 
