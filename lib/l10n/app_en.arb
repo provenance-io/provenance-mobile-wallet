@@ -587,5 +587,19 @@
   "viewMoreScreenInformation": "Information",
   "informationScreenAbout": "About",
   "informationScreenDocumentation": "Documentation",
-  "settingsScreenPreferences": "Preferences"
+  "settingsScreenPreferences": "Preferences",
+  "settingsScreenVersion": "Version {version} ({buildNumber})",
+  "@settingsScreenVersion": {
+    "description": "Displays the version of the app",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.3"
+      },
+      "buildNumber": {
+        "type": "String",
+        "example": "894"
+      }
+    }
+  }
 }

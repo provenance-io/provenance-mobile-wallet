@@ -13,6 +13,7 @@ import 'package:provenance_wallet/screens/home/settings/future_toggle_item.dart'
 import 'package:provenance_wallet/screens/home/settings/link_item.dart';
 import 'package:provenance_wallet/screens/home/settings/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/config_service/local_config.dart';
 import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -53,6 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
+    final config = get<LocalConfig>();
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.neutral750,
@@ -233,6 +235,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 _divider,
+                VerticalSpacer.largeX3(),
+                Center(
+                  child: Text(
+                    strings.settingsScreenVersion(
+                      config.version,
+                      config.buildNumber,
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'OverpassMono',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
