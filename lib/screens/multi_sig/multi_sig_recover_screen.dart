@@ -103,6 +103,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                   Expanded(
                     child: SizedBox(),
                   ),
+                  VerticalSpacer.large(),
                   PwButton(
                     child: PwText(Strings.of(context).next),
                     enabled: selectedData != null,
