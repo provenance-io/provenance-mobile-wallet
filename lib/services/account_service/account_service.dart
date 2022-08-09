@@ -6,6 +6,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef WalletConnectionProvider = WalletConnection Function(
@@ -243,7 +244,16 @@ class AccountService implements Disposable {
   }
 
   Future<List<Account>> resetAccounts() async {
-    final accounts = await _storage.getAccounts();
+    var accounts = <Account>[];
+
+    try {
+      accounts = await _storage.getAccounts();
+    } catch (e) {
+      logError(
+        'Failed to get accounts',
+        error: e,
+      );
+    }
 
     final success = await _storage.removeAllAccounts();
     if (success) {
