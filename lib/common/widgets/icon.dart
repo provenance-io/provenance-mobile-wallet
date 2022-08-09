@@ -37,6 +37,7 @@ class PwIcons {
   static const String coinsOutline = "coins_outline";
   static const String gear = "gear";
   static const String sort = "sort";
+  static const String information = "information";
 }
 
 class PwIcon extends StatelessWidget {
