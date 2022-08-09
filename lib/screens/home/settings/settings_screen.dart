@@ -70,7 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leadingIcon: PwIcons.back,
                   ),
                 ),
-                CategoryLabel(strings.security),
+                CategoryLabel(
+                  strings.settingsScreenPreferences,
+                ),
                 _divider,
                 FutureBuilder<BiometryType>(
                   future: get<CipherService>().getBiometryType(),
@@ -146,22 +148,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (shouldReset) {
                       await get<HomeBloc>().resetAccounts();
                     }
-                  },
-                ),
-                _divider,
-                CategoryLabel(strings.general),
-                _divider,
-                LinkItem(
-                  text: strings.aboutProvenanceBlockchain,
-                  onTap: () {
-                    launchUrl('https://provenance.io/');
-                  },
-                ),
-                _divider,
-                LinkItem(
-                  text: strings.moreInformation,
-                  onTap: () {
-                    launchUrl('https://docs.provenance.io/');
                   },
                 ),
                 _divider,

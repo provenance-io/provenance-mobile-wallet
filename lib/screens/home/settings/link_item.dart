@@ -7,12 +7,14 @@ class LinkItem extends StatelessWidget {
     required this.text,
     required this.onTap,
     this.count,
+    this.icon,
     Key? key,
   }) : super(key: key);
 
   final String text;
   final void Function() onTap;
   final int? count;
+  final String? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +39,9 @@ class LinkItem extends StatelessWidget {
                   right: Spacing.large,
                 ),
                 child: PwIcon(
-                  PwIcons.caret,
+                  icon ?? PwIcons.caret,
                   color: Theme.of(context).colorScheme.neutralNeutral,
-                  size: 10,
+                  size: icon != null ? null : 10,
                 ),
               ),
             ),

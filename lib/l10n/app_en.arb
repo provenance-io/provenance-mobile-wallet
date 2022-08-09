@@ -51,7 +51,7 @@
   "security": "Security",
   "pinCode": "Pin Code",
   "general": "General",
-  "aboutProvenanceBlockchain": "About Provenance Blockchain",
+  "provenanceBlockchain": "Provenance Blockchain",
   "moreInformation": "More Information",
   "resetAccounts": "Reset Accounts",
   "resetAccountsAreYouSure": "Are you sure you wish to reset all accounts?",
@@ -584,5 +584,8 @@
   "walletConnectFailed": "Failed to connect",
   "viewMoreScreenEcosystem": "Ecosystem",
   "viewMoreScreenGeneral": "General",
-  "viewMoreScreenInformation": "Information"
+  "viewMoreScreenInformation": "Information",
+  "informationScreenAbout": "About",
+  "informationScreenDocumentation": "Documentation",
+  "settingsScreenPreferences": "Preferences"
 }
