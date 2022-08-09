@@ -74,8 +74,8 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
     }
 
     FirebaseMessaging.onMessage.listen(_onMessage);
-    FirebaseMessaging.onBackgroundMessage(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage);
+    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
   }
 
   Future<void> _onMessage(RemoteMessage message) async {
@@ -84,5 +84,17 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
     // 2. Transform RemoteMessage to that message
     // 3. Expose via a stream on this class
     logDebug('Received firebase message: $message');
+  }
+
+  ///
+  /// This method runs in its own isolate outside the application context, so
+  /// it is not possible to update application state or execute any UI
+  /// impacting logic.
+  ///
+  /// See https://firebase.flutter.dev/docs/messaging/usage/#background-messages
+  ///
+  static Future<void> _onBackgroundMessage(RemoteMessage message) async {
+    Log.instance.debug('Received firebase message: $message',
+        tag: '$DefaultRemoteNotificationService');
   }
 }
