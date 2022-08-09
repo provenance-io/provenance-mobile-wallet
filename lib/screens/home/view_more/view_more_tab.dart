@@ -1,9 +1,9 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
+import 'package:provenance_wallet/screens/home/settings/information_screen.dart';
 import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
-import 'package:provenance_wallet/screens/home/view_more/information_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ViewMoreTab extends StatefulWidget {
