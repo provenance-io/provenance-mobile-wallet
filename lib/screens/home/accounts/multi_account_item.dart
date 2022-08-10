@@ -84,11 +84,11 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 kind: widget._initialAccount.kind,
                 isSelected: _isSelected,
               ),
-              if (_account.publicKey != null)
+              if (_account.coin != null)
                 AccountNetworkRow(
-                  coin: _account.publicKey!.coin,
+                  coin: _account.coin!,
                 ),
-              if (widget._initialAccount.publicKey == null)
+              if (widget._initialAccount.address == null)
                 PwText(
                   Strings.of(context).accountStatusPending,
                   style: PwTextStyle.bodySmall,
@@ -191,7 +191,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       case MenuOperation.copy:
         await Clipboard.setData(
           ClipboardData(
-            text: item.publicKey!.address,
+            text: item.address!,
           ),
         );
         ScaffoldMessenger.of(context).showSnackBar(

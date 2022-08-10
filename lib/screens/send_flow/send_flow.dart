@@ -21,7 +21,7 @@ import 'package:provenance_wallet/util/strings.dart';
 class SendFlow extends FlowBase {
   const SendFlow(this.accountDetails, {Key? key}) : super(key: key);
 
-  final Account accountDetails;
+  final TransactableAccount accountDetails;
   @override
   State<StatefulWidget> createState() => SendFlowState();
 }
@@ -35,11 +35,12 @@ class SendFlowState extends FlowBaseState<SendFlow>
   void initState() {
     super.initState();
     get.registerLazySingleton<SendBloc>(() {
-      final publicKey = widget.accountDetails.publicKey!;
+      final address = widget.accountDetails.address;
+      final coin = widget.accountDetails.coin;
 
       return SendBloc(
-        publicKey.coin,
-        publicKey.address,
+        coin,
+        address,
         get<AssetService>(),
         get<PriceService>(),
         get<TransactionService>(),
@@ -95,7 +96,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   Future<String?> scanAddress() {
     return showPage((context) => QRCodeScanner(
           isValidCallback: (input) {
-            switch (widget.accountDetails.publicKey!.coin) {
+            switch (widget.accountDetails.coin) {
               case Coin.mainNet:
                 return Future.value(
                   input.isNotEmpty && input.startsWith("pb1"),

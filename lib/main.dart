@@ -467,14 +467,14 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     final accounts = await accountService.getAccounts();
     for (var account in accounts) {
-      final address = account.publicKey?.address;
+      final address = account.address;
       if (address != null) {
         await remoteNotificationService.registerForPushNotifications(address);
       }
     }
 
     accountService.events.added.listen((e) {
-      final address = e.publicKey?.address;
+      final address = e.address;
       if (address != null) {
         remoteNotificationService.registerForPushNotifications(address).onError(
               (error, stackTrace) => logDebug(
@@ -486,7 +486,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     accountService.events.removed.listen((e) {
       for (var account in e) {
-        final address = account.publicKey?.address;
+        final address = account.address;
         if (address != null) {
           remoteNotificationService
               .unregisterForPushNotifications(address)
@@ -500,7 +500,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     }).addTo(_subscriptions);
 
     accountService.events.updated.listen((e) {
-      final address = e.publicKey?.address;
+      final address = e.address;
       if (address != null && !remoteNotificationService.isRegistered(address)) {
         remoteNotificationService.registerForPushNotifications(address).onError(
               (error, stackTrace) => logDebug(
@@ -520,23 +520,21 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final accounts = await accountService.getAccounts();
     final pendingAccounts = accounts
         .whereType<MultiAccount>()
-        .where((e) => e.publicKey == null)
+        .where((e) => e.address == null)
         .toList();
 
     for (var pendingAccount in pendingAccounts) {
       final remoteAccount = await multiSigService.getAccount(
         remoteId: pendingAccount.remoteId,
-        signerPublicKey: pendingAccount.linkedAccount.publicKey,
+        signerAddress: pendingAccount.linkedAccount.address,
       );
 
       if (remoteAccount != null) {
-        final isActive = !remoteAccount.signers.any((e) => e.publicKey == null);
-        if (isActive) {
-          final publicKeys =
-              remoteAccount.signers.map((e) => e.publicKey!).toList();
+        final address = remoteAccount.address;
+        if (address != null) {
           final account = await accountService.activateMultiAccount(
             id: pendingAccount.id,
-            publicKeys: publicKeys,
+            address: address,
           );
 
           if (account == null) {
@@ -631,7 +629,7 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
         final details = await accountStorageService.addAccount(
           name: account.name,
           privateKeys: privateKeys,
-          selectedCoin: account.publicKey!.coin,
+          selectedCoin: account.coin!,
         );
 
         if (details != null) {

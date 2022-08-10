@@ -135,7 +135,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
 
     for (var basicAccount in basicAccounts) {
       final remoteAccounts = await multiSigService.getAccounts(
-        publicKey: basicAccount.publicKey,
+        address: basicAccount.address,
       );
 
       if (remoteAccounts == null) {

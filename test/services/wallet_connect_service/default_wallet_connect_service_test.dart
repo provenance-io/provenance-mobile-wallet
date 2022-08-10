@@ -27,7 +27,8 @@ class MockAccountServiceEvents implements AccountServiceEvents {
   final addedStreamController = StreamController<Account>();
   final removeStreamController = StreamController<List<Account>>();
   final updatedStreamController = StreamController<Account>();
-  final selectedStreamController = BehaviorSubject<Account?>.seeded(null);
+  final selectedStreamController =
+      BehaviorSubject<TransactableAccount?>.seeded(null);
 
   @override
   Stream<Account> get added => addedStreamController.stream;
@@ -36,7 +37,8 @@ class MockAccountServiceEvents implements AccountServiceEvents {
   @override
   Stream<Account> get updated => updatedStreamController.stream;
   @override
-  ValueStream<Account?> get selected => selectedStreamController.stream;
+  ValueStream<TransactableAccount?> get selected =>
+      selectedStreamController.stream;
 
   @override
   void clear() {
@@ -108,8 +110,6 @@ void main() {
 
   late MockAccountServiceEvents accountServiceEvents;
   late MockConnectionFactory mockConnectionFactory;
-
-  late WalletConnectionDelegate capturedDelegate;
 
   final BehaviorSubject<AuthStatus> _authStatus =
       BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);

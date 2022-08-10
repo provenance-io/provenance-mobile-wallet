@@ -1,8 +1,3 @@
-enum SembastAccountStatus {
-  pending,
-  ready,
-}
-
 class SembastPublicKeyModel {
   SembastPublicKeyModel({
     required this.hex,
@@ -31,19 +26,16 @@ class SembastAccountModel {
     required this.publicKeys,
     required this.selectedChainId,
     required this.linkedAccountIds,
-    this.status = SembastAccountStatus.ready,
   });
 
   final String name;
   final List<SembastPublicKeyModel> publicKeys;
 
-  final SembastAccountStatus status;
   final String selectedChainId;
   final List<String> linkedAccountIds;
 
   Map<String, dynamic> toRecord() => {
         'name': name,
-        'status': status.name,
         'publicKeys': publicKeys.map((e) => e.toRecord()).toList(),
         'selectedChainId': selectedChainId,
         'linkedAccountIds': linkedAccountIds,
@@ -52,7 +44,6 @@ class SembastAccountModel {
   factory SembastAccountModel.fromRecord(Map<String, dynamic> rec) =>
       SembastAccountModel(
         name: rec['name'] as String,
-        status: SembastAccountStatus.values.byName(rec['status'] as String),
         publicKeys: (rec['publicKeys'] as List<dynamic>)
             .map((e) => SembastPublicKeyModel.fromRecord(e))
             .toList(),
@@ -68,7 +59,6 @@ class SembastAccountModel {
     List<SembastPublicKeyModel>? publicKeys,
     String? selectedChainId,
     List<String>? linkedAccountIds,
-    SembastAccountStatus? status,
   }) =>
       SembastAccountModel(
         name: name ?? this.name,
@@ -81,42 +71,36 @@ class SembastAccountModel {
 class SembastMultiAccountModel {
   SembastMultiAccountModel({
     required this.name,
-    required this.publicKeys,
-    required this.selectedChainId,
     required this.linkedAccountId,
     required this.remoteId,
     required this.cosignerCount,
     required this.signaturesRequired,
     required this.inviteIds,
+    this.address,
   });
 
   final String name;
-  final List<SembastPublicKeyModel> publicKeys;
-  final String selectedChainId;
+
   final String linkedAccountId;
   final String remoteId;
   final int cosignerCount;
   final int signaturesRequired;
   final List<String> inviteIds;
+  final String? address;
 
   Map<String, dynamic> toRecord() => {
         'name': name,
-        'publicKeys': publicKeys.map((e) => e.toRecord()).toList(),
-        'selectedChainId': selectedChainId,
         'linkedAccountId': linkedAccountId,
         'remoteId': remoteId,
         'cosignerCount': cosignerCount,
         'signaturesRequired': signaturesRequired,
         'inviteIds': inviteIds,
+        'address': address,
       };
 
   factory SembastMultiAccountModel.fromRecord(Map<String, dynamic> rec) =>
       SembastMultiAccountModel(
         name: rec['name'] as String,
-        publicKeys: (rec['publicKeys'] as List<dynamic>)
-            .map((e) => SembastPublicKeyModel.fromRecord(e))
-            .toList(),
-        selectedChainId: rec['selectedChainId'] as String,
         linkedAccountId: rec['linkedAccountId'] as String,
         remoteId: rec['remoteId'] as String,
         cosignerCount: rec['cosignerCount'] as int,
@@ -125,18 +109,17 @@ class SembastMultiAccountModel {
                 ?.map((e) => e as String)
                 .toList() ??
             [],
+        address: rec['address'] as String?,
       );
 
   SembastMultiAccountModel copyWith({
     String? name,
-    List<SembastPublicKeyModel>? publicKeys,
     String? selectedChainId,
-    SembastAccountStatus? status,
+    String? address,
   }) =>
       SembastMultiAccountModel(
         name: name ?? this.name,
-        publicKeys: publicKeys ?? this.publicKeys,
-        selectedChainId: selectedChainId ?? this.selectedChainId,
+        address: address ?? this.address,
         linkedAccountId: linkedAccountId,
         remoteId: remoteId,
         cosignerCount: cosignerCount,

@@ -29,27 +29,6 @@ final txRaw = TxRaw();
 final txResponse = TxResponse(code: 0, height: $fixnum.Int64(123));
 final rawResponse = RawTxResponsePair(txRaw, txResponse);
 
-Matcher _baseSignReqMatcher(
-  BaseAccount baseAccount,
-  wallet.PublicKey publicKey, [
-  int offset = 0,
-]) {
-  return predicate((arg) {
-    final reqSigner = arg as BaseReqSigner;
-    expect(reqSigner.baseAccount, baseAccount);
-    expect(reqSigner.sequenceOffset, offset);
-
-    final signer = reqSigner.signer;
-    expect(signer.address, publicKey.address);
-    expect(
-      signer.pubKey.compressedPublicKey,
-      publicKey.compressedPublicKey,
-    );
-
-    return true;
-  });
-}
-
 Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
   return predicate((arg) {
     final walletEstimate = arg as AccountGasEstimate;
@@ -60,25 +39,6 @@ Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
       walletEstimate.feeCalculated!.length,
       1,
     ); // the 1 coin is calculated
-
-    return true;
-  });
-}
-
-Matcher _baseReqMatcher(
-  wallet.Coin coin,
-  TxBody txBody,
-  BaseAccount baseAccount,
-  wallet.PublicKey publicKey,
-) {
-  return predicate((arg) {
-    final baseReq = arg as BaseReq;
-    expect(baseReq.chainId, ChainId.forCoin(coin));
-    expect(baseReq.feeGranter, null);
-    expect(baseReq.body, txBody);
-    expect(baseReq.signers, [
-      _baseSignReqMatcher(baseAccount, publicKey),
-    ]);
 
     return true;
   });
@@ -108,6 +68,12 @@ main() {
     when(mockPbClient!.estimateTx(any))
         .thenAnswer((_) => Future.value(gasEstimate));
 
+    when(mockPbClient!.estimateTransactionFees(any, any))
+        .thenAnswer((_) => Future.value(gasEstimate));
+
+    when(mockPbClient!.broadcastTransaction(any, any, any, any))
+        .thenAnswer((_) async => rawResponse);
+
     when(mockGasFeeService!.getGasFee(wallet.Coin.testNet))
         .thenAnswer((_) => Future.value(gasFee));
 
@@ -125,47 +91,18 @@ main() {
 
   group("estimateGas", () {
     test("success", () async {
-      final walletEstimate = await transHandler!.estimateGas(txBody, publicKey);
+      final walletEstimate =
+          await transHandler!.estimateGas(txBody, publicKey.address);
       expect(walletEstimate, _walletEstimateMatcher(gasEstimate, gasFee));
-    });
-
-    test("calls", () async {
-      await transHandler!.estimateGas(txBody, publicKey);
-      verify(mockPbClient!.getBaseAccount(publicKey.address));
-      final req = verify(mockPbClient!.estimateTx(captureAny)).captured.first
-          as BaseReq;
-
-      expect(
-        req,
-        _baseReqMatcher(
-          coin,
-          txBody,
-          baseAccount,
-          publicKey,
-        ),
-      );
-    });
-
-    test("error while calling get base account", () async {
-      final exception = Exception("A");
-      when(mockPbClient!.getBaseAccount(any))
-          .thenAnswer((_) => Future.error(exception));
-
-      expect(
-        () => transHandler!.estimateGas(txBody, publicKey),
-        throwsA(exception),
-      );
-
-      verifyZeroInteractions(mockGasFeeService!);
     });
 
     test("error while calling estimateTx", () async {
       final exception = Exception("A");
-      when(mockPbClient!.estimateTx(any))
+      when(mockPbClient!.estimateTransactionFees(any, any))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.estimateGas(txBody, publicKey),
+        () => transHandler!.estimateGas(txBody, publicKey.address),
         throwsA(exception),
       );
       verifyZeroInteractions(mockGasFeeService!);
@@ -177,7 +114,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.estimateGas(txBody, publicKey),
+        () => transHandler!.estimateGas(txBody, publicKey.address),
         throwsA(exception),
       );
     });
@@ -189,44 +126,6 @@ main() {
           await transHandler!.executeTransaction(txBody, privateKey);
 
       expect(response, rawResponse);
-    });
-
-    test("calls", () async {
-      await transHandler!.executeTransaction(txBody, privateKey);
-
-      verify(mockPbClient!.getBaseAccount(publicKey.address));
-      final req = verify(mockPbClient!.estimateTx(captureAny)).captured.first
-          as BaseReq;
-
-      expect(
-        req,
-        _baseReqMatcher(
-          coin,
-          txBody,
-          baseAccount,
-          publicKey,
-        ),
-      );
-
-      final captures = verify(mockPbClient!.broadcastTx(
-        captureAny,
-        captureAny,
-        BroadcastMode.BROADCAST_MODE_BLOCK,
-      )).captured;
-
-      final baseReq = captures[0] as BaseReq;
-      expect(
-        baseReq,
-        _baseReqMatcher(
-          coin,
-          txBody,
-          baseAccount,
-          publicKey,
-        ),
-      );
-
-      final walletEstimate = captures[1] as AccountGasEstimate;
-      expect(walletEstimate, _walletEstimateMatcher(gasEstimate, gasFee));
     });
 
     test("calls - with gas estimate", () async {
@@ -244,22 +143,9 @@ main() {
       verifyNever(mockPbClient!.estimateTx(any));
     });
 
-    test("error while calling get base account", () async {
-      final exception = Exception("A");
-      when(mockPbClient!.getBaseAccount(any))
-          .thenAnswer((_) => Future.error(exception));
-
-      expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
-        throwsA(exception),
-      );
-
-      verifyZeroInteractions(mockGasFeeService!);
-    });
-
     test("error while calling estimateTx", () async {
       final exception = Exception("A");
-      when(mockPbClient!.estimateTx(any))
+      when(mockPbClient!.estimateTransactionFees(any, any))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -282,7 +168,8 @@ main() {
 
     test("error while broadcasting", () async {
       final exception = Exception("A");
-      when(mockPbClient!.broadcastTx(
+      when(mockPbClient!.broadcastTransaction(
+        any,
         any,
         any,
         any,

@@ -171,7 +171,7 @@ class AddAccountFlowBloc implements Disposable {
   AccountAddKind? _addKind;
 
   BiometryType? _biometryType;
-  Account? _multiSigLinkedAccount;
+  BasicAccount? _multiSigLinkedAccount;
   Account? _createdAccount;
   String? _inviteId;
   MultiSigRemoteAccount? _multiSigRemoteAccount;
@@ -533,7 +533,7 @@ class AddAccountFlowBloc implements Disposable {
     return success;
   }
 
-  void submitMultiSigConnect(Account? account) {
+  void submitMultiSigConnect(BasicAccount? account) {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
@@ -554,6 +554,7 @@ class AddAccountFlowBloc implements Disposable {
       cosignerCount: account.signers.length,
       signaturesRequired: account.signersRequired,
       inviteIds: account.signers.map((e) => e.inviteId).toList(),
+      address: account.address,
     );
 
     _navigator.endFlow(multiAccount);
@@ -582,7 +583,7 @@ class AddAccountFlowBloc implements Disposable {
 
     final registration = await _multiSigService.create(
       name: _multiSigName.value,
-      publicKey: _multiSigLinkedAccount!.publicKey!,
+      publicKey: _multiSigLinkedAccount!.publicKey,
       cosignerCount: _multiSigCosignerCount.value.value,
       threshold: _multiSigSignatureCount.value.value,
     );
@@ -592,7 +593,7 @@ class AddAccountFlowBloc implements Disposable {
     if (registration != null) {
       final account = await _accountService.addMultiAccount(
         name: _multiSigName.value,
-        coin: _multiSigLinkedAccount!.publicKey!.coin,
+        coin: _multiSigLinkedAccount!.coin,
         remoteId: registration.remoteId,
         inviteIds: registration.signers.map((e) => e.inviteId).toList(),
         linkedAccountId: _multiSigLinkedAccount!.id,

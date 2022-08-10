@@ -8,6 +8,7 @@ class MultiSigRemoteAccount {
     required this.signers,
     required this.signersRequired,
     required this.coin,
+    this.address,
   });
 
   final String remoteId;
@@ -15,4 +16,5 @@ class MultiSigRemoteAccount {
   final List<MultiSigSigner> signers;
   final int signersRequired;
   final Coin coin;
+  final String? address;
 }

@@ -57,7 +57,7 @@ class ProposalsFlow extends FlowBase {
 
 class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     implements ProposalsFlowNavigator {
-  late Account _account;
+  late TransactableAccount _account;
   @override
   void initState() {
     _account = get<AccountService>().events.selected.value!;

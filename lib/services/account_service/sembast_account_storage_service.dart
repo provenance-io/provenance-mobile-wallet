@@ -309,15 +309,18 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<Account?> selectAccount({
+  Future<TransactableAccount?> selectAccount({
     String? id,
   }) async {
     final db = await _db;
 
-    Account? account;
+    TransactableAccount? account;
 
     if (id != null) {
-      account = await getAccount(id: id);
+      final candidate = await getAccount(id: id);
+      if (candidate is TransactableAccount) {
+        account = candidate;
+      }
     }
 
     var success = false;
@@ -391,17 +394,17 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    String? address,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
       name: name,
-      publicKeys: [],
-      selectedChainId: selectedChainId,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
+      address: address,
     );
 
     final id = await db.transaction((tx) async {
@@ -439,9 +442,9 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<MultiAccount?> setMultiAccountPublicKeys({
+  Future<MultiAccount?> setMultiAccountAddress({
     required String id,
-    required List<PublicKey> publicKeys,
+    required String address,
   }) async {
     final db = await _db;
     final ref = _multiAccounts.record(id);
@@ -449,7 +452,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     if (rec != null) {
       final model = v1.SembastMultiAccountModel.fromRecord(rec);
       final updatedModel = model.copyWith(
-        publicKeys: _toSembastPublicKeys(publicKeys),
+        address: address,
       );
 
       await ref.update(db, updatedModel.toRecord());
@@ -514,42 +517,29 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
   Future<MultiAccount> _toMulti(String id, Map<String, Object?> value) async {
     final model = v1.SembastMultiAccountModel.fromRecord(value);
-    final chainId = model.selectedChainId;
 
     final linkedAccount = await getBasicAccount(id: model.linkedAccountId);
 
-    PublicKey? publicKey;
-
-    if (model.publicKeys.isNotEmpty) {
-      final selectedKey = model.publicKeys
-          .firstWhere((e) => e.chainId == model.selectedChainId);
-
-      final coin = ChainId.toCoin(chainId);
-      final hex = selectedKey.hex;
-      publicKey = PublicKey.fromCompressPublicHex(
-          convert.hex.decoder.convert(hex), coin);
-    }
-
-    return publicKey != null
+    return model.address != null
         ? MultiTransactableAccount(
             id: id,
             name: model.name,
-            publicKey: publicKey,
             linkedAccount: linkedAccount!,
             remoteId: model.remoteId,
             cosignerCount: model.cosignerCount,
             signaturesRequired: model.signaturesRequired,
             inviteIds: model.inviteIds,
+            address: model.address!,
           )
         : MultiAccount(
             id: id,
             name: model.name,
-            publicKey: publicKey,
             linkedAccount: linkedAccount!,
             remoteId: model.remoteId,
             cosignerCount: model.cosignerCount,
             signaturesRequired: model.signaturesRequired,
             inviteIds: model.inviteIds,
+            address: model.address,
           );
   }
 

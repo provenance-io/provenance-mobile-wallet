@@ -1,4 +1,3 @@
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
@@ -21,11 +20,12 @@ abstract class AccountStorageServiceCore {
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    String? address,
   });
 
-  Future<MultiAccount?> setMultiAccountPublicKeys({
+  Future<MultiAccount?> setMultiAccountAddress({
     required String id,
-    required List<PublicKey> publicKeys,
+    required String address,
   });
 
   Future<Account?> getAccount({
@@ -59,7 +59,7 @@ abstract class AccountStorageServiceCore {
     required String name,
   });
 
-  Future<Account?> selectAccount({
+  Future<TransactableAccount?> selectAccount({
     String? id,
   });
 

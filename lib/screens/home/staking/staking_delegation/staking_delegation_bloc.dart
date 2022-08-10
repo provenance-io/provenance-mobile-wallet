@@ -31,7 +31,7 @@ class StakingDelegationBloc extends Disposable {
     required final DetailedValidator validator,
     final String commissionRate = "",
     required final SelectedDelegationType selectedDelegationType,
-    required Account account,
+    required TransactableAccount account,
   })  : _account = account,
         _stakingDelegationDetails = BehaviorSubject.seeded(
           StakingDelegationDetails(
@@ -46,7 +46,7 @@ class StakingDelegationBloc extends Disposable {
           ),
         );
 
-  final Account _account;
+  final TransactableAccount _account;
   ValueStream<StakingDelegationDetails> get stakingDelegationDetails =>
       _stakingDelegationDetails;
 
@@ -56,9 +56,9 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<void> load() async {
-    final asset = (await get<AssetService>()
-            .getAssets(_account.publicKey!.coin, _account.publicKey!.address))
-        .firstWhere((element) => element.denom == 'nhash');
+    final asset =
+        (await get<AssetService>().getAssets(_account.coin, _account.address))
+            .firstWhere((element) => element.denom == 'nhash');
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
@@ -124,7 +124,7 @@ class StakingDelegationBloc extends Disposable {
         denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
-      delegatorAddress: _account.publicKey!.address,
+      delegatorAddress: _account.address,
       validatorAddress: details.validator.operatorAddress,
     );
   }
@@ -136,7 +136,7 @@ class StakingDelegationBloc extends Disposable {
         denom: details.asset?.denom ?? nHashDenom,
         amount: hashToNHash(details.hashDelegated).toString(),
       ),
-      delegatorAddress: _account.publicKey!.address,
+      delegatorAddress: _account.address,
       validatorAddress: details.validator.operatorAddress,
     );
   }
@@ -144,7 +144,7 @@ class StakingDelegationBloc extends Disposable {
   MsgWithdrawDelegatorReward _getClaimRewardMessage() {
     final details = _stakingDelegationDetails.value;
     return MsgWithdrawDelegatorReward(
-      delegatorAddress: _account.publicKey!.address,
+      delegatorAddress: _account.address,
       validatorAddress: details.validator.operatorAddress,
     );
   }
@@ -194,7 +194,7 @@ class StakingDelegationBloc extends Disposable {
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey!);
+        .estimateGas(body, _account.address);
   }
 }
 

@@ -54,7 +54,6 @@ class MockAccountStorageServiceCore extends _i1.Mock
   @override
   _i3.Future<_i4.MultiAccount?> addMultiAccount(
           {String? name,
-          List<_i6.PublicKey>? publicKeys,
           String? selectedChainId,
           String? linkedAccountId,
           String? remoteId,
@@ -64,7 +63,6 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
-                #publicKeys: publicKeys,
                 #selectedChainId: selectedChainId,
                 #linkedAccountId: linkedAccountId,
                 #remoteId: remoteId,
@@ -72,6 +70,14 @@ class MockAccountStorageServiceCore extends _i1.Mock
                 #signaturesRequired: signaturesRequired,
                 #inviteIds: inviteIds
               }),
+              returnValue: Future<_i4.MultiAccount?>.value())
+          as _i3.Future<_i4.MultiAccount?>);
+  @override
+  _i3.Future<_i4.MultiAccount?> setMultiAccountPublicKeys(
+          {String? id, List<_i6.PublicKey>? publicKeys}) =>
+      (super.noSuchMethod(
+              Invocation.method(#setMultiAccountPublicKeys, [],
+                  {#id: id, #publicKeys: publicKeys}),
               returnValue: Future<_i4.MultiAccount?>.value())
           as _i3.Future<_i4.MultiAccount?>);
   @override
@@ -125,9 +131,10 @@ class MockAccountStorageServiceCore extends _i1.Mock
               returnValue: Future<_i4.Account?>.value())
           as _i3.Future<_i4.Account?>);
   @override
-  _i3.Future<_i4.Account?> selectAccount({String? id}) => (super.noSuchMethod(
-      Invocation.method(#selectAccount, [], {#id: id}),
-      returnValue: Future<_i4.Account?>.value()) as _i3.Future<_i4.Account?>);
+  _i3.Future<_i4.TransactableAccount?> selectAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
+              returnValue: Future<_i4.TransactableAccount?>.value())
+          as _i3.Future<_i4.TransactableAccount?>);
   @override
   _i3.Future<_i4.Account?> setChainId({String? id, String? chainId}) =>
       (super.noSuchMethod(

@@ -74,6 +74,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    String? address,
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
@@ -83,19 +84,20 @@ class AccountStorageServiceImp implements AccountStorageService {
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
+      address: address,
     );
 
     return details;
   }
 
   @override
-  Future<MultiAccount?> setMultiAccountPublicKeys({
+  Future<MultiAccount?> setMultiAccountAddress({
     required String id,
-    required List<PublicKey> publicKeys,
+    required String address,
   }) {
-    return _serviceCore.setMultiAccountPublicKeys(
+    return _serviceCore.setMultiAccountAddress(
       id: id,
-      publicKeys: publicKeys,
+      address: address,
     );
   }
 
@@ -176,7 +178,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }
 
   @override
-  Future<Account?> selectAccount({String? id}) {
+  Future<TransactableAccount?> selectAccount({String? id}) {
     return _serviceCore.selectAccount(id: id);
   }
 

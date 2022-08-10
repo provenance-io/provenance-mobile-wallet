@@ -17,7 +17,7 @@ class ProposalWeightedVoteScreen extends StatefulWidget {
   }) : super(key: key);
 
   final Proposal proposal;
-  final Account account;
+  final TransactableAccount account;
 
   @override
   State<StatefulWidget> createState() => _ProposalDetailsScreenState();

@@ -1,5 +1,4 @@
 import 'package:decimal/decimal.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
@@ -15,7 +14,6 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -27,7 +25,7 @@ class StakingDelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
 
   final String commissionRate;
-  final Account account;
+  final TransactableAccount account;
 
   const StakingDelegationScreen({
     Key? key,

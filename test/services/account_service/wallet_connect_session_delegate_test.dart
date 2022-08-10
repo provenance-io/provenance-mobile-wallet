@@ -218,8 +218,8 @@ void main() {
       verify(mockTransactionHandler.estimateGas(argThat(predicate((arg) {
         return true;
       })), argThat(predicate((arg) {
-        final pubKey = arg as PublicKey;
-        expect(pubKey.compressedPublicKey, publicKey.compressedPublicKey);
+        final address = arg as String;
+        expect(address, publicKey.address);
         return true;
       }))));
     });
