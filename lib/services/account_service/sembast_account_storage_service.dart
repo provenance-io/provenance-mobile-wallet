@@ -554,12 +554,13 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   List<v1.SembastPublicKeyModel> _toSembastPublicKeys(
-      List<PublicKey> publicKeys) {
+      List<PublicKey>? publicKeys) {
     return publicKeys
-        .map((e) => v1.SembastPublicKeyModel(
-              hex: e.compressedPublicKeyHex,
-              chainId: ChainId.forCoin(e.coin),
-            ))
-        .toList();
+            ?.map((e) => v1.SembastPublicKeyModel(
+                  hex: e.compressedPublicKeyHex,
+                  chainId: ChainId.forCoin(e.coin),
+                ))
+            .toList() ??
+        [];
   }
 }
