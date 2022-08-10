@@ -1,5 +1,7 @@
 # Provenance Blockchain Wallet
 
+[![Build Status](https://app.bitrise.io/app/34e1626b80bd4a4a/status.svg?token=blq-C_Myaf2eKN9pK0MaIQ&branch=master)](https://app.bitrise.io/app/34e1626b80bd4a4a)
+
 Harness the power of distributed apps built on the Provenance Blockchain. The Provenance Blockchain Wallet connects you to the world of decentralized financial services within the Provenance Blockchain ecosystem.
 
 Provenance Blockchain facilitates the establishment of an ecosystem that garners participation amongst financial functions including asset originators, fund managers, servicers, banks, and investors.
