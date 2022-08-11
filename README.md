@@ -1,7 +1,5 @@
 # Provenance Blockchain Wallet
 
-[![Build Status](https://app.bitrise.io/app/34e1626b80bd4a4a/status.svg?token=blq-C_Myaf2eKN9pK0MaIQ&branch=master)](https://app.bitrise.io/app/34e1626b80bd4a4a)
-
 Harness the power of distributed apps built on the Provenance Blockchain. The Provenance Blockchain Wallet connects you to the world of decentralized financial services within the Provenance Blockchain ecosystem.
 
 Provenance Blockchain facilitates the establishment of an ecosystem that garners participation amongst financial functions including asset originators, fund managers, servicers, banks, and investors.
@@ -9,6 +7,9 @@ Provenance Blockchain facilitates the establishment of an ecosystem that garners
 The Provenance Blockchain Wallet provides users in all categories the ability to hold and exchange HASH, the native token on the Provenance Blockchain, and connect to next generation financial service dApps powered by blockchain through a simple QR scanning process.
 
 Using biometrics and on-device secured enclaves, the Provenance Blockchain Wallet provides users with a secure, efficient, and robust self-custody key solution.  With the Provenance Blockchain Wallet you control your keys, you authorize dApps to connect with your wallet, and you sign all Provenance Blockchain transactions completely on your device.
+
+## Status
+![Bitrise](https://img.shields.io/bitrise/34e1626b80bd4a4a?logo=bitrise&token=blq-C_Myaf2eKN9pK0MaIQ)
 
 ## Getting Started
 
