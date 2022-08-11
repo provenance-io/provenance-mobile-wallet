@@ -2,29 +2,23 @@ import 'package:flutter/scheduler.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
-import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/action/action_flow.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
-import 'package:provenance_wallet/screens/home/dashboard/connection_details_modal.dart';
+import 'package:provenance_wallet/screens/home/dashboard/wallet_connect_button.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
-import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class Dashboard extends StatefulWidget {
@@ -69,7 +63,6 @@ class _DashboardState extends State<Dashboard> {
 
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
-    final _walletConnectService = get<WalletConnectService>();
 
     return Container(
       decoration: BoxDecoration(
@@ -89,119 +82,7 @@ class _DashboardState extends State<Dashboard> {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               actions: [
-                StreamBuilder<WalletConnectSessionState>(
-                  initialData: _walletConnectService.sessionEvents.state.value,
-                  stream: _walletConnectService.sessionEvents.state,
-                  builder: (context, snapshot) {
-                    final connected = snapshot.data?.status ==
-                        WalletConnectSessionStatus.connected;
-                    Widget icon;
-                    switch (snapshot.data?.status) {
-                      case WalletConnectSessionStatus.disconnected:
-                        icon = PwIcon(
-                          PwIcons.qr,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                          size: 48.0,
-                        );
-                        break;
-                      case WalletConnectSessionStatus.connected:
-                        icon = PwIcon(
-                          PwIcons.linked,
-                          color: Theme.of(context).colorScheme.neutralNeutral,
-                          size: 48.0,
-                        );
-                        break;
-                      default:
-                        icon = Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            PwIcon(
-                              PwIcons.linked,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .neutralNeutral
-                                  .withAlpha(128),
-                              size: 48.0,
-                            ),
-                            SizedBox(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 1,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .neutralNeutral,
-                              ),
-                              height: 48,
-                              width: 48,
-                            ),
-                          ],
-                        );
-                    }
-
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        right: Spacing.large,
-                      ),
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (connected) {
-                            showDialog(
-                              useSafeArea: true,
-                              barrierColor:
-                                  Theme.of(context).colorScheme.neutral750,
-                              context: context,
-                              builder: (context) => ConnectionDetailsModal(),
-                            );
-                          } else {
-                            final accountId =
-                                accountService.events.selected.value?.id;
-
-                            if (accountId != null) {
-                              final addressData = await Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).push(
-                                QRCodeScanner(
-                                  isValidCallback: (input) {
-                                    return Future.value(input.isNotEmpty);
-                                  },
-                                ).route(),
-                              );
-
-                              if (addressData != null) {
-                                final success = await _walletConnectService
-                                    .connectSession(accountId, addressData)
-                                    .catchError((err) {
-                                  PwDialog.showError(
-                                    context,
-                                    message:
-                                        Strings.of(context).walletConnectError,
-                                    error: err,
-                                  );
-
-                                  logError(
-                                    'Failed to connect session',
-                                    error: err,
-                                  );
-
-                                  return false;
-                                });
-
-                                if (!success) {
-                                  PwDialog.showError(
-                                    context,
-                                    message:
-                                        Strings.of(context).walletConnectFailed,
-                                  );
-                                }
-                              }
-                            }
-                          }
-                        },
-                        child: icon,
-                      ),
-                    );
-                  },
-                ),
+                WalletConnectButton(),
                 ValueListenableBuilder<int>(
                   valueListenable: _notificationBellNotifier,
                   builder: (context, value, child) {
