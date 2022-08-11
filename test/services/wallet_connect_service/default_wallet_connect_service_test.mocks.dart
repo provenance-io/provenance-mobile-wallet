@@ -174,7 +174,8 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
-          List<String>? inviteIds}) =>
+          List<String>? inviteIds,
+          String? address}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -183,16 +184,17 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                 #remoteId: remoteId,
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
-                #inviteIds: inviteIds
+                #inviteIds: inviteIds,
+                #address: address
               }),
               returnValue: Future<_i9.MultiAccount?>.value())
           as _i8.Future<_i9.MultiAccount?>);
   @override
   _i8.Future<_i9.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, List<_i10.PublicKey>? publicKeys}) =>
+          {String? id, String? address}) =>
       (super.noSuchMethod(
-              Invocation.method(#activateMultiAccount, [],
-                  {#id: id, #publicKeys: publicKeys}),
+              Invocation.method(
+                  #activateMultiAccount, [], {#id: id, #address: address}),
               returnValue: Future<_i9.MultiTransactableAccount?>.value())
           as _i8.Future<_i9.MultiTransactableAccount?>);
   @override
