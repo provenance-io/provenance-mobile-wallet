@@ -168,13 +168,13 @@ class _DashboardState extends State<Dashboard> {
                               );
 
                               if (addressData != null) {
-                                _walletConnectService
+                                final success = await _walletConnectService
                                     .connectSession(accountId, addressData)
                                     .catchError((err) {
                                   PwDialog.showError(
                                     context,
                                     message:
-                                        Strings.of(context).walletConnectFailed,
+                                        Strings.of(context).walletConnectError,
                                     error: err,
                                   );
 
@@ -185,6 +185,14 @@ class _DashboardState extends State<Dashboard> {
 
                                   return false;
                                 });
+
+                                if (!success) {
+                                  PwDialog.showError(
+                                    context,
+                                    message:
+                                        Strings.of(context).walletConnectFailed,
+                                  );
+                                }
                               }
                             }
                           }

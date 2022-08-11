@@ -581,5 +581,6 @@
   },
   "homeScreenMore": "More",
   "transactionResponse": "Response",
+  "walletConnectError": "Error while connecting",
   "walletConnectFailed": "Failed to connect"
 }
