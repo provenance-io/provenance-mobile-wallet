@@ -119,12 +119,15 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                       for (var i = 0; i < cosigners.length; i++) {
                         final cosigner = cosigners[i];
 
+                        final address = abbreviateAddress(cosigner.address!);
+
                         String? description;
                         if (cosigner.isSelf) {
-                          description =
+                          final self =
                               Strings.of(context).multiSigInviteCosignerSelf;
+                          description = '$self ($address)';
                         } else if (cosigner.address != null) {
-                          description = abbreviateAddress(cosigner.address!);
+                          description = address;
                         }
 
                         widgets.add(divider);
