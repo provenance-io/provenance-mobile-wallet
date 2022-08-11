@@ -542,15 +542,4 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
             address: model.address,
           );
   }
-
-  List<v1.SembastPublicKeyModel> _toSembastPublicKeys(
-      List<PublicKey>? publicKeys) {
-    return publicKeys
-            ?.map((e) => v1.SembastPublicKeyModel(
-                  hex: e.compressedPublicKeyHex,
-                  chainId: ChainId.forCoin(e.coin),
-                ))
-            .toList() ??
-        [];
-  }
 }
