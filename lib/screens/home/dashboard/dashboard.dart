@@ -83,6 +83,7 @@ class _DashboardState extends State<Dashboard> {
               elevation: 0.0,
               actions: [
                 WalletConnectButton(),
+                HorizontalSpacer.large(),
                 ValueListenableBuilder<int>(
                   valueListenable: _notificationBellNotifier,
                   builder: (context, value, child) {
