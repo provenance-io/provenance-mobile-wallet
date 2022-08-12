@@ -11,11 +11,11 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
-        - uses: subosito/flutter-action@v2
+    - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
         architecture: x64
-        
+
     - name: Bash Command Lines for GitHub Actions
       uses: jdickey/bash@v.1.1.1
       run: '${GITHUB_ACTION_PATH}/../../buildIntegrationTests.sh'
