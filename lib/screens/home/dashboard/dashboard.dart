@@ -16,7 +16,6 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
@@ -70,7 +69,6 @@ class _DashboardState extends State<Dashboard> {
 
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
-    final _keyValueService = get<KeyValueService>();
     final _walletConnectService = get<WalletConnectService>();
 
     return Container(
@@ -196,26 +194,14 @@ class _DashboardState extends State<Dashboard> {
                     );
                   },
                 ),
-                StreamBuilder<KeyValueData<bool>>(
-                  initialData: _keyValueService
-                      .stream<bool>(PrefKey.enableMultiSig)
-                      .valueOrNull,
-                  stream: _keyValueService.stream<bool>(PrefKey.enableMultiSig),
-                  builder: (context, snapshot) {
-                    final show = snapshot.data?.data ?? false;
-                    if (!show) {
-                      return Container();
-                    }
-
-                    return ValueListenableBuilder<int>(
-                        valueListenable: _notificationBellNotifier,
-                        builder: (context, value, child) {
-                          return NotificationBell(
-                            notificationCount: value,
-                            placeCount: 1,
-                            onClicked: _onNotificationBellClicked,
-                          );
-                        });
+                ValueListenableBuilder<int>(
+                  valueListenable: _notificationBellNotifier,
+                  builder: (context, value, child) {
+                    return NotificationBell(
+                      notificationCount: value,
+                      placeCount: 1,
+                      onClicked: _onNotificationBellClicked,
+                    );
                   },
                 ),
               ],

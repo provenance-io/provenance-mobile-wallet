@@ -72,33 +72,37 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: Spacing.large),
           children: [
-            ...widget.children,
-            PwListDivider.alternate(),
-            PwGasAdjustmentSlider(
-              title: Strings.of(context).stakingConfirmGasAdjustment,
-              startingValue: defaultGasEstimate,
-              onValueChanged: (value) {
-                setState(() {
-                  _gasEstimate = value;
-                });
-              },
+            Column(
+              children: [
+                ...widget.children,
+                PwListDivider.alternate(),
+                PwGasAdjustmentSlider(
+                  title: Strings.of(context).stakingConfirmGasAdjustment,
+                  startingValue: defaultGasEstimate,
+                  onValueChanged: (value) {
+                    setState(() {
+                      _gasEstimate = value;
+                    });
+                  },
+                ),
+                PwListDivider.alternate(),
+                VerticalSpacer.largeX3(),
+                Expanded(child: Container()),
+                PwButton(
+                  onPressed: () {
+                    widget.onTransactionSign(_gasEstimate);
+                  },
+                  child: PwText(
+                    widget.signButtonTitle,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    color: PwColor.neutralNeutral,
+                    style: PwTextStyle.body,
+                  ),
+                ),
+                VerticalSpacer.largeX3(),
+              ],
             ),
-            PwListDivider.alternate(),
-            VerticalSpacer.largeX3(),
-            Expanded(child: Container()),
-            PwButton(
-              onPressed: () {
-                widget.onTransactionSign(_gasEstimate);
-              },
-              child: PwText(
-                widget.signButtonTitle,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-                color: PwColor.neutralNeutral,
-                style: PwTextStyle.body,
-              ),
-            ),
-            VerticalSpacer.largeX3(),
           ],
         ),
       ),

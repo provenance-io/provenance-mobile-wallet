@@ -447,7 +447,7 @@
     "description": "This is displayed in an AlertDialog when trying to delegate to a jailed validator, warning the user about the risks involved."
   },
   "stakingDelegateYesResponse": "Yes",
-  "stakingDelegateNoResponse": "No, nevermind",
+  "stakingDelegateNoResponse": "No",
   "stakingRedelegateRedelegate": "Redelegate",
   "stakingRedelegateAvailableForRedelegation": "Available for Redelegation",
   "stakingRedelegateRedelegating": "Redelegating",
