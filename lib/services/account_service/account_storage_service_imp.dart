@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 
 class AccountStorageServiceImp implements AccountStorageService {
   AccountStorageServiceImp(
@@ -75,6 +76,7 @@ class AccountStorageServiceImp implements AccountStorageService {
     required int signaturesRequired,
     required List<String> inviteIds,
     String? address,
+    List<MultiSigSigner>? signers,
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
@@ -85,19 +87,20 @@ class AccountStorageServiceImp implements AccountStorageService {
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
       address: address,
+      signers: signers,
     );
 
     return details;
   }
 
   @override
-  Future<MultiAccount?> setMultiAccountAddress({
+  Future<MultiAccount?> setMultiAccountSigners({
     required String id,
-    required String address,
+    required List<MultiSigSigner> signers,
   }) {
-    return _serviceCore.setMultiAccountAddress(
+    return _serviceCore.setMultiAccountSigners(
       id: id,
-      address: address,
+      signers: signers,
     );
   }
 

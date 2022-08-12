@@ -2,11 +2,14 @@ import 'package:convert/convert.dart' as convert;
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_schema_v1.dart'
     as v1;
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/util/public_key_util.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/sembast_import_export.dart' as ie;
 
@@ -395,6 +398,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     required int signaturesRequired,
     required List<String> inviteIds,
     String? address,
+    List<MultiSigSigner>? signers,
   }) async {
     final db = await _db;
     final model = v1.SembastMultiAccountModel(
@@ -404,7 +408,12 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
-      address: address,
+      signers: signers
+          ?.map((e) => v1.SembastMultiAccountSigner(
+                publicKey: e.publicKey?.compressedPublicKeyHex,
+                signerOrder: e.signerOrder,
+              ))
+          .toList(),
     );
 
     final id = await db.transaction((tx) async {
@@ -442,9 +451,9 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<MultiAccount?> setMultiAccountAddress({
+  Future<MultiAccount?> setMultiAccountSigners({
     required String id,
-    required String address,
+    required List<MultiSigSigner> signers,
   }) async {
     final db = await _db;
     final ref = _multiAccounts.record(id);
@@ -452,7 +461,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     if (rec != null) {
       final model = v1.SembastMultiAccountModel.fromRecord(rec);
       final updatedModel = model.copyWith(
-        address: address,
+        signers: signers,
       );
 
       await ref.update(db, updatedModel.toRecord());
@@ -520,26 +529,49 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
     final linkedAccount = await getBasicAccount(id: model.linkedAccountId);
 
-    return model.address != null
-        ? MultiTransactableAccount(
-            id: id,
-            name: model.name,
-            linkedAccount: linkedAccount!,
-            remoteId: model.remoteId,
-            cosignerCount: model.cosignerCount,
-            signaturesRequired: model.signaturesRequired,
-            inviteIds: model.inviteIds,
-            address: model.address!,
-          )
-        : MultiAccount(
-            id: id,
-            name: model.name,
-            linkedAccount: linkedAccount!,
-            remoteId: model.remoteId,
-            cosignerCount: model.cosignerCount,
-            signaturesRequired: model.signaturesRequired,
-            inviteIds: model.inviteIds,
-            address: model.address,
-          );
+    final signers = model.signers?.toList();
+    signers?.sortAscendingBy((e) => e.signerOrder);
+
+    MultiAccount account;
+
+    final active = linkedAccount != null &&
+        signers != null &&
+        signers.isNotEmpty &&
+        signers.every((e) => e.publicKey != null);
+    if (active) {
+      final coin = linkedAccount!.coin;
+
+      final signerKeys = signers!
+          .map((e) => publicKeyFromCompressedHex(e.publicKey!, coin))
+          .toList();
+      final publicKey = AminoPubKey(
+        threshold: model.signaturesRequired,
+        publicKeys: signerKeys,
+        coin: coin,
+      );
+
+      account = MultiTransactableAccount(
+        id: id,
+        name: model.name,
+        linkedAccount: linkedAccount,
+        remoteId: model.remoteId,
+        cosignerCount: model.cosignerCount,
+        signaturesRequired: model.signaturesRequired,
+        inviteIds: model.inviteIds,
+        publicKey: publicKey,
+      );
+    } else {
+      account = MultiAccount(
+        id: id,
+        name: model.name,
+        linkedAccount: linkedAccount!,
+        remoteId: model.remoteId,
+        cosignerCount: model.cosignerCount,
+        signaturesRequired: model.signaturesRequired,
+        inviteIds: model.inviteIds,
+      );
+    }
+
+    return account;
   }
 }

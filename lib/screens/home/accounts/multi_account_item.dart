@@ -31,7 +31,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   final _subscriptions = CompositeSubscription();
   final _bloc = get<AccountsBloc>();
   final _accountService = get<AccountService>();
-  late final MultiAccount _account;
+  late MultiAccount _account;
   late bool _isSelected;
 
   @override

@@ -64,7 +64,7 @@ class MockTransactionHandler extends _i1.Mock
           as _i6.Future<_i2.AccountGasEstimate>);
   @override
   _i6.Future<_i3.RawTxResponsePair> executeTransaction(
-          _i3.TxBody? txBody, _i7.PrivateKey? privateKey,
+          _i3.TxBody? txBody, _i7.IPrivKey? privateKey,
           [_i2.AccountGasEstimate? gasEstimate]) =>
       (super.noSuchMethod(
               Invocation.method(

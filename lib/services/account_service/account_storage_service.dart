@@ -1,6 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 
 class PublicKeyData {
   PublicKeyData({
@@ -61,12 +62,12 @@ abstract class AccountStorageService {
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
-    String? address,
+    List<MultiSigSigner>? signers,
   });
 
-  Future<MultiAccount?> setMultiAccountAddress({
+  Future<MultiAccount?> setMultiAccountSigners({
     required String id,
-    required String address,
+    required List<MultiSigSigner> signers,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);

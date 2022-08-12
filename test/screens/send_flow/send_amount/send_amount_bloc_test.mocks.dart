@@ -16,12 +16,14 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i11;
+    as _i12;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
-import 'package:provenance_wallet/services/models/price.dart' as _i13;
+import 'package:provenance_wallet/services/models/price.dart' as _i14;
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
+    as _i11;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i12;
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -138,7 +140,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          String? address}) =>
+          List<_i11.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -148,16 +150,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
                 #inviteIds: inviteIds,
-                #address: address
+                #signers: signers
               }),
               returnValue: Future<_i9.MultiAccount?>.value())
           as _i7.Future<_i9.MultiAccount?>);
   @override
   _i7.Future<_i9.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, String? address}) =>
+          {String? id, List<_i11.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #activateMultiAccount, [], {#id: id, #address: address}),
+                  #activateMultiAccount, [], {#id: id, #signers: signers}),
               returnValue: Future<_i9.MultiTransactableAccount?>.value())
           as _i7.Future<_i9.MultiTransactableAccount?>);
   @override
@@ -184,16 +186,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i11.TransactionHandler {
+    implements _i12.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Stream<_i11.TransactionResponse> get transaction =>
+  _i7.Stream<_i12.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i11.TransactionResponse>.empty())
-          as _i7.Stream<_i11.TransactionResponse>);
+              returnValue: Stream<_i12.TransactionResponse>.empty())
+          as _i7.Stream<_i12.TransactionResponse>);
   @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
           _i4.TxBody? txBody, List<_i10.IPubKey>? signers) =>
@@ -203,7 +205,7 @@ class MockTransactionHandler extends _i1.Mock
           as _i7.Future<_i3.AccountGasEstimate>);
   @override
   _i7.Future<_i4.RawTxResponsePair> executeTransaction(
-          _i4.TxBody? txBody, _i10.PrivateKey? privateKey,
+          _i4.TxBody? txBody, _i10.IPrivKey? privateKey,
           [_i3.AccountGasEstimate? gasEstimate]) =>
       (super.noSuchMethod(
               Invocation.method(
@@ -216,18 +218,18 @@ class MockTransactionHandler extends _i1.Mock
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i12.PriceService {
+class MockPriceService extends _i1.Mock implements _i13.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i13.Price>> getAssetPrices(
+  _i7.Future<List<_i14.Price>> getAssetPrices(
           _i10.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
-          as _i7.Future<List<_i13.Price>>);
+              returnValue: Future<List<_i14.Price>>.value(<_i14.Price>[]))
+          as _i7.Future<List<_i14.Price>>);
   @override
   _i7.Future<_i5.HttpClient> getClient(_i10.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),

@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendScreen extends StatelessWidget {
@@ -183,6 +184,8 @@ class SendPageState extends State<SendPage> {
     try {
       await _bloc!.next(_addressController.text, _denomNotifier.value);
     } catch (e) {
+      logError('Error', error: e);
+
       showDialog(
         useSafeArea: true,
         context: context,

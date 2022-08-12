@@ -51,12 +51,12 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   @override
   Future<proto.RawTxResponsePair> executeTransaction(
     proto.TxBody txBody,
-    PrivateKey privateKey, [
+    IPrivKey privateKey, [
     AccountGasEstimate? gasEstimate,
   ]) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
 
-    final publicKey = privateKey.defaultKey().publicKey;
+    final publicKey = privateKey.publicKey;
     final coin = getCoinFromAddress(publicKey.address);
     final pbClient = await protoBuffInjector(coin);
 
@@ -70,7 +70,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final responsePair = await pbClient.broadcastTransaction(
       txBody,
       [
-        privateKey.defaultKey(),
+        privateKey,
       ],
       fee,
       proto.BroadcastMode.BROADCAST_MODE_BLOCK,

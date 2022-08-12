@@ -12,7 +12,7 @@ abstract class TransactionHandler {
 
   Future<proto.RawTxResponsePair> executeTransaction(
     proto.TxBody txBody,
-    PrivateKey privateKey, [
+    IPrivKey privateKey, [
     AccountGasEstimate? gasEstimate,
   ]);
 }

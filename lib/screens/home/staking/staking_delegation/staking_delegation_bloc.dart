@@ -184,7 +184,7 @@ class StakingDelegationBloc extends Disposable {
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey!,
+      privateKey!.defaultKey(),
       estimate,
     );
 

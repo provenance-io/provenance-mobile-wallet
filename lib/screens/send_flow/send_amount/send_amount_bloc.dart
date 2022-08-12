@@ -5,9 +5,9 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendAmountBlocNavigator {
@@ -43,6 +43,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
+  // TODO-Roy: Rename accountDetails
   final TransactableAccount accountDetails;
   final SendAsset asset;
   final String receivingAddress;
@@ -69,11 +70,12 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final publicKey = (accountDetails as BasicAccount).publicKey;
     final coin = accountDetails.coin;
 
-    get<TransactionHandler>()
-        .estimateGas(body, [publicKey]).then((estimate) async {
+    // TODO-Roy: Make this async/await all the way (remove "then")
+    get<TxQueueService>()
+        .estimateGas(account: accountDetails, txBody: body)
+        .then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];
 
       final denoms = estimate.totalFees.map((e) => e.denom).toList();

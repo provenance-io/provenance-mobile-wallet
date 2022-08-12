@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 abstract class SendReviewNaviagor {
   void complete();
@@ -51,7 +48,7 @@ class SendReviewBlocState {
 class SendReviewBloc implements Disposable {
   SendReviewBloc(
     this._accountDetails,
-    this._transactionHandler,
+    this._txQueueService,
     this.receivingAddress,
     this.sendingAsset,
     this.fee,
@@ -69,7 +66,7 @@ class SendReviewBloc implements Disposable {
 
   final SendReviewNaviagor _naviagor;
   final _stateStreamController = StreamController<SendReviewBlocState>();
-  final TransactionHandler _transactionHandler;
+  final TxQueueService _txQueueService;
   final TransactableAccount _accountDetails;
   final String receivingAddress;
   final String? note;
@@ -83,7 +80,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.close();
   }
 
-  Future<void> doSend() async {
+  Future<ScheduleTxResponse> doSend() async {
     final amountToSend = sendingAsset.amount;
 
     final body = TxBody(
@@ -102,8 +99,6 @@ class SendReviewBloc implements Disposable {
       ],
     );
 
-    final privateKey = await get<AccountService>().loadKey(_accountDetails.id);
-
     AccountGasEstimate estimate = AccountGasEstimate(
       fee.estimate,
       null,
@@ -116,13 +111,13 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    final response = await _transactionHandler.executeTransaction(
-      body,
-      privateKey!,
-      estimate,
+    final response = await _txQueueService.scheduleTx(
+      txBody: body,
+      account: _accountDetails,
+      gasEstimate: estimate,
     );
 
-    log(response.asJsonString());
+    return response;
   }
 
   Future<void> complete() async {

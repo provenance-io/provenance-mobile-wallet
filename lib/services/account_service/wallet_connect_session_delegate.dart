@@ -131,7 +131,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       proto.RawTxResponsePair response =
           await _transactionHandler.executeTransaction(
         txBody,
-        _privateKey,
+        _privateKey.defaultKey(),
         action.gasEstimate,
       );
 

@@ -122,8 +122,8 @@ main() {
 
   group("executeTransaction", () {
     test("success", () async {
-      final response =
-          await transHandler!.executeTransaction(txBody, privateKey);
+      final response = await transHandler!
+          .executeTransaction(txBody, privateKey.defaultKey());
 
       expect(response, rawResponse);
     });
@@ -136,7 +136,7 @@ main() {
 
       await transHandler!.executeTransaction(
         txBody,
-        privateKey,
+        privateKey.defaultKey(),
         walletEstimate,
       );
 
@@ -149,7 +149,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
       verifyZeroInteractions(mockGasFeeService!);
@@ -161,7 +161,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
     });
@@ -176,7 +176,7 @@ main() {
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
     });
