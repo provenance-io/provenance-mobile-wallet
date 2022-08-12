@@ -15,9 +15,7 @@ jobs:
         channel: 'stable'
         architecture: x64
 
-    - name: Bash Command Lines for GitHub Actions
-      uses: jdickey/bash@v.1.1.1
-      args: '${GITHUB_ACTION_PATH}/../../buildIntegrationTests.sh'
+    - run: '${GITHUB_ACTION_PATH}/../../buildIntegrationTests.sh'
 
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
