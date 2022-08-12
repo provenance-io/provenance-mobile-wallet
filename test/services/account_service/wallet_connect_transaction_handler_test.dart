@@ -32,11 +32,11 @@ final rawResponse = RawTxResponsePair(txRaw, txResponse);
 Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
   return predicate((arg) {
     final walletEstimate = arg as AccountGasEstimate;
-    expect(walletEstimate.estimate, gasEstimate.estimate);
+    expect(walletEstimate.estimatedGas, gasEstimate.estimate);
     expect(walletEstimate.baseFee, gasFee.amount);
-    expect(walletEstimate.feeAdjustment, gasEstimate.feeAdjustment);
+    expect(walletEstimate.gasAdjustment, gasEstimate.feeAdjustment);
     expect(
-      walletEstimate.feeCalculated!.length,
+      walletEstimate.totalFees.length,
       1,
     ); // the 1 coin is calculated
 

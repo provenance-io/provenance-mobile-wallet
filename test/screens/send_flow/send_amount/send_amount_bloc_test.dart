@@ -22,7 +22,7 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-const feeAmount = AccountGasEstimate(
+final feeAmount = AccountGasEstimate(
   20000000,
   1,
 );
@@ -97,12 +97,12 @@ main() {
         final feeAsset = arg as MultiSendAsset;
         expect(
           feeAsset.estimate,
-          feeAmount.estimate,
+          feeAmount.estimatedGas,
         );
         expect(feeAsset.fees.first.denom, "nhash");
         expect(
           feeAsset.fees.first.amount,
-          Decimal.fromInt(feeAmount.estimate * feeAmount.baseFee!),
+          Decimal.fromInt(feeAmount.estimatedGas * feeAmount.baseFee!),
         );
         expect(feeAsset.fees.length, 1);
 
@@ -171,11 +171,11 @@ main() {
 
     expect(amountAsset.amount, Decimal.parse("110"));
     expect(amountAsset.denom, hashAsset.denom);
-    expect(feeAsset.estimate, feeAmount.estimate);
+    expect(feeAsset.estimate, feeAmount.estimatedGas);
     expect(feeAsset.fees.first.denom, "nhash");
     expect(
       feeAsset.fees.first.amount,
-      Decimal.fromInt(feeAmount.estimate * feeAmount.baseFee!),
+      Decimal.fromInt(feeAmount.estimatedGas * feeAmount.baseFee!),
     );
   });
 }

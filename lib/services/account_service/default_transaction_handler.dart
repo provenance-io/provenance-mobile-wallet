@@ -63,8 +63,8 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     gasEstimate ??= await estimateGas(txBody, [publicKey]);
 
     final fee = proto.Fee(
-      amount: gasEstimate.feeCalculated,
-      gasLimit: proto.Int64(gasEstimate.limit),
+      amount: gasEstimate.totalFees,
+      gasLimit: proto.Int64(gasEstimate.estimatedGas),
     );
 
     final responsePair = await pbClient.broadcastTransaction(

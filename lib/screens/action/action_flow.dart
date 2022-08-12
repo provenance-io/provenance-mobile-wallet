@@ -136,7 +136,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
           requestId: sendRequest.id,
           clientMeta: clientMeta,
           data: data,
-          fees: sendRequest.gasEstimate.feeCalculated,
+          fees: sendRequest.gasEstimate.totalFees,
         );
       },
     ).then((approved) => approved ?? false);

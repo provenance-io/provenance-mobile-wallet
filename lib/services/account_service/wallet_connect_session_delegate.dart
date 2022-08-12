@@ -148,7 +148,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
           gasUsed: txResponse.gasUsed.toInt(),
           height: txResponse.height.toInt(),
           txHash: txResponse.txhash,
-          fees: action.gasEstimate.feeCalculated,
+          fees: action.gasEstimate.totalFees,
           codespace: txResponse.codespace,
         ),
       );

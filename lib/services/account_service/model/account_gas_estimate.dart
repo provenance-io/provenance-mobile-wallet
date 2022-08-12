@@ -1,47 +1,26 @@
-import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/util/fee_util.dart';
 
-class AccountGasEstimate extends GasEstimate {
-  const AccountGasEstimate(
-    int estimate,
+class AccountGasEstimate {
+  AccountGasEstimate(
+    this.estimatedGas,
     this.baseFee, [
-    double? feeAdjustment,
-    List<Coin>? feeCalculated,
-  ]) : super(
-          estimate,
-          feeAdjustment,
-          feeCalculated,
-        );
+    this.gasAdjustment,
+    this.estimatedFees,
+  ]) : totalFees = addBaseFee(estimatedGas, estimatedFees, baseFee);
 
   final int? baseFee;
+  final int estimatedGas;
+  final double? gasAdjustment;
+  final List<Coin>? estimatedFees;
+  final List<Coin> totalFees;
 
-  @override
-  List<Coin>? get feeCalculated {
-    final parentFeeCalculated = super.feeCalculated?.toList() ?? <Coin>[];
-    parentFeeCalculated.add(Coin(
-      denom: "nhash",
-      amount: (estimate * (baseFee ?? 0)).toString(),
-    ));
-
-    return parentFeeCalculated
-        .fold<Map<String, Decimal>>({}, (map, coin) {
-          final value = map[coin.denom] ?? Decimal.zero;
-          map[coin.denom] = value + Decimal.parse(coin.amount);
-
-          return map;
-        })
-        .entries
-        .map((entry) =>
-            Coin(denom: entry.key, amount: entry.value.toBigInt().toString()))
-        .toList();
-  }
-
-  AccountGasEstimate copyWithBaseFee(int? baseFee) {
+  AccountGasEstimate copyWithBaseFee(int? newBaseFee) {
     return AccountGasEstimate(
-      estimate,
-      baseFee,
-      feeAdjustment,
-      super.feeCalculated,
+      estimatedGas,
+      newBaseFee,
+      gasAdjustment,
+      estimatedFees,
     );
   }
 }
