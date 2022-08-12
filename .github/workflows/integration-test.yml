@@ -4,10 +4,10 @@ on: workflow_dispatch
 
 jobs:
   integration:
+    runs-on: macos-latest
     permissions:
       contents: 'read'
       id-token: 'write'
-    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@v2
