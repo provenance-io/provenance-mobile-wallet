@@ -3,7 +3,7 @@ name: Flutter integration testing
 on: workflow_dispatch
 
 jobs:
-  build:
+  integration:
     permissions:
       contents: 'read'
       id-token: 'write'
