@@ -8,6 +8,9 @@ The Provenance Blockchain Wallet provides users in all categories the ability to
 
 Using biometrics and on-device secured enclaves, the Provenance Blockchain Wallet provides users with a secure, efficient, and robust self-custody key solution.  With the Provenance Blockchain Wallet you control your keys, you authorize dApps to connect with your wallet, and you sign all Provenance Blockchain transactions completely on your device.
 
+## Status
+![Bitrise](https://img.shields.io/bitrise/34e1626b80bd4a4a?logo=bitrise&token=blq-C_Myaf2eKN9pK0MaIQ)
+
 ## Getting Started
 
 ### Requisites
