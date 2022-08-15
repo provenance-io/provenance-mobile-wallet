@@ -21,8 +21,17 @@ jobs:
           channel: 'stable'
           architecture: x64
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Build the test file
+        run: ${GITHUB_WORKSPACE}/generateSampleTestData.sh
+
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: ../integration_test_data.json
+          write-mode: overwrite
+          contents: |
+            '${{ secrets.TEST_ACCOUNT_ONE_SEED_PHRASE }}'
+
+      - name: Build the tests
         run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
 
 
