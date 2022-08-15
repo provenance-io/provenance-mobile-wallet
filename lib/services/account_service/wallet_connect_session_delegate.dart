@@ -210,7 +210,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     try {
       gasEstimate = await _transactionHandler.estimateGas(
         txBody,
-        _privateKey.defaultKey().publicKey.address,
+        [_privateKey.defaultKey().publicKey],
       );
 
       if (signTransactionData.gasEstimate != null) {

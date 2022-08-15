@@ -112,8 +112,8 @@ class WeightedVoteBloc extends Disposable {
 
     final privateKey = await get<AccountService>().loadKey(_account.id);
 
-    final adjustedEstimate =
-        await (get<TransactionHandler>()).estimateGas(body, _account.address);
+    final adjustedEstimate = await (get<TransactionHandler>())
+        .estimateGas(body, [(_account as BasicAccount).publicKey]);
 
     AccountGasEstimate estimate = AccountGasEstimate(
       adjustedEstimate.estimate,

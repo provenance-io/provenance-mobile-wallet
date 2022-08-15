@@ -184,9 +184,8 @@ class MockTransactionHandler extends _i1.Mock
           as _i6.Stream<_i9.TransactionResponse>);
   @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
-          _i4.TxBody? txBody, String? signerAddress) =>
-      (super.noSuchMethod(
-              Invocation.method(#estimateGas, [txBody, signerAddress]),
+          _i4.TxBody? txBody, List<_i8.IPubKey>? signers) =>
+      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, signers]),
               returnValue: Future<_i3.AccountGasEstimate>.value(
                   _FakeAccountGasEstimate_1()))
           as _i6.Future<_i3.AccountGasEstimate>);

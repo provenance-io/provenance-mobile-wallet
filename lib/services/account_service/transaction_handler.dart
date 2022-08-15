@@ -7,7 +7,7 @@ abstract class TransactionHandler {
 
   Future<AccountGasEstimate> estimateGas(
     proto.TxBody txBody,
-    String signerAddress,
+    List<IPubKey> signers,
   );
 
   Future<proto.RawTxResponsePair> executeTransaction(

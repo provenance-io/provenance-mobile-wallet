@@ -26,19 +26,13 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   @override
   Future<AccountGasEstimate> estimateGas(
     proto.TxBody txBody,
-    String signerAddress,
+    List<IPubKey> signers,
   ) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
-    final coin = getCoinFromAddress(signerAddress);
+    final coin = getCoinFromAddress(signers[0].address);
     final pbClient = await protoBuffInjector(coin);
 
     final gasService = get<GasFeeService>();
-
-    final signers = [
-      PubKey(
-        address: signerAddress,
-      ),
-    ];
 
     final estimate = await pbClient.estimateTransactionFees(
       txBody,
@@ -66,7 +60,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final coin = getCoinFromAddress(publicKey.address);
     final pbClient = await protoBuffInjector(coin);
 
-    gasEstimate ??= await estimateGas(txBody, publicKey.address);
+    gasEstimate ??= await estimateGas(txBody, [publicKey]);
 
     final fee = proto.Fee(
       amount: gasEstimate.feeCalculated,
@@ -75,7 +69,9 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
 
     final responsePair = await pbClient.broadcastTransaction(
       txBody,
-      [privateKey],
+      [
+        privateKey.defaultKey(),
+      ],
       fee,
       proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
@@ -90,13 +86,4 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
 
     return responsePair;
   }
-}
-
-class PubKey implements IPubKey {
-  PubKey({
-    required this.address,
-  });
-
-  @override
-  final String address;
 }

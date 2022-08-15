@@ -69,10 +69,11 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final address = accountDetails.address;
+    final publicKey = (accountDetails as BasicAccount).publicKey;
     final coin = accountDetails.coin;
 
-    get<TransactionHandler>().estimateGas(body, address).then((estimate) async {
+    get<TransactionHandler>()
+        .estimateGas(body, [publicKey]).then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();

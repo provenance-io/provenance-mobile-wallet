@@ -92,7 +92,7 @@ main() {
   group("estimateGas", () {
     test("success", () async {
       final walletEstimate =
-          await transHandler!.estimateGas(txBody, publicKey.address);
+          await transHandler!.estimateGas(txBody, [publicKey]);
       expect(walletEstimate, _walletEstimateMatcher(gasEstimate, gasFee));
     });
 
@@ -102,7 +102,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.estimateGas(txBody, publicKey.address),
+        () => transHandler!.estimateGas(txBody, [publicKey]),
         throwsA(exception),
       );
       verifyZeroInteractions(mockGasFeeService!);
@@ -114,7 +114,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.estimateGas(txBody, publicKey.address),
+        () => transHandler!.estimateGas(txBody, [publicKey]),
         throwsA(exception),
       );
     });
