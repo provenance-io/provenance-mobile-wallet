@@ -31,6 +31,11 @@ jobs:
           write-mode: overwrite
           contents: |
             '${{ secrets.TEST_ACCOUNT_ONE_SEED_PHRASE }}'
+      
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
       - name: Build the tests
         run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
