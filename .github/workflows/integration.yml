@@ -14,7 +14,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       # - uses: subosito/flutter-action@v2
       #   with:
@@ -42,7 +41,7 @@ jobs:
 
       - uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: '${secrets.BITRISE_PROVENANCE_WALLET_API_KEY}'
+          credentials_json: ${{secrets.BITRISE_PROVENANCE_WALLET_API_KEY}}'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
