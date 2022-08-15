@@ -40,16 +40,15 @@ jobs:
       - name: Build the tests
         run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
 
+      - uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.BITRISE_PROVENANCE_WALLET_API_KEY }}'
 
-      # - uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     credentials_json: '${{ secrets.BITRISE_PROVENANCE_WALLET_API_KEY }}'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
 
-      # - name: 'Set up Cloud SDK'
-      #   uses: 'google-github-actions/setup-gcloud@v0'
-
-      # - name: 'Set Cloud Project'
-      #   run: 'gcloud --quiet config set project provenance-wallet'
+      - name: 'Set Cloud Project'
+        run: 'gcloud --quiet config set project provenance-wallet'
     
-      # - name: 'Run firebase tests'
-      #   run: 'gcloud firebase test android run --type instrumentation --app build/app/outputs/apk/dev/debug/app-dev-debug.apk --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk --timeout 1m --results-bucket=provenance-wallet-tests'
+      - name: 'Run firebase tests'
+        run: 'gcloud firebase test android run --type instrumentation --app build/app/outputs/apk/dev/debug/app-dev-debug.apk --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk --timeout 1m --results-bucket=provenance-wallet-tests'
