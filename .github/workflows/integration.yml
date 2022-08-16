@@ -15,45 +15,39 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
-      # - uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: 'stable'
-      #     architecture: x64
-      # - run: flutter pub get
-
-      # - name: Build the test file
-      #   run: ${GITHUB_WORKSPACE}/generateSampleTestData.sh
-
-      # - uses: DamianReeves/write-file-action@master
-      #   with:
-      #     path: ../integration_test_data.json
-      #     write-mode: overwrite
-      #     contents: |
-      #       '${{ secrets.TEST_ACCOUNT_ONE_SEED_PHRASE }}'
-      
-      # - uses: actions/setup-java@v3
-      #   with:
-      #     distribution: 'zulu'
-      #     java-version: '11'
-
-      # - name: Build the tests
-      #   run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
-      - uses: actions-hub/gcloud@master
-        env:
-          PROJECT_ID: provenance-wallet
-          APPLICATION_CREDENTIALS: ${{ secrets.BITRISE_PROVENANCE_WALLET_API_KEY }}
+      - uses: subosito/flutter-action@v2
         with:
-          args: --quiet config set project provenance-wallet
+          channel: 'stable'
+          architecture: x64
+      - run: flutter pub get
 
-      # - uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     credentials_json: '${{secrets.BITRISE_PROVENANCE_WALLET_API_KEY}}'
+      - name: Build the test file
+        run: ${GITHUB_WORKSPACE}/generateSampleTestData.sh
 
-      # - name: 'Set up Cloud SDK'
-      #   uses: 'google-github-actions/setup-gcloud@v0'
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: ../integration_test_data.json
+          write-mode: overwrite
+          contents: |
+            '${{ secrets.TEST_ACCOUNT_ONE_SEED_PHRASE }}'
+      - uses: actions/setup-python@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
-      # - name: 'Set Cloud Project'
-      #   run: 'gcloud --quiet config set project provenance-wallet'
+      - name: Build the tests
+        run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
+
+      - uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{secrets.BITRISE_PROVENANCE_WALLET_API_KEY}}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+
+      - name: 'Set Cloud Project'
+        run: 'gcloud --quiet config set project provenance-wallet'
     
-      # - name: 'Run firebase tests'
-      #   run: 'gcloud firebase test android run --type instrumentation --app build/app/outputs/apk/dev/debug/app-dev-debug.apk --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk --timeout 1m --results-bucket=provenance-wallet-tests'
+      - name: 'Run firebase tests'
+        run: 'gcloud firebase test android run --type instrumentation --app build/app/outputs/apk/dev/debug/app-dev-debug.apk --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk --timeout 1m --results-bucket=provenance-wallet-tests'
