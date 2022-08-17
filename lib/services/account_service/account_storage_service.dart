@@ -38,7 +38,7 @@ abstract class AccountStorageService {
 
   Future<TransactableAccount?> getSelectedAccount();
 
-  Future<Account?> selectAccount({
+  Future<TransactableAccount?> selectAccount({
     String? id,
   });
 
@@ -55,13 +55,18 @@ abstract class AccountStorageService {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required Coin selectedCoin,
     required String linkedAccountId,
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    String? address,
+  });
+
+  Future<MultiAccount?> setMultiAccountAddress({
+    required String id,
+    required String address,
   });
 
   Future<PrivateKey?> loadKey(String id, Coin coin);

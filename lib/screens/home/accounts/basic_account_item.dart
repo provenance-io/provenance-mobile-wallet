@@ -32,21 +32,36 @@ class BasicAccountItem extends StatefulWidget {
 class _BasicAccountItemState extends State<BasicAccountItem> {
   final _subscriptions = CompositeSubscription();
   final _bloc = get<AccountsBloc>();
-
+  final _accountService = get<AccountService>();
   late BasicAccount _account;
+  late bool _isSelected;
 
   @override
   void initState() {
     super.initState();
 
     _account = widget._initialAccount;
+
     _bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
-          _account = e as BasicAccount;
+          setState(() {
+            _account = e as BasicAccount;
+          });
         }
       });
     }).addTo(_subscriptions);
+
+    _isSelected =
+        _account.id == _accountService.events.selected.valueOrNull?.id;
+    _accountService.events.selected.listen((e) {
+      final isSelected = _account.id == e?.id;
+      if (isSelected != _isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+      }
+    });
   }
 
   @override

@@ -117,11 +117,11 @@ void main() {
       chainId: ChainId.forCoin(newCoin),
     );
     expect(account, isNotNull);
-    expect(account!.publicKey!.coin, newCoin);
+    expect(account!.coin, newCoin);
 
     account = await service.getBasicAccount(id: second.id);
     expect(account, isNotNull);
-    expect(account!.publicKey!.coin, newCoin);
+    expect(account!.coin, newCoin);
   });
 
   test('When multi-sig is added, linked account is updated', () async {
@@ -129,14 +129,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',
@@ -162,14 +156,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',
@@ -199,14 +187,8 @@ void main() {
     final account = datas.first;
     final chainId = account.selectedKey.chainId;
 
-    final seed = Mnemonic.createSeed(['multi']);
-    final publicKeys = Coin.values
-        .map((e) => PrivateKey.fromSeed(seed, e).defaultKey().publicKey)
-        .toList();
-
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
-      publicKeys: publicKeys,
       selectedChainId: chainId,
       linkedAccountId: account.id,
       remoteId: 'remote-id',
@@ -249,8 +231,9 @@ class _AccountData {
 _expectAccountMatches(_AccountData data, Account? account) {
   expect(account, isNotNull);
   expect(account!.name, data.name);
-  expect(account.publicKey!.compressedPublicKeyHex, data.selectedKey.hex);
-  expect(account.publicKey!.coin, ChainId.toCoin(data.selectedKey.chainId));
+  expect((account as BasicAccount).publicKey.compressedPublicKeyHex,
+      data.selectedKey.hex);
+  expect(account.coin, ChainId.toCoin(data.selectedKey.chainId));
 }
 
 Future<_AccountData> _initAccount() async {

@@ -121,7 +121,7 @@ class AccountDescriptionRow extends StatelessWidget {
   }) : super(key: key);
 
   final bool isSelected;
-  final Account account;
+  final TransactableAccount account;
 
   @override
   Widget build(BuildContext context) {

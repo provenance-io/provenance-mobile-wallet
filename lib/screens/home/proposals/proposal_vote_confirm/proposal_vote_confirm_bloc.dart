@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
 class ProposalVoteConfirmBloc {
-  final Account _account;
+  final TransactableAccount _account;
   final Proposal _proposal;
   final gov.VoteOption _voteOption;
 
@@ -40,7 +40,7 @@ class ProposalVoteConfirmBloc {
     return gov.MsgVote(
       option: _voteOption,
       proposalId: Int64.parseInt(_proposal.proposalId.toString()),
-      voter: _account.publicKey!.address,
+      voter: _account.address,
     );
   }
 
@@ -77,7 +77,7 @@ class ProposalVoteConfirmBloc {
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey!);
+        .estimateGas(body, [(_account as BasicAccount).publicKey]);
   }
 
   Vote getUserFriendlyVote() {

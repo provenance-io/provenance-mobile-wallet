@@ -15,13 +15,13 @@ class ReceiveState {
 class ReceiveBloc implements Disposable {
   ReceiveBloc(this._accountDetails) {
     final state = ReceiveState(
-      _accountDetails.publicKey!.address,
+      _accountDetails.address,
     );
 
     _streamController.add(state);
   }
 
-  final Account _accountDetails;
+  final TransactableAccount _accountDetails;
   final _streamController = StreamController<ReceiveState>();
 
   Stream<ReceiveState> get stream => _streamController.stream;
@@ -32,7 +32,6 @@ class ReceiveBloc implements Disposable {
   }
 
   Future<void> copyAddressToClipboard() {
-    return Clipboard.setData(
-        ClipboardData(text: _accountDetails.publicKey!.address));
+    return Clipboard.setData(ClipboardData(text: _accountDetails.address));
   }
 }

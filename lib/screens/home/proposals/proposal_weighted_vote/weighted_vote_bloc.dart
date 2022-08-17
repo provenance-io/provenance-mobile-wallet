@@ -17,7 +17,7 @@ import 'package:rxdart/rxdart.dart';
 
 class WeightedVoteBloc extends Disposable {
   final Proposal _proposal;
-  final Account _account;
+  final TransactableAccount _account;
   final _weightedVoteDetails = BehaviorSubject.seeded(WeightedVoteDetails());
 
   WeightedVoteBloc(
@@ -71,7 +71,7 @@ class WeightedVoteBloc extends Disposable {
     return gov.MsgVoteWeighted(
       options: options,
       proposalId: Int64.parseInt(_proposal.proposalId.toString()),
-      voter: _account.publicKey!.address,
+      voter: _account.address,
     );
   }
 
@@ -113,7 +113,7 @@ class WeightedVoteBloc extends Disposable {
     final privateKey = await get<AccountService>().loadKey(_account.id);
 
     final adjustedEstimate = await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey!);
+        .estimateGas(body, [(_account as BasicAccount).publicKey]);
 
     AccountGasEstimate estimate = AccountGasEstimate(
       adjustedEstimate.estimate,

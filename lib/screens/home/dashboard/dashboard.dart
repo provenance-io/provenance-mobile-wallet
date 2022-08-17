@@ -206,15 +206,15 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
               centerTitle: false,
-              title: StreamBuilder<Account?>(
+              title: StreamBuilder<TransactableAccount?>(
                 initialData: accountService.events.selected.value,
                 stream: accountService.events.selected,
                 builder: (context, snapshot) {
                   final details = snapshot.data;
 
                   final name = details?.name ?? '';
-                  final accountAddress = details?.publicKey?.address ?? '';
-                  final coin = details?.publicKey?.coin;
+                  final accountAddress = details?.address ?? '';
+                  final coin = details?.coin;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,8 +330,8 @@ class _DashboardState extends State<Dashboard> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                final coin = accountService
-                                    .events.selected.value?.publicKey?.coin;
+                                final coin =
+                                    accountService.events.selected.value?.coin;
                                 if (coin != null) {
                                   get<DashboardTabBloc>().openAsset(coin, item);
                                 }

@@ -23,7 +23,7 @@ void main() {
     });
 
     final initial = service.events.selected.value!;
-    expect(initial.publicKey!.coin, initialCoin);
+    expect(initial.coin, initialCoin);
 
     const updatedCoin = Coin.testNet;
     final updated =
@@ -31,8 +31,8 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(updated!.publicKey!.coin, updatedCoin);
-    expect(service.events.selected.value!.publicKey!.coin, updatedCoin);
+    expect(updated!.coin, updatedCoin);
+    expect(service.events.selected.value!.coin, updatedCoin);
     expect(calledUpdate, isTrue);
   });
 
@@ -77,6 +77,7 @@ Future<AccountService> createService({
     import: export,
   );
   final cipherService = MemoryCipherService();
+
   final service = AccountService(
     storage: AccountStorageServiceImp(
       serviceCore,
@@ -108,6 +109,7 @@ Future<Map<String, Object?>> createDatabaseExport({
     directory: sembastInMemoryDatabasePath,
   );
   final cipherService = MemoryCipherService();
+
   final service = AccountService(
     storage: AccountStorageServiceImp(
       serviceCore,

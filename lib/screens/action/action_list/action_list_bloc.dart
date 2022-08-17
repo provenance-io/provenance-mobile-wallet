@@ -199,7 +199,7 @@ class ActionListBloc extends Disposable {
 
     final accountLookup = accounts.asMap().map(
           (key, value) => MapEntry(
-            value.publicKey!.address,
+            value.address!,
             value,
           ),
         );

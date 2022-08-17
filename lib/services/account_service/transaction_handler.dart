@@ -1,14 +1,17 @@
-import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 
 abstract class TransactionHandler {
   Stream<TransactionResponse> get transaction;
 
-  Future<AccountGasEstimate> estimateGas(TxBody txBody, PublicKey publicKey);
+  Future<AccountGasEstimate> estimateGas(
+    proto.TxBody txBody,
+    List<IPubKey> signers,
+  );
 
-  Future<RawTxResponsePair> executeTransaction(
-    TxBody txBody,
+  Future<proto.RawTxResponsePair> executeTransaction(
+    proto.TxBody txBody,
     PrivateKey privateKey, [
     AccountGasEstimate? gasEstimate,
   ]);
@@ -21,7 +24,7 @@ class TransactionResponse {
     this.gasEstimate,
   });
 
-  final TxBody txBody;
-  final TxResponse txResponse;
+  final proto.TxBody txBody;
+  final proto.TxResponse txResponse;
   final AccountGasEstimate? gasEstimate;
 }

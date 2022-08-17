@@ -1,30 +1,78 @@
+import 'package:flutter/services.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
-class MultiAccountItem extends StatelessWidget {
+class MultiAccountItem extends StatefulWidget {
   const MultiAccountItem({
     required MultiAccount account,
     Key? key,
-  })  : _account = account,
+  })  : _initialAccount = account,
         super(key: key);
 
-  final MultiAccount _account;
+  final MultiAccount _initialAccount;
+
+  @override
+  State<MultiAccountItem> createState() => _MultiAccountItemState();
+}
+
+class _MultiAccountItemState extends State<MultiAccountItem> {
+  final _subscriptions = CompositeSubscription();
+  final _bloc = get<AccountsBloc>();
+  final _accountService = get<AccountService>();
+  late final MultiAccount _account;
+  late bool _isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _account = widget._initialAccount;
+
+    _bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as MultiAccount;
+          });
+        }
+      });
+    }).addTo(_subscriptions);
+
+    _isSelected =
+        _account.id == _accountService.events.selected.valueOrNull?.id;
+    _accountService.events.selected.listen((e) {
+      final isSelected = _account.id == e?.id;
+      if (isSelected != _isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscriptions.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    const isSelected = false;
-
     return Container(
-      color: isSelected
+      color: _isSelected
           ? Theme.of(context).colorScheme.secondary650
           : Theme.of(context).colorScheme.neutral700,
       child: Column(
@@ -32,22 +80,26 @@ class MultiAccountItem extends StatelessWidget {
           AccountContainer(
             rows: [
               AccountTitleRow(
-                name: _account.name,
-                kind: _account.kind,
-                isSelected: isSelected,
+                name: widget._initialAccount.name,
+                kind: widget._initialAccount.kind,
+                isSelected: _isSelected,
               ),
-              if (_account.publicKey == null)
+              if (_account.coin != null)
+                AccountNetworkRow(
+                  coin: _account.coin!,
+                ),
+              if (widget._initialAccount.address == null)
                 PwText(
                   Strings.of(context).accountStatusPending,
                   style: PwTextStyle.bodySmall,
                   color: PwColor.neutralNeutral,
                 ),
             ],
-            isSelected: isSelected,
+            isSelected: _isSelected,
             onShowMenu: () => _showMenu(
               context,
-              _account,
-              isSelected,
+              widget._initialAccount,
+              _isSelected,
             ),
           ),
           Divider(
@@ -57,8 +109,8 @@ class MultiAccountItem extends StatelessWidget {
               indent: 24,
               color: Theme.of(context).colorScheme.neutral750),
           LinkedAccount(
-            name: _account.linkedAccount.name,
-            isSelected: isSelected,
+            name: widget._initialAccount.linkedAccount.name,
+            isSelected: _isSelected,
           ),
         ],
       ),
@@ -71,6 +123,8 @@ class MultiAccountItem extends StatelessWidget {
     bool isSelected,
   ) async {
     final strings = Strings.of(context);
+
+    final isTransactable = item is TransactableAccount;
 
     var result = await showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
@@ -92,6 +146,14 @@ class MultiAccountItem extends StatelessWidget {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
+            if (isTransactable && !isSelected) PwListDivider(),
+            if (isTransactable && !isSelected)
+              PwGreyButton(
+                text: strings.select,
+                onPressed: () {
+                  Navigator.of(context).pop(MenuOperation.select);
+                },
+              ),
             PwListDivider(),
             PwGreyButton(
               enabled: false,
@@ -107,6 +169,8 @@ class MultiAccountItem extends StatelessWidget {
     if (result == null) {
       return;
     }
+
+    final bloc = get<HomeBloc>();
 
     switch (result) {
       case MenuOperation.delete:
@@ -124,13 +188,32 @@ class MultiAccountItem extends StatelessWidget {
           }
         }
         break;
+      case MenuOperation.copy:
+        await Clipboard.setData(
+          ClipboardData(
+            text: item.address!,
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              strings.addressCopied,
+            ),
+            backgroundColor: Theme.of(context).colorScheme.neutral700,
+          ),
+        );
+        break;
+      case MenuOperation.select:
+        await bloc.selectAccount(id: item.id);
+
+        break;
       case MenuOperation.viewInvite:
         Navigator.of(
           context,
           rootNavigator: true,
         ).push(
           MultiSigCreationStatus(
-            accountId: _account.id,
+            accountId: widget._initialAccount.id,
           ).route(
             fullScreenDialog: true,
           ),
@@ -141,6 +224,8 @@ class MultiAccountItem extends StatelessWidget {
 }
 
 enum MenuOperation {
+  copy,
+  select,
   delete,
   viewInvite,
 }

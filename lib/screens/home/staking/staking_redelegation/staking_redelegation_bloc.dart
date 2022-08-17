@@ -36,7 +36,7 @@ class StakingRedelegationBloc extends Disposable {
 
   final BehaviorSubject<StakingRedelegationDetails> _stakingRedelegationDetails;
   final _isLoading = BehaviorSubject.seeded(false);
-  final Account _account;
+  final TransactableAccount _account;
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<StakingRedelegationDetails> get stakingRedelegationDetails =>
       _stakingRedelegationDetails;
@@ -98,7 +98,7 @@ class StakingRedelegationBloc extends Disposable {
           denom: nHashDenom,
           amount: hashToNHash(details.hashRedelegated).toString(),
         ),
-        delegatorAddress: _account.publicKey!.address,
+        delegatorAddress: _account.address,
         validatorSrcAddress: details.delegation.sourceAddress,
         validatorDstAddress: details.toRedelegate?.addressId ?? "");
   }
@@ -138,7 +138,7 @@ class StakingRedelegationBloc extends Disposable {
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>())
-        .estimateGas(body, _account.publicKey!);
+        .estimateGas(body, [(_account as BasicAccount).publicKey]);
   }
 }
 

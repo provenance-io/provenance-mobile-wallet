@@ -43,7 +43,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
-  final Account accountDetails;
+  final TransactableAccount accountDetails;
   final SendAsset asset;
   final String receivingAddress;
   final String requiredString;
@@ -57,7 +57,7 @@ class SendAmountBloc extends Disposable {
     final body = TxBody(
       messages: [
         MsgSend(
-          fromAddress: accountDetails.publicKey!.address,
+          fromAddress: accountDetails.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -69,16 +69,16 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final publicKey = accountDetails.publicKey!;
+    final publicKey = (accountDetails as BasicAccount).publicKey;
+    final coin = accountDetails.coin;
 
     get<TransactionHandler>()
-        .estimateGas(body, publicKey)
-        .then((estimate) async {
+        .estimateGas(body, [publicKey]).then((estimate) async {
       List<SendAsset> individualFees = <SendAsset>[];
       if (estimate.feeCalculated?.isNotEmpty ?? false) {
         final denoms = estimate.feeCalculated!.map((e) => e.denom).toList();
         final priceLookup =
-            await _priceService.getAssetPrices(publicKey.coin, denoms).then(
+            await _priceService.getAssetPrices(coin, denoms).then(
                   (prices) =>
                       {for (var price in prices) price.denomination: price},
                 );

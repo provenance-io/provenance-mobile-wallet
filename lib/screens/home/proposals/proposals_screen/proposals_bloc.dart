@@ -21,10 +21,10 @@ class ProposalsBloc extends PwPagingCache {
   );
   final _proposalPages = BehaviorSubject.seeded(1);
   final _governanceService = get<GovernanceService>();
-  final Account _account;
+  final TransactableAccount _account;
 
   ProposalsBloc({
-    required Account account,
+    required TransactableAccount account,
   })  : _account = account,
         super(50);
 
@@ -46,17 +46,17 @@ class ProposalsBloc extends PwPagingCache {
     }
 
     try {
-      final asset = (await get<AssetService>()
-              .getAssets(_account.publicKey!.coin, _account.publicKey!.address))
-          .firstWhere((element) => element.denom == 'nhash');
+      final asset =
+          (await get<AssetService>().getAssets(_account.coin, _account.address))
+              .firstWhere((element) => element.denom == 'nhash');
       final proposals = await _governanceService.getProposals(
-        _account.publicKey!.coin,
+        _account.coin,
         _proposalPages.value,
       );
 
       final myVotes = await _governanceService.getVotesForAddress(
-        _account.publicKey!.address,
-        _account.publicKey!.coin,
+        _account.address,
+        _account.coin,
       );
 
       _proposalDetails.tryAdd(
@@ -81,7 +81,7 @@ class ProposalsBloc extends PwPagingCache {
         _proposalPages,
         _isLoadingProposals,
         () async => await _governanceService.getProposals(
-            _account.publicKey!.coin, _proposalPages.value));
+            _account.coin, _proposalPages.value));
 
     _proposalDetails.tryAdd(
       ProposalDetails(
@@ -107,7 +107,7 @@ class ProposalsBloc extends PwPagingCache {
   }
 
   String getExplorerUrl(String address) {
-    switch (_account.publicKey?.coin) {
+    switch (_account.coin) {
       case Coin.mainNet:
         return "https://explorer.provenance.io/accounts/$address";
       default:

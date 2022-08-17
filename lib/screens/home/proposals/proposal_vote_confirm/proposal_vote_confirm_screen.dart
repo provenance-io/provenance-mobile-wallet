@@ -25,7 +25,7 @@ class ProposalVoteConfirmScreen extends StatefulWidget {
     required this.voteOption,
   }) : super(key: key);
 
-  final Account account;
+  final TransactableAccount account;
   final Proposal proposal;
   final gov.VoteOption voteOption;
 
@@ -120,7 +120,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   VerticalSpacer.large(),
                   AddressCard(
                     title: strings.proposalVoteConfirmVoterAddress,
-                    address: widget.account.publicKey!.address,
+                    address: widget.account.address,
                   ),
                   DetailsHeader(
                       title: strings.proposalVoteConfirmVotingDetails),

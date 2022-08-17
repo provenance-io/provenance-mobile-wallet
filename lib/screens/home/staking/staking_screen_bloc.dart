@@ -26,7 +26,7 @@ class StakingScreenBloc extends PwPagingCache {
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
   final _validatorService = get<ValidatorService>();
-  final Account _account;
+  final TransactableAccount _account;
 
   final Function onFlowCompletion;
 
@@ -57,18 +57,18 @@ class StakingScreenBloc extends PwPagingCache {
 
     try {
       final delegations = await _validatorService.getDelegations(
-        _account.publicKey!.coin,
-        _account.publicKey!.address,
+        _account.coin,
+        _account.address,
         _delegationPages.value,
       );
 
       final rewards = await _validatorService.getRewards(
-        _account.publicKey!.coin,
-        _account.publicKey!.address,
+        _account.coin,
+        _account.address,
       );
 
       final validators = await _validatorService.getRecentValidators(
-        _account.publicKey!.coin,
+        _account.coin,
         _validatorPages.value,
       );
 
@@ -76,7 +76,7 @@ class StakingScreenBloc extends PwPagingCache {
         StakingDetails(
             delegates: delegations,
             validators: validators,
-            address: _account.publicKey!.address,
+            address: _account.address,
             rewards: rewards),
       );
     } finally {
@@ -119,9 +119,7 @@ class StakingScreenBloc extends PwPagingCache {
         _delegationPages,
         _isLoadingDelegations,
         () async => await _validatorService.getDelegations(
-            _account.publicKey!.coin,
-            _account.publicKey!.address,
-            _delegationPages.value));
+            _account.coin, _account.address, _delegationPages.value));
 
     _stakingDetails.tryAdd(
       StakingDetails(
@@ -144,7 +142,7 @@ class StakingScreenBloc extends PwPagingCache {
       _validatorPages,
       _isLoadingValidators,
       () async => await _validatorService.getRecentValidators(
-        _account.publicKey!.coin,
+        _account.coin,
         _validatorPages.value,
       ),
     );
