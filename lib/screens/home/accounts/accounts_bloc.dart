@@ -90,11 +90,11 @@ class AccountsBloc implements Disposable {
     return index;
   }
 
-  Future<int> getAssetCount(Account account) async {
+  Future<int> getAssetCount(TransactableAccount account) async {
     var count = _assetCounts[account.id];
     if (count == null) {
-      final assets = await _assetService.getAssets(
-          account.publicKey!.coin, account.publicKey!.address);
+      final assets =
+          await _assetService.getAssets(account.coin, account.address);
       count = assets.length;
       _assetCounts[account.id] = count;
     }

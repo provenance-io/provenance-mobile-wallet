@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -196,6 +197,10 @@ class ActionList extends StatelessWidget {
       ModalLoadingRoute.dismiss(context);
     } catch (e) {
       ModalLoadingRoute.dismiss(context);
+      logError(
+        'Action failed',
+        error: e,
+      );
       PwDialog.showError(context, error: e as Exception);
     }
   }

@@ -71,9 +71,10 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
       Invocation.method(#selectFirstAccount, []),
       returnValue: Future<_i7.Account?>.value()) as _i6.Future<_i7.Account?>);
   @override
-  _i6.Future<_i7.Account?> selectAccount({String? id}) => (super.noSuchMethod(
-      Invocation.method(#selectAccount, [], {#id: id}),
-      returnValue: Future<_i7.Account?>.value()) as _i6.Future<_i7.Account?>);
+  _i6.Future<_i7.TransactableAccount?> selectAccount({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
+              returnValue: Future<_i7.TransactableAccount?>.value())
+          as _i6.Future<_i7.TransactableAccount?>);
   @override
   _i6.Future<_i7.TransactableAccount?> getSelectedAccount() =>
       (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
@@ -119,26 +120,34 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
   @override
   _i6.Future<_i7.MultiAccount?> addMultiAccount(
           {String? name,
-          List<_i8.PublicKey>? publicKeys,
           _i8.Coin? coin,
           String? linkedAccountId,
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
-          List<String>? inviteIds}) =>
+          List<String>? inviteIds,
+          String? address}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
-                #publicKeys: publicKeys,
                 #coin: coin,
                 #linkedAccountId: linkedAccountId,
                 #remoteId: remoteId,
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
-                #inviteIds: inviteIds
+                #inviteIds: inviteIds,
+                #address: address
               }),
               returnValue: Future<_i7.MultiAccount?>.value())
           as _i6.Future<_i7.MultiAccount?>);
+  @override
+  _i6.Future<_i7.MultiTransactableAccount?> activateMultiAccount(
+          {String? id, String? address}) =>
+      (super.noSuchMethod(
+              Invocation.method(
+                  #activateMultiAccount, [], {#id: id, #address: address}),
+              returnValue: Future<_i7.MultiTransactableAccount?>.value())
+          as _i6.Future<_i7.MultiTransactableAccount?>);
   @override
   _i6.Future<_i7.Account?> removeAccount({String? id}) => (super.noSuchMethod(
       Invocation.method(#removeAccount, [], {#id: id}),
@@ -175,8 +184,8 @@ class MockTransactionHandler extends _i1.Mock
           as _i6.Stream<_i9.TransactionResponse>);
   @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
-          _i4.TxBody? txBody, _i8.PublicKey? publicKey) =>
-      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, publicKey]),
+          _i4.TxBody? txBody, List<_i8.IPubKey>? signers) =>
+      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, signers]),
               returnValue: Future<_i3.AccountGasEstimate>.value(
                   _FakeAccountGasEstimate_1()))
           as _i6.Future<_i3.AccountGasEstimate>);

@@ -73,7 +73,7 @@ class DefaultWalletConnectService extends WalletConnectService
   }
 
   Future<WalletConnectSession?> _doCreateConnection(
-      Account accountDetails, String wcAddress,
+      TransactableAccount accountDetails, String wcAddress,
       {String? peerId,
       String? remotePeerId,
       ClientMeta? clientMeta,
@@ -102,7 +102,7 @@ class DefaultWalletConnectService extends WalletConnectService
       walletInfo: WalletInfo(
         accountDetails.id,
         accountDetails.name,
-        accountDetails.publicKey!.coin,
+        accountDetails.coin,
       ),
     );
 
@@ -110,7 +110,7 @@ class DefaultWalletConnectService extends WalletConnectService
         accountId: accountDetails.id,
         connection: connection,
         delegate: delegate,
-        coin: accountDetails.publicKey!.coin,
+        coin: accountDetails.coin,
         remoteNotificationService: _remoteNotificationService,
         onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
 
@@ -239,15 +239,15 @@ class DefaultWalletConnectService extends WalletConnectService
 
     final now = DateTime.now();
 
-    final accountDetails = await _accountService.getAccount(accountId);
-    if (accountDetails == null) {
-      logError('No account currently selected');
+    final account = await _accountService.getAccount(accountId);
+    if (account is! TransactableAccount) {
+      logError('Did not find valid account for id: $accountId');
 
       return false;
     }
 
     _log("The existing session expires at ${sessionExpired.toIso8601String()}");
-    final session = await _doCreateConnection(accountDetails, data.address,
+    final session = await _doCreateConnection(account, data.address,
         clientMeta: data.clientMeta,
         peerId: data.peerId,
         remotePeerId: data.remotePeerId);

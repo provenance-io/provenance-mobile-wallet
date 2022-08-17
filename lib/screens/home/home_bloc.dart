@@ -87,13 +87,13 @@ class HomeBloc extends Disposable {
 
       if (account != null) {
         assetList = await _assetService.getAssets(
-          account.publicKey!.coin,
-          account.publicKey!.address,
+          account.coin,
+          account.address,
         );
 
         transactions = await _transactionService.getTransactions(
-          account.publicKey!.coin,
-          account.publicKey!.address,
+          account.coin,
+          account.address,
           _transactionPages.value,
         );
       }
@@ -106,7 +106,7 @@ class HomeBloc extends Disposable {
           selectedType: _allMessageTypes,
           allMessageTypes: _allMessageTypes,
           allStatuses: _allStatuses,
-          address: account?.publicKey?.address ?? '',
+          address: account?.address ?? '',
           filteredTransactions: transactions,
           transactions: transactions.toList(),
         ),
@@ -130,8 +130,8 @@ class HomeBloc extends Disposable {
 
     if (account != null) {
       final newTransactions = await _transactionService.getTransactions(
-        account.publicKey!.coin,
-        account.publicKey!.address,
+        account.coin,
+        account.address,
         _transactionPages.value,
       );
       if (newTransactions.isNotEmpty) {
@@ -145,7 +145,7 @@ class HomeBloc extends Disposable {
         allStatuses: oldDetails.allStatuses,
         selectedStatus: oldDetails.selectedStatus,
         selectedType: oldDetails.selectedType,
-        address: account?.publicKey?.address ?? '',
+        address: account?.address ?? '',
         filteredTransactions: oldDetails.filteredTransactions,
         transactions: transactions.toList(),
       ),
@@ -177,7 +177,7 @@ class HomeBloc extends Disposable {
     _transactionDetails.tryAdd(TransactionDetails(
       allMessageTypes: allMessageTypes,
       allStatuses: allStatuses,
-      address: _accountService.events.selected.value?.publicKey?.address ?? "",
+      address: _accountService.events.selected.value?.address ?? "",
       transactions: transactions,
       filteredTransactions: filtered,
       selectedStatus: status,

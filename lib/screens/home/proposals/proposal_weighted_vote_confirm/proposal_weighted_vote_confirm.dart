@@ -23,7 +23,7 @@ class ProposalWeightedVoteConfirmScreen extends StatefulWidget {
     required this.proposal,
   }) : super(key: key);
 
-  final Account account;
+  final TransactableAccount account;
   final Proposal proposal;
 
   @override
@@ -108,7 +108,7 @@ class _ProposalWeightedVoteConfirmScreenState
                       VerticalSpacer.large(),
                       AddressCard(
                         title: strings.proposalVoteConfirmVoterAddress,
-                        address: widget.account.publicKey!.address,
+                        address: widget.account.address,
                       ),
                       DetailsHeader(
                         title: strings.proposalVoteConfirmVotingDetails,

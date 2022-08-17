@@ -175,7 +175,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
     if (account != null) {
       final remoteAccount = await _multiSigService.getAccount(
         remoteId: account.remoteId,
-        signerPublicKey: account.linkedAccount.publicKey,
+        signerAddress: account.linkedAccount.address,
       );
 
       if (remoteAccount != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 
 enum AccountKind {
   basic,
@@ -12,7 +13,8 @@ abstract class Account {
   abstract final String id;
   abstract final String name;
   abstract final AccountKind kind;
-  abstract final PublicKey? publicKey;
+  abstract final String? address;
+  abstract final Coin? coin;
 }
 
 abstract class TransactableAccount implements Account {
@@ -28,7 +30,10 @@ abstract class TransactableAccount implements Account {
   abstract final AccountKind kind;
 
   @override
-  PublicKey get publicKey;
+  String get address;
+
+  @override
+  Coin get coin;
 }
 
 class BasicAccount with Diagnosticable implements Account, TransactableAccount {
@@ -48,8 +53,13 @@ class BasicAccount with Diagnosticable implements Account, TransactableAccount {
   @override
   final String name;
 
-  @override
   final PublicKey publicKey;
+
+  @override
+  String get address => publicKey.address;
+
+  @override
+  Coin get coin => publicKey.coin;
 
   final List<String> linkedAccountIds;
 
@@ -57,7 +67,7 @@ class BasicAccount with Diagnosticable implements Account, TransactableAccount {
   int get hashCode => Object.hashAll([
         id,
         name,
-        publicKey.address,
+        address,
         linkedAccountIds,
       ]);
 
@@ -66,7 +76,7 @@ class BasicAccount with Diagnosticable implements Account, TransactableAccount {
     return other is BasicAccount &&
         other.id == id &&
         other.name == name &&
-        other.publicKey.address == publicKey.address &&
+        other.address == address &&
         other.linkedAccountIds == linkedAccountIds;
   }
 
@@ -75,7 +85,7 @@ class BasicAccount with Diagnosticable implements Account, TransactableAccount {
     super.debugFillProperties(properties);
 
     properties.add(StringProperty('id', id));
-    properties.add(StringProperty('address', publicKey.address));
+    properties.add(StringProperty('address', address));
     properties.add(StringProperty('name', name));
     properties
         .add(StringProperty('linkedAccountIds', linkedAccountIds.toString()));
@@ -86,7 +96,7 @@ class MultiAccount with Diagnosticable implements Account {
   const MultiAccount({
     required this.id,
     required this.name,
-    required this.publicKey,
+    required this.address,
     required this.linkedAccount,
     required this.remoteId,
     required this.cosignerCount,
@@ -104,7 +114,10 @@ class MultiAccount with Diagnosticable implements Account {
   final String name;
 
   @override
-  final PublicKey? publicKey;
+  final String? address;
+
+  @override
+  Coin? get coin => address == null ? null : getCoinFromAddress(address!);
 
   final BasicAccount linkedAccount;
 
@@ -120,7 +133,7 @@ class MultiAccount with Diagnosticable implements Account {
   int get hashCode => Object.hashAll([
         id,
         name,
-        publicKey?.address,
+        address,
         linkedAccount,
         remoteId,
         cosignerCount,
@@ -133,7 +146,7 @@ class MultiAccount with Diagnosticable implements Account {
     return other is MultiAccount &&
         other.id == id &&
         other.name == name &&
-        other.publicKey?.address == publicKey?.address &&
+        other.address == address &&
         other.linkedAccount == linkedAccount &&
         other.remoteId == remoteId &&
         other.cosignerCount == cosignerCount &&
@@ -146,7 +159,7 @@ class MultiAccount with Diagnosticable implements Account {
     super.debugFillProperties(properties);
 
     properties.add(StringProperty('id', id));
-    properties.add(StringProperty('address', publicKey?.address));
+    properties.add(StringProperty('address', address));
     properties.add(StringProperty('name', name));
   }
 }
@@ -156,7 +169,7 @@ class MultiTransactableAccount extends MultiAccount
   const MultiTransactableAccount({
     required String id,
     required String name,
-    required PublicKey publicKey,
+    required String address,
     required BasicAccount linkedAccount,
     required String remoteId,
     required int cosignerCount,
@@ -165,7 +178,7 @@ class MultiTransactableAccount extends MultiAccount
   }) : super(
           id: id,
           name: name,
-          publicKey: publicKey,
+          address: address,
           linkedAccount: linkedAccount,
           remoteId: remoteId,
           cosignerCount: cosignerCount,
@@ -174,5 +187,8 @@ class MultiTransactableAccount extends MultiAccount
         );
 
   @override
-  PublicKey get publicKey => super.publicKey!;
+  String get address => super.address!;
+
+  @override
+  Coin get coin => super.coin!;
 }

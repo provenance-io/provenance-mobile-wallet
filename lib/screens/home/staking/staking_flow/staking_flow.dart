@@ -77,7 +77,7 @@ class StakingFlow extends FlowBase {
   }) : super(key: key);
 
   final String validatorAddress;
-  final Account account;
+  final TransactableAccount account;
   final Delegation? selectedDelegation;
   final Rewards? rewards;
 

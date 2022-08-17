@@ -13,7 +13,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class StakingRedelegationScreen extends StatefulWidget {
   final DetailedValidator validator;
-  final Account account;
+  final TransactableAccount account;
   final Delegation delegation;
 
   const StakingRedelegationScreen({

@@ -19,7 +19,7 @@ class StakingDetailsBloc extends Disposable {
       BehaviorSubject.seeded(DetailedValidatorDetails(null, null, null, null));
   final _isLoading = BehaviorSubject.seeded(false);
   final String _validatorAddress;
-  final Account _account;
+  final TransactableAccount _account;
   final Delegation? _selectedDelegation;
   final Rewards? _rewards;
   final _validatorService = get<ValidatorService>();
@@ -41,12 +41,12 @@ class StakingDetailsBloc extends Disposable {
 
     try {
       final validator = await _validatorService.getDetailedValidator(
-        account.publicKey!.coin,
+        account.coin,
         _validatorAddress,
       );
 
       final commission = await _validatorService.getValidatorCommission(
-        account.publicKey!.coin,
+        account.coin,
         _validatorAddress,
       );
 
@@ -79,7 +79,7 @@ class StakingDetailsBloc extends Disposable {
   }
 
   String getProvUrl() {
-    switch (_account.publicKey!.coin) {
+    switch (_account.coin) {
       case Coin.testNet:
         return 'https://explorer.test.provenance.io/validator/$_validatorAddress';
       case Coin.mainNet:

@@ -6,6 +6,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -25,26 +26,18 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   @override
   Future<AccountGasEstimate> estimateGas(
     proto.TxBody txBody,
-    PublicKey publicKey,
+    List<IPubKey> signers,
   ) async {
-    final coin = publicKey.coin;
-
     final protoBuffInjector = get<ProtobuffClientInjector>();
+    final coin = getCoinFromAddress(signers[0].address);
     final pbClient = await protoBuffInjector(coin);
-
-    final account = await pbClient.getBaseAccount(publicKey.address);
-    final signer = _EstimateSigner(account.address, publicKey);
-    final baseReqSigner = proto.BaseReqSigner(signer, account);
-
-    final baseReq = proto.BaseReq(
-      txBody,
-      [baseReqSigner],
-      pbClient.chainId,
-    );
 
     final gasService = get<GasFeeService>();
 
-    final estimate = await pbClient.estimateTx(baseReq);
+    final estimate = await pbClient.estimateTransactionFees(
+      txBody,
+      signers,
+    );
     final customFee = await gasService.getGasFee(coin);
 
     return AccountGasEstimate(
@@ -61,28 +54,25 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     PrivateKey privateKey, [
     AccountGasEstimate? gasEstimate,
   ]) async {
-    final publicKey = privateKey.defaultKey().publicKey;
-    final coin = publicKey.coin;
     final protoBuffInjector = get<ProtobuffClientInjector>();
 
+    final publicKey = privateKey.defaultKey().publicKey;
+    final coin = getCoinFromAddress(publicKey.address);
     final pbClient = await protoBuffInjector(coin);
 
-    final account = await pbClient.getBaseAccount(publicKey.address);
-    final signer = _SignerImp(privateKey);
+    gasEstimate ??= await estimateGas(txBody, [publicKey]);
 
-    final baseReqSigner = proto.BaseReqSigner(signer, account);
-
-    gasEstimate ??= await estimateGas(txBody, publicKey);
-
-    final baseReq = proto.BaseReq(
-      txBody,
-      [baseReqSigner],
-      pbClient.chainId,
+    final fee = proto.Fee(
+      amount: gasEstimate.feeCalculated,
+      gasLimit: proto.Int64(gasEstimate.limit),
     );
 
-    final responsePair = await pbClient.broadcastTx(
-      baseReq,
-      gasEstimate,
+    final responsePair = await pbClient.broadcastTransaction(
+      txBody,
+      [
+        privateKey.defaultKey(),
+      ],
+      fee,
       proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
 
@@ -95,39 +85,5 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     );
 
     return responsePair;
-  }
-}
-
-class _SignerImp implements proto.Signer {
-  _SignerImp(this._privateKey);
-
-  final PrivateKey _privateKey;
-
-  @override
-  String get address => pubKey.address;
-
-  @override
-  PublicKey get pubKey => _privateKey.defaultKey().publicKey;
-
-  @override
-  List<int> sign(List<int> data) {
-    return _privateKey.defaultKey().signData(Hash.sha256(data))..removeLast();
-  }
-}
-
-class _EstimateSigner extends proto.Signer {
-  _EstimateSigner(this._address, this._publicKey);
-
-  final String _address;
-  final PublicKey _publicKey;
-
-  @override
-  String get address => _address;
-
-  @override
-  PublicKey get pubKey => _publicKey;
-  @override
-  List<int> sign(List<int> data) {
-    return <int>[];
   }
 }

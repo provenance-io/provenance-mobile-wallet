@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_regis
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
 
 enum MultiSigInviteStatus {
@@ -116,11 +117,11 @@ class MultiSigService with ClientCoinMixin {
   }
 
   Future<List<MultiSigRemoteAccount>?> getAccounts({
-    required PublicKey publicKey,
+    required String address,
   }) async {
-    final coin = publicKey.coin;
+    final coin = getCoinFromAddress(address);
     final client = await getClient(coin);
-    final path = '$_basePath/by-address/${publicKey.address}';
+    final path = '$_basePath/by-address/$address';
 
     List<MultiSigRemoteAccount>? accounts;
 
@@ -156,6 +157,7 @@ class MultiSigService with ClientCoinMixin {
                   )
                   .toList(),
               signersRequired: e.threshold,
+              address: e.address,
             ),
           )
           .toList();
@@ -166,10 +168,10 @@ class MultiSigService with ClientCoinMixin {
 
   Future<MultiSigRemoteAccount?> getAccount({
     required String remoteId,
-    required PublicKey signerPublicKey,
+    required String signerAddress,
   }) async {
     final accounts = await getAccounts(
-      publicKey: signerPublicKey,
+      address: signerAddress,
     );
 
     MultiSigRemoteAccount? account;
@@ -210,6 +212,7 @@ class MultiSigService with ClientCoinMixin {
                 ))
             .toList(),
         signersRequired: data.threshold,
+        address: data.address,
       );
     }
 

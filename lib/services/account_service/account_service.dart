@@ -6,6 +6,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef WalletConnectionProvider = WalletConnection Function(
@@ -18,12 +19,12 @@ class AccountServiceEvents {
   final _added = PublishSubject<Account>();
   final _removed = PublishSubject<List<Account>>();
   final _updated = PublishSubject<Account>();
-  final _selected = BehaviorSubject<Account?>.seeded(null);
+  final _selected = BehaviorSubject<TransactableAccount?>.seeded(null);
 
   Stream<Account> get added => _added;
   Stream<List<Account>> get removed => _removed;
   Stream<Account> get updated => _updated;
-  ValueStream<Account?> get selected => _selected;
+  ValueStream<TransactableAccount?> get selected => _selected;
 
   void clear() {
     _subscriptions.clear();
@@ -70,13 +71,13 @@ class AccountService implements Disposable {
 
   Future<Account?> selectFirstAccount() async {
     final id = (await _storage.getAccounts())
-        .firstWhereOrNull((e) => e.publicKey != null)
+        .firstWhereOrNull((e) => e.address != null)
         ?.id;
 
     return await selectAccount(id: id);
   }
 
-  Future<Account?> selectAccount({String? id}) async {
+  Future<TransactableAccount?> selectAccount({String? id}) async {
     final details = await _storage.selectAccount(id: id);
 
     events._selected.add(details);
@@ -168,23 +169,23 @@ class AccountService implements Disposable {
 
   Future<MultiAccount?> addMultiAccount({
     required String name,
-    required List<PublicKey> publicKeys,
     required Coin coin,
     required String linkedAccountId,
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    String? address,
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
-      publicKeys: publicKeys,
       selectedCoin: coin,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
+      address: address,
     );
 
     if (details != null) {
@@ -197,6 +198,22 @@ class AccountService implements Disposable {
     }
 
     return details;
+  }
+
+  Future<MultiTransactableAccount?> activateMultiAccount({
+    required String id,
+    required String address,
+  }) async {
+    final account = await _storage.setMultiAccountAddress(
+      id: id,
+      address: address,
+    );
+
+    if (account != null) {
+      events._updated.add(account);
+    }
+
+    return account is MultiTransactableAccount ? account : null;
   }
 
   Future<Account?> removeAccount({required String id}) async {
@@ -229,7 +246,16 @@ class AccountService implements Disposable {
   }
 
   Future<List<Account>> resetAccounts() async {
-    final accounts = await _storage.getAccounts();
+    var accounts = <Account>[];
+
+    try {
+      accounts = await _storage.getAccounts();
+    } catch (e) {
+      logError(
+        'Failed to get accounts',
+        error: e,
+      );
+    }
 
     final success = await _storage.removeAllAccounts();
     if (success) {
@@ -243,7 +269,7 @@ class AccountService implements Disposable {
   }
 
   Future<PrivateKey?> loadKey(String accountId) async {
-    final coin = events.selected.value?.publicKey?.coin;
+    final coin = events.selected.value?.coin;
     PrivateKey? privateKey;
     if (coin != null) {
       privateKey = await _storage.loadKey(accountId, coin);
