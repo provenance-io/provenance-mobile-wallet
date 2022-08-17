@@ -38,7 +38,7 @@ class InformationScreen extends StatelessWidget {
                   icon: PwIcons.newWindow,
                   onTap: () {
                     final account = get<AccountService>().events.selected.value;
-                    switch (account?.publicKey?.coin) {
+                    switch (account?.coin) {
                       case Coin.mainNet:
                         launchUrl('https://provenance.io/');
                         break;
