@@ -3,7 +3,7 @@ description: The Provenance Blockchain Wallet provides users in all categories t
 
 publish_to: "none"
 
-version: 1.0.6
+version: 1.0.7
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -38,6 +38,7 @@ dependencies:
   package_info_plus: ^1.4.2
   path:
   pretty_json: ^2.0.0
+  protobuf: ^2.0.1
   prov_wallet_flutter:
     path: packages/prov_wallet_flutter
   provenance_dart:
