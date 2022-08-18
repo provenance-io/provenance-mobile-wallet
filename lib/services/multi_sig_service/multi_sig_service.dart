@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_creat
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
@@ -244,6 +245,27 @@ class MultiSigService with ClientCoinMixin {
     );
 
     return response.data?.txUuid;
+  }
+
+  Future<List<MultiSigPendingTxDto>?> getPendingTxs({
+    required String signerAddress,
+  }) async {
+    final coin = getCoinFromAddress(signerAddress);
+    final client = await getClient(coin);
+    final path = '$_basePath/tx/pending$signerAddress';
+
+    final response = await client.get(
+      path,
+      listConverter: (json) {
+        if (json is String) {
+          return <MultiSigPendingTxDto>[];
+        }
+
+        return json.map((e) => MultiSigPendingTxDto.fromJson(e)).toList();
+      },
+    );
+
+    return response.data;
   }
 
   MultiSigSigner _toMultiSigSigner({
