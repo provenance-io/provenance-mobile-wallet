@@ -581,5 +581,7 @@
   },
   "homeScreenMore": "More",
   "transactionResponse": "Response",
-  "walletConnectFailed": "Failed to connect"
+  "walletConnectFailed": "Failed to connect",
+  "stakingScreenNoDelegations": "No delegations yet",
+  "stakingScreenSelectValidatorsToContinue": "Select the Validators tab to continue"
 }
