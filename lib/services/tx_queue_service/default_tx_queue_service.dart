@@ -106,7 +106,8 @@ class DefaultQueueTxService implements TxQueueService {
             gasEstimate: estimateModel,
           );
 
-          id = await _store.add(db, model.toRecord());
+          final ref = _store.record(remoteId);
+          await ref.put(db, model.toRecord());
         }
 
         break;
@@ -130,17 +131,10 @@ class DefaultQueueTxService implements TxQueueService {
     TxResult? result;
 
     final db = await _db;
-    final rec = await _store.findFirst(
-      db,
-      finder: Finder(
-        filter: Filter.equals(
-          'remoteId',
-          remoteTxId,
-        ),
-      ),
-    );
-    if (rec != null && rec.value != null) {
-      final model = SembastScheduledTx.fromRecord(rec.value!).copyWith(
+    final ref = _store.record(remoteTxId);
+    final rec = await ref.get(db);
+    if (rec != null) {
+      final model = SembastScheduledTx.fromRecord(rec).copyWith(
         signers: signers
             .map(
               (e) => SembastTxSigner(
@@ -152,12 +146,12 @@ class DefaultQueueTxService implements TxQueueService {
             .toList(),
       );
 
-      await rec.ref.update(
+      await ref.update(
         db,
         model.toRecord(),
       );
 
-      result = await _execute(rec.key);
+      result = await _execute(remoteTxId);
     }
 
     return result;
