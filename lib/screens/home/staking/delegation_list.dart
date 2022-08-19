@@ -41,8 +41,26 @@ class DelegationListState extends State<DelegationList> {
             stream: _bloc.stakingDetails,
             builder: (context, snapshot) {
               final stakingDetails = snapshot.data;
-              if (stakingDetails == null) {
-                return Container();
+              if (stakingDetails == null || stakingDetails.delegates.isEmpty) {
+                return Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      VerticalSpacer.xLarge(),
+                      PwText(
+                        Strings.of(context).stakingScreenNoDelegations,
+                        style: PwTextStyle.bodyBold,
+                      ),
+                      VerticalSpacer.xSmall(),
+                      PwText(
+                        Strings.of(context)
+                            .stakingScreenSelectValidatorsToContinue,
+                        style: PwTextStyle.footnote,
+                        color: PwColor.neutral250,
+                      ),
+                    ],
+                  ),
+                );
               }
               return ListView.separated(
                 padding: EdgeInsets.symmetric(
