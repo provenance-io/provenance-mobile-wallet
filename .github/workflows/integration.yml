@@ -1,0 +1,51 @@
+name: Integration
+
+on:
+  schedule:
+    # Runs Monday-Friday at 8am MST, or UTC 14:00
+    - cron: "0 14 * * 1-5"
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          architecture: x64
+      - run: flutter pub get
+
+      - name: Build the test file
+        run: ${GITHUB_WORKSPACE}/generateSampleTestData.sh
+
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: ../integration_test_data.json
+          write-mode: overwrite
+          contents: |
+            '${{ secrets.TEST_ACCOUNT_ONE_SEED_PHRASE }}'
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "11"
+
+      - name: Build the tests
+        run: ${GITHUB_WORKSPACE}/buildIntegrationTests.sh
+
+      - id: "auth"
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{secrets.BITRISE_PROVENANCE_WALLET_API_KEY}}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v0"
+        with:
+          install_components: "gke-gcloud-auth-plugin"
+
+      - name: "Set Cloud Project"
+        run: "gcloud --quiet config set project provenance-wallet"
+
+      - name: "Run firebase tests"
+        run: "gcloud firebase test android run --type instrumentation --app build/app/outputs/apk/dev/debug/app-dev-debug.apk --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk --timeout 1m --results-bucket=provenance-wallet-tests"
