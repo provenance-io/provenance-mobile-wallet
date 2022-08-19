@@ -110,7 +110,7 @@ void main() {
         account: anyNamed('account'),
         gasEstimate: anyNamed('gasEstimate'),
       )).thenAnswer(
-        (_) async => ScheduleTxResponse(
+        (_) async => ScheduledTx(
           txId: '1',
           result: TxResult(
             body: proto.TxBody(),
