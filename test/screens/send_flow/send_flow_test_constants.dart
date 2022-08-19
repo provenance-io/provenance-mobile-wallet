@@ -32,17 +32,17 @@ final feeAsset = MultiSendAsset(
   2,
   [
     SendAsset(
-      "USD",
-      1,
-      "USD",
-      Decimal.fromInt(1),
-      0,
-    ),
-    SendAsset(
       "Hash",
       22,
       "nhash",
       Decimal.fromInt(9),
+      0,
+    ),
+    SendAsset(
+      "USD",
+      1,
+      "USD",
+      Decimal.fromInt(1),
       0,
     ),
   ],

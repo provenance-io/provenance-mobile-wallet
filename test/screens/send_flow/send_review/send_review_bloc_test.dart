@@ -8,8 +8,8 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -32,13 +32,13 @@ final accountDetails = BasicAccount(
 @GenerateMocks([
   SendReviewNaviagor,
   AccountService,
-  TransactionHandler,
+  TxQueueService,
 ])
 void main() {
   PrivateKey? privateKey;
   MockAccountService? mockAccountService;
   MockSendReviewNaviagor? mockNavigator;
-  MockTransactionHandler? mockTransactionHandler;
+  MockTxQueueService? mockTxQueueService;
 
   SendReviewBloc? bloc;
 
@@ -50,9 +50,10 @@ void main() {
     privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
     mockNavigator = MockSendReviewNaviagor();
 
-    mockTransactionHandler = MockTransactionHandler();
-    when(mockTransactionHandler!.estimateGas(any, any))
-        .thenAnswer((realInvocation) {
+    mockTxQueueService = MockTxQueueService();
+    when(mockTxQueueService!.estimateGas(
+            txBody: anyNamed('txBody'), account: anyNamed('account')))
+        .thenAnswer((_) {
       return Future.value(AccountGasEstimate(100, null));
     });
 
@@ -65,7 +66,7 @@ void main() {
 
     bloc = SendReviewBloc(
       accountDetails,
-      mockTransactionHandler!,
+      mockTxQueueService!,
       receivingAddress,
       dollarAsset,
       feeAsset,
@@ -104,30 +105,35 @@ void main() {
 
   group("doSend", () {
     test("args", () async {
-      when(mockTransactionHandler!.executeTransaction(
-        any,
-        any,
-        any,
-      )).thenAnswer((_) => Future.value(proto.RawTxResponsePair(
-            proto.TxRaw(),
-            proto.TxResponse(),
-          )));
+      when(mockTxQueueService!.scheduleTx(
+        txBody: anyNamed('txBody'),
+        account: anyNamed('account'),
+        gasEstimate: anyNamed('gasEstimate'),
+      )).thenAnswer(
+        (_) async => ScheduleTxResponse(
+          txId: '1',
+          result: TxResult(
+            body: proto.TxBody(),
+            response: proto.TxResponse(),
+          ),
+        ),
+      );
 
       await bloc!.doSend();
 
-      final captures = verify(mockTransactionHandler!.executeTransaction(
-        captureAny,
-        privateKey!,
-        captureAny,
+      final captures = verify(mockTxQueueService!.scheduleTx(
+        txBody: captureAnyNamed('txBody'),
+        account: captureAnyNamed('account'),
+        gasEstimate: captureAnyNamed('gasEstimate'),
       )).captured;
 
       final txBody = captures.first as proto.TxBody;
       expect(txBody.memo, "Some Note");
       expect(txBody.messages.length, 1);
 
-      final estimate = captures.last as proto.GasEstimate;
-      expect(estimate.limit, feeAsset.estimate);
-      expect(estimate.feeCalculated, predicate((arg) {
+      final estimate = captures.last as AccountGasEstimate;
+      expect(estimate.estimatedGas, feeAsset.estimate);
+      expect(estimate.totalFees, predicate((arg) {
         final coins = arg as List<proto.Coin>;
         expect(coins.length, feeAsset.fees.length);
 

@@ -7,9 +7,9 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -30,7 +30,7 @@ final feeAmount = AccountGasEstimate(
 @GenerateMocks([
   SendAmountBlocNavigator,
   AccountService,
-  TransactionHandler,
+  TxQueueService,
   PriceService,
 ])
 main() {
@@ -40,20 +40,21 @@ main() {
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockAccountService? mockAccountService;
-  MockTransactionHandler? mockTransactionHandler;
+  MockTxQueueService? mockTxQueueService;
   MockPriceService? mockPriceService;
 
   setUp(() {
-    mockTransactionHandler = MockTransactionHandler();
-    when(mockTransactionHandler!.estimateGas(any, any))
+    mockTxQueueService = MockTxQueueService();
+    when(mockTxQueueService!.estimateGas(
+            txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
 
     mockPriceService = MockPriceService();
     when(mockPriceService!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<TransactionHandler>(
-      mockTransactionHandler!,
+    get.registerSingleton<TxQueueService>(
+      mockTxQueueService!,
     );
 
     mockAccountService = MockAccountService();
@@ -80,7 +81,7 @@ main() {
 
   tearDown(() {
     get.unregister<AccountService>();
-    get.unregister<TransactionHandler>();
+    get.unregister<TxQueueService>();
     get.unregister<MockAccountService>();
   });
 
