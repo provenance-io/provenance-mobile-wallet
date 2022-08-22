@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_a
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/util/address_util.dart';
@@ -247,12 +248,12 @@ class MultiSigService with ClientCoinMixin {
     return response.data?.txUuid;
   }
 
-  Future<List<MultiSigPendingTxDto>?> getPendingTxs({
+  Future<List<MultiSigPendingTx>?> getPendingTxs({
     required String signerAddress,
   }) async {
     final coin = getCoinFromAddress(signerAddress);
     final client = await getClient(coin);
-    final path = '$_basePath/tx/pending$signerAddress';
+    final path = '$_basePath/tx/pending/$signerAddress';
 
     final response = await client.get(
       path,
@@ -265,7 +266,15 @@ class MultiSigService with ClientCoinMixin {
       },
     );
 
-    return response.data;
+    return response.data
+        ?.map(
+          (e) => MultiSigPendingTx(
+            accountAddress: signerAddress,
+            txUuid: e.txUuid,
+            txBody: proto.TxBody.fromJson(e.txBodyBytes),
+          ),
+        )
+        .toList();
   }
 
   MultiSigSigner _toMultiSigSigner({

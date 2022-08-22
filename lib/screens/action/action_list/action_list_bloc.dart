@@ -8,6 +8,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
@@ -97,6 +98,7 @@ class ActionListBloc extends Disposable {
   final ActionListNavigator _navigator;
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
+  final MultiSigPendingTxCache _multiSigPendingTxCache;
   final String approveSessionLabel;
   final String signatureRequestedLabel;
   final String transactionRequestedLabel;
@@ -113,7 +115,8 @@ class ActionListBloc extends Disposable {
     required this.unknownLabel,
     required this.actionRequiredSubLabel,
   })  : _connectQueueService = get<WalletConnectQueueService>(),
-        _accountService = get<AccountService>();
+        _accountService = get<AccountService>(),
+        _multiSigPendingTxCache = get<MultiSigPendingTxCache>();
 
   var notifications = [
     NotificationItem(
@@ -126,16 +129,22 @@ class ActionListBloc extends Disposable {
 
   Stream<ActionListBlocState> get stream => _streamController.stream;
 
-  void init() {
+  Future<void> init() async {
     _connectQueueService.addListener(_onActionQueueUpdated);
+    _multiSigPendingTxCache.addListener(_onActionQueueUpdated);
 
-    Future.wait([_buildActionGroups(), _buildNotificationItems()])
-        .then((results) {
-      final actionGroups = results[0] as List<ActionListGroup>;
-      final notifications = results[1] as List<NotificationItem>;
+    final accounts = (await _accountService.getAccounts())
+        .whereType<TransactableAccount>()
+        .toList();
+    final addresses = accounts.map((e) => e.address).toList();
+    await _multiSigPendingTxCache.update(
+      signerAddresses: addresses,
+    );
 
-      _streamController.add(ActionListBlocState(actionGroups, notifications));
-    });
+    final actionGroups = await _buildActionGroups(accounts);
+    final notifications = await _buildNotificationItems();
+
+    _streamController.add(ActionListBlocState(actionGroups, notifications));
   }
 
   @override
@@ -193,20 +202,26 @@ class ActionListBloc extends Disposable {
     return notifications;
   }
 
-  Future<List<ActionListGroup>> _buildActionGroups() async {
+  Future<List<ActionListGroup>> _buildActionGroups(
+      [List<TransactableAccount>? txAccounts]) async {
     final currentAccount = _accountService.events.selected.value;
-    final accounts = await _accountService.getAccounts();
+    final accounts = txAccounts ??
+        (await _accountService.getAccounts())
+            .whereType<TransactableAccount>()
+            .toList();
 
     final accountLookup = accounts.asMap().map(
           (key, value) => MapEntry(
-            value.address!,
+            value.address,
             value,
           ),
         );
 
+    final groups = <ActionListGroup>[];
+
     final queuedItems = await _connectQueueService.loadAllGroups();
 
-    return queuedItems
+    final walletConnectGroups = queuedItems
         .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
         .map((queuedGroup) {
       final account = accountLookup[queuedGroup.walletAddress];
@@ -234,7 +249,39 @@ class ActionListBloc extends Disposable {
           );
         }).toList(),
       );
-    }).toList();
+    });
+
+    groups.addAll(walletConnectGroups);
+
+    final multiSigItems = _multiSigPendingTxCache.items;
+
+    final multiSigGroups = <String, List<MultiSigActionListItem>>{};
+    for (final multiSigItem in multiSigItems) {
+      final address = multiSigItem.address;
+
+      if (!multiSigGroups.containsKey(address)) {
+        multiSigGroups[address] = <MultiSigActionListItem>[];
+      }
+
+      multiSigGroups[address]!.add(multiSigItem);
+    }
+
+    for (final multiSigGroup in multiSigGroups.entries) {
+      final account = accountLookup[multiSigGroup.key]!;
+      final name = account.name;
+
+      groups.add(
+        ActionListGroup(
+          label: name,
+          subLabel: abbreviateAddress(multiSigGroup.key),
+          items: multiSigGroup.value,
+          isSelected: currentAccount!.id == account.id,
+          isBasicAccount: false,
+        ),
+      );
+    }
+
+    return groups;
   }
 
   Future<bool> _approveWalletConnectGroup(
