@@ -174,6 +174,9 @@
   "multiSigInviteMessage": "“You’re invited to join my Provenance Blockchain Multi-sig Account by clicking the link below.”",
   "multiSigRecoverLoadError": "An error occured",
   "multiSigRecoverTitle": "Recover Account",
+  "multiSigTransactionInitiatedTitle": "Transaction Initiated",
+  "multiSigTransactionInitiatedMessage": "You will be notified upon co-signer approval",
+  "multiSigTransactionInitiatedDone": "Back to dashboard",
   "nameYourAccount": "Name Your Account",
   "accountName": "Account Name",
   "accountNameMessage": "Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThese names are stored locally, and can only be seen by you.",
@@ -584,5 +587,9 @@
   "walletConnectError": "Error while connecting",
   "walletConnectFailed": "Failed to connect",
   "stakingScreenNoDelegations": "No delegations yet",
-  "stakingScreenSelectValidatorsToContinue": "Select the Validators tab to continue"
+  "stakingScreenSelectValidatorsToContinue": "Select the Validators tab to continue",
+  "errorAccountNotFound": "Account not found",
+  "errorCipherKeyNotFound": "Cipher not found",
+  "errorTransactionNotFound": "Transaction not found",
+  "errorCreateTransactionFailed": "Failed to create transaction"
 }

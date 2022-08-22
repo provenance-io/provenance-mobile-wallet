@@ -54,7 +54,7 @@ class SendAmountBloc extends Disposable {
 
   Stream<SendAmountBlocState> get stream => _streamController.stream;
 
-  void init() {
+  Future<void> init() async {
     final body = TxBody(
       messages: [
         MsgSend(
@@ -72,37 +72,37 @@ class SendAmountBloc extends Disposable {
 
     final coin = accountDetails.coin;
 
-    // TODO-Roy: Make this async/await all the way (remove "then")
-    get<TxQueueService>()
-        .estimateGas(account: accountDetails, txBody: body)
-        .then((estimate) async {
-      List<SendAsset> individualFees = <SendAsset>[];
+    final estimate = await get<TxQueueService>().estimateGas(
+      account: accountDetails,
+      txBody: body,
+    );
 
-      final denoms = estimate.totalFees.map((e) => e.denom).toList();
-      final priceLookup = await _priceService.getAssetPrices(coin, denoms).then(
-            (prices) => {for (var price in prices) price.denomination: price},
-          );
+    List<SendAsset> individualFees = <SendAsset>[];
 
-      for (var fee in estimate.totalFees) {
-        final price = priceLookup[fee.denom]?.usdPrice ?? 0;
-        final sendAsset = SendAsset(
-          fee.denom,
-          1,
-          fee.denom,
-          Decimal.parse(fee.amount),
-          price,
+    final denoms = estimate.totalFees.map((e) => e.denom).toList();
+    final priceLookup = await _priceService.getAssetPrices(coin, denoms).then(
+          (prices) => {for (var price in prices) price.denomination: price},
         );
-        individualFees.add(sendAsset);
-      }
 
-      _fee = MultiSendAsset(
-        estimate.estimatedGas,
-        individualFees,
+    for (var fee in estimate.totalFees) {
+      final price = priceLookup[fee.denom]?.usdPrice ?? 0;
+      final sendAsset = SendAsset(
+        fee.denom,
+        1,
+        fee.denom,
+        Decimal.parse(fee.amount),
+        price,
       );
+      individualFees.add(sendAsset);
+    }
 
-      final state = SendAmountBlocState(_fee);
-      _streamController.add(state);
-    });
+    _fee = MultiSendAsset(
+      estimate.estimatedGas,
+      individualFees,
+    );
+
+    final state = SendAmountBlocState(_fee);
+    _streamController.add(state);
   }
 
   String? validateAmount(String? proposedAmount) {
