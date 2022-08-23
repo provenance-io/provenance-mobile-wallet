@@ -265,7 +265,7 @@ class WalletConnectQueueService extends Listenable
   }
 
   Future<void> addWalletApproveRequest(WalletConnectAddress address,
-      WalletConnectSessionRequestData apporveRequestData) async {
+      WalletConnectSessionRequestData approveRequestData) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -274,7 +274,7 @@ class WalletConnectQueueService extends Listenable
       return;
     }
     final group = WalletConnectQueueGroup.fromRecord(map);
-    group.actionLookup[apporveRequestData.id] = apporveRequestData;
+    group.actionLookup[approveRequestData.id] = approveRequestData;
 
     await record.update(db, group.toRecord());
 

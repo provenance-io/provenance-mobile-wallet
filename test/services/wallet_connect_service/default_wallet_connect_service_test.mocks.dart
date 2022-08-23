@@ -332,10 +332,10 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletApproveRequest(_i6.WalletConnectAddress? address,
-          _i16.WalletConnectSessionRequestData? apporveRequestData) =>
+          _i16.WalletConnectSessionRequestData? approveRequestData) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #addWalletApproveRequest, [address, apporveRequestData]),
+                  #addWalletApproveRequest, [address, approveRequestData]),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);

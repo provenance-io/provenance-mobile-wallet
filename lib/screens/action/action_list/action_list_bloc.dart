@@ -166,7 +166,7 @@ class ActionListBloc extends Disposable {
       return false;
     }
 
-    return _approveWalletConnectGroup(group, item as _WalletConnectActionItem);
+    return _approveWalletConnectItem(group, item as _WalletConnectActionItem);
   }
 
   Future<void> processWalletConnectQueue(
@@ -176,7 +176,7 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    return _processWalletConnectGroup(
+    return _processWalletConnectItem(
         approved, group, item as _WalletConnectActionItem);
   }
 
@@ -276,7 +276,7 @@ class ActionListBloc extends Disposable {
     return groups;
   }
 
-  Future<bool> _approveWalletConnectGroup(
+  Future<bool> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
     final payload = item.payload;
 
@@ -292,7 +292,7 @@ class ActionListBloc extends Disposable {
     }
   }
 
-  Future<void> _processWalletConnectGroup(bool approved,
+  Future<void> _processWalletConnectItem(bool approved,
       _WalletConnectActionGroup group, _WalletConnectActionItem item) async {
     final walletConnectService = get<WalletConnectService>();
 
