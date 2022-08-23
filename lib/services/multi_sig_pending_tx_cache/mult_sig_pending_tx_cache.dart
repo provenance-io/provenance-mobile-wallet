@@ -18,10 +18,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
   final items = <MultiSigActionListItem>[];
 
-  // final _items = BehaviorSubject<List<ActionListItem>>();
   final _cache = <String, List<MultiSigActionListItem>>{};
-
-  // ValueStream<List<ActionListItem>> get items => _items;
 
   Future<void> update({
     required List<String> signerAddresses,
@@ -71,13 +68,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     items.addAll(updated);
 
     notifyListeners();
-    // _items.add(items);
   }
-
-  // @override
-  // FutureOr onDispose() {
-  //   _items.close();
-  // }
 }
 
 class MultiSigActionListItem extends ActionListItem {
