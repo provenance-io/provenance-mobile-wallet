@@ -57,6 +57,7 @@
   "resetAccountsAreYouSure": "Are you sure you wish to reset all accounts?",
   "pinCodeUpdated": "Pin Code Updated Successfully",
   "successName": "Success",
+  "msgSendName": "Send",
   "profileDeveloperCategoryTitle": "Developer",
   "profileDeveloperHttpClients500": "HTTP clients return 500",
   "profileDeveloperServiceMocks": "Service Mocks",

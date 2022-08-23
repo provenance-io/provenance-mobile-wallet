@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
+import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigPendingTxCache extends Listenable with ListenableMixin {
@@ -31,14 +33,12 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
       if (txs != null) {
         final items = txs.map(
           (e) {
-            final labels = e.txBody.messages.fold<List<String>>([], (prev, e) {
-              return prev..add(e.typeUrl);
-            });
-
             return MultiSigActionListItem(
               address: e.accountAddress,
-              label: (_) => labels.join(', '),
-              sublabel: (_) => 'sublabel',
+              label: (c) => e.txBody.messages
+                  .map((e) => e.toMessage().toLocalizedName(c))
+                  .join(', '),
+              sublabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
               txBody: e.txBody,
               txUuid: e.txUuid,
             );
