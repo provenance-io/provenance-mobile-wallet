@@ -601,5 +601,7 @@
         "example": "894"
       }
     }
-  }
+  },
+  "stakingScreenNoDelegations": "No delegations yet",
+  "stakingScreenSelectValidatorsToContinue": "Select the Validators tab to continue"
 }
