@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_c
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 abstract class ActionListNavigator {
   Future<bool> showApproveSession(
@@ -44,9 +45,11 @@ class _WalletConnectActionGroup extends ActionListGroup {
 }
 
 class _WalletConnectActionItem extends ActionListItem {
-  _WalletConnectActionItem(
-      {required String label, required String subLabel, required this.payload})
-      : super(label: label, subLabel: subLabel);
+  _WalletConnectActionItem({
+    required LocalizedString label,
+    required LocalizedString subLabel,
+    required this.payload,
+  }) : super(label: label, subLabel: subLabel);
 
   final dynamic payload;
 }
@@ -73,8 +76,8 @@ class ActionListItem {
     required this.subLabel,
   });
 
-  final String label;
-  final String subLabel;
+  final LocalizedString label;
+  final LocalizedString subLabel;
 }
 
 class NotificationItem {
@@ -99,22 +102,11 @@ class ActionListBloc extends Disposable {
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
   final MultiSigPendingTxCache _multiSigPendingTxCache;
-  final String approveSessionLabel;
-  final String signatureRequestedLabel;
-  final String transactionRequestedLabel;
-  final String unknownLabel;
-  final String actionRequiredSubLabel;
 
   final _streamController = StreamController<ActionListBlocState>();
 
-  ActionListBloc(
-    this._navigator, {
-    required this.approveSessionLabel,
-    required this.signatureRequestedLabel,
-    required this.transactionRequestedLabel,
-    required this.unknownLabel,
-    required this.actionRequiredSubLabel,
-  })  : _connectQueueService = get<WalletConnectQueueService>(),
+  ActionListBloc(this._navigator)
+      : _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>(),
         _multiSigPendingTxCache = get<MultiSigPendingTxCache>();
 
@@ -232,19 +224,19 @@ class ActionListBloc extends Disposable {
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
-          String label;
+          LocalizedString label;
           if (entry.value is WalletConnectSessionRequestData) {
-            label = approveSessionLabel;
+            label = (c) => Strings.of(c).actionListLabelApproveSession;
           } else if (entry.value is SignRequest) {
-            label = signatureRequestedLabel;
+            label = (c) => Strings.of(c).actionListLabelSignatureRequested;
           } else if (entry.value is SendRequest) {
-            label = transactionRequestedLabel;
+            label = (c) => Strings.of(c).actionListLabelTransactionRequested;
           } else {
-            label = unknownLabel;
+            label = (c) => Strings.of(c).actionListLabelUnknown;
           }
           return _WalletConnectActionItem(
             label: label,
-            subLabel: actionRequiredSubLabel,
+            subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
             payload: entry.value,
           );
         }).toList(),

@@ -5,6 +5,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigPendingTxCache extends Listenable with ListenableMixin {
   MultiSigPendingTxCache({
@@ -36,8 +37,8 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
             return MultiSigActionListItem(
               address: e.accountAddress,
-              label: labels.join(', '),
-              sublabel: 'sublabel',
+              label: (_) => labels.join(', '),
+              sublabel: (_) => 'sublabel',
               txBody: e.txBody,
               txUuid: e.txUuid,
             );
@@ -82,8 +83,8 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 class MultiSigActionListItem extends ActionListItem {
   MultiSigActionListItem({
     required this.address,
-    required String label,
-    required String sublabel,
+    required LocalizedString label,
+    required LocalizedString sublabel,
     required this.txBody,
     required this.txUuid,
   }) : super(

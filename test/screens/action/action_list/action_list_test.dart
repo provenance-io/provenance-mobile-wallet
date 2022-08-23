@@ -5,9 +5,12 @@ import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-final item = ActionListItem(label: "Main Label", subLabel: "Sub Label");
-final item2 = ActionListItem(label: "Main Label2", subLabel: "Sub Label2");
-final item3 = ActionListItem(label: "Main Label3", subLabel: "Sub Label3");
+final item =
+    ActionListItem(label: (_) => "Main Label", subLabel: (_) => "Sub Label");
+final item2 =
+    ActionListItem(label: (_) => "Main Label2", subLabel: (_) => "Sub Label2");
+final item3 =
+    ActionListItem(label: (_) => "Main Label3", subLabel: (_) => "Sub Label3");
 
 const actionListSelected = "Selected";
 const actionListBasicAccount = "Basic";
@@ -126,9 +129,10 @@ main() {
 
     testWidgets("Verify contents", (tester) async {
       await _build(tester, item);
+      final context = tester.allElements.last;
 
-      expect(find.text(item.label), findsOneWidget);
-      expect(find.text(item.subLabel), findsOneWidget);
+      expect(find.text(item.label(context)), findsOneWidget);
+      expect(find.text(item.subLabel(context)), findsOneWidget);
       expect(find.byIcon(Icons.keyboard_arrow_right), findsOneWidget);
     });
   });
