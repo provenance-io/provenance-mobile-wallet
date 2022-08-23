@@ -269,6 +269,7 @@ class AccountService implements Disposable {
     return accounts;
   }
 
+  // TODO-Roy: Throw instead of returning null if missing
   Future<PrivateKey?> loadKey(String accountId) async {
     final coin = events.selected.value?.coin;
     PrivateKey? privateKey;

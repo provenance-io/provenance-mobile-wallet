@@ -5,10 +5,12 @@ part 'multi_sig_pending_tx_dto.g.dart';
 @JsonSerializable()
 class MultiSigPendingTxDto {
   MultiSigPendingTxDto({
+    required this.multiSigAddress,
     required this.txUuid,
     required this.txBodyBytes,
   });
 
+  final String multiSigAddress;
   final String txUuid;
   final String txBodyBytes;
 

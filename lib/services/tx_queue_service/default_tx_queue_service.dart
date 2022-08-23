@@ -59,19 +59,16 @@ class DefaultQueueTxService implements TxQueueService {
   Future<ScheduledTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    AccountGasEstimate? gasEstimate,
+    required AccountGasEstimate gasEstimate,
   }) async {
     final db = await _db;
 
-    SembastGasEstimate? estimateModel;
-    if (gasEstimate != null) {
-      estimateModel = SembastGasEstimate(
-        estimatedGas: gasEstimate.estimatedGas,
-        baseFee: gasEstimate.baseFee,
-        gasAdjustment: gasEstimate.gasAdjustment,
-        estimatedFees: gasEstimate.estimatedFees,
-      );
-    }
+    final estimateModel = SembastGasEstimate(
+      estimatedGas: gasEstimate.estimatedGas,
+      baseFee: gasEstimate.baseFee,
+      gasAdjustment: gasEstimate.gasAdjustment,
+      estimatedFees: gasEstimate.estimatedFees,
+    );
 
     ScheduledTx response;
 
@@ -97,10 +94,16 @@ class DefaultQueueTxService implements TxQueueService {
         final address = multiAccount.address;
         final signerAddress = multiAccount.linkedAccount.address;
 
+        final fee = proto.Fee(
+          amount: gasEstimate.totalFees,
+          gasLimit: proto.Int64(gasEstimate.estimatedGas),
+        );
+
         final remoteId = await _multiSigService.createTx(
           multiSigAddress: address,
           signerAddress: signerAddress,
           txBody: txBody,
+          fee: fee,
         );
 
         if (remoteId == null) {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
@@ -7,15 +9,21 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_creat
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_created_tx_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_sign_tx_request_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_tx_body_bytes_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_status.dart';
 import 'package:provenance_wallet/util/address_util.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
 
 enum MultiSigInviteStatus {
@@ -228,15 +236,21 @@ class MultiSigService with ClientCoinMixin {
     required String multiSigAddress,
     required String signerAddress,
     required proto.TxBody txBody,
+    required proto.Fee fee,
   }) async {
     final coin = getCoinFromAddress(multiSigAddress);
     final client = await getClient(coin);
     const path = '$_basePath/tx/create';
 
+    final txBodyBytes = MultiSigTxBodyBytesDto(
+      txBody: txBody,
+      fee: fee,
+    );
+
     final request = MultiSigCreateTxRequestDto(
       multiSigAddress: multiSigAddress,
       signerAddress: signerAddress,
-      txBodyBytes: txBody.writeToJson(),
+      txBodyBytes: jsonEncode(txBodyBytes),
     );
 
     final response = await client.post(
@@ -266,15 +280,119 @@ class MultiSigService with ClientCoinMixin {
       },
     );
 
-    return response.data
-        ?.map(
-          (e) => MultiSigPendingTx(
-            accountAddress: signerAddress,
-            txUuid: e.txUuid,
-            txBody: proto.TxBody.fromJson(e.txBodyBytes),
-          ),
-        )
-        .toList();
+    List<MultiSigPendingTx>? result;
+
+    final data = response.data;
+    if (data != null) {
+      result = data.map((e) => _fromPendingTxDto(e)).whereNotNull().toList();
+    }
+
+    return result;
+  }
+
+  Future<List<MultiSigPendingTx>?> getCreatedTxs({
+    required String signerAddress,
+  }) async {
+    final coin = getCoinFromAddress(signerAddress);
+    final client = await getClient(coin);
+    final path = '$_basePath/tx/created/$signerAddress';
+
+    final response = await client.get(
+      path,
+      listConverter: (json) {
+        if (json is String) {
+          return <MultiSigCreatedTxDto>[];
+        }
+
+        return json.map((e) => MultiSigCreatedTxDto.fromJson(e)).toList();
+      },
+    );
+
+    List<MultiSigPendingTx>? result;
+
+    final data = response.data;
+    if (data != null) {
+      result = data.map((e) => _fromCreatedTxDto(e)).whereNotNull().toList();
+    }
+
+    return result;
+  }
+
+  Future<bool> signTx({
+    required String signerAddress,
+    required String txUuid,
+    required String signatureBytes,
+  }) async {
+    final coin = getCoinFromAddress(signerAddress);
+    final client = await getClient(coin);
+    const path = '$_basePath/tx/sign';
+
+    final request = MultiSigSignTxRequest(
+      address: signerAddress,
+      txUuid: txUuid,
+      signatureBytes: signatureBytes,
+    );
+
+    final response = await client.post(
+      path,
+      body: request,
+    );
+
+    return response.isSuccessful;
+  }
+
+  MultiSigPendingTx? _fromCreatedTxDto(MultiSigCreatedTxDto? dto) {
+    MultiSigPendingTx? result;
+
+    try {
+      if (dto != null) {
+        final txBodyBytes =
+            MultiSigTxBodyBytesDto.fromJson(jsonDecode(dto.txBodyBytes));
+
+        result = MultiSigPendingTx(
+          multiSigAddress: dto.multiSigAddress,
+          txUuid: dto.txUuid,
+          txBody: txBodyBytes.txBody,
+          fee: txBodyBytes.fee,
+          status: MultiSigStatus.values.byName(dto.status.toLowerCase()),
+          signatures: dto.signatures
+              ?.map(
+                (e) => MultiSigSignature(
+                  signerAddress: e.signerAddress,
+                  signatureHex: e.signatureHex,
+                ),
+              )
+              .toList(),
+        );
+      }
+    } catch (e) {
+      logDebug('Invalid $MultiSigCreatedTxDto');
+    }
+
+    return result;
+  }
+
+  MultiSigPendingTx? _fromPendingTxDto(MultiSigPendingTxDto? dto) {
+    MultiSigPendingTx? result;
+
+    try {
+      if (dto != null) {
+        final txBodyBytes =
+            MultiSigTxBodyBytesDto.fromJson(jsonDecode(dto.txBodyBytes));
+
+        result = MultiSigPendingTx(
+          multiSigAddress: dto.multiSigAddress,
+          txUuid: dto.txUuid,
+          txBody: txBodyBytes.txBody,
+          fee: txBodyBytes.fee,
+          status: MultiSigStatus.pending,
+        );
+      }
+    } catch (e) {
+      logDebug('Invalid $MultiSigPendingTxDto');
+    }
+
+    return result;
   }
 
   MultiSigSigner _toMultiSigSigner({

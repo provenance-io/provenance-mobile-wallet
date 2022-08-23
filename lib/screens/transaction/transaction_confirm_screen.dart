@@ -7,14 +7,6 @@ import 'package:provenance_wallet/screens/transaction/transaction_message_defaul
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-typedef MessageBuilder = Widget Function(
-  String requestId,
-  ClientMeta clientMeta,
-  String? message,
-  Map<String, dynamic>? data,
-  List<proto.Coin>? fees,
-);
-
 enum TransactionConfirmKind {
   approve,
   notify,
@@ -24,8 +16,7 @@ class TransactionConfirmScreen extends StatefulWidget {
   const TransactionConfirmScreen({
     required this.kind,
     required this.title,
-    required this.requestId,
-    required this.clientMeta,
+    this.clientMeta,
     this.subTitle,
     this.message,
     this.data,
@@ -35,8 +26,7 @@ class TransactionConfirmScreen extends StatefulWidget {
 
   final TransactionConfirmKind kind;
   final String title;
-  final String requestId;
-  final ClientMeta clientMeta;
+  final ClientMeta? clientMeta;
   final String? subTitle;
   final String? message;
   final List<Map<String, dynamic>>? data;
@@ -139,7 +129,6 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Spacing.largeX3),
                 child: TransactionMessageDefault(
-                  requestId: widget.requestId,
                   clientMeta: widget.clientMeta,
                   message: widget.message,
                   data: widget.data,

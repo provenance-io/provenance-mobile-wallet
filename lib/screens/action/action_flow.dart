@@ -1,3 +1,4 @@
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -6,7 +7,6 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -89,7 +89,6 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
           title: Strings.of(context).confirmSignTitle,
-          requestId: signRequest.id,
           subTitle: signRequest.description,
           clientMeta: clientMeta,
           message: signRequest.message,
@@ -104,8 +103,11 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   }
 
   @override
-  Future<bool> showApproveTransaction(
-      SendRequest sendRequest, ClientMeta clientMeta) async {
+  Future<bool> showApproveTransaction({
+    required List<proto.GeneratedMessage> messages,
+    List<proto.Coin>? fees,
+    ClientMeta? clientMeta,
+  }) async {
     return showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
@@ -113,7 +115,6 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         animation,
         secondaryAnimation,
       ) {
-        final messages = sendRequest.messages;
         final data = messages.map((message) {
           return <String, dynamic>{
             MessageFieldName.type: message.info_.qualifiedMessageName,
@@ -124,10 +125,9 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
           title: Strings.of(context).confirmTransactionTitle,
-          requestId: sendRequest.id,
           clientMeta: clientMeta,
           data: data,
-          fees: sendRequest.gasEstimate.totalFees,
+          fees: fees,
         );
       },
     ).then((approved) => approved ?? false);

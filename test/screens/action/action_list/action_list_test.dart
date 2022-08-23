@@ -17,6 +17,7 @@ const actionListBasicAccount = "Basic";
 const actionListMultiSigAccount = "Multi-Sig";
 
 final basicGroup = ActionListGroup(
+    accountId: 'one',
     label: "Test Label",
     subLabel: "SubList",
     isBasicAccount: true,
@@ -24,6 +25,7 @@ final basicGroup = ActionListGroup(
     items: [item]);
 
 final multiSigGroup = ActionListGroup(
+    accountId: 'two',
     label: "Test Label - multiSig",
     subLabel: "SubList",
     isBasicAccount: false,
@@ -31,6 +33,7 @@ final multiSigGroup = ActionListGroup(
     items: []);
 
 final isSelectedGroup = ActionListGroup(
+    accountId: 'three',
     label: "Test Label - isSelected",
     subLabel: "SubList",
     isBasicAccount: false,

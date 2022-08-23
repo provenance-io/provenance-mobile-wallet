@@ -11,7 +11,7 @@ abstract class TxQueueService {
   Future<ScheduledTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    AccountGasEstimate? gasEstimate,
+    required AccountGasEstimate gasEstimate,
   });
 
   Future<void> completeTx({
