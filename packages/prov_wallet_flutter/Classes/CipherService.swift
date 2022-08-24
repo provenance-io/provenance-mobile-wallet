@@ -102,7 +102,7 @@ class CipherService: NSObject {
         saveCipher(id: id, cipher: newCipherText)
     }
 
-    func decryptKey(id: String) async throws -> String {
+    func decryptKey(id: String) async throws -> String? {
         let success = await authenticate()
         if !success {
             throw CipherServiceError(kind: .accessError, message: "Authentication failed")
@@ -310,9 +310,9 @@ class CipherService: NSObject {
         return cipherText
     }
 
-    private func decrypt(id: String, cipherText: Data) throws -> String {
+    private func decrypt(id: String, cipherText: Data) throws -> String? {
         if cipherText.isEmpty {
-            return ""
+            return nil
         }
 
         guard let secKey = loadSecKey(id: id) else {

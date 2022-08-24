@@ -27,12 +27,11 @@ class WalletConnectQueueGroup {
         "message": "",
         "description": input.description,
         "txBody": body.writeToBuffer(),
-        "estimate": input.gasEstimate.estimate,
+        "estimate": input.gasEstimate.estimatedGas,
         "baseFee": input.gasEstimate.baseFee,
-        "feeAdjustment": input.gasEstimate.feeAdjustment,
-        "feeCalculated": input.gasEstimate.feeCalculated
-            ?.map((e) => e.writeToBuffer())
-            .toList(),
+        "feeAdjustment": input.gasEstimate.gasAdjustment,
+        "feeCalculated":
+            input.gasEstimate.totalFees.map((e) => e.writeToBuffer()).toList(),
       };
     } else if (input is SignRequest) {
       return <String, dynamic>{

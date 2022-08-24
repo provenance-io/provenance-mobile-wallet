@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 
 enum AccountKind {
   basic,
@@ -15,6 +14,7 @@ abstract class Account {
   abstract final AccountKind kind;
   abstract final String? address;
   abstract final Coin? coin;
+  abstract final IPubKey? publicKey;
 }
 
 abstract class TransactableAccount implements Account {
@@ -34,6 +34,9 @@ abstract class TransactableAccount implements Account {
 
   @override
   Coin get coin;
+
+  @override
+  IPubKey get publicKey;
 }
 
 class BasicAccount with Diagnosticable implements Account, TransactableAccount {
@@ -53,6 +56,7 @@ class BasicAccount with Diagnosticable implements Account, TransactableAccount {
   @override
   final String name;
 
+  @override
   final PublicKey publicKey;
 
   @override
@@ -96,12 +100,12 @@ class MultiAccount with Diagnosticable implements Account {
   const MultiAccount({
     required this.id,
     required this.name,
-    required this.address,
     required this.linkedAccount,
     required this.remoteId,
     required this.cosignerCount,
     required this.signaturesRequired,
     required this.inviteIds,
+    this.publicKey,
   });
 
   @override
@@ -113,12 +117,6 @@ class MultiAccount with Diagnosticable implements Account {
   @override
   final String name;
 
-  @override
-  final String? address;
-
-  @override
-  Coin? get coin => address == null ? null : getCoinFromAddress(address!);
-
   final BasicAccount linkedAccount;
 
   final String remoteId;
@@ -128,6 +126,15 @@ class MultiAccount with Diagnosticable implements Account {
   final int signaturesRequired;
 
   final List<String> inviteIds;
+
+  @override
+  final AminoPubKey? publicKey;
+
+  @override
+  String? get address => publicKey?.address;
+
+  @override
+  Coin? get coin => publicKey?.coin;
 
   @override
   int get hashCode => Object.hashAll([
@@ -169,22 +176,25 @@ class MultiTransactableAccount extends MultiAccount
   const MultiTransactableAccount({
     required String id,
     required String name,
-    required String address,
     required BasicAccount linkedAccount,
     required String remoteId,
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
+    required AminoPubKey publicKey,
   }) : super(
           id: id,
           name: name,
-          address: address,
           linkedAccount: linkedAccount,
           remoteId: remoteId,
           cosignerCount: cosignerCount,
           signaturesRequired: signaturesRequired,
           inviteIds: inviteIds,
+          publicKey: publicKey,
         );
+
+  @override
+  AminoPubKey get publicKey => super.publicKey!;
 
   @override
   String get address => super.address!;

@@ -6,8 +6,10 @@ import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class SendReviewCell extends StatelessWidget {
@@ -173,10 +175,29 @@ class SendReviewPageState extends State<SendReviewPage> {
     );
   }
 
-  void _sendClicked(String total, String addressTo) {
-    _bloc!.doSend().then((_) {
+  Future<void> _sendClicked(String total, String addressTo) async {
+    ScheduleTxResponse? response;
+    try {
+      response = await _bloc!.doSend();
+    } catch (e) {
+      logError('Send failed', error: e);
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: e.toString(),
+          );
+        },
+      );
+    } finally {
       ModalLoadingRoute.dismiss(context);
-      showDialog(
+    }
+
+    // TODO-Roy: Handle fail and handle scheduled
+
+    if (response?.result != null) {
+      await showDialog(
         barrierColor: Colors.transparent,
         useSafeArea: true,
         context: context,
@@ -185,17 +206,9 @@ class SendReviewPageState extends State<SendReviewPage> {
           totalAmount: total,
           addressTo: abbreviateAddress(addressTo),
         ),
-      ).then((value) => _bloc!.complete());
-    }).catchError((err) {
-      ModalLoadingRoute.dismiss(context);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: err.toString(),
-          );
-        },
       );
-    });
+
+      await _bloc!.complete();
+    }
   }
 }

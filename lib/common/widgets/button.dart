@@ -1,4 +1,5 @@
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/util/extensions/color_extension.dart';
 
 class PwPrimaryButton extends StatelessWidget {
   factory PwPrimaryButton.fromString({
@@ -140,7 +141,7 @@ class PwButton extends StatelessWidget {
         final color = theme.colorScheme.primary550;
 
         return states.contains(MaterialState.disabled)
-            ? color.withOpacity(.5)
+            ? color.asDisabled()
             : color;
       }),
       side: MaterialStateProperty.resolveWith((states) {

@@ -6,6 +6,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -175,7 +176,7 @@ class AccountService implements Disposable {
     required int cosignerCount,
     required int signaturesRequired,
     required List<String> inviteIds,
-    String? address,
+    List<MultiSigSigner>? signers,
   }) async {
     final details = await _storage.addMultiAccount(
       name: name,
@@ -185,7 +186,7 @@ class AccountService implements Disposable {
       cosignerCount: cosignerCount,
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
-      address: address,
+      signers: signers,
     );
 
     if (details != null) {
@@ -202,11 +203,11 @@ class AccountService implements Disposable {
 
   Future<MultiTransactableAccount?> activateMultiAccount({
     required String id,
-    required String address,
+    required List<MultiSigSigner> signers,
   }) async {
-    final account = await _storage.setMultiAccountAddress(
+    final account = await _storage.setMultiAccountSigners(
       id: id,
-      address: address,
+      signers: signers,
     );
 
     if (account != null) {

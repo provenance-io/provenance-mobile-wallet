@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 
 abstract class AccountStorageServiceCore {
   AccountStorageServiceCore._();
@@ -21,11 +22,12 @@ abstract class AccountStorageServiceCore {
     required int signaturesRequired,
     required List<String> inviteIds,
     String? address,
+    List<MultiSigSigner>? signers,
   });
 
-  Future<MultiAccount?> setMultiAccountAddress({
+  Future<MultiAccount?> setMultiAccountSigners({
     required String id,
-    required String address,
+    required List<MultiSigSigner> signers,
   });
 
   Future<Account?> getAccount({

@@ -83,7 +83,7 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
     // 1. Create a new message class that encompasses our data
     // 2. Transform RemoteMessage to that message
     // 3. Expose via a stream on this class
-    logDebug('Received firebase message: $message');
+    logDebug('Received firebase message: ${message.data}');
   }
 
   ///
@@ -94,7 +94,24 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
   /// See https://firebase.flutter.dev/docs/messaging/usage/#background-messages
   ///
   static Future<void> _onBackgroundMessage(RemoteMessage message) async {
-    Log.instance.debug('Received firebase message: $message',
+    Log.instance.debug('Received firebase message: ${message.data}',
         tag: '$DefaultRemoteNotificationService');
   }
 }
+
+class MultiSigRemoteMessage {
+  MultiSigRemoteMessage({
+    required this.topic,
+    required this.txUuid,
+    required this.txBody,
+  });
+
+  final String topic;
+  final String txUuid;
+  final String txBody;
+}
+
+const multiSigTxSignatureRequired = 'MULTISIG_TX_SIGNATURE_REQUIRED';
+const multiSigAccountComplete = 'MULTISIG_WALLET_COMPLETE';
+const multiSigTxReady = 'MULTISIG_TX_READY';
+const multiSigTxResult = 'MULTISIG_TX_RESULT';

@@ -131,7 +131,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       proto.RawTxResponsePair response =
           await _transactionHandler.executeTransaction(
         txBody,
-        _privateKey,
+        _privateKey.defaultKey(),
         action.gasEstimate,
       );
 
@@ -148,7 +148,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
           gasUsed: txResponse.gasUsed.toInt(),
           height: txResponse.height.toInt(),
           txHash: txResponse.txhash,
-          fees: action.gasEstimate.feeCalculated,
+          fees: action.gasEstimate.totalFees,
           codespace: txResponse.codespace,
         ),
       );

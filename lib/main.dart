@@ -63,6 +63,8 @@ import 'package:provenance_wallet/services/stat_service/stat_service.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/default_tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
 import 'package:provenance_wallet/services/validator_service/validator_service.dart';
@@ -315,8 +317,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
   Future<void> _setup() async {
     final keyValueService = get<KeyValueService>();
+    final cipherService = get<CipherService>();
 
-    get<CipherService>().error.listen((e) {
+    cipherService.error.listen((e) {
       logDebug("CipherService error: $e");
 
       final navContext = _navigatorKey.currentContext;
@@ -452,8 +455,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<WalletConnectionFactory>(
       () => (address) => WalletConnection(address),
     );
-    get.registerLazySingleton<TransactionHandler>(
-      () => DefaultTransactionHandler(),
+    final transactionHandler = DefaultTransactionHandler();
+    get.registerSingleton<TransactionHandler>(
+      transactionHandler,
     );
 
     get.registerLazySingleton<PriceService>(
@@ -510,6 +514,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
+    final multiSigService = get<MultiSigService>();
+    final txQueueService = DefaultQueueTxService(
+      transactionHandler: transactionHandler,
+      cipherService: cipherService,
+      multiSigService: multiSigService,
+      accountService: accountService,
+    );
+    get.registerSingleton<TxQueueService>(txQueueService);
+
     await _activatePendingMultiAccounts();
   }
 
@@ -530,11 +543,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       );
 
       if (remoteAccount != null) {
-        final address = remoteAccount.address;
-        if (address != null) {
+        final active = remoteAccount.signers.every((e) => e.publicKey != null);
+        if (active) {
           final account = await accountService.activateMultiAccount(
             id: pendingAccount.id,
-            address: address,
+            signers: remoteAccount.signers,
           );
 
           if (account == null) {

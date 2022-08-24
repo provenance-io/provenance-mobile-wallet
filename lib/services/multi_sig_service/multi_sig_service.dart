@@ -1,11 +1,15 @@
 import 'package:collection/collection.dart';
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_request_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
@@ -217,6 +221,51 @@ class MultiSigService with ClientCoinMixin {
     }
 
     return account;
+  }
+
+  Future<String?> createTx({
+    required String multiSigAddress,
+    required String signerAddress,
+    required proto.TxBody txBody,
+  }) async {
+    final coin = getCoinFromAddress(multiSigAddress);
+    final client = await getClient(coin);
+    const path = '$_basePath/tx/create';
+
+    final request = MultiSigCreateTxRequestDto(
+      multiSigAddress: multiSigAddress,
+      signerAddress: signerAddress,
+      txBodyBytes: txBody.writeToJson(),
+    );
+
+    final response = await client.post(
+      path,
+      body: request,
+      converter: (json) => MultiSigCreateTxResponseDto.fromJson(json),
+    );
+
+    return response.data?.txUuid;
+  }
+
+  Future<List<MultiSigPendingTxDto>?> getPendingTxs({
+    required String signerAddress,
+  }) async {
+    final coin = getCoinFromAddress(signerAddress);
+    final client = await getClient(coin);
+    final path = '$_basePath/tx/pending$signerAddress';
+
+    final response = await client.get(
+      path,
+      listConverter: (json) {
+        if (json is String) {
+          return <MultiSigPendingTxDto>[];
+        }
+
+        return json.map((e) => MultiSigPendingTxDto.fromJson(e)).toList();
+      },
+    );
+
+    return response.data;
   }
 
   MultiSigSigner _toMultiSigSigner({

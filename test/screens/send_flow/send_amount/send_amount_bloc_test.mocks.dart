@@ -5,7 +5,7 @@
 import 'dart:async' as _i7;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i4;
+import 'package:provenance_dart/proto.dart' as _i12;
 import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart'
     as _i8;
@@ -15,13 +15,15 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i11;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
-import 'package:provenance_wallet/services/models/price.dart' as _i13;
+import 'package:provenance_wallet/services/models/price.dart' as _i14;
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
+    as _i11;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i12;
+    as _i13;
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
+    as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,8 +41,8 @@ class _FakeAccountServiceEvents_0 extends _i1.Fake
 class _FakeAccountGasEstimate_1 extends _i1.Fake
     implements _i3.AccountGasEstimate {}
 
-class _FakeRawTxResponsePair_2 extends _i1.Fake
-    implements _i4.RawTxResponsePair {}
+class _FakeScheduleTxResponse_2 extends _i1.Fake
+    implements _i4.ScheduleTxResponse {}
 
 class _FakeHttpClient_3 extends _i1.Fake implements _i5.HttpClient {}
 
@@ -138,7 +140,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          String? address}) =>
+          List<_i11.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -148,16 +150,16 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
                 #cosignerCount: cosignerCount,
                 #signaturesRequired: signaturesRequired,
                 #inviteIds: inviteIds,
-                #address: address
+                #signers: signers
               }),
               returnValue: Future<_i9.MultiAccount?>.value())
           as _i7.Future<_i9.MultiAccount?>);
   @override
   _i7.Future<_i9.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, String? address}) =>
+          {String? id, List<_i11.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #activateMultiAccount, [], {#id: id, #address: address}),
+                  #activateMultiAccount, [], {#id: id, #signers: signers}),
               returnValue: Future<_i9.MultiTransactableAccount?>.value())
           as _i7.Future<_i9.MultiTransactableAccount?>);
   @override
@@ -180,54 +182,62 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           returnValue: Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
-/// A class which mocks [TransactionHandler].
+/// A class which mocks [TxQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTransactionHandler extends _i1.Mock
-    implements _i11.TransactionHandler {
-  MockTransactionHandler() {
+class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
+  MockTxQueueService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Stream<_i11.TransactionResponse> get transaction =>
-      (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: Stream<_i11.TransactionResponse>.empty())
-          as _i7.Stream<_i11.TransactionResponse>);
-  @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
-          _i4.TxBody? txBody, List<_i10.IPubKey>? signers) =>
-      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, signers]),
+          {_i12.TxBody? txBody, _i9.TransactableAccount? account}) =>
+      (super.noSuchMethod(
+              Invocation.method(
+                  #estimateGas, [], {#txBody: txBody, #account: account}),
               returnValue: Future<_i3.AccountGasEstimate>.value(
                   _FakeAccountGasEstimate_1()))
           as _i7.Future<_i3.AccountGasEstimate>);
   @override
-  _i7.Future<_i4.RawTxResponsePair> executeTransaction(
-          _i4.TxBody? txBody, _i10.PrivateKey? privateKey,
-          [_i3.AccountGasEstimate? gasEstimate]) =>
+  _i7.Future<_i4.ScheduleTxResponse> scheduleTx(
+          {_i12.TxBody? txBody,
+          _i9.TransactableAccount? account,
+          _i3.AccountGasEstimate? gasEstimate}) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #executeTransaction, [txBody, privateKey, gasEstimate]),
-              returnValue: Future<_i4.RawTxResponsePair>.value(
-                  _FakeRawTxResponsePair_2()))
-          as _i7.Future<_i4.RawTxResponsePair>);
+              Invocation.method(#scheduleTx, [], {
+                #txBody: txBody,
+                #account: account,
+                #gasEstimate: gasEstimate
+              }),
+              returnValue: Future<_i4.ScheduleTxResponse>.value(
+                  _FakeScheduleTxResponse_2()))
+          as _i7.Future<_i4.ScheduleTxResponse>);
+  @override
+  _i7.Future<void> completeTx(
+          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
 }
 
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i12.PriceService {
+class MockPriceService extends _i1.Mock implements _i13.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i13.Price>> getAssetPrices(
+  _i7.Future<List<_i14.Price>> getAssetPrices(
           _i10.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: Future<List<_i13.Price>>.value(<_i13.Price>[]))
-          as _i7.Future<List<_i13.Price>>);
+              returnValue: Future<List<_i14.Price>>.value(<_i14.Price>[]))
+          as _i7.Future<List<_i14.Price>>);
   @override
   _i7.Future<_i5.HttpClient> getClient(_i10.Coin? coin) =>
       (super.noSuchMethod(Invocation.method(#getClient, [coin]),

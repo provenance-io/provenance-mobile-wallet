@@ -1,3 +1,5 @@
+import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
+
 class SembastPublicKeyModel {
   SembastPublicKeyModel({
     required this.hex,
@@ -76,7 +78,7 @@ class SembastMultiAccountModel {
     required this.cosignerCount,
     required this.signaturesRequired,
     required this.inviteIds,
-    this.address,
+    this.signers,
   });
 
   final String name;
@@ -86,7 +88,8 @@ class SembastMultiAccountModel {
   final int cosignerCount;
   final int signaturesRequired;
   final List<String> inviteIds;
-  final String? address;
+
+  final List<SembastMultiAccountSigner>? signers;
 
   Map<String, dynamic> toRecord() => {
         'name': name,
@@ -95,7 +98,8 @@ class SembastMultiAccountModel {
         'cosignerCount': cosignerCount,
         'signaturesRequired': signaturesRequired,
         'inviteIds': inviteIds,
-        'address': address,
+        if (signers != null)
+          'signers': signers?.map((e) => e.toRecord()).toList(),
       };
 
   factory SembastMultiAccountModel.fromRecord(Map<String, dynamic> rec) =>
@@ -109,21 +113,51 @@ class SembastMultiAccountModel {
                 ?.map((e) => e as String)
                 .toList() ??
             [],
-        address: rec['address'] as String?,
+        signers: rec['signers'] != null
+            ? (rec['signers'] as List<dynamic>)
+                .map((e) => SembastMultiAccountSigner.fromRecord(e))
+                .toList()
+            : null,
       );
 
   SembastMultiAccountModel copyWith({
     String? name,
     String? selectedChainId,
-    String? address,
+    List<MultiSigSigner>? signers,
   }) =>
       SembastMultiAccountModel(
         name: name ?? this.name,
-        address: address ?? this.address,
         linkedAccountId: linkedAccountId,
         remoteId: remoteId,
         cosignerCount: cosignerCount,
         signaturesRequired: signaturesRequired,
         inviteIds: inviteIds,
+        signers: signers
+            ?.map((e) => SembastMultiAccountSigner(
+                  publicKey: e.publicKey!.compressedPublicKeyHex,
+                  signerOrder: e.signerOrder,
+                ))
+            .toList(),
+      );
+}
+
+class SembastMultiAccountSigner {
+  SembastMultiAccountSigner({
+    required this.publicKey,
+    required this.signerOrder,
+  });
+
+  final String? publicKey;
+  final int signerOrder;
+
+  Map<String, Object?> toRecord() => {
+        if (publicKey != null) 'publicKey': publicKey,
+        'signerOrder': signerOrder,
+      };
+
+  factory SembastMultiAccountSigner.fromRecord(Map<String, Object?> rec) =>
+      SembastMultiAccountSigner(
+        publicKey: rec['publicKey'] as String?,
+        signerOrder: rec['signerOrder'] as int,
       );
 }

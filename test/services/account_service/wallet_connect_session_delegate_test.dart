@@ -202,9 +202,9 @@ void main() {
         expect(details.requestId, requestId);
         expect(details.messages, transData.proposedMessages);
         expect(details.description, description);
-        expect(details.gasEstimate.adjustment, gasEstimate.adjustment);
-        expect(details.gasEstimate.estimate, gasEstimate.estimate);
-        expect(details.gasEstimate.feeAdjustment, gasEstimate.feeAdjustment);
+        expect(details.gasEstimate.gasAdjustment, gasEstimate.gasAdjustment);
+        expect(details.gasEstimate.estimatedGas, gasEstimate.estimatedGas);
+        expect(details.gasEstimate.gasAdjustment, gasEstimate.gasAdjustment);
 
         return true;
       });

@@ -554,7 +554,7 @@ class AddAccountFlowBloc implements Disposable {
       cosignerCount: account.signers.length,
       signaturesRequired: account.signersRequired,
       inviteIds: account.signers.map((e) => e.inviteId).toList(),
-      address: account.address,
+      signers: account.signers,
     );
 
     _navigator.endFlow(multiAccount);

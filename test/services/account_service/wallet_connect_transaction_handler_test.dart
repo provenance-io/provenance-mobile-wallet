@@ -32,11 +32,11 @@ final rawResponse = RawTxResponsePair(txRaw, txResponse);
 Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
   return predicate((arg) {
     final walletEstimate = arg as AccountGasEstimate;
-    expect(walletEstimate.estimate, gasEstimate.estimate);
+    expect(walletEstimate.estimatedGas, gasEstimate.estimate);
     expect(walletEstimate.baseFee, gasFee.amount);
-    expect(walletEstimate.feeAdjustment, gasEstimate.feeAdjustment);
+    expect(walletEstimate.gasAdjustment, gasEstimate.feeAdjustment);
     expect(
-      walletEstimate.feeCalculated!.length,
+      walletEstimate.totalFees.length,
       1,
     ); // the 1 coin is calculated
 
@@ -122,8 +122,8 @@ main() {
 
   group("executeTransaction", () {
     test("success", () async {
-      final response =
-          await transHandler!.executeTransaction(txBody, privateKey);
+      final response = await transHandler!
+          .executeTransaction(txBody, privateKey.defaultKey());
 
       expect(response, rawResponse);
     });
@@ -136,7 +136,7 @@ main() {
 
       await transHandler!.executeTransaction(
         txBody,
-        privateKey,
+        privateKey.defaultKey(),
         walletEstimate,
       );
 
@@ -149,7 +149,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
       verifyZeroInteractions(mockGasFeeService!);
@@ -161,7 +161,7 @@ main() {
           .thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
     });
@@ -176,7 +176,7 @@ main() {
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
-        () => transHandler!.executeTransaction(txBody, privateKey),
+        () => transHandler!.executeTransaction(txBody, privateKey.defaultKey()),
         throwsA(exception),
       );
     });

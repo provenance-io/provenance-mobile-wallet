@@ -59,15 +59,15 @@ class ProposalVoteConfirmBloc {
     final adjustedEstimate = await _estimateGas(body);
 
     AccountGasEstimate estimate = AccountGasEstimate(
-      adjustedEstimate.estimate,
+      adjustedEstimate.estimatedGas,
       adjustedEstimate.baseFee,
-      gasAdjustment ?? adjustedEstimate.feeAdjustment,
-      adjustedEstimate.feeCalculated,
+      gasAdjustment ?? adjustedEstimate.gasAdjustment,
+      adjustedEstimate.totalFees,
     );
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey!,
+      privateKey!.defaultKey(),
       estimate,
     );
 
