@@ -24,6 +24,7 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -220,7 +221,8 @@ class HomeScreenState extends State<HomeScreen>
         final data = messages.map((message) {
           return <String, dynamic>{
             MessageFieldName.type: message.info_.qualifiedMessageName,
-            ...message.toProto3Json() as Map<String, dynamic>,
+            ...message.toProto3Json(typeRegistry: provenanceTypes)
+                as Map<String, dynamic>,
           };
         }).toList();
 

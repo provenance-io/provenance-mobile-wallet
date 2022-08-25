@@ -104,6 +104,7 @@ class ProvenanceColorScheme extends ColorScheme {
     Color? graphNegative,
     Color? graphNeutral,
     Color? graphPositive,
+    Color? surfaceTint,
   }) {
     return ProvenanceColorScheme(
       brightness: brightness ?? this.brightness,
