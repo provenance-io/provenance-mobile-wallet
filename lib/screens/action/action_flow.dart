@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:provider/provider.dart';
 
 class ActionFlow extends FlowBase {
@@ -126,7 +127,8 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         final data = messages.map((message) {
           return <String, dynamic>{
             MessageFieldName.type: message.info_.qualifiedMessageName,
-            ...message.toProto3Json() as Map<String, dynamic>,
+            ...message.toProto3Json(typeRegistry: provenanceTypes)
+                as Map<String, dynamic>,
           };
         }).toList();
 

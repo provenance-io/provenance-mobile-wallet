@@ -2,6 +2,7 @@ import 'package:protobuf/protobuf.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
 import 'package:provenance_wallet/util/messages/message_field_key.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 
 typedef MessageFieldConverter = Object? Function(Object? obj);
 
@@ -190,7 +191,7 @@ class MessageFieldProcessor {
       _recurseKeys(
         keys,
         key,
-        obj.toProto3Json(),
+        obj.toProto3Json(typeRegistry: provenanceTypes),
       );
     }
   }
