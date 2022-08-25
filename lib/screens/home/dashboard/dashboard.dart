@@ -29,6 +29,8 @@ class Dashboard extends StatefulWidget {
   static final keyAccountNameText = ValueKey('$Dashboard.account_name_text');
   static final keyAccountAddressText =
       ValueKey('$Dashboard.account_address_text');
+  static final keyOpenAccountsButton =
+      ValueKey('$Dashboard.open_accounts_button');
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -137,6 +139,7 @@ class _DashboardState extends State<Dashboard> {
                 },
               ),
               leading: GestureDetector(
+                key: Dashboard.keyOpenAccountsButton,
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   await showDialog(

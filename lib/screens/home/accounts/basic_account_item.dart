@@ -24,6 +24,8 @@ class BasicAccountItem extends StatefulWidget {
         super(key: key);
 
   final BasicAccount _initialAccount;
+  static final keySelectAccountButton =
+      ValueKey('$BasicAccountItem.select_account_button');
 
   @override
   State<BasicAccountItem> createState() => _BasicAccountItemState();
@@ -75,6 +77,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           ? Theme.of(context).colorScheme.secondary650
           : Theme.of(context).colorScheme.neutral700,
       child: AccountContainer(
+        name: account.name,
         rows: [
           AccountTitleRow(
             name: account.name,
@@ -139,6 +142,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             if (!isSelected) PwListDivider(),
             if (!isSelected)
               PwGreyButton(
+                key: BasicAccountItem.keySelectAccountButton,
                 text: strings.select,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.select);

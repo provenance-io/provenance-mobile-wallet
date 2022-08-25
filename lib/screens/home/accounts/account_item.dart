@@ -66,13 +66,18 @@ class AccountContainer extends StatelessWidget {
   const AccountContainer({
     required this.rows,
     required this.isSelected,
+    required this.name,
     this.onShowMenu,
     Key? key,
   }) : super(key: key);
 
+  static Key keyAccountEllipsisName(String name) =>
+      ValueKey('$AccountContainer.ellipsis_$name');
+
   final List<Widget> rows;
   final void Function()? onShowMenu;
   final bool isSelected;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +99,7 @@ class AccountContainer extends StatelessWidget {
         ),
         if (onShowMenu != null)
           GestureDetector(
+            key: keyAccountEllipsisName(name),
             behavior: HitTestBehavior.opaque,
             onTap: onShowMenu,
             child: SizedBox(

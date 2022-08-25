@@ -20,6 +20,7 @@ class MultiSigRemoteAccountItem extends StatelessWidget {
     return Column(
       children: [
         AccountContainer(
+          name: account.name,
           rows: [
             AccountTitleRow(
               name: account.name,
