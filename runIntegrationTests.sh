@@ -13,4 +13,4 @@ TEST_DATA_JSON=${TEST_DATA_JSON//$'\n'/}
 # Replace multiple spaces with single space
 TEST_DATA_JSON=$TEST_DATA_JSON | tr -s ' '
 
-flutter test integration_test/recover_account_test.dart --flavor dev --dart-define TEST_DATA_JSON="$TEST_DATA_JSON" --dart-define CIPHER_SERVICE=memory
+flutter test integration_test --flavor dev --dart-define TEST_DATA_JSON="$TEST_DATA_JSON" --dart-define CIPHER_SERVICE=memory --dart-define ENABLE_FIREBASE=false --dart-define ACCOUNT_STORAGE=memory
