@@ -22,7 +22,7 @@ void main() {
   testWidgets(
     'Given account name and passphrase then recover account flow opens dashboard',
     (tester) async {
-      app.main();
+      app.main([]);
 
       final testData = await tester.loadTestData();
 
