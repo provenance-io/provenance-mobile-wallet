@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +74,7 @@ import 'package:provenance_wallet/services/validator_service/validator_service.d
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
@@ -101,7 +104,7 @@ const _enableFirebase = bool.fromEnvironment(
 
 final _log = Log.instance;
 
-void main() {
+void main(List<String> args) {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
@@ -257,6 +260,12 @@ void main() {
         directory: directory.absolute.path,
       ));
 
+      final json = args.firstOrNull;
+
+      if (json != null) {
+        await _integrationTestSetup(json);
+      }
+
       runApp(
         Phoenix(
           child: ProvenanceWalletApp(),
@@ -279,6 +288,30 @@ void main() {
       }
     },
   );
+}
+
+Future<void> _integrationTestSetup(String json) async {
+  // TODO: Only pass in test data for the test we are currently running.
+
+  final data = IntegrationTestData.fromJson(jsonDecode(json));
+  final seedPhraseOne = data.switchAccountsTest!.recoveryPhraseOne!.split(" ");
+  final seedPhraseTwo = data.switchAccountsTest!.recoveryPhraseTwo!.split(" ");
+  final nameOne = data.switchAccountsTest!.nameOne!;
+  final nameTwo = data.switchAccountsTest!.nameTwo!;
+  final pin = data.switchAccountsTest!.cipherPin!;
+
+  final service = get<AccountService>();
+  await service.addAccount(
+    phrase: seedPhraseOne,
+    name: nameOne,
+    coin: wallet.Coin.testNet,
+  );
+  await service.addAccount(
+    phrase: seedPhraseTwo,
+    name: nameTwo,
+    coin: wallet.Coin.testNet,
+  );
+  await get<CipherService>().setPin(pin);
 }
 
 class ProvenanceWalletApp extends StatefulWidget {

@@ -20,11 +20,20 @@ void main() async {
     recoverWalletTest: RecoverWalletTestData(
       recoveryPhrase: '<recovery phrase>',
     ),
+    switchAccountsTest: SwitchAccountsTestData(
+      recoveryPhraseOne: '<recovery phrase>',
+      recoveryPhraseTwo: '<recovery phrase>',
+      nameOne: '<name one>',
+      nameTwo: '<name two>',
+      cipherPin: '<cipher pin>',
+    ),
   );
 
   final data = IntegrationTestData(
     recoverWalletTest:
         existingData?.recoverWalletTest ?? sampleData.recoverWalletTest,
+    switchAccountsTest:
+        existingData?.switchAccountsTest ?? sampleData.switchAccountsTest,
   );
 
   buffer.writeln(prettyJson(data));
