@@ -23,7 +23,6 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_kind.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/mock_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_service/asset_service.dart';
@@ -230,11 +229,6 @@ void main(List<String> args) {
             cipherService,
           );
           break;
-        case AccountStorageServiceKind.mock:
-          accountStorageService = AccountStorageServiceImp(
-            MockAccountStorageService(),
-            cipherService,
-          );
       }
 
       _log.info(
