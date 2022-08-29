@@ -13,6 +13,7 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/extensions/double_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:rxdart/rxdart.dart';
 
 class WeightedVoteBloc extends Disposable {
@@ -98,7 +99,7 @@ class WeightedVoteBloc extends Disposable {
   }
 
   Object? getMsgVoteWeightedJson() {
-    return _getMsgVoteWeighted().toProto3Json();
+    return _getMsgVoteWeighted().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<Object?> doWeightedVote(
@@ -129,7 +130,7 @@ class WeightedVoteBloc extends Disposable {
     );
 
     log(response.asJsonString());
-    return response.txResponse.toProto3Json();
+    return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
   }
 }
 

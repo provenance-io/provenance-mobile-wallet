@@ -11,6 +11,7 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 
 class ProposalVoteConfirmBloc {
   final TransactableAccount _account;
@@ -33,7 +34,7 @@ class ProposalVoteConfirmBloc {
   }
 
   Object? getMsgVoteJson() {
-    return _getMsgVote().toProto3Json();
+    return _getMsgVote().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   gov.MsgVote _getMsgVote() {
@@ -72,7 +73,7 @@ class ProposalVoteConfirmBloc {
     );
 
     log(response.asJsonString());
-    return response.txResponse.toProto3Json();
+    return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {

@@ -17,6 +17,7 @@ import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingRedelegationBloc extends Disposable {
@@ -104,7 +105,7 @@ class StakingRedelegationBloc extends Disposable {
   }
 
   Object? getRedelegateMessageJson() {
-    return _getRedelegateMessage().toProto3Json();
+    return _getRedelegateMessage().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<Object?> doRedelegate(
@@ -133,7 +134,7 @@ class StakingRedelegationBloc extends Disposable {
     );
 
     log(response.asJsonString());
-    return response.txResponse.toProto3Json();
+    return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
