@@ -97,6 +97,9 @@ flutter:
     - assets/splash/
 
   fonts:
+    - family: OverpassMono
+      fonts:
+        - asset: fonts/OverpassMono/overpass-mono-regular.ttf
     - family: GothicA1
       fonts:
         - asset: fonts/GothicA1/GothicA1-Black.ttf

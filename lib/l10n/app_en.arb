@@ -49,13 +49,13 @@
   "governanceProposals": "Governance Proposals",
   "qrScannerTitle": "Scan QR Code",
   "security": "Security",
-  "pinCode": "Pin Code",
+  "pinCode": "PIN Code",
   "general": "General",
-  "aboutProvenanceBlockchain": "About Provenance Blockchain",
+  "provenanceBlockchain": "Provenance Blockchain",
   "moreInformation": "More Information",
   "resetAccounts": "Reset Accounts",
   "resetAccountsAreYouSure": "Are you sure you wish to reset all accounts?",
-  "pinCodeUpdated": "Pin Code Updated Successfully",
+  "pinCodeUpdated": "PIN Code Updated Successfully",
   "successName": "Success",
   "profileDeveloperCategoryTitle": "Developer",
   "profileDeveloperHttpClients500": "HTTP clients return 500",
@@ -179,10 +179,10 @@
   "accountNameMessage": "Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThese names are stored locally, and can only be seen by you.",
   "accountNameMultiSigMessage": "Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThis name will be shared with co-signers.",
   "continueName": "Continue",
-  "verifyPinCode": "Verify Pin Code",
-  "yourPinDoesNotMatchPleaseTryAgain": "Your pin doesn't match. Please try again or go back and re-enter your pin.",
+  "verifyPinCode": "Verify PIN Code",
+  "yourPinDoesNotMatchPleaseTryAgain": "Your PIN doesn't match. Please try again or go back and re-enter your PIN.",
   "setPinCode": "Set Pin Code",
-  "setAPinCodeToUnlockYourAccount": "Set a pin code to unlock your account.",
+  "setAPinCodeToUnlockYourAccount": "Set a PIN code to unlock your account.",
   "useFaceIdTitle": "Use Face ID?",
   "useYourFaceId": "Use your Face ID for faster, easier\naccess to your account.",
   "useTouchIdTitle": "Use Touch ID?",
@@ -257,9 +257,9 @@
   "transactionFieldMessage": "Message",
   "transactionFieldTrue": "Yes",
   "transactionFieldFalse": "No",
-  "enterPin": "Enter Pin",
-  "enterPinToVerifyYourIdentity": "Enter pin to verify your identity.",
-  "yourPinDoesNotMatch": "Your pin doesn't match.",
+  "enterPin": "Enter PIN",
+  "enterPinToVerifyYourIdentity": "Enter PIN to verify your identity.",
+  "yourPinDoesNotMatch": "Your PIN doesn't match.",
   "accountCreated": "ACCOUNT CREATED",
   "dropDownAllMessageTypes": "All Message Types",
   "dropDownAllStatuses": "All Statuses",
@@ -583,6 +583,26 @@
   "transactionResponse": "Response",
   "walletConnectError": "Error while connecting",
   "walletConnectFailed": "Failed to connect",
+  "viewMoreScreenEcosystem": "Ecosystem",
+  "viewMoreScreenGeneral": "General",
+  "viewMoreScreenInformation": "Information",
+  "informationScreenAbout": "About",
+  "informationScreenDocumentation": "Documentation",
+  "settingsScreenPreferences": "Preferences",
+  "settingsScreenVersion": "Version {version} ({buildNumber})",
+  "@settingsScreenVersion": {
+    "description": "Displays the version of the app",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.3"
+      },
+      "buildNumber": {
+        "type": "String",
+        "example": "894"
+      }
+    }
+  },
   "stakingScreenNoDelegations": "No delegations yet",
   "stakingScreenSelectValidatorsToContinue": "Select the Validators tab to continue"
 }

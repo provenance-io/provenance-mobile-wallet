@@ -32,9 +32,6 @@ class ToggleItem extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(
-              right: Spacing.medium,
-            ),
             child: value == null
                 ? Container()
                 : FlutterSwitch(
