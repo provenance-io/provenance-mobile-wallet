@@ -539,9 +539,9 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
         signers.isNotEmpty &&
         signers.every((e) => e.publicKey != null);
     if (active) {
-      final coin = linkedAccount!.coin;
+      final coin = linkedAccount.coin;
 
-      final signerKeys = signers!
+      final signerKeys = signers
           .map((e) => publicKeyFromCompressedHex(e.publicKey!, coin))
           .toList();
       final publicKey = AminoPubKey(
