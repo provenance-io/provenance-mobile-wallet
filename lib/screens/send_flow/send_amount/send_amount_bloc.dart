@@ -26,7 +26,7 @@ class SendAmountBlocState {
 
 class SendAmountBloc extends Disposable {
   SendAmountBloc(
-    this.accountDetails,
+    this.account,
     this.receivingAddress,
     this.asset,
     this._priceService,
@@ -43,8 +43,7 @@ class SendAmountBloc extends Disposable {
 
   MultiSendAsset? _fee;
 
-  // TODO-Roy: Rename accountDetails
-  final TransactableAccount accountDetails;
+  final TransactableAccount account;
   final SendAsset asset;
   final String receivingAddress;
   final String requiredString;
@@ -58,7 +57,7 @@ class SendAmountBloc extends Disposable {
     final body = TxBody(
       messages: [
         MsgSend(
-          fromAddress: accountDetails.address,
+          fromAddress: account.address,
           toAddress: receivingAddress,
           amount: [
             Coin(
@@ -70,10 +69,10 @@ class SendAmountBloc extends Disposable {
       ],
     );
 
-    final coin = accountDetails.coin;
+    final coin = account.coin;
 
     final estimate = await get<TxQueueService>().estimateGas(
-      account: accountDetails,
+      account: account,
       txBody: body,
     );
 
