@@ -71,10 +71,10 @@ class ActionItemCell extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.label),
+              Text(item.label(context)),
               VerticalSpacer.small(),
               Text(
-                item.subLabel,
+                item.subLabel(context),
                 style: theme.textTheme.caption,
               ),
             ],
