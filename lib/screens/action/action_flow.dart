@@ -1,3 +1,4 @@
+import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -6,12 +7,12 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:provider/provider.dart';
 
 class ActionFlow extends FlowBase {
@@ -42,20 +43,11 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
   @override
   Widget createStartPage() {
-    // this must be accessed outside of the provider
-    final strings = Strings.of(context);
-
     return Provider<ActionListBloc>(
         lazy: true,
         create: (context) {
           final bloc = ActionListBloc(
             this,
-            approveSessionLabel: strings.actionListLabelApproveSession,
-            signatureRequestedLabel: strings.actionListLabelSignatureRequested,
-            transactionRequestedLabel:
-                strings.actionListLabelTransactionRequested,
-            unknownLabel: strings.actionListLabelUnknown,
-            actionRequiredSubLabel: strings.actionListSubLabelActionRequired,
           );
           bloc.init();
           return bloc;
@@ -98,7 +90,6 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
           title: Strings.of(context).confirmSignTitle,
-          requestId: signRequest.id,
           subTitle: signRequest.description,
           clientMeta: clientMeta,
           message: signRequest.message,
@@ -113,8 +104,11 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   }
 
   @override
-  Future<bool> showApproveTransaction(
-      SendRequest sendRequest, ClientMeta clientMeta) async {
+  Future<bool> showApproveTransaction({
+    required List<proto.GeneratedMessage> messages,
+    List<proto.Coin>? fees,
+    ClientMeta? clientMeta,
+  }) async {
     return showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
@@ -122,21 +116,20 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         animation,
         secondaryAnimation,
       ) {
-        final messages = sendRequest.messages;
         final data = messages.map((message) {
           return <String, dynamic>{
             MessageFieldName.type: message.info_.qualifiedMessageName,
-            ...message.toProto3Json() as Map<String, dynamic>,
+            ...message.toProto3Json(typeRegistry: provenanceTypes)
+                as Map<String, dynamic>,
           };
         }).toList();
 
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.approve,
           title: Strings.of(context).confirmTransactionTitle,
-          requestId: sendRequest.id,
           clientMeta: clientMeta,
           data: data,
-          fees: sendRequest.gasEstimate.totalFees,
+          fees: fees,
         );
       },
     ).then((approved) => approved ?? false);

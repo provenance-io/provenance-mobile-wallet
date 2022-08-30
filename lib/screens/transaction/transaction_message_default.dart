@@ -14,8 +14,7 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class TransactionMessageDefault extends StatefulWidget {
   const TransactionMessageDefault({
-    required this.requestId,
-    required this.clientMeta,
+    this.clientMeta,
     this.message,
     this.data,
     this.fees,
@@ -23,8 +22,7 @@ class TransactionMessageDefault extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final String requestId;
-  final ClientMeta clientMeta;
+  final ClientMeta? clientMeta;
   final String? message;
 
   final List<Map<String, dynamic>>? data;
@@ -125,16 +123,18 @@ class _TransactionMessageDefaultState extends State<TransactionMessageDefault>
     final List<TableRow> headers = <TableRow>[];
     final fees = widget.fees;
     final message = widget.message;
+    final clientMeta = widget.clientMeta;
+    if (clientMeta != null) {
+      final platformName = clientMeta.name;
+      final platformHost = clientMeta.url?.host;
 
-    final platformName = widget.clientMeta.name;
-    final platformHost = widget.clientMeta.url?.host;
-
-    headers.add(
-      createFieldTableRow(
-        Strings.of(context).transactionFieldPlatform,
-        '$platformName\n$platformHost',
-      ),
-    );
+      headers.add(
+        createFieldTableRow(
+          Strings.of(context).transactionFieldPlatform,
+          '$platformName\n$platformHost',
+        ),
+      );
+    }
 
     if (message != null) {
       headers.add(

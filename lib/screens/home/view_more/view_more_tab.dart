@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
+import 'package:provenance_wallet/screens/home/settings/information_screen.dart';
 import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -23,14 +24,13 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
     final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: strings.viewMore,
+        title: strings.homeScreenMore,
         hasIcon: false,
         style: PwTextStyle.footnote,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          VerticalSpacer.large(),
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -41,7 +41,14 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        PwText(
+                          strings.viewMoreScreenEcosystem,
+                          style: PwTextStyle.subhead,
+                          textAlign: TextAlign.start,
+                        ),
+                        VerticalSpacer.large(),
                         _getLink(
                           PwIcons.coinsOutline,
                           strings.staking,
@@ -53,6 +60,18 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           PwIcons.copy,
                           strings.governanceProposals,
                           ProposalsFlow(),
+                        ),
+                        VerticalSpacer.xxLarge(),
+                        PwText(
+                          strings.viewMoreScreenGeneral,
+                          style: PwTextStyle.subhead,
+                          textAlign: TextAlign.start,
+                        ),
+                        VerticalSpacer.large(),
+                        _getLink(
+                          PwIcons.information,
+                          strings.viewMoreScreenInformation,
+                          InformationScreen(),
                         ),
                         _getLink(
                           PwIcons.gear,

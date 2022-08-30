@@ -1,13 +1,16 @@
+import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -179,11 +182,30 @@ class SendReviewPageState extends State<SendReviewPage> {
   }
 
   Future<void> _sendClicked(String total, String addressTo) async {
-    ScheduleTxResponse? response;
+    ScheduledTx? response;
     try {
       response = await _bloc!.doSend();
-    } catch (e) {
-      logError('Send failed', error: e);
+    } on PwError catch (e, s) {
+      logError(
+        'Send failed',
+        error: e,
+        stackTrace: s,
+      );
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: e.toLocalizedString(context),
+          );
+        },
+      );
+    } catch (e, s) {
+      logError(
+        'Send failed',
+        error: e,
+        stackTrace: s,
+      );
 
       await showDialog(
         context: context,
@@ -196,8 +218,6 @@ class SendReviewPageState extends State<SendReviewPage> {
     } finally {
       ModalLoadingRoute.dismiss(context);
     }
-
-    // TODO-Roy: Handle fail and handle scheduled
 
     if (response?.result != null) {
       await showDialog(
@@ -212,6 +232,18 @@ class SendReviewPageState extends State<SendReviewPage> {
       );
 
       await _bloc!.complete();
+    } else if (response?.txId != null) {
+      PwDialog.showFull(
+        context: context,
+        title: Strings.of(context).multiSigTransactionInitiatedTitle,
+        message: Strings.of(context).multiSigTransactionInitiatedMessage,
+        icon: Image.asset(
+          Assets.imagePaths.transactionComplete,
+          height: 80,
+          width: 80,
+        ),
+        dismissButtonText: Strings.of(context).multiSigTransactionInitiatedDone,
+      );
     }
   }
 }

@@ -8,10 +8,10 @@ abstract class TxQueueService {
     required TransactableAccount account,
   });
 
-  Future<ScheduleTxResponse> scheduleTx({
+  Future<ScheduledTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    AccountGasEstimate? gasEstimate,
+    required AccountGasEstimate gasEstimate,
   });
 
   Future<void> completeTx({
@@ -20,8 +20,8 @@ abstract class TxQueueService {
   });
 }
 
-class ScheduleTxResponse {
-  ScheduleTxResponse({
+class ScheduledTx {
+  ScheduledTx({
     this.txId,
     this.result,
   });

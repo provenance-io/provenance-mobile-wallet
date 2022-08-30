@@ -276,7 +276,6 @@ class HomeScreenState extends State<HomeScreen>
         return TransactionConfirmScreen(
           kind: TransactionConfirmKind.notify,
           title: title,
-          requestId: response.requestId,
           clientMeta: clientDetails,
           data: [
             data,

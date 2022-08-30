@@ -16,6 +16,7 @@ import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_e
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_tx_signer.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_memory.dart';
@@ -55,25 +56,21 @@ class DefaultQueueTxService implements TxQueueService {
       );
 
   @override
-  Future<ScheduleTxResponse> scheduleTx({
+  Future<ScheduledTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    AccountGasEstimate? gasEstimate,
+    required AccountGasEstimate gasEstimate,
   }) async {
     final db = await _db;
 
-    SembastGasEstimate? estimateModel;
-    if (gasEstimate != null) {
-      estimateModel = SembastGasEstimate(
-        estimatedGas: gasEstimate.estimatedGas,
-        baseFee: gasEstimate.baseFee,
-        gasAdjustment: gasEstimate.gasAdjustment,
-        estimatedFees: gasEstimate.estimatedFees,
-      );
-    }
+    final estimateModel = SembastGasEstimate(
+      estimatedGas: gasEstimate.estimatedGas,
+      baseFee: gasEstimate.baseFee,
+      gasAdjustment: gasEstimate.gasAdjustment,
+      estimatedFees: gasEstimate.estimatedFees,
+    );
 
-    String? id;
-    TxResult? result;
+    ScheduledTx response;
 
     switch (account.kind) {
       case AccountKind.basic:
@@ -84,7 +81,11 @@ class DefaultQueueTxService implements TxQueueService {
           txBody: txBody,
         );
 
-        result = await _executeBasic(account, model);
+        final result = await _executeBasic(account, model);
+
+        response = ScheduledTx(
+          result: result,
+        );
 
         break;
       case AccountKind.multi:
@@ -93,12 +94,21 @@ class DefaultQueueTxService implements TxQueueService {
         final address = multiAccount.address;
         final signerAddress = multiAccount.linkedAccount.address;
 
+        final fee = proto.Fee(
+          amount: gasEstimate.totalFees,
+          gasLimit: proto.Int64(gasEstimate.estimatedGas),
+        );
+
         final remoteId = await _multiSigService.createTx(
           multiSigAddress: address,
           signerAddress: signerAddress,
           txBody: txBody,
+          fee: fee,
         );
-        if (remoteId != null) {
+
+        if (remoteId == null) {
+          throw TxQueueServiceError.createTxFailed;
+        } else {
           final model = SembastScheduledTx(
             accountId: account.id,
             remoteId: remoteId,
@@ -108,32 +118,31 @@ class DefaultQueueTxService implements TxQueueService {
 
           final ref = _store.record(remoteId);
           await ref.put(db, model.toRecord());
+
+          response = ScheduledTx(
+            txId: remoteId,
+          );
         }
 
         break;
     }
 
-    // TODO-Roy: handle network failure
-    //   return null?
-    //   return failed response?
-
-    return ScheduleTxResponse(
-      txId: id,
-      result: result,
-    );
+    return response;
   }
 
   @override
-  Future<TxResult?> completeTx({
+  Future<TxResult> completeTx({
     required String remoteTxId,
     required List<TxSigner> signers,
   }) async {
-    TxResult? result;
+    TxResult result;
 
     final db = await _db;
     final ref = _store.record(remoteTxId);
     final rec = await ref.get(db);
-    if (rec != null) {
+    if (rec == null) {
+      throw TxQueueServiceError.txNotFound;
+    } else {
       final model = SembastScheduledTx.fromRecord(rec).copyWith(
         signers: signers
             .map(
@@ -157,55 +166,61 @@ class DefaultQueueTxService implements TxQueueService {
     return result;
   }
 
-  Future<TxResult?> _execute(String id) async {
-    TxResult? result;
+  Future<TxResult> _execute(String id) async {
+    TxResult result;
 
     final db = await _db;
 
     final rec = _store.record(id);
     final data = await rec.get(db);
-    if (data != null) {
-      final model = SembastScheduledTx.fromRecord(data);
+    if (data == null) {
+      throw TxQueueServiceError.txNotFound;
+    }
 
-      final account = await _accountService.getAccount(model.accountId);
-      if (account != null) {
-        switch (account.kind) {
-          case AccountKind.basic:
-            result = await _executeBasic(account as BasicAccount, model);
-            break;
-          case AccountKind.multi:
-            result =
-                await _executeMulti(account as MultiTransactableAccount, model);
-            break;
-        }
+    final model = SembastScheduledTx.fromRecord(data);
 
-        await rec.delete(db);
+    final account = await _accountService.getAccount(model.accountId);
+    if (account == null) {
+      throw TxQueueServiceError.accountNotFound;
+    } else {
+      switch (account.kind) {
+        case AccountKind.basic:
+          result = await _executeBasic(account as BasicAccount, model);
+          break;
+        case AccountKind.multi:
+          result =
+              await _executeMulti(account as MultiTransactableAccount, model);
+          break;
       }
+
+      await rec.delete(db);
     }
 
     return result;
   }
 
-  Future<TxResult?> _executeBasic(
+  Future<TxResult> _executeBasic(
       BasicAccount account, SembastScheduledTx model) async {
     final serialized = await _cipherService.decryptKey(
       id: account.id,
     );
 
+    if (serialized == null) {
+      throw TxQueueServiceError.cipherKeyNotFound;
+    }
+
     TxResult? result;
 
-    if (serialized != null) {
-      final privateKey = PrivateKey.fromBip32(serialized);
-      final response = await _transactionHandler.executeTransaction(
-        model.txBody,
-        privateKey.defaultKey(),
-      );
+    final privateKey = PrivateKey.fromBip32(serialized);
+    final response = await _transactionHandler.executeTransaction(
+      model.txBody,
+      privateKey.defaultKey(),
+    );
 
-      result = TxResult(
-        body: model.txBody,
-        response: response.txResponse,
-      );
-    }
+    result = TxResult(
+      body: model.txBody,
+      response: response.txResponse,
+    );
 
     return result;
   }

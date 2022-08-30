@@ -75,6 +75,7 @@ main() {
       await _build(tester);
       _streamController.add(ActionListBlocState([
         ActionListGroup(
+          accountId: 'test',
           label: "ActionLabel",
           subLabel: "ActionSubLabel",
           isSelected: true,

@@ -6,6 +6,7 @@ import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
 import 'package:provenance_wallet/util/messages/message_field_processor.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 
 final msgSend = MsgSend(
   fromAddress: 'abcdefghijklmnop',
@@ -57,7 +58,8 @@ void main() {
     final send = MsgSend(
       fromAddress: address,
     );
-    final json = send.toProto3Json() as Map<String, dynamic>;
+    final json = send.toProto3Json(typeRegistry: provenanceTypes)
+        as Map<String, dynamic>;
 
     final group = processor.findFields(json);
     expect(group.fields[0] is MessageField, isTrue);
@@ -77,7 +79,8 @@ void main() {
         ),
       ],
     );
-    final json = send.toProto3Json() as Map<String, dynamic>;
+    final json = send.toProto3Json(typeRegistry: provenanceTypes)
+        as Map<String, dynamic>;
     final group = processor.findFields(json);
     expect(group.fields[0] is MessageFieldGroup, isTrue);
 

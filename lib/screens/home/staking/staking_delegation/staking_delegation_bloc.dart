@@ -21,6 +21,7 @@ import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingDelegationBloc extends Disposable {
@@ -150,15 +151,15 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Object? getClaimRewardJson() {
-    return _getClaimRewardMessage().toProto3Json();
+    return _getClaimRewardMessage().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Object? getUndelegateMessageJson() {
-    return _getUndelegateMessage().toProto3Json();
+    return _getUndelegateMessage().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Object? getDelegateMessageJson() {
-    return _getDelegateMessage().toProto3Json();
+    return _getDelegateMessage().toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<Object?> _sendMessage(
@@ -189,7 +190,7 @@ class StakingDelegationBloc extends Disposable {
     );
 
     log(response.asJsonString());
-    return response.txResponse.toProto3Json();
+    return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {

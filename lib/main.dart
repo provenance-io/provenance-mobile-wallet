@@ -50,6 +50,7 @@ import 'package:provenance_wallet/services/key_value_service/default_key_value_s
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
@@ -240,6 +241,9 @@ void main(List<String> args) {
 
       final multiSigService = MultiSigService();
       get.registerSingleton<MultiSigService>(multiSigService);
+      get.registerSingleton<MultiSigPendingTxCache>(MultiSigPendingTxCache(
+        multiSigService: multiSigService,
+      ));
 
       final accountService = AccountService(
         storage: accountStorageService,

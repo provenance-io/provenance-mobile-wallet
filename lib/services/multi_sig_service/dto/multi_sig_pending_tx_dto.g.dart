@@ -9,6 +9,7 @@ part of 'multi_sig_pending_tx_dto.dart';
 MultiSigPendingTxDto _$MultiSigPendingTxDtoFromJson(
         Map<String, dynamic> json) =>
     MultiSigPendingTxDto(
+      multiSigAddress: json['multiSigAddress'] as String,
       txUuid: json['txUuid'] as String,
       txBodyBytes: json['txBodyBytes'] as String,
     );
@@ -16,6 +17,7 @@ MultiSigPendingTxDto _$MultiSigPendingTxDtoFromJson(
 Map<String, dynamic> _$MultiSigPendingTxDtoToJson(
         MultiSigPendingTxDto instance) =>
     <String, dynamic>{
+      'multiSigAddress': instance.multiSigAddress,
       'txUuid': instance.txUuid,
       'txBodyBytes': instance.txBodyBytes,
     };

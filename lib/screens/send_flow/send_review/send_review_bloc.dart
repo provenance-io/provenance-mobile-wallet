@@ -80,7 +80,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.close();
   }
 
-  Future<ScheduleTxResponse> doSend() async {
+  Future<ScheduledTx> doSend() async {
     final amountToSend = sendingAsset.amount;
 
     final body = TxBody(
