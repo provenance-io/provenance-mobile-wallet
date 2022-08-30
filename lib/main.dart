@@ -59,6 +59,7 @@ import 'package:provenance_wallet/services/notification/notification_service.dar
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/disabled_remote_notification_service.dart';
+import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
@@ -145,6 +146,7 @@ void main(List<String> args) {
         crashReportingService = FirebaseCrashReportingService();
 
         remoteNotificationService = DefaultRemoteNotificationService();
+
         remoteConfigService = FirebaseRemoteConfigService(
           keyValueService: keyValueService,
           localConfigService: localConfigService,
@@ -239,9 +241,11 @@ void main(List<String> args) {
 
       final multiSigService = MultiSigService();
       get.registerSingleton<MultiSigService>(multiSigService);
-      get.registerSingleton<MultiSigPendingTxCache>(MultiSigPendingTxCache(
+
+      final multiSigPendingTxCache = MultiSigPendingTxCache(
         multiSigService: multiSigService,
-      ));
+      );
+      get.registerSingleton<MultiSigPendingTxCache>(multiSigPendingTxCache);
 
       final accountService = AccountService(
         storage: accountStorageService,
@@ -559,6 +563,22 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       accountService: accountService,
     );
     get.registerSingleton<TxQueueService>(txQueueService);
+
+    final multiSigPendingTxCache = get<MultiSigPendingTxCache>();
+    remoteNotificationService.multiSig.listen((e) {
+      switch (e.topic) {
+        case MultiSigTopic.accountComplete:
+          _activatePendingMultiAccounts();
+          break;
+        case MultiSigTopic.txSignatureRequired:
+        case MultiSigTopic.txReady:
+        case MultiSigTopic.txResult:
+          multiSigPendingTxCache.update(
+            signerAddresses: [e.address],
+          );
+          break;
+      }
+    });
 
     await _activatePendingMultiAccounts();
   }
