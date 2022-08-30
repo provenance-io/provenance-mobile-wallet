@@ -17,6 +17,8 @@ class AccountPortfolio extends StatelessWidget {
 
   final double labelHeight;
 
+  static final keySendButton = ValueKey('$AccountPortfolio.send_button');
+
   @override
   Widget build(BuildContext context) {
     final bloc = get<HomeBloc>();
@@ -67,7 +69,7 @@ class AccountPortfolio extends StatelessWidget {
             children: [
               Flexible(
                 child: PwButton(
-                  //minimumWidth: 150,
+                  key: AccountPortfolio.keySendButton,
                   minimumHeight: 66,
                   child: Column(
                     children: [

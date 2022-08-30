@@ -34,6 +34,9 @@ class SendScreen extends StatelessWidget {
 class SendPage extends StatefulWidget {
   const SendPage({Key? key}) : super(key: key);
 
+  static final keyAddressField = ValueKey('$SendPage.address_field');
+  static final keyNextButton = ValueKey('$SendPage.next_button');
+
   @override
   State<StatefulWidget> createState() => SendPageState();
 }
@@ -110,6 +113,7 @@ class SendPageState extends State<SendPage> {
             children: [
               Expanded(
                 child: PwTextFormField(
+                  key: SendPage.keyAddressField,
                   label: Strings.of(context).sendPageSendToAddressLabel,
                   controller: _addressController,
                   hint: Strings.of(context).sendPageScanQrCode,
@@ -163,6 +167,7 @@ class SendPageState extends State<SendPage> {
           ),
           VerticalSpacer.xxLarge(),
           PwButton(
+            key: SendPage.keyNextButton,
             child: PwText(Strings.of(context).nextButtonLabel),
             onPressed: _next,
           ),
