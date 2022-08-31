@@ -46,6 +46,7 @@ class ProposalsBloc extends PwPagingCache {
     }
 
     try {
+      _proposalPages.tryAdd(1);
       final asset =
           (await get<AssetService>().getAssets(_account.coin, _account.address))
               .firstWhere((element) => element.denom == 'nhash');
