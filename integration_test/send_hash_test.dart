@@ -1,8 +1,12 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
+import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
@@ -11,6 +15,7 @@ import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
+import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
 
 import 'util/key_extension.dart';
@@ -47,56 +52,66 @@ void main() {
         await key.tap(tester);
       }
 
-      final beginningHash =
+      double beginningHash =
           double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
-      print(beginningHash);
 
       if (beginningHash < 10) {
-        // TODO: get current address and hit the faucet.
+        String clipboardData = "";
+        SystemChannels.platform
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          if (methodCall.method == "Clipboard.setData") {
+            clipboardData = methodCall.arguments
+                .toString()
+                .replaceAll('{text: ', '')
+                .replaceAll('}', '');
+          }
+        });
+        await Dashboard.keyOpenAccountsButton.tap(tester);
+        await AccountContainer.keyAccountEllipsisName(data.accountName!)
+            .tap(tester);
+        await BasicAccountItem.keyCopyAccountNumberButton.tap(tester);
+        Map<String, dynamic> json = {'address': clipboardData};
+        final res = await TestHttpClient(baseUrl: 'https://test.provenance.io/')
+            .post('blockchain/faucet/external', body: json);
+
+        expect(true, res.isSuccessful);
+        await PwAppBar.keyLeadingIconButton.tap(tester);
+        await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
+        beginningHash =
+            double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
       }
 
       await AccountPortfolio.keySendButton.tap(tester);
       await SendPage.keyAddressField
           .enterText(data.sendHashTest!.accountAddress!, tester);
-
       await SendAssetList.keySelectAssetButton.tap(tester);
-
-      // final widgets = tester.allWidgets
-      //     .map((e) => e.toStringDeep())
-      //     .toList()
-      //     .join("------\n");
-      // print(widgets);
-      // // SendAssetCell
-
       await SendAssetList.keyDropDownItem("HASH").tap(tester);
       await SendPage.keyNextButton.tap(tester);
-
       await SendAmountPage.keyEnterAmountField.enterText("5", tester);
-
       await SendAmountPage.keyNextButton.scrollUntilVisible(
         tester,
         scrollable: ValueKey("FeeRow"),
       );
       await SendAmountPage.keyNextButton.tap(tester);
-
-      // await SendReviewPage.keySendButton.scrollUntilVisible(
-      //   tester,
-      //   scrollable: SendReviewPage.keyReviewColumn,
-      // );
-
       await SendReviewPage.keySendButton.tap(tester);
-
       await pumpEventQueue();
 
-      final transactionAmount =
-          double.parse(SendSuccessScreen.keyTransactionAmount.pwText(tester));
-      print(transactionAmount);
+      // Text is something like "6.473829789 HASH"
+      final textPrice =
+          SendSuccessScreen.keyTransactionAmount.pwText(tester).split(" ")[0];
+      final transactionAmount = double.parse(textPrice);
 
-      SendSuccessScreen.keyDoneButton.tap(tester);
-      //await tester.pumpAndSettle(Duration(seconds: 1));
+      await SendSuccessScreen.keyDoneButton.tap(tester);
+      //await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
 
-      Dashboard.keyAssetAmount("HASH")
-          .expectPwText((beginningHash - transactionAmount).toString(), tester);
+      // The expected value uses less hash than the actual value, so we only look at 2 decimal places.
+      final compareValue =
+          (beginningHash - transactionAmount).toStringAsFixed(2);
+
+      final finalValue =
+          double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester))
+              .toStringAsFixed(2);
+      expectLater(finalValue, compareValue);
     },
   );
 }

@@ -26,6 +26,8 @@ class BasicAccountItem extends StatefulWidget {
   final BasicAccount _initialAccount;
   static final keySelectAccountButton =
       ValueKey('$BasicAccountItem.select_account_button');
+  static final keyCopyAccountNumberButton =
+      ValueKey('$BasicAccountItem.copy_account_number_button');
 
   @override
   State<BasicAccountItem> createState() => _BasicAccountItemState();
@@ -119,6 +121,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PwGreyButton(
+              key: BasicAccountItem.keyCopyAccountNumberButton,
               text: strings.copyAccountAddress,
               onPressed: () {
                 Navigator.of(context).pop(MenuOperation.copy);
