@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -200,9 +201,13 @@ class DefaultQueueTxService implements TxQueueService {
   }
 
   Future<TxResult> _executeBasic(
-      BasicAccount account, SembastScheduledTx model) async {
+    BasicAccount account,
+    SembastScheduledTx model,
+  ) async {
+    final chainId = ChainId.forCoin(account.coin);
+
     final serialized = await _cipherService.decryptKey(
-      id: account.id,
+      id: '${account.id}-$chainId',
     );
 
     if (serialized == null) {
