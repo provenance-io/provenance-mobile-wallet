@@ -74,7 +74,6 @@ class SendPageState extends State<SendPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -82,87 +81,91 @@ class SendPageState extends State<SendPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PwText(Strings.of(context).sendPageSelectAsset),
-          VerticalSpacer.small(),
-          ValueListenableBuilder<List<SendAsset>>(
-            valueListenable: _assets,
-            builder: (
-              context,
-              assets,
-              child,
-            ) {
-              return ValueListenableBuilder<SendAsset?>(
-                valueListenable: _denomNotifier,
-                builder: (
-                  context,
-                  selectedAsset,
-                  child,
-                ) {
-                  return SendAssetList(
-                    assets,
-                    selectedAsset,
-                    (newAsset) => _denomNotifier.value = newAsset,
-                  );
-                },
-              );
-            },
-          ),
-          VerticalSpacer.xxLarge(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: PwTextFormField(
-                  key: SendPage.keyAddressField,
-                  label: Strings.of(context).sendPageSendToAddressLabel,
-                  controller: _addressController,
-                  hint: Strings.of(context).sendPageScanQrCode,
-                ),
-              ),
-              HorizontalSpacer.medium(),
-              IconButton(
-                padding: EdgeInsets.zero,
-                icon: PwIcon(
-                  PwIcons.qr,
-                  color: theme.colorScheme.neutralNeutral,
-                  size: 48.0,
-                ),
-                onPressed: () async {
-                  try {
-                    final newAddress = await _bloc!.scanAddress();
-                    if (newAddress?.isNotEmpty ?? false) {
-                      _addressController.text = newAddress!;
-                    }
-                  } catch (e) {
-                    showDialog(
-                      useSafeArea: true,
-                      context: context,
-                      builder: (context) => ErrorDialog(
-                        error: e.toString(),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-          VerticalSpacer.xxLarge(),
-          PwText(Strings.of(context).sendPageRecentAddress),
-          VerticalSpacer.small(),
           Expanded(
-            child: ValueListenableBuilder<List<RecentAddress>>(
-              valueListenable: _recentSends,
-              builder: (
-                context,
-                value,
-                child,
-              ) =>
-                  RecentSendList(
-                value,
-                _onRecentAddressClicked,
-                _onViewAllClicked,
-                key: ValueKey("RecentAddresses"),
-              ),
+            child: ListView(
+              children: [
+                PwText(Strings.of(context).sendPageSelectAsset),
+                VerticalSpacer.small(),
+                ValueListenableBuilder<List<SendAsset>>(
+                  valueListenable: _assets,
+                  builder: (
+                    context,
+                    assets,
+                    child,
+                  ) {
+                    return ValueListenableBuilder<SendAsset?>(
+                      valueListenable: _denomNotifier,
+                      builder: (
+                        context,
+                        selectedAsset,
+                        child,
+                      ) {
+                        return SendAssetList(
+                          assets,
+                          selectedAsset,
+                          (newAsset) => _denomNotifier.value = newAsset,
+                        );
+                      },
+                    );
+                  },
+                ),
+                VerticalSpacer.xxLarge(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: PwTextFormField(
+                        key: SendPage.keyAddressField,
+                        label: Strings.of(context).sendPageSendToAddressLabel,
+                        controller: _addressController,
+                        hint: Strings.of(context).sendPageScanQrCode,
+                      ),
+                    ),
+                    HorizontalSpacer.medium(),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: PwIcon(
+                        PwIcons.qr,
+                        color: theme.colorScheme.neutralNeutral,
+                        size: 48.0,
+                      ),
+                      onPressed: () async {
+                        try {
+                          final newAddress = await _bloc!.scanAddress();
+                          if (newAddress?.isNotEmpty ?? false) {
+                            _addressController.text = newAddress!;
+                          }
+                        } catch (e) {
+                          showDialog(
+                            useSafeArea: true,
+                            context: context,
+                            builder: (context) => ErrorDialog(
+                              error: e.toString(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                VerticalSpacer.xxLarge(),
+                PwText(Strings.of(context).sendPageRecentAddress),
+                VerticalSpacer.small(),
+                ValueListenableBuilder<List<RecentAddress>>(
+                  valueListenable: _recentSends,
+                  builder: (
+                    context,
+                    value,
+                    child,
+                  ) =>
+                      RecentSendList(
+                    value,
+                    _onRecentAddressClicked,
+                    _onViewAllClicked,
+                    key: ValueKey("RecentAddresses"),
+                  ),
+                ),
+              ],
             ),
           ),
           VerticalSpacer.xxLarge(),
