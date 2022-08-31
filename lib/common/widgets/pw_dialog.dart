@@ -1,3 +1,4 @@
+import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -168,10 +169,13 @@ class PwDialog {
     VoidCallback? okAction,
     bool showCancel = false,
   }) {
-    final msg = message ??= error?.toString().replaceFirst(
-          RegExp("^.*: "),
-          "",
-        );
+    final msg = message ??
+        ((error is PwError)
+            ? error.toLocalizedString(context)
+            : error?.toString().replaceFirst(
+                  RegExp("^.*: "),
+                  "",
+                ));
 
     return show<T>(
       context,

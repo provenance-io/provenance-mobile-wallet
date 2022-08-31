@@ -592,5 +592,6 @@
   "errorAccountNotFound": "Account not found",
   "errorCipherKeyNotFound": "Cipher not found",
   "errorTransactionNotFound": "Transaction not found",
-  "errorCreateTransactionFailed": "Failed to create transaction"
+  "errorCreateTransactionFailed": "Failed to create transaction",
+  "errorMultiSigTxFailed": "Transaction failed"
 }

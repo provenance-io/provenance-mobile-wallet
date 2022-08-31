@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -419,11 +420,15 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
-    await _multiSigService.updateTxResult(
-      coin: coin,
-      txUuid: item.txUuid,
-      txHash: responsePair.txResponse.txhash,
-    );
+    if (responsePair.txResponse.code == 0) {
+      await _multiSigService.updateTxResult(
+        coin: coin,
+        txUuid: item.txUuid,
+        txHash: responsePair.txResponse.txhash,
+      );
+    } else {
+      throw ActionListError.txFailed;
+    }
 
     logDebug('Multi-sig tx response: ${responsePair.txResponse.rawLog}');
   }

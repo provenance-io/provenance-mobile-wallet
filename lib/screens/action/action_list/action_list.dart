@@ -201,7 +201,7 @@ class ActionList extends StatelessWidget {
         'Action failed',
         error: e,
       );
-      PwDialog.showError(context, error: e as Exception);
+      PwDialog.showError(context, error: e);
     }
   }
 }
