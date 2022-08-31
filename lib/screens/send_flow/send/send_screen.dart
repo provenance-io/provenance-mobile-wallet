@@ -83,6 +83,7 @@ class SendPageState extends State<SendPage> {
         children: [
           Expanded(
             child: ListView(
+              shrinkWrap: true,
               children: [
                 PwText(Strings.of(context).sendPageSelectAsset),
                 VerticalSpacer.small(),
