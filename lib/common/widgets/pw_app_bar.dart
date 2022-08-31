@@ -22,6 +22,8 @@ class PwAppBar extends StatefulWidget implements PreferredSizeWidget {
   final PwColor? textColor;
   final PwTextStyle? style;
 
+  static final keyLeadingIconButton = ValueKey('$PwAppBar.leading_icon_button');
+
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
@@ -45,6 +47,7 @@ class _PwAppBarState extends State<PwAppBar> {
       bottom: widget.bottom,
       leading: (widget.hasIcon ?? true)
           ? IconButton(
+              key: PwAppBar.keyLeadingIconButton,
               icon: PwIcon(
                 widget.leadingIcon ?? PwIcons.close,
               ),

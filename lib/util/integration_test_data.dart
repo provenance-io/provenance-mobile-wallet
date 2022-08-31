@@ -6,9 +6,11 @@ part 'integration_test_data.g.dart';
 class IntegrationTestData {
   const IntegrationTestData({
     this.recoverWalletTest,
+    this.switchAccountsTest,
   });
 
   final RecoverWalletTestData? recoverWalletTest;
+  final SwitchAccountsTestData? switchAccountsTest;
 
   // ignore: member-ordering
   factory IntegrationTestData.fromJson(Map<String, dynamic> json) =>
@@ -30,4 +32,27 @@ class RecoverWalletTestData {
       _$RecoverWalletTestDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$RecoverWalletTestDataToJson(this);
+}
+
+@JsonSerializable()
+class SwitchAccountsTestData {
+  const SwitchAccountsTestData({
+    this.recoveryPhraseOne,
+    this.recoveryPhraseTwo,
+    this.nameOne,
+    this.nameTwo,
+    this.cipherPin,
+  });
+
+  final String? recoveryPhraseOne;
+  final String? recoveryPhraseTwo;
+  final String? nameOne;
+  final String? nameTwo;
+  final String? cipherPin;
+
+  // ignore: member-ordering
+  factory SwitchAccountsTestData.fromJson(Map<String, dynamic> json) =>
+      _$SwitchAccountsTestDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SwitchAccountsTestDataToJson(this);
 }

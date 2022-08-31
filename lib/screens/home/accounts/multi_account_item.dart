@@ -78,6 +78,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       child: Column(
         children: [
           AccountContainer(
+            name: _account.name,
             rows: [
               AccountTitleRow(
                 name: widget._initialAccount.name,
