@@ -15,6 +15,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/cipher_service_pw_error.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
@@ -620,44 +621,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 }
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {
-  String message;
-  switch (error.code) {
-    case CipherServiceErrorCode.accessError:
-      message = Strings.of(context).cipherAccessError;
-      break;
-    case CipherServiceErrorCode.accountKeyNotFound:
-      message = Strings.of(context).cipherAccountKeyNotFoundError;
-      break;
-    case CipherServiceErrorCode.addSecItem:
-      message = Strings.of(context).cipherAddSecItemError;
-      break;
-    case CipherServiceErrorCode.dataPersistence:
-      message = Strings.of(context).cipherDataPersistenceError;
-      break;
-    case CipherServiceErrorCode.invalidArgument:
-      message = Strings.of(context).cipherInvalidArgumentError;
-      break;
-    case CipherServiceErrorCode.publicKeyError:
-      message = Strings.of(context).cipherPublicKeyError;
-      break;
-    case CipherServiceErrorCode.secKeyNotFound:
-      message = Strings.of(context).cipherSecKeyNotFoundError;
-      break;
-    case CipherServiceErrorCode.unknown:
-      message = Strings.of(context).cipherUnknownError;
-      break;
-    case CipherServiceErrorCode.upgradeError:
-      message = Strings.of(context).cipherUpgradeError;
-      break;
-    case CipherServiceErrorCode.unsupportedAlgorithm:
-      message = Strings.of(context).cipherUnsupportedAlgorithmError;
-      break;
-  }
-
   PwDialog.showError(
     context,
-    title: Strings.of(context).cipherErrorTitle,
-    message: message,
+    error: CipherServicePwError(
+      inner: error,
+    ),
   );
 }
 
