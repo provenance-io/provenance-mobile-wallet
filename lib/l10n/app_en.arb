@@ -252,7 +252,7 @@
   "confirmTransactionTitle": "Transaction",
   "transactionApprove": "Approve",
   "transactionDecline": "Decline",
-  "transactionBackToDashboard": "Back to dashboard",
+  "transactionBackToDashboard": "Done",
   "transactionDataTitle": "Data",
   "transactionDataButton": "Data",
   "transactionDenomHash": "Hash",
@@ -613,5 +613,6 @@
   "errorCipherKeyNotFound": "Cipher not found",
   "errorTransactionNotFound": "Transaction not found",
   "errorCreateTransactionFailed": "Failed to create transaction",
-  "errorMultiSigTxFailed": "Transaction failed"
+  "errorTxFailed": "Transaction failed",
+  "multiSigAccountNotFound": "Multi-signature account not found in account list"
 }

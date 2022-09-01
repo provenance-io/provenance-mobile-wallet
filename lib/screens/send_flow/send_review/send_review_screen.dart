@@ -241,6 +241,7 @@ class SendReviewPageState extends State<SendReviewPage> {
         ),
         dismissButtonText: Strings.of(context).multiSigTransactionInitiatedDone,
       );
+      await _bloc!.complete();
     }
   }
 }
