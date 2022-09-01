@@ -339,6 +339,16 @@ class _DashboardState extends State<Dashboard> {
         ? 0
         : connectCounts.reduce((value, element) => value + element);
 
+    // Attempt to get the count right first try, but don't wait forever.
+    await Future.any([
+      _multiSigPendingTxCache.initialized,
+      Future.delayed(
+        Duration(
+          seconds: 1,
+        ),
+      ),
+    ]);
+
     _notificationBellNotifier.value =
         connectCount + _multiSigPendingTxCache.items.length;
   }

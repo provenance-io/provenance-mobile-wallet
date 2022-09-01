@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
@@ -145,7 +146,7 @@ class ActionListBloc extends Disposable {
         .whereType<TransactableAccount>()
         .toList();
     final addresses = accounts.map((e) => e.address).toList();
-    await _multiSigPendingTxCache.update(
+    await _multiSigPendingTxCache.fetch(
       signerAddresses: addresses,
     );
 
@@ -371,7 +372,10 @@ class ActionListBloc extends Disposable {
     final accounts = await _accountService.getTransactableAccounts();
     final multiSigAccount = accounts
         .whereType<MultiTransactableAccount>()
-        .firstWhere((e) => e.linkedAccount.address == item.signerAddress);
+        .firstWhereOrNull((e) => e.linkedAccount.address == item.signerAddress);
+    if (multiSigAccount == null) {
+      throw ActionListError.multiSigAccountNotFound;
+    }
 
     final coin = getCoinFromAddress(item.multiSigAddress);
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
@@ -420,15 +424,13 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
-    if (responsePair.txResponse.code == 0) {
-      await _multiSigService.updateTxResult(
-        coin: coin,
-        txUuid: item.txUuid,
-        txHash: responsePair.txResponse.txhash,
-      );
-    } else {
-      throw ActionListError.txFailed;
-    }
+    await _multiSigPendingTxCache.finalizeTx(
+      signerAddress: item.signerAddress,
+      txUuid: item.txUuid,
+      response: responsePair.txResponse,
+      coin: coin,
+      fee: item.fee,
+    );
 
     logDebug('Multi-sig tx response: ${responsePair.txResponse.rawLog}');
   }
@@ -461,6 +463,15 @@ class ActionListBloc extends Disposable {
     );
 
     if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await _multiSigPendingTxCache.fetch(
+        signerAddresses: addresses,
+      );
       _onActionQueueUpdated();
     }
 

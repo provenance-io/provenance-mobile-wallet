@@ -135,6 +135,7 @@ class PwDialog {
                         message ?? "",
                         style: PwTextStyle.body,
                         color: PwColor.neutralNeutral,
+                        textAlign: TextAlign.center,
                       ),
                 ),
                 Expanded(child: Container()),

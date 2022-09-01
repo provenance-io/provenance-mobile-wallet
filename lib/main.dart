@@ -541,12 +541,19 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case MultiSigTopic.txSignatureRequired:
         case MultiSigTopic.txReady:
         case MultiSigTopic.txResult:
-          multiSigPendingTxCache.update(
+          multiSigPendingTxCache.fetch(
             signerAddresses: [e.address],
           );
           break;
       }
     });
+
+    // Don't delay startup by awaiting here
+    multiSigPendingTxCache.fetch(
+        signerAddresses: accounts
+            .whereType<TransactableAccount>()
+            .map((e) => e.address)
+            .toList());
 
     await _activatePendingMultiAccounts();
   }

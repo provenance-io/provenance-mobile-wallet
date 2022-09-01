@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_status.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/subjects.dart';
 
 class MultiSigPendingTxCache extends Listenable with ListenableMixin {
   MultiSigPendingTxCache({
@@ -21,9 +24,16 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
   final items = <MultiSigActionListItem>[];
 
-  final _cache = <String, List<MultiSigActionListItem>>{};
+  final _itemsBySignerAddress = <String, List<MultiSigActionListItem>>{};
+  // TODO-Roy: Persist across app restarts
+  final _resultsByTxUuid = <String, _TxResultData>{};
+  final _initialized = Completer();
+  final _response = PublishSubject<ServiceTxResponse>();
 
-  Future<void> update({
+  Future<void> get initialized => _initialized.future;
+  Stream<ServiceTxResponse> get response => _response;
+
+  Future<void> fetch({
     required List<String> signerAddresses,
   }) async {
     for (final signerAddress in signerAddresses) {
@@ -34,6 +44,10 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
         signerAddress: signerAddress,
       );
 
+      if (pendingTxs == null) {
+        return;
+      }
+
       final pendingItems = _toSignListItems(pendingTxs, signerAddress);
       addressItems.addAll(pendingItems);
 
@@ -41,42 +55,100 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
       final createdTxs = await _multiSigService.getCreatedTxs(
         signerAddress: signerAddress,
       );
-      final createdItems = _toTransmitListItems(
-        createdTxs?.where(
-            (e) => e.status == MultiSigStatus.ready && e.signatures != null),
-        signerAddress,
-      );
-      addressItems.addAll(createdItems);
 
-      _cache[signerAddress] = addressItems;
+      if (createdTxs == null) {
+        return;
+      }
+
+      for (final tx in createdTxs) {
+        if (tx.status == MultiSigStatus.ready && tx.signatures != null) {
+          final result = _resultsByTxUuid[tx.txUuid];
+          if (result != null) {
+            final success = await _multiSigService.updateTxResult(
+              txUuid: result.txUuid,
+              txHash: result.txHash,
+              coin: result.coin,
+            );
+
+            if (success) {
+              _resultsByTxUuid.remove(tx.txUuid);
+            }
+          } else {
+            final item = _toTransmitListItem(tx, signerAddress);
+            addressItems.add(item);
+          }
+        }
+      }
+
+      _itemsBySignerAddress[signerAddress] = addressItems;
     }
 
     _publish();
+
+    if (!_initialized.isCompleted) {
+      _initialized.complete();
+    }
   }
 
-  List<MultiSigTransmitActionListItem> _toTransmitListItems(
-          Iterable<MultiSigPendingTx>? items, String signerAddress) =>
-      items?.map(
-        (e) {
-          return MultiSigTransmitActionListItem(
-            multiSigAddress: e.multiSigAddress,
-            signerAddress: signerAddress,
-            label: (c) => e.txBody.messages
-                .map((e) => e.toMessage().toLocalizedName(c))
-                .join(', '),
-            subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-            txBody: e.txBody,
-            fee: e.fee,
-            txUuid: e.txUuid,
-            signatures: e.signatures!,
-          );
-        },
-      ).toList() ??
-      [];
+  Future<void> finalizeTx({
+    required String signerAddress,
+    required String txUuid,
+    required TxResponse response,
+    required Fee fee,
+    required wallet.Coin coin,
+  }) async {
+    _resultsByTxUuid[txUuid] = _TxResultData(
+      txUuid: txUuid,
+      txHash: response.txhash,
+      coin: coin,
+    );
+
+    final success = await _multiSigService.updateTxResult(
+      txUuid: txUuid,
+      txHash: response.txhash,
+      coin: coin,
+    );
+
+    if (success) {
+      _resultsByTxUuid.remove(txUuid);
+    }
+
+    _itemsBySignerAddress[signerAddress]
+        ?.removeWhere((e) => e.txUuid == txUuid);
+    _publish();
+
+    _response.add(
+      ServiceTxResponse(
+        code: response.code,
+        message: response.rawLog,
+        gasUsed: response.gasUsed.toInt(),
+        gasWanted: response.gasWanted.toInt(),
+        height: response.height.toInt(),
+        txHash: response.txhash,
+        fees: fee.amount,
+        codespace: response.codespace,
+      ),
+    );
+  }
+
+  MultiSigTransmitActionListItem _toTransmitListItem(
+          MultiSigPendingTx tx, String signerAddress) =>
+      MultiSigTransmitActionListItem(
+        multiSigAddress: tx.multiSigAddress,
+        signerAddress: signerAddress,
+        label: (c) => tx.txBody.messages
+            .map((e) => e.toMessage().toLocalizedName(c))
+            .join(', '),
+        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+        txBody: tx.txBody,
+        fee: tx.fee,
+        txUuid: tx.txUuid,
+        signatures: tx.signatures!,
+      );
 
   List<MultiSigSignActionListItem> _toSignListItems(
-          Iterable<MultiSigPendingTx>? items, String signerAddress) =>
-      items?.map(
+          Iterable<MultiSigPendingTx> items, String signerAddress) =>
+      items.map(
         (e) {
           return MultiSigSignActionListItem(
             multiSigAddress: e.multiSigAddress,
@@ -90,24 +162,24 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
             txUuid: e.txUuid,
           );
         },
-      ).toList() ??
-      [];
+      ).toList();
 
   Future<void> remove({
     required List<String> signerAddresses,
   }) async {
     for (final address in signerAddresses) {
-      _cache.remove(address);
+      _itemsBySignerAddress.remove(address);
     }
 
     _publish();
   }
 
   void _publish() {
-    final updated = _cache.entries.fold<List<MultiSigActionListItem>>(
-        [],
-        (previousValue, element) =>
-            previousValue..addAll(element.value)).toList();
+    final updated = _itemsBySignerAddress.entries
+        .fold<List<MultiSigActionListItem>>(
+            [],
+            (previousValue, element) =>
+                previousValue..addAll(element.value)).toList();
     items.clear();
     items.addAll(updated);
 
@@ -118,6 +190,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 abstract class MultiSigActionListItem implements ActionListItem {
   String get multiSigAddress;
   String get signerAddress;
+  String get txUuid;
 }
 
 class MultiSigSignActionListItem implements MultiSigActionListItem {
@@ -141,6 +214,7 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
 
   final Fee fee;
 
+  @override
   final String txUuid;
 
   @override
@@ -172,6 +246,7 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
 
   final Fee fee;
 
+  @override
   final String txUuid;
 
   @override
@@ -181,4 +256,16 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   final LocalizedString subLabel;
 
   final List<MultiSigSignature> signatures;
+}
+
+class _TxResultData {
+  _TxResultData({
+    required this.txUuid,
+    required this.txHash,
+    required this.coin,
+  });
+
+  final String txUuid;
+  final String txHash;
+  final wallet.Coin coin;
 }
