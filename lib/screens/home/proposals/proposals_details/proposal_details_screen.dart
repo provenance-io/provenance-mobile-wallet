@@ -262,28 +262,37 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                     proposal: _proposal,
                   ),
                 if (_proposal.status.toLowerCase() == depositPeriod)
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: Spacing.large,
-                      right: Spacing.large,
-                      bottom: Spacing.largeX3,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: PwOutlinedButton(
-                            strings.proposalDetailsScreenDeposit,
-                            onPressed: () {
-                              get<ProposalsFlowBloc>()
-                                  .showWeightedVote(_proposal);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PwListDivider.alternate(
+                        indent: Spacing.large,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: Spacing.large,
+                          left: Spacing.large,
+                          right: Spacing.large,
+                          bottom: Spacing.largeX3,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: PwOutlinedButton(
+                                strings.proposalDetailsScreenDeposit,
+                                onPressed: () {
+                                  get<ProposalsFlowBloc>()
+                                      .showDepositReview(_proposal);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
               ],
             ),
           ),

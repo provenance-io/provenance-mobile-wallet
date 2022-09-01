@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
@@ -24,6 +25,10 @@ abstract class ProposalsFlowNavigator {
   Future<void> showVoteReview(
     Proposal proposal,
     proto.VoteOption voteOption,
+  );
+
+  Future<void> showDepositReview(
+    Proposal proposal,
   );
 
   Future<void> showWeightedVote(
@@ -143,6 +148,16 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   Future<void> showWeightedVoteReview(Proposal proposal) async {
     showPage(
       (context) => ProposalWeightedVoteConfirmScreen(
+        account: _account,
+        proposal: proposal,
+      ),
+    );
+  }
+
+  @override
+  Future<void> showDepositReview(Proposal proposal) async {
+    showPage(
+      (context) => DepositConfirmScreen(
         account: _account,
         proposal: proposal,
       ),

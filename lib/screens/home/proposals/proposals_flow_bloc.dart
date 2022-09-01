@@ -50,4 +50,9 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   void backToDashboard() {
     _navigator.backToDashboard();
   }
+
+  @override
+  Future<void> showDepositReview(Proposal proposal) async {
+    await _navigator.showDepositReview(proposal);
+  }
 }

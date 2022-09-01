@@ -613,5 +613,10 @@
   "errorCipherKeyNotFound": "Cipher not found",
   "errorTransactionNotFound": "Transaction not found",
   "errorCreateTransactionFailed": "Failed to create transaction",
-  "proposalDetailsScreenDeposit": "Deposit"
+  "proposalDetailsScreenDeposit": "Deposit",
+  "depositConfirmScreenConfirmDeposit": "Confirm Deposit",
+  "depositConfirmScreenDepositAmount": "Deposit Amount",
+  "depositConfirmScreenTotalDeposit": "Total Deposit",
+  "depositConfirmScreenCurrentDeposit": "Current Deposit",
+  "depositConfirmScreenDepositDetails": "Deposit Details"
 }
