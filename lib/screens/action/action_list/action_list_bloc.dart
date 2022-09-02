@@ -419,6 +419,12 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
+    await _multiSigService.updateTxResult(
+      coin: coin,
+      txUuid: item.txUuid,
+      txHash: responsePair.txResponse.txhash,
+    );
+
     logDebug('Multi-sig tx response: ${responsePair.txResponse.rawLog}');
   }
 

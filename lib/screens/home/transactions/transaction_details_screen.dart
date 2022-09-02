@@ -9,7 +9,7 @@ import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
   const TransactionDetailsScreen({
@@ -107,8 +107,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                       default:
                         url = "";
                     }
-                    if (await canLaunch(url)) {
-                      await launch(url);
+                    if (await canLaunchUrlString(url)) {
+                      await launchUrlString(url);
                     } else {
                       throw 'Could not launch $url';
                     }

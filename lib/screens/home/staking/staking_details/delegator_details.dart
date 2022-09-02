@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DelegatorDetails extends StatelessWidget {
   final DetailedValidatorDetails details;
@@ -145,8 +145,8 @@ class DelegatorDetails extends StatelessWidget {
                   GestureDetector(
                     onTap: () async {
                       String url = _bloc.getProvUrl();
-                      if (await canLaunch(url)) {
-                        await launch(url);
+                      if (await canLaunchUrlString(url)) {
+                        await launchUrlString(url);
                       } else {
                         throw 'Could not launch $url';
                       }

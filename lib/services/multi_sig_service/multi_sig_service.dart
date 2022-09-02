@@ -17,6 +17,7 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_regis
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_sign_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_tx_body_bytes_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_update_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signature.dart';
@@ -331,6 +332,27 @@ class MultiSigService with ClientCoinMixin {
       address: signerAddress,
       txUuid: txUuid,
       signatureBytes: signatureBytes,
+    );
+
+    final response = await client.post(
+      path,
+      body: request,
+    );
+
+    return response.isSuccessful;
+  }
+
+  Future<bool> updateTxResult({
+    required String txUuid,
+    required String txHash,
+    required Coin coin,
+  }) async {
+    const path = '$_basePath/tx/result';
+    final client = await getClient(coin);
+
+    final request = MultiSigUpdateTxRequestDto(
+      txUuid: txUuid,
+      txHash: txHash,
     );
 
     final response = await client.post(

@@ -43,10 +43,10 @@ class MockSendAmountBloc extends _i1.Mock implements _i4.SendAmountBloc {
   }
 
   @override
-  _i2.TransactableAccount get accountDetails =>
-      (super.noSuchMethod(Invocation.getter(#accountDetails),
-              returnValue: _FakeTransactableAccount_0(
-                  this, Invocation.getter(#accountDetails)))
+  _i2.TransactableAccount get account =>
+      (super.noSuchMethod(Invocation.getter(#account),
+              returnValue:
+                  _FakeTransactableAccount_0(this, Invocation.getter(#account)))
           as _i2.TransactableAccount);
   @override
   _i3.SendAsset get asset => (super.noSuchMethod(Invocation.getter(#asset),
