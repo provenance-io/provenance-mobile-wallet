@@ -185,22 +185,20 @@ class _ProposalWeightedVoteConfirmScreenState
                     right: Spacing.large,
                     bottom: Spacing.largeX3,
                   ),
-                  child: Flexible(
-                    child: PwButton(
-                      onPressed: () async {
-                        await ModalLoadingRoute.showLoading(
-                          context,
-                          minDisplayTime: Duration(milliseconds: 500),
-                        );
-                        await _sendWeightedVote(_gasEstimate, context);
-                      },
-                      child: PwText(
-                        strings.proposalWeightedVoteConfirmWeightedVote,
-                        softWrap: false,
-                        overflow: TextOverflow.fade,
-                        color: PwColor.neutralNeutral,
-                        style: PwTextStyle.body,
-                      ),
+                  child: PwButton(
+                    onPressed: () async {
+                      await ModalLoadingRoute.showLoading(
+                        context,
+                        minDisplayTime: Duration(milliseconds: 500),
+                      );
+                      await _sendWeightedVote(_gasEstimate, context);
+                    },
+                    child: PwText(
+                      strings.proposalWeightedVoteConfirmWeightedVote,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      color: PwColor.neutralNeutral,
+                      style: PwTextStyle.body,
                     ),
                   ),
                 ),

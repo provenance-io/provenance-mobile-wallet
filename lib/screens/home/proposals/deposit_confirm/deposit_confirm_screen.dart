@@ -67,15 +67,13 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
         ),
         leading: Padding(
           padding: EdgeInsets.only(left: 21),
-          child: Flexible(
-            child: IconButton(
-              icon: PwIcon(
-                PwIcons.back,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          child: IconButton(
+            icon: PwIcon(
+              PwIcons.back,
             ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ),
         actions: [
