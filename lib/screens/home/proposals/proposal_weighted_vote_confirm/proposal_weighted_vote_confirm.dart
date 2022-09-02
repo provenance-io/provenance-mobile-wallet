@@ -78,7 +78,7 @@ class _ProposalWeightedVoteConfirmScreenState
                   50,
                 ),
                 onPressed: () {
-                  final data = _bloc.getMsgVoteWeightedJson();
+                  final data = _bloc.getMessageJson();
                   get<ProposalsFlowBloc>().showTransactionData(
                     data,
                     Strings.of(context).stakingConfirmData,
@@ -215,7 +215,7 @@ class _ProposalWeightedVoteConfirmScreenState
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.doWeightedVote(gasEstimate);
+      final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
       get<ProposalsFlowBloc>().showTransactionComplete(
         response,
