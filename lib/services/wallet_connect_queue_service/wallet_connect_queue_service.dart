@@ -14,6 +14,40 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:sembast/sembast.dart';
 
 class WalletConnectQueueGroup {
+  WalletConnectQueueGroup(this.walletAddress, this.clientMeta);
+
+  String walletAddress;
+  ClientMeta? clientMeta;
+  final Map<String, dynamic> actionLookup = <String, dynamic>{};
+
+  void updateClientMeta(ClientMeta meta) {
+    clientMeta = meta;
+  }
+
+  static WalletConnectQueueGroup fromRecord(Map<String, dynamic> input) {
+    final actions = <String, dynamic>{};
+    input["actions"].entries.forEach((entry) {
+      actions[entry.key] = _fromRecord(entry.value);
+    });
+    final walletAddress = input["walletAddress"];
+    final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
+
+    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
+    group.actionLookup.addAll(actions);
+    return group;
+  }
+
+  Map<String, dynamic> toRecord() {
+    final map = <String, dynamic>{
+      "walletAddress": walletAddress,
+      "clientMeta": clientMeta?.toJson(),
+      "actions":
+          actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))
+    };
+
+    return map;
+  }
+
   static Map<String, dynamic> _toRecord(dynamic input) {
     if (input is SendRequest) {
       final body = TxBody(
@@ -115,40 +149,6 @@ class WalletConnectQueueGroup {
     } else {
       throw Exception("${input.runtimeType} is not a supported type");
     }
-  }
-
-  WalletConnectQueueGroup(this.walletAddress, this.clientMeta);
-
-  String walletAddress;
-  ClientMeta? clientMeta;
-  final Map<String, dynamic> actionLookup = <String, dynamic>{};
-
-  void updateClientMeta(ClientMeta meta) {
-    clientMeta = meta;
-  }
-
-  static WalletConnectQueueGroup fromRecord(Map<String, dynamic> input) {
-    final actions = <String, dynamic>{};
-    input["actions"].entries.forEach((entry) {
-      actions[entry.key] = _fromRecord(entry.value);
-    });
-    final walletAddress = input["walletAddress"];
-    final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
-
-    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
-    group.actionLookup.addAll(actions);
-    return group;
-  }
-
-  Map<String, dynamic> toRecord() {
-    final map = <String, dynamic>{
-      "walletAddress": walletAddress,
-      "clientMeta": clientMeta?.toJson(),
-      "actions":
-          actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))
-    };
-
-    return map;
   }
 }
 
