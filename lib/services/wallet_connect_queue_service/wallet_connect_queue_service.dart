@@ -14,15 +14,22 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 import 'package:sembast/sembast.dart';
 
 class WalletConnectQueueGroup {
-  WalletConnectQueueGroup(this.walletAddress, this.clientMeta);
+  WalletConnectQueueGroup({
+    required this.walletAddress,
+    this.clientMeta,
+  });
 
-  String walletAddress;
-  ClientMeta? clientMeta;
+  final String walletAddress;
+  final ClientMeta? clientMeta;
   final Map<String, dynamic> actionLookup = <String, dynamic>{};
 
-  void updateClientMeta(ClientMeta meta) {
-    clientMeta = meta;
-  }
+  WalletConnectQueueGroup copyWith({
+    ClientMeta? clientMeta,
+  }) =>
+      WalletConnectQueueGroup(
+        walletAddress: walletAddress,
+        clientMeta: clientMeta ?? this.clientMeta,
+      );
 
   static WalletConnectQueueGroup fromRecord(Map<String, dynamic> input) {
     final actions = <String, dynamic>{};
@@ -32,7 +39,10 @@ class WalletConnectQueueGroup {
     final walletAddress = input["walletAddress"];
     final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
 
-    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
+    final group = WalletConnectQueueGroup(
+      walletAddress: walletAddress,
+      clientMeta: clientMeta,
+    );
     group.actionLookup.addAll(actions);
     return group;
   }
@@ -194,7 +204,10 @@ class WalletConnectQueueService extends Listenable
 
   Future<void> createWalletConnectSessionGroup(WalletConnectAddress address,
       String walletAddress, ClientMeta? clientMeta) async {
-    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
+    final group = WalletConnectQueueGroup(
+      walletAddress: walletAddress,
+      clientMeta: clientMeta,
+    );
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -222,8 +235,9 @@ class WalletConnectQueueService extends Listenable
       return;
     }
 
-    final group = WalletConnectQueueGroup.fromRecord(map);
-    group.updateClientMeta(clientMeta);
+    final group = WalletConnectQueueGroup.fromRecord(map).copyWith(
+      clientMeta: clientMeta,
+    );
 
     await record.update(db, group.toRecord());
   }
