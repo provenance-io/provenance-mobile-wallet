@@ -8,11 +8,13 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_request
 
 class WalletConnectQueueGroup {
   WalletConnectQueueGroup({
-    required this.walletAddress,
+    required this.connectAddress,
+    required this.accountAddress,
     this.clientMeta,
   });
 
-  final String walletAddress;
+  final WalletConnectAddress connectAddress;
+  final String accountAddress;
   final ClientMeta? clientMeta;
   final Map<String, dynamic> actionLookup = <String, dynamic>{};
 
@@ -20,7 +22,8 @@ class WalletConnectQueueGroup {
     ClientMeta? clientMeta,
   }) =>
       WalletConnectQueueGroup(
-        walletAddress: walletAddress,
+        connectAddress: connectAddress,
+        accountAddress: accountAddress,
         clientMeta: clientMeta ?? this.clientMeta,
       );
 
@@ -29,11 +32,14 @@ class WalletConnectQueueGroup {
     input["actions"].entries.forEach((entry) {
       actions[entry.key] = _fromRecord(entry.value);
     });
-    final walletAddress = input["walletAddress"];
+    final connectAddress =
+        WalletConnectAddress.create(input["connectAddress"] as String)!;
+    final accountAddress = input["accountAddress"];
     final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
 
     final group = WalletConnectQueueGroup(
-      walletAddress: walletAddress,
+      connectAddress: connectAddress,
+      accountAddress: accountAddress,
       clientMeta: clientMeta,
     );
     group.actionLookup.addAll(actions);
@@ -42,7 +48,8 @@ class WalletConnectQueueGroup {
 
   Map<String, dynamic> toRecord() {
     final map = <String, dynamic>{
-      "walletAddress": walletAddress,
+      "connectAddress": connectAddress,
+      "accountAddress": accountAddress,
       "clientMeta": clientMeta?.toJson(),
       "actions":
           actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))

@@ -258,13 +258,13 @@ class ActionListBloc extends Disposable {
     final walletConnectGroups = queuedItems
         .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
         .map((queuedGroup) {
-      final account = accountLookup[queuedGroup.walletAddress]!;
+      final account = accountLookup[queuedGroup.accountAddress]!;
 
       return _WalletConnectActionGroup(
         accountId: account.id,
         queueGroup: queuedGroup,
         label: account.name,
-        subLabel: abbreviateAddress(queuedGroup.walletAddress),
+        subLabel: abbreviateAddress(queuedGroup.accountAddress),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {

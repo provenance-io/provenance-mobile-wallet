@@ -52,13 +52,16 @@ class WalletConnectQueueService extends Listenable
     await db.close();
   }
 
-  Future<void> createWalletConnectSessionGroup(WalletConnectAddress address,
-      String walletAddress, ClientMeta? clientMeta) async {
+  Future<void> createWalletConnectSessionGroup(
+      WalletConnectAddress connectAddress,
+      String walletAddress,
+      ClientMeta? clientMeta) async {
     final group = WalletConnectQueueGroup(
-      walletAddress: walletAddress,
+      connectAddress: connectAddress,
+      accountAddress: walletAddress,
       clientMeta: clientMeta,
     );
-    final record = _main.record(address.fullUriString);
+    final record = _main.record(connectAddress.fullUriString);
 
     final db = await _db;
 
@@ -170,8 +173,8 @@ class WalletConnectQueueService extends Listenable
   }
 
   Future<void> removeRequest(
-      WalletConnectAddress address, String requestId) async {
-    final record = _main.record(address.fullUriString);
+      WalletConnectAddress connectAddress, String requestId) async {
+    final record = _main.record(connectAddress.fullUriString);
 
     final db = await _db;
     final map = await record.get(db);
