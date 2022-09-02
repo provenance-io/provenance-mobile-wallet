@@ -38,13 +38,13 @@ class WalletConnectQueueService extends Listenable
     final db = await _factory.openDatabase(
       dbPath,
       version: version,
-      onVersionChanged: _onVersionChanced,
+      onVersionChanged: _onVersionChanged,
     );
 
     return db;
   }
 
-  Future<void> _onVersionChanced(
+  Future<void> _onVersionChanged(
       Database db, int oldVersion, int newVersion) async {}
 
   Future<void> close() async {
