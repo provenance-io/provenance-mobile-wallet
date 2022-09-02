@@ -8,7 +8,6 @@ class DepositSlider extends StatefulWidget {
   final String? label;
   final Color thumbColor;
   final double max;
-  final double min;
 
   const DepositSlider({
     Key? key,
@@ -18,7 +17,6 @@ class DepositSlider extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.max = 100,
-    this.min = 0,
   }) : super(key: key);
 
   @override
@@ -29,7 +27,7 @@ class _DepositSliderState extends State<DepositSlider> {
   late double _value;
   @override
   void initState() {
-    _value = widget.min;
+    _value = 0;
     super.initState();
   }
 
