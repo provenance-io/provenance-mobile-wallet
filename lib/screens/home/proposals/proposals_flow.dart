@@ -44,7 +44,10 @@ abstract class ProposalsFlowNavigator {
     String screenTitle,
   );
 
-  Future<void> showTransactionComplete(Object? response);
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  );
 
   void onComplete();
 
@@ -119,7 +122,10 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Future<void> showTransactionData(Object? data, String screenTitle) async {
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  ) async {
     showPage(
       (context) => PwDataScreen(
         title: screenTitle,
@@ -129,10 +135,13 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Future<void> showTransactionComplete(Object? response) async {
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  ) async {
     showPage(
       (context) => PwTransactionCompleteScreen(
-        title: Strings.of(context).proposalVoteComplete,
+        title: title,
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
@@ -166,7 +175,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
 
   @override
   void onComplete() {
-    completeFlow(true);
+    backToFlowStart(null);
   }
 
   @override
