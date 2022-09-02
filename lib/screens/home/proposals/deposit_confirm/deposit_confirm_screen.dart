@@ -264,7 +264,10 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
     try {
       final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(response);
+      get<ProposalsFlowBloc>().showTransactionComplete(
+        response,
+        Strings.of(context).proposalDepositComplete,
+      );
     } catch (err) {
       await _showErrorModal(err, context);
     }

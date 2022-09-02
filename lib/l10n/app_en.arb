@@ -542,6 +542,7 @@
   "proposalWeightedVoteConfirmWeightedVote": "Confirm Weighted Vote",
   "proposalWeightedVoteProposalId": "Proposal ID#",
   "proposalVoteComplete": "VOTE COMPLETE",
+  "proposalDepositComplete": "DEPOSIT COMPLETE",
   "stakingConfirmUndelegationDetails": "Undelegation Details",
   "stakingConfirmAmountToUndelegate": "Amount to Undelegate",
   "stakingConfirmNewTotalDelegation": "New Total Delegation",

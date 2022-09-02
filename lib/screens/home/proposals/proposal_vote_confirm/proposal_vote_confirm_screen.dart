@@ -190,7 +190,10 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     try {
       final response = await _bloc.doVote(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(response);
+      get<ProposalsFlowBloc>().showTransactionComplete(
+        response,
+        Strings.of(context).proposalVoteComplete,
+      );
     } catch (err) {
       await _showErrorModal(err, context);
     }
