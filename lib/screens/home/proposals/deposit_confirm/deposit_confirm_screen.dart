@@ -12,7 +12,6 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -164,14 +163,14 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.depositConfirmScreenCurrentDeposit,
-                          value:
-                              strings.hashAmount(details.sliderMin.toString()),
+                          value: strings.hashAmount(
+                              details.currentDepositHash.toString()),
                         ),
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.depositConfirmScreenTotalDeposit,
                           value: strings.hashAmount(
-                              (details.amount + details.sliderMin)
+                              (details.amount + details.currentDepositHash)
                                   .toInt()
                                   .toString()),
                         ),
@@ -185,10 +184,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         DetailsItem.withRowChildren(
                           title: strings.depositConfirmScreenDepositAmount,
                           children: [
-                            if (details.amount + details.sliderMin >
-                                nHashToHash(BigInt.parse(
-                                        details.proposal?.neededDeposit ?? "0"))
-                                    .toDouble())
+                            if (details.amount + details.currentDepositHash >
+                                details.neededDepositHash)
                               PwIcon(
                                 PwIcons.warn,
                                 color: Theme.of(context).errorColor,

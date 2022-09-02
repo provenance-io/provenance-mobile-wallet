@@ -110,7 +110,7 @@ class DepositDetails {
   final double hashAmount;
   final Proposal? proposal;
 
-  double get sliderMin {
+  double get currentDepositHash {
     return nHashToHash(BigInt.parse(proposal?.currentDeposit ?? "0"))
         .toDouble();
   }
@@ -119,5 +119,9 @@ class DepositDetails {
     return min(
         nHashToHash(BigInt.parse(proposal?.neededDeposit ?? "0")).toDouble(),
         hashAmount);
+  }
+
+  double get neededDepositHash {
+    return nHashToHash(BigInt.parse(proposal?.neededDeposit ?? "0")).toDouble();
   }
 }
