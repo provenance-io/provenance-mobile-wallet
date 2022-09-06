@@ -58,7 +58,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
   Future<void> get initialized => _initialized.future;
   Stream<ServiceTxResponse> get response => _response;
 
-  Future<void> fetch({
+  Future<void> sync({
     required List<String> signerAddresses,
   }) async {
     for (final signerAddress in signerAddresses) {

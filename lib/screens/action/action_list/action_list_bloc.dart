@@ -147,7 +147,7 @@ class ActionListBloc extends Disposable {
         .whereType<TransactableAccount>()
         .toList();
     final addresses = accounts.map((e) => e.address).toList();
-    await _multiSigPendingTxCache.fetch(
+    await _multiSigPendingTxCache.sync(
       signerAddresses: addresses,
     );
 
@@ -470,7 +470,7 @@ class ActionListBloc extends Disposable {
           .map((e) => e.address)
           .toList();
 
-      await _multiSigPendingTxCache.fetch(
+      await _multiSigPendingTxCache.sync(
         signerAddresses: addresses,
       );
       _onActionQueueUpdated();
