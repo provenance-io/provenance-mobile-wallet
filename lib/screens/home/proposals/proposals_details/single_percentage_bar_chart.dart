@@ -23,7 +23,8 @@ class SinglePercentageBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final endValue = ((current / total) * 100);
+    final endValue = current != 0 && total != 0 ? ((current / total) * 100) : 0;
+    double widthFactor = current != 0 ? current / total : 0;
     return Column(
       children: [
         Row(
@@ -71,7 +72,7 @@ class SinglePercentageBarChart extends StatelessWidget {
             ),
             if (current <= total)
               FractionallySizedBox(
-                widthFactor: current / total,
+                widthFactor: widthFactor,
                 child: Container(
                   height: 4,
                   decoration: BoxDecoration(

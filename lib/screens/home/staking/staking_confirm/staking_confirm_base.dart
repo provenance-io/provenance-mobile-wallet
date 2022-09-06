@@ -40,15 +40,13 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
           style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
-        leading: Flexible(
-          child: IconButton(
-            icon: PwIcon(
-              PwIcons.back,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        leading: IconButton(
+          icon: PwIcon(
+            PwIcons.back,
           ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         actions: [
           PwTextButton(

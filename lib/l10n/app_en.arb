@@ -542,6 +542,7 @@
   "proposalWeightedVoteConfirmWeightedVote": "Confirm Weighted Vote",
   "proposalWeightedVoteProposalId": "Proposal ID#",
   "proposalVoteComplete": "VOTE COMPLETE",
+  "proposalDepositComplete": "DEPOSIT COMPLETE",
   "stakingConfirmUndelegationDetails": "Undelegation Details",
   "stakingConfirmAmountToUndelegate": "Amount to Undelegate",
   "stakingConfirmNewTotalDelegation": "New Total Delegation",
@@ -615,4 +616,10 @@
   "errorCreateTransactionFailed": "Failed to create transaction",
   "errorTxFailed": "Transaction failed",
   "multiSigAccountNotFound": "Multi-signature account not found in account list"
+  "proposalDetailsScreenDeposit": "Deposit",
+  "depositConfirmScreenConfirmDeposit": "Confirm Deposit",
+  "depositConfirmScreenDepositAmount": "Deposit Amount",
+  "depositConfirmScreenTotalDeposit": "Total Deposit",
+  "depositConfirmScreenCurrentDeposit": "Current Deposit",
+  "depositConfirmScreenDepositDetails": "Deposit Details"
 }
