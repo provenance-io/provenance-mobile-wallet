@@ -615,7 +615,7 @@
   "errorTransactionNotFound": "Transaction not found",
   "errorCreateTransactionFailed": "Failed to create transaction",
   "errorTxFailed": "Transaction failed",
-  "multiSigAccountNotFound": "Multi-signature account not found in account list"
+  "multiSigAccountNotFound": "Multi-signature account not found in account list",
   "proposalDetailsScreenDeposit": "Deposit",
   "depositConfirmScreenConfirmDeposit": "Confirm Deposit",
   "depositConfirmScreenDepositAmount": "Deposit Amount",
