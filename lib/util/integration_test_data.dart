@@ -5,12 +5,18 @@ part 'integration_test_data.g.dart';
 @JsonSerializable()
 class IntegrationTestData {
   const IntegrationTestData({
-    this.recoverWalletTest,
+    this.recoveryPhrase,
+    this.accountName,
+    this.cipherPin,
     this.switchAccountsTest,
+    this.sendHashTest,
   });
+  final String? recoveryPhrase;
+  final String? accountName;
+  final String? cipherPin;
 
-  final RecoverWalletTestData? recoverWalletTest;
   final SwitchAccountsTestData? switchAccountsTest;
+  final SendHashTestData? sendHashTest;
 
   // ignore: member-ordering
   factory IntegrationTestData.fromJson(Map<String, dynamic> json) =>
@@ -20,39 +26,33 @@ class IntegrationTestData {
 }
 
 @JsonSerializable()
-class RecoverWalletTestData {
-  const RecoverWalletTestData({
-    this.recoveryPhrase,
-  });
-
-  final String? recoveryPhrase;
-
-  // ignore: member-ordering
-  factory RecoverWalletTestData.fromJson(Map<String, dynamic> json) =>
-      _$RecoverWalletTestDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RecoverWalletTestDataToJson(this);
-}
-
-@JsonSerializable()
 class SwitchAccountsTestData {
   const SwitchAccountsTestData({
-    this.recoveryPhraseOne,
     this.recoveryPhraseTwo,
-    this.nameOne,
     this.nameTwo,
-    this.cipherPin,
   });
 
-  final String? recoveryPhraseOne;
   final String? recoveryPhraseTwo;
-  final String? nameOne;
   final String? nameTwo;
-  final String? cipherPin;
 
   // ignore: member-ordering
   factory SwitchAccountsTestData.fromJson(Map<String, dynamic> json) =>
       _$SwitchAccountsTestDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$SwitchAccountsTestDataToJson(this);
+}
+
+@JsonSerializable()
+class SendHashTestData {
+  const SendHashTestData({
+    this.accountAddress,
+  });
+
+  final String? accountAddress;
+
+  // ignore: member-ordering
+  factory SendHashTestData.fromJson(Map<String, dynamic> json) =>
+      _$SendHashTestDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SendHashTestDataToJson(this);
 }

@@ -7,6 +7,7 @@ class PwDropDown<X> extends StatefulWidget {
     required this.items,
     required this.builder,
     required this.onValueChanged,
+    this.selectedItemBuilder,
     this.isExpanded = false,
     this.autofocus = false,
     this.focusNode,
@@ -18,6 +19,7 @@ class PwDropDown<X> extends StatefulWidget {
   final X value;
   final List<X> items;
   final Widget Function(X item) builder;
+  final Widget Function(X item)? selectedItemBuilder;
   final void Function(X item) onValueChanged;
   final bool isExpanded;
   final bool autofocus;
@@ -91,6 +93,14 @@ class _PwDropDownState<X> extends State<PwDropDown<X>> {
             ),
           ),
       onChanged: (e) => widget.onValueChanged.call(e!),
+      selectedItemBuilder: widget.selectedItemBuilder == null
+          ? null
+          : (context) => widget.items.map<DropdownMenuItem<X>>((X value) {
+                return DropdownMenuItem<X>(
+                  value: value,
+                  child: widget.selectedItemBuilder!(value),
+                );
+              }).toList(),
       items: widget.items.map<DropdownMenuItem<X>>((X value) {
         return DropdownMenuItem<X>(
           value: value,

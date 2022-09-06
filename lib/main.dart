@@ -106,6 +106,8 @@ const _enableFirebase = bool.fromEnvironment(
 
 final _log = Log.instance;
 
+final mainCompleter = Completer();
+
 void main(List<String> args) {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
@@ -274,6 +276,7 @@ void main(List<String> args) {
           child: ProvenanceWalletApp(),
         ),
       );
+      mainCompleter.complete();
     },
     (error, stack) {
       if (get.isRegistered<CrashReportingService>()) {
@@ -294,27 +297,38 @@ void main(List<String> args) {
 }
 
 Future<void> _integrationTestSetup(String json) async {
-  // TODO: Only pass in test data for the test we are currently running.
-
   final data = IntegrationTestData.fromJson(jsonDecode(json));
-  final seedPhraseOne = data.switchAccountsTest!.recoveryPhraseOne!.split(" ");
-  final seedPhraseTwo = data.switchAccountsTest!.recoveryPhraseTwo!.split(" ");
-  final nameOne = data.switchAccountsTest!.nameOne!;
-  final nameTwo = data.switchAccountsTest!.nameTwo!;
-  final pin = data.switchAccountsTest!.cipherPin!;
+  if (data.switchAccountsTest != null) {
+    final seedPhraseOne = data.recoveryPhrase!.split(" ");
+    final seedPhraseTwo =
+        data.switchAccountsTest!.recoveryPhraseTwo!.split(" ");
+    final nameOne = data.accountName!;
+    final nameTwo = data.switchAccountsTest!.nameTwo!;
+    final pin = data.cipherPin!;
 
-  final service = get<AccountService>();
-  await service.addAccount(
-    phrase: seedPhraseOne,
-    name: nameOne,
-    coin: wallet.Coin.testNet,
-  );
-  await service.addAccount(
-    phrase: seedPhraseTwo,
-    name: nameTwo,
-    coin: wallet.Coin.testNet,
-  );
-  await get<CipherService>().setPin(pin);
+    final service = get<AccountService>();
+    await service.addAccount(
+      phrase: seedPhraseOne,
+      name: nameOne,
+      coin: wallet.Coin.testNet,
+    );
+    await service.addAccount(
+      phrase: seedPhraseTwo,
+      name: nameTwo,
+      coin: wallet.Coin.testNet,
+    );
+    await get<CipherService>().setPin(pin);
+  } else if (data.sendHashTest != null) {
+    final seedPhraseOne = data.recoveryPhrase!.split(" ");
+
+    final service = get<AccountService>();
+    await service.addAccount(
+      phrase: seedPhraseOne,
+      name: data.accountName!,
+      coin: wallet.Coin.testNet,
+    );
+    await get<CipherService>().setPin(data.cipherPin!);
+  }
 }
 
 class ProvenanceWalletApp extends StatefulWidget {

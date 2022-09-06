@@ -70,6 +70,8 @@ class SendReviewScreen extends StatelessWidget {
 class SendReviewPage extends StatefulWidget {
   const SendReviewPage({Key? key}) : super(key: key);
 
+  static final keySendButton = ValueKey('$SendReviewPage.send_button');
+
   @override
   State<StatefulWidget> createState() => SendReviewPageState();
 }
@@ -156,12 +158,13 @@ class SendReviewPageState extends State<SendReviewPage> {
                     child: Container(),
                   ),
                   PwButton(
+                    key: SendReviewPage.keySendButton,
                     child: PwText(
                       Strings.of(context).sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () async {
-                      ModalLoadingRoute.showLoading(
+                      await ModalLoadingRoute.showLoading(
                         context,
                         minDisplayTime: Duration(milliseconds: 500),
                       );
