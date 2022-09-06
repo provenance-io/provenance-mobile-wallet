@@ -91,6 +91,7 @@ class HomeBloc extends Disposable {
           account.address,
         );
 
+        // TODO-Roy: Move this out of home_bloc. Delays loading unecessarily.
         transactions = await _transactionService.getTransactions(
           account.coin,
           account.address,
