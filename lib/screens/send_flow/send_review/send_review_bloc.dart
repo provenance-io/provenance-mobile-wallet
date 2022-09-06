@@ -53,7 +53,7 @@ class SendReviewBloc implements Disposable {
     this.sendingAsset,
     this.fee,
     this.note,
-    this._naviagor,
+    this._navigator,
   ) {
     final state = SendReviewBlocState(
       receivingAddress,
@@ -64,7 +64,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.add(state);
   }
 
-  final SendReviewNaviagor _naviagor;
+  final SendReviewNaviagor _navigator;
   final _stateStreamController = StreamController<SendReviewBlocState>();
   final TxQueueService _txQueueService;
   final TransactableAccount _accountDetails;
@@ -121,6 +121,6 @@ class SendReviewBloc implements Disposable {
   }
 
   Future<void> complete() async {
-    _naviagor.complete();
+    _navigator.complete();
   }
 }

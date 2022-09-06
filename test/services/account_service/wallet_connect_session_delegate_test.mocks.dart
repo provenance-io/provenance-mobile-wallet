@@ -4,7 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
-import 'dart:ui' as _i12;
+import 'dart:ui' as _i13;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i3;
@@ -20,6 +20,8 @@ import 'package:provenance_wallet/services/models/requests/sign_request.dart'
     as _i9;
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
     as _i11;
+import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
+    as _i12;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
     as _i8;
 
@@ -102,12 +104,12 @@ class MockWalletConnectQueueService extends _i1.Mock
       returnValueForMissingStub: _i6.Future<void>.value()) as _i6.Future<void>);
   @override
   _i6.Future<void> createWalletConnectSessionGroup(
-          _i4.WalletConnectAddress? address,
+          _i4.WalletConnectAddress? connectAddress,
           String? walletAddress,
           _i4.ClientMeta? clientMeta) =>
       (super.noSuchMethod(
               Invocation.method(#createWalletConnectSessionGroup,
-                  [address, walletAddress, clientMeta]),
+                  [connectAddress, walletAddress, clientMeta]),
               returnValue: _i6.Future<void>.value(),
               returnValueForMissingStub: _i6.Future<void>.value())
           as _i6.Future<void>);
@@ -155,11 +157,11 @@ class MockWalletConnectQueueService extends _i1.Mock
               returnValueForMissingStub: _i6.Future<void>.value())
           as _i6.Future<void>);
   @override
-  _i6.Future<_i8.WalletConnectQueueGroup?> loadGroup(
+  _i6.Future<_i12.WalletConnectQueueGroup?> loadGroup(
           _i4.WalletConnectAddress? address) =>
       (super.noSuchMethod(Invocation.method(#loadGroup, [address]),
-              returnValue: _i6.Future<_i8.WalletConnectQueueGroup?>.value())
-          as _i6.Future<_i8.WalletConnectQueueGroup?>);
+              returnValue: _i6.Future<_i12.WalletConnectQueueGroup?>.value())
+          as _i6.Future<_i12.WalletConnectQueueGroup?>);
   @override
   _i6.Future<dynamic> loadQueuedAction(
           _i4.WalletConnectAddress? address, String? requestId) =>
@@ -168,24 +170,24 @@ class MockWalletConnectQueueService extends _i1.Mock
           returnValue: _i6.Future<dynamic>.value()) as _i6.Future<dynamic>);
   @override
   _i6.Future<void> removeRequest(
-          _i4.WalletConnectAddress? address, String? requestId) =>
+          _i4.WalletConnectAddress? connectAddress, String? requestId) =>
       (super.noSuchMethod(
-              Invocation.method(#removeRequest, [address, requestId]),
+              Invocation.method(#removeRequest, [connectAddress, requestId]),
               returnValue: _i6.Future<void>.value(),
               returnValueForMissingStub: _i6.Future<void>.value())
           as _i6.Future<void>);
   @override
-  _i6.Future<List<_i8.WalletConnectQueueGroup>> loadAllGroups() =>
+  _i6.Future<List<_i12.WalletConnectQueueGroup>> loadAllGroups() =>
       (super.noSuchMethod(Invocation.method(#loadAllGroups, []),
-              returnValue: _i6.Future<List<_i8.WalletConnectQueueGroup>>.value(
-                  <_i8.WalletConnectQueueGroup>[]))
-          as _i6.Future<List<_i8.WalletConnectQueueGroup>>);
+              returnValue: _i6.Future<List<_i12.WalletConnectQueueGroup>>.value(
+                  <_i12.WalletConnectQueueGroup>[]))
+          as _i6.Future<List<_i12.WalletConnectQueueGroup>>);
   @override
-  void addListener(_i12.VoidCallback? listener) =>
+  void addListener(_i13.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i12.VoidCallback? listener) =>
+  void removeListener(_i13.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -268,11 +270,11 @@ class MockWalletConnection extends _i1.Mock implements _i4.WalletConnection {
               returnValueForMissingStub: _i6.Future<void>.value())
           as _i6.Future<void>);
   @override
-  void addListener(_i12.VoidCallback? listener) =>
+  void addListener(_i13.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i12.VoidCallback? listener) =>
+  void removeListener(_i13.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
