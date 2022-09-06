@@ -559,7 +559,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final multiSigService = get<MultiSigService>();
     final txQueueService = DefaultQueueTxService(
       transactionHandler: transactionHandler,
-      cipherService: cipherService,
       multiSigService: multiSigService,
       accountService: accountService,
     );

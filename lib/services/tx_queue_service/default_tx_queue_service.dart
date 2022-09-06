@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
@@ -24,11 +23,9 @@ import 'package:sembast/sembast_memory.dart';
 class DefaultQueueTxService implements TxQueueService {
   DefaultQueueTxService({
     required TransactionHandler transactionHandler,
-    required CipherService cipherService,
     required MultiSigService multiSigService,
     required AccountService accountService,
   })  : _transactionHandler = transactionHandler,
-        _cipherService = cipherService,
         _multiSigService = multiSigService,
         _accountService = accountService {
     _db = _initDb();
@@ -37,7 +34,6 @@ class DefaultQueueTxService implements TxQueueService {
   final _store = StoreRef<String, Map<String, Object?>?>.main();
 
   final TransactionHandler _transactionHandler;
-  final CipherService _cipherService;
   final MultiSigService _multiSigService;
   final AccountService _accountService;
 
@@ -201,17 +197,13 @@ class DefaultQueueTxService implements TxQueueService {
 
   Future<TxResult> _executeBasic(
       BasicAccount account, SembastScheduledTx model) async {
-    final serialized = await _cipherService.decryptKey(
-      id: account.id,
-    );
-
-    if (serialized == null) {
+    final privateKey = await _accountService.loadKey(account.id);
+    if (privateKey == null) {
       throw TxQueueServiceError.cipherKeyNotFound;
     }
 
     TxResult? result;
 
-    final privateKey = PrivateKey.fromBip32(serialized);
     final response = await _transactionHandler.executeTransaction(
       model.txBody,
       privateKey.defaultKey(),
