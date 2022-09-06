@@ -17,23 +17,25 @@ void main() async {
   final buffer = StringBuffer();
 
   final sampleData = IntegrationTestData(
-    recoverWalletTest: RecoverWalletTestData(
-      recoveryPhrase: '<recovery phrase>',
-    ),
+    accountName: '<name>',
+    cipherPin: '<cipher pin>',
+    recoveryPhrase: '<recovery phrase>',
     switchAccountsTest: SwitchAccountsTestData(
-      recoveryPhraseOne: '<recovery phrase>',
-      recoveryPhraseTwo: '<recovery phrase>',
-      nameOne: '<name one>',
+      recoveryPhraseTwo: '<recovery phrase 2>',
       nameTwo: '<name two>',
-      cipherPin: '<cipher pin>',
+    ),
+    sendHashTest: SendHashTestData(
+      accountAddress: '<account address>',
     ),
   );
 
   final data = IntegrationTestData(
-    recoverWalletTest:
-        existingData?.recoverWalletTest ?? sampleData.recoverWalletTest,
+    accountName: existingData?.accountName ?? sampleData.accountName,
+    cipherPin: existingData?.cipherPin ?? sampleData.cipherPin,
+    recoveryPhrase: existingData?.recoveryPhrase ?? sampleData.recoveryPhrase,
     switchAccountsTest:
         existingData?.switchAccountsTest ?? sampleData.switchAccountsTest,
+    sendHashTest: existingData?.sendHashTest ?? sampleData.sendHashTest,
   );
 
   buffer.writeln(prettyJson(data));

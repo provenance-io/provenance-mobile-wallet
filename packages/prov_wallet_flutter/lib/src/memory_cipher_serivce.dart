@@ -3,7 +3,7 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 class MemoryCipherService implements CipherService {
   final _privateKeys = <String, String>{};
   var _useBiometry = false;
-  String? _pin = "000000";
+  String? _pin;
 
   @override
   Future<String?> get platformVersion async => '';

@@ -32,7 +32,7 @@ void main() {
       await AccountTypeScreen.keyRecoverAccountButton.tap(tester);
       await AccountNameScreen.keyNameTextField.tap(tester);
 
-      const accountName = 'one';
+      final accountName = testData.accountName!;
       await AccountNameScreen.keyNameTextField.enterText(accountName, tester);
 
       await AccountNameScreen.keyContinueButton.tap(tester);
@@ -60,7 +60,7 @@ void main() {
       final keyWordOne =
           RecoverPassphraseEntryScreen.keyPassphraseWordTextField(wordOneIndex);
 
-      final phrase = testData.recoverWalletTest!.recoveryPhrase!;
+      final phrase = testData.recoveryPhrase ?? "";
 
       await keyWordOne.tap(tester);
       await keyWordOne.enterText(phrase, tester);
@@ -74,13 +74,18 @@ void main() {
 
       await RecoverPassphraseEntryScreen.keyContinueButton.tap(tester);
 
-      final keyZero = keyPinPadNumber(0);
+      final pin = testData.cipherPin ?? "";
 
-      // Initial pin
-      await keyZero.tap(tester, times: 6);
-
-      // Verify pin
-      await keyZero.tap(tester, times: 6);
+      for (var i = 0; i < pin.length; i++) {
+        final number = int.parse(pin[i]);
+        final key = keyPinPadNumber(number);
+        await key.tap(tester);
+      }
+      for (var i = 0; i < pin.length; i++) {
+        final number = int.parse(pin[i]);
+        final key = keyPinPadNumber(number);
+        await key.tap(tester);
+      }
 
       await EnableFaceIdScreen.keySkipButton.tap(tester);
       await AccountSetupConfirmationScreen.keyContinueButton.tap(tester);

@@ -60,6 +60,11 @@ class SendAssetCell extends StatelessWidget {
 }
 
 class SendAssetList extends StatelessWidget {
+  static final keySelectAssetButton =
+      ValueKey('$SendAssetList.select_asset_button');
+  static Key keyDropDownItem(String asset) =>
+      ValueKey('$SendAssetList.dropdown_button_$asset');
+
   const SendAssetList(
     this.assets,
     this.selectedAsset,
@@ -89,12 +94,19 @@ class SendAssetList extends StatelessWidget {
       );
 
       child = PwDropDown<SendAsset>(
+        key: SendAssetList.keySelectAssetButton,
         isExpanded: true,
         itemHeight: 50,
         value: selectedAsset,
         items: assets,
         onValueChanged: onAssetChanged,
-        builder: (item) => SendAssetCell(item),
+        builder: (item) => SendAssetCell(
+          item,
+          key: keyDropDownItem(item.displayDenom),
+        ),
+        selectedItemBuilder: (item) => SendAssetCell(
+          item,
+        ),
         dropdownColor: theme.canvasColor,
       );
     }

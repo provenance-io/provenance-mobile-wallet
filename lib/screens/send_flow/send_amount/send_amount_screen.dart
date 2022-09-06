@@ -64,6 +64,10 @@ class SendAmountPage extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  static final keyEnterAmountField =
+      ValueKey('$SendAmountPage.enter_amount_field');
+  static final keyNextButton = ValueKey('$SendAmountPage.next_button');
+
   @override
   State<StatefulWidget> createState() => SendAmountPageState();
 }
@@ -137,6 +141,7 @@ class SendAmountPageState extends State<SendAmountPage> {
               ),
               VerticalSpacer.medium(),
               TextFormField(
+                key: SendAmountPage.keyEnterAmountField,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 textAlign: TextAlign.center,
                 controller: _amountController,
@@ -281,6 +286,7 @@ class SendAmountPageState extends State<SendAmountPage> {
                   child,
                 ) =>
                     PwButton(
+                  key: SendAmountPage.keyNextButton,
                   child: PwText(
                     Strings.of(context).sendAmountNextButton,
                     style: PwTextStyle.bodyBold,

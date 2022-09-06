@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart' as ft;
+import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/widgets/pw_text.dart';
 
 import 'widget_tester_extension.dart';
@@ -45,5 +46,14 @@ extension KeyExtension on Key {
       key: this,
       scrollable: scrollable,
     );
+  }
+
+  Future<int> drag(
+    ft.WidgetTester tester, {
+    required double dx,
+    required double dy,
+  }) async {
+    await tester.drag(find.byKey(this), Offset(dx, dy));
+    return tester.pumpAndSettle();
   }
 }

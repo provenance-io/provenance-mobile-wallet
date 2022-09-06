@@ -32,6 +32,9 @@ class Dashboard extends StatefulWidget {
       ValueKey('$Dashboard.account_address_text');
   static final keyOpenAccountsButton =
       ValueKey('$Dashboard.open_accounts_button');
+  static final keyListColumn = ValueKey('$Dashboard.list_column');
+  static Key keyAssetAmount(String denom) =>
+      ValueKey('$Dashboard.asset_amount_$denom');
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -216,6 +219,7 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     return ListView.separated(
+                      key: Dashboard.keyListColumn,
                       padding: EdgeInsets.symmetric(
                         horizontal: Spacing.large,
                       ),
@@ -282,6 +286,8 @@ class _DashboardState extends State<Dashboard> {
                                         children: [
                                           PwText(
                                             item.displayAmount,
+                                            key: Dashboard.keyAssetAmount(
+                                                item.display),
                                             color: PwColor.neutral200,
                                             style: PwTextStyle.footnote,
                                           ),

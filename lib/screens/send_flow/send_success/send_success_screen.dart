@@ -13,6 +13,10 @@ class SendSuccessScreen extends StatelessWidget {
     required this.addressTo,
   }) : super(key: key);
 
+  static final keyDoneButton = ValueKey('$SendSuccessScreen.done_button');
+  static final keyTransactionAmount =
+      ValueKey('$SendSuccessScreen.transaction_amount');
+
   final DateTime date;
   final String totalAmount;
   final String addressTo;
@@ -51,6 +55,7 @@ class SendSuccessScreen extends StatelessWidget {
                   VerticalSpacer.medium(),
                   PwText(
                     totalAmount,
+                    key: SendSuccessScreen.keyTransactionAmount,
                     style: PwTextStyle.display2,
                     textAlign: TextAlign.center,
                   ),
@@ -78,6 +83,7 @@ class SendSuccessScreen extends StatelessWidget {
                   ),
                   Expanded(child: Container()),
                   PwButton(
+                    key: SendSuccessScreen.keyDoneButton,
                     child: PwText(
                       Strings.of(context).sendDone,
                       style: PwTextStyle.bodyBold,
