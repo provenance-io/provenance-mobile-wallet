@@ -69,15 +69,13 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
         ),
         leading: Padding(
           padding: EdgeInsets.only(left: 21),
-          child: Flexible(
-            child: IconButton(
-              icon: PwIcon(
-                PwIcons.back,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          child: IconButton(
+            icon: PwIcon(
+              PwIcons.back,
             ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ),
         actions: [
@@ -89,7 +87,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 50,
               ),
               onPressed: () {
-                final data = _bloc.getMsgVoteJson();
+                final data = _bloc.getMessageJson();
                 get<ProposalsFlowBloc>().showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
@@ -188,9 +186,12 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.doVote(gasEstimate);
+      final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(response);
+      get<ProposalsFlowBloc>().showTransactionComplete(
+        response,
+        Strings.of(context).proposalVoteComplete,
+      );
     } catch (err) {
       await _showErrorModal(err, context);
     }

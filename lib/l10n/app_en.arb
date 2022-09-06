@@ -542,6 +542,7 @@
   "proposalWeightedVoteConfirmWeightedVote": "Confirm Weighted Vote",
   "proposalWeightedVoteProposalId": "Proposal ID#",
   "proposalVoteComplete": "VOTE COMPLETE",
+  "proposalDepositComplete": "DEPOSIT COMPLETE",
   "stakingConfirmUndelegationDetails": "Undelegation Details",
   "stakingConfirmAmountToUndelegate": "Amount to Undelegate",
   "stakingConfirmNewTotalDelegation": "New Total Delegation",
@@ -612,5 +613,11 @@
   "errorAccountNotFound": "Account not found",
   "errorCipherKeyNotFound": "Cipher not found",
   "errorTransactionNotFound": "Transaction not found",
-  "errorCreateTransactionFailed": "Failed to create transaction"
+  "errorCreateTransactionFailed": "Failed to create transaction",
+  "proposalDetailsScreenDeposit": "Deposit",
+  "depositConfirmScreenConfirmDeposit": "Confirm Deposit",
+  "depositConfirmScreenDepositAmount": "Deposit Amount",
+  "depositConfirmScreenTotalDeposit": "Total Deposit",
+  "depositConfirmScreenCurrentDeposit": "Current Deposit",
+  "depositConfirmScreenDepositDetails": "Deposit Details"
 }

@@ -34,67 +34,75 @@ class ProposalsListState extends State<ProposalsList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Stack(
-        children: [
-          StreamBuilder<ProposalDetails>(
-              initialData: _bloc.proposalDetails.value,
-              stream: _bloc.proposalDetails,
-              builder: (context, snapshot) {
-                final details = snapshot.data;
-                if (details == null) {
-                  return Container();
-                }
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Spacing.large,
-                    vertical: 20,
-                  ),
-                  controller: _scrollController,
-                  itemBuilder: (context, index) {
-                    if (details.proposals.isEmpty) {
-                      return Container();
-                    }
-                    final item = details.proposals[index];
-                    final vote = details.myVotes.firstWhereOrNull(
-                      (element) => element.proposalId == item.proposalId,
-                    );
-
-                    return ProposalListItem(
-                      item: item,
-                      vote: vote,
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return PwListDivider();
-                  },
-                  itemCount: details.proposals.length,
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                );
-              }),
-          StreamBuilder<bool>(
-            initialData: _bloc.isLoadingProposals.value,
-            stream: _bloc.isLoadingProposals,
-            builder: (context, snapshot) {
-              final isLoading = snapshot.data ?? false;
-              if (isLoading) {
-                return Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: SizedBox(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: CircularProgressIndicator(),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await _bloc.load(
+            showLoading: false,
+          );
+        },
+        color: Theme.of(context).colorScheme.indicatorActive,
+        child: Stack(
+          children: [
+            StreamBuilder<ProposalDetails>(
+                initialData: _bloc.proposalDetails.value,
+                stream: _bloc.proposalDetails,
+                builder: (context, snapshot) {
+                  final details = snapshot.data;
+                  if (details == null) {
+                    return Container();
+                  }
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.large,
+                      vertical: 20,
                     ),
-                  ),
-                );
-              }
+                    controller: _scrollController,
+                    itemBuilder: (context, index) {
+                      if (details.proposals.isEmpty) {
+                        return Container();
+                      }
+                      final item = details.proposals[index];
+                      final vote = details.myVotes.firstWhereOrNull(
+                        (element) => element.proposalId == item.proposalId,
+                      );
 
-              return Container();
-            },
-          ),
-        ],
+                      return ProposalListItem(
+                        item: item,
+                        vote: vote,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return PwListDivider();
+                    },
+                    itemCount: details.proposals.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
+                  );
+                }),
+            StreamBuilder<bool>(
+              initialData: _bloc.isLoadingProposals.value,
+              stream: _bloc.isLoadingProposals,
+              builder: (context, snapshot) {
+                final isLoading = snapshot.data ?? false;
+                if (isLoading) {
+                  return Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: SizedBox(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+
+                return Container();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

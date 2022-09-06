@@ -1,84 +1,29 @@
 import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
-import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_gov.dart' as gov;
-import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/type_registry.dart';
 
-class ProposalVoteConfirmBloc {
-  final TransactableAccount _account;
+class ProposalVoteConfirmBloc extends TransactionBloc {
   final Proposal _proposal;
   final gov.VoteOption _voteOption;
 
   ProposalVoteConfirmBloc(
-    this._account,
+    TransactableAccount account,
     this._proposal,
     this._voteOption,
-  );
+  ) : super(account);
 
-  Future<Object?> doVote(
-    double? gasAdjustment,
-  ) async {
-    return await _sendMessage(
-      gasAdjustment,
-      _getMsgVote().toAny(),
-    );
-  }
-
-  Object? getMsgVoteJson() {
-    return _getMsgVote().toProto3Json(typeRegistry: provenanceTypes);
-  }
-
-  gov.MsgVote _getMsgVote() {
+  @override
+  gov.MsgVote getMessage() {
     return gov.MsgVote(
       option: _voteOption,
       proposalId: Int64.parseInt(_proposal.proposalId.toString()),
-      voter: _account.address,
+      voter: account.address,
     );
-  }
-
-  Future<Object?> _sendMessage(
-    double? gasAdjustment,
-    proto.Any message,
-  ) async {
-    final body = proto.TxBody(
-      messages: [
-        message,
-      ],
-    );
-
-    final privateKey = await get<AccountService>().loadKey(_account.id);
-
-    final adjustedEstimate = await _estimateGas(body);
-
-    AccountGasEstimate estimate = AccountGasEstimate(
-      adjustedEstimate.estimatedGas,
-      adjustedEstimate.baseFee,
-      gasAdjustment ?? adjustedEstimate.gasAdjustment,
-      adjustedEstimate.totalFees,
-    );
-
-    final response = await get<TransactionHandler>().executeTransaction(
-      body,
-      privateKey!.defaultKey(),
-      estimate,
-    );
-
-    log(response.asJsonString());
-    return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
-  }
-
-  Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    return await (get<TransactionHandler>())
-        .estimateGas(body, [(_account as BasicAccount).publicKey]);
   }
 
   Vote getUserFriendlyVote() {
@@ -96,4 +41,7 @@ class ProposalVoteConfirmBloc {
         return Vote.demo();
     }
   }
+
+  @override
+  FutureOr onDispose() {}
 }

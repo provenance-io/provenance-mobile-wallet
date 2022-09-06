@@ -23,8 +23,14 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   }
 
   @override
-  Future<void> showTransactionComplete(Object? response) async {
-    await _navigator.showTransactionComplete(response);
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  ) async {
+    await _navigator.showTransactionComplete(
+      response,
+      title,
+    );
   }
 
   @override
@@ -49,5 +55,10 @@ class ProposalsFlowBloc extends ProposalsFlowNavigator {
   @override
   void backToDashboard() {
     _navigator.backToDashboard();
+  }
+
+  @override
+  Future<void> showDepositReview(Proposal proposal) async {
+    await _navigator.showDepositReview(proposal);
   }
 }
