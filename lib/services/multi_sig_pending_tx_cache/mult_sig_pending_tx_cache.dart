@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
+import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
@@ -14,21 +17,43 @@ import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.d
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
 
+// TODO-Roy: Rename to MultiSigService
 class MultiSigPendingTxCache extends Listenable with ListenableMixin {
   MultiSigPendingTxCache({
     required MultiSigService multiSigService,
-  }) : _multiSigService = multiSigService;
+  }) : _multiSigService = multiSigService {
+    _db = _initDb();
+  }
+
+  Future<Database> _initDb() async {
+    final directory = await getApplicationDocumentsDirectory();
+    await directory.create(recursive: true);
+
+    final factory = databaseFactoryIo;
+
+    final path = p.join(directory.path, 'multi_sig_service.db');
+
+    final db = await factory.openDatabase(
+      path,
+      version: 1,
+    );
+
+    return db;
+  }
 
   final MultiSigService _multiSigService;
 
   final items = <MultiSigActionListItem>[];
 
-  final _itemsBySignerAddress = <String, List<MultiSigActionListItem>>{};
-  // TODO-Roy: Persist across app restarts
-  final _resultsByTxUuid = <String, _TxResultData>{};
+  final _actionItemsBySignerAddress = <String, List<MultiSigActionListItem>>{};
   final _initialized = Completer();
   final _response = PublishSubject<ServiceTxResponse>();
+
+  final _main = StoreRef<String, Map<String, Object?>?>.main();
+  late final Future<Database> _db;
 
   Future<void> get initialized => _initialized.future;
   Stream<ServiceTxResponse> get response => _response;
@@ -62,16 +87,19 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
       for (final tx in createdTxs) {
         if (tx.status == MultiSigStatus.ready && tx.signatures != null) {
-          final result = _resultsByTxUuid[tx.txUuid];
+          final ref = _main.record(tx.txUuid);
+          final db = await _db;
+          final result = await ref.get(db);
           if (result != null) {
+            final model = _SembastResultData.fromRecord(result);
             final success = await _multiSigService.updateTxResult(
-              txUuid: result.txUuid,
-              txHash: result.txHash,
-              coin: result.coin,
+              txUuid: model.txUuid,
+              txHash: model.txHash,
+              coin: ChainId.toCoin(model.chainId),
             );
 
             if (success) {
-              _resultsByTxUuid.remove(tx.txUuid);
+              await ref.delete(db);
             }
           } else {
             final item = _toTransmitListItem(tx, signerAddress);
@@ -80,7 +108,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
         }
       }
 
-      _itemsBySignerAddress[signerAddress] = addressItems;
+      _actionItemsBySignerAddress[signerAddress] = addressItems;
     }
 
     _publish();
@@ -97,11 +125,17 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     required Fee fee,
     required wallet.Coin coin,
   }) async {
-    _resultsByTxUuid[txUuid] = _TxResultData(
+    final chainId = ChainId.forCoin(coin);
+
+    final data = _SembastResultData(
       txUuid: txUuid,
       txHash: response.txhash,
-      coin: coin,
+      chainId: chainId,
     );
+
+    final ref = _main.record(txUuid);
+    final db = await _db;
+    await ref.put(db, data.toRecord());
 
     final success = await _multiSigService.updateTxResult(
       txUuid: txUuid,
@@ -110,10 +144,10 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     );
 
     if (success) {
-      _resultsByTxUuid.remove(txUuid);
+      await ref.delete(db);
     }
 
-    _itemsBySignerAddress[signerAddress]
+    _actionItemsBySignerAddress[signerAddress]
         ?.removeWhere((e) => e.txUuid == txUuid);
     _publish();
 
@@ -168,14 +202,14 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     required List<String> signerAddresses,
   }) async {
     for (final address in signerAddresses) {
-      _itemsBySignerAddress.remove(address);
+      _actionItemsBySignerAddress.remove(address);
     }
 
     _publish();
   }
 
   void _publish() {
-    final updated = _itemsBySignerAddress.entries
+    final updated = _actionItemsBySignerAddress.entries
         .fold<List<MultiSigActionListItem>>(
             [],
             (previousValue, element) =>
@@ -258,14 +292,28 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   final List<MultiSigSignature> signatures;
 }
 
-class _TxResultData {
-  _TxResultData({
+class _SembastResultData {
+  _SembastResultData({
     required this.txUuid,
     required this.txHash,
-    required this.coin,
+    required this.chainId,
   });
 
   final String txUuid;
   final String txHash;
-  final wallet.Coin coin;
+  final String chainId;
+
+  Map<String, dynamic> toRecord() => {
+        'txUuid': txUuid,
+        'txHash': txHash,
+        'chainId': chainId,
+      };
+
+  // ignore: unused_element
+  factory _SembastResultData.fromRecord(Map<String, dynamic> rec) =>
+      _SembastResultData(
+        txUuid: rec['txUuid'] as String,
+        txHash: rec['txHash'] as String,
+        chainId: rec['chainId'] as String,
+      );
 }
