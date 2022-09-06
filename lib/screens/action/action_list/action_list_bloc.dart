@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -144,7 +146,7 @@ class ActionListBloc extends Disposable {
         .whereType<TransactableAccount>()
         .toList();
     final addresses = accounts.map((e) => e.address).toList();
-    await _multiSigPendingTxCache.update(
+    await _multiSigPendingTxCache.fetch(
       signerAddresses: addresses,
     );
 
@@ -370,7 +372,10 @@ class ActionListBloc extends Disposable {
     final accounts = await _accountService.getTransactableAccounts();
     final multiSigAccount = accounts
         .whereType<MultiTransactableAccount>()
-        .firstWhere((e) => e.linkedAccount.address == item.signerAddress);
+        .firstWhereOrNull((e) => e.linkedAccount.address == item.signerAddress);
+    if (multiSigAccount == null) {
+      throw ActionListError.multiSigAccountNotFound;
+    }
 
     final coin = getCoinFromAddress(item.multiSigAddress);
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
@@ -419,10 +424,12 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
-    await _multiSigService.updateTxResult(
-      coin: coin,
+    await _multiSigPendingTxCache.finalizeTx(
+      signerAddress: item.signerAddress,
       txUuid: item.txUuid,
-      txHash: responsePair.txResponse.txhash,
+      response: responsePair.txResponse,
+      coin: coin,
+      fee: item.fee,
     );
 
     logDebug('Multi-sig tx response: ${responsePair.txResponse.rawLog}');
@@ -456,6 +463,15 @@ class ActionListBloc extends Disposable {
     );
 
     if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await _multiSigPendingTxCache.fetch(
+        signerAddresses: addresses,
+      );
       _onActionQueueUpdated();
     }
 

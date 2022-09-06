@@ -4,7 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:ui' as _i8;
+import 'dart:ui' as _i9;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart'
@@ -12,11 +12,13 @@ import 'package:provenance_wallet/services/account_service/wallet_connect_sessio
 import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart'
     as _i3;
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
-    as _i7;
+    as _i8;
+import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
+    as _i6;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
     as _i4;
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart'
-    as _i6;
+    as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -52,6 +54,11 @@ class MockRemoteNotificationService extends _i1.Mock
   }
 
   @override
+  _i5.Stream<_i6.MultiSigRemoteNotification> get multiSig =>
+      (super.noSuchMethod(Invocation.getter(#multiSig),
+              returnValue: _i5.Stream<_i6.MultiSigRemoteNotification>.empty())
+          as _i5.Stream<_i6.MultiSigRemoteNotification>);
+  @override
   bool isRegistered(String? topic) =>
       (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
           returnValue: false) as bool);
@@ -75,7 +82,7 @@ class MockRemoteNotificationService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletConnectService extends _i1.Mock
-    implements _i6.WalletConnectService {
+    implements _i7.WalletConnectService {
   MockWalletConnectService() {
     _i1.throwOnMissingStub(this);
   }
@@ -98,7 +105,7 @@ class MockWalletConnectService extends _i1.Mock
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
   _i5.Future<bool> approveSession(
-          {_i7.WalletConnectSessionRequestData? details, bool? allowed}) =>
+          {_i8.WalletConnectSessionRequestData? details, bool? allowed}) =>
       (super.noSuchMethod(
           Invocation.method(
               #approveSession, [], {#details: details, #allowed: allowed}),
@@ -121,11 +128,11 @@ class MockWalletConnectService extends _i1.Mock
               {#requestId: requestId, #allowed: allowed}),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  void addListener(_i8.VoidCallback? listener) =>
+  void addListener(_i9.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i8.VoidCallback? listener) =>
+  void removeListener(_i9.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
