@@ -20,6 +20,11 @@ class RecoveryWordsConfirmScreen extends StatefulWidget {
   final int currentStep;
   final int totalSteps;
 
+  static ValueKey keyCheckbox =
+      ValueKey("$RecoveryWordsConfirmScreen.checkbox");
+  static ValueKey keyContinueButton =
+      ValueKey("$RecoveryWordsConfirmScreen.continue_button");
+
   @override
   State<StatefulWidget> createState() {
     return RecoveryWordsConfirmScreenState();
@@ -112,6 +117,7 @@ class RecoveryWordsConfirmScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PwCheckBox(
+                    key: RecoveryWordsConfirmScreen.keyCheckbox,
                     onSelect: (isChecked) {
                       setState(() {
                         _isResponsible = isChecked;
@@ -134,6 +140,7 @@ class RecoveryWordsConfirmScreenState
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: PwButton(
+                key: RecoveryWordsConfirmScreen.keyContinueButton,
                 child: PwText(
                   Strings.of(context).continueName,
                   style: PwTextStyle.bodyBold,

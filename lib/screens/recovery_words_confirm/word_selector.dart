@@ -13,6 +13,9 @@ class WordSelector extends StatefulWidget {
   final RecoveryWordsBloc bloc;
   final int index;
 
+  static ValueKey keyWordSelector(int index) =>
+      ValueKey("$WordSelector.index_$index");
+
   @override
   State<StatefulWidget> createState() {
     return WordSelectorState();
@@ -42,6 +45,7 @@ class WordSelectorState extends State<WordSelector> {
                 (trueWordIndex == null || trueWordIndex == -1)
                     ? Strings.of(context).selectWord
                     : Strings.of(context).selectWordIndex(trueWordIndex + 1),
+                key: WordSelector.keyWordSelector(widget.index),
                 style: PwTextStyle.body,
               );
             },
@@ -60,6 +64,7 @@ class WordSelectorState extends State<WordSelector> {
                     .map((e) {
                       return [
                         WordButton(
+                          groupIndex: widget.index,
                           word: e,
                           isSelected: e == selectedWord,
                           setSelected: () {

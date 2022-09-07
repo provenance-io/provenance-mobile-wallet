@@ -6,6 +6,8 @@ class PwOnboardingScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  static final keyScrollView = ValueKey('$PwOnboardingScreen.scroll_view');
+
   final List<Widget> children;
 
   @override
@@ -15,6 +17,7 @@ class PwOnboardingScreen extends StatelessWidget {
         return Container(
           color: Theme.of(context).colorScheme.neutral750,
           child: SingleChildScrollView(
+            key: keyScrollView,
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(

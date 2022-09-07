@@ -18,6 +18,9 @@ class CreatePassphraseScreen extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
 
+  static final keyContinueButton =
+      ValueKey('$CreatePassphraseScreen.continue_button');
+
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
@@ -93,6 +96,7 @@ class CreatePassphraseScreen extends StatelessWidget {
             child: PwButton(
               child: PwText(
                 strings.continueName,
+                key: CreatePassphraseScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),

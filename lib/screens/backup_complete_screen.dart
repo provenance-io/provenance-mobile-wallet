@@ -18,6 +18,9 @@ class BackupCompleteScreen extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
 
+  static ValueKey keyContinueButton =
+      ValueKey("$BackupCompleteScreen.continue_button");
+
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
@@ -68,6 +71,7 @@ class BackupCompleteScreen extends StatelessWidget {
             child: PwButton(
               child: PwText(
                 strings.continueName,
+                key: BackupCompleteScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),
