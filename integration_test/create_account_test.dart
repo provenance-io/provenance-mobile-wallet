@@ -28,9 +28,10 @@ void main() {
     (tester) async {
       app.main([]);
 
-      final testData = await tester.loadTestData();
+      await app.mainCompleter.future;
+      await tester.pumpAndSettle();
 
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      final testData = await tester.loadTestData();
 
       await LandingScreen.keyAddAccountButton.tap(tester);
       await AccountTypeScreen.keyBasicAccountButton.tap(tester);
