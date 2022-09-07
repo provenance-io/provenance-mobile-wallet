@@ -1,20 +1,37 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart';
+import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/util/lazy.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:rxdart/subjects.dart';
 
-class DefaultRemoteNotificationService extends RemoteNotificationService {
+class DefaultRemoteNotificationService extends RemoteNotificationService
+    implements Disposable {
   DefaultRemoteNotificationService() {
     _lazyInit = Lazy(() => _init());
   }
 
   final Set<String> _registrations = {};
   final _firebaseMessaging = FirebaseMessaging.instance;
+  final _multiSig = PublishSubject<MultiSigRemoteNotification>();
+  final _multiSigTopics = MultiSigTopic.values.map((e) => e.id).toSet();
   late final Lazy<Future<void>> _lazyInit;
 
   @override
+  Stream<MultiSigRemoteNotification> get multiSig => _multiSig;
+
+  @override
   bool isRegistered(String topic) => _registrations.contains(topic);
+
+  @override
+  FutureOr onDispose() {
+    _multiSig.close();
+  }
 
   @override
   Future<void> registerForPushNotifications(
@@ -79,11 +96,13 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
   }
 
   Future<void> _onMessage(RemoteMessage message) async {
-    // TODO-Roy:
-    // 1. Create a new message class that encompasses our data
-    // 2. Transform RemoteMessage to that message
-    // 3. Expose via a stream on this class
     logDebug('Received firebase message: ${message.data}');
+
+    final dataTopic = message.data['topic'] as String?;
+    if (_multiSigTopics.contains(dataTopic)) {
+      final notification = MultiSigRemoteNotification.fromJson(message.data);
+      _multiSig.add(notification);
+    }
   }
 
   ///
@@ -98,20 +117,3 @@ class DefaultRemoteNotificationService extends RemoteNotificationService {
         tag: '$DefaultRemoteNotificationService');
   }
 }
-
-class MultiSigRemoteMessage {
-  MultiSigRemoteMessage({
-    required this.topic,
-    required this.txUuid,
-    required this.txBody,
-  });
-
-  final String topic;
-  final String txUuid;
-  final String txBody;
-}
-
-const multiSigTxSignatureRequired = 'MULTISIG_TX_SIGNATURE_REQUIRED';
-const multiSigAccountComplete = 'MULTISIG_WALLET_COMPLETE';
-const multiSigTxReady = 'MULTISIG_TX_READY';
-const multiSigTxResult = 'MULTISIG_TX_RESULT';

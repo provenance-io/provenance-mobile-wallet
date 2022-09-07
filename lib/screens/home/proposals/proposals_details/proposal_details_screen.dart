@@ -1,10 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_buttons.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -259,6 +261,38 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                   VotingButtons(
                     proposal: _proposal,
                   ),
+                if (_proposal.status.toLowerCase() == depositPeriod)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PwListDivider.alternate(
+                        indent: Spacing.large,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: Spacing.large,
+                          left: Spacing.large,
+                          right: Spacing.large,
+                          bottom: Spacing.largeX3,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: PwOutlinedButton(
+                                strings.proposalDetailsScreenDeposit,
+                                onPressed: () {
+                                  get<ProposalsFlowBloc>()
+                                      .showDepositReview(_proposal);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
               ],
             ),
           ),

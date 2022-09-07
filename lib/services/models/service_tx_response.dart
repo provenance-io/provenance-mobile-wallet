@@ -1,9 +1,8 @@
 import 'package:provenance_dart/proto.dart' as proto;
 
-class WalletConnectTxResponse {
-  WalletConnectTxResponse({
+class ServiceTxResponse {
+  ServiceTxResponse({
     required this.code,
-    required this.requestId,
     this.message,
     this.gasWanted,
     this.gasUsed,
@@ -15,7 +14,7 @@ class WalletConnectTxResponse {
   });
 
   final int code;
-  final String requestId;
+
   final String? message;
   final int? gasWanted;
   final int? gasUsed;

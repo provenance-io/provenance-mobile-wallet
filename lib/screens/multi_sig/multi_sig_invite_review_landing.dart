@@ -4,7 +4,7 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MultiSigInviteReviewLanding extends StatelessWidget {
   const MultiSigInviteReviewLanding({
@@ -88,8 +88,8 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                               .multiSigInviteReviewLandingLearnMoreButton,
                           onPressed: () async {
                             const url = 'https://provenance.io';
-                            if (await canLaunch(url)) {
-                              launch(url);
+                            if (await canLaunchUrlString(url)) {
+                              launchUrlString(url);
                             }
                           },
                         ),

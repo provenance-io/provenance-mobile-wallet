@@ -10,8 +10,8 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
+import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_tx_response.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,14 +29,14 @@ class WalletConnectSessionDelegateEvents {
   final _signRequest = PublishSubject<SignRequest>(sync: true);
   final _sendRequest = PublishSubject<SendRequest>(sync: true);
   final _onDidError = PublishSubject<String>(sync: true);
-  final _onResponse = PublishSubject<WalletConnectTxResponse>(sync: true);
+  final _onResponse = PublishSubject<ServiceTxResponse>(sync: true);
   final _onClose = PublishSubject<void>(sync: true);
 
   Stream<WalletConnectSessionRequestData> get sessionRequest => _sessionRequest;
   Stream<SignRequest> get signRequest => _signRequest;
   Stream<SendRequest> get sendRequest => _sendRequest;
   Stream<String> get onDidError => _onDidError;
-  Stream<WalletConnectTxResponse> get onResponse => _onResponse;
+  Stream<ServiceTxResponse> get onResponse => _onResponse;
   Stream<void> get onClose => _onClose;
 
   void listen(WalletConnectSessionDelegateEvents other) {
@@ -140,9 +140,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       await _connection.sendTransactionResult(wcRequestId, response);
 
       events._onResponse.add(
-        WalletConnectTxResponse(
+        ServiceTxResponse(
           code: txResponse.code,
-          requestId: action.requestId.toString(),
           message: txResponse.rawLog,
           gasWanted: txResponse.gasWanted.toInt(),
           gasUsed: txResponse.gasUsed.toInt(),

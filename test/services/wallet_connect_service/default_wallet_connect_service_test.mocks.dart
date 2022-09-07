@@ -4,35 +4,39 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i8;
-import 'dart:ui' as _i17;
+import 'dart:ui' as _i19;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i5;
 import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_dart/wallet_connect.dart' as _i6;
-import 'package:provenance_wallet/common/pw_design.dart' as _i20;
+import 'package:provenance_wallet/common/pw_design.dart' as _i22;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i4;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i18;
+    as _i20;
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
     as _i7;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
 import 'package:provenance_wallet/services/models/requests/send_request.dart'
-    as _i15;
-import 'package:provenance_wallet/services/models/requests/sign_request.dart'
-    as _i14;
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
     as _i16;
+import 'package:provenance_wallet/services/models/requests/sign_request.dart'
+    as _i15;
+import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
+    as _i17;
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
     as _i11;
+import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
+    as _i13;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
     as _i12;
+import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
+    as _i18;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
-    as _i13;
-import 'package:provenance_wallet/util/local_auth_helper.dart' as _i19;
+    as _i14;
+import 'package:provenance_wallet/util/local_auth_helper.dart' as _i21;
 import 'package:rxdart/streams.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -253,6 +257,11 @@ class MockRemoteNotificationService extends _i1.Mock
   }
 
   @override
+  _i8.Stream<_i13.MultiSigRemoteNotification> get multiSig =>
+      (super.noSuchMethod(Invocation.getter(#multiSig),
+              returnValue: _i8.Stream<_i13.MultiSigRemoteNotification>.empty())
+          as _i8.Stream<_i13.MultiSigRemoteNotification>);
+  @override
   bool isRegistered(String? topic) =>
       (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
           returnValue: false) as bool);
@@ -276,7 +285,7 @@ class MockRemoteNotificationService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletConnectQueueService extends _i1.Mock
-    implements _i13.WalletConnectQueueService {
+    implements _i14.WalletConnectQueueService {
   MockWalletConnectQueueService() {
     _i1.throwOnMissingStub(this);
   }
@@ -287,12 +296,12 @@ class MockWalletConnectQueueService extends _i1.Mock
       returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
   @override
   _i8.Future<void> createWalletConnectSessionGroup(
-          _i6.WalletConnectAddress? address,
+          _i6.WalletConnectAddress? connectAddress,
           String? walletAddress,
           _i6.ClientMeta? clientMeta) =>
       (super.noSuchMethod(
               Invocation.method(#createWalletConnectSessionGroup,
-                  [address, walletAddress, clientMeta]),
+                  [connectAddress, walletAddress, clientMeta]),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
@@ -314,7 +323,7 @@ class MockWalletConnectQueueService extends _i1.Mock
               _i8.Future<void>.value()) as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletConnectSignRequest(
-          _i6.WalletConnectAddress? address, _i14.SignRequest? signRequest) =>
+          _i6.WalletConnectAddress? address, _i15.SignRequest? signRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSignRequest, [address, signRequest]),
@@ -323,7 +332,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletConnectSendRequest(
-          _i6.WalletConnectAddress? address, _i15.SendRequest? sendRequest) =>
+          _i6.WalletConnectAddress? address, _i16.SendRequest? sendRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSendRequest, [address, sendRequest]),
@@ -332,7 +341,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletApproveRequest(_i6.WalletConnectAddress? address,
-          _i16.WalletConnectSessionRequestData? approveRequestData) =>
+          _i17.WalletConnectSessionRequestData? approveRequestData) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletApproveRequest, [address, approveRequestData]),
@@ -340,11 +349,11 @@ class MockWalletConnectQueueService extends _i1.Mock
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
-  _i8.Future<_i13.WalletConnectQueueGroup?> loadGroup(
+  _i8.Future<_i18.WalletConnectQueueGroup?> loadGroup(
           _i6.WalletConnectAddress? address) =>
       (super.noSuchMethod(Invocation.method(#loadGroup, [address]),
-              returnValue: _i8.Future<_i13.WalletConnectQueueGroup?>.value())
-          as _i8.Future<_i13.WalletConnectQueueGroup?>);
+              returnValue: _i8.Future<_i18.WalletConnectQueueGroup?>.value())
+          as _i8.Future<_i18.WalletConnectQueueGroup?>);
   @override
   _i8.Future<dynamic> loadQueuedAction(
           _i6.WalletConnectAddress? address, String? requestId) =>
@@ -353,24 +362,24 @@ class MockWalletConnectQueueService extends _i1.Mock
           returnValue: _i8.Future<dynamic>.value()) as _i8.Future<dynamic>);
   @override
   _i8.Future<void> removeRequest(
-          _i6.WalletConnectAddress? address, String? requestId) =>
+          _i6.WalletConnectAddress? connectAddress, String? requestId) =>
       (super.noSuchMethod(
-              Invocation.method(#removeRequest, [address, requestId]),
+              Invocation.method(#removeRequest, [connectAddress, requestId]),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
-  _i8.Future<List<_i13.WalletConnectQueueGroup>> loadAllGroups() =>
+  _i8.Future<List<_i18.WalletConnectQueueGroup>> loadAllGroups() =>
       (super.noSuchMethod(Invocation.method(#loadAllGroups, []),
-              returnValue: _i8.Future<List<_i13.WalletConnectQueueGroup>>.value(
-                  <_i13.WalletConnectQueueGroup>[]))
-          as _i8.Future<List<_i13.WalletConnectQueueGroup>>);
+              returnValue: _i8.Future<List<_i18.WalletConnectQueueGroup>>.value(
+                  <_i18.WalletConnectQueueGroup>[]))
+          as _i8.Future<List<_i18.WalletConnectQueueGroup>>);
   @override
-  void addListener(_i17.VoidCallback? listener) =>
+  void addListener(_i19.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i17.VoidCallback? listener) =>
+  void removeListener(_i19.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -383,16 +392,16 @@ class MockWalletConnectQueueService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i18.TransactionHandler {
+    implements _i20.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Stream<_i18.TransactionResponse> get transaction =>
+  _i8.Stream<_i20.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: _i8.Stream<_i18.TransactionResponse>.empty())
-          as _i8.Stream<_i18.TransactionResponse>);
+              returnValue: _i8.Stream<_i20.TransactionResponse>.empty())
+          as _i8.Stream<_i20.TransactionResponse>);
   @override
   _i8.Future<_i4.AccountGasEstimate> estimateGas(
           _i5.TxBody? txBody, List<_i10.IPubKey>? signers) =>
@@ -488,11 +497,11 @@ class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
-  void addListener(_i17.VoidCallback? listener) =>
+  void addListener(_i19.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i17.VoidCallback? listener) =>
+  void removeListener(_i19.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
@@ -500,34 +509,34 @@ class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
 /// A class which mocks [LocalAuthHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocalAuthHelper extends _i1.Mock implements _i19.LocalAuthHelper {
+class MockLocalAuthHelper extends _i1.Mock implements _i21.LocalAuthHelper {
   MockLocalAuthHelper() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.ValueStream<_i19.AuthStatus> get status =>
+  _i2.ValueStream<_i21.AuthStatus> get status =>
       (super.noSuchMethod(Invocation.getter(#status),
-              returnValue: _FakeValueStream_0<_i19.AuthStatus>(
+              returnValue: _FakeValueStream_0<_i21.AuthStatus>(
                   this, Invocation.getter(#status)))
-          as _i2.ValueStream<_i19.AuthStatus>);
+          as _i2.ValueStream<_i21.AuthStatus>);
   @override
   void reset() => super.noSuchMethod(Invocation.method(#reset, []),
       returnValueForMissingStub: null);
   @override
   _i8.Future<bool> enroll(String? code, String? accountName, bool? useBiometry,
-          _i20.BuildContext? context) =>
+          _i22.BuildContext? context) =>
       (super.noSuchMethod(
           Invocation.method(#enroll, [code, accountName, useBiometry, context]),
           returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
   @override
-  _i8.Future<_i19.AuthStatus> auth(_i20.BuildContext? context) =>
+  _i8.Future<_i21.AuthStatus> auth(_i22.BuildContext? context) =>
       (super.noSuchMethod(Invocation.method(#auth, [context]),
               returnValue:
-                  _i8.Future<_i19.AuthStatus>.value(_i19.AuthStatus.noAccount))
-          as _i8.Future<_i19.AuthStatus>);
+                  _i8.Future<_i21.AuthStatus>.value(_i21.AuthStatus.noAccount))
+          as _i8.Future<_i21.AuthStatus>);
   @override
-  void didChangeAppLifecycleState(_i17.AppLifecycleState? state) => super
+  void didChangeAppLifecycleState(_i19.AppLifecycleState? state) => super
       .noSuchMethod(Invocation.method(#didChangeAppLifecycleState, [state]),
           returnValueForMissingStub: null);
   @override
@@ -540,7 +549,7 @@ class MockLocalAuthHelper extends _i1.Mock implements _i19.LocalAuthHelper {
           returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
   @override
   _i8.Future<bool> didPushRouteInformation(
-          _i20.RouteInformation? routeInformation) =>
+          _i22.RouteInformation? routeInformation) =>
       (super.noSuchMethod(
           Invocation.method(#didPushRouteInformation, [routeInformation]),
           returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
@@ -557,7 +566,7 @@ class MockLocalAuthHelper extends _i1.Mock implements _i19.LocalAuthHelper {
       super.noSuchMethod(Invocation.method(#didChangePlatformBrightness, []),
           returnValueForMissingStub: null);
   @override
-  void didChangeLocales(List<_i17.Locale>? locales) =>
+  void didChangeLocales(List<_i19.Locale>? locales) =>
       super.noSuchMethod(Invocation.method(#didChangeLocales, [locales]),
           returnValueForMissingStub: null);
   @override

@@ -14,6 +14,7 @@ import 'package:provenance_wallet/screens/home/notification_bar.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
+import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -42,22 +43,26 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final _notificationBellNotifier = ValueNotifier<int>(0);
   late WalletConnectQueueService _connectQueueService;
+  late MultiSigPendingTxCache _multiSigPendingTxCache;
 
   @override
   void initState() {
     super.initState();
 
     _connectQueueService = get<WalletConnectQueueService>();
-    _connectQueueService.addListener(_connectQueueUpdated);
+    _connectQueueService.addListener(_updateBellCount);
+
+    _multiSigPendingTxCache = get<MultiSigPendingTxCache>();
+    _multiSigPendingTxCache.addListener(_updateBellCount);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _connectQueueUpdated();
+      _updateBellCount();
     });
   }
 
   @override
   void dispose() {
-    _connectQueueService.removeListener(_connectQueueUpdated);
+    _connectQueueService.removeListener(_updateBellCount);
     super.dispose();
   }
 
@@ -333,11 +338,27 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(context, ActionFlow(account: account).route());
   }
 
-  void _connectQueueUpdated() async {
-    final groups = await _connectQueueService.loadAllGroups();
-    final counts = groups.map((group) => group.actionLookup.length);
-    _notificationBellNotifier.value = (counts.isEmpty)
+  void _updateBellCount() async {
+    final connectGroups = await _connectQueueService.loadAllGroups();
+
+    final connectCounts =
+        connectGroups.map((group) => group.actionLookup.length);
+
+    final connectCount = (connectCounts.isEmpty)
         ? 0
-        : counts.reduce((value, element) => value + element);
+        : connectCounts.reduce((value, element) => value + element);
+
+    // Attempt to get the count right first try, but don't wait forever.
+    await Future.any([
+      _multiSigPendingTxCache.initialized,
+      Future.delayed(
+        Duration(
+          seconds: 1,
+        ),
+      ),
+    ]);
+
+    _notificationBellNotifier.value =
+        connectCount + _multiSigPendingTxCache.items.length;
   }
 }

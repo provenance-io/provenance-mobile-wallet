@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
@@ -26,6 +27,10 @@ abstract class ProposalsFlowNavigator {
     proto.VoteOption voteOption,
   );
 
+  Future<void> showDepositReview(
+    Proposal proposal,
+  );
+
   Future<void> showWeightedVote(
     Proposal proposal,
   );
@@ -39,7 +44,10 @@ abstract class ProposalsFlowNavigator {
     String screenTitle,
   );
 
-  Future<void> showTransactionComplete(Object? response);
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  );
 
   void onComplete();
 
@@ -114,7 +122,10 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Future<void> showTransactionData(Object? data, String screenTitle) async {
+  Future<void> showTransactionData(
+    Object? data,
+    String screenTitle,
+  ) async {
     showPage(
       (context) => PwDataScreen(
         title: screenTitle,
@@ -124,10 +135,13 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Future<void> showTransactionComplete(Object? response) async {
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  ) async {
     showPage(
       (context) => PwTransactionCompleteScreen(
-        title: Strings.of(context).proposalVoteComplete,
+        title: title,
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
@@ -150,8 +164,18 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
+  Future<void> showDepositReview(Proposal proposal) async {
+    showPage(
+      (context) => DepositConfirmScreen(
+        account: _account,
+        proposal: proposal,
+      ),
+    );
+  }
+
+  @override
   void onComplete() {
-    completeFlow(true);
+    backToFlowStart(null);
   }
 
   @override

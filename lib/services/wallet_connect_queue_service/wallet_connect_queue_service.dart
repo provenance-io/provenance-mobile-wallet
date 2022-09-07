@@ -2,155 +2,15 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
-import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:sembast/sembast.dart';
-
-class WalletConnectQueueGroup {
-  static Map<String, dynamic> _toRecord(dynamic input) {
-    if (input is SendRequest) {
-      final body = TxBody(
-        messages: input.messages.map((e) => e.toAny()),
-      );
-
-      return <String, dynamic>{
-        "type": "SendRequest",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": "",
-        "description": input.description,
-        "txBody": body.writeToBuffer(),
-        "estimate": input.gasEstimate.estimatedGas,
-        "baseFee": input.gasEstimate.baseFee,
-        "feeAdjustment": input.gasEstimate.gasAdjustment,
-        "feeCalculated":
-            input.gasEstimate.totalFees.map((e) => e.writeToBuffer()).toList(),
-      };
-    } else if (input is SignRequest) {
-      return <String, dynamic>{
-        "type": "SignRequest",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": input.message,
-        "description": input.description,
-        "address": input.address
-      };
-    } else if (input is WalletConnectSessionRequestData) {
-      return <String, dynamic>{
-        "type": "ApproveSession",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": "Approval required",
-        "description": "",
-        "address": input.data.address.fullUriString,
-        "clientMeta": input.data.clientMeta.toJson(),
-        "peerId": input.data.peerId,
-        "remotePeerId": input.data.remotePeerId,
-      };
-    } else {
-      throw Exception("${input.runtimeType} is not a supported type");
-    }
-  }
-
-  static dynamic _fromRecord(Map<String, dynamic> input) {
-    final type = input["type"] as String;
-
-    if (type == "SendRequest") {
-      final body = TxBody.fromBuffer(input["txBody"].cast<int>());
-      final id = input["id"];
-      final requestId = input["requestId"];
-      final description = input["description"];
-      final estimate = input["estimate"];
-      final feeAdjustment = input["feeAdjustment"];
-      final baseFee = input["baseFee"];
-      final feeCalculated = input["feeCalculated"]
-          ?.map((e) => Coin.fromBuffer(e.cast<int>()))
-          .cast<Coin>()
-          .toList();
-
-      return SendRequest(
-          id: id,
-          requestId: requestId,
-          description: description,
-          messages: body.messages
-              .map((e) => e.toMessage())
-              .toList()
-              .cast<GeneratedMessage>(),
-          gasEstimate: AccountGasEstimate(
-              estimate, baseFee, feeAdjustment, feeCalculated));
-    } else if (type == "SignRequest") {
-      final id = input["id"];
-      final requestId = input["requestId"];
-      final description = input["description"];
-      final message = input["message"];
-      final address = input["address"];
-
-      return SignRequest(
-          id: id,
-          message: message,
-          description: description,
-          address: address,
-          requestId: requestId);
-    } else if (type == "ApproveSession") {
-      final id = input["id"];
-      final requestId = input["requestId"];
-      final peerId = input["peerId"];
-      final remotePeerId = input["remotePeerId"];
-
-      return WalletConnectSessionRequestData(
-          id,
-          requestId,
-          SessionRequestData(
-              peerId,
-              remotePeerId,
-              ClientMeta.fromJson(input["clientMeta"]),
-              WalletConnectAddress.create(input["address"])!));
-    } else {
-      throw Exception("${input.runtimeType} is not a supported type");
-    }
-  }
-
-  WalletConnectQueueGroup(this.walletAddress, this.clientMeta);
-
-  String walletAddress;
-  ClientMeta? clientMeta;
-  final Map<String, dynamic> actionLookup = <String, dynamic>{};
-
-  void updateClientMeta(ClientMeta meta) {
-    clientMeta = meta;
-  }
-
-  static WalletConnectQueueGroup fromRecord(Map<String, dynamic> input) {
-    final actions = <String, dynamic>{};
-    input["actions"].entries.forEach((entry) {
-      actions[entry.key] = _fromRecord(entry.value);
-    });
-    final walletAddress = input["walletAddress"];
-    final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
-
-    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
-    group.actionLookup.addAll(actions);
-    return group;
-  }
-
-  Map<String, dynamic> toRecord() {
-    final map = <String, dynamic>{
-      "walletAddress": walletAddress,
-      "clientMeta": clientMeta?.toJson(),
-      "actions":
-          actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))
-    };
-
-    return map;
-  }
-}
 
 class WalletConnectQueueService extends Listenable
     with ListenableMixin
@@ -178,13 +38,13 @@ class WalletConnectQueueService extends Listenable
     final db = await _factory.openDatabase(
       dbPath,
       version: version,
-      onVersionChanged: _onVersionChanced,
+      onVersionChanged: _onVersionChanged,
     );
 
     return db;
   }
 
-  Future<void> _onVersionChanced(
+  Future<void> _onVersionChanged(
       Database db, int oldVersion, int newVersion) async {}
 
   Future<void> close() async {
@@ -192,10 +52,16 @@ class WalletConnectQueueService extends Listenable
     await db.close();
   }
 
-  Future<void> createWalletConnectSessionGroup(WalletConnectAddress address,
-      String walletAddress, ClientMeta? clientMeta) async {
-    final group = WalletConnectQueueGroup(walletAddress, clientMeta);
-    final record = _main.record(address.fullUriString);
+  Future<void> createWalletConnectSessionGroup(
+      WalletConnectAddress connectAddress,
+      String walletAddress,
+      ClientMeta? clientMeta) async {
+    final group = WalletConnectQueueGroup(
+      connectAddress: connectAddress,
+      accountAddress: walletAddress,
+      clientMeta: clientMeta,
+    );
+    final record = _main.record(connectAddress.fullUriString);
 
     final db = await _db;
 
@@ -222,8 +88,9 @@ class WalletConnectQueueService extends Listenable
       return;
     }
 
-    final group = WalletConnectQueueGroup.fromRecord(map);
-    group.updateClientMeta(clientMeta);
+    final group = WalletConnectQueueGroup.fromRecord(map).copyWith(
+      clientMeta: clientMeta,
+    );
 
     await record.update(db, group.toRecord());
   }
@@ -306,8 +173,8 @@ class WalletConnectQueueService extends Listenable
   }
 
   Future<void> removeRequest(
-      WalletConnectAddress address, String requestId) async {
-    final record = _main.record(address.fullUriString);
+      WalletConnectAddress connectAddress, String requestId) async {
+    final record = _main.record(connectAddress.fullUriString);
 
     final db = await _db;
     final map = await record.get(db);

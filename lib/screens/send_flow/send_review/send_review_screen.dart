@@ -233,7 +233,7 @@ class SendReviewPageState extends State<SendReviewPage> {
 
       await _bloc!.complete();
     } else if (response?.txId != null) {
-      PwDialog.showFull(
+      await PwDialog.showFull(
         context: context,
         title: Strings.of(context).multiSigTransactionInitiatedTitle,
         message: Strings.of(context).multiSigTransactionInitiatedMessage,
@@ -244,6 +244,7 @@ class SendReviewPageState extends State<SendReviewPage> {
         ),
         dismissButtonText: Strings.of(context).multiSigTransactionInitiatedDone,
       );
+      await _bloc!.complete();
     }
   }
 }

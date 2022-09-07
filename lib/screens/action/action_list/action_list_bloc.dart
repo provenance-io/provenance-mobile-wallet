@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -14,6 +16,7 @@ import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
@@ -144,7 +147,7 @@ class ActionListBloc extends Disposable {
         .whereType<TransactableAccount>()
         .toList();
     final addresses = accounts.map((e) => e.address).toList();
-    await _multiSigPendingTxCache.update(
+    await _multiSigPendingTxCache.fetch(
       signerAddresses: addresses,
     );
 
@@ -255,13 +258,13 @@ class ActionListBloc extends Disposable {
     final walletConnectGroups = queuedItems
         .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
         .map((queuedGroup) {
-      final account = accountLookup[queuedGroup.walletAddress]!;
+      final account = accountLookup[queuedGroup.accountAddress]!;
 
       return _WalletConnectActionGroup(
         accountId: account.id,
         queueGroup: queuedGroup,
         label: account.name,
-        subLabel: abbreviateAddress(queuedGroup.walletAddress),
+        subLabel: abbreviateAddress(queuedGroup.accountAddress),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
@@ -370,7 +373,10 @@ class ActionListBloc extends Disposable {
     final accounts = await _accountService.getTransactableAccounts();
     final multiSigAccount = accounts
         .whereType<MultiTransactableAccount>()
-        .firstWhere((e) => e.linkedAccount.address == item.signerAddress);
+        .firstWhereOrNull((e) => e.linkedAccount.address == item.signerAddress);
+    if (multiSigAccount == null) {
+      throw ActionListError.multiSigAccountNotFound;
+    }
 
     final coin = getCoinFromAddress(item.multiSigAddress);
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
@@ -419,6 +425,14 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
+    await _multiSigPendingTxCache.finalizeTx(
+      signerAddress: item.signerAddress,
+      txUuid: item.txUuid,
+      response: responsePair.txResponse,
+      coin: coin,
+      fee: item.fee,
+    );
+
     logDebug('Multi-sig tx response: ${responsePair.txResponse.rawLog}');
   }
 
@@ -450,6 +464,15 @@ class ActionListBloc extends Disposable {
     );
 
     if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await _multiSigPendingTxCache.fetch(
+        signerAddresses: addresses,
+      );
       _onActionQueueUpdated();
     }
 
