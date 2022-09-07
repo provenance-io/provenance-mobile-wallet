@@ -9,13 +9,13 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:prov_wallet_flutter/src/biometry_type.dart' as _i9;
 import 'package:prov_wallet_flutter/src/cipher_service.dart' as _i7;
 import 'package:prov_wallet_flutter/src/cipher_service_error.dart' as _i8;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
+    as _i6;
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart'
     as _i5;
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
     as _i2;
 import 'package:provenance_wallet/services/models/account.dart' as _i4;
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
