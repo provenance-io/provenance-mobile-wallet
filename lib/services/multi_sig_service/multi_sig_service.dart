@@ -10,9 +10,11 @@ import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_creat
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_created_tx_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_created_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
+import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_sign_tx_request_dto.dart';
@@ -265,14 +267,17 @@ class MultiSigService with ClientCoinMixin {
   }
 
   Future<List<MultiSigPendingTx>?> getPendingTxs({
-    required String signerAddress,
+    required List<String> signerAddresses,
   }) async {
-    final coin = getCoinFromAddress(signerAddress);
+    final coin = getCoinFromAddress(signerAddresses.first);
     final client = await getClient(coin);
-    final path = '$_basePath/tx/pending/$signerAddress';
+    const path = '$_basePath/tx/pending';
 
-    final response = await client.get(
+    final response = await client.post(
       path,
+      body: MultiSigPendingTxRequestDto(
+        addresses: signerAddresses,
+      ),
       listConverter: (json) {
         if (json is String) {
           return <MultiSigPendingTxDto>[];
@@ -293,14 +298,17 @@ class MultiSigService with ClientCoinMixin {
   }
 
   Future<List<MultiSigPendingTx>?> getCreatedTxs({
-    required String signerAddress,
+    required List<String> signerAddresses,
   }) async {
-    final coin = getCoinFromAddress(signerAddress);
+    final coin = getCoinFromAddress(signerAddresses.first);
     final client = await getClient(coin);
-    final path = '$_basePath/tx/created/$signerAddress';
+    const path = '$_basePath/tx/created';
 
-    final response = await client.get(
+    final response = await client.post(
       path,
+      body: MultiSigCreatedTxRequestDto(
+        addresses: signerAddresses,
+      ),
       listConverter: (json) {
         if (json is String) {
           return <MultiSigCreatedTxDto>[];

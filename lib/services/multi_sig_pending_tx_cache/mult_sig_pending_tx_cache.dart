@@ -66,7 +66,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
       // TODO-Roy: Add service route to get txs for multiple addresses
       final pendingTxs = await _multiSigService.getPendingTxs(
-        signerAddress: signerAddress,
+        signerAddresses: [signerAddress],
       );
 
       if (pendingTxs == null) {
@@ -78,7 +78,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
       // TODO-Roy: Add service route to get txs for multiple addresses
       final createdTxs = await _multiSigService.getCreatedTxs(
-        signerAddress: signerAddress,
+        signerAddresses: [signerAddress],
       );
 
       if (createdTxs == null) {
