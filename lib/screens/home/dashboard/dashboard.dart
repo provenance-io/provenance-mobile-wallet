@@ -14,7 +14,7 @@ import 'package:provenance_wallet/screens/home/notification_bar.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
+import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -43,7 +43,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final _notificationBellNotifier = ValueNotifier<int>(0);
   late WalletConnectQueueService _connectQueueService;
-  late MultiSigPendingTxCache _multiSigPendingTxCache;
+  late MultiSigService _multiSigService;
 
   @override
   void initState() {
@@ -52,8 +52,8 @@ class _DashboardState extends State<Dashboard> {
     _connectQueueService = get<WalletConnectQueueService>();
     _connectQueueService.addListener(_updateBellCount);
 
-    _multiSigPendingTxCache = get<MultiSigPendingTxCache>();
-    _multiSigPendingTxCache.addListener(_updateBellCount);
+    _multiSigService = get<MultiSigService>();
+    _multiSigService.addListener(_updateBellCount);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _updateBellCount();
@@ -350,7 +350,7 @@ class _DashboardState extends State<Dashboard> {
 
     // Attempt to get the count right first try, but don't wait forever.
     await Future.any([
-      _multiSigPendingTxCache.initialized,
+      _multiSigService.initialized,
       Future.delayed(
         Duration(
           seconds: 1,
@@ -359,6 +359,6 @@ class _DashboardState extends State<Dashboard> {
     ]);
 
     _notificationBellNotifier.value =
-        connectCount + _multiSigPendingTxCache.items.length;
+        connectCount + _multiSigService.items.length;
   }
 }

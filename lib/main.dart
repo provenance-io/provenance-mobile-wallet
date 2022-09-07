@@ -52,7 +52,7 @@ import 'package:provenance_wallet/services/key_value_service/default_key_value_s
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
+import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
@@ -245,10 +245,10 @@ void main(List<String> args) {
       final multiSigClient = MultiSigClient();
       get.registerSingleton<MultiSigClient>(multiSigClient);
 
-      final multiSigPendingTxCache = MultiSigPendingTxCache(
+      final multiSigService = MultiSigService(
         multiSigClient: multiSigClient,
       );
-      get.registerSingleton<MultiSigPendingTxCache>(multiSigPendingTxCache);
+      get.registerSingleton<MultiSigService>(multiSigService);
 
       final accountService = AccountService(
         storage: accountStorageService,
@@ -578,7 +578,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
     get.registerSingleton<TxQueueService>(txQueueService);
 
-    final multiSigPendingTxCache = get<MultiSigPendingTxCache>();
+    final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {
       switch (e.topic) {
         case MultiSigTopic.accountComplete:
@@ -587,7 +587,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case MultiSigTopic.txSignatureRequired:
         case MultiSigTopic.txReady:
         case MultiSigTopic.txResult:
-          multiSigPendingTxCache.sync(
+          multiSigService.sync(
             signerAddresses: [e.address],
           );
           break;
@@ -595,7 +595,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     });
 
     // Don't delay startup by awaiting here
-    multiSigPendingTxCache.sync(
+    multiSigService.sync(
         signerAddresses: accounts
             .whereType<TransactableAccount>()
             .map((e) => e.address)

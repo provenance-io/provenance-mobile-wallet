@@ -21,9 +21,8 @@ import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
-// TODO-Roy: Rename to MultiSigService
-class MultiSigPendingTxCache extends Listenable with ListenableMixin {
-  MultiSigPendingTxCache({
+class MultiSigService extends Listenable with ListenableMixin {
+  MultiSigService({
     required MultiSigClient multiSigClient,
   }) : _multiSigClient = multiSigClient {
     _db = _initDb();

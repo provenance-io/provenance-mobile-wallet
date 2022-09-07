@@ -15,7 +15,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
+import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -117,7 +117,7 @@ class ActionListBloc extends Disposable {
   final ActionListNavigator _navigator;
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
-  final MultiSigPendingTxCache _multiSigPendingTxCache;
+  final MultiSigService _multiSigService;
   final MultiSigClient _multiSigClient;
 
   final _streamController = StreamController<ActionListBlocState>();
@@ -125,7 +125,7 @@ class ActionListBloc extends Disposable {
   ActionListBloc(this._navigator)
       : _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>(),
-        _multiSigPendingTxCache = get<MultiSigPendingTxCache>(),
+        _multiSigService = get<MultiSigService>(),
         _multiSigClient = get<MultiSigClient>();
 
   var notifications = [
@@ -141,13 +141,13 @@ class ActionListBloc extends Disposable {
 
   Future<void> init() async {
     _connectQueueService.addListener(_onActionQueueUpdated);
-    _multiSigPendingTxCache.addListener(_onActionQueueUpdated);
+    _multiSigService.addListener(_onActionQueueUpdated);
 
     final accounts = (await _accountService.getAccounts())
         .whereType<TransactableAccount>()
         .toList();
     final addresses = accounts.map((e) => e.address).toList();
-    await _multiSigPendingTxCache.sync(
+    await _multiSigService.sync(
       signerAddresses: addresses,
     );
 
@@ -160,7 +160,7 @@ class ActionListBloc extends Disposable {
   @override
   FutureOr onDispose() {
     _connectQueueService.removeListener(_onActionQueueUpdated);
-    _multiSigPendingTxCache.removeListener(_onActionQueueUpdated);
+    _multiSigService.removeListener(_onActionQueueUpdated);
     _streamController.close();
   }
 
@@ -289,7 +289,7 @@ class ActionListBloc extends Disposable {
 
     groups.addAll(walletConnectGroups);
 
-    final multiSigItems = _multiSigPendingTxCache.items;
+    final multiSigItems = _multiSigService.items;
 
     final multiSigGroups = <String, List<MultiSigActionListItem>>{};
     for (final multiSigItem in multiSigItems) {
@@ -425,7 +425,7 @@ class ActionListBloc extends Disposable {
       item.fee,
     );
 
-    await _multiSigPendingTxCache.finalizeTx(
+    await _multiSigService.finalizeTx(
       signerAddress: item.signerAddress,
       txUuid: item.txUuid,
       response: responsePair.txResponse,
@@ -470,7 +470,7 @@ class ActionListBloc extends Disposable {
           .map((e) => e.address)
           .toList();
 
-      await _multiSigPendingTxCache.sync(
+      await _multiSigService.sync(
         signerAddresses: addresses,
       );
       _onActionQueueUpdated();
