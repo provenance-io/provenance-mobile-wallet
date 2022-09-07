@@ -24,6 +24,7 @@ String abbreviateAddressAlt(String address) {
       : address;
 }
 
+@Deprecated('We will be adding a new chain-id with the same pb prefix')
 Coin getCoinFromAddress(String address) {
   final prefix = address.substring(0, 2);
   switch (prefix) {
