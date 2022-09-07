@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
@@ -15,7 +16,6 @@ import 'package:provenance_wallet/services/models/requests/send_request.dart';
 import 'package:provenance_wallet/services/models/requests/sign_request.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -118,7 +118,7 @@ class ActionListBloc extends Disposable {
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
   final MultiSigPendingTxCache _multiSigPendingTxCache;
-  final MultiSigService _multiSigService;
+  final MultiSigClient _multiSigClient;
 
   final _streamController = StreamController<ActionListBlocState>();
 
@@ -126,7 +126,7 @@ class ActionListBloc extends Disposable {
       : _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>(),
         _multiSigPendingTxCache = get<MultiSigPendingTxCache>(),
-        _multiSigService = get<MultiSigService>();
+        _multiSigClient = get<MultiSigClient>();
 
   var notifications = [
     NotificationItem(
@@ -457,7 +457,7 @@ class ActionListBloc extends Disposable {
 
     final signatureBytes = convert.hex.encode(authBytes);
 
-    final success = await _multiSigService.signTx(
+    final success = await _multiSigClient.signTx(
       signerAddress: item.signerAddress,
       txUuid: item.txUuid,
       signatureBytes: signatureBytes,

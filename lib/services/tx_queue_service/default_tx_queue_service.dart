@@ -5,13 +5,12 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_estimate.dart';
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_tx_signer.dart';
@@ -24,10 +23,10 @@ import 'package:sembast/sembast_memory.dart';
 class DefaultQueueTxService implements TxQueueService {
   DefaultQueueTxService({
     required TransactionHandler transactionHandler,
-    required MultiSigService multiSigService,
+    required MultiSigClient multiSigClient,
     required AccountService accountService,
   })  : _transactionHandler = transactionHandler,
-        _multiSigService = multiSigService,
+        _multiSigClient = multiSigClient,
         _accountService = accountService {
     _db = _initDb();
   }
@@ -35,7 +34,7 @@ class DefaultQueueTxService implements TxQueueService {
   final _store = StoreRef<String, Map<String, Object?>?>.main();
 
   final TransactionHandler _transactionHandler;
-  final MultiSigService _multiSigService;
+  final MultiSigClient _multiSigClient;
   final AccountService _accountService;
 
   late final Future<Database> _db;
@@ -96,7 +95,7 @@ class DefaultQueueTxService implements TxQueueService {
           gasLimit: proto.Int64(gasEstimate.estimatedGas),
         );
 
-        final remoteId = await _multiSigService.createTx(
+        final remoteId = await _multiSigClient.createTx(
           multiSigAddress: address,
           signerAddress: signerAddress,
           txBody: txBody,

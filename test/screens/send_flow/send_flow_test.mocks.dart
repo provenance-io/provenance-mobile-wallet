@@ -25,7 +25,7 @@ import 'package:provenance_wallet/services/models/price.dart' as _i18;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i15;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
     as _i17;

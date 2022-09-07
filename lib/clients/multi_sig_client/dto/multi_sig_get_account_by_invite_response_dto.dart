@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_signer_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_signer_dto.dart';
 
 part 'multi_sig_get_account_by_invite_response_dto.g.dart';
 

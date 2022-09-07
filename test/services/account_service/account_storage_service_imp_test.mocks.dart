@@ -14,7 +14,7 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart'
     as _i2;
 import 'package:provenance_wallet/services/models/account.dart' as _i4;
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i6;
 
 // ignore_for_file: type=lint

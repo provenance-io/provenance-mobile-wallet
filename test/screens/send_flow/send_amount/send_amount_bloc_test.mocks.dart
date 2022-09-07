@@ -19,7 +19,7 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
 import 'package:provenance_wallet/services/models/price.dart' as _i14;
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i11;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
     as _i13;

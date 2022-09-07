@@ -16,6 +16,7 @@ import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/cipher_service_pw_error.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
@@ -52,7 +53,6 @@ import 'package:provenance_wallet/services/key_value_service/key_value_service.d
 import 'package:provenance_wallet/services/key_value_service/shared_preferences_key_value_store.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/notification/basic_notification_service.dart';
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
@@ -242,11 +242,11 @@ void main(List<String> args) {
         tag: _tag,
       );
 
-      final multiSigService = MultiSigService();
-      get.registerSingleton<MultiSigService>(multiSigService);
+      final multiSigClient = MultiSigClient();
+      get.registerSingleton<MultiSigClient>(multiSigClient);
 
       final multiSigPendingTxCache = MultiSigPendingTxCache(
-        multiSigService: multiSigService,
+        multiSigClient: multiSigClient,
       );
       get.registerSingleton<MultiSigPendingTxCache>(multiSigPendingTxCache);
 
@@ -570,10 +570,10 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    final multiSigService = get<MultiSigService>();
+    final multiSigClient = get<MultiSigClient>();
     final txQueueService = DefaultQueueTxService(
       transactionHandler: transactionHandler,
-      multiSigService: multiSigService,
+      multiSigClient: multiSigClient,
       accountService: accountService,
     );
     get.registerSingleton<TxQueueService>(txQueueService);
@@ -606,7 +606,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
   Future<void> _activatePendingMultiAccounts() async {
     final accountService = get<AccountService>();
-    final multiSigService = get<MultiSigService>();
+    final multiSigClient = get<MultiSigClient>();
 
     final accounts = await accountService.getAccounts();
     final pendingAccounts = accounts
@@ -615,7 +615,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         .toList();
 
     for (var pendingAccount in pendingAccounts) {
-      final remoteAccount = await multiSigService.getAccount(
+      final remoteAccount = await multiSigClient.getAccount(
         remoteId: pendingAccount.remoteId,
         signerAddress: pendingAccount.linkedAccount.address,
       );

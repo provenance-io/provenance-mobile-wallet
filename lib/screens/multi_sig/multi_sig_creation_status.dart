@@ -1,3 +1,4 @@
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -5,7 +6,6 @@ import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -26,7 +26,7 @@ class MultiSigCreationStatus extends StatefulWidget {
 
 class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _accountService = get<AccountService>();
-  final _multiSigService = get<MultiSigService>();
+  final _multiSigClient = get<MultiSigClient>();
 
   late final Future<List<CosignerData>> _getCosignersFuture;
 
@@ -178,7 +178,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
         await _accountService.getAccount(widget.accountId) as MultiAccount?;
 
     if (account != null) {
-      final remoteAccount = await _multiSigService.getAccount(
+      final remoteAccount = await _multiSigClient.getAccount(
         remoteId: account.remoteId,
         signerAddress: account.linkedAccount.address,
       );

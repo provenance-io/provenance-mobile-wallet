@@ -4,27 +4,27 @@ import 'package:collection/collection.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_response_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_tx_response_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_created_tx_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_created_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_get_account_by_invite_response_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_get_accounts_response_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_pending_tx_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_pending_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_response_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_sign_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_body_bytes_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_update_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_status.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_response_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_create_tx_response_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_created_tx_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_created_tx_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_account_by_invite_response_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_get_accounts_response_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_pending_tx_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_register_response_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_sign_tx_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_tx_body_bytes_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_update_tx_request_dto.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signature.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_status.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
@@ -43,8 +43,7 @@ class MultiSigCosignerResponse {
   final MultiSigInviteStatus status;
 }
 
-// TODO-Roy: Rename to MultiSigClient
-class MultiSigService with ClientCoinMixin {
+class MultiSigClient with ClientCoinMixin {
   static const _basePath = '/service-mobile-wallet/external/api/v1/multisig';
 
   Future<MultiSigRemoteAccount?> create({
