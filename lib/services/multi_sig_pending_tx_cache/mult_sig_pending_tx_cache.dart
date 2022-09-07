@@ -15,6 +15,7 @@ import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_si
 import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_status.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
@@ -66,10 +67,11 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
       // TODO-Roy: Add service route to get txs for multiple addresses
       final pendingTxs = await _multiSigService.getPendingTxs(
-        signerAddress: signerAddress,
+        signerAddresses: [signerAddress],
       );
 
       if (pendingTxs == null) {
+        logDebug('Sync failed to get pending txs');
         return;
       }
 
@@ -78,10 +80,11 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
 
       // TODO-Roy: Add service route to get txs for multiple addresses
       final createdTxs = await _multiSigService.getCreatedTxs(
-        signerAddress: signerAddress,
+        signerAddresses: [signerAddress],
       );
 
       if (createdTxs == null) {
+        logDebug('Sync failed to get created txs');
         return;
       }
 
