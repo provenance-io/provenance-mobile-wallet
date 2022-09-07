@@ -41,6 +41,7 @@ class MultiSigCosignerResponse {
   final MultiSigInviteStatus status;
 }
 
+// TODO-Roy: Rename to MultiSigClient
 class MultiSigService with ClientCoinMixin {
   static const _basePath = '/service-mobile-wallet/external/api/v1/multisig';
 

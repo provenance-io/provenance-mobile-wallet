@@ -587,7 +587,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case MultiSigTopic.txSignatureRequired:
         case MultiSigTopic.txReady:
         case MultiSigTopic.txResult:
-          multiSigPendingTxCache.fetch(
+          multiSigPendingTxCache.sync(
             signerAddresses: [e.address],
           );
           break;
@@ -595,7 +595,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     });
 
     // Don't delay startup by awaiting here
-    multiSigPendingTxCache.fetch(
+    multiSigPendingTxCache.sync(
         signerAddresses: accounts
             .whereType<TransactableAccount>()
             .map((e) => e.address)

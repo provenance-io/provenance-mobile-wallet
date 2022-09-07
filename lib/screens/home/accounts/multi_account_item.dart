@@ -134,6 +134,14 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            if (isTransactable)
+              PwGreyButton(
+                text: strings.copyAccountAddress,
+                onPressed: () {
+                  Navigator.of(context).pop(MenuOperation.copy);
+                },
+              ),
+            if (isTransactable) PwListDivider(),
             PwGreyButton(
               text: strings.accountMenuItemViewInvite,
               onPressed: () {
