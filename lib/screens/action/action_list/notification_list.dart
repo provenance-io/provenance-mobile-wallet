@@ -137,81 +137,83 @@ class NotificationListState extends State<NotificationList>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-              child: Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: PwText(Strings.of(context)
-                                .notificationListStatusLabel)),
-                        ValueListenableBuilder<bool>(
-                            valueListenable: _isEdittingController,
-                            builder: (context, value, child) {
-                              return (value)
-                                  ? Container()
-                                  : PwTextButton.shrinkWrap(
-                                      child: PwText(Strings.of(context)
-                                          .notificationListEditLabel),
-                                      onPressed: () {
-                                        _isEdittingController.value =
-                                            !_isEdittingController.value;
-                                      },
-                                    );
-                            })
-                      ],
+    return ClipRect(
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: PwText(Strings.of(context)
+                                  .notificationListStatusLabel)),
+                          ValueListenableBuilder<bool>(
+                              valueListenable: _isEdittingController,
+                              builder: (context, value, child) {
+                                return (value)
+                                    ? Container()
+                                    : PwTextButton.shrinkWrap(
+                                        child: PwText(Strings.of(context)
+                                            .notificationListEditLabel),
+                                        onPressed: () {
+                                          _isEdittingController.value =
+                                              !_isEdittingController.value;
+                                        },
+                                      );
+                              })
+                        ],
+                      ),
                     ),
-                  ),
-                  PwDivider(),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: widget.items.length,
-                      separatorBuilder: (context, index) => const PwDivider(),
-                      itemBuilder: (context, index) {
-                        final item = widget.items[index];
-                        return NotificationItemCell(
-                          item: item,
-                          isSelected: _isSelectedMap[item]!,
-                          animation: _animationController,
-                          key: ValueKey(index),
-                        );
-                      }),
-                ],
-              ),
-            ],
-          )),
-        ),
-        SlideTransition(
-          position: _buttonAnimation,
-          child: SafeArea(
-            child: Column(children: [
-              PwTextButton.primaryAction(
-                context: context,
-                text: "Delete",
-                onPressed: _deleteSelected,
-              ),
-              PwTextButton.secondaryAction(
-                context: context,
-                text: "Cancel",
-                onPressed: _cancelClicked,
-              )
-            ]),
+                    PwDivider(),
+                    ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: widget.items.length,
+                        separatorBuilder: (context, index) => const PwDivider(),
+                        itemBuilder: (context, index) {
+                          final item = widget.items[index];
+                          return NotificationItemCell(
+                            item: item,
+                            isSelected: _isSelectedMap[item]!,
+                            animation: _animationController,
+                            key: ValueKey(index),
+                          );
+                        }),
+                  ],
+                ),
+              ],
+            )),
           ),
-        )
-      ],
+          SlideTransition(
+            position: _buttonAnimation,
+            child: SafeArea(
+              child: Column(children: [
+                PwTextButton.primaryAction(
+                  context: context,
+                  text: "Delete",
+                  onPressed: _deleteSelected,
+                ),
+                PwTextButton.secondaryAction(
+                  context: context,
+                  text: "Cancel",
+                  onPressed: _cancelClicked,
+                )
+              ]),
+            ),
+          )
+        ],
+      ),
     );
   }
 
