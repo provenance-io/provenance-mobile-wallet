@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_flow.dart';
@@ -55,10 +56,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final strings = Strings.of(context);
     final config = get<LocalConfig>();
     return Scaffold(
-      appBar: PwAppBar(
-        title: strings.globalSettings,
-        style: PwTextStyle.footnote,
-        leadingIcon: PwIcons.back,
+      appBar: PwAppBarGestureDetector(
+        onTap: _tapCounter.increment,
+        child: PwAppBar(
+          title: strings.globalSettings,
+          style: PwTextStyle.footnote,
+          leadingIcon: PwIcons.back,
+        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
