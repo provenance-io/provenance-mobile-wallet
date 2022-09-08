@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/enum/account_add_kind.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -15,8 +17,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.da
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -132,7 +132,7 @@ class AddAccountFlowBloc implements Disposable {
   final AddAccountOrigin _origin;
   final _accountService = get<AccountService>();
   final _keyValueService = get<KeyValueService>();
-  final _multiSigService = get<MultiSigService>();
+  final _multiSigClient = get<MultiSigClient>();
 
   final _name = BehaviorSubject<String>();
   final _multiSigName = BehaviorSubject<String>();
@@ -511,7 +511,7 @@ class AddAccountFlowBloc implements Disposable {
     if (redirectedLink != null) {
       final linkData = parseInviteLinkData(redirectedLink);
       if (linkData != null) {
-        final remoteAccount = await _multiSigService.getAccountByInvite(
+        final remoteAccount = await _multiSigClient.getAccountByInvite(
           inviteId: linkData.inviteId,
           coin: linkData.coin,
         );
@@ -581,7 +581,7 @@ class AddAccountFlowBloc implements Disposable {
   Future<void> submitMultiSigConfirm(BuildContext context) async {
     ModalLoadingRoute.showLoading(context);
 
-    final registration = await _multiSigService.create(
+    final registration = await _multiSigClient.create(
       name: _multiSigName.value,
       publicKey: _multiSigLinkedAccount!.publicKey,
       cosignerCount: _multiSigCosignerCount.value.value,

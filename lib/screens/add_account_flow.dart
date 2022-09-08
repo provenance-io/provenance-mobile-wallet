@@ -1,3 +1,4 @@
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
@@ -23,7 +24,6 @@ import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recove
 import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 

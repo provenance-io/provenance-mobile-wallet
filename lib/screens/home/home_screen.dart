@@ -15,7 +15,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
-import 'package:provenance_wallet/services/multi_sig_pending_tx_cache/mult_sig_pending_tx_cache.dart';
+import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -50,7 +50,7 @@ class HomeScreenState extends State<HomeScreen>
     allStatuses: widget.allStatuses,
   );
   final _walletConnectService = get<WalletConnectService>();
-  final _multiSigPendingTxCache = get<MultiSigPendingTxCache>();
+  final _multiSigService = get<MultiSigService>();
 
   List<Asset> assets = [];
   List<Transaction> transactions = [];
@@ -98,7 +98,7 @@ class HomeScreenState extends State<HomeScreen>
         .listen(_onError)
         .addTo(_subscriptions);
 
-    _multiSigPendingTxCache.response.listen(_onResponse).addTo(_subscriptions);
+    _multiSigService.response.listen(_onResponse).addTo(_subscriptions);
 
     _bloc.error.listen(_onError).addTo(_subscriptions);
     _walletConnectService.delegateEvents.onResponse

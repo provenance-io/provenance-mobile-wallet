@@ -1,3 +1,5 @@
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -5,8 +7,6 @@ import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/multi_sig_remote_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -24,7 +24,7 @@ class MultiSigRecoverScreen extends StatefulWidget {
 
 class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
   final accountService = get<AccountService>();
-  final multiSigService = get<MultiSigService>();
+  final multiSigClient = get<MultiSigClient>();
 
   _MultiSigAccountData? selectedData;
 
@@ -134,7 +134,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
     final recoverableRemoteAccounts = <String, _MultiSigAccountData>{};
 
     for (var basicAccount in basicAccounts) {
-      final remoteAccounts = await multiSigService.getAccounts(
+      final remoteAccounts = await multiSigClient.getAccounts(
         address: basicAccount.address,
       );
 
