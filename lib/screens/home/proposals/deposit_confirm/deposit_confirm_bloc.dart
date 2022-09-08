@@ -89,12 +89,14 @@ class DepositConfirmBloc extends TransactionBloc {
     _depositDetails.close();
   }
 
-  String getProvUrl() {
+  Uri getProvUrl() {
     switch (account.coin) {
       case Coin.testNet:
-        return 'https://explorer.test.provenance.io/proposal/${_proposal.proposalId}';
+        return Uri.https(
+            'explorer.test.provenance.io', '/proposal/${_proposal.proposalId}');
       case Coin.mainNet:
-        return 'https://explorer.provenance.io/proposal/${_proposal.proposalId}';
+        return Uri.https(
+            'explorer.provenance.io', '/proposal/${_proposal.proposalId}');
     }
   }
 }

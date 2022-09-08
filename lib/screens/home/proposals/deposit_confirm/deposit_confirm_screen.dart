@@ -134,9 +134,9 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                             HorizontalSpacer.small(),
                             GestureDetector(
                               onTap: () async {
-                                String url = _bloc.getProvUrl();
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                Uri url = _bloc.getProvUrl();
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
                                 } else {
                                   throw 'Could not launch $url';
                                 }
