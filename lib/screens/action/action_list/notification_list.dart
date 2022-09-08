@@ -29,37 +29,40 @@ class NotificationItemCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: slideAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-              offset: slideAnimation.value, child: child);
-        },
-        child: Row(
-          children: [
-            SizedBox(
-              width: _checkBoxSize,
-              child: ValueListenableBuilder<bool>(
-                  valueListenable: isSelected,
-                  builder: (context, value, child) {
-                    return Checkbox(
-                        value: value,
-                        onChanged: (newValue) => isSelected.value = newValue!);
-                  }),
-            ),
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                PwText(
-                  item.label,
-                  maxLines: 2,
-                ),
-                PwText(notificationListFormatter.format(item.created))
-              ],
-            )),
-          ],
-        ));
+    return ClipRRect(
+      child: AnimatedBuilder(
+          animation: slideAnimation,
+          builder: (context, child) {
+            return Transform.translate(
+                offset: slideAnimation.value, child: child);
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                width: _checkBoxSize,
+                child: ValueListenableBuilder<bool>(
+                    valueListenable: isSelected,
+                    builder: (context, value, child) {
+                      return Checkbox(
+                          value: value,
+                          onChanged: (newValue) =>
+                              isSelected.value = newValue!);
+                    }),
+              ),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  PwText(
+                    item.label,
+                    maxLines: 2,
+                  ),
+                  PwText(notificationListFormatter.format(item.created))
+                ],
+              )),
+            ],
+          )),
+    );
   }
 }
 
@@ -81,7 +84,9 @@ class NotificationList extends StatefulWidget {
 }
 
 class NotificationListState extends State<NotificationList>
-    with SingleTickerProviderStateMixin {
+    with
+        SingleTickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin<NotificationList> {
   static final _animationDuration = Duration(milliseconds: 200);
 
   final _isEdittingController = ValueNotifier<bool>(false);
@@ -137,6 +142,8 @@ class NotificationListState extends State<NotificationList>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Column(
       children: [
         Expanded(
@@ -227,4 +234,7 @@ class NotificationListState extends State<NotificationList>
   void _cancelClicked() {
     _isEdittingController.value = false;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
