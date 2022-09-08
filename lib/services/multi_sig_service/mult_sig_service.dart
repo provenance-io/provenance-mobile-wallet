@@ -157,9 +157,9 @@ class MultiSigService extends Listenable with ListenableMixin {
       ServiceTxResponse(
         code: response.code,
         message: response.rawLog,
-        gasUsed: response.gasUsed.toInt(),
-        gasWanted: response.gasWanted.toInt(),
-        height: response.height.toInt(),
+        // gasUsed: response.gasUsed.toInt(),
+        // gasWanted: response.gasWanted.toInt(),
+        // height: response.height.toInt(),
         txHash: response.txhash,
         fees: fee.amount,
         codespace: response.codespace,
