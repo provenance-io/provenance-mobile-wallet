@@ -77,6 +77,64 @@ class DeveloperMenu extends StatelessWidget {
           },
         ),
         PwListDivider(),
+        StreamBuilder<KeyValueData<bool>>(
+          initialData: keyValueService
+              .stream<bool>(PrefKey.allowProposalCreation)
+              .valueOrNull,
+          stream: keyValueService.stream<bool>(PrefKey.allowProposalCreation),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            final bool = snapshot.data?.data ?? false;
+
+            return ToggleItem(
+              text: strings.developerMenuAllowProposalCreation,
+              value: bool,
+              onChanged: (value) async {
+                await keyValueService.setBool(
+                  PrefKey.allowProposalCreation,
+                  !bool,
+                );
+                if (!bool) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      final theme = Theme.of(context);
+                      return AlertDialog(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.neutral750,
+                        title: Text(
+                          strings.stakingDelegateBeforeYouContinue,
+                          style: theme.textTheme.footnote,
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          strings.developerMenuProposalCreationTestnet,
+                          style: theme.textTheme.body,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: PwText(
+                              strings.okay,
+                              style: PwTextStyle.bodyBold,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            );
+          },
+        ),
+        PwListDivider(),
         LinkItem(
           text: strings.profileDeveloperServiceMocks,
           onTap: () {

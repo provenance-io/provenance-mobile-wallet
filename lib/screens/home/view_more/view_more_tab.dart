@@ -1,9 +1,14 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
 import 'package:provenance_wallet/screens/home/settings/information_screen.dart';
 import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
+import 'package:provenance_wallet/screens/home/view_more/hidden_proposal_creation/hidden_proposal_creation_screen.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class ViewMoreTab extends StatefulWidget {
@@ -19,6 +24,8 @@ class ViewMoreTab extends StatefulWidget {
 }
 
 class _ViewMoreTabState extends State<ViewMoreTab> {
+  final keyValueService = get<KeyValueService>();
+  final accountService = get<AccountService>();
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
@@ -60,6 +67,29 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                           PwIcons.copy,
                           strings.governanceProposals,
                           ProposalsFlow(),
+                        ),
+                        StreamBuilder<KeyValueData<bool>>(
+                          initialData: keyValueService
+                              .stream<bool>(PrefKey.allowProposalCreation)
+                              .valueOrNull,
+                          stream: keyValueService
+                              .stream<bool>(PrefKey.allowProposalCreation),
+                          builder: (context, snapshot) {
+                            final isTestNet =
+                                accountService.events.selected.value?.coin ==
+                                    Coin.testNet;
+                            final allowProposalCreation =
+                                snapshot.data?.data ?? false;
+                            if (!allowProposalCreation && isTestNet) {
+                              return Container();
+                            }
+
+                            return _getLink(
+                              PwIcons.userAccount,
+                              "Create Proposal",
+                              HiddenProposalCreationScreen(),
+                            );
+                          },
                         ),
                         VerticalSpacer.xxLarge(),
                         PwText(

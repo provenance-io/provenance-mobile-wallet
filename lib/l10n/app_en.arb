@@ -622,5 +622,7 @@
   "depositConfirmScreenDepositAmount": "Deposit Amount",
   "depositConfirmScreenTotalDeposit": "Total Deposit",
   "depositConfirmScreenCurrentDeposit": "Current Deposit",
-  "depositConfirmScreenDepositDetails": "Deposit Details"
+  "depositConfirmScreenDepositDetails": "Deposit Details",
+  "developerMenuAllowProposalCreation": "Allow Proposal Creation",
+  "developerMenuProposalCreationTestnet": "Proposal creation is limited and available for Testnet only."
 }

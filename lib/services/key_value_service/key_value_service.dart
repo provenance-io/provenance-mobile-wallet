@@ -40,6 +40,7 @@ abstract class KeyValueService {
 
 enum PrefKey {
   allowCrashlitics,
+  allowProposalCreation,
   defaultChainId,
   enableMultiSig,
   endpoints,
