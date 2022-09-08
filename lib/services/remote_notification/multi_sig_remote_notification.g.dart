@@ -9,17 +9,21 @@ part of 'multi_sig_remote_notification.dart';
 MultiSigRemoteNotification _$MultiSigRemoteNotificationFromJson(
         Map<String, dynamic> json) =>
     MultiSigRemoteNotification(
-      address: json['address'] as String,
-      topic: MultiSigRemoteNotification._topicFromJson(json['topic'] as String),
-      txUuid: json['txUuid'] as String,
-      txBody: json['txBody'] as String,
+      topic: MultiSigTopic.fromJson(json['topic'] as String),
+      address: json['address'] as String?,
+      txUuid: json['txUuid'] as String?,
+      txBody: json['txBody'] as String?,
+      txHash: json['txHash'] as String?,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$MultiSigRemoteNotificationToJson(
         MultiSigRemoteNotification instance) =>
     <String, dynamic>{
+      'topic': instance.topic,
       'address': instance.address,
-      'topic': MultiSigRemoteNotification._topicToJson(instance.topic),
       'txUuid': instance.txUuid,
       'txBody': instance.txBody,
+      'txHash': instance.txHash,
+      'status': instance.status,
     };
