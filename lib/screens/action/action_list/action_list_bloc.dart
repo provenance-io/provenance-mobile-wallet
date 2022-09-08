@@ -479,6 +479,10 @@ class ActionListBloc extends Disposable {
     final status = success ? 'succeeded' : 'failed';
 
     logDebug('Sign tx ${item.txUuid} $status');
+
+    if (!success) {
+      throw ActionListError.multiSigSendSignatureFailed;
+    }
   }
 
   Future<List<int>> _sign({

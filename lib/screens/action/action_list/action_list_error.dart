@@ -4,7 +4,8 @@ import 'package:provenance_wallet/util/strings.dart';
 
 enum ActionListError implements PwError {
   txFailed,
-  multiSigAccountNotFound;
+  multiSigAccountNotFound,
+  multiSigSendSignatureFailed;
 
   @override
   String toLocalizedString(BuildContext context) {
@@ -13,6 +14,8 @@ enum ActionListError implements PwError {
         return Strings.of(context).errorTxFailed;
       case ActionListError.multiSigAccountNotFound:
         return Strings.of(context).multiSigAccountNotFound;
+      case ActionListError.multiSigSendSignatureFailed:
+        return Strings.of(context).multiSigSendSignatureFailed;
     }
   }
 }
