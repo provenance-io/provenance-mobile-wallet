@@ -4,6 +4,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
@@ -236,13 +237,23 @@ class _HiddenProposalCreationScreenState
     double? gasEstimate,
     BuildContext context,
   ) async {
+    final navigator = Navigator.of(context);
     try {
       final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      // showTransactionComplete(
-      //   response,
-      //   Strings.of(context).proposalDepositComplete,
-      // );
+      navigator.pushReplacement(
+        PwTransactionCompleteScreen(
+          title: "PROPOSAL COMPLETE",
+          response: response,
+          onComplete: () => navigator.pop(),
+          onPressed: () {
+            navigator.push(PwDataScreen(
+              title: Strings.of(context).transactionResponse,
+              data: response,
+            ).route());
+          },
+        ).route(),
+      );
     } catch (err) {
       await _showErrorModal(err, context);
     }
