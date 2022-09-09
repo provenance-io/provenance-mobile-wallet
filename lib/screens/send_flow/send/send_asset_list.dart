@@ -3,6 +3,7 @@ import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class SendAssetCell extends StatelessWidget {
   const SendAssetCell(
@@ -84,7 +85,7 @@ class SendAssetList extends StatelessWidget {
 
     if (assets.isEmpty) {
       child = Center(
-        child: PwText("Loading assets"),
+        child: PwText(Strings.of(context).sendAssetListLoadingAssets),
       );
     } else {
       final selectedDenom = this.selectedAsset?.displayDenom ?? "";

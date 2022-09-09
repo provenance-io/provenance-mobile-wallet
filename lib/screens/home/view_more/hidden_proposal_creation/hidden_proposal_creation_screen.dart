@@ -86,7 +86,7 @@ class _HiddenProposalCreationScreenState
         elevation: 0.0,
         centerTitle: true,
         title: PwText(
-          "Create Proposal (Testnet)",
+          strings.devCreateProposal,
           style: PwTextStyle.footnote,
           textAlign: TextAlign.left,
         ),
@@ -146,11 +146,11 @@ class _HiddenProposalCreationScreenState
                       padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                       children: [
                         DetailsHeader(
-                          title: "Create Proposal Details",
+                          title: strings.devCreateProposalDetails,
                         ),
                         PwListDivider.alternate(),
                         StakingTextFormField(
-                          hint: "Proposal Title",
+                          hint: strings.devProposalTitle,
                           textEditingController: _titleEditingController,
                           keyboardType: TextInputType.name,
                         ),
@@ -158,7 +158,7 @@ class _HiddenProposalCreationScreenState
                         PwListDivider.alternate(),
                         VerticalSpacer.large(),
                         StakingTextFormField(
-                          hint: "Proposal Description",
+                          hint: strings.devProposalDescription,
                           textEditingController: _descriptionEditingController,
                           keyboardType: TextInputType.name,
                         ),
@@ -171,7 +171,7 @@ class _HiddenProposalCreationScreenState
                         ),
                         PwListDivider.alternate(),
                         DetailsItem.withRowChildren(
-                          title: "Initial Deposit Amount",
+                          title: strings.devInitialDepositAmount,
                           children: [
                             PwText(
                               strings.hashAmount(
@@ -218,7 +218,7 @@ class _HiddenProposalCreationScreenState
                         await _sendProposal(_gasEstimate, context);
                       },
                       child: PwText(
-                        "Confirm Proposal",
+                        strings.devConfirmProposal,
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         color: PwColor.neutralNeutral,
@@ -243,7 +243,7 @@ class _HiddenProposalCreationScreenState
       ModalLoadingRoute.dismiss(context);
       navigator.pushReplacement(
         PwTransactionCompleteScreen(
-          title: "PROPOSAL COMPLETE",
+          title: Strings.of(context).devProposalComplete,
           response: response,
           onComplete: () => navigator.pop(),
           onPressed: () {

@@ -60,9 +60,9 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 PwText(
-                  "Global Status: ",
+                  Strings.of(context).proposalsLegendGlobalStatus,
                   style: PwTextStyle.body,
                 ),
                 Padding(

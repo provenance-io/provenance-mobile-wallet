@@ -86,7 +86,7 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
 
                             return _getLink(
                               PwIcons.userAccount,
-                              "Create Proposal",
+                              strings.viewMoreTabCreateProposal,
                               HiddenProposalCreationScreen(),
                             );
                           },
