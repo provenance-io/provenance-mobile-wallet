@@ -8,11 +8,11 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart';
 
 import './wallet_connect_session_delegate_test.mocks.dart';
 import '../../test_helpers.dart';
@@ -140,7 +140,7 @@ void main() {
           walletConnectAddr, publicKey.address, clientMeta));
 
       final pred = predicate((arg) {
-        final details = arg as WalletConnectSessionRequestData;
+        final details = arg as SessionAction;
         expect(details.data, sessionData);
         expect(details.id, isNotNull);
         expect(details.requestId, requestId);
@@ -162,7 +162,7 @@ void main() {
       delegate.onApproveSign(requestId, description, address, msg.codeUnits);
 
       final pred = predicate((arg) {
-        final details = arg as SignRequest;
+        final details = arg as SignAction;
         expect(details.id, isNotNull);
         expect(details.requestId, requestId);
         expect(details.message, msg);
@@ -197,7 +197,7 @@ void main() {
       delegate.onApproveTransaction(requestId, description, address, transData);
 
       final pred = predicate((arg) {
-        final details = arg as SendRequest;
+        final details = arg as SendAction;
         expect(details.id, isNotNull);
         expect(details.requestId, requestId);
         expect(details.messages, transData.proposedMessages);

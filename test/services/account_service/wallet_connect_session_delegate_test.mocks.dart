@@ -14,16 +14,16 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
     as _i2;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
     as _i5;
-import 'package:provenance_wallet/services/models/requests/send_request.dart'
-    as _i10;
-import 'package:provenance_wallet/services/models/requests/sign_request.dart'
-    as _i9;
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
-    as _i11;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
     as _i12;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
     as _i8;
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart'
+    as _i10;
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart'
+    as _i11;
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart'
+    as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -131,7 +131,7 @@ class MockWalletConnectQueueService extends _i1.Mock
               _i6.Future<void>.value()) as _i6.Future<void>);
   @override
   _i6.Future<void> addWalletConnectSignRequest(
-          _i4.WalletConnectAddress? address, _i9.SignRequest? signRequest) =>
+          _i4.WalletConnectAddress? address, _i9.SignAction? signRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSignRequest, [address, signRequest]),
@@ -140,7 +140,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i6.Future<void>);
   @override
   _i6.Future<void> addWalletConnectSendRequest(
-          _i4.WalletConnectAddress? address, _i10.SendRequest? sendRequest) =>
+          _i4.WalletConnectAddress? address, _i10.SendAction? sendRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSendRequest, [address, sendRequest]),
@@ -149,7 +149,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i6.Future<void>);
   @override
   _i6.Future<void> addWalletApproveRequest(_i4.WalletConnectAddress? address,
-          _i11.WalletConnectSessionRequestData? approveRequestData) =>
+          _i11.SessionAction? approveRequestData) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletApproveRequest, [address, approveRequestData]),

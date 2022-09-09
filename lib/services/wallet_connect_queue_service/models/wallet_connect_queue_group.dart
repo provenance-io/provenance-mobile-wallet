@@ -2,9 +2,9 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 
 class WalletConnectQueueGroup {
   WalletConnectQueueGroup({
@@ -59,7 +59,7 @@ class WalletConnectQueueGroup {
   }
 
   static Map<String, dynamic> _toRecord(dynamic input) {
-    if (input is SendRequest) {
+    if (input is SendAction) {
       final body = TxBody(
         messages: input.messages.map((e) => e.toAny()),
       );
@@ -77,7 +77,7 @@ class WalletConnectQueueGroup {
         "feeCalculated":
             input.gasEstimate.totalFees.map((e) => e.writeToBuffer()).toList(),
       };
-    } else if (input is SignRequest) {
+    } else if (input is SignAction) {
       return <String, dynamic>{
         "type": "SignRequest",
         "id": input.id,
@@ -86,7 +86,7 @@ class WalletConnectQueueGroup {
         "description": input.description,
         "address": input.address
       };
-    } else if (input is WalletConnectSessionRequestData) {
+    } else if (input is SessionAction) {
       return <String, dynamic>{
         "type": "ApproveSession",
         "id": input.id,
@@ -119,7 +119,7 @@ class WalletConnectQueueGroup {
           .cast<Coin>()
           .toList();
 
-      return SendRequest(
+      return SendAction(
           id: id,
           requestId: requestId,
           description: description,
@@ -136,7 +136,7 @@ class WalletConnectQueueGroup {
       final message = input["message"];
       final address = input["address"];
 
-      return SignRequest(
+      return SignAction(
           id: id,
           message: message,
           description: description,
@@ -148,7 +148,7 @@ class WalletConnectQueueGroup {
       final peerId = input["peerId"];
       final remotePeerId = input["remotePeerId"];
 
-      return WalletConnectSessionRequestData(
+      return SessionAction(
           id,
           requestId,
           SessionRequestData(

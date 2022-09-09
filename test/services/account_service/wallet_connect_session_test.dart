@@ -3,12 +3,12 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart';
 
 import '../../test_helpers.dart';
 import 'wallet_connect_session_test.mocks.dart';
@@ -174,20 +174,6 @@ main() {
       });
     });
 
-    group("signTransactionFinish", () {
-      test('completed', () async {
-        when(mockWalletConnectSessionDelegate!.complete(any, any))
-            .thenAnswer((_) => Future.value(true));
-        when(mockKeyValueService!.setString(any, any))
-            .thenAnswer((_) => Future.value(true));
-        final result = await session!
-            .signTransactionFinish(requestId: "ABCD", allowed: true);
-
-        expect(result, true);
-        verify(mockWalletConnectSessionDelegate!.complete("ABCD", true));
-      });
-    });
-
     group("sendMessageFinish", () {
       test('completed', () async {
         when(mockWalletConnectSessionDelegate!.complete(any, any))
@@ -211,7 +197,7 @@ main() {
         when(mockWalletConnection!.connect(any, any))
             .thenAnswer((_) => Future.value(null));
 
-        final details = WalletConnectSessionRequestData(
+        final details = SessionAction(
           "ABC",
           1,
           SessionRequestData(

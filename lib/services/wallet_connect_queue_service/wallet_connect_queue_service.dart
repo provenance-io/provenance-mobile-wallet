@@ -6,10 +6,10 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 import 'package:sembast/sembast.dart';
 
 class WalletConnectQueueService extends Listenable
@@ -96,7 +96,7 @@ class WalletConnectQueueService extends Listenable
   }
 
   Future<void> addWalletConnectSignRequest(
-      WalletConnectAddress address, SignRequest signRequest) async {
+      WalletConnectAddress address, SignAction signRequest) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -114,7 +114,7 @@ class WalletConnectQueueService extends Listenable
   }
 
   Future<void> addWalletConnectSendRequest(
-      WalletConnectAddress address, SendRequest sendRequest) async {
+      WalletConnectAddress address, SendAction sendRequest) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -131,8 +131,8 @@ class WalletConnectQueueService extends Listenable
     notifyListeners();
   }
 
-  Future<void> addWalletApproveRequest(WalletConnectAddress address,
-      WalletConnectSessionRequestData approveRequestData) async {
+  Future<void> addWalletApproveRequest(
+      WalletConnectAddress address, SessionAction approveRequestData) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;

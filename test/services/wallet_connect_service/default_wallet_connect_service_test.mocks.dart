@@ -22,12 +22,6 @@ import 'package:provenance_wallet/services/account_service/transaction_handler.d
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
     as _i7;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
-import 'package:provenance_wallet/services/models/requests/send_request.dart'
-    as _i16;
-import 'package:provenance_wallet/services/models/requests/sign_request.dart'
-    as _i15;
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
-    as _i17;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
     as _i13;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
@@ -36,6 +30,12 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/models/w
     as _i18;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
     as _i14;
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart'
+    as _i16;
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart'
+    as _i17;
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart'
+    as _i15;
 import 'package:provenance_wallet/util/local_auth_helper.dart' as _i21;
 import 'package:rxdart/streams.dart' as _i2;
 
@@ -323,7 +323,7 @@ class MockWalletConnectQueueService extends _i1.Mock
               _i8.Future<void>.value()) as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletConnectSignRequest(
-          _i6.WalletConnectAddress? address, _i15.SignRequest? signRequest) =>
+          _i6.WalletConnectAddress? address, _i15.SignAction? signRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSignRequest, [address, signRequest]),
@@ -332,7 +332,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletConnectSendRequest(
-          _i6.WalletConnectAddress? address, _i16.SendRequest? sendRequest) =>
+          _i6.WalletConnectAddress? address, _i16.SendAction? sendRequest) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletConnectSendRequest, [address, sendRequest]),
@@ -341,7 +341,7 @@ class MockWalletConnectQueueService extends _i1.Mock
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletApproveRequest(_i6.WalletConnectAddress? address,
-          _i17.WalletConnectSessionRequestData? approveRequestData) =>
+          _i17.SessionAction? approveRequestData) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addWalletApproveRequest, [address, approveRequestData]),
