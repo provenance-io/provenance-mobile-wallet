@@ -1,6 +1,6 @@
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart';
 
 abstract class AccountStorageServiceCore {
   AccountStorageServiceCore._();

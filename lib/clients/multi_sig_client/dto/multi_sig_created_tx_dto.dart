@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/multi_sig_service/dto/multi_sig_tx_signature_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_signature_dto.dart';
 
 part 'multi_sig_created_tx_dto.g.dart';
 

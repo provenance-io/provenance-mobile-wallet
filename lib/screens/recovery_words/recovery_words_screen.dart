@@ -21,6 +21,11 @@ class RecoveryWordsScreen extends StatefulWidget {
   final int currentStep;
   final int totalSteps;
 
+  static final keyCopyButton = ValueKey("$RecoveryWordsScreen.copy_button");
+  static final keySnackbar = ValueKey("$RecoveryWordsScreen.snackbar");
+  static final keyContinueButton =
+      ValueKey("$RecoveryWordsScreen.continue_button");
+
   @override
   State<StatefulWidget> createState() {
     return RecoveryWordsScreenState();
@@ -90,6 +95,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                   PwListDivider(),
                   VerticalSpacer.xLarge(),
                   GestureDetector(
+                    key: RecoveryWordsScreen.keyCopyButton,
                     onTap: () async {
                       await Clipboard.setData(
                         ClipboardData(
@@ -98,6 +104,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          key: RecoveryWordsScreen.keySnackbar,
                           content: Text(
                             Strings.of(context).passphraseCopied,
                           ),
@@ -133,6 +140,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
             child: PwButton(
               child: PwText(
                 Strings.of(context).continueName,
+                key: RecoveryWordsScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),

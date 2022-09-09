@@ -8,6 +8,8 @@ import 'dart:async' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i4;
 import 'package:provenance_dart/wallet.dart' as _i9;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
+    as _i15;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
@@ -25,8 +27,6 @@ import 'package:provenance_wallet/services/models/price.dart' as _i18;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
-    as _i15;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
     as _i17;
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'

@@ -1,8 +1,8 @@
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 class MultiSigInviteReviewFlowBloc {
@@ -15,7 +15,7 @@ class MultiSigInviteReviewFlowBloc {
         _navigator = navigator;
 
   final _accountService = get<AccountService>();
-  final _multiSigService = get<MultiSigService>();
+  final _multiSigClient = get<MultiSigClient>();
 
   final String _inviteId;
   final MultiSigRemoteAccount _remoteAccount;
@@ -54,7 +54,7 @@ class MultiSigInviteReviewFlowBloc {
     MultiAccount? multiAccount;
 
     if (account != null) {
-      final signer = await _multiSigService.register(
+      final signer = await _multiSigClient.register(
         inviteId: _inviteId,
         publicKey: account.publicKey,
       );

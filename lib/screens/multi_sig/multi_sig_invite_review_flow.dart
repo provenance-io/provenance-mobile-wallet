@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
@@ -8,7 +9,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_deta
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_landing.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class MultiSigInviteReviewFlowNavigator {

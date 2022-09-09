@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i5;
 import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_dart/wallet_connect.dart' as _i6;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
+    as _i11;
 import 'package:provenance_wallet/common/pw_design.dart' as _i22;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
@@ -26,8 +28,6 @@ import 'package:provenance_wallet/services/models/requests/sign_request.dart'
     as _i15;
 import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
     as _i17;
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signer.dart'
-    as _i11;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
     as _i13;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'

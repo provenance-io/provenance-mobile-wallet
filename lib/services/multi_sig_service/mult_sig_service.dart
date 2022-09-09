@@ -6,14 +6,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_status.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/services/models/service_tx_response.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_pending_tx.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_signature.dart';
-import 'package:provenance_wallet/services/multi_sig_service/models/multi_sig_status.dart';
-import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -21,11 +21,10 @@ import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
-// TODO-Roy: Rename to MultiSigService
-class MultiSigPendingTxCache extends Listenable with ListenableMixin {
-  MultiSigPendingTxCache({
-    required MultiSigService multiSigService,
-  }) : _multiSigService = multiSigService {
+class MultiSigService extends Listenable with ListenableMixin {
+  MultiSigService({
+    required MultiSigClient multiSigClient,
+  }) : _multiSigClient = multiSigClient {
     _db = _initDb();
   }
 
@@ -45,7 +44,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     return db;
   }
 
-  final MultiSigService _multiSigService;
+  final MultiSigClient _multiSigClient;
 
   final items = <MultiSigActionListItem>[];
 
@@ -66,7 +65,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
       final addressItems = <MultiSigActionListItem>[];
 
       // TODO-Roy: Add service route to get txs for multiple addresses
-      final pendingTxs = await _multiSigService.getPendingTxs(
+      final pendingTxs = await _multiSigClient.getPendingTxs(
         signerAddresses: [signerAddress],
       );
 
@@ -79,7 +78,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
       addressItems.addAll(pendingItems);
 
       // TODO-Roy: Add service route to get txs for multiple addresses
-      final createdTxs = await _multiSigService.getCreatedTxs(
+      final createdTxs = await _multiSigClient.getCreatedTxs(
         signerAddresses: [signerAddress],
       );
 
@@ -95,7 +94,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
           final result = await ref.get(db);
           if (result != null) {
             final model = _SembastResultData.fromRecord(result);
-            final success = await _multiSigService.updateTxResult(
+            final success = await _multiSigClient.updateTxResult(
               txUuid: model.txUuid,
               txHash: model.txHash,
               coin: ChainId.toCoin(model.chainId),
@@ -140,7 +139,7 @@ class MultiSigPendingTxCache extends Listenable with ListenableMixin {
     final db = await _db;
     await ref.put(db, data.toRecord());
 
-    final success = await _multiSigService.updateTxResult(
+    final success = await _multiSigClient.updateTxResult(
       txUuid: txUuid,
       txHash: response.txhash,
       coin: coin,
