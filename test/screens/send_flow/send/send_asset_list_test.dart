@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart' as intl;
@@ -68,6 +69,8 @@ main() {
     ) {
       return tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Material(
             child: SendAssetList(
               assets,
