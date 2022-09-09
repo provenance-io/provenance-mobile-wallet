@@ -9,4 +9,9 @@ enum MultiSigTopic {
   });
 
   final String id;
+
+  factory MultiSigTopic.fromJson(String value) =>
+      MultiSigTopic.values.firstWhere((e) => e.id == value);
+
+  String toJson() => id;
 }
