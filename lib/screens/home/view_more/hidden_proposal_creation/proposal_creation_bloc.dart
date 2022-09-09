@@ -69,12 +69,14 @@ class ProposalCreationBloc extends TransactionBloc {
         title: details.title,
         description: details.description,
       ).toAny(),
-      initialDeposit: [
-        Coin(
-          denom: nHashDenom,
-          amount: scaledAmount,
-        )
-      ],
+      initialDeposit: details.initialDeposit.toInt() > 0
+          ? [
+              Coin(
+                denom: nHashDenom,
+                amount: scaledAmount,
+              )
+            ]
+          : null,
       proposer: account.address,
     );
   }
