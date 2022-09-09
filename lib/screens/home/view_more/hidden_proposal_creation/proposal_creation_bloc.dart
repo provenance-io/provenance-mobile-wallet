@@ -17,7 +17,10 @@ class ProposalCreationBloc extends TransactionBloc {
     TransactableAccount account,
   ) : super(account);
 
-  final _creationDetails = BehaviorSubject.seeded(ProposalCreationDetails());
+  final _creationDetails = BehaviorSubject.seeded(ProposalCreationDetails(
+    hashAmount: Decimal.zero,
+    initialDeposit: Decimal.zero,
+  ));
 
   ValueStream<ProposalCreationDetails?> get creationDetails => _creationDetails;
 
@@ -41,7 +44,7 @@ class ProposalCreationBloc extends TransactionBloc {
       _creationDetails.tryAdd(
         ProposalCreationDetails.fromExisting(
           oldDetails,
-          hashAmount: nHashToHash(BigInt.parse(asset.amount)).toDouble(),
+          hashAmount: nHashToHash(BigInt.parse(asset.amount)),
         ),
       );
     } finally {
@@ -60,16 +63,17 @@ class ProposalCreationBloc extends TransactionBloc {
   @override
   gov.MsgSubmitProposal getMessage() {
     final details = _creationDetails.value;
-    final scaledAmount =
-        hashToNHash(Decimal.parse(details.initialDeposit.toInt().toString()))
-            .toString();
+    final scaledAmount = hashToNHash(
+      details.initialDeposit,
+      ignoreScaleError: true,
+    ).toString();
 
     return gov.MsgSubmitProposal(
       content: gov.TextProposal(
         title: details.title,
         description: details.description,
       ).toAny(),
-      initialDeposit: details.initialDeposit.toInt() > 0
+      initialDeposit: details.initialDeposit > Decimal.zero
           ? [
               Coin(
                 denom: nHashDenom,
@@ -106,7 +110,7 @@ class ProposalCreationBloc extends TransactionBloc {
     _creationDetails.tryAdd(
       ProposalCreationDetails.fromExisting(
         oldDetatils,
-        initialDeposit: deposit,
+        initialDeposit: Decimal.tryParse(deposit.toString()),
       ),
     );
   }
@@ -120,8 +124,8 @@ class ProposalCreationBloc extends TransactionBloc {
 class ProposalCreationDetails {
   ProposalCreationDetails({
     this.isLoading = true,
-    this.initialDeposit = 0,
-    this.hashAmount = 0,
+    required this.initialDeposit,
+    required this.hashAmount,
     this.title = "",
     this.description = "",
   });
@@ -129,8 +133,8 @@ class ProposalCreationDetails {
   static ProposalCreationDetails fromExisting(
     ProposalCreationDetails existing, {
     bool? isLoading,
-    double? initialDeposit,
-    double? hashAmount,
+    Decimal? initialDeposit,
+    Decimal? hashAmount,
     String? title,
     String? description,
   }) {
@@ -144,8 +148,8 @@ class ProposalCreationDetails {
   }
 
   final bool isLoading;
-  final double initialDeposit;
-  final double hashAmount;
+  final Decimal initialDeposit;
+  final Decimal hashAmount;
   final String title;
   final String description;
 }

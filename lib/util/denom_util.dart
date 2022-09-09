@@ -3,8 +3,8 @@ import 'package:decimal/decimal.dart';
 const _hashExponent = 9;
 final _ten = Decimal.fromInt(10);
 
-BigInt hashToNHash(Decimal hash) {
-  return toBase(hash, _hashExponent);
+BigInt hashToNHash(Decimal hash, {bool ignoreScaleError = false}) {
+  return toBase(hash, _hashExponent, ignoreScaleError);
 }
 
 Decimal nHashToHash(BigInt nHash, {int? fractionDigits}) {
@@ -24,8 +24,8 @@ Decimal stringNHashToHash(String nHash, {int? fractionDigits}) {
   return nHashToHash(bigInt, fractionDigits: fractionDigits);
 }
 
-BigInt toBase(Decimal display, int exponent) {
-  if (display.scale > exponent) {
+BigInt toBase(Decimal display, int exponent, bool ignoreScaleError) {
+  if (display.scale > exponent && !ignoreScaleError) {
     throw ArgumentError.value(display, 'display',
         'Scale ${display.scale} is greater than exponent $exponent');
   }

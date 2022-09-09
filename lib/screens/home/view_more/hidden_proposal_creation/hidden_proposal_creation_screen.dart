@@ -173,13 +173,13 @@ class _HiddenProposalCreationScreenState
                           children: [
                             PwText(
                               strings.hashAmount(
-                                  details.initialDeposit.toInt().toString()),
+                                  details.initialDeposit.toString()),
                               style: PwTextStyle.footnote,
                             )
                           ],
                         ),
                         DepositSlider(
-                          max: details.hashAmount,
+                          max: details.hashAmount.toDouble(),
                           thumbColor: Theme.of(context).colorScheme.primary550,
                           onChanged: (changed) =>
                               _bloc.updateInitialDeposit(changed),
