@@ -269,16 +269,20 @@ class ActionListBloc extends Disposable {
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
-          LocalizedString label;
-          if (entry.value is SessionAction) {
-            label = (c) => Strings.of(c).actionListLabelApproveSession;
-          } else if (entry.value is SignAction) {
-            label = (c) => Strings.of(c).actionListLabelSignatureRequested;
-          } else if (entry.value is SendAction) {
-            label = (c) => Strings.of(c).actionListLabelTransactionRequested;
-          } else {
-            label = (c) => Strings.of(c).actionListLabelUnknown;
+          LocalizedString label = (c) => Strings.of(c).actionListLabelUnknown;
+
+          switch (entry.value.kind) {
+            case WalletConnectActionKind.session:
+              label = (c) => Strings.of(c).actionListLabelApproveSession;
+              break;
+            case WalletConnectActionKind.send:
+              label = (c) => Strings.of(c).actionListLabelTransactionRequested;
+              break;
+            case WalletConnectActionKind.sign:
+              label = (c) => Strings.of(c).actionListLabelSignatureRequested;
+              break;
           }
+
           return _WalletConnectActionItem(
             label: label,
             subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
@@ -324,20 +328,24 @@ class ActionListBloc extends Disposable {
 
   Future<bool> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
-    final payload = item.action;
+    final action = item.action;
 
-    if (payload is SessionAction) {
-      return _navigator.showApproveSession(payload as SessionAction);
-    } else if (payload is SignAction) {
-      return _navigator.showApproveSign(payload, group._queueGroup.clientMeta!);
-    } else if (payload is SendAction) {
-      return _navigator.showApproveTransaction(
-        messages: payload.messages,
-        fees: payload.gasEstimate.totalFees,
-        clientMeta: group._queueGroup.clientMeta,
-      );
-    } else {
-      throw Exception("Unknown action type ${item.runtimeType}");
+    switch (action.kind) {
+      case WalletConnectActionKind.session:
+        return _navigator.showApproveSession(action as SessionAction);
+      case WalletConnectActionKind.send:
+        final sendAction = action as SendAction;
+
+        return _navigator.showApproveTransaction(
+          messages: sendAction.messages,
+          fees: sendAction.gasEstimate.totalFees,
+          clientMeta: group._queueGroup.clientMeta,
+        );
+      case WalletConnectActionKind.sign:
+        return _navigator.showApproveSign(
+          action as SignAction,
+          group._queueGroup.clientMeta!,
+        );
     }
   }
 

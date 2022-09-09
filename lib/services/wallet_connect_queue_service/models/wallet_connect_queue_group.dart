@@ -5,6 +5,8 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action_kind.dart';
 
 class WalletConnectQueueGroup {
   WalletConnectQueueGroup({
@@ -16,7 +18,7 @@ class WalletConnectQueueGroup {
   final WalletConnectAddress connectAddress;
   final String accountAddress;
   final ClientMeta? clientMeta;
-  final Map<String, dynamic> actionLookup = <String, dynamic>{};
+  final actionLookup = <String, WalletConnectAction>{};
 
   WalletConnectQueueGroup copyWith({
     ClientMeta? clientMeta,
@@ -28,7 +30,7 @@ class WalletConnectQueueGroup {
       );
 
   static WalletConnectQueueGroup fromRecord(Map<String, dynamic> input) {
-    final actions = <String, dynamic>{};
+    final actions = <String, WalletConnectAction>{};
     input["actions"].entries.forEach((entry) {
       actions[entry.key] = _fromRecord(entry.value);
     });
@@ -58,52 +60,58 @@ class WalletConnectQueueGroup {
     return map;
   }
 
-  static Map<String, dynamic> _toRecord(dynamic input) {
-    if (input is SendAction) {
-      final body = TxBody(
-        messages: input.messages.map((e) => e.toAny()),
-      );
+  static Map<String, dynamic> _toRecord(WalletConnectAction action) {
+    switch (action.kind) {
+      case WalletConnectActionKind.session:
+        final sessionAction = action as SessionAction;
 
-      return <String, dynamic>{
-        "type": "SendRequest",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": "",
-        "description": input.description,
-        "txBody": body.writeToBuffer(),
-        "estimate": input.gasEstimate.estimatedGas,
-        "baseFee": input.gasEstimate.baseFee,
-        "feeAdjustment": input.gasEstimate.gasAdjustment,
-        "feeCalculated":
-            input.gasEstimate.totalFees.map((e) => e.writeToBuffer()).toList(),
-      };
-    } else if (input is SignAction) {
-      return <String, dynamic>{
-        "type": "SignRequest",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": input.message,
-        "description": input.description,
-        "address": input.address
-      };
-    } else if (input is SessionAction) {
-      return <String, dynamic>{
-        "type": "ApproveSession",
-        "id": input.id,
-        "requestId": input.requestId,
-        "message": "Approval required",
-        "description": "",
-        "address": input.data.address.fullUriString,
-        "clientMeta": input.data.clientMeta.toJson(),
-        "peerId": input.data.peerId,
-        "remotePeerId": input.data.remotePeerId,
-      };
-    } else {
-      throw Exception("${input.runtimeType} is not a supported type");
+        return <String, dynamic>{
+          "type": "ApproveSession",
+          "id": sessionAction.id,
+          "requestId": sessionAction.requestId,
+          "message": "Approval required",
+          "description": "",
+          "address": sessionAction.data.address.fullUriString,
+          "clientMeta": sessionAction.data.clientMeta.toJson(),
+          "peerId": sessionAction.data.peerId,
+          "remotePeerId": sessionAction.data.remotePeerId,
+        };
+      case WalletConnectActionKind.send:
+        final sendAction = action as SendAction;
+
+        final body = TxBody(
+          messages: sendAction.messages.map((e) => e.toAny()),
+        );
+
+        return <String, dynamic>{
+          "type": "SendRequest",
+          "id": action.id,
+          "requestId": action.requestId,
+          "message": "",
+          "description": sendAction.description,
+          "txBody": body.writeToBuffer(),
+          "estimate": sendAction.gasEstimate.estimatedGas,
+          "baseFee": sendAction.gasEstimate.baseFee,
+          "feeAdjustment": sendAction.gasEstimate.gasAdjustment,
+          "feeCalculated": sendAction.gasEstimate.totalFees
+              .map((e) => e.writeToBuffer())
+              .toList(),
+        };
+      case WalletConnectActionKind.sign:
+        final signAction = action as SignAction;
+
+        return <String, dynamic>{
+          "type": "SignRequest",
+          "id": signAction.id,
+          "requestId": signAction.requestId,
+          "message": signAction.message,
+          "description": signAction.description,
+          "address": signAction.address
+        };
     }
   }
 
-  static dynamic _fromRecord(Map<String, dynamic> input) {
+  static WalletConnectAction _fromRecord(Map<String, dynamic> input) {
     final type = input["type"] as String;
 
     if (type == "SendRequest") {

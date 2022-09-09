@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/wallet_connect_queue_service/models/w
 import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
 import 'package:sembast/sembast.dart';
 
 class WalletConnectQueueService extends Listenable
@@ -159,7 +160,7 @@ class WalletConnectQueueService extends Listenable
     return WalletConnectQueueGroup.fromRecord(map);
   }
 
-  Future<dynamic> loadQueuedAction(
+  Future<WalletConnectAction?> loadQueuedAction(
       WalletConnectAddress address, String requestId) async {
     final record = _main.record(address.fullUriString);
 

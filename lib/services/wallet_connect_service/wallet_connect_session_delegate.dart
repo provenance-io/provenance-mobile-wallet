@@ -105,7 +105,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     bool result;
 
-    switch (action.kind as WalletConnectActionKind) {
+    switch (action.kind) {
       case WalletConnectActionKind.session:
         result = await _completeSessionAction(action as SessionAction);
         break;
