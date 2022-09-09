@@ -44,7 +44,6 @@ class _HiddenProposalCreationScreenState
     _descriptionEditingController = TextEditingController(text: "");
     _titleEditingController.addListener(_onTitleChanged);
     _descriptionEditingController.addListener(_onDescriptionChanged);
-    get.registerSingleton<ProposalCreationBloc>(_bloc);
     _bloc.load();
     super.initState();
   }
@@ -55,7 +54,6 @@ class _HiddenProposalCreationScreenState
     _titleEditingController.dispose();
     _descriptionEditingController.removeListener(_onDescriptionChanged);
     _descriptionEditingController.dispose();
-    get.unregister<ProposalCreationBloc>();
     super.dispose();
   }
 
