@@ -241,11 +241,14 @@ class _HiddenProposalCreationScreenState
     try {
       final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      navigator.pushReplacement(
+      navigator.push(
         PwTransactionCompleteScreen(
           title: Strings.of(context).devProposalComplete,
           response: response,
-          onComplete: () => navigator.pop(),
+          onComplete: () {
+            navigator.pop();
+            navigator.pop();
+          },
           onPressed: () {
             navigator.push(PwDataScreen(
               title: Strings.of(context).transactionResponse,
