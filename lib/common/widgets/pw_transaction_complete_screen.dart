@@ -88,22 +88,24 @@ class PwTransactionCompleteScreen extends StatelessWidget {
                       ),
                       onPressed: () => onComplete(),
                     ),
-                    if (onBackToDashboard != null)
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: Spacing.large,
-                          bottom: Spacing.largeX4,
-                        ),
-                        child: PwTextButton(
-                          child: PwText(
-                            Strings.of(context).stakingCompleteBackToDashboard,
-                            style: PwTextStyle.body,
-                            textAlign: TextAlign.center,
-                            color: PwColor.neutralNeutral,
-                          ),
-                          onPressed: () => onBackToDashboard!(),
-                        ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: Spacing.large,
+                        bottom: Spacing.largeX4,
                       ),
+                      child: onBackToDashboard != null
+                          ? PwTextButton(
+                              child: PwText(
+                                Strings.of(context)
+                                    .stakingCompleteBackToDashboard,
+                                style: PwTextStyle.body,
+                                textAlign: TextAlign.center,
+                                color: PwColor.neutralNeutral,
+                              ),
+                              onPressed: () => onBackToDashboard!(),
+                            )
+                          : VerticalSpacer.large(),
+                    ),
                   ],
                 ),
               ),
