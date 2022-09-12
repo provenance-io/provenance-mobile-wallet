@@ -581,7 +581,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {
       final address = e.address;
-      // TODO-Roy: Update service to include address on notification
       if (address == null) {
         return;
       }
