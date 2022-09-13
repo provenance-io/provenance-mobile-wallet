@@ -47,6 +47,8 @@ class DefaultWalletConnectService extends WalletConnectService
   WalletConnectSession? _currentSession;
 
   final _accountServiceSubscriptions = CompositeSubscription();
+
+  // TODO-Roy: Move these dependencies to the constructor for visibility
   final _keyValueService = get<KeyValueService>();
   final _accountService = get<AccountService>();
   final _connectionFactory = get<WalletConnectionFactory>();
