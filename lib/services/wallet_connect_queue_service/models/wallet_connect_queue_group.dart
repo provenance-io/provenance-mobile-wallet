@@ -48,7 +48,7 @@ class WalletConnectQueueGroup {
 
   Map<String, dynamic> toRecord() {
     final map = <String, dynamic>{
-      "connectAddress": connectAddress,
+      "connectAddress": connectAddress.fullUriString,
       "accountAddress": accountAddress,
       "clientMeta": clientMeta?.toJson(),
       "actions":

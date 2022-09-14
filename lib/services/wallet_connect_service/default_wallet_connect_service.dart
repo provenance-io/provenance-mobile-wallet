@@ -73,12 +73,14 @@ class DefaultWalletConnectService extends WalletConnectService
   }
 
   Future<WalletConnectSession?> _doCreateConnection(
-      TransactableAccount accountDetails, String wcAddress,
+      TransactableAccount connectAccount,
+      TransactableAccount transactAccount,
+      String wcAddress,
       {String? peerId,
       String? remotePeerId,
       ClientMeta? clientMeta,
       Duration? timeout}) async {
-    final privateKey = await _accountService.loadKey(accountDetails.id);
+    final privateKey = await _accountService.loadKey(connectAccount.id);
     if (privateKey == null) {
       logError('Failed to locate the private key');
       return null;
@@ -100,17 +102,17 @@ class DefaultWalletConnectService extends WalletConnectService
       connection: connection,
       queueService: _queueServce,
       walletInfo: WalletInfo(
-        accountDetails.id,
-        accountDetails.name,
-        accountDetails.coin,
+        transactAccount.id,
+        transactAccount.name,
+        transactAccount.coin,
       ),
     );
 
     final session = WalletConnectSession(
-        accountId: accountDetails.id,
+        accountId: transactAccount.id,
         connection: connection,
         delegate: delegate,
-        coin: accountDetails.coin,
+        coin: transactAccount.coin,
         remoteNotificationService: _remoteNotificationService,
         onSessionClosedRemotelyDelegate: _onRemoveSessionClosed);
 
@@ -191,13 +193,25 @@ class DefaultWalletConnectService extends WalletConnectService
     SessionData? sessionData,
     Duration? remainingTime,
   }) async {
-    final accountDetails = _accountService.events.selected.value;
-    if (accountDetails == null) {
+    final account = _accountService.events.selected.value;
+    if (account == null) {
       logError('No account currently selected');
 
       return false;
     }
-    final wcConnection = await _doCreateConnection(accountDetails, addressData);
+
+    TransactableAccount connectAccount;
+    TransactableAccount transactAccount;
+    if (account is MultiTransactableAccount) {
+      connectAccount = account.linkedAccount;
+      transactAccount = account;
+    } else {
+      connectAccount = account;
+      transactAccount = account;
+    }
+
+    final wcConnection =
+        await _doCreateConnection(connectAccount, transactAccount, addressData);
     if (wcConnection == null) {
       return false;
     } else {
@@ -246,8 +260,19 @@ class DefaultWalletConnectService extends WalletConnectService
       return false;
     }
 
+    TransactableAccount connectAccount;
+    TransactableAccount transactAccount;
+    if (account is MultiTransactableAccount) {
+      connectAccount = account.linkedAccount;
+      transactAccount = account;
+    } else {
+      connectAccount = account;
+      transactAccount = account;
+    }
+
     _log("The existing session expires at ${sessionExpired.toIso8601String()}");
-    final session = await _doCreateConnection(account, data.address,
+    final session = await _doCreateConnection(
+        connectAccount, transactAccount, data.address,
         clientMeta: data.clientMeta,
         peerId: data.peerId,
         remotePeerId: data.remotePeerId);
