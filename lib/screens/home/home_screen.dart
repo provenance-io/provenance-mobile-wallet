@@ -26,12 +26,8 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String allMessageTypes;
-  final String allStatuses;
   const HomeScreen({
     Key? key,
-    required this.allMessageTypes,
-    required this.allStatuses,
   }) : super(key: key);
 
   @override
@@ -45,10 +41,8 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  late final _bloc = HomeBloc(
-    allMessageTypes: widget.allMessageTypes,
-    allStatuses: widget.allStatuses,
-  );
+  final _bloc = HomeBloc();
+
   final _walletConnectService = get<WalletConnectService>();
   final _multiSigService = get<MultiSigService>();
 
@@ -168,7 +162,10 @@ class HomeScreenState extends State<HomeScreen>
               physics: NeverScrollableScrollPhysics(),
               children: [
                 DashboardTab(),
-                TransactionTab(),
+                TransactionTab(
+                  allMessageTypes: strings.dropDownAllMessageTypes,
+                  allStatuses: strings.dropDownAllStatuses,
+                ),
                 ViewMoreTab(
                   onFlowCompletion: () {
                     setState(() {
