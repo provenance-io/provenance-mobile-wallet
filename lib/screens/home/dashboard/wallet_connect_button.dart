@@ -25,7 +25,7 @@ class WalletConnectButton extends StatelessWidget {
         stream: _accountService.events.selected,
         builder: (context, snapshot) {
           final account = snapshot.data;
-          if (account == null) {
+          if (account is! BasicAccount) {
             return _IconButton(
               icon: PwIcon(
                 PwIcons.qr,
