@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 const _checkBoxSize = 40.0;

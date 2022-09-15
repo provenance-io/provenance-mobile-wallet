@@ -97,21 +97,10 @@ class ActionListItem {
   final LocalizedString subLabel;
 }
 
-class NotificationItem {
-  const NotificationItem({
-    required this.label,
-    required this.created,
-  });
-
-  final String label;
-  final DateTime created;
-}
-
 class ActionListBlocState {
-  ActionListBlocState(this.actionGroups, this.notificationGroups);
+  ActionListBlocState(this.actionGroups);
 
   List<ActionListGroup> actionGroups;
-  List<NotificationItem> notificationGroups;
 }
 
 class ActionListBloc extends Disposable {
@@ -129,15 +118,6 @@ class ActionListBloc extends Disposable {
         _multiSigService = get<MultiSigService>(),
         _multiSigClient = get<MultiSigClient>();
 
-  var notifications = [
-    NotificationItem(
-        label: "All co-signers have joined Space's Account",
-        created: DateTime.now().subtract(Duration(hours: 1))),
-    NotificationItem(
-        label: "Invitation Declined",
-        created: DateTime.now().subtract(Duration(days: 1))),
-  ];
-
   Stream<ActionListBlocState> get stream => _streamController.stream;
 
   Future<void> init() async {
@@ -153,9 +133,8 @@ class ActionListBloc extends Disposable {
     );
 
     final actionGroups = await _buildActionGroups(accounts);
-    final notifications = await _buildNotificationItems();
 
-    _streamController.add(ActionListBlocState(actionGroups, notifications));
+    _streamController.add(ActionListBlocState(actionGroups));
   }
 
   @override
@@ -163,20 +142,6 @@ class ActionListBloc extends Disposable {
     _connectQueueService.removeListener(_onActionQueueUpdated);
     _multiSigService.removeListener(_onActionQueueUpdated);
     _streamController.close();
-  }
-
-  Future<void> deleteNotifications(List<NotificationItem> notifications) async {
-    this.notifications = this.notifications.where((item) {
-      return !notifications.contains(item);
-    }).toList();
-
-    Future.wait([_buildActionGroups(), _buildNotificationItems()])
-        .then((results) {
-      final actionGroups = results[0] as List<ActionListGroup>;
-      final notifications = results[1] as List<NotificationItem>;
-
-      _streamController.add(ActionListBlocState(actionGroups, notifications));
-    });
   }
 
   Future<bool> requestApproval(
@@ -223,18 +188,12 @@ class ActionListBloc extends Disposable {
     }
   }
 
-  void _onActionQueueUpdated() {
-    Future.wait([_buildActionGroups(), _buildNotificationItems()])
-        .then((results) {
-      final actionGroups = results[0] as List<ActionListGroup>;
-      final notifications = results[1] as List<NotificationItem>;
+  Future<void> _onActionQueueUpdated() async {
+    final groups = await _buildActionGroups();
 
-      _streamController.add(ActionListBlocState(actionGroups, notifications));
-    });
-  }
-
-  Future<List<NotificationItem>> _buildNotificationItems() async {
-    return notifications;
+    _streamController.add(
+      ActionListBlocState(groups),
+    );
   }
 
   Future<List<ActionListGroup>> _buildActionGroups(
