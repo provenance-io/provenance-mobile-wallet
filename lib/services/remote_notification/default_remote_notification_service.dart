@@ -122,15 +122,19 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
   }
 
   static MultiSigRemoteNotification? _fromMessage(RemoteMessage message) {
+    MultiSigRemoteNotification? result;
+
     final dataTopic = message.data['topic'] as String?;
     if (_multiSigTopics.contains(dataTopic)) {
       final data = MultiSigRemoteNotificationData.fromJson(message.data);
 
-      return MultiSigRemoteNotification(
+      result = MultiSigRemoteNotification(
         title: message.notification?.title,
         body: message.notification?.body,
         data: data,
       );
     }
+
+    return result;
   }
 }
