@@ -41,7 +41,6 @@ abstract class KeyValueService {
 enum PrefKey {
   allowCrashlitics,
   defaultChainId,
-  enableMultiSig,
   endpoints,
   httpClientDiagnostics500,
   isMockingAssetService,

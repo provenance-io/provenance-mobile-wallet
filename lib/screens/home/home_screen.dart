@@ -14,8 +14,8 @@ import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -192,7 +192,7 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _onSessionRequest(
-    WalletConnectSessionRequestData details,
+    SessionAction details,
   ) async {
     final strings = Strings.of(context);
     final name = details.data.clientMeta.name;

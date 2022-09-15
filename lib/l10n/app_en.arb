@@ -63,7 +63,6 @@
   "profileDeveloperServiceMocks": "Service Mocks",
   "profileDeveloperConnectLabel": "Connect",
   "profileDeveloperConnectInvalidAddress": "Invalid address",
-  "profileDeveloperEnableMultiSig": "Enable Multi-Sig",
   "profileShowAdvancedUI": "Show Advanced UI",
   "profileMenuUseMainnet": "Use Mainnet",
   "profileMenuUseTestnet": "Use Testnet",

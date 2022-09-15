@@ -8,13 +8,9 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
@@ -23,6 +19,11 @@ import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'models/session_action.dart';
+import 'models/wallet_connect_session_status.dart';
+import 'wallet_connect_session.dart';
+import 'wallet_connect_session_delegate.dart';
 
 class DefaultWalletConnectService extends WalletConnectService
     with ListenableMixin, WidgetsBindingObserver
@@ -46,6 +47,8 @@ class DefaultWalletConnectService extends WalletConnectService
   WalletConnectSession? _currentSession;
 
   final _accountServiceSubscriptions = CompositeSubscription();
+
+  // TODO-Roy: Move these dependencies to the constructor for visibility
   final _keyValueService = get<KeyValueService>();
   final _accountService = get<AccountService>();
   final _connectionFactory = get<WalletConnectionFactory>();
@@ -296,7 +299,7 @@ class DefaultWalletConnectService extends WalletConnectService
 
   @override
   Future<bool> approveSession({
-    required WalletConnectSessionRequestData details,
+    required SessionAction details,
     required bool allowed,
   }) async {
     final session = _currentSession;
@@ -329,18 +332,6 @@ class DefaultWalletConnectService extends WalletConnectService
     required bool allowed,
   }) async {
     return await _currentSession?.sendMessageFinish(
-          requestId: requestId,
-          allowed: allowed,
-        ) ??
-        false;
-  }
-
-  @override
-  Future<bool> signTransactionFinish({
-    required String requestId,
-    required bool allowed,
-  }) async {
-    return await _currentSession?.signTransactionFinish(
           requestId: requestId,
           allowed: allowed,
         ) ??

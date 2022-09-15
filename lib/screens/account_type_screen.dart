@@ -3,12 +3,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_button.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class AccountTypeScreen extends StatelessWidget {
-  AccountTypeScreen({
+  const AccountTypeScreen({
     required this.bloc,
     required this.includeMultiSig,
     Key? key,
@@ -19,7 +17,6 @@ class AccountTypeScreen extends StatelessWidget {
   static final keyRecoverAccountButton =
       ValueKey('$AccountTypeScreen.recover_account_button');
 
-  final _keyValueService = get<KeyValueService>();
   final bool includeMultiSig;
   final AddAccountFlowBloc bloc;
 
@@ -70,33 +67,20 @@ class AccountTypeScreen extends StatelessWidget {
                       },
                     ),
                     if (includeMultiSig)
-                      StreamBuilder<KeyValueData<bool>>(
-                          initialData: _keyValueService
-                              .stream<bool>(PrefKey.enableMultiSig)
-                              .valueOrNull,
-                          stream: _keyValueService
-                              .stream<bool>(PrefKey.enableMultiSig),
-                          builder: (context, snapshot) {
-                            final enable = snapshot.data?.data ?? false;
-                            if (enable) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  top: Spacing.large,
-                                ),
-                                child: AccountButton(
-                                  name: strings.accountTypeOptionMultiName,
-                                  desc: strings.accountTypeOptionMultiDesc,
-                                  onPressed: () {
-                                    bloc.submitAccountType(
-                                      AccountAddKind.createMulti,
-                                    );
-                                  },
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: Spacing.large,
+                        ),
+                        child: AccountButton(
+                          name: strings.accountTypeOptionMultiName,
+                          desc: strings.accountTypeOptionMultiDesc,
+                          onPressed: () {
+                            bloc.submitAccountType(
+                              AccountAddKind.createMulti,
+                            );
+                          },
+                        ),
+                      ),
                     VerticalSpacer.largeX3(),
                   ],
                 ),

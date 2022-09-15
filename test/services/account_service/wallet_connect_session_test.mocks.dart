@@ -9,14 +9,14 @@ import 'dart:ui' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i6;
 import 'package:provenance_dart/wallet_connect.dart' as _i2;
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart'
-    as _i3;
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
     as _i10;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
     as _i9;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
     as _i8;
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart'
+    as _i3;
 import 'package:rxdart/rxdart.dart' as _i4;
 
 // ignore_for_file: type=lint

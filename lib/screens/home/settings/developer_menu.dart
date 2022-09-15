@@ -52,31 +52,6 @@ class DeveloperMenu extends StatelessWidget {
           },
         ),
         PwListDivider(),
-        StreamBuilder<KeyValueData<bool>>(
-          initialData:
-              keyValueService.stream<bool>(PrefKey.enableMultiSig).valueOrNull,
-          stream: keyValueService.stream<bool>(PrefKey.enableMultiSig),
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return Container();
-            }
-
-            final data = snapshot.data?.data ?? false;
-
-            return ToggleItem(
-              text: strings.profileDeveloperEnableMultiSig,
-              value: data,
-              onChanged: (value) async {
-                await keyValueService.setBool(
-                  PrefKey.enableMultiSig,
-                  !data,
-                );
-                get<HomeBloc>().load();
-              },
-            );
-          },
-        ),
-        PwListDivider(),
         LinkItem(
           text: strings.profileDeveloperServiceMocks,
           onTap: () {
