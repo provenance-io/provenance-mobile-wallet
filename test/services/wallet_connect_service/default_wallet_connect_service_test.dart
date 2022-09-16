@@ -160,7 +160,15 @@ void main() {
     get.registerSingleton<WalletConnectionFactory>(
         mockConnectionFactory.getConnection);
 
-    _walletConnectService = DefaultWalletConnectService();
+    _walletConnectService = DefaultWalletConnectService(
+      keyValueService: mockKeyValueService,
+      accountService: mockAccountService,
+      connectionFactory: mockConnectionFactory.getConnection,
+      notificationService: mockRemoteNotificationService,
+      queueService: mockWalletConnectQueueService,
+      transactionHandler: mockTransactionHandler,
+      localAuthHelper: mockLocalAuthHelper,
+    );
 
     // setup values needed by the connect method
     when(mockAccountService.loadKey(any))
