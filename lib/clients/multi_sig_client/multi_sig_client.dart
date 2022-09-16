@@ -17,13 +17,13 @@ import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_pending
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_sign_tx_request_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_body_bytes_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_update_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_status.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -298,6 +298,7 @@ class MultiSigClient with ClientCoinMixin {
 
   Future<List<MultiSigPendingTx>?> getCreatedTxs({
     required List<String> signerAddresses,
+    MultiSigStatus? status,
   }) async {
     final coin = getCoinFromAddress(signerAddresses.first);
     final client = await getClient(coin);
@@ -307,6 +308,7 @@ class MultiSigClient with ClientCoinMixin {
       path,
       body: MultiSigCreatedTxRequestDto(
         addresses: signerAddresses,
+        status: status,
       ),
       listConverter: (json) {
         if (json is String) {
@@ -384,7 +386,7 @@ class MultiSigClient with ClientCoinMixin {
           txUuid: dto.txUuid,
           txBody: txBodyBytes.txBody,
           fee: txBodyBytes.fee,
-          status: MultiSigStatus.values.byName(dto.status.toLowerCase()),
+          status: dto.status,
           signatures: dto.signatures
               ?.map(
                 (e) => MultiSigSignature(

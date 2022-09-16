@@ -1,6 +1,6 @@
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_status.dart';
 
 class MultiSigPendingTx {
   MultiSigPendingTx({

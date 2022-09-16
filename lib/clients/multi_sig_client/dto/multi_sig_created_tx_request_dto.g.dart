@@ -11,7 +11,9 @@ MultiSigCreatedTxRequestDto _$MultiSigCreatedTxRequestDtoFromJson(
     MultiSigCreatedTxRequestDto(
       addresses:
           (json['addresses'] as List<dynamic>).map((e) => e as String).toList(),
-      status: json['status'] as String?,
+      status: json['status'] == null
+          ? null
+          : MultiSigStatus.fromJson(json['status'] as String),
     );
 
 Map<String, dynamic> _$MultiSigCreatedTxRequestDtoToJson(
