@@ -32,7 +32,7 @@ main() {
 
   setUp(() {
     mockTransactionHandler = MockTransactionHandler();
-    when(mockTransactionHandler!.estimateGas(any, any))
+    when(mockTransactionHandler!.estimateGas(any, any, any))
         .thenAnswer((realInvocation) {
       final gasEstimate = AccountGasEstimate(100, null);
 

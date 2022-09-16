@@ -665,6 +665,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       final remoteAccount = await multiSigClient.getAccount(
         remoteId: pendingAccount.remoteId,
         signerAddress: pendingAccount.linkedAccount.address,
+        coin: pendingAccount.linkedAccount.coin,
       );
 
       if (remoteAccount != null) {

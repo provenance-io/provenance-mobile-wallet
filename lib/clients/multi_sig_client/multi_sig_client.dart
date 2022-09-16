@@ -134,8 +134,8 @@ class MultiSigClient with ClientCoinMixin {
 
   Future<List<MultiSigRemoteAccount>?> getAccounts({
     required String address,
+    required Coin coin,
   }) async {
-    final coin = getCoinFromAddress(address);
     final client = await getClient(coin);
     final path = '$_basePath/by-address/$address';
 
@@ -185,9 +185,11 @@ class MultiSigClient with ClientCoinMixin {
   Future<MultiSigRemoteAccount?> getAccount({
     required String remoteId,
     required String signerAddress,
+    required Coin coin,
   }) async {
     final accounts = await getAccounts(
       address: signerAddress,
+      coin: coin,
     );
 
     MultiSigRemoteAccount? account;
@@ -238,10 +240,10 @@ class MultiSigClient with ClientCoinMixin {
   Future<String?> createTx({
     required String multiSigAddress,
     required String signerAddress,
+    required Coin coin,
     required proto.TxBody txBody,
     required proto.Fee fee,
   }) async {
-    final coin = getCoinFromAddress(multiSigAddress);
     final client = await getClient(coin);
     const path = '$_basePath/tx/create';
 
@@ -331,10 +333,10 @@ class MultiSigClient with ClientCoinMixin {
 
   Future<bool> signTx({
     required String signerAddress,
+    required Coin coin,
     required String txUuid,
     required String signatureBytes,
   }) async {
-    final coin = getCoinFromAddress(signerAddress);
     final client = await getClient(coin);
     const path = '$_basePath/tx/sign';
 

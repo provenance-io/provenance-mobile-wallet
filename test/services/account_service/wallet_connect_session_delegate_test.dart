@@ -181,7 +181,7 @@ void main() {
     test("onApproveTransaction", () async {
       final gasEstimate = AccountGasEstimate(100, 400);
 
-      when(mockTransactionHandler.estimateGas(any, any))
+      when(mockTransactionHandler.estimateGas(any, any, any))
           .thenAnswer((_) => Future.value(gasEstimate));
 
       const requestId = 100;
@@ -215,20 +215,40 @@ void main() {
       verify(mockWalletConnectQueueService.addWalletConnectSendRequest(
           walletConnectAddr, argThat(pred)));
 
-      verify(mockTransactionHandler.estimateGas(argThat(predicate((arg) {
-        return true;
-      })), argThat(predicate((arg) {
-        final actual = (arg as List<IPubKey>)[0];
+      verify(
+        mockTransactionHandler.estimateGas(
+          argThat(
+            predicate(
+              (arg) {
+                return true;
+              },
+            ),
+          ),
+          argThat(
+            predicate(
+              (arg) {
+                final actual = (arg as List<IPubKey>)[0];
 
-        expect(actual.address, publicKey.address);
-        return true;
-      }))));
+                expect(actual.address, publicKey.address);
+                return true;
+              },
+            ),
+          ),
+          argThat(
+            predicate(
+              (arg) {
+                return true;
+              },
+            ),
+          ),
+        ),
+      );
     });
 
     test("onApproveTransaction passes on grpc error", () async {
       final error = GrpcError.cancelled("Test Cancelled");
 
-      when(mockTransactionHandler.estimateGas(any, any))
+      when(mockTransactionHandler.estimateGas(any, any, any))
           .thenAnswer((_) => Future.error(error));
 
       const requestId = 100;
