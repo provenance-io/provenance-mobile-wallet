@@ -68,7 +68,7 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
     return await (get<TransactionHandler>()).estimateGas(
       body,
-      [(account as BasicAccount).publicKey],
+      [account.publicKey],
       account.coin,
     );
   }
