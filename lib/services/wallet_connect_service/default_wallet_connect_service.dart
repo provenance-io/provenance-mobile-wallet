@@ -24,14 +24,6 @@ import 'models/wallet_connect_session_status.dart';
 import 'wallet_connect_session.dart';
 import 'wallet_connect_session_delegate.dart';
 
-//  final _keyValueService = get<KeyValueService>();
-//   final _accountService = get<AccountService>();
-//   final _connectionFactory = get<WalletConnectionFactory>();
-//   final _remoteNotificationService = get<RemoteNotificationService>();
-//   final _queueServce = get<WalletConnectQueueService>();
-//   final _transactionHandler = get<TransactionHandler>();
-//   final _localAuthHelper = get<LocalAuthHelper>();
-
 class DefaultWalletConnectService extends WalletConnectService
     with ListenableMixin, WidgetsBindingObserver
     implements Disposable {
