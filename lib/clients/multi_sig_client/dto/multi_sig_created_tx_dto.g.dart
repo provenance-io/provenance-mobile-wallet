@@ -10,6 +10,7 @@ MultiSigCreatedTxDto _$MultiSigCreatedTxDtoFromJson(
         Map<String, dynamic> json) =>
     MultiSigCreatedTxDto(
       multiSigAddress: json['multiSigAddress'] as String,
+      signerAddress: json['signerAddress'] as String,
       txUuid: json['txUuid'] as String,
       txBodyBytes: json['txBodyBytes'] as String,
       status: MultiSigStatus.fromJson(json['status'] as String),
@@ -23,6 +24,7 @@ Map<String, dynamic> _$MultiSigCreatedTxDtoToJson(
         MultiSigCreatedTxDto instance) =>
     <String, dynamic>{
       'multiSigAddress': instance.multiSigAddress,
+      'signerAddress': instance.signerAddress,
       'txUuid': instance.txUuid,
       'txBodyBytes': instance.txBodyBytes,
       'status': instance.status,

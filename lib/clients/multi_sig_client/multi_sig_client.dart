@@ -385,6 +385,7 @@ class MultiSigClient with ClientCoinMixin {
 
         result = MultiSigPendingTx(
           multiSigAddress: dto.multiSigAddress,
+          signerAddress: dto.signerAddress,
           txUuid: dto.txUuid,
           txBody: txBodyBytes.txBody,
           fee: txBodyBytes.fee,
@@ -416,6 +417,7 @@ class MultiSigClient with ClientCoinMixin {
 
         result = MultiSigPendingTx(
           multiSigAddress: dto.multiSigAddress,
+          signerAddress: dto.signerAddress,
           txUuid: dto.txUuid,
           txBody: txBodyBytes.txBody,
           fee: txBodyBytes.fee,

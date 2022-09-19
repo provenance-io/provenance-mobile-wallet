@@ -10,6 +10,7 @@ MultiSigPendingTxDto _$MultiSigPendingTxDtoFromJson(
         Map<String, dynamic> json) =>
     MultiSigPendingTxDto(
       multiSigAddress: json['multiSigAddress'] as String,
+      signerAddress: json['signerAddress'] as String,
       txUuid: json['txUuid'] as String,
       txBodyBytes: json['txBodyBytes'] as String,
     );
@@ -18,6 +19,7 @@ Map<String, dynamic> _$MultiSigPendingTxDtoToJson(
         MultiSigPendingTxDto instance) =>
     <String, dynamic>{
       'multiSigAddress': instance.multiSigAddress,
+      'signerAddress': instance.signerAddress,
       'txUuid': instance.txUuid,
       'txBodyBytes': instance.txBodyBytes,
     };
