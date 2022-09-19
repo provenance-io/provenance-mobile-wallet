@@ -43,6 +43,7 @@ enum PrefKey {
   allowProposalCreation,
   defaultChainId,
   endpoints,
+  enableMultiSig,
   httpClientDiagnostics500,
   isMockingAssetService,
   isMockingTransactionService,
