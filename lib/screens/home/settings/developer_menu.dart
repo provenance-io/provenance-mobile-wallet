@@ -64,7 +64,7 @@ class DeveloperMenu extends StatelessWidget {
             final data = snapshot.data?.data ?? false;
 
             return ToggleItem(
-              text: strings.profileDeveloperEnableMultiSig,
+              text: strings.devEnableMultiSig,
               value: data,
               onChanged: (value) async {
                 await keyValueService.setBool(

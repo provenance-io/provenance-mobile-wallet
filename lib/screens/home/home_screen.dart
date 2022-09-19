@@ -14,8 +14,8 @@ import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -26,12 +26,8 @@ import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String allMessageTypes;
-  final String allStatuses;
   const HomeScreen({
     Key? key,
-    required this.allMessageTypes,
-    required this.allStatuses,
   }) : super(key: key);
 
   @override
@@ -45,10 +41,8 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  late final _bloc = HomeBloc(
-    allMessageTypes: widget.allMessageTypes,
-    allStatuses: widget.allStatuses,
-  );
+  final _bloc = HomeBloc();
+
   final _walletConnectService = get<WalletConnectService>();
   final _multiSigService = get<MultiSigService>();
 
@@ -168,7 +162,10 @@ class HomeScreenState extends State<HomeScreen>
               physics: NeverScrollableScrollPhysics(),
               children: [
                 DashboardTab(),
-                TransactionTab(),
+                TransactionTab(
+                  allMessageTypes: strings.dropDownAllMessageTypes,
+                  allStatuses: strings.dropDownAllStatuses,
+                ),
                 ViewMoreTab(
                   onFlowCompletion: () {
                     setState(() {
@@ -192,7 +189,7 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _onSessionRequest(
-    WalletConnectSessionRequestData details,
+    SessionAction details,
   ) async {
     final strings = Strings.of(context);
     final name = details.data.clientMeta.name;

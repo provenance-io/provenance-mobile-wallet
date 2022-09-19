@@ -20,6 +20,7 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
+import 'package:provenance_wallet/services/account_notification_service/account_notification_service.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
@@ -116,6 +117,18 @@ void main(List<String> args) {
       get<CrashReportingService>().recordFlutterError(errorDetails);
     }
   };
+
+  DefaultRemoteNotificationService.onBackgroundMultiSigNotification(
+      (message) async {
+    final title = message.title;
+    if (title != null) {
+      await AccountNotificationService.addInBackground(
+        label: title,
+        created: DateTime.now(),
+      );
+    }
+  });
+
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -522,9 +535,23 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
 
-    final accountService = get<AccountService>();
     final remoteNotificationService = get<RemoteNotificationService>();
 
+    final accountNotificationService = AccountNotificationService();
+    get.registerSingleton<AccountNotificationService>(
+        accountNotificationService);
+
+    remoteNotificationService.multiSig.listen((e) {
+      final title = e.title;
+      if (title != null) {
+        accountNotificationService.add(
+          label: title,
+          created: DateTime.now(),
+        );
+      }
+    }).addTo(_subscriptions);
+
+    final accountService = get<AccountService>();
     final accounts = await accountService.getAccounts();
     for (var account in accounts) {
       final address = account.address;
@@ -580,7 +607,13 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {
-      switch (e.topic) {
+      final data = e.data;
+      final address = data.address;
+      if (address == null) {
+        return;
+      }
+
+      switch (data.topic) {
         case MultiSigTopic.accountComplete:
           _activatePendingMultiAccounts();
           break;
@@ -588,7 +621,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case MultiSigTopic.txReady:
         case MultiSigTopic.txResult:
           multiSigService.sync(
-            signerAddresses: [e.address],
+            signerAddresses: [address],
           );
           break;
       }

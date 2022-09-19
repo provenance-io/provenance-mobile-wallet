@@ -33,10 +33,7 @@ class StartScreenState extends State<StartScreen> {
         var strings = Strings.of(context);
 
         return (snapshot.data == AuthStatus.authenticated)
-            ? HomeScreen(
-                allMessageTypes: strings.dropDownAllMessageTypes,
-                allStatuses: strings.dropDownAllStatuses,
-              )
+            ? HomeScreen()
             : LandingScreen();
       },
     );

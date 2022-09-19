@@ -9,6 +9,8 @@ import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
+import 'package:provenance_wallet/services/account_notification_service/account_notification_service.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provider/provider.dart';
 
 import './action_list_screen_test.mocks.dart';
@@ -51,7 +53,17 @@ main() {
       ));
     }
 
-    setUp(() {
+    setUp(() async {
+      final accountNotificationService = AccountNotificationService(
+        inMemory: true,
+      );
+      await accountNotificationService.add(
+        label: 'Test',
+        created: DateTime.now(),
+      );
+
+      get.registerSingleton(accountNotificationService);
+
       _streamController = StreamController<ActionListBlocState>();
 
       mockBloc = MockActionListBloc();
@@ -59,8 +71,10 @@ main() {
       when(mockBloc.stream).thenAnswer((_) => _streamController.stream);
     });
 
-    tearDown(() {
+    tearDown(() async {
       _streamController.close();
+
+      get.unregister<AccountNotificationService>();
     });
 
     testWidgets("empty screen when there is no state", (tester) async {
@@ -73,24 +87,18 @@ main() {
 
     testWidgets("empty screen when there is no state", (tester) async {
       await _build(tester);
-      _streamController.add(ActionListBlocState([
-        ActionListGroup(
-          accountId: 'test',
-          label: "ActionLabel",
-          subLabel: "ActionSubLabel",
-          isSelected: true,
-          isBasicAccount: true,
-          items: [],
-        )
-      ], [
-        NotificationItem(
-          label: "Notification",
-          created: DateTime.fromMillisecondsSinceEpoch(100),
-        ),
-        NotificationItem(
-            label: "Notification2",
-            created: DateTime.fromMillisecondsSinceEpoch(25))
-      ]));
+      _streamController.add(ActionListBlocState(
+        [
+          ActionListGroup(
+            accountId: 'test',
+            label: "ActionLabel",
+            subLabel: "ActionSubLabel",
+            isSelected: true,
+            isBasicAccount: true,
+            items: [],
+          )
+        ],
+      ));
 
       await tester.pumpAndSettle(); // let the builder complete
 
@@ -106,7 +114,7 @@ main() {
       expect(notificationTabFind, findsOneWidget);
       expect(actionTabFind, findsOneWidget);
 
-      expect(tester.widget<ActionListTab>(notificationTabFind).count, 2);
+      expect(tester.widget<ActionListTab>(notificationTabFind).count, 1);
       expect(tester.widget<ActionListTab>(actionTabFind).count, 1);
 
       await tester.tap(notificationTabFind);

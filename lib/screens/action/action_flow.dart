@@ -7,8 +7,8 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/screens/action/action_list/action_list_screen.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -60,8 +60,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
   /* ActionListNavigator */
   @override
-  Future<bool> showApproveSession(
-      WalletConnectSessionRequestData sessionRequestData) async {
+  Future<bool> showApproveSession(SessionAction sessionRequestData) async {
     final name = sessionRequestData.data.clientMeta.name;
 
     return PwModalScreen.showConfirm(
@@ -79,7 +78,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
   @override
   Future<bool> showApproveSign(
-      SignRequest signRequest, ClientMeta clientMeta) async {
+      SignAction signRequest, ClientMeta clientMeta) async {
     return showGeneralDialog<bool>(
       context: context,
       pageBuilder: (
