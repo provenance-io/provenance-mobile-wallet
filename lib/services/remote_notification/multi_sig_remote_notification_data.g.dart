@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'multi_sig_remote_notification.dart';
+part of 'multi_sig_remote_notification_data.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MultiSigRemoteNotification _$MultiSigRemoteNotificationFromJson(
+MultiSigRemoteNotificationData _$MultiSigRemoteNotificationDataFromJson(
         Map<String, dynamic> json) =>
-    MultiSigRemoteNotification(
+    MultiSigRemoteNotificationData(
       topic: MultiSigTopic.fromJson(json['topic'] as String),
       address: json['address'] as String?,
       txUuid: json['txUuid'] as String?,
@@ -17,8 +17,8 @@ MultiSigRemoteNotification _$MultiSigRemoteNotificationFromJson(
       status: json['status'] as String?,
     );
 
-Map<String, dynamic> _$MultiSigRemoteNotificationToJson(
-        MultiSigRemoteNotification instance) =>
+Map<String, dynamic> _$MultiSigRemoteNotificationDataToJson(
+        MultiSigRemoteNotificationData instance) =>
     <String, dynamic>{
       'topic': instance.topic,
       'address': instance.address,

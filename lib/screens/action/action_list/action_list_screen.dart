@@ -4,6 +4,9 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
+import 'package:provenance_wallet/services/account_notification_service/account_notification_service.dart';
+import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +41,7 @@ class ActionListScreen extends StatefulWidget {
 class ActionListScreenState extends State<ActionListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final _notificationService = get<AccountNotificationService>();
 
   @override
   void initState() {
@@ -80,10 +84,20 @@ class ActionListScreenState extends State<ActionListScreen>
                             label:
                                 Strings.of(context).actionListActionsCellTitle,
                             count: state.actionGroups.length),
-                        ActionListTab(
-                            label: Strings.of(context)
-                                .actionListNotificationsCellTitle,
-                            count: state.notificationGroups.length),
+                        StreamBuilder<List<NotificationItem>>(
+                            initialData:
+                                _notificationService.notifications.valueOrNull,
+                            stream: _notificationService.notifications,
+                            builder: (context, snapshot) {
+                              final notificationCount =
+                                  snapshot.data?.length ?? 0;
+
+                              return ActionListTab(
+                                label: Strings.of(context)
+                                    .actionListNotificationsCellTitle,
+                                count: notificationCount,
+                              );
+                            }),
                       ],
                       controller: _tabController,
                     ),
@@ -91,11 +105,22 @@ class ActionListScreenState extends State<ActionListScreen>
                         child:
                             TabBarView(controller: _tabController, children: [
                       ActionList(groups: state.actionGroups),
-                      NotificationList(
-                        items: state.notificationGroups,
-                        onItemsDeleted: (v) =>
-                            _onDeleteNotificationItems(context, v),
-                      )
+                      StreamBuilder<List<NotificationItem>>(
+                          initialData:
+                              _notificationService.notifications.valueOrNull,
+                          stream: _notificationService.notifications,
+                          builder: (context, snapshot) {
+                            final notifications = snapshot.data;
+                            if (notifications == null) {
+                              return Container();
+                            }
+
+                            return NotificationList(
+                              items: notifications,
+                              onItemsDeleted: (v) =>
+                                  _onDeleteNotificationItems(context, v),
+                            );
+                          })
                     ]))
                   ],
                 ),
@@ -117,7 +142,8 @@ class ActionListScreenState extends State<ActionListScreen>
       return;
     }
 
-    final bloc = Provider.of<ActionListBloc>(context, listen: false);
-    return bloc.deleteNotifications(deletedItems);
+    final ids = deletedItems.map((e) => e.id).toList();
+
+    await _notificationService.delete(ids: ids);
   }
 }

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart';
+import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification_data.dart';
 import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/util/lazy.dart';
@@ -19,7 +20,7 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
   final Set<String> _registrations = {};
   final _firebaseMessaging = FirebaseMessaging.instance;
   final _multiSig = PublishSubject<MultiSigRemoteNotification>();
-  final _multiSigTopics = MultiSigTopic.values.map((e) => e.id).toSet();
+  static final _multiSigTopics = MultiSigTopic.values.map((e) => e.id).toSet();
   late final Lazy<Future<void>> _lazyInit;
 
   @override
@@ -27,6 +28,23 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
 
   @override
   bool isRegistered(String topic) => _registrations.contains(topic);
+
+  ///
+  /// This method runs in its own isolate outside the application context, so
+  /// it is not possible to update application state or execute any UI
+  /// impacting logic.
+  ///
+  /// See https://firebase.flutter.dev/docs/messaging/usage/#background-messages
+  ///
+  static void onBackgroundMultiSigNotification(
+      Future<void> Function(MultiSigRemoteNotification message) callback) {
+    FirebaseMessaging.onBackgroundMessage((rm) async {
+      final notification = _fromMessage(rm);
+      if (notification != null) {
+        await callback.call(notification);
+      }
+    });
+  }
 
   @override
   FutureOr onDispose() {
@@ -92,28 +110,31 @@ class DefaultRemoteNotificationService extends RemoteNotificationService
 
     FirebaseMessaging.onMessage.listen(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage);
-    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
   }
 
   Future<void> _onMessage(RemoteMessage message) async {
     logDebug('Received firebase message: ${message.data}');
 
-    final dataTopic = message.data['topic'] as String?;
-    if (_multiSigTopics.contains(dataTopic)) {
-      final notification = MultiSigRemoteNotification.fromJson(message.data);
+    final notification = _fromMessage(message);
+    if (notification != null) {
       _multiSig.add(notification);
     }
   }
 
-  ///
-  /// This method runs in its own isolate outside the application context, so
-  /// it is not possible to update application state or execute any UI
-  /// impacting logic.
-  ///
-  /// See https://firebase.flutter.dev/docs/messaging/usage/#background-messages
-  ///
-  static Future<void> _onBackgroundMessage(RemoteMessage message) async {
-    Log.instance.debug('Received firebase message: ${message.data}',
-        tag: '$DefaultRemoteNotificationService');
+  static MultiSigRemoteNotification? _fromMessage(RemoteMessage message) {
+    MultiSigRemoteNotification? result;
+
+    final dataTopic = message.data['topic'] as String?;
+    if (_multiSigTopics.contains(dataTopic)) {
+      final data = MultiSigRemoteNotificationData.fromJson(message.data);
+
+      result = MultiSigRemoteNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+        data: data,
+      );
+    }
+
+    return result;
   }
 }

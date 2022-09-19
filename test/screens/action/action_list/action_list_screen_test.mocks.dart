@@ -29,14 +29,6 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
   }
 
   @override
-  List<_i2.NotificationItem> get notifications =>
-      (super.noSuchMethod(Invocation.getter(#notifications),
-          returnValue: <_i2.NotificationItem>[]) as List<_i2.NotificationItem>);
-  @override
-  set notifications(List<_i2.NotificationItem>? _notifications) =>
-      super.noSuchMethod(Invocation.setter(#notifications, _notifications),
-          returnValueForMissingStub: null);
-  @override
   _i3.Stream<_i2.ActionListBlocState> get stream =>
       (super.noSuchMethod(Invocation.getter(#stream),
               returnValue: _i3.Stream<_i2.ActionListBlocState>.empty())
@@ -45,14 +37,6 @@ class MockActionListBloc extends _i1.Mock implements _i2.ActionListBloc {
   _i3.Future<void> init() => (super.noSuchMethod(Invocation.method(#init, []),
       returnValue: _i3.Future<void>.value(),
       returnValueForMissingStub: _i3.Future<void>.value()) as _i3.Future<void>);
-  @override
-  _i3.Future<void> deleteNotifications(
-          List<_i2.NotificationItem>? notifications) =>
-      (super.noSuchMethod(
-              Invocation.method(#deleteNotifications, [notifications]),
-              returnValue: _i3.Future<void>.value(),
-              returnValueForMissingStub: _i3.Future<void>.value())
-          as _i3.Future<void>);
   @override
   _i3.Future<bool> requestApproval(
           _i2.ActionListGroup? group, _i2.ActionListItem? item) =>

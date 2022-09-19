@@ -1,8 +1,8 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
+import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
 
 extension _WidgetTesterHelper on WidgetTester {
   Future<void> tapAndSettle(Finder finder) {
@@ -16,7 +16,10 @@ main() {
     AnimationController? animationController;
 
     final item = NotificationItem(
-        created: DateTime.fromMillisecondsSinceEpoch(1000), label: "TestLabel");
+      id: '1',
+      created: DateTime.fromMillisecondsSinceEpoch(1000),
+      label: "TestLabel",
+    );
 
     Future<void> _build(WidgetTester tester, NotificationItem item,
         ValueNotifier<bool> selected, Animation<double> animation) async {
@@ -116,9 +119,15 @@ main() {
 
   group("NotificationList", () {
     final item1 = NotificationItem(
-        label: "item1", created: DateTime.fromMillisecondsSinceEpoch(1000));
+      id: '1',
+      label: "item1",
+      created: DateTime.fromMillisecondsSinceEpoch(1000),
+    );
     final item2 = NotificationItem(
-        label: "item2", created: DateTime.fromMillisecondsSinceEpoch(3000));
+      id: '2',
+      label: "item2",
+      created: DateTime.fromMillisecondsSinceEpoch(3000),
+    );
 
     Future<void> _build(WidgetTester tester, List<NotificationItem> items,
         NotificationItemsDelegate itemsDeletedDelegate) async {
