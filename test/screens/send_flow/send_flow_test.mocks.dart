@@ -259,22 +259,24 @@ class MockTransactionHandler extends _i1.Mock
           as _i7.Stream<_i16.TransactionResponse>);
   @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
-          _i4.TxBody? txBody, List<_i9.IPubKey>? signers) =>
-      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, signers]),
+          _i4.TxBody? txBody, List<_i9.IPubKey>? signers, _i9.Coin? coin) =>
+      (super.noSuchMethod(
+              Invocation.method(#estimateGas, [txBody, signers, coin]),
               returnValue: _i7.Future<_i3.AccountGasEstimate>.value(
-                  _FakeAccountGasEstimate_1(this,
-                      Invocation.method(#estimateGas, [txBody, signers]))))
+                  _FakeAccountGasEstimate_1(
+                      this,
+                      Invocation.method(
+                          #estimateGas, [txBody, signers, coin]))))
           as _i7.Future<_i3.AccountGasEstimate>);
   @override
   _i7.Future<_i4.RawTxResponsePair> executeTransaction(
-          _i4.TxBody? txBody, _i9.IPrivKey? privateKey,
+          _i4.TxBody? txBody, _i9.IPrivKey? privateKey, _i9.Coin? coin,
           [_i3.AccountGasEstimate? gasEstimate]) =>
-      (super.noSuchMethod(Invocation.method(#executeTransaction, [txBody, privateKey, gasEstimate]),
-              returnValue: _i7.Future<_i4.RawTxResponsePair>.value(
-                  _FakeRawTxResponsePair_2(
-                      this,
-                      Invocation.method(
-                          #executeTransaction, [txBody, privateKey, gasEstimate]))))
+      (super.noSuchMethod(Invocation.method(#executeTransaction, [txBody, privateKey, coin, gasEstimate]),
+              returnValue: _i7.Future<_i4.RawTxResponsePair>.value(_FakeRawTxResponsePair_2(
+                  this,
+                  Invocation.method(
+                      #executeTransaction, [txBody, privateKey, coin, gasEstimate]))))
           as _i7.Future<_i4.RawTxResponsePair>);
 }
 

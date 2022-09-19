@@ -57,6 +57,7 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
     final response = await get<TransactionHandler>().executeTransaction(
       body,
       privateKey!.defaultKey(),
+      account.coin,
       estimate,
     );
 
@@ -65,7 +66,10 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    return await (get<TransactionHandler>())
-        .estimateGas(body, [(account as BasicAccount).publicKey]);
+    return await (get<TransactionHandler>()).estimateGas(
+      body,
+      [account.publicKey],
+      account.coin,
+    );
   }
 }

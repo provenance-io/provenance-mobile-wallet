@@ -15,7 +15,6 @@ import 'package:provenance_wallet/services/models/wallet_connect_session_restore
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -28,7 +27,21 @@ import 'wallet_connect_session_delegate.dart';
 class DefaultWalletConnectService extends WalletConnectService
     with ListenableMixin, WidgetsBindingObserver
     implements Disposable {
-  DefaultWalletConnectService() {
+  DefaultWalletConnectService({
+    required KeyValueService keyValueService,
+    required AccountService accountService,
+    required WalletConnectionFactory connectionFactory,
+    required RemoteNotificationService notificationService,
+    required WalletConnectQueueService queueService,
+    required TransactionHandler transactionHandler,
+    required LocalAuthHelper localAuthHelper,
+  })  : _keyValueService = keyValueService,
+        _accountService = accountService,
+        _connectionFactory = connectionFactory,
+        _remoteNotificationService = notificationService,
+        _queueServce = queueService,
+        _transactionHandler = transactionHandler,
+        _localAuthHelper = localAuthHelper {
     WidgetsBinding.instance.addObserver(this);
 
     _authSubscription = _localAuthHelper.status.listen((authStatus) {
@@ -48,14 +61,13 @@ class DefaultWalletConnectService extends WalletConnectService
 
   final _accountServiceSubscriptions = CompositeSubscription();
 
-  // TODO-Roy: Move these dependencies to the constructor for visibility
-  final _keyValueService = get<KeyValueService>();
-  final _accountService = get<AccountService>();
-  final _connectionFactory = get<WalletConnectionFactory>();
-  final _remoteNotificationService = get<RemoteNotificationService>();
-  final _queueServce = get<WalletConnectQueueService>();
-  final _transactionHandler = get<TransactionHandler>();
-  final _localAuthHelper = get<LocalAuthHelper>();
+  final KeyValueService _keyValueService;
+  final AccountService _accountService;
+  final WalletConnectionFactory _connectionFactory;
+  final RemoteNotificationService _remoteNotificationService;
+  final WalletConnectQueueService _queueServce;
+  final TransactionHandler _transactionHandler;
+  final LocalAuthHelper _localAuthHelper;
 
   late StreamSubscription _authSubscription;
 

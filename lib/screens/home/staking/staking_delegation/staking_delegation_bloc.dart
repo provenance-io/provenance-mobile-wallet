@@ -186,6 +186,7 @@ class StakingDelegationBloc extends Disposable {
     final response = await get<TransactionHandler>().executeTransaction(
       body,
       privateKey!.defaultKey(),
+      _account.coin,
       estimate,
     );
 
@@ -194,8 +195,11 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    return await (get<TransactionHandler>())
-        .estimateGas(body, [(_account as BasicAccount).publicKey]);
+    return await (get<TransactionHandler>()).estimateGas(
+      body,
+      [_account.publicKey],
+      _account.coin,
+    );
   }
 }
 

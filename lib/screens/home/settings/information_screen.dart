@@ -7,7 +7,7 @@ import 'package:provenance_wallet/screens/home/settings/link_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InformationScreen extends StatelessWidget {
   const InformationScreen({
@@ -65,8 +65,8 @@ class InformationScreen extends StatelessWidget {
   }
 
   void launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     } else {
       throw 'Could not launch $url';
     }

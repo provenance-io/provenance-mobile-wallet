@@ -272,11 +272,13 @@ void main(List<String> args) {
 
       final directory = await getApplicationDocumentsDirectory();
       await directory.create(recursive: true);
+
       get.registerSingleton<WalletConnectQueueService>(
-          WalletConnectQueueService(
-        factory: databaseFactoryIo,
-        directory: directory.absolute.path,
-      ));
+        WalletConnectQueueService(
+          factory: databaseFactoryIo,
+          directory: directory.absolute.path,
+        ),
+      );
 
       final json = args.firstOrNull;
 
@@ -521,9 +523,10 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<GasFeeService>(
       () => DefaultGasFeeService(),
     );
-    get.registerLazySingleton<WalletConnectionFactory>(
-      () => (address) => WalletConnection(address),
-    );
+
+    WalletConnection walletConnectionFactory(address) =>
+        WalletConnection(address);
+    get.registerSingleton<WalletConnectionFactory>(walletConnectionFactory);
     final transactionHandler = DefaultTransactionHandler();
     get.registerSingleton<TransactionHandler>(
       transactionHandler,
@@ -533,9 +536,21 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       () => PriceService(),
     );
 
-    get.registerSingleton<WalletConnectService>(DefaultWalletConnectService());
-
+    final accountService = get<AccountService>();
     final remoteNotificationService = get<RemoteNotificationService>();
+    final walletConnectQueueService = get<WalletConnectQueueService>();
+
+    get.registerSingleton<WalletConnectService>(
+      DefaultWalletConnectService(
+        keyValueService: keyValueService,
+        accountService: accountService,
+        connectionFactory: walletConnectionFactory,
+        notificationService: remoteNotificationService,
+        queueService: walletConnectQueueService,
+        transactionHandler: transactionHandler,
+        localAuthHelper: authHelper,
+      ),
+    );
 
     final accountNotificationService = AccountNotificationService();
     get.registerSingleton<AccountNotificationService>(
@@ -551,7 +566,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    final accountService = get<AccountService>();
     final accounts = await accountService.getAccounts();
     for (var account in accounts) {
       final address = account.address;
@@ -651,6 +665,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       final remoteAccount = await multiSigClient.getAccount(
         remoteId: pendingAccount.remoteId,
         signerAddress: pendingAccount.linkedAccount.address,
+        coin: pendingAccount.linkedAccount.coin,
       );
 
       if (remoteAccount != null) {

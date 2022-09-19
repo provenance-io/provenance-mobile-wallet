@@ -14,7 +14,7 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DepositConfirmScreen extends StatefulWidget {
   const DepositConfirmScreen({
@@ -135,8 +135,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                             GestureDetector(
                               onTap: () async {
                                 String url = _bloc.getProvUrl();
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                if (await canLaunchUrlString(url)) {
+                                  await launchUrlString(url);
                                 } else {
                                   throw 'Could not launch $url';
                                 }

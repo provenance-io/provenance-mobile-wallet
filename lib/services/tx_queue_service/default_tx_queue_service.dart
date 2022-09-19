@@ -49,6 +49,7 @@ class DefaultQueueTxService implements TxQueueService {
         [
           account.publicKey,
         ],
+        account.coin,
       );
 
   @override
@@ -97,6 +98,7 @@ class DefaultQueueTxService implements TxQueueService {
 
         final remoteId = await _multiSigClient.createTx(
           multiSigAddress: address,
+          coin: multiAccount.coin,
           signerAddress: signerAddress,
           txBody: txBody,
           fee: fee,
@@ -207,6 +209,7 @@ class DefaultQueueTxService implements TxQueueService {
     final response = await _transactionHandler.executeTransaction(
       model.txBody,
       privateKey.defaultKey(),
+      account.coin,
     );
 
     result = TxResult(
@@ -245,6 +248,7 @@ class DefaultQueueTxService implements TxQueueService {
     final response = await _transactionHandler.executeTransaction(
       model.txBody,
       aminoKey,
+      account.coin,
     );
 
     return TxResult(
