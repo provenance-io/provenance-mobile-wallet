@@ -7,18 +7,18 @@ import 'dart:async' as _i5;
 import 'dart:ui' as _i9;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_wallet/services/account_service/wallet_connect_session.dart'
-    as _i2;
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_delegate.dart'
-    as _i3;
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart'
-    as _i8;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
     as _i6;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
     as _i4;
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart'
+    as _i8;
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart'
     as _i7;
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session.dart'
+    as _i2;
+import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart'
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -105,7 +105,7 @@ class MockWalletConnectService extends _i1.Mock
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
   _i5.Future<bool> approveSession(
-          {_i8.WalletConnectSessionRequestData? details, bool? allowed}) =>
+          {_i8.SessionAction? details, bool? allowed}) =>
       (super.noSuchMethod(
           Invocation.method(
               #approveSession, [], {#details: details, #allowed: allowed}),
@@ -114,12 +114,6 @@ class MockWalletConnectService extends _i1.Mock
   _i5.Future<bool> connectSession(String? accountId, String? addressData) =>
       (super.noSuchMethod(
           Invocation.method(#connectSession, [accountId, addressData]),
-          returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
-  @override
-  _i5.Future<bool> signTransactionFinish({String? requestId, bool? allowed}) =>
-      (super.noSuchMethod(
-          Invocation.method(#signTransactionFinish, [],
-              {#requestId: requestId, #allowed: allowed}),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
   _i5.Future<bool> sendMessageFinish({String? requestId, bool? allowed}) =>

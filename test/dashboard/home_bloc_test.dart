@@ -312,10 +312,7 @@ class TestState {
     get.registerSingleton<TransactionHandler>(
       DefaultTransactionHandler(),
     );
-    final bloc = HomeBloc(
-      allMessageTypes: "All Message Types",
-      allStatuses: "All Statuses",
-    );
+    final bloc = HomeBloc();
 
     await pumpEventQueue();
 

@@ -12,12 +12,14 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_error.d
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/requests/send_request.dart';
-import 'package:provenance_wallet/services/models/requests/sign_request.dart';
-import 'package:provenance_wallet/services/models/wallet_connect_session_request_data.dart';
 import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action_kind.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -25,10 +27,9 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 abstract class ActionListNavigator {
-  Future<bool> showApproveSession(
-      WalletConnectSessionRequestData sessionRequestData);
+  Future<bool> showApproveSession(SessionAction sessionRequestData);
 
-  Future<bool> showApproveSign(SignRequest signRequest, ClientMeta clientMeta);
+  Future<bool> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
 
   Future<bool> showApproveTransaction({
     required List<p.GeneratedMessage> messages,
@@ -62,10 +63,10 @@ class _WalletConnectActionItem extends ActionListItem {
   _WalletConnectActionItem({
     required LocalizedString label,
     required LocalizedString subLabel,
-    required this.payload,
+    required this.action,
   }) : super(label: label, subLabel: subLabel);
 
-  final dynamic payload;
+  final WalletConnectAction action;
 }
 
 class ActionListGroup {
@@ -268,20 +269,24 @@ class ActionListBloc extends Disposable {
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
-          LocalizedString label;
-          if (entry.value is WalletConnectSessionRequestData) {
-            label = (c) => Strings.of(c).actionListLabelApproveSession;
-          } else if (entry.value is SignRequest) {
-            label = (c) => Strings.of(c).actionListLabelSignatureRequested;
-          } else if (entry.value is SendRequest) {
-            label = (c) => Strings.of(c).actionListLabelTransactionRequested;
-          } else {
-            label = (c) => Strings.of(c).actionListLabelUnknown;
+          LocalizedString label = (c) => Strings.of(c).actionListLabelUnknown;
+
+          switch (entry.value.kind) {
+            case WalletConnectActionKind.session:
+              label = (c) => Strings.of(c).actionListLabelApproveSession;
+              break;
+            case WalletConnectActionKind.send:
+              label = (c) => Strings.of(c).actionListLabelTransactionRequested;
+              break;
+            case WalletConnectActionKind.sign:
+              label = (c) => Strings.of(c).actionListLabelSignatureRequested;
+              break;
           }
+
           return _WalletConnectActionItem(
             label: label,
             subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-            payload: entry.value,
+            action: entry.value,
           );
         }).toList(),
       );
@@ -323,20 +328,24 @@ class ActionListBloc extends Disposable {
 
   Future<bool> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
-    final payload = item.payload;
+    final action = item.action;
 
-    if (payload is WalletConnectSessionRequestData) {
-      return _navigator.showApproveSession(payload);
-    } else if (payload is SignRequest) {
-      return _navigator.showApproveSign(payload, group._queueGroup.clientMeta!);
-    } else if (payload is SendRequest) {
-      return _navigator.showApproveTransaction(
-        messages: payload.messages,
-        fees: payload.gasEstimate.totalFees,
-        clientMeta: group._queueGroup.clientMeta,
-      );
-    } else {
-      throw Exception("Unknown action type ${item.runtimeType}");
+    switch (action.kind) {
+      case WalletConnectActionKind.session:
+        return _navigator.showApproveSession(action as SessionAction);
+      case WalletConnectActionKind.send:
+        final sendAction = action as SendAction;
+
+        return _navigator.showApproveTransaction(
+          messages: sendAction.messages,
+          fees: sendAction.gasEstimate.totalFees,
+          clientMeta: group._queueGroup.clientMeta,
+        );
+      case WalletConnectActionKind.sign:
+        return _navigator.showApproveSign(
+          action as SignAction,
+          group._queueGroup.clientMeta!,
+        );
     }
   }
 
@@ -344,21 +353,22 @@ class ActionListBloc extends Disposable {
       _WalletConnectActionGroup group, _WalletConnectActionItem item) async {
     final walletConnectService = get<WalletConnectService>();
 
-    final payload = item.payload;
+    final action = item.action;
 
-    if (payload is WalletConnectSessionRequestData) {
-      await walletConnectService.approveSession(
-        details: payload,
-        allowed: approved,
-      );
-    } else if (payload is SignRequest) {
-      await walletConnectService.sendMessageFinish(
-          requestId: payload.id, allowed: approved);
-    } else if (payload is SendRequest) {
-      await walletConnectService.sendMessageFinish(
-          requestId: payload.id, allowed: approved);
-    } else {
-      throw Exception("Unknown action type ${item.runtimeType}");
+    switch (action.kind) {
+      case WalletConnectActionKind.session:
+        await walletConnectService.approveSession(
+          details: action as SessionAction,
+          allowed: approved,
+        );
+        break;
+      case WalletConnectActionKind.send:
+      case WalletConnectActionKind.sign:
+        await walletConnectService.sendMessageFinish(
+          requestId: action.id,
+          allowed: approved,
+        );
+        break;
     }
   }
 
@@ -479,6 +489,10 @@ class ActionListBloc extends Disposable {
     final status = success ? 'succeeded' : 'failed';
 
     logDebug('Sign tx ${item.txUuid} $status');
+
+    if (!success) {
+      throw ActionListError.multiSigSendSignatureFailed;
+    }
   }
 
   Future<List<int>> _sign({

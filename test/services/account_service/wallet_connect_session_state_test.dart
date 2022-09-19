@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_state.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_session_state.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_session_status.dart';
 
 main() {
   test("disconnected", () {

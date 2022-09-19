@@ -580,6 +580,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
     final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {
+      final address = e.address;
+      if (address == null) {
+        return;
+      }
+
       switch (e.topic) {
         case MultiSigTopic.accountComplete:
           _activatePendingMultiAccounts();
@@ -588,7 +593,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         case MultiSigTopic.txReady:
         case MultiSigTopic.txResult:
           multiSigService.sync(
-            signerAddresses: [e.address],
+            signerAddresses: [address],
           );
           break;
       }

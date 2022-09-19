@@ -1,11 +1,12 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
+import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class AssetChartRecentTransactions extends StatelessWidget {
   const AssetChartRecentTransactions({Key? key, required this.asset})
@@ -14,7 +15,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
   final Asset asset;
   @override
   Widget build(BuildContext context) {
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<TransactionsBloc>(context);
 
     return Column(
       children: [

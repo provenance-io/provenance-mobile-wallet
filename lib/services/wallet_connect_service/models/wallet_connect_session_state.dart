@@ -1,5 +1,6 @@
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/services/account_service/wallet_connect_session_status.dart';
+
+import 'wallet_connect_session_status.dart';
 
 class WalletConnectSessionState {
   const WalletConnectSessionState.disconnected()
