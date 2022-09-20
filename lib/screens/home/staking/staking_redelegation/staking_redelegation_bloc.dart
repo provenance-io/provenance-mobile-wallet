@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_staking.dart' as staking;
+import 'package:provenance_dart/proto_staking_v1beta1.dart' as staking;
+import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -17,7 +18,6 @@ import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StakingRedelegationBloc extends Disposable {

@@ -1,4 +1,5 @@
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -12,7 +13,6 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/sign_ac
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provenance_wallet/util/type_registry.dart';
 import 'package:provider/provider.dart';
 
 class ActionFlow extends FlowBase {
