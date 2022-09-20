@@ -61,15 +61,15 @@ class DeveloperMenu extends StatelessWidget {
               return Container();
             }
 
-            final data = snapshot.data?.data ?? false;
+            final shouldEnableMultiSig = snapshot.data?.data ?? false;
 
             return ToggleItem(
               text: strings.devEnableMultiSig,
-              value: data,
+              value: shouldEnableMultiSig,
               onChanged: (value) async {
                 await keyValueService.setBool(
                   PrefKey.enableMultiSig,
-                  !data,
+                  !shouldEnableMultiSig,
                 );
                 get<HomeBloc>().load();
               },
@@ -87,17 +87,17 @@ class DeveloperMenu extends StatelessWidget {
               return Container();
             }
 
-            final bool = snapshot.data?.data ?? false;
+            final shouldAllowProposalCreation = snapshot.data?.data ?? false;
 
             return ToggleItem(
               text: strings.developerMenuAllowProposalCreation,
-              value: bool,
+              value: shouldAllowProposalCreation,
               onChanged: (value) async {
                 await keyValueService.setBool(
                   PrefKey.allowProposalCreation,
-                  !bool,
+                  !shouldAllowProposalCreation,
                 );
-                if (!bool) {
+                if (!shouldAllowProposalCreation) {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
