@@ -209,10 +209,6 @@ class _HiddenProposalCreationScreenState
                       enabled: details.title.isNotEmpty &&
                           details.description.isNotEmpty,
                       onPressed: () async {
-                        await ModalLoadingRoute.showLoading(
-                          context,
-                          minDisplayTime: Duration(milliseconds: 500),
-                        );
                         await _sendProposal(_gasEstimate, context);
                       },
                       child: PwText(
@@ -236,9 +232,22 @@ class _HiddenProposalCreationScreenState
     BuildContext context,
   ) async {
     final navigator = Navigator.of(context);
-    try {
-      final response = await _bloc.sendTransaction(gasEstimate);
-      ModalLoadingRoute.dismiss(context);
+    Object? error;
+    Object? response;
+
+    await ModalLoadingRoute.showLoading(
+      context,
+      minDisplayTime: Duration(milliseconds: 500),
+      toComplete: () async {
+        try {
+          response = await _bloc.sendTransaction(gasEstimate);
+        } catch (err) {
+          error = err;
+        }
+      },
+    );
+
+    if (error == null) {
       navigator.push(
         PwTransactionCompleteScreen(
           title: Strings.of(context).devProposalComplete,
@@ -255,20 +264,15 @@ class _HiddenProposalCreationScreenState
           },
         ).route(),
       );
-    } catch (err) {
-      await _showErrorModal(err, context);
+    } else {
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            error: error.toString(),
+          );
+        },
+      );
     }
-  }
-
-  Future<void> _showErrorModal(Object error, BuildContext context) async {
-    ModalLoadingRoute.dismiss(context);
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: error.toString(),
-        );
-      },
-    );
   }
 }

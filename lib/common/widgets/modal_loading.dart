@@ -1,5 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
+typedef AwaitedFunction = Future<void> Function();
+
 class ModalLoading extends StatefulWidget {
   const ModalLoading({
     Key? key,
@@ -94,17 +96,23 @@ class ModalLoadingRoute extends PopupRoute {
     instance = null;
   }
 
+  // TODO: Refactor this so you have to pass in an awaited function.
+
   static showLoading(
     BuildContext context, {
     Duration? minDisplayTime,
+    AwaitedFunction? toComplete,
   }) async {
     if (instance != null) {
       instance?.loadingState.currentState?.updateMessage("");
     } else {
       instance = ModalLoadingRoute(theme: Theme.of(context));
       Navigator.of(context, rootNavigator: true).push(instance!);
-      if (minDisplayTime == null) return;
-      await Future.delayed(minDisplayTime);
+      await Future.delayed(minDisplayTime ?? Duration(milliseconds: 0));
+      if (toComplete != null) {
+        await toComplete();
+        await dismiss(context);
+      }
     }
   }
 
