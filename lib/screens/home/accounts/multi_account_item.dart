@@ -85,10 +85,9 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 kind: widget._initialAccount.kind,
                 isSelected: _isSelected,
               ),
-              if (_account.coin != null)
-                AccountNetworkRow(
-                  coin: _account.coin!,
-                ),
+              AccountNetworkRow(
+                coin: _account.coin,
+              ),
               if (widget._initialAccount.address == null)
                 PwText(
                   Strings.of(context).accountStatusPending,

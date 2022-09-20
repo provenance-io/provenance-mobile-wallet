@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 
 part 'multi_sig_created_tx_request_dto.g.dart';
 
@@ -10,7 +11,7 @@ class MultiSigCreatedTxRequestDto {
   });
 
   final List<String> addresses;
-  final String? status;
+  final MultiSigStatus? status;
 
   factory MultiSigCreatedTxRequestDto.fromJson(Map<String, dynamic> json) =>
       _$MultiSigCreatedTxRequestDtoFromJson(json);

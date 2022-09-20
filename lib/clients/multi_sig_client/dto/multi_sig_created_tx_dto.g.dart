@@ -12,7 +12,7 @@ MultiSigCreatedTxDto _$MultiSigCreatedTxDtoFromJson(
       multiSigAddress: json['multiSigAddress'] as String,
       txUuid: json['txUuid'] as String,
       txBodyBytes: json['txBodyBytes'] as String,
-      status: json['status'] as String,
+      status: MultiSigStatus.fromJson(json['status'] as String),
       signatures: (json['signatures'] as List<dynamic>?)
           ?.map(
               (e) => MultiSigTxSignatureDto.fromJson(e as Map<String, dynamic>))

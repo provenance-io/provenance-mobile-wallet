@@ -347,7 +347,7 @@ class ActionListBloc extends Disposable {
       throw ActionListError.multiSigAccountNotFound;
     }
 
-    final coin = getCoinFromAddress(item.multiSigAddress);
+    final coin = multiSigAccount.coin;
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
 
     final authBytes = await _sign(
@@ -368,8 +368,6 @@ class ActionListBloc extends Disposable {
           ),
     };
 
-    // TODO-Roy: Provide order on sig model and order them here instead of
-    // at point of storage for improved transparency.
     final sigLookup = <String, List<int>>{};
     for (final publicKey in multiSigAccount.publicKey.publicKeys) {
       final address = publicKey.address;
@@ -413,7 +411,9 @@ class ActionListBloc extends Disposable {
     }
 
     final accountId = group.accountId;
-    final coin = getCoinFromAddress(item.signerAddress);
+    final account =
+        await _accountService.getAccount(accountId) as TransactableAccount;
+    final coin = account.coin;
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
 
     final authBytes = await _sign(
@@ -428,6 +428,7 @@ class ActionListBloc extends Disposable {
 
     final success = await _multiSigClient.signTx(
       signerAddress: item.signerAddress,
+      coin: coin,
       txUuid: item.txUuid,
       signatureBytes: signatureBytes,
     );

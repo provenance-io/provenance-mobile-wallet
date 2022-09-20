@@ -6,7 +6,6 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -27,9 +26,9 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   Future<AccountGasEstimate> estimateGas(
     proto.TxBody txBody,
     List<IPubKey> signers,
+    Coin coin,
   ) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
-    final coin = getCoinFromAddress(signers[0].address);
     final pbClient = await protoBuffInjector(coin);
 
     final gasService = get<GasFeeService>();
@@ -51,16 +50,16 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   @override
   Future<proto.RawTxResponsePair> executeTransaction(
     proto.TxBody txBody,
-    IPrivKey privateKey, [
+    IPrivKey privateKey,
+    Coin coin, [
     AccountGasEstimate? gasEstimate,
   ]) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
 
     final publicKey = privateKey.publicKey;
-    final coin = getCoinFromAddress(publicKey.address);
     final pbClient = await protoBuffInjector(coin);
 
-    gasEstimate ??= await estimateGas(txBody, [publicKey]);
+    gasEstimate ??= await estimateGas(txBody, [publicKey], coin);
 
     final fee = proto.Fee(
       amount: gasEstimate.totalFees,

@@ -134,7 +134,7 @@ class MultiAccount with Diagnosticable implements Account {
   String? get address => publicKey?.address;
 
   @override
-  Coin? get coin => publicKey?.coin;
+  Coin get coin => linkedAccount.coin;
 
   @override
   int get hashCode => Object.hashAll([
@@ -198,7 +198,4 @@ class MultiTransactableAccount extends MultiAccount
 
   @override
   String get address => super.address!;
-
-  @override
-  Coin get coin => super.coin!;
 }

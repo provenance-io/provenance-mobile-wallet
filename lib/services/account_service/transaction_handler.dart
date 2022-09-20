@@ -8,11 +8,13 @@ abstract class TransactionHandler {
   Future<AccountGasEstimate> estimateGas(
     proto.TxBody txBody,
     List<IPubKey> signers,
+    Coin coin,
   );
 
   Future<proto.RawTxResponsePair> executeTransaction(
     proto.TxBody txBody,
-    IPrivKey privateKey, [
+    IPrivKey privateKey,
+    Coin coin, [
     AccountGasEstimate? gasEstimate,
   ]);
 }

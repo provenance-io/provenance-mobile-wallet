@@ -6,9 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
@@ -80,6 +80,7 @@ class MultiSigService extends Listenable with ListenableMixin {
       // TODO-Roy: Add service route to get txs for multiple addresses
       final createdTxs = await _multiSigClient.getCreatedTxs(
         signerAddresses: [signerAddress],
+        status: MultiSigStatus.ready,
       );
 
       if (createdTxs == null) {
@@ -88,7 +89,7 @@ class MultiSigService extends Listenable with ListenableMixin {
       }
 
       for (final tx in createdTxs) {
-        if (tx.status == MultiSigStatus.ready && tx.signatures != null) {
+        if (tx.signatures != null) {
           final ref = _main.record(tx.txUuid);
           final db = await _db;
           final result = await ref.get(db);
