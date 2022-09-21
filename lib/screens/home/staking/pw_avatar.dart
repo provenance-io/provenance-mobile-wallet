@@ -25,7 +25,7 @@ class PwAvatar extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           foregroundColor: Theme.of(context).colorScheme.neutralNeutral,
-          foregroundImage: NetworkImage(imgUrl),
+          foregroundImage: (imgUrl.isNotEmpty) ? NetworkImage(imgUrl) : null,
           child: PwText(
             initial.toUpperCase(),
           ),
