@@ -8,6 +8,7 @@ part 'multi_sig_created_tx_dto.g.dart';
 class MultiSigCreatedTxDto {
   MultiSigCreatedTxDto({
     required this.multiSigAddress,
+    required this.signerAddress,
     required this.txUuid,
     required this.txBodyBytes,
     required this.status,
@@ -15,6 +16,7 @@ class MultiSigCreatedTxDto {
   });
 
   final String multiSigAddress;
+  final String signerAddress;
   final String txUuid;
   final String txBodyBytes;
   final MultiSigStatus status;
