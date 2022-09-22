@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -54,6 +55,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
+    final _formatter = DateFormat.yMMMd('en_US');
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.neutral750,
