@@ -201,7 +201,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         ),
                         DepositSlider(
                           max: details.sliderMax,
-                          thumbColor: Theme.of(context).colorScheme.primary550,
+                          thumbColor:
+                              Theme.of(context).colorScheme.secondary350,
                           onChanged: (changed) => _bloc.depositAmount = changed,
                         ),
                         PwListDivider.alternate(),
