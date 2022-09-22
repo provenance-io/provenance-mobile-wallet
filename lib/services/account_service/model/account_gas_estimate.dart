@@ -14,13 +14,4 @@ class AccountGasEstimate {
   final double? gasAdjustment;
   final List<Coin>? estimatedFees;
   final List<Coin> totalFees;
-
-  AccountGasEstimate copyWithBaseFee(int? newBaseFee) {
-    return AccountGasEstimate(
-      estimatedGas,
-      newBaseFee,
-      gasAdjustment,
-      estimatedFees,
-    );
-  }
 }

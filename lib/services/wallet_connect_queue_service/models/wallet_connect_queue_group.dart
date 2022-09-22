@@ -2,9 +2,9 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action_kind.dart';
 
@@ -76,11 +76,11 @@ class WalletConnectQueueGroup {
           "peerId": sessionAction.data.peerId,
           "remotePeerId": sessionAction.data.remotePeerId,
         };
-      case WalletConnectActionKind.send:
-        final sendAction = action as SendAction;
+      case WalletConnectActionKind.tx:
+        final txAction = action as TxAction;
 
         final body = TxBody(
-          messages: sendAction.messages.map((e) => e.toAny()),
+          messages: txAction.messages.map((e) => e.toAny()),
         );
 
         return <String, dynamic>{
@@ -88,12 +88,12 @@ class WalletConnectQueueGroup {
           "id": action.id,
           "requestId": action.requestId,
           "message": "",
-          "description": sendAction.description,
+          "description": txAction.description,
           "txBody": body.writeToBuffer(),
-          "estimate": sendAction.gasEstimate.estimatedGas,
-          "baseFee": sendAction.gasEstimate.baseFee,
-          "feeAdjustment": sendAction.gasEstimate.gasAdjustment,
-          "feeCalculated": sendAction.gasEstimate.totalFees
+          "estimate": txAction.gasEstimate.estimatedGas,
+          "baseFee": txAction.gasEstimate.baseFee,
+          "feeAdjustment": txAction.gasEstimate.gasAdjustment,
+          "feeCalculated": txAction.gasEstimate.totalFees
               .map((e) => e.writeToBuffer())
               .toList(),
         };
@@ -127,7 +127,7 @@ class WalletConnectQueueGroup {
           .cast<Coin>()
           .toList();
 
-      return SendAction(
+      return TxAction(
           id: id,
           requestId: requestId,
           description: description,

@@ -15,9 +15,9 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action_kind.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -234,7 +234,7 @@ class ActionListBloc extends Disposable {
             case WalletConnectActionKind.session:
               label = (c) => Strings.of(c).actionListLabelApproveSession;
               break;
-            case WalletConnectActionKind.send:
+            case WalletConnectActionKind.tx:
               label = (c) => Strings.of(c).actionListLabelTransactionRequested;
               break;
             case WalletConnectActionKind.sign:
@@ -253,17 +253,17 @@ class ActionListBloc extends Disposable {
 
     groups.addAll(walletConnectGroups);
 
-    final multiSigItems = _multiSigService.items;
-
     final multiSigGroups = <String, List<MultiSigActionListItem>>{};
-    for (final multiSigItem in multiSigItems) {
-      final address = multiSigItem.signerAddress;
+
+    final multiSigItems = _multiSigService.items;
+    for (final item in multiSigItems) {
+      final address = item.groupAddress;
 
       if (!multiSigGroups.containsKey(address)) {
         multiSigGroups[address] = <MultiSigActionListItem>[];
       }
 
-      multiSigGroups[address]!.add(multiSigItem);
+      multiSigGroups[address]!.add(item);
     }
 
     for (final multiSigGroup in multiSigGroups.entries) {
@@ -292,12 +292,12 @@ class ActionListBloc extends Disposable {
     switch (action.kind) {
       case WalletConnectActionKind.session:
         return _navigator.showApproveSession(action as SessionAction);
-      case WalletConnectActionKind.send:
-        final sendAction = action as SendAction;
+      case WalletConnectActionKind.tx:
+        final txAction = action as TxAction;
 
         return _navigator.showApproveTransaction(
-          messages: sendAction.messages,
-          fees: sendAction.gasEstimate.totalFees,
+          messages: txAction.messages,
+          fees: txAction.gasEstimate.totalFees,
           clientMeta: group._queueGroup.clientMeta,
         );
       case WalletConnectActionKind.sign:
@@ -321,7 +321,7 @@ class ActionListBloc extends Disposable {
           allowed: approved,
         );
         break;
-      case WalletConnectActionKind.send:
+      case WalletConnectActionKind.tx:
       case WalletConnectActionKind.sign:
         await walletConnectService.sendMessageFinish(
           requestId: action.id,
@@ -338,7 +338,6 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    final accountId = group.accountId;
     final accounts = await _accountService.getTransactableAccounts();
     final multiSigAccount = accounts
         .whereType<MultiTransactableAccount>()
@@ -348,12 +347,13 @@ class ActionListBloc extends Disposable {
     }
 
     final coin = multiSigAccount.coin;
+    final signerAccountId = multiSigAccount.linkedAccount.id;
     final pbClient = await get<ProtobuffClientInjector>().call(coin);
 
     final authBytes = await _sign(
       pbClient: pbClient,
       multiSigAddress: item.multiSigAddress,
-      signerAccountId: accountId,
+      signerAccountId: signerAccountId,
       txBody: item.txBody,
       fee: item.fee,
     );
@@ -391,6 +391,8 @@ class ActionListBloc extends Disposable {
       ],
       item.fee,
     );
+
+    // TODO-Roy: if is wallet connect, send update to wallet connect
 
     await _multiSigService.finalizeTx(
       signerAddress: item.signerAddress,

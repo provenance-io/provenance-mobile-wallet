@@ -80,6 +80,8 @@ class MultiSigService extends Listenable with ListenableMixin {
       return;
     }
 
+    _actionItemsBySignerAddress.clear();
+
     for (final tx in pendingTxs) {
       final item = _toSignListItem(tx);
       _cacheMultiSigItem(item);
@@ -174,6 +176,7 @@ class MultiSigService extends Listenable with ListenableMixin {
       MultiSigTransmitActionListItem(
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
+        groupAddress: tx.multiSigAddress,
         label: (c) => tx.txBody.messages
             .map((e) => e.toMessage().toLocalizedName(c))
             .join(', '),
@@ -188,6 +191,7 @@ class MultiSigService extends Listenable with ListenableMixin {
       MultiSigSignActionListItem(
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
+        groupAddress: tx.signerAddress,
         label: (c) => tx.txBody.messages
             .map((e) => e.toMessage().toLocalizedName(c))
             .join(', '),
@@ -223,6 +227,7 @@ class MultiSigService extends Listenable with ListenableMixin {
 abstract class MultiSigActionListItem implements ActionListItem {
   String get multiSigAddress;
   String get signerAddress;
+  String get groupAddress;
   String get txUuid;
 }
 
@@ -230,6 +235,7 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
   MultiSigSignActionListItem({
     required this.multiSigAddress,
     required this.signerAddress,
+    required this.groupAddress,
     required this.label,
     required this.subLabel,
     required this.txBody,
@@ -242,6 +248,9 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
 
   @override
   final String signerAddress;
+
+  @override
+  final String groupAddress;
 
   final TxBody txBody;
 
@@ -261,6 +270,7 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   MultiSigTransmitActionListItem({
     required this.multiSigAddress,
     required this.signerAddress,
+    required this.groupAddress,
     required this.label,
     required this.subLabel,
     required this.txBody,
@@ -274,6 +284,9 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
 
   @override
   final String signerAddress;
+
+  @override
+  final String groupAddress;
 
   final TxBody txBody;
 

@@ -6,12 +6,14 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_bank_v1beta1.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
+import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart';
 
 import './wallet_connect_session_delegate_test.mocks.dart';
@@ -28,29 +30,43 @@ const walletConnectAddressStr =
     "wc:c2572162-bc23-442c-95c7-a4b6403331f4@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=c90653342c66a002944cff439239b79cc6fdde42b61a10c6d1e8d05506bd92bf";
 final walletConnectAddr = WalletConnectAddress.create(walletConnectAddressStr)!;
 
-@GenerateMocks(
-    [TransactionHandler, WalletConnectQueueService, WalletConnection])
+@GenerateMocks([
+  AccountService,
+  TxQueueService,
+  WalletConnectQueueService,
+  WalletConnection,
+])
 void main() {
-  late MockTransactionHandler mockTransactionHandler;
+  late MockAccountService mockAccountService;
+  late MockTxQueueService mockTxQueueService;
+
   late MockWalletConnectQueueService mockWalletConnectQueueService;
   late MockWalletConnection mockWalletConnection;
 
   late WalletConnectSessionDelegate delegate;
 
-  final waleltInfo = WalletInfo("ABC", "Name", Coin.testNet);
+  final account = BasicAccount(
+    id: 'ABC',
+    name: 'Name',
+    publicKey: publicKey,
+  );
 
   setUp(() {
-    mockTransactionHandler = MockTransactionHandler();
+    mockAccountService = MockAccountService();
+    mockTxQueueService = MockTxQueueService();
+
     mockWalletConnectQueueService = MockWalletConnectQueueService();
     mockWalletConnection = MockWalletConnection();
 
     delegate = WalletConnectSessionDelegate(
-        privateKey: privateKey,
-        walletInfo: waleltInfo,
-        connection: mockWalletConnection,
-        transactionHandler: mockTransactionHandler,
-        queueService: mockWalletConnectQueueService,
-        address: walletConnectAddr);
+      connectAccount: account,
+      transactAccount: account,
+      accountService: mockAccountService,
+      txQueueService: mockTxQueueService,
+      connection: mockWalletConnection,
+      queueService: mockWalletConnectQueueService,
+      address: walletConnectAddr,
+    );
   });
 
   group("WalletConnectSessionDelegateEvents", () {
@@ -180,9 +196,9 @@ void main() {
 
     test("onApproveTransaction", () async {
       final gasEstimate = AccountGasEstimate(100, 400);
-
-      when(mockTransactionHandler.estimateGas(any, any, any))
-          .thenAnswer((_) => Future.value(gasEstimate));
+      when(mockTxQueueService.estimateGas(
+              txBody: anyNamed('txBody'), account: anyNamed('account')))
+          .thenAnswer((_) async => gasEstimate);
 
       const requestId = 100;
       const description = "Desc";
@@ -197,7 +213,7 @@ void main() {
       delegate.onApproveTransaction(requestId, description, address, transData);
 
       final pred = predicate((arg) {
-        final details = arg as SendAction;
+        final details = arg as TxAction;
         expect(details.id, isNotNull);
         expect(details.requestId, requestId);
         expect(details.messages, transData.proposedMessages);
@@ -214,41 +230,13 @@ void main() {
 
       verify(mockWalletConnectQueueService.addWalletConnectSendRequest(
           walletConnectAddr, argThat(pred)));
-
-      verify(
-        mockTransactionHandler.estimateGas(
-          argThat(
-            predicate(
-              (arg) {
-                return true;
-              },
-            ),
-          ),
-          argThat(
-            predicate(
-              (arg) {
-                final actual = (arg as List<IPubKey>)[0];
-
-                expect(actual.address, publicKey.address);
-                return true;
-              },
-            ),
-          ),
-          argThat(
-            predicate(
-              (arg) {
-                return true;
-              },
-            ),
-          ),
-        ),
-      );
     });
 
     test("onApproveTransaction passes on grpc error", () async {
       final error = GrpcError.cancelled("Test Cancelled");
 
-      when(mockTransactionHandler.estimateGas(any, any, any))
+      when(mockTxQueueService.estimateGas(
+              txBody: anyNamed('txBody'), account: anyNamed('account')))
           .thenAnswer((_) => Future.error(error));
 
       const requestId = 100;

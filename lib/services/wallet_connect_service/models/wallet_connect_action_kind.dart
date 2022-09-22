@@ -1,5 +1,5 @@
 enum WalletConnectActionKind {
   session,
-  send,
+  tx,
   sign,
 }

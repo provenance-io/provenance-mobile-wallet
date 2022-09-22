@@ -539,6 +539,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
 
     final accountService = get<AccountService>();
+    final multiSigClient = get<MultiSigClient>();
+
+    final txQueueService = DefaultQueueTxService(
+      transactionHandler: transactionHandler,
+      multiSigClient: multiSigClient,
+      accountService: accountService,
+    );
+    get.registerSingleton<TxQueueService>(txQueueService);
+
     final remoteNotificationService = get<RemoteNotificationService>();
     final walletConnectQueueService = get<WalletConnectQueueService>();
 
@@ -546,10 +555,10 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       DefaultWalletConnectService(
         keyValueService: keyValueService,
         accountService: accountService,
+        txQueueService: txQueueService,
         connectionFactory: walletConnectionFactory,
         notificationService: remoteNotificationService,
         queueService: walletConnectQueueService,
-        transactionHandler: transactionHandler,
         localAuthHelper: authHelper,
       ),
     );
@@ -612,14 +621,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
             );
       }
     }).addTo(_subscriptions);
-
-    final multiSigClient = get<MultiSigClient>();
-    final txQueueService = DefaultQueueTxService(
-      transactionHandler: transactionHandler,
-      multiSigClient: multiSigClient,
-      accountService: accountService,
-    );
-    get.registerSingleton<TxQueueService>(txQueueService);
 
     final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {

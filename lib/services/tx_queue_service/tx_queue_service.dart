@@ -37,7 +37,7 @@ class TxResult {
   });
 
   final proto.TxBody body;
-  final proto.TxResponse response;
+  final proto.RawTxResponsePair response;
 }
 
 class TxSigner {

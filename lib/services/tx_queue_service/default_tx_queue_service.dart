@@ -214,7 +214,7 @@ class DefaultQueueTxService implements TxQueueService {
 
     result = TxResult(
       body: model.txBody,
-      response: response.txResponse,
+      response: response,
     );
 
     return result;
@@ -253,7 +253,7 @@ class DefaultQueueTxService implements TxQueueService {
 
     return TxResult(
       body: model.txBody,
-      response: response.txResponse,
+      response: response,
     );
   }
 

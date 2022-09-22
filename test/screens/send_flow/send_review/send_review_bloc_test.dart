@@ -114,7 +114,10 @@ void main() {
           txId: '1',
           result: TxResult(
             body: proto.TxBody(),
-            response: proto.TxResponse(),
+            response: proto.RawTxResponsePair(
+              proto.TxRaw(),
+              proto.TxResponse(),
+            ),
           ),
         ),
       );
