@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
