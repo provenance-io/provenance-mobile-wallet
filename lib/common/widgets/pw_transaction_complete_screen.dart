@@ -7,14 +7,14 @@ class PwTransactionCompleteScreen extends StatelessWidget {
   const PwTransactionCompleteScreen({
     Key? key,
     required this.title,
-    required this.onPressed,
+    required this.onDataPressed,
     required this.onComplete,
     this.onBackToDashboard,
     required this.response,
   }) : super(key: key);
 
   final String title;
-  final Function onPressed;
+  final Function onDataPressed;
   final Function onComplete;
   final Function? onBackToDashboard;
   final Object? response;
