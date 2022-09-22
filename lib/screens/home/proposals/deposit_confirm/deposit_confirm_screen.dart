@@ -173,6 +173,28 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                           value: widget.proposal.title,
                         ),
                         PwListDivider.alternate(),
+                        VerticalSpacer.xxLarge(),
+                        PwText(strings.depositConfirmScreenDepositAmount),
+                        DepositSlider(
+                          max: details.sliderMax,
+                          thumbColor:
+                              Theme.of(context).colorScheme.secondary350,
+                          onChanged: (changed) => _bloc.depositAmount = changed,
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.fromStrings(
+                          title: strings.depositConfirmScreenAvailableBalance,
+                          value:
+                              strings.hashAmount(details.hashAmount.toString()),
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.fromStrings(
+                          title: strings.depositConfirmScreenDepositNeeded,
+                          value: strings.hashAmount(widget
+                              .proposal.neededDepositFormatted
+                              .toString()),
+                        ),
+                        PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.depositConfirmScreenCurrentDeposit,
                           value: strings.hashAmount(
@@ -185,37 +207,6 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                               (details.amount + details.currentDepositHash)
                                   .toInt()
                                   .toString()),
-                        ),
-                        PwListDivider.alternate(),
-                        DetailsItem.fromStrings(
-                          title: strings.stakingDelegateAvailableBalance,
-                          value:
-                              strings.hashAmount(details.hashAmount.toString()),
-                        ),
-                        PwListDivider.alternate(),
-                        DetailsItem.withRowChildren(
-                          title: strings.depositConfirmScreenDepositAmount,
-                          children: [
-                            if (details.amount + details.currentDepositHash >
-                                details.neededDepositHash)
-                              PwIcon(
-                                PwIcons.warn,
-                                color: Theme.of(context).errorColor,
-                                size: 19,
-                              ),
-                            HorizontalSpacer.small(),
-                            PwText(
-                              strings.hashAmount(
-                                  details.amount.toInt().toString()),
-                              style: PwTextStyle.footnote,
-                            )
-                          ],
-                        ),
-                        DepositSlider(
-                          max: details.sliderMax,
-                          thumbColor:
-                              Theme.of(context).colorScheme.secondary350,
-                          onChanged: (changed) => _bloc.depositAmount = changed,
                         ),
                         PwListDivider.alternate(),
                         PwGasAdjustmentSlider(
