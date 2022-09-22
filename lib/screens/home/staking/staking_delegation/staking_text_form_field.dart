@@ -7,6 +7,7 @@ class StakingTextFormField extends StatelessWidget {
   final Function? submit;
   final ScrollController? scrollController;
   final bool shouldAutovalidate;
+  final TextInputType keyboardType;
 
   const StakingTextFormField({
     Key? key,
@@ -15,6 +16,7 @@ class StakingTextFormField extends StatelessWidget {
     this.shouldAutovalidate = true,
     this.submit,
     this.scrollController,
+    this.keyboardType = const TextInputType.numberWithOptions(decimal: true),
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class StakingTextFormField extends StatelessWidget {
     final theme = Theme.of(context);
     return TextFormField(
       style: theme.textTheme.body,
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      keyboardType: keyboardType,
       autocorrect: false,
       controller: textEditingController,
       onFieldSubmitted: (_) {
@@ -54,7 +56,9 @@ class StakingTextFormField extends StatelessWidget {
           return Strings.of(context).starRequired;
         }
         final number = num.tryParse(value);
-        return null == number || number.isNegative
+        return keyboardType == TextInputType.numberWithOptions(decimal: true) &&
+                    null == number ||
+                number?.isNegative == true
             ? Strings.of(context).starPositiveNumber
             : null;
       },

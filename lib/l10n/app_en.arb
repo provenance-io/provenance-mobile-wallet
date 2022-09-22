@@ -622,5 +622,18 @@
   "depositConfirmScreenDepositAmount": "Deposit Amount",
   "depositConfirmScreenTotalDeposit": "Total Deposit",
   "depositConfirmScreenCurrentDeposit": "Current Deposit",
-  "depositConfirmScreenDepositDetails": "Deposit Details"
+  "depositConfirmScreenDepositDetails": "Deposit Details",
+  "developerMenuAllowProposalCreation": "Allow Proposal Creation",
+  "developerMenuProposalCreationTestnet": "Proposal creation is limited and available for Testnet only.",
+  "proposalsLegendGlobalStatus": "Global Status: ",
+  "viewMoreTabCreateProposal": "Create Proposal",
+  "devCreateProposal": "Create Proposal (Testnet)",
+  "devCreateProposalDetails": "Create Proposal Details",
+  "devProposalTitle": "Proposal Title",
+  "devProposalDescription": "Proposal Description",
+  "devInitialDepositAmount": "Initial Deposit Amount",
+  "devConfirmProposal": "Confirm Proposal",
+  "devProposalComplete": "PROPOSAL COMPLETE",
+  "devEnableMultiSig": "Enable Multi Sig",
+  "sendAssetListLoadingAssets": "Loading assets"
 }

@@ -85,7 +85,6 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
                 ),
                 PwListDivider.alternate(),
                 VerticalSpacer.largeX3(),
-                Expanded(child: Container()),
                 PwButton(
                   onPressed: () {
                     widget.onTransactionSign(_gasEstimate);
