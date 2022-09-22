@@ -211,6 +211,8 @@ class ProvenanceThemeData {
   static const Color _notice350 = Color(0xFFF4B601);
   static const Color _notice800 = Color(0xFF140F00);
   static const Color _positive300 = Color(0xFF5AE70D);
+  static const Color _depositPeriod = Color(0xFFFEC10B);
+  static const Color _votingPeriod = Color(0xFFA898EA);
 
   // ----- PROVENANCE TYPOGRAPHY -----
   // Keep private. Expose only through ThemeData.
@@ -490,6 +492,8 @@ extension CustomColorScheme on ColorScheme {
   Color get notice350 => ProvenanceThemeData._notice350;
   Color get notice800 => ProvenanceThemeData._notice800;
   Color get positive300 => ProvenanceThemeData._positive300;
+  Color get depositPeriod => ProvenanceThemeData._depositPeriod;
+  Color get votingPeriod => ProvenanceThemeData._votingPeriod;
 }
 
 extension CustomTextTheme on TextTheme {

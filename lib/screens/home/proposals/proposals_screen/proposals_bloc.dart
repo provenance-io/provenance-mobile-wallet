@@ -10,6 +10,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -98,10 +99,14 @@ class ProposalsBloc extends PwPagingCache {
   Color getColor(String status, BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     switch (status.toLowerCase()) {
-      case "passed":
+      case passed:
         return colorScheme.positive300;
-      case "rejected":
+      case rejected:
         return colorScheme.error;
+      case votingPeriod:
+        return colorScheme.votingPeriod;
+      case depositPeriod:
+        return colorScheme.depositPeriod;
       default:
         return colorScheme.neutral200;
     }
