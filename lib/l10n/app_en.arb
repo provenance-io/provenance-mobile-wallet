@@ -634,6 +634,8 @@
       }
     }
   },
+  "depositConfirmScreenDepositNeeded": "Deposit Needed",
+  "depositConfirmScreenAvailableBalance": "Available Balance",
   "developerMenuAllowProposalCreation": "Allow Proposal Creation",
   "developerMenuProposalCreationTestnet": "Proposal creation is limited and available for Testnet only.",
   "proposalsLegendGlobalStatus": "Global Status: ",
