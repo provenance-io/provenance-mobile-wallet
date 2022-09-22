@@ -67,20 +67,7 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(left: Spacing.large),
-                          child: ProposalListItemStatus(status: passed),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: Spacing.large),
-                          child: ProposalListItemStatus(status: rejected),
-                        ),
-                      ],
-                    ),
+                  children: const [
                     Padding(
                       padding: EdgeInsets.only(left: Spacing.large),
                       child: ProposalListItemStatus(status: depositPeriod),
@@ -88,6 +75,14 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
                     Padding(
                       padding: EdgeInsets.only(left: Spacing.large),
                       child: ProposalListItemStatus(status: votingPeriod),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: passed),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: rejected),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: Spacing.large),
