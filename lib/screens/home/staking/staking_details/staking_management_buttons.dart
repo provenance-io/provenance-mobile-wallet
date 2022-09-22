@@ -9,8 +9,8 @@ import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class StakingManagement extends StatelessWidget {
-  const StakingManagement({
+class StakingManagementButtons extends StatelessWidget {
+  const StakingManagementButtons({
     Key? key,
     required this.validator,
     required this.delegation,

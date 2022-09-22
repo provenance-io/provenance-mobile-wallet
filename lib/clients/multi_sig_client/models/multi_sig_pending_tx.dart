@@ -5,6 +5,7 @@ import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_sign
 class MultiSigPendingTx {
   MultiSigPendingTx({
     required this.multiSigAddress,
+    required this.signerAddress,
     required this.txUuid,
     required this.txBody,
     required this.fee,
@@ -13,6 +14,7 @@ class MultiSigPendingTx {
   });
 
   final String multiSigAddress;
+  final String signerAddress;
   final String txUuid;
   final TxBody txBody;
   final Fee fee;

@@ -9,14 +9,14 @@ class PwTransactionCompleteScreen extends StatelessWidget {
     required this.title,
     required this.onPressed,
     required this.onComplete,
-    required this.onBackToDashboard,
+    this.onBackToDashboard,
     required this.response,
   }) : super(key: key);
 
   final String title;
   final Function onPressed;
   final Function onComplete;
-  final Function onBackToDashboard;
+  final Function? onBackToDashboard;
   final Object? response;
 
   @override
@@ -93,15 +93,18 @@ class PwTransactionCompleteScreen extends StatelessWidget {
                         top: Spacing.large,
                         bottom: Spacing.largeX4,
                       ),
-                      child: PwTextButton(
-                        child: PwText(
-                          Strings.of(context).stakingCompleteBackToDashboard,
-                          style: PwTextStyle.body,
-                          textAlign: TextAlign.center,
-                          color: PwColor.neutralNeutral,
-                        ),
-                        onPressed: () => onBackToDashboard(),
-                      ),
+                      child: onBackToDashboard != null
+                          ? PwTextButton(
+                              child: PwText(
+                                Strings.of(context)
+                                    .stakingCompleteBackToDashboard,
+                                style: PwTextStyle.body,
+                                textAlign: TextAlign.center,
+                                color: PwColor.neutralNeutral,
+                              ),
+                              onPressed: () => onBackToDashboard!(),
+                            )
+                          : VerticalSpacer.large(),
                     ),
                   ],
                 ),

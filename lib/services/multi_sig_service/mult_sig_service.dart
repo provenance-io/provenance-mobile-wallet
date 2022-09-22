@@ -61,57 +61,51 @@ class MultiSigService extends Listenable with ListenableMixin {
   Future<void> sync({
     required List<String> signerAddresses,
   }) async {
-    for (final signerAddress in signerAddresses) {
-      final addressItems = <MultiSigActionListItem>[];
+    final pendingTxs = await _multiSigClient.getPendingTxs(
+      signerAddresses: signerAddresses,
+    );
 
-      // TODO-Roy: Add service route to get txs for multiple addresses
-      final pendingTxs = await _multiSigClient.getPendingTxs(
-        signerAddresses: [signerAddress],
-      );
+    if (pendingTxs == null) {
+      logDebug('Sync failed to get pending txs');
+      return;
+    }
 
-      if (pendingTxs == null) {
-        logDebug('Sync failed to get pending txs');
-        return;
-      }
+    final createdTxs = await _multiSigClient.getCreatedTxs(
+      signerAddresses: signerAddresses,
+      status: MultiSigStatus.ready,
+    );
 
-      final pendingItems = _toSignListItems(pendingTxs, signerAddress);
-      addressItems.addAll(pendingItems);
+    if (createdTxs == null) {
+      logDebug('Sync failed to get created txs');
+      return;
+    }
 
-      // TODO-Roy: Add service route to get txs for multiple addresses
-      final createdTxs = await _multiSigClient.getCreatedTxs(
-        signerAddresses: [signerAddress],
-        status: MultiSigStatus.ready,
-      );
+    for (final tx in pendingTxs) {
+      final item = _toSignListItem(tx);
+      _cacheMultiSigItem(item);
+    }
 
-      if (createdTxs == null) {
-        logDebug('Sync failed to get created txs');
-        return;
-      }
+    for (final tx in createdTxs) {
+      if (tx.signatures != null) {
+        final ref = _main.record(tx.txUuid);
+        final db = await _db;
+        final result = await ref.get(db);
+        if (result != null) {
+          final model = _SembastResultData.fromRecord(result);
+          final success = await _multiSigClient.updateTxResult(
+            txUuid: model.txUuid,
+            txHash: model.txHash,
+            coin: ChainId.toCoin(model.chainId),
+          );
 
-      for (final tx in createdTxs) {
-        if (tx.signatures != null) {
-          final ref = _main.record(tx.txUuid);
-          final db = await _db;
-          final result = await ref.get(db);
-          if (result != null) {
-            final model = _SembastResultData.fromRecord(result);
-            final success = await _multiSigClient.updateTxResult(
-              txUuid: model.txUuid,
-              txHash: model.txHash,
-              coin: ChainId.toCoin(model.chainId),
-            );
-
-            if (success) {
-              await ref.delete(db);
-            }
-          } else {
-            final item = _toTransmitListItem(tx, signerAddress);
-            addressItems.add(item);
+          if (success) {
+            await ref.delete(db);
           }
+        } else {
+          final item = _toTransmitListItem(tx);
+          _cacheMultiSigItem(item);
         }
       }
-
-      _actionItemsBySignerAddress[signerAddress] = addressItems;
     }
 
     _publish();
@@ -168,11 +162,18 @@ class MultiSigService extends Listenable with ListenableMixin {
     );
   }
 
-  MultiSigTransmitActionListItem _toTransmitListItem(
-          MultiSigPendingTx tx, String signerAddress) =>
+  void _cacheMultiSigItem(MultiSigActionListItem item) {
+    if (!_actionItemsBySignerAddress.containsKey(item.signerAddress)) {
+      _actionItemsBySignerAddress[item.signerAddress] = [];
+    }
+
+    _actionItemsBySignerAddress[item.signerAddress]!.add(item);
+  }
+
+  MultiSigTransmitActionListItem _toTransmitListItem(MultiSigPendingTx tx) =>
       MultiSigTransmitActionListItem(
         multiSigAddress: tx.multiSigAddress,
-        signerAddress: signerAddress,
+        signerAddress: tx.signerAddress,
         label: (c) => tx.txBody.messages
             .map((e) => e.toMessage().toLocalizedName(c))
             .join(', '),
@@ -183,23 +184,18 @@ class MultiSigService extends Listenable with ListenableMixin {
         signatures: tx.signatures!,
       );
 
-  List<MultiSigSignActionListItem> _toSignListItems(
-          Iterable<MultiSigPendingTx> items, String signerAddress) =>
-      items.map(
-        (e) {
-          return MultiSigSignActionListItem(
-            multiSigAddress: e.multiSigAddress,
-            signerAddress: signerAddress,
-            label: (c) => e.txBody.messages
-                .map((e) => e.toMessage().toLocalizedName(c))
-                .join(', '),
-            subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-            txBody: e.txBody,
-            fee: e.fee,
-            txUuid: e.txUuid,
-          );
-        },
-      ).toList();
+  MultiSigSignActionListItem _toSignListItem(MultiSigPendingTx tx) =>
+      MultiSigSignActionListItem(
+        multiSigAddress: tx.multiSigAddress,
+        signerAddress: tx.signerAddress,
+        label: (c) => tx.txBody.messages
+            .map((e) => e.toMessage().toLocalizedName(c))
+            .join(', '),
+        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+        txBody: tx.txBody,
+        fee: tx.fee,
+        txUuid: tx.txUuid,
+      );
 
   Future<void> remove({
     required List<String> signerAddresses,

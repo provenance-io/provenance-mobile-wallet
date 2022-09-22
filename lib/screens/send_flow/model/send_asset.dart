@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:decimal/intl.dart';
 import 'package:intl/intl.dart';
+import 'package:provenance_wallet/util/constants.dart';
 
 class SendAsset {
   const SendAsset(
@@ -15,7 +16,7 @@ class SendAsset {
       : this(
           "hash",
           9,
-          "nhash",
+          nHashDenom,
           amount,
           price,
         );
@@ -63,10 +64,10 @@ class MultiSendAsset {
 
   String get displayAmount {
     final map = <String, SendAsset>{};
-    map['nhash'] = SendAsset(
+    map[nHashDenom] = SendAsset(
       "Hash",
       9,
-      'nhash',
+      nHashDenom,
       Decimal.fromInt(estimate),
       0,
     );

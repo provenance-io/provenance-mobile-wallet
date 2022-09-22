@@ -52,6 +52,89 @@ class DeveloperMenu extends StatelessWidget {
           },
         ),
         PwListDivider(),
+        StreamBuilder<KeyValueData<bool>>(
+          initialData:
+              keyValueService.stream<bool>(PrefKey.enableMultiSig).valueOrNull,
+          stream: keyValueService.stream<bool>(PrefKey.enableMultiSig),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            final shouldEnableMultiSig = snapshot.data?.data ?? false;
+
+            return ToggleItem(
+              text: strings.devEnableMultiSig,
+              value: shouldEnableMultiSig,
+              onChanged: (value) async {
+                await keyValueService.setBool(
+                  PrefKey.enableMultiSig,
+                  !shouldEnableMultiSig,
+                );
+                get<HomeBloc>().load();
+              },
+            );
+          },
+        ),
+        PwListDivider(),
+        StreamBuilder<KeyValueData<bool>>(
+          initialData: keyValueService
+              .stream<bool>(PrefKey.allowProposalCreation)
+              .valueOrNull,
+          stream: keyValueService.stream<bool>(PrefKey.allowProposalCreation),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+
+            final shouldAllowProposalCreation = snapshot.data?.data ?? false;
+
+            return ToggleItem(
+              text: strings.developerMenuAllowProposalCreation,
+              value: shouldAllowProposalCreation,
+              onChanged: (value) async {
+                await keyValueService.setBool(
+                  PrefKey.allowProposalCreation,
+                  !shouldAllowProposalCreation,
+                );
+                if (!shouldAllowProposalCreation) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      final theme = Theme.of(context);
+                      return AlertDialog(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.neutral750,
+                        title: Text(
+                          strings.stakingDelegateBeforeYouContinue,
+                          style: theme.textTheme.footnote,
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          strings.developerMenuProposalCreationTestnet,
+                          style: theme.textTheme.body,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: PwText(
+                              strings.okay,
+                              style: PwTextStyle.bodyBold,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            );
+          },
+        ),
+        PwListDivider(),
         LinkItem(
           text: strings.profileDeveloperServiceMocks,
           onTap: () {

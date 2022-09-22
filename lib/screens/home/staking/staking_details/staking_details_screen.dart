@@ -2,7 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/delegator_details.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management_buttons.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -88,7 +88,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         ],
                       ),
                     ),
-                    StakingManagement(
+                    StakingManagementButtons(
                       validator: validator,
                       delegation: details.delegation,
                       commission: commission,
