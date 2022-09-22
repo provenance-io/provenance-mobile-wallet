@@ -105,6 +105,7 @@ class ActionListBlocState {
 
 class ActionListBloc extends Disposable {
   final ActionListNavigator _navigator;
+  final WalletConnectService _connectService;
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
   final MultiSigService _multiSigService;
@@ -113,7 +114,8 @@ class ActionListBloc extends Disposable {
   final _streamController = StreamController<ActionListBlocState>();
 
   ActionListBloc(this._navigator)
-      : _connectQueueService = get<WalletConnectQueueService>(),
+      : _connectService = get<WalletConnectService>(),
+        _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>(),
         _multiSigService = get<MultiSigService>(),
         _multiSigClient = get<MultiSigClient>();
@@ -182,7 +184,7 @@ class ActionListBloc extends Disposable {
     } else if (item is MultiSigSignActionListItem) {
       await _processMultiSigSignItem(approved, group, item);
     } else if (item is MultiSigTransmitActionListItem) {
-      await _processMultiSigTransmitItem(approved, group, item);
+      await _processMultiSigTransmitItem(approved, item);
     } else {
       log("Unknown actionType ${group.runtimeType}");
     }
@@ -310,20 +312,18 @@ class ActionListBloc extends Disposable {
 
   Future<void> _processWalletConnectItem(bool approved,
       _WalletConnectActionGroup group, _WalletConnectActionItem item) async {
-    final walletConnectService = get<WalletConnectService>();
-
     final action = item.action;
 
     switch (action.kind) {
       case WalletConnectActionKind.session:
-        await walletConnectService.approveSession(
+        await _connectService.approveSession(
           details: action as SessionAction,
           allowed: approved,
         );
         break;
       case WalletConnectActionKind.tx:
       case WalletConnectActionKind.sign:
-        await walletConnectService.sendMessageFinish(
+        await _connectService.sendMessageFinish(
           requestId: action.id,
           allowed: approved,
         );
@@ -331,8 +331,8 @@ class ActionListBloc extends Disposable {
     }
   }
 
-  Future<void> _processMultiSigTransmitItem(bool approved,
-      ActionListGroup group, MultiSigTransmitActionListItem item) async {
+  Future<void> _processMultiSigTransmitItem(
+      bool approved, MultiSigTransmitActionListItem item) async {
     if (!approved) {
       // TODO-Roy: Send update to service
       return;
@@ -393,6 +393,8 @@ class ActionListBloc extends Disposable {
     );
 
     // TODO-Roy: if is wallet connect, send update to wallet connect
+    // Probably move multi-sig broadcast somewhere else and reference it both
+    // here and in wallet connect delegate
 
     await _multiSigService.finalizeTx(
       signerAddress: item.signerAddress,

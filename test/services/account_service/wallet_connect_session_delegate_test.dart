@@ -159,7 +159,7 @@ void main() {
         final details = arg as SessionAction;
         expect(details.data, sessionData);
         expect(details.id, isNotNull);
-        expect(details.requestId, requestId);
+        expect(details.walletConnectId, requestId);
 
         return true;
       });
@@ -180,7 +180,7 @@ void main() {
       final pred = predicate((arg) {
         final details = arg as SignAction;
         expect(details.id, isNotNull);
-        expect(details.requestId, requestId);
+        expect(details.walletConnectId, requestId);
         expect(details.message, msg);
         expect(details.description, description);
         expect(details.address, address);
@@ -215,7 +215,7 @@ void main() {
       final pred = predicate((arg) {
         final details = arg as TxAction;
         expect(details.id, isNotNull);
-        expect(details.requestId, requestId);
+        expect(details.walletConnectId, requestId);
         expect(details.messages, transData.proposedMessages);
         expect(details.description, description);
         expect(details.gasEstimate.gasAdjustment, gasEstimate.gasAdjustment);
@@ -226,9 +226,9 @@ void main() {
       });
 
       await untilCalled(
-          mockWalletConnectQueueService.addWalletConnectSendRequest(any, any));
+          mockWalletConnectQueueService.addWalletConnectTxRequest(any, any));
 
-      verify(mockWalletConnectQueueService.addWalletConnectSendRequest(
+      verify(mockWalletConnectQueueService.addWalletConnectTxRequest(
           walletConnectAddr, argThat(pred)));
     });
 

@@ -68,7 +68,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "ApproveSession",
           "id": sessionAction.id,
-          "requestId": sessionAction.requestId,
+          "requestId": sessionAction.walletConnectId,
           "message": "Approval required",
           "description": "",
           "address": sessionAction.data.address.fullUriString,
@@ -86,7 +86,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "SendRequest",
           "id": action.id,
-          "requestId": action.requestId,
+          "requestId": action.walletConnectId,
           "message": "",
           "description": txAction.description,
           "txBody": body.writeToBuffer(),
@@ -103,7 +103,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "SignRequest",
           "id": signAction.id,
-          "requestId": signAction.requestId,
+          "requestId": signAction.walletConnectId,
           "message": signAction.message,
           "description": signAction.description,
           "address": signAction.address
@@ -114,6 +114,7 @@ class WalletConnectQueueGroup {
   static WalletConnectAction _fromRecord(Map<String, dynamic> input) {
     final type = input["type"] as String;
 
+    // TODO-Roy: Rename SendRequest to TxAction, SignRequest to SignAction, etc.
     if (type == "SendRequest") {
       final body = TxBody.fromBuffer(input["txBody"].cast<int>());
       final id = input["id"];
@@ -129,7 +130,7 @@ class WalletConnectQueueGroup {
 
       return TxAction(
           id: id,
-          requestId: requestId,
+          walletConnectId: requestId,
           description: description,
           messages: body.messages
               .map((e) => e.toMessage())
@@ -149,7 +150,7 @@ class WalletConnectQueueGroup {
           message: message,
           description: description,
           address: address,
-          requestId: requestId);
+          walletConnectId: requestId);
     } else if (type == "ApproveSession") {
       final id = input["id"];
       final requestId = input["requestId"];

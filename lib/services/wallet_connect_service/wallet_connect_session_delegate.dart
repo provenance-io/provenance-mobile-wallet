@@ -106,7 +106,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return false;
     }
 
-    final wcRequestId = action.requestId;
+    final wcRequestId = action.walletConnectId;
     if (!allowed) {
       await _connection.reject(wcRequestId);
       return true;
@@ -160,7 +160,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final signAction = SignAction(
       id: id,
-      requestId: requestId,
+      walletConnectId: requestId,
       message: utf8.decode(msg),
       description: description,
       address: address,
@@ -203,15 +203,15 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return null;
     }
 
-    final sendRequest = TxAction(
+    final txAction = TxAction(
       id: id,
-      requestId: requestId,
+      walletConnectId: requestId,
       description: description,
       messages: signTransactionData.proposedMessages,
       gasEstimate: gasEstimate,
     );
 
-    _queueService.addWalletConnectSendRequest(_address, sendRequest);
+    _queueService.addWalletConnectTxRequest(_address, txAction);
   }
 
   @override
@@ -251,7 +251,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     await _connection.sendApproveSession(
-      action.requestId,
+      action.walletConnectId,
       sessionApproval,
     );
 
@@ -280,7 +280,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       final txResponse = response.txResponse;
 
       await _connection.sendTransactionResult(
-        action.requestId,
+        action.walletConnectId,
         response,
       );
 
@@ -317,7 +317,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       ..removeLast();
 
     await _connection.sendSignResult(
-      action.requestId,
+      action.walletConnectId,
       signedData,
     );
 

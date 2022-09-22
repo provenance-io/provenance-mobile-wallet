@@ -114,8 +114,8 @@ class WalletConnectQueueService extends Listenable
     notifyListeners();
   }
 
-  Future<void> addWalletConnectSendRequest(
-      WalletConnectAddress address, TxAction sendRequest) async {
+  Future<void> addWalletConnectTxRequest(
+      WalletConnectAddress address, TxAction txAction) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -125,7 +125,7 @@ class WalletConnectQueueService extends Listenable
     }
 
     final group = WalletConnectQueueGroup.fromRecord(map);
-    group.actionLookup[sendRequest.id] = sendRequest;
+    group.actionLookup[txAction.id] = txAction;
 
     await record.update(db, group.toRecord());
 

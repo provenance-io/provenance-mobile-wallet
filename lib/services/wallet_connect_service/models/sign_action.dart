@@ -4,7 +4,7 @@ import 'wallet_connect_action_kind.dart';
 class SignAction implements WalletConnectAction {
   SignAction({
     required this.id,
-    required this.requestId,
+    required this.walletConnectId,
     required this.message,
     required this.description,
     required this.address,
@@ -14,7 +14,7 @@ class SignAction implements WalletConnectAction {
   final String id;
 
   @override
-  final int requestId;
+  final int walletConnectId;
 
   @override
   WalletConnectActionKind get kind => WalletConnectActionKind.sign;
