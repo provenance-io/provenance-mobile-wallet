@@ -623,6 +623,17 @@
   "depositConfirmScreenTotalDeposit": "Total Deposit",
   "depositConfirmScreenCurrentDeposit": "Current Deposit",
   "depositConfirmScreenDepositDetails": "Deposit Details",
+  "depositConfirmScreenByDepositingHASH": "By depositing HASH",
+  "depositConfirmScreenDepositWillBeLocked": "You understand that your HASH deposit will be locked up until {endTime}",
+  "@depositConfirmScreenDepositWillBeLocked": {
+    "description": "Tells the user how long their HASH will be locked.",
+    "placeholders": {
+      "endTime": {
+        "type": "String",
+        "example": "September 22, 2022"
+      }
+    }
+  },
   "developerMenuAllowProposalCreation": "Allow Proposal Creation",
   "developerMenuProposalCreationTestnet": "Proposal creation is limited and available for Testnet only.",
   "proposalsLegendGlobalStatus": "Global Status: ",

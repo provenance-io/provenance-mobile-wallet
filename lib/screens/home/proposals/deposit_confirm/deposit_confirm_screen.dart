@@ -8,6 +8,7 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -122,6 +123,14 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                     child: ListView(
                       padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                       children: [
+                        WarningSection(
+                          title: strings.depositConfirmScreenByDepositingHASH,
+                          message:
+                              strings.depositConfirmScreenDepositWillBeLocked(
+                                  _formatter
+                                      .format(widget.proposal.depositEndTime)),
+                          background: Theme.of(context).colorScheme.error,
+                        ),
                         DetailsHeader(
                           title: strings.depositConfirmScreenDepositDetails,
                         ),
