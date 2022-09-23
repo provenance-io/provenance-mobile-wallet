@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+import 'package:convert/convert.dart' as convert;
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
@@ -13,8 +16,13 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
+import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/subjects.dart';
@@ -23,8 +31,10 @@ import 'package:sembast/sembast_io.dart';
 
 class MultiSigService extends Listenable with ListenableMixin {
   MultiSigService({
+    required AccountService accountService,
     required MultiSigClient multiSigClient,
-  }) : _multiSigClient = multiSigClient {
+  })  : _accountService = accountService,
+        _multiSigClient = multiSigClient {
     _db = _initDb();
   }
 
@@ -44,6 +54,7 @@ class MultiSigService extends Listenable with ListenableMixin {
     return db;
   }
 
+  final AccountService _accountService;
   final MultiSigClient _multiSigClient;
 
   final items = <MultiSigActionListItem>[];
@@ -117,7 +128,115 @@ class MultiSigService extends Listenable with ListenableMixin {
     }
   }
 
-  Future<void> finalizeTx({
+  Future<bool> sign(
+      ActionListGroup group, MultiSigSignActionListItem item) async {
+    final accountId = group.accountId;
+    final account =
+        await _accountService.getAccount(accountId) as TransactableAccount;
+    final coin = account.coin;
+    final pbClient = await get<ProtobuffClientInjector>().call(coin);
+
+    final authBytes = await _sign(
+      pbClient: pbClient,
+      multiSigAddress: item.multiSigAddress,
+      signerAccountId: accountId,
+      txBody: item.txBody,
+      fee: item.fee,
+    );
+
+    final signatureBytes = convert.hex.encode(authBytes);
+
+    final success = await _multiSigClient.signTx(
+      signerAddress: item.signerAddress,
+      coin: coin,
+      txUuid: item.txUuid,
+      signatureBytes: signatureBytes,
+    );
+
+    if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await sync(
+        signerAddresses: addresses,
+      );
+    }
+
+    return success;
+  }
+
+  Future<void> transmit(MultiSigTransmitActionListItem item) async {
+    final accounts = await _accountService.getTransactableAccounts();
+    final multiSigAccount = accounts
+        .whereType<MultiTransactableAccount>()
+        .firstWhereOrNull((e) => e.linkedAccount.address == item.signerAddress);
+    if (multiSigAccount == null) {
+      throw ActionListError.multiSigAccountNotFound;
+    }
+
+    final coin = multiSigAccount.coin;
+    final signerAccountId = multiSigAccount.linkedAccount.id;
+    final pbClient = await get<ProtobuffClientInjector>().call(coin);
+
+    final authBytes = await _sign(
+      pbClient: pbClient,
+      multiSigAddress: item.multiSigAddress,
+      signerAccountId: signerAccountId,
+      txBody: item.txBody,
+      fee: item.fee,
+    );
+
+    final unorderedSignatures = {
+      item.signerAddress: authBytes,
+      ...item.signatures.asMap().map(
+            (key, value) => MapEntry(
+              value.signerAddress,
+              convert.hex.decode(value.signatureHex),
+            ),
+          ),
+    };
+
+    final sigLookup = <String, List<int>>{};
+    for (final publicKey in multiSigAccount.publicKey.publicKeys) {
+      final address = publicKey.address;
+      final sig = unorderedSignatures[address];
+      if (sig != null) {
+        sigLookup[address] = sig;
+      }
+    }
+
+    final privateKey = wallet.AminoPrivKey(
+      threshold: multiSigAccount.signaturesRequired,
+      pubKeys: multiSigAccount.publicKey.publicKeys,
+      coin: coin,
+      sigLookup: sigLookup,
+    );
+
+    final responsePair = await pbClient.broadcastTransaction(
+      item.txBody,
+      [
+        privateKey,
+      ],
+      item.fee,
+    );
+
+    // TODO-Roy: if is wallet connect, send update to wallet connect
+    // Probably move multi-sig broadcast somewhere else and reference it both
+    // here and in wallet connect delegate
+
+    await _finalizeTx(
+      signerAddress: item.signerAddress,
+      txUuid: item.txUuid,
+      response: responsePair.txResponse,
+      coin: coin,
+      fee: item.fee,
+    );
+  }
+
+  Future<void> _finalizeTx({
     required String signerAddress,
     required String txUuid,
     required TxResponse response,
@@ -162,6 +281,29 @@ class MultiSigService extends Listenable with ListenableMixin {
         codespace: response.codespace,
       ),
     );
+  }
+
+  Future<List<int>> _sign({
+    required p.PbClient pbClient,
+    required String multiSigAddress,
+    required String signerAccountId,
+    required p.TxBody txBody,
+    required p.Fee fee,
+  }) async {
+    final signerRootPk = await _accountService.loadKey(signerAccountId);
+
+    final signerPk = signerRootPk!.defaultKey();
+
+    final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
+
+    final authBytes = pbClient.generateMultiSigAuthorization(
+      signerPk,
+      txBody,
+      fee,
+      multiSigBaseAccount,
+    );
+
+    return authBytes;
   }
 
   void _cacheMultiSigItem(MultiSigActionListItem item) {

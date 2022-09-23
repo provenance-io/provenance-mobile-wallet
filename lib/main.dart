@@ -258,15 +258,16 @@ void main(List<String> args) {
       final multiSigClient = MultiSigClient();
       get.registerSingleton<MultiSigClient>(multiSigClient);
 
-      final multiSigService = MultiSigService(
-        multiSigClient: multiSigClient,
-      );
-      get.registerSingleton<MultiSigService>(multiSigService);
-
       final accountService = AccountService(
         storage: accountStorageService,
       );
       get.registerSingleton<AccountService>(accountService);
+
+      final multiSigService = MultiSigService(
+        accountService: accountService,
+        multiSigClient: multiSigClient,
+      );
+      get.registerSingleton<MultiSigService>(multiSigService);
 
       get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
 
