@@ -11,7 +11,7 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -55,7 +55,7 @@ void main() {
       final address = selectedAccount!.address;
       final coin = selectedAccount.coin;
 
-      final assets = await state.assetService.getAssets(coin, address);
+      final assets = await state.assetClient.getAssets(coin, address);
 
       expect(walletService.events.selected.value?.id, selectedAccount.id);
       expect(bloc.assetList.value!.first.amount, assets.first.amount);
@@ -165,7 +165,7 @@ void main() {
 class TestState {
   TestState._(
     this.accountIds,
-    this.assetService,
+    this.assetClient,
     this.transactionService,
     this.deepLinkService,
     this.walletService,
@@ -173,7 +173,7 @@ class TestState {
   );
 
   final List<String> accountIds;
-  final AssetService assetService;
+  final AssetClient assetClient;
   final TransactionService transactionService;
   final DeepLinkService deepLinkService;
   final AccountService walletService;
@@ -287,7 +287,7 @@ class TestState {
     final mockWalletConnectService = MockWalletConnectService();
 
     final deepLinkService = MockDeepLinkService();
-    final assetService = MockAssetService(assets);
+    final assetClient = MockAssetClient(assets);
     final transactionService =
         MockTransactionService(sendTransactions, transactions);
 
@@ -299,7 +299,7 @@ class TestState {
 
     final authHelper = LocalAuthHelper();
 
-    get.registerSingleton<AssetService>(assetService);
+    get.registerSingleton<AssetClient>(assetClient);
     get.registerSingleton<TransactionService>(transactionService);
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<KeyValueService>(keyValueService);
@@ -318,7 +318,7 @@ class TestState {
 
     return TestState._(
       accountIds,
-      assetService,
+      assetClient,
       transactionService,
       deepLinkService,
       accountService,

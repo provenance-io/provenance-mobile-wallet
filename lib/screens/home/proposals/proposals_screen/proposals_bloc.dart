@@ -4,7 +4,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/governance_service/governance_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -48,7 +48,7 @@ class ProposalsBloc extends PwPagingCache {
     try {
       _proposalPages.tryAdd(1);
       final asset =
-          (await get<AssetService>().getAssets(_account.coin, _account.address))
+          (await get<AssetClient>().getAssets(_account.coin, _account.address))
               .firstWhere((element) => element.denom == 'nhash');
       final proposals = await _governanceService.getProposals(
         _account.coin,

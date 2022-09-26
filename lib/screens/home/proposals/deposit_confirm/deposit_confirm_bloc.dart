@@ -8,7 +8,7 @@ import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
@@ -36,7 +36,7 @@ class DepositConfirmBloc extends TransactionBloc {
 
     try {
       final asset =
-          (await get<AssetService>().getAssets(account.coin, account.address))
+          (await get<AssetClient>().getAssets(account.coin, account.address))
               .firstWhere((element) => element.denom == 'nhash');
 
       _depositDetails.tryAdd(

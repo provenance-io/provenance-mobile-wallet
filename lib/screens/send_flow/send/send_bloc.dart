@@ -4,7 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
@@ -37,7 +37,7 @@ class SendBloc extends Disposable {
   SendBloc(
     this._coin,
     this._provenanceAddress,
-    this._assetService,
+    this._assetClient,
     this._priceService,
     this._transactionService,
     this._navigator,
@@ -47,7 +47,7 @@ class SendBloc extends Disposable {
   final Coin _coin;
   final String _provenanceAddress;
   final SendBlocNavigator _navigator;
-  final AssetService _assetService;
+  final AssetClient _assetClient;
   final TransactionService _transactionService;
   final PriceService _priceService;
 
@@ -55,7 +55,7 @@ class SendBloc extends Disposable {
 
   Future<void> load() {
     final assetFuture =
-        _assetService.getAssets(_coin, _provenanceAddress).then((assets) async {
+        _assetClient.getAssets(_coin, _provenanceAddress).then((assets) async {
       final denominations = assets.map((e) => e.denom).toSet().toList();
 
       final prices = await _priceService

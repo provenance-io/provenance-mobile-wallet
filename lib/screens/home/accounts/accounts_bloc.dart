@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
@@ -17,7 +17,7 @@ class AccountsBloc implements Disposable {
 
   final _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
-  final _assetService = get<AssetService>();
+  final _assetService = get<AssetClient>();
   final _count = BehaviorSubject.seeded(0);
 
   final _updated = PublishSubject<Account>();

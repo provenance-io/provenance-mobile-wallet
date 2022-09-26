@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/default_asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/dtos/asset_dto.dart';
+import 'package:provenance_wallet/services/asset_client/dtos/asset_graph_item_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
@@ -22,7 +22,7 @@ import './default_asset_service_test.mocks.dart';
 main() {
   MockTestHttpClient? mockHttpClient;
   MockNotificationService? mockNotificationService;
-  DefaultAssetService? assetService;
+  DefaultAssetClient? assetClient;
 
   setUp(() async {
     mockNotificationService = MockNotificationService();
@@ -33,7 +33,7 @@ main() {
       Future.value(mockHttpClient!),
     );
 
-    assetService = DefaultAssetService();
+    assetClient = DefaultAssetClient();
   });
 
   void _setupResults<X>(List<X>? futureResult) {
@@ -66,7 +66,7 @@ main() {
     test('notification success', () async {
       _setupResults<Asset>(null);
 
-      await assetService!.getAssets(Coin.testNet, "ABCDE");
+      await assetClient!.getAssets(Coin.testNet, "ABCDE");
 
       verify(mockNotificationService!
           .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
@@ -102,7 +102,7 @@ main() {
     test('url', () async {
       _setupResults<Asset>(null);
 
-      await assetService!.getAssets(Coin.testNet, "ABCDE");
+      await assetClient!.getAssets(Coin.testNet, "ABCDE");
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
@@ -148,7 +148,7 @@ main() {
 
       _setupResults<Asset>(assets);
 
-      final results = await assetService!.getAssets(Coin.testNet, "ABCDE");
+      final results = await assetClient!.getAssets(Coin.testNet, "ABCDE");
 
       expect(
         results,
@@ -159,7 +159,7 @@ main() {
     test('list Converter', () async {
       _setupResults<Asset>(null);
 
-      await assetService!.getAssets(Coin.testNet, "ABCDE");
+      await assetClient!.getAssets(Coin.testNet, "ABCDE");
 
       var captures = verify(mockHttpClient!.get(
         any,
@@ -219,7 +219,7 @@ main() {
     test('notification success', () async {
       _setupResults<AssetGraphItem>(null);
 
-      await assetService!.getAssetGraphingData(
+      await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "AssetTypeA",
         GraphingDataValue.all,
@@ -259,7 +259,7 @@ main() {
     test('url with out start or end dates', () async {
       _setupResults<AssetGraphItem>(null);
 
-      await assetService!.getAssetGraphingData(
+      await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "AssetTypeA",
         GraphingDataValue.all,
@@ -287,7 +287,7 @@ main() {
       final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
       final now = DateTime.now();
 
-      await assetService!.getAssetGraphingData(
+      await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "AssetTypeA",
         GraphingDataValue.all,
@@ -316,7 +316,7 @@ main() {
       final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
       final now = DateTime.now();
 
-      await assetService!.getAssetGraphingData(
+      await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "AssetTypeA",
         GraphingDataValue.all,
@@ -357,7 +357,7 @@ main() {
 
       _setupResults<AssetGraphItem>(assets);
 
-      final results = await assetService!.getAssetGraphingData(
+      final results = await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "ABCDE",
         GraphingDataValue.all,
@@ -372,7 +372,7 @@ main() {
     test('list Converter', () async {
       _setupResults<AssetGraphItem>(null);
 
-      await assetService!.getAssetGraphingData(
+      await assetClient!.getAssetGraphingData(
         Coin.testNet,
         "ABCDE",
         GraphingDataValue.all,

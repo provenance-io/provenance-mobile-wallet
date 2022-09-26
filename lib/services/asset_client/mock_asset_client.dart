@@ -1,10 +1,10 @@
 import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 
-class MockAssetService extends AssetService {
+class MockAssetClient extends AssetClient {
   final faker = Faker();
   @override
   Future<List<Asset>> getAssets(

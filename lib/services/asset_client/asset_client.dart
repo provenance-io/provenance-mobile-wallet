@@ -3,7 +3,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-class AssetService {
+class AssetClient {
   Future<List<Asset>> getAssets(
     Coin coin,
     String provenanceAddresses,

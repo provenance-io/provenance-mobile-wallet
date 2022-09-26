@@ -16,7 +16,7 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
     as _i16;
-import 'package:provenance_wallet/services/asset_service/asset_service.dart'
+import 'package:provenance_wallet/services/asset_client/asset_client.dart'
     as _i6;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i14;
@@ -66,11 +66,11 @@ class _FakeHttpClient_3 extends _i1.SmartFake implements _i5.HttpClient {
       : super(parent, parentInvocation);
 }
 
-/// A class which mocks [AssetService].
+/// A class which mocks [AssetClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAssetService extends _i1.Mock implements _i6.AssetService {
-  MockAssetService() {
+class MockAssetClient extends _i1.Mock implements _i6.AssetClient {
+  MockAssetClient() {
     _i1.throwOnMissingStub(this);
   }
 

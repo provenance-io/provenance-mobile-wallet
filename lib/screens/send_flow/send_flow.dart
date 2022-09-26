@@ -10,7 +10,7 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_service/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
@@ -41,7 +41,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
       return SendBloc(
         coin,
         address,
-        get<AssetService>(),
+        get<AssetClient>(),
         get<PriceService>(),
         get<TransactionService>(),
         this,

@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -14,7 +14,7 @@ class AssetChartBloc extends Disposable {
 
   final Coin _coin;
   final Asset _asset;
-  final _assetService = get<AssetService>();
+  final _assetService = get<AssetClient>();
   final _chartDetails = BehaviorSubject<AssetChartDetails?>.seeded(null);
 
   ValueStream<AssetChartDetails?> get chartDetails => _chartDetails.stream;

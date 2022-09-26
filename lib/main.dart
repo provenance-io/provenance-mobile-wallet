@@ -28,9 +28,9 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/default_asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/mock_asset_client.dart';
 import 'package:provenance_wallet/services/config_service/default_local_config_service.dart';
 import 'package:provenance_wallet/services/config_service/default_remote_config_service.dart';
 import 'package:provenance_wallet/services/config_service/firebase_remote_config_service.dart';
@@ -469,8 +469,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     final isMockingAssetService =
         await keyValueService.getBool(PrefKey.isMockingAssetService) ?? false;
 
-    get.registerLazySingleton<AssetService>(
-      () => isMockingAssetService ? MockAssetService() : DefaultAssetService(),
+    get.registerLazySingleton<AssetClient>(
+      () => isMockingAssetService ? MockAssetClient() : DefaultAssetClient(),
     );
 
     final isMockingTransactionService =

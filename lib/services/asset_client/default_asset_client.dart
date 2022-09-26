@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_dto.dart';
-import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/dtos/asset_dto.dart';
+import 'package:provenance_wallet/services/asset_client/dtos/asset_graph_item_dto.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
@@ -27,7 +27,7 @@ class _DateTimeFormatWithTimeZone extends DateFormat {
   }
 }
 
-class DefaultAssetService extends AssetService
+class DefaultAssetClient extends AssetClient
     with ClientNotificationMixin, ClientCoinMixin {
   static final _formatter =
       _DateTimeFormatWithTimeZone("yyyy-MM-dd'T'HH:mm:ss.SSS");

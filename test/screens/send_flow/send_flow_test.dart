@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -17,14 +17,14 @@ import 'send_flow_test.mocks.dart';
 final get = GetIt.instance;
 
 @GenerateMocks([
-  AssetService,
+  AssetClient,
   TransactionService,
   AccountService,
   TransactionHandler,
   PriceService,
 ])
 main() {
-  MockAssetService? mockAssetService;
+  MockAssetClient? mockAssetClient;
   MockTransactionService? mockTransactionService;
   MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
@@ -54,8 +54,8 @@ main() {
       return Future.value(response);
     });
 
-    mockAssetService = MockAssetService();
-    when(mockAssetService!.getAssets(any, any)).thenAnswer((realInvocation) {
+    mockAssetClient = MockAssetClient();
+    when(mockAssetClient!.getAssets(any, any)).thenAnswer((realInvocation) {
       final response = <Asset>[];
 
       return Future.value(response);
@@ -69,7 +69,7 @@ main() {
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<TransactionService>(mockTransactionService!);
-    get.registerSingleton<AssetService>(mockAssetService!);
+    get.registerSingleton<AssetClient>(mockAssetClient!);
     get.registerSingleton<AccountService>(mockAccountService!);
     get.registerSingleton<PriceService>(mockPriceService!);
   });
@@ -77,7 +77,7 @@ main() {
   tearDown(() {
     get.unregister<AccountService>();
     get.unregister<TransactionService>();
-    get.unregister<AssetService>();
+    get.unregister<AssetClient>();
     get.unregister<TransactionHandler>();
     get.unregister<PriceService>();
   });
