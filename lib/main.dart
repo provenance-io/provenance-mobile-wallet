@@ -58,7 +58,7 @@ import 'package:provenance_wallet/services/notification/basic_notification_servi
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/disabled_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
@@ -534,8 +534,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       transactionHandler,
     );
 
-    get.registerLazySingleton<PriceService>(
-      () => PriceService(),
+    get.registerLazySingleton<PriceClient>(
+      () => PriceClient(),
     );
 
     final accountService = get<AccountService>();

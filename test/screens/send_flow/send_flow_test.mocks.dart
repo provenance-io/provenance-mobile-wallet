@@ -27,7 +27,7 @@ import 'package:provenance_wallet/services/models/price.dart' as _i18;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
-import 'package:provenance_wallet/services/price_service/price_service.dart'
+import 'package:provenance_wallet/services/price_client/price_service.dart'
     as _i17;
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
     as _i11;
@@ -280,11 +280,11 @@ class MockTransactionHandler extends _i1.Mock
           as _i7.Future<_i4.RawTxResponsePair>);
 }
 
-/// A class which mocks [PriceService].
+/// A class which mocks [PriceClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i17.PriceService {
-  MockPriceService() {
+class MockPriceClient extends _i1.Mock implements _i17.PriceClient {
+  MockPriceClient() {
     _i1.throwOnMissingStub(this);
   }
 

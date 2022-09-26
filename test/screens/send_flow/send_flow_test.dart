@@ -9,7 +9,7 @@ import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 
 import 'send_flow_test.mocks.dart';
@@ -21,14 +21,14 @@ final get = GetIt.instance;
   TransactionService,
   AccountService,
   TransactionHandler,
-  PriceService,
+  PriceClient,
 ])
 main() {
   MockAssetClient? mockAssetClient;
   MockTransactionService? mockTransactionService;
   MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
-  MockPriceService? mockPriceService;
+  MockPriceService? mockPriceClient;
 
   setUp(() {
     mockTransactionHandler = MockTransactionHandler();
@@ -64,14 +64,14 @@ main() {
     mockAccountService = MockAccountService();
     when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
 
-    mockPriceService = MockPriceService();
-    when(mockPriceService!.getAssetPrices(any, any))
+    mockPriceClient = MockPriceClient();
+    when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<TransactionService>(mockTransactionService!);
     get.registerSingleton<AssetClient>(mockAssetClient!);
     get.registerSingleton<AccountService>(mockAccountService!);
-    get.registerSingleton<PriceService>(mockPriceService!);
+    get.registerSingleton<PriceClient>(mockPriceClient!);
   });
 
   tearDown(() {
@@ -79,7 +79,7 @@ main() {
     get.unregister<TransactionService>();
     get.unregister<AssetClient>();
     get.unregister<TransactionHandler>();
-    get.unregister<PriceService>();
+    get.unregister<PriceClient>();
   });
 
 //   testWidgets("Contents", (tester) async {

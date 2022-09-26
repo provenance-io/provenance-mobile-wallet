@@ -8,8 +8,8 @@ import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/price_service/dtos/price_dto.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/dtos/price_dto.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import 'price_service_test.mocks.dart';
@@ -18,7 +18,7 @@ import 'price_service_test.mocks.dart';
 main() {
   MockTestHttpClient? mockHttpClient;
   MockNotificationService? mockNotificationService;
-  PriceService? priceService;
+  PriceClient? priceClient;
 
   setUp(() async {
     mockNotificationService = MockNotificationService();
@@ -29,7 +29,7 @@ main() {
       Future.value(mockHttpClient!),
     );
 
-    priceService = PriceService();
+    priceClient = PriceClient();
   });
 
   tearDown(() async {
@@ -62,7 +62,7 @@ main() {
     test('no notification', () async {
       _setupResults<List<Price>>(null);
 
-      await priceService!.getAssetPrices(Coin.testNet, ['A']);
+      await priceClient!.getAssetPrices(Coin.testNet, ['A']);
 
       verifyNever(mockNotificationService!
           .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
@@ -71,7 +71,7 @@ main() {
     test('url', () async {
       _setupResults<List<Price>>(null);
 
-      await priceService!.getAssetPrices(Coin.testNet, ["A", "b"]);
+      await priceClient!.getAssetPrices(Coin.testNet, ["A", "b"]);
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
@@ -107,7 +107,7 @@ main() {
 
       _setupResults<List<Price>>(prices);
 
-      final result = await priceService!.getAssetPrices(Coin.testNet, ['a']);
+      final result = await priceClient!.getAssetPrices(Coin.testNet, ['a']);
 
       expect(
         result,
@@ -118,7 +118,7 @@ main() {
     test('Converter', () async {
       _setupResults<List<Price>>(null);
 
-      await priceService!.getAssetPrices(Coin.testNet, ['a']);
+      await priceClient!.getAssetPrices(Coin.testNet, ['a']);
 
       var captures = verify(mockHttpClient!.get(
         any,

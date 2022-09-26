@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/price_service/dtos/price_dto.dart';
+import 'package:provenance_wallet/services/price_client/dtos/price_dto.dart';
 
 class Price {
   Price({required PriceDto dto})

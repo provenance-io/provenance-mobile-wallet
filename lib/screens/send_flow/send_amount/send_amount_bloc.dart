@@ -6,7 +6,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_bank.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -29,7 +29,7 @@ class SendAmountBloc extends Disposable {
     this.account,
     this.receivingAddress,
     this.asset,
-    this._priceService,
+    this._priceClient,
     this._navigator, {
     required this.requiredString,
     required this.insufficientString,
@@ -39,7 +39,7 @@ class SendAmountBloc extends Disposable {
 
   final _streamController = StreamController<SendAmountBlocState>();
   final SendAmountBlocNavigator _navigator;
-  final PriceService _priceService;
+  final PriceClient _priceClient;
 
   MultiSendAsset? _fee;
 
@@ -79,7 +79,7 @@ class SendAmountBloc extends Disposable {
     List<SendAsset> individualFees = <SendAsset>[];
 
     final denoms = estimate.totalFees.map((e) => e.denom).toList();
-    final priceLookup = await _priceService.getAssetPrices(coin, denoms).then(
+    final priceLookup = await _priceClient.getAssetPrices(coin, denoms).then(
           (prices) => {for (var price in prices) price.denomination: price},
         );
 

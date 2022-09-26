@@ -12,7 +12,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -42,7 +42,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
         coin,
         address,
         get<AssetClient>(),
-        get<PriceService>(),
+        get<PriceClient>(),
         get<TransactionService>(),
         this,
       );
@@ -122,7 +122,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
       widget.accountDetails,
       _receivingAddress!,
       _asset!,
-      get<PriceService>(),
+      get<PriceClient>(),
       this,
       gasEstimateNotReadyString: strings.sendAmountErrorGasEstimateNotReady,
       insufficientString: strings.sendAmountErrorInsufficient,
