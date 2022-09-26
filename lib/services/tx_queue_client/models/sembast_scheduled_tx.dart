@@ -1,6 +1,6 @@
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_estimate.dart';
-import 'package:provenance_wallet/services/tx_queue_service/models/sembast_tx_signer.dart';
+import 'package:provenance_wallet/services/tx_queue_client/models/sembast_gas_estimate.dart';
+import 'package:provenance_wallet/services/tx_queue_client/models/sembast_tx_signer.dart';
 
 class SembastScheduledTx {
   SembastScheduledTx({

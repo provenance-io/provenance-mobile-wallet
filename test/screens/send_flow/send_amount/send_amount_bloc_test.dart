@@ -9,7 +9,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -30,7 +30,7 @@ final feeAmount = AccountGasEstimate(
 @GenerateMocks([
   SendAmountBlocNavigator,
   AccountService,
-  TxQueueService,
+  TxQueueClient,
   PriceClient,
 ])
 main() {
@@ -40,12 +40,12 @@ main() {
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockAccountService? mockAccountService;
-  MockTxQueueService? mockTxQueueService;
+  MockTxQueueClient? mockTxQueueClient;
   MockPriceClient? mockPriceClient;
 
   setUp(() {
-    mockTxQueueService = MockTxQueueService();
-    when(mockTxQueueService!.estimateGas(
+    mockTxQueueClient = MockTxQueueClient();
+    when(mockTxQueueClient!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
 
@@ -53,8 +53,8 @@ main() {
     when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<TxQueueService>(
-      mockTxQueueService!,
+    get.registerSingleton<TxQueueClient>(
+      mockTxQueueClient!,
     );
 
     mockAccountService = MockAccountService();
@@ -81,7 +81,7 @@ main() {
 
   tearDown(() {
     get.unregister<AccountService>();
-    get.unregister<TxQueueService>();
+    get.unregister<TxQueueClient>();
     get.unregister<MockAccountService>();
   });
 

@@ -14,7 +14,7 @@ import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
-import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -164,7 +164,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   ) {
     final bloc = SendReviewBloc(
       widget.accountDetails,
-      get<TxQueueService>(),
+      get<TxQueueClient>(),
       _receivingAddress!,
       amountToSend,
       fee,

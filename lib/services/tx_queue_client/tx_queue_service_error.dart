@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-enum TxQueueServiceError implements PwError {
+enum TxQueueClientError implements PwError {
   accountNotFound,
   cipherKeyNotFound,
   createTxFailed,
@@ -11,13 +11,13 @@ enum TxQueueServiceError implements PwError {
   @override
   String toLocalizedString(BuildContext context) {
     switch (this) {
-      case TxQueueServiceError.txNotFound:
+      case TxQueueClientError.txNotFound:
         return Strings.of(context).errorTransactionNotFound;
-      case TxQueueServiceError.accountNotFound:
+      case TxQueueClientError.accountNotFound:
         return Strings.of(context).errorAccountNotFound;
-      case TxQueueServiceError.cipherKeyNotFound:
+      case TxQueueClientError.cipherKeyNotFound:
         return Strings.of(context).errorCipherKeyNotFound;
-      case TxQueueServiceError.createTxFailed:
+      case TxQueueClientError.createTxFailed:
         return Strings.of(context).errorCreateTransactionFailed;
     }
   }

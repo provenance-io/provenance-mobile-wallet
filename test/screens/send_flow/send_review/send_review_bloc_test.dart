@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -32,13 +32,13 @@ final accountDetails = BasicAccount(
 @GenerateMocks([
   SendReviewNaviagor,
   AccountService,
-  TxQueueService,
+  TxQueueClient,
 ])
 void main() {
   PrivateKey? privateKey;
   MockAccountService? mockAccountService;
   MockSendReviewNaviagor? mockNavigator;
-  MockTxQueueService? mockTxQueueService;
+  MockTxQueueClient? mockTxQueueClient;
 
   SendReviewBloc? bloc;
 
@@ -50,8 +50,8 @@ void main() {
     privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
     mockNavigator = MockSendReviewNaviagor();
 
-    mockTxQueueService = MockTxQueueService();
-    when(mockTxQueueService!.estimateGas(
+    mockTxQueueClient = MockTxQueueClient();
+    when(mockTxQueueClient!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) {
       return Future.value(AccountGasEstimate(100, null));
@@ -66,7 +66,7 @@ void main() {
 
     bloc = SendReviewBloc(
       accountDetails,
-      mockTxQueueService!,
+      mockTxQueueClient!,
       receivingAddress,
       dollarAsset,
       feeAsset,
@@ -105,7 +105,7 @@ void main() {
 
   group("doSend", () {
     test("args", () async {
-      when(mockTxQueueService!.scheduleTx(
+      when(mockTxQueueClient!.scheduleTx(
         txBody: anyNamed('txBody'),
         account: anyNamed('account'),
         gasEstimate: anyNamed('gasEstimate'),
@@ -121,7 +121,7 @@ void main() {
 
       await bloc!.doSend();
 
-      final captures = verify(mockTxQueueService!.scheduleTx(
+      final captures = verify(mockTxQueueClient!.scheduleTx(
         txBody: captureAnyNamed('txBody'),
         account: captureAnyNamed('account'),
         gasEstimate: captureAnyNamed('gasEstimate'),
