@@ -3,11 +3,11 @@ import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/all_transactions_dto.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/send_transaction_dto.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/dtos/all_transactions_dto.dart';
+import 'package:provenance_wallet/services/transaction_client/dtos/send_transaction_dto.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 
-class DefaultTransactionService extends TransactionService
+class DefaultTransactionClient extends TransactionClient
     with ClientNotificationMixin, ClientCoinMixin {
   String get _transactionServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/address';

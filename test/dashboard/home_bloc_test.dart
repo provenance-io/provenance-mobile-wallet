@@ -20,7 +20,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -166,7 +166,7 @@ class TestState {
   TestState._(
     this.accountIds,
     this.assetClient,
-    this.transactionService,
+    this.transactionClient,
     this.deepLinkService,
     this.walletService,
     this.bloc,
@@ -174,7 +174,7 @@ class TestState {
 
   final List<String> accountIds;
   final AssetClient assetClient;
-  final TransactionService transactionService;
+  final TransactionClient transactionClient;
   final DeepLinkService deepLinkService;
   final AccountService walletService;
   final HomeBloc bloc;
@@ -288,7 +288,7 @@ class TestState {
 
     final deepLinkService = MockDeepLinkService();
     final assetClient = MockAssetClient(assets);
-    final transactionService =
+    final transactionClient =
         MockTransactionService(sendTransactions, transactions);
 
     final keyValueService = DefaultKeyValueService(
@@ -300,7 +300,7 @@ class TestState {
     final authHelper = LocalAuthHelper();
 
     get.registerSingleton<AssetClient>(assetClient);
-    get.registerSingleton<TransactionService>(transactionService);
+    get.registerSingleton<TransactionClient>(transactionClient);
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<KeyValueService>(keyValueService);
     get.registerSingleton<RemoteNotificationService>(
@@ -319,7 +319,7 @@ class TestState {
     return TestState._(
       accountIds,
       assetClient,
-      transactionService,
+      transactionClient,
       deepLinkService,
       accountService,
       bloc,

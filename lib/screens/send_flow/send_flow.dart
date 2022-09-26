@@ -13,7 +13,7 @@ import 'package:provenance_wallet/screens/send_flow/send_review/send_review_scre
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -43,7 +43,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
         address,
         get<AssetClient>(),
         get<PriceClient>(),
-        get<TransactionService>(),
+        get<TransactionClient>(),
         this,
       );
     });

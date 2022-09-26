@@ -2,9 +2,9 @@ import 'package:faker/faker.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 
-class MockTransactionService extends TransactionService {
+class MockTransactionClient extends TransactionClient {
   final faker = Faker();
 
   @override

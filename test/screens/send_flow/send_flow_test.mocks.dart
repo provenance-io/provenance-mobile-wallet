@@ -29,7 +29,7 @@ import 'package:provenance_wallet/services/models/send_transactions.dart'
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
 import 'package:provenance_wallet/services/price_client/price_service.dart'
     as _i17;
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart'
     as _i11;
 
 // ignore_for_file: type=lint
@@ -93,12 +93,11 @@ class MockAssetClient extends _i1.Mock implements _i6.AssetClient {
           as _i7.Future<List<_i10.AssetGraphItem>>);
 }
 
-/// A class which mocks [TransactionService].
+/// A class which mocks [TransactionClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTransactionService extends _i1.Mock
-    implements _i11.TransactionService {
-  MockTransactionService() {
+class MockTransactionClient extends _i1.Mock implements _i11.TransactionClient {
+  MockTransactionClient() {
     _i1.throwOnMissingStub(this);
   }
 

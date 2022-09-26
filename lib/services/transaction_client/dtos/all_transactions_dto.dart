@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
+import 'package:provenance_wallet/services/transaction_client/dtos/transaction_dto.dart';
 
 part 'all_transactions_dto.g.dart';
 

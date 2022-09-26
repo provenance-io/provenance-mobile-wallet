@@ -8,8 +8,8 @@ import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/services/models/onboarding_stat.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/stat_service/default_stat_client.dart';
-import 'package:provenance_wallet/services/stat_service/dtos/stat_dto.dart';
+import 'package:provenance_wallet/services/stat_client/default_stat_client.dart';
+import 'package:provenance_wallet/services/stat_client/dtos/stat_dto.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import 'default_stat_service_test.mocks.dart';
@@ -18,7 +18,7 @@ import 'default_stat_service_test.mocks.dart';
 main() {
   MockTestHttpClient? mockHttpClient;
   MockNotificationService? mockNotificationService;
-  DefaultStatClient? statService;
+  DefaultStatClient? statClient;
 
   setUp(() async {
     mockNotificationService = MockNotificationService();
@@ -29,7 +29,7 @@ main() {
       Future.value(mockHttpClient!),
     );
 
-    statService = DefaultStatClient();
+    statClient = DefaultStatClient();
   });
 
   tearDown(() async {
@@ -62,7 +62,7 @@ main() {
     test('no notification', () async {
       _setupResults<OnboardingStat>(null);
 
-      await statService!.getStats(Coin.testNet);
+      await statClient!.getStats(Coin.testNet);
 
       verifyNever(mockNotificationService!
           .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
@@ -71,7 +71,7 @@ main() {
     test('url', () async {
       _setupResults<OnboardingStat>(null);
 
-      await statService!.getStats(Coin.testNet);
+      await statClient!.getStats(Coin.testNet);
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
@@ -101,7 +101,7 @@ main() {
 
       _setupResults<OnboardingStat>(prices);
 
-      final result = await statService!.getStats(Coin.testNet);
+      final result = await statClient!.getStats(Coin.testNet);
 
       expect(
         result,
@@ -112,7 +112,7 @@ main() {
     test('Converter', () async {
       _setupResults<OnboardingStat>(null);
 
-      await statService!.getStats(Coin.testNet);
+      await statClient!.getStats(Coin.testNet);
 
       var captures = verify(mockHttpClient!.get(
         any,

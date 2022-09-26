@@ -10,7 +10,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 
 import 'send_flow_test.mocks.dart';
 
@@ -18,14 +18,14 @@ final get = GetIt.instance;
 
 @GenerateMocks([
   AssetClient,
-  TransactionService,
+  TransactionClient,
   AccountService,
   TransactionHandler,
   PriceClient,
 ])
 main() {
   MockAssetClient? mockAssetClient;
-  MockTransactionService? mockTransactionService;
+  MockTransactionClient? mockTransactionClient;
   MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
   MockPriceClient? mockPriceClient;
@@ -43,8 +43,8 @@ main() {
       mockTransactionHandler!,
     );
 
-    mockTransactionService = MockTransactionService();
-    when(mockTransactionService!.getTransactions(
+    mockTransactionClient = MockTransactionClient();
+    when(mockTransactionClient!.getTransactions(
       any,
       any,
       any,
@@ -68,7 +68,7 @@ main() {
     when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<TransactionService>(mockTransactionService!);
+    get.registerSingleton<TransactionClient>(mockTransactionClient!);
     get.registerSingleton<AssetClient>(mockAssetClient!);
     get.registerSingleton<AccountService>(mockAccountService!);
     get.registerSingleton<PriceClient>(mockPriceClient!);
@@ -76,7 +76,7 @@ main() {
 
   tearDown(() {
     get.unregister<AccountService>();
-    get.unregister<TransactionService>();
+    get.unregister<TransactionClient>();
     get.unregister<AssetClient>();
     get.unregister<TransactionHandler>();
     get.unregister<PriceClient>();

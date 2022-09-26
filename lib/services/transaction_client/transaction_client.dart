@@ -3,7 +3,7 @@ import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-abstract class TransactionService {
+abstract class TransactionClient {
   Future<List<SendTransaction>> getSendTransactions(
     Coin coin,
     String provenanceAddress,

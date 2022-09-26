@@ -7,7 +7,7 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/util/extensions/iterable_extensions.dart';
 
 abstract class SendBlocNavigator {
@@ -39,7 +39,7 @@ class SendBloc extends Disposable {
     this._provenanceAddress,
     this._assetClient,
     this._priceClient,
-    this._transactionService,
+    this._transactionClient,
     this._navigator,
   );
 
@@ -48,7 +48,7 @@ class SendBloc extends Disposable {
   final String _provenanceAddress;
   final SendBlocNavigator _navigator;
   final AssetClient _assetClient;
-  final TransactionService _transactionService;
+  final TransactionClient _transactionClient;
   final PriceClient _priceClient;
 
   Stream<SendBlocState> get stream => _stateStreamController.stream;
@@ -84,7 +84,7 @@ class SendBloc extends Disposable {
 
     return Future.wait([
       assetFuture,
-      _transactionService.getSendTransactions(
+      _transactionClient.getSendTransactions(
         _coin,
         _provenanceAddress,
       ),

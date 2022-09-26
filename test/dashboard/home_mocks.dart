@@ -6,7 +6,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MockDeepLinkService implements DeepLinkService {
@@ -42,7 +42,7 @@ class MockAssetClient implements AssetClient {
   }
 }
 
-class MockTransactionService implements TransactionService {
+class MockTransactionService implements TransactionClient {
   MockTransactionService([
     this._sendTransactions = const {},
     this._transactions = const {},

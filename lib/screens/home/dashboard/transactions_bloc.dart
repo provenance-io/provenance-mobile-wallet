@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,7 +15,7 @@ class TransactionsBloc {
   })  : _allMessageTypes = allMessageTypes,
         _allStatuses = allStatuses;
 
-  final _transactionService = get<TransactionService>();
+  final _transactionClient = get<TransactionClient>();
   final _accountService = get<AccountService>();
   final String _allMessageTypes;
   final String _allStatuses;
@@ -38,7 +38,7 @@ class TransactionsBloc {
       _isLoadingTransactions.tryAdd(true);
 
       try {
-        transactions = await _transactionService.getTransactions(
+        transactions = await _transactionClient.getTransactions(
           account.coin,
           account.address,
           _transactionPages.value,
@@ -72,7 +72,7 @@ class TransactionsBloc {
     final account = _accountService.events.selected.value;
 
     if (account != null) {
-      final newTransactions = await _transactionService.getTransactions(
+      final newTransactions = await _transactionClient.getTransactions(
         account.coin,
         account.address,
         _transactionPages.value,
