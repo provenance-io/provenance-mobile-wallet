@@ -1,13 +1,13 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/proposals_dto.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/votes_dto.dart';
-import 'package:provenance_wallet/services/governance_service/governance_service.dart';
+import 'package:provenance_wallet/services/governance/dtos/proposals_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/votes_dto.dart';
+import 'package:provenance_wallet/services/governance/governance_client.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
 
-class DefaultGovernanceService extends GovernanceService
+class DefaultGovernanceClient extends GovernanceClient
     with ClientNotificationMixin, ClientCoinMixin {
   String get _governanceServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/explorer';

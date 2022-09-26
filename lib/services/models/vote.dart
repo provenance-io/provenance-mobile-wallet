@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/governance_service/dtos/vote_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/vote_dto.dart';
 
 class Vote {
   Vote({required VoteDto dto})

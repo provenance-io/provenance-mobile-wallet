@@ -47,12 +47,12 @@ Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
 @GenerateMocks([PbClient, GasFeeClient])
 main() {
   MockPbClient? mockPbClient;
-  MockGasFeeService? mockGasFeeClient;
+  MockGasFeeClient? mockGasFeeClient;
   DefaultTransactionHandler? transHandler;
 
   setUp(() {
     mockPbClient = MockPbClient();
-    mockGasFeeClient = MockGasFeeService();
+    mockGasFeeClient = MockGasFeeClient();
 
     when(mockPbClient!.broadcastTx(
       any,

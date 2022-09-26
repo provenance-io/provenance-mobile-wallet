@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/proposer_dto.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/vote_answer_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/proposer_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/vote_answer_dto.dart';
 
 part 'vote_dto.g.dart';
 

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/tally_amount_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/tally_amount_dto.dart';
 
 part 'timings_voting_tally_dto.g.dart';
 

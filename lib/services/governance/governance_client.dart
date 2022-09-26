@@ -3,7 +3,7 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-abstract class GovernanceService {
+abstract class GovernanceClient {
   Future<List<Proposal>> getProposals(
     Coin coin,
     int pageNumber,

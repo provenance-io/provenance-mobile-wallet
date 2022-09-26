@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/proposer_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/proposer_dto.dart';
 
 part 'header_dto.g.dart';
 

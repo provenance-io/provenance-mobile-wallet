@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/header_dto.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/timings_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/header_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/timings_dto.dart';
 
 part 'proposal_dto.g.dart';
 

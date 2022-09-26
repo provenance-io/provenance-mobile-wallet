@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/timings_deposit_dto.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/timings_voting_dto.dart';
-import 'package:provenance_wallet/services/governance_service/dtos/voting_time_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/timings_deposit_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/timings_voting_dto.dart';
+import 'package:provenance_wallet/services/governance/dtos/voting_time_dto.dart';
 
 part 'timings_dto.g.dart';
 
