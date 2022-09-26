@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/block_count_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/voting_power_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/block_count_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/voting_power_dto.dart';
 
 part 'detailed_validator_dto.g.dart';
 

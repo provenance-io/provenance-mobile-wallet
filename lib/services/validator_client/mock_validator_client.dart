@@ -6,9 +6,9 @@ import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/validator_client/validator_client.dart';
 
-class MockValidatorService extends ValidatorService {
+class MockValidatorClient extends ValidatorClient {
   final faker = Faker();
   static const _tokenTotal = 5802852327538;
   static const _addressCharSet = '1234567890abcdefghijklmnopqrstuvwzyz';

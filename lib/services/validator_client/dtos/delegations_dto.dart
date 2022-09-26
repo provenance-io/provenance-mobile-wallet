@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/delegation_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/delegation_totals_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/delegation_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/delegation_totals_dto.dart';
 
 part 'delegations_dto.g.dart';
 

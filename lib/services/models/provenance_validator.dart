@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/recent_validator_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/recent_validator_dto.dart';
 
 class ProvenanceValidator {
   ProvenanceValidator({

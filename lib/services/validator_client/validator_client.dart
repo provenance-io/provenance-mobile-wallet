@@ -6,7 +6,7 @@ import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
-abstract class ValidatorService {
+abstract class ValidatorClient {
   Future<List<ProvenanceValidator>> getRecentValidators(
     Coin coin,
     int pageNumber,

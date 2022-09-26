@@ -11,7 +11,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/validator_client/validator_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,7 +25,7 @@ class StakingScreenBloc extends PwPagingCache {
   );
   final _validatorPages = BehaviorSubject.seeded(1);
   final _delegationPages = BehaviorSubject.seeded(1);
-  final _validatorService = get<ValidatorService>();
+  final _validatorClient = get<ValidatorClient>();
   final TransactableAccount _account;
 
   final Function onFlowCompletion;
@@ -56,18 +56,18 @@ class StakingScreenBloc extends PwPagingCache {
     }
 
     try {
-      final delegations = await _validatorService.getDelegations(
+      final delegations = await _validatorClient.getDelegations(
         _account.coin,
         _account.address,
         _delegationPages.value,
       );
 
-      final rewards = await _validatorService.getRewards(
+      final rewards = await _validatorClient.getRewards(
         _account.coin,
         _account.address,
       );
 
-      final validators = await _validatorService.getRecentValidators(
+      final validators = await _validatorClient.getRecentValidators(
         _account.coin,
         _validatorPages.value,
       );
@@ -118,7 +118,7 @@ class StakingScreenBloc extends PwPagingCache {
         oldDetails.delegates,
         _delegationPages,
         _isLoadingDelegations,
-        () async => await _validatorService.getDelegations(
+        () async => await _validatorClient.getDelegations(
             _account.coin, _account.address, _delegationPages.value));
 
     _stakingDetails.tryAdd(
@@ -141,7 +141,7 @@ class StakingScreenBloc extends PwPagingCache {
       oldDetails.validators,
       _validatorPages,
       _isLoadingValidators,
-      () async => await _validatorService.getRecentValidators(
+      () async => await _validatorClient.getRecentValidators(
         _account.coin,
         _validatorPages.value,
       ),

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/balance_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/balance_dto.dart';
 
 part 'timings_voting_params_dto.g.dart';
 

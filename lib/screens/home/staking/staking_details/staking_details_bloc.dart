@@ -10,7 +10,7 @@ import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/validator_client/validator_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -22,7 +22,7 @@ class StakingDetailsBloc extends Disposable {
   final TransactableAccount _account;
   final Delegation? _selectedDelegation;
   final Rewards? _rewards;
-  final _validatorService = get<ValidatorService>();
+  final _validatorClient = get<ValidatorClient>();
 
   StakingDetailsBloc(
     this._validatorAddress,
@@ -40,12 +40,12 @@ class StakingDetailsBloc extends Disposable {
     final account = _account;
 
     try {
-      final validator = await _validatorService.getDetailedValidator(
+      final validator = await _validatorClient.getDetailedValidator(
         account.coin,
         _validatorAddress,
       );
 
-      final commission = await _validatorService.getValidatorCommission(
+      final commission = await _validatorClient.getValidatorCommission(
         account.coin,
         _validatorAddress,
       );

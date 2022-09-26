@@ -6,14 +6,14 @@ import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/commission_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/delegations_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/detailed_validator_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/recent_validators_dto.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/rewards_total_dto.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/commission_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/delegations_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/detailed_validator_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/recent_validators_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/rewards_total_dto.dart';
+import 'package:provenance_wallet/services/validator_client/validator_client.dart';
 
-class DefaultValidatorService extends ValidatorService
+class DefaultValidatorClient extends ValidatorClient
     with ClientNotificationMixin, ClientCoinMixin {
   String get _validatorServiceBasePath =>
       '/service-mobile-wallet/external/api/v1/explorer';

@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/services/validator_service/dtos/detailed_validator_dto.dart';
+import 'package:provenance_wallet/services/validator_client/dtos/detailed_validator_dto.dart';
 
 class DetailedValidator {
   DetailedValidator({required DetailedValidatorDto dto})
