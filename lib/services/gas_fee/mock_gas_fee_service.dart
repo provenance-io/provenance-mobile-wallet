@@ -3,7 +3,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
 import 'package:provenance_wallet/services/models/gas_fee.dart';
 
-class MockGasFeeService extends GasFeeService {
+class MockGasFeeService extends GasFeeClient {
   final faker = Faker();
 
   @override

@@ -45,7 +45,7 @@ import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
 import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/gas_fee_service/gas_fee_client.dart';
 import 'package:provenance_wallet/services/governance_service/default_governance_service.dart';
 import 'package:provenance_wallet/services/governance_service/governance_service.dart';
 import 'package:provenance_wallet/services/http_client.dart';
@@ -522,8 +522,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<NotificationService>(
       () => BasicNotificationService(),
     );
-    get.registerLazySingleton<GasFeeService>(
-      () => DefaultGasFeeService(),
+    get.registerLazySingleton<GasFeeClient>(
+      () => DefaultGasFeeClient(),
     );
 
     WalletConnection walletConnectionFactory(address) =>

@@ -8,8 +8,8 @@ import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/gas_fee_service/dto/gas_fee_dto.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/gas_fee/dto/gas_fee_dto.dart';
+import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
 import 'package:provenance_wallet/services/models/gas_fee.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -44,15 +44,15 @@ Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
   });
 }
 
-@GenerateMocks([PbClient, GasFeeService])
+@GenerateMocks([PbClient, GasFeeClient])
 main() {
   MockPbClient? mockPbClient;
-  MockGasFeeService? mockGasFeeService;
+  MockGasFeeService? mockGasFeeClient;
   DefaultTransactionHandler? transHandler;
 
   setUp(() {
     mockPbClient = MockPbClient();
-    mockGasFeeService = MockGasFeeService();
+    mockGasFeeClient = MockGasFeeService();
 
     when(mockPbClient!.broadcastTx(
       any,
@@ -74,13 +74,13 @@ main() {
     when(mockPbClient!.broadcastTransaction(any, any, any, any))
         .thenAnswer((_) async => rawResponse);
 
-    when(mockGasFeeService!.getGasFee(wallet.Coin.testNet))
+    when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
         .thenAnswer((_) => Future.value(gasFee));
 
     get.registerSingleton<ProtobuffClientInjector>(
       (_) => Future.value(mockPbClient!),
     );
-    get.registerSingleton<GasFeeService>(mockGasFeeService!);
+    get.registerSingleton<GasFeeClient>(mockGasFeeClient!);
 
     transHandler = DefaultTransactionHandler();
   });
@@ -105,12 +105,12 @@ main() {
         () => transHandler!.estimateGas(txBody, [publicKey], coin),
         throwsA(exception),
       );
-      verifyZeroInteractions(mockGasFeeService!);
+      verifyZeroInteractions(mockGasFeeClient!);
     });
 
     test("error while get gas fee", () async {
       final exception = Exception("A");
-      when(mockGasFeeService!.getGasFee(wallet.Coin.testNet))
+      when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -154,12 +154,12 @@ main() {
             .executeTransaction(txBody, privateKey.defaultKey(), coin),
         throwsA(exception),
       );
-      verifyZeroInteractions(mockGasFeeService!);
+      verifyZeroInteractions(mockGasFeeClient!);
     });
 
     test("error while get gas fee", () async {
       final exception = Exception("A");
-      when(mockGasFeeService!.getGasFee(wallet.Coin.testNet))
+      when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
           .thenAnswer((_) => Future.error(exception));
 
       expect(

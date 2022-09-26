@@ -5,7 +5,7 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
+import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -31,7 +31,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final protoBuffInjector = get<ProtobuffClientInjector>();
     final pbClient = await protoBuffInjector(coin);
 
-    final gasService = get<GasFeeService>();
+    final gasService = get<GasFeeClient>();
 
     final estimate = await pbClient.estimateTransactionFees(
       txBody,
