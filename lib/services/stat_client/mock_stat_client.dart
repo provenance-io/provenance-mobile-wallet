@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/models/onboarding_stat.dart';
-import 'package:provenance_wallet/services/stat_service/stat_service.dart';
+import 'package:provenance_wallet/services/stat_client/stat_client.dart';
 
-class MockStatService extends StatService {
+class MockStatClient extends StatClient {
   @override
   Future<OnboardingStat?> getStats(Coin coin) async {
     await Future.delayed(Duration(milliseconds: 500));

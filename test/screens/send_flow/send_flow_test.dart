@@ -28,7 +28,7 @@ main() {
   MockTransactionService? mockTransactionService;
   MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
-  MockPriceService? mockPriceClient;
+  MockPriceClient? mockPriceClient;
 
   setUp(() {
     mockTransactionHandler = MockTransactionHandler();

@@ -64,8 +64,8 @@ import 'package:provenance_wallet/services/remote_notification/disabled_remote_n
 import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
-import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
-import 'package:provenance_wallet/services/stat_service/stat_service.dart';
+import 'package:provenance_wallet/services/stat_service/default_stat_client.dart';
+import 'package:provenance_wallet/services/stat_service/stat_client.dart';
 import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
 import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
@@ -463,8 +463,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       (await get<Future<TestHttpClient>>()).setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<StatService>(
-      () => DefaultStatService(),
+    get.registerLazySingleton<StatClient>(
+      () => DefaultStatClient(),
     );
     final isMockingAssetService =
         await keyValueService.getBool(PrefKey.isMockingAssetService) ?? false;

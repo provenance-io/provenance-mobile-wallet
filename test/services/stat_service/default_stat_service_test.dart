@@ -8,7 +8,7 @@ import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/services/models/onboarding_stat.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
+import 'package:provenance_wallet/services/stat_service/default_stat_client.dart';
 import 'package:provenance_wallet/services/stat_service/dtos/stat_dto.dart';
 import 'package:provenance_wallet/util/get.dart';
 
@@ -18,7 +18,7 @@ import 'default_stat_service_test.mocks.dart';
 main() {
   MockTestHttpClient? mockHttpClient;
   MockNotificationService? mockNotificationService;
-  DefaultStatService? statService;
+  DefaultStatClient? statService;
 
   setUp(() async {
     mockNotificationService = MockNotificationService();
@@ -29,7 +29,7 @@ main() {
       Future.value(mockHttpClient!),
     );
 
-    statService = DefaultStatService();
+    statService = DefaultStatClient();
   });
 
   tearDown(() async {
