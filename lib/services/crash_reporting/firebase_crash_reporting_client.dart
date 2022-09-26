@@ -1,8 +1,8 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_client.dart';
 
-class FirebaseCrashReportingService implements CrashReportingService {
+class FirebaseCrashReportingClient implements CrashReportingClient {
   static final _instance = FirebaseCrashlytics.instance;
 
   @override

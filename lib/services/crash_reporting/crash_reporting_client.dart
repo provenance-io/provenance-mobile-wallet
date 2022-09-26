@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-abstract class CrashReportingService {
+abstract class CrashReportingClient {
   Future<void> log(String message);
 
   Future<void> recordError(

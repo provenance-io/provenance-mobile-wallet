@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_client.dart';
 
-class LoggingCrashReportingService implements CrashReportingService {
+class LoggingCrashReportingClient implements CrashReportingClient {
   bool _collectionEnabled = true;
 
   @override

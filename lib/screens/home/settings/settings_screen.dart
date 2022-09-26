@@ -14,7 +14,7 @@ import 'package:provenance_wallet/screens/home/settings/link_item.dart';
 import 'package:provenance_wallet/screens/home/settings/toggle_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/config_service/local_config.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_client.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -205,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               );
 
                               final crashReportingService =
-                                  get<CrashReportingService>();
+                                  get<CrashReportingClient>();
 
                               if (value) {
                                 await crashReportingService

@@ -38,9 +38,9 @@ import 'package:provenance_wallet/services/config_service/local_config.dart';
 import 'package:provenance_wallet/services/config_service/remote_config_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/logging_crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_client.dart';
+import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_client.dart';
+import 'package:provenance_wallet/services/crash_reporting/logging_crash_reporting_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
@@ -113,8 +113,8 @@ void main(List<String> args) {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    if (get.isRegistered<CrashReportingService>()) {
-      get<CrashReportingService>().recordFlutterError(errorDetails);
+    if (get.isRegistered<CrashReportingClient>()) {
+      get<CrashReportingClient>().recordFlutterError(errorDetails);
     }
   };
 
@@ -149,7 +149,7 @@ void main(List<String> args) {
 
       _log.info('Initializing: $config', tag: _tag);
 
-      CrashReportingService crashReportingService;
+      CrashReportingClient crashReportingService;
       RemoteNotificationService remoteNotificationService;
       RemoteConfigService remoteConfigService;
       DeepLinkService deepLinkService;
@@ -159,7 +159,7 @@ void main(List<String> args) {
       if (_enableFirebase) {
         await Firebase.initializeApp();
 
-        crashReportingService = FirebaseCrashReportingService();
+        crashReportingService = FirebaseCrashReportingClient();
 
         remoteNotificationService = DefaultRemoteNotificationService();
 
@@ -169,7 +169,7 @@ void main(List<String> args) {
         );
         deepLinkService = FirebaseDeepLinkService()..init();
       } else {
-        crashReportingService = LoggingCrashReportingService();
+        crashReportingService = LoggingCrashReportingClient();
         remoteNotificationService = DisabledRemoteNotificationService();
         remoteConfigService = DefaultRemoteConfigService(
           localConfigService: localConfigService,
@@ -177,7 +177,7 @@ void main(List<String> args) {
         deepLinkService = DisabledDeepLinkService();
       }
 
-      get.registerSingleton<CrashReportingService>(
+      get.registerSingleton<CrashReportingClient>(
         crashReportingService,
       );
 
@@ -294,8 +294,8 @@ void main(List<String> args) {
       mainCompleter.complete();
     },
     (error, stack) {
-      if (get.isRegistered<CrashReportingService>()) {
-        get<CrashReportingService>().recordError(
+      if (get.isRegistered<CrashReportingClient>()) {
+        get<CrashReportingClient>().recordError(
           error,
           stack: stack,
         );
