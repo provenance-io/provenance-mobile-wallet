@@ -209,7 +209,7 @@ class DefaultQueueTxService implements TxQueueService {
 
     final txResponse = responsePair.txResponse;
 
-    await _multiSigService.finalizeTx(
+    await _multiSigService.updateTxResult(
       signerAddress: signerAccount.address,
       txUuid: txUuid,
       response: responsePair.txResponse,

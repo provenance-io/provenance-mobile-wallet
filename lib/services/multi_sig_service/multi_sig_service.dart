@@ -168,7 +168,7 @@ class MultiSigService extends Listenable with ListenableMixin {
     return success;
   }
 
-  Future<void> finalizeTx({
+  Future<void> updateTxResult({
     required String signerAddress,
     required String txUuid,
     required TxResponse response,
