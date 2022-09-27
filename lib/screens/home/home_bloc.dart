@@ -39,7 +39,7 @@ class HomeBloc extends Disposable {
 
   final _transactionHandler = get<TransactionHandler>();
   final _accountService = get<AccountService>();
-  final _assetService = get<AssetClient>();
+  final _assetClient = get<AssetClient>();
   final _walletConnectService = get<WalletConnectService>();
 
   ValueStream<bool> get isLoading => _isLoading;
@@ -59,7 +59,7 @@ class HomeBloc extends Disposable {
       var assetList = <Asset>[];
 
       if (account != null) {
-        assetList = await _assetService.getAssets(
+        assetList = await _assetClient.getAssets(
           account.coin,
           account.address,
         );

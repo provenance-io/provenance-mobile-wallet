@@ -14,7 +14,7 @@ class AssetChartBloc extends Disposable {
 
   final Coin _coin;
   final Asset _asset;
-  final _assetService = get<AssetClient>();
+  final _assetClient = get<AssetClient>();
   final _chartDetails = BehaviorSubject<AssetChartDetails?>.seeded(null);
 
   ValueStream<AssetChartDetails?> get chartDetails => _chartDetails.stream;
@@ -83,7 +83,7 @@ class AssetChartBloc extends Disposable {
       false,
     );
 
-    final graphItemList = await _assetService.getAssetGraphingData(
+    final graphItemList = await _assetClient.getAssetGraphingData(
       _coin,
       _asset.denom,
       modifiedDataValue,
