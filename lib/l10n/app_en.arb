@@ -177,6 +177,8 @@
   "multiSigTransactionInitiatedTitle": "Transaction Initiated",
   "multiSigTransactionInitiatedMessage": "You will be notified upon co-signer approval",
   "multiSigTransactionInitiatedDone": "Back to dashboard",
+  "multiSigRecoverPleaseNote": "Please note",
+  "multiSigRecoverNoAccountsToRecover": "At this time, you do not have any accounts to import or recover",
   "nameYourAccount": "Name Your Account",
   "accountName": "Account Name",
   "accountNameMessage": "Name your account to easily identify it while using the Provenance Blockchain Wallet.\n\nThese names are stored locally, and can only be seen by you.",
@@ -635,7 +637,5 @@
   "devConfirmProposal": "Confirm Proposal",
   "devProposalComplete": "PROPOSAL COMPLETE",
   "devEnableMultiSig": "Enable Multi Sig",
-  "sendAssetListLoadingAssets": "Loading assets",
-  "multiSigRecoverPleaseNote": "Please note",
-  "multiSigRecoverNoAccountsToRecover": "At this time, you do not have any accounts to import or recover"
+  "sendAssetListLoadingAssets": "Loading assets"
 }

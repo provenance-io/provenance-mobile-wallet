@@ -178,7 +178,7 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
           }
         }
       }
-    } else {}
+    }
 
     return _LoadData(
       datas: recoverableRemoteAccounts.values.toList(),

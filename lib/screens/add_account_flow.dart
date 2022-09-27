@@ -279,9 +279,9 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
     );
 
     if (link != null) {
-      String _multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
+      final multiSigInvalidLink = Strings.of(context).multiSigInvalidLink;
       await _bloc.submitMultiSigJoinLink(
-        _multiSigInvalidLink,
+        multiSigInvalidLink,
         link,
         AddAccountScreen.multiSigJoinScanQrCode,
       );
