@@ -3,11 +3,12 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_sliders.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalWeightedVoteScreen extends StatefulWidget {
   const ProposalWeightedVoteScreen({
@@ -82,7 +83,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                             details.yesAmount ==
                         100,
                     onPressed: () {
-                      get<ProposalsFlowBloc>()
+                      Provider.of<ProposalsBloc>(context)
                           .showWeightedVoteReview(widget.proposal);
                     },
                     child: PwText(

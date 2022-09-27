@@ -1,10 +1,10 @@
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_list_item_status.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalListItem extends StatefulWidget {
   const ProposalListItem({
@@ -28,7 +28,7 @@ class _ProposalListItemState extends State<ProposalListItem> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        get<ProposalsFlowBloc>().showProposalDetails(widget.item);
+        Provider.of<ProposalsBloc>(context).showProposalDetails(widget.item);
       },
       child: Padding(
         padding: EdgeInsets.zero,

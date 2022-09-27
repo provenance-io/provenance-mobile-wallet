@@ -7,8 +7,8 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -16,6 +16,7 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalVoteConfirmScreen extends StatefulWidget {
   const ProposalVoteConfirmScreen({
@@ -88,7 +89,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               ),
               onPressed: () {
                 final data = _bloc.getMessageJson();
-                get<ProposalsFlowBloc>().showTransactionData(
+                Provider.of<ProposalsBloc>(context).showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
                 );
@@ -188,7 +189,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     try {
       final response = await _bloc.sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(
+      Provider.of<ProposalsBloc>(context).showTransactionComplete(
         response,
         Strings.of(context).proposalVoteComplete,
       );

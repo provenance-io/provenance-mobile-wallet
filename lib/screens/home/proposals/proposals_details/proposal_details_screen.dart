@@ -6,7 +6,6 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_buttons.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -17,6 +16,7 @@ import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalDetailsScreen extends StatefulWidget {
   const ProposalDetailsScreen({
@@ -283,7 +283,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                               child: PwOutlinedButton(
                                 strings.proposalDetailsScreenDeposit,
                                 onPressed: () {
-                                  get<ProposalsFlowBloc>()
+                                  Provider.of<ProposalsBloc>(context)
                                       .showDepositReview(_proposal);
                                 },
                               ),

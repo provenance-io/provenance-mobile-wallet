@@ -2,10 +2,10 @@ import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class VotingButtons extends StatelessWidget {
   const VotingButtons({
@@ -16,7 +16,7 @@ class VotingButtons extends StatelessWidget {
   final Proposal proposal;
   @override
   Widget build(BuildContext context) {
-    final _bloc = get<ProposalsFlowBloc>();
+    final _bloc = Provider.of<ProposalsBloc>(context);
     final strings = Strings.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
