@@ -6,7 +6,7 @@
 import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i10;
+import 'package:provenance_dart/proto.dart' as _i11;
 import 'package:provenance_dart/wallet.dart' as _i8;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i9;
@@ -17,6 +17,8 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/models/account.dart' as _i7;
+import 'package:provenance_wallet/services/tx_queue_service/models/service_tx_response.dart'
+    as _i10;
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
 
@@ -194,8 +196,13 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
   }
 
   @override
+  _i6.Stream<_i10.ServiceTxResponse> get response =>
+      (super.noSuchMethod(Invocation.getter(#response),
+              returnValue: _i6.Stream<_i10.ServiceTxResponse>.empty())
+          as _i6.Stream<_i10.ServiceTxResponse>);
+  @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
-          {_i10.TxBody? txBody, _i7.TransactableAccount? account}) =>
+          {_i11.TxBody? txBody, _i7.TransactableAccount? account}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #estimateGas, [], {#txBody: txBody, #account: account}),
@@ -205,7 +212,7 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
           as _i6.Future<_i3.AccountGasEstimate>);
   @override
   _i6.Future<_i4.ScheduledTx> scheduleTx(
-          {_i10.TxBody? txBody,
+          {_i11.TxBody? txBody,
           _i7.TransactableAccount? account,
           _i3.AccountGasEstimate? gasEstimate}) =>
       (super
@@ -218,12 +225,24 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
                     #gasEstimate: gasEstimate
                   })))) as _i6.Future<_i4.ScheduledTx>);
   @override
-  _i6.Future<void> completeTx(
-          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+  _i6.Future<void> completeTx({String? txUuid}) => (super.noSuchMethod(
+      Invocation.method(#completeTx, [], {#txUuid: txUuid}),
+      returnValue: _i6.Future<void>.value(),
+      returnValueForMissingStub: _i6.Future<void>.value()) as _i6.Future<void>);
+  @override
+  _i6.Future<bool> signTx(
+          {String? txUuid,
+          String? signerAddress,
+          String? multiSigAddress,
+          _i11.TxBody? txBody,
+          _i11.Fee? fee}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
-          returnValue: _i6.Future<void>.value(),
-          returnValueForMissingStub:
-              _i6.Future<void>.value()) as _i6.Future<void>);
+          Invocation.method(#signTx, [], {
+            #txUuid: txUuid,
+            #signerAddress: signerAddress,
+            #multiSigAddress: multiSigAddress,
+            #txBody: txBody,
+            #fee: fee
+          }),
+          returnValue: _i6.Future<bool>.value(false)) as _i6.Future<bool>);
 }

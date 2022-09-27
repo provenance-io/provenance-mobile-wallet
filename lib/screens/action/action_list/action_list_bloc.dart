@@ -4,11 +4,13 @@ import 'dart:developer';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
@@ -18,6 +20,7 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action_kind.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
+import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -105,7 +108,7 @@ class ActionListBloc extends Disposable {
   final WalletConnectQueueService _connectQueueService;
   final AccountService _accountService;
   final MultiSigService _multiSigService;
-  final MultiSigClient _multiSigClient;
+  final TxQueueService _txQueueService;
 
   final _streamController = StreamController<ActionListBlocState>();
 
@@ -114,7 +117,7 @@ class ActionListBloc extends Disposable {
         _connectQueueService = get<WalletConnectQueueService>(),
         _accountService = get<AccountService>(),
         _multiSigService = get<MultiSigService>(),
-        _multiSigClient = get<MultiSigClient>();
+        _txQueueService = get<TxQueueService>();
 
   Stream<ActionListBlocState> get stream => _streamController.stream;
 
@@ -254,7 +257,7 @@ class ActionListBloc extends Disposable {
     final multiSigGroups = <String, List<MultiSigActionListItem>>{};
 
     final multiSigItems = _multiSigService.items;
-    for (final item in multiSigItems) {
+    for (final item in multiSigItems.map(_toMultiSigListItem)) {
       final address = item.groupAddress;
 
       if (!multiSigGroups.containsKey(address)) {
@@ -282,6 +285,46 @@ class ActionListBloc extends Disposable {
 
     return groups;
   }
+
+  MultiSigActionListItem _toMultiSigListItem(MultiSigPendingTx tx) {
+    switch (tx.status) {
+      case MultiSigStatus.pending:
+        return _toSignListItem(tx);
+      case MultiSigStatus.ready:
+        return _toTransmitListItem(tx);
+      default:
+        throw 'Invalid tx status: ${tx.status.name}';
+    }
+  }
+
+  MultiSigTransmitActionListItem _toTransmitListItem(MultiSigPendingTx tx) =>
+      MultiSigTransmitActionListItem(
+        multiSigAddress: tx.multiSigAddress,
+        signerAddress: tx.signerAddress,
+        groupAddress: tx.multiSigAddress,
+        label: (c) => tx.txBody.messages
+            .map((e) => e.toMessage().toLocalizedName(c))
+            .join(', '),
+        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+        txBody: tx.txBody,
+        fee: tx.fee,
+        txUuid: tx.txUuid,
+        signatures: tx.signatures!,
+      );
+
+  MultiSigSignActionListItem _toSignListItem(MultiSigPendingTx tx) =>
+      MultiSigSignActionListItem(
+        multiSigAddress: tx.multiSigAddress,
+        signerAddress: tx.signerAddress,
+        groupAddress: tx.signerAddress,
+        label: (c) => tx.txBody.messages
+            .map((e) => e.toMessage().toLocalizedName(c))
+            .join(', '),
+        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+        txBody: tx.txBody,
+        fee: tx.fee,
+        txUuid: tx.txUuid,
+      );
 
   Future<bool> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
@@ -334,7 +377,7 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    _multiSigService.transmit(item);
+    await _txQueueService.completeTx(txUuid: item.txUuid);
   }
 
   Future<void> _processMultiSigSignItem(bool approved, ActionListGroup group,
@@ -344,7 +387,13 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    final success = await _multiSigService.sign(group, item);
+    final success = await _txQueueService.signTx(
+      txUuid: item.txUuid,
+      signerAddress: item.signerAddress,
+      multiSigAddress: item.multiSigAddress,
+      txBody: item.txBody,
+      fee: item.fee,
+    );
 
     // TODO-Roy: not needed, sync should pick up the change?
     // _onActionQueueUpdated();

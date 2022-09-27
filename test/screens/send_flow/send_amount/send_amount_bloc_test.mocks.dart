@@ -6,7 +6,7 @@
 import 'dart:async' as _i7;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i12;
+import 'package:provenance_dart/proto.dart' as _i13;
 import 'package:provenance_dart/wallet.dart' as _i10;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i11;
@@ -20,9 +20,11 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
     as _i3;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
-import 'package:provenance_wallet/services/models/price.dart' as _i14;
+import 'package:provenance_wallet/services/models/price.dart' as _i15;
 import 'package:provenance_wallet/services/price_service/price_service.dart'
-    as _i13;
+    as _i14;
+import 'package:provenance_wallet/services/tx_queue_service/models/service_tx_response.dart'
+    as _i12;
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
 
@@ -210,8 +212,13 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
   }
 
   @override
+  _i7.Stream<_i12.ServiceTxResponse> get response =>
+      (super.noSuchMethod(Invocation.getter(#response),
+              returnValue: _i7.Stream<_i12.ServiceTxResponse>.empty())
+          as _i7.Stream<_i12.ServiceTxResponse>);
+  @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
-          {_i12.TxBody? txBody, _i9.TransactableAccount? account}) =>
+          {_i13.TxBody? txBody, _i9.TransactableAccount? account}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #estimateGas, [], {#txBody: txBody, #account: account}),
@@ -221,7 +228,7 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
           as _i7.Future<_i3.AccountGasEstimate>);
   @override
   _i7.Future<_i4.ScheduledTx> scheduleTx(
-          {_i12.TxBody? txBody,
+          {_i13.TxBody? txBody,
           _i9.TransactableAccount? account,
           _i3.AccountGasEstimate? gasEstimate}) =>
       (super
@@ -234,31 +241,43 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
                     #gasEstimate: gasEstimate
                   })))) as _i7.Future<_i4.ScheduledTx>);
   @override
-  _i7.Future<void> completeTx(
-          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+  _i7.Future<void> completeTx({String? txUuid}) => (super.noSuchMethod(
+      Invocation.method(#completeTx, [], {#txUuid: txUuid}),
+      returnValue: _i7.Future<void>.value(),
+      returnValueForMissingStub: _i7.Future<void>.value()) as _i7.Future<void>);
+  @override
+  _i7.Future<bool> signTx(
+          {String? txUuid,
+          String? signerAddress,
+          String? multiSigAddress,
+          _i13.TxBody? txBody,
+          _i13.Fee? fee}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
-          returnValue: _i7.Future<void>.value(),
-          returnValueForMissingStub:
-              _i7.Future<void>.value()) as _i7.Future<void>);
+          Invocation.method(#signTx, [], {
+            #txUuid: txUuid,
+            #signerAddress: signerAddress,
+            #multiSigAddress: multiSigAddress,
+            #txBody: txBody,
+            #fee: fee
+          }),
+          returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
 /// A class which mocks [PriceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i13.PriceService {
+class MockPriceService extends _i1.Mock implements _i14.PriceService {
   MockPriceService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i14.Price>> getAssetPrices(
+  _i7.Future<List<_i15.Price>> getAssetPrices(
           _i10.Coin? coin, List<String>? denominations) =>
       (super.noSuchMethod(
               Invocation.method(#getAssetPrices, [coin, denominations]),
-              returnValue: _i7.Future<List<_i14.Price>>.value(<_i14.Price>[]))
-          as _i7.Future<List<_i14.Price>>);
+              returnValue: _i7.Future<List<_i15.Price>>.value(<_i15.Price>[]))
+          as _i7.Future<List<_i15.Price>>);
   @override
   _i7.Future<_i5.HttpClient> getClient(_i10.Coin? coin) => (super.noSuchMethod(
           Invocation.method(#getClient, [coin]),
