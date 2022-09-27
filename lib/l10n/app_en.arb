@@ -635,5 +635,7 @@
   "devConfirmProposal": "Confirm Proposal",
   "devProposalComplete": "PROPOSAL COMPLETE",
   "devEnableMultiSig": "Enable Multi Sig",
-  "sendAssetListLoadingAssets": "Loading assets"
+  "sendAssetListLoadingAssets": "Loading assets",
+  "pleaseNote": "Please note",
+  "noAccountsToRecover": "At this time, you do not have any accounts to import or recover"
 }
