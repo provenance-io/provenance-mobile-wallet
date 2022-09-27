@@ -395,9 +395,6 @@ class ActionListBloc extends Disposable {
       fee: item.fee,
     );
 
-    // TODO-Roy: not needed, sync should pick up the change?
-    // _onActionQueueUpdated();
-
     final status = success ? 'succeeded' : 'failed';
 
     logDebug('Sign tx ${item.txId} $status');
