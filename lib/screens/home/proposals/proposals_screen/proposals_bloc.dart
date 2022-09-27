@@ -104,11 +104,11 @@ class ProposalsBloc extends PwPagingCache {
       case rejected:
         return colorScheme.error;
       case votingPeriod:
-        return colorScheme.votingPeriod;
+        return colorScheme.terciary350;
       case depositPeriod:
-        return colorScheme.depositPeriod;
+        return colorScheme.notice325;
       case vetoed:
-        return colorScheme.vetoed;
+        return colorScheme.neutral200;
       default:
         return colorScheme.neutral200;
     }
