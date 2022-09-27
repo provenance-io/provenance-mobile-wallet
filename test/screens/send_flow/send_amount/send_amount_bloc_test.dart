@@ -44,7 +44,7 @@ main() {
   MockPriceClient? mockPriceClient;
 
   setUp(() {
-    mockTxQueueService = MockTxQueueClient();
+    mockTxQueueService = MockTxQueueService();
     when(mockTxQueueService!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
