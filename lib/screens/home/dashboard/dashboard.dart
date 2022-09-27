@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/action/action_flow.dart';
+import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
@@ -21,6 +22,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
@@ -69,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<HomeBloc>(context);
 
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
@@ -155,7 +157,17 @@ class _DashboardState extends State<Dashboard> {
                     useSafeArea: true,
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => AccountsScreen(),
+                    builder: (context) => Provider<AccountsBloc>(
+                        lazy: true,
+                        create: (context) {
+                          final bloc = AccountsBloc();
+                          bloc.load();
+                          return bloc;
+                        },
+                        dispose: (_, bloc) {
+                          bloc.onDispose();
+                        },
+                        child: AccountsScreen()),
                   );
                 },
                 child: Padding(

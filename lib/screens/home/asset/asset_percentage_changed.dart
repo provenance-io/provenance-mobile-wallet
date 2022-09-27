@@ -1,14 +1,14 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/util/extensions/double_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class AssetPercentageChanged extends StatelessWidget {
   const AssetPercentageChanged({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<AssetChartBloc>();
+    final bloc = Provider.of<AssetChartBloc>(context);
 
     return StreamBuilder<AssetChartDetails?>(
       initialData: bloc.chartDetails.value,

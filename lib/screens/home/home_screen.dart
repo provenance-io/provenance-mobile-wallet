@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
-import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
@@ -23,6 +22,7 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  final _bloc = HomeBloc();
+  late final HomeBloc _bloc;
 
   final _walletConnectService = get<WalletConnectService>();
   final _multiSigService = get<MultiSigService>();
@@ -57,11 +57,6 @@ class HomeScreenState extends State<HomeScreen>
     _tabController.dispose();
     _subscriptions.dispose();
 
-    get.unregister<HomeBloc>();
-    if (get.isRegistered<DashboardTabBloc>()) {
-      get.unregister<DashboardTabBloc>();
-    }
-
     super.dispose();
   }
 
@@ -74,6 +69,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    _bloc = Provider.of<HomeBloc>(context);
     _bloc.isLoading.listen((e) {
       if (e) {
         ModalLoadingRoute.showLoading(context);
@@ -99,7 +95,6 @@ class HomeScreenState extends State<HomeScreen>
         .listen(_onResponse)
         .addTo(_subscriptions);
 
-    get.registerSingleton<HomeBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance.addObserver(this);

@@ -11,6 +11,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountsScreen extends StatefulWidget {
@@ -25,25 +26,20 @@ class AccountsScreen extends StatefulWidget {
 class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
-  final _accountsBloc = AccountsBloc();
+  late final AccountsBloc _accountsBloc;
   final _accountService = get<AccountService>();
 
   @override
   void dispose() {
     _subscriptions.dispose();
-
     super.dispose();
-
-    get.unregister<AccountsBloc>();
   }
 
   @override
   void initState() {
     super.initState();
 
-    get.registerSingleton(_accountsBloc);
-
-    _accountsBloc.load();
+    _accountsBloc = Provider.of(context);
 
     _accountService.events.removed.listen(_onRemoved).addTo(_subscriptions);
     _accountsBloc.insert.listen(_onInsert).addTo(_subscriptions);

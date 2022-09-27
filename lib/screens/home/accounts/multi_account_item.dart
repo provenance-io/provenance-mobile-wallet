@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MultiAccountItem extends StatefulWidget {
@@ -29,7 +30,7 @@ class MultiAccountItem extends StatefulWidget {
 
 class _MultiAccountItemState extends State<MultiAccountItem> {
   final _subscriptions = CompositeSubscription();
-  final _bloc = get<AccountsBloc>();
+  late final AccountsBloc _bloc;
   final _accountService = get<AccountService>();
   late MultiAccount _account;
   late bool _isSelected;
@@ -37,7 +38,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   @override
   void initState() {
     super.initState();
-
+    _bloc = Provider.of(context);
     _account = widget._initialAccount;
 
     _bloc.updated.listen((e) {
@@ -178,7 +179,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       return;
     }
 
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<HomeBloc>(context);
 
     switch (result) {
       case MenuOperation.delete:

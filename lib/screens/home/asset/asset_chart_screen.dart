@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart.dart';
@@ -9,19 +8,14 @@ import 'package:provenance_wallet/screens/home/asset/asset_chart_recent_transact
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/price_change_indicator.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  const AssetChartScreen(
-    this.coin,
-    this.asset, {
+  const AssetChartScreen({
     Key? key,
   }) : super(key: key);
-
-  final Coin coin;
-  final Asset asset;
 
   @override
   _AssetChartScreenState createState() => _AssetChartScreenState();
@@ -34,15 +28,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
 
   @override
   void initState() {
-    if (!get.isRegistered<AssetChartBloc>()) {
-      final bloc = AssetChartBloc(widget.coin, widget.asset);
-      get.registerSingleton(bloc);
-
-      _bloc = bloc..load();
-    } else {
-      _bloc = get<AssetChartBloc>();
-    }
-
+    _bloc = Provider.of<AssetChartBloc>(context);
     super.initState();
   }
 
@@ -94,7 +80,6 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                   PwIcons.back,
                 ),
                 onPressed: () {
-                  get.unregister<AssetChartBloc>();
                   get<DashboardTabBloc>().closeAsset();
                 },
               ),
@@ -169,7 +154,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     (isTallScreen)
                         ? VerticalSpacer.xxLarge()
                         : VerticalSpacer.medium(),
-                    AssetChartRecentTransactions(asset: widget.asset),
+                    AssetChartRecentTransactions(asset: details.asset),
                   ],
                 ),
               ),

@@ -9,6 +9,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/extensions/double_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 typedef OnAddressCaptured = Future<void> Function(String address);
 
@@ -21,7 +22,7 @@ class AccountPortfolio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<HomeBloc>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(

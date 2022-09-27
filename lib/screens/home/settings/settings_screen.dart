@@ -20,6 +20,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -153,7 +154,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             confirmText: strings.resetAccounts,
                           );
                           if (shouldReset) {
-                            await get<HomeBloc>().resetAccounts();
+                            await Provider.of<HomeBloc>(context)
+                                .resetAccounts();
                           }
                         },
                       ),

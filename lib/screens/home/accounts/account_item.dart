@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class AccountTitleRow extends StatelessWidget {
   const AccountTitleRow({
@@ -132,7 +132,7 @@ class AccountDescriptionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<int?>(
-      future: get<AccountsBloc>().getAssetCount(account),
+      future: Provider.of<AccountsBloc>(context).getAssetCount(account),
       builder: (context, snapshot) {
         final numAssets = snapshot.data;
 
