@@ -2,18 +2,17 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class EnableBiometricsScreen extends StatelessWidget {
-  EnableBiometricsScreen({
+  const EnableBiometricsScreen({
     Key? key,
   }) : super(key: key);
 
-  final bloc = get<ChangePinBloc>();
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<ChangePinBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
@@ -74,7 +73,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
-                        get<ChangePinBloc>().enrollInBiometrics(context, true);
+                        bloc.enrollInBiometrics(context, true);
                       },
                     ),
                   ),
@@ -88,7 +87,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                         color: PwColor.neutralNeutral,
                       ),
                       onPressed: () async {
-                        get<ChangePinBloc>().enrollInBiometrics(context, false);
+                        bloc.enrollInBiometrics(context, false);
                       },
                     ),
                   ),

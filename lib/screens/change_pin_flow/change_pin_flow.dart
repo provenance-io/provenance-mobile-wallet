@@ -5,7 +5,7 @@ import 'package:provenance_wallet/screens/change_pin_flow/changed_pin_successful
 import 'package:provenance_wallet/screens/change_pin_flow/confirm_new_pin_screen.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/create_new_pin_screen.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/enable_biometrics_screen.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class ChangePinFlow extends FlowBase {
   const ChangePinFlow(
@@ -20,24 +20,20 @@ class ChangePinFlow extends FlowBase {
 class ChangePinFlowState extends FlowBaseState<ChangePinFlow>
     implements ChangePinBlocNavigator {
   @override
-  void initState() {
-    super.initState();
-    get.registerLazySingleton<ChangePinBloc>(
-      () => ChangePinBloc(
-        widget._accountName,
-        this,
-      ),
-    );
-  }
+  Widget createStartPage() => Provider<ChangePinBloc>(
+      lazy: true,
+      create: (context) {
+        final bloc = ChangePinBloc(
+          widget._accountName,
+          this,
+        );
 
-  @override
-  void dispose() {
-    get.unregister<ChangePinBloc>();
-    super.dispose();
-  }
-
-  @override
-  Widget createStartPage() => CreateNewPinScreen();
+        return bloc;
+      },
+      dispose: (_, bloc) {
+        bloc.onDispose();
+      },
+      child: CreateNewPinScreen());
 
   @override
   Future<void> confirmPin() async {

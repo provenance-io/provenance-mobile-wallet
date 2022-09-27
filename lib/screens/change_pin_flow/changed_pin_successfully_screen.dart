@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ChangedPinSuccessFullyScreen extends StatelessWidget {
   const ChangedPinSuccessFullyScreen({
@@ -65,7 +65,7 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                           color: PwColor.neutralNeutral,
                         ),
                         onPressed: () async {
-                          get<ChangePinBloc>().returnToProfile();
+                          Provider.of<ChangePinBloc>(context).returnToProfile();
                         },
                       ),
                     ),

@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_bloc.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmNewPinScreen extends StatefulHookWidget {
   const ConfirmNewPinScreen({
@@ -45,6 +45,6 @@ class ConfirmNewPinScreenState extends State<ConfirmNewPinScreen> {
   }
 
   _onFinish(List<int> inputCodes) async {
-    get<ChangePinBloc>().enableBiometrics(inputCodes, context);
+    Provider.of<ChangePinBloc>(context).enableBiometrics(inputCodes, context);
   }
 }
