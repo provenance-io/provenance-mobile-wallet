@@ -9,10 +9,7 @@ import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -20,12 +17,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 class DepositConfirmScreen extends StatefulWidget {
   const DepositConfirmScreen({
     Key? key,
-    required this.account,
-    required this.proposal,
   }) : super(key: key);
-
-  final TransactableAccount account;
-  final Proposal proposal;
 
   @override
   State<StatefulWidget> createState() => _DepositConfirmScreenState();
@@ -37,19 +29,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
 
   @override
   void initState() {
-    _bloc = DepositConfirmBloc(
-      widget.account,
-      widget.proposal,
-    );
-    get.registerSingleton<DepositConfirmBloc>(_bloc);
-    _bloc.load();
+    _bloc = Provider.of(context);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<DepositConfirmBloc>();
-    super.dispose();
   }
 
   @override
@@ -128,7 +109,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                           title: strings.proposalVoteConfirmProposalId,
                           children: [
                             PwText(
-                              widget.proposal.proposalId.toString(),
+                              details.proposal?.proposalId.toString() ?? "",
                               textAlign: TextAlign.end,
                               style: PwTextStyle.footnote,
                             ),
@@ -159,7 +140,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.proposalVoteConfirmTitle,
-                          value: widget.proposal.title,
+                          value: details.proposal?.title ?? "",
                         ),
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(

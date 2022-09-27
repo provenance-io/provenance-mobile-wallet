@@ -13,7 +13,6 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +38,7 @@ class _ProposalWeightedVoteConfirmScreenState
 
   @override
   void initState() {
-    _bloc = get<WeightedVoteBloc>();
+    _bloc = Provider.of(context);
     super.initState();
   }
 

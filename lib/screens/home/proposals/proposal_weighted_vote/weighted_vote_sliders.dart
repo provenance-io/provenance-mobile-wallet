@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_slider.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class WeightedVoteSliders extends StatefulWidget {
   const WeightedVoteSliders({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class WeightedVoteSliders extends StatefulWidget {
 class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
   double _sharedPoints = 100;
   final List<double> _currentValues = [0, 0, 0, 0];
-  final _bloc = get<WeightedVoteBloc>();
+
   String percentage = "0%";
   @override
   Widget build(BuildContext context) {
@@ -192,7 +192,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
   }
 
   void _updateWeight() {
-    _bloc.updateWeight(
+    Provider.of<WeightedVoteBloc>(context).updateWeight(
       yesAmount: _currentValues[0],
       noAmount: _currentValues[1],
       noWithVetoAmount: _currentValues[2],

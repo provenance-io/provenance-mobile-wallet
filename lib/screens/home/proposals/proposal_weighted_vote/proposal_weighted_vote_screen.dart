@@ -6,7 +6,6 @@ import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -29,18 +28,8 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
 
   @override
   void initState() {
-    _bloc = WeightedVoteBloc(
-      widget.proposal,
-      widget.account,
-    );
-    get.registerSingleton<WeightedVoteBloc>(_bloc);
+    _bloc = Provider.of(context);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<WeightedVoteBloc>();
-    super.dispose();
   }
 
   @override

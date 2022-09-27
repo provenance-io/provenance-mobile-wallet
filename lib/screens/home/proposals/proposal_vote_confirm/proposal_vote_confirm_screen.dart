@@ -1,4 +1,3 @@
-import 'package:provenance_dart/proto_gov.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -14,7 +13,6 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -23,12 +21,10 @@ class ProposalVoteConfirmScreen extends StatefulWidget {
     Key? key,
     required this.account,
     required this.proposal,
-    required this.voteOption,
   }) : super(key: key);
 
   final TransactableAccount account;
   final Proposal proposal;
-  final gov.VoteOption voteOption;
 
   @override
   State<StatefulWidget> createState() => _ProposalVoteConfirmScreen();
@@ -40,19 +36,8 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   @override
   void initState() {
-    _bloc = ProposalVoteConfirmBloc(
-      widget.account,
-      widget.proposal,
-      widget.voteOption,
-    );
-    get.registerSingleton<ProposalVoteConfirmBloc>(_bloc);
+    _bloc = Provider.of(context);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<ProposalVoteConfirmBloc>();
-    super.dispose();
   }
 
   @override
