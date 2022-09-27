@@ -3,7 +3,7 @@ extension StringExtension on String {
     return '${this[0].toUpperCase()}${substring(1)}';
   }
 
-  String capitalizeAll() {
+  String capitalizeWords() {
     return split(' ').map((e) => e.capitalize()).join(" ");
   }
 
