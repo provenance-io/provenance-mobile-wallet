@@ -69,8 +69,8 @@ import 'package:provenance_wallet/services/stat_client/stat_client.dart';
 import 'package:provenance_wallet/services/transaction_client/default_transaction_client.dart';
 import 'package:provenance_wallet/services/transaction_client/mock_transaction_client.dart';
 import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
-import 'package:provenance_wallet/services/tx_queue_client/default_tx_queue_client.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
+import 'package:provenance_wallet/services/tx_queue_service/default_tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/validator_client/default_validator_client.dart';
 import 'package:provenance_wallet/services/validator_client/mock_validator_client.dart';
 import 'package:provenance_wallet/services/validator_client/validator_client.dart';
@@ -614,12 +614,12 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     }).addTo(_subscriptions);
 
     final multiSigClient = get<MultiSigClient>();
-    final txQueueService = DefaultQueueTxClient(
+    final txQueueService = DefaultQueueTxService(
       transactionHandler: transactionHandler,
       multiSigClient: multiSigClient,
       accountService: accountService,
     );
-    get.registerSingleton<TxQueueClient>(txQueueService);
+    get.registerSingleton<TxQueueService>(txQueueService);
 
     final multiSigService = get<MultiSigService>();
     remoteNotificationService.multiSig.listen((e) {

@@ -17,7 +17,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/models/account.dart' as _i7;
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart'
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
 
 // ignore_for_file: type=lint
@@ -185,11 +185,11 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           returnValue: _i6.Future<bool>.value(false)) as _i6.Future<bool>);
 }
 
-/// A class which mocks [TxQueueClient].
+/// A class which mocks [TxQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTxQueueClient extends _i1.Mock implements _i4.TxQueueClient {
-  MockTxQueueClient() {
+class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
+  MockTxQueueService() {
     _i1.throwOnMissingStub(this);
   }
 

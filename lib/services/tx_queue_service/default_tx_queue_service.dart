@@ -11,17 +11,17 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_gas_estimate.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_scheduled_tx.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_tx_signer.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_service_error.dart';
+import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_estimate.dart';
+import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
+import 'package:provenance_wallet/services/tx_queue_service/models/sembast_tx_signer.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_memory.dart';
 
-class DefaultQueueTxClient implements TxQueueClient {
-  DefaultQueueTxClient({
+class DefaultQueueTxService implements TxQueueService {
+  DefaultQueueTxService({
     required TransactionHandler transactionHandler,
     required MultiSigClient multiSigClient,
     required AccountService accountService,
@@ -105,7 +105,7 @@ class DefaultQueueTxClient implements TxQueueClient {
         );
 
         if (remoteId == null) {
-          throw TxQueueClientError.createTxFailed;
+          throw TxQueueServiceError.createTxFailed;
         } else {
           final model = SembastScheduledTx(
             accountId: account.id,
@@ -139,7 +139,7 @@ class DefaultQueueTxClient implements TxQueueClient {
     final ref = _store.record(remoteTxId);
     final rec = await ref.get(db);
     if (rec == null) {
-      throw TxQueueClientError.txNotFound;
+      throw TxQueueServiceError.txNotFound;
     } else {
       final model = SembastScheduledTx.fromRecord(rec).copyWith(
         signers: signers
@@ -172,14 +172,14 @@ class DefaultQueueTxClient implements TxQueueClient {
     final rec = _store.record(id);
     final data = await rec.get(db);
     if (data == null) {
-      throw TxQueueClientError.txNotFound;
+      throw TxQueueServiceError.txNotFound;
     }
 
     final model = SembastScheduledTx.fromRecord(data);
 
     final account = await _accountService.getAccount(model.accountId);
     if (account == null) {
-      throw TxQueueClientError.accountNotFound;
+      throw TxQueueServiceError.accountNotFound;
     } else {
       switch (account.kind) {
         case AccountKind.basic:
@@ -201,7 +201,7 @@ class DefaultQueueTxClient implements TxQueueClient {
       BasicAccount account, SembastScheduledTx model) async {
     final privateKey = await _accountService.loadKey(account.id);
     if (privateKey == null) {
-      throw TxQueueClientError.cipherKeyNotFound;
+      throw TxQueueServiceError.cipherKeyNotFound;
     }
 
     TxResult? result;

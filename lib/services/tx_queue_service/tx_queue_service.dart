@@ -2,7 +2,7 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
-abstract class TxQueueClient {
+abstract class TxQueueService {
   Future<AccountGasEstimate> estimateGas({
     required proto.TxBody txBody,
     required TransactableAccount account,
