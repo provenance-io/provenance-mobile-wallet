@@ -118,6 +118,7 @@ void main() {
               proto.TxRaw(),
               proto.TxResponse(),
             ),
+            fee: proto.Fee(),
           ),
         ),
       );

@@ -17,12 +17,11 @@ import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_e
 import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
+import 'package:provenance_wallet/util/fee_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_memory.dart';
-
-import 'models/service_tx_response.dart';
 
 class DefaultQueueTxService implements TxQueueService {
   DefaultQueueTxService({
@@ -37,7 +36,7 @@ class DefaultQueueTxService implements TxQueueService {
 
   final _store = StoreRef<String, Map<String, Object?>?>.main();
 
-  final _response = PublishSubject<ServiceTxResponse>();
+  final _response = PublishSubject<TxResult>();
 
   final TransactionHandler _transactionHandler;
   final MultiSigService _multiSigService;
@@ -46,7 +45,7 @@ class DefaultQueueTxService implements TxQueueService {
   late final Future<Database> _db;
 
   @override
-  Stream<ServiceTxResponse> get response => _response;
+  Stream<TxResult> get response => _response;
 
   @override
   Future<AccountGasEstimate> estimateGas({
@@ -139,10 +138,10 @@ class DefaultQueueTxService implements TxQueueService {
 
   @override
   Future<TxResult> completeTx({
-    required String txUuid,
+    required String txId,
   }) async {
     final item =
-        _multiSigService.items.firstWhereOrNull((e) => e.txUuid == txUuid);
+        _multiSigService.items.firstWhereOrNull((e) => e.txUuid == txId);
     if (item == null) {
       throw TxQueueServiceError.txNotFound;
     }
@@ -203,36 +202,23 @@ class DefaultQueueTxService implements TxQueueService {
       item.fee,
     );
 
-    // TODO-Roy: if is wallet connect, send update to wallet connect
-    // Probably move multi-sig broadcast somewhere else and reference it both
-    // here and in wallet connect delegate
-
-    final txResponse = responsePair.txResponse;
-
     await _multiSigService.updateTxResult(
       signerAddress: signerAccount.address,
-      txUuid: txUuid,
+      txUuid: txId,
       response: responsePair.txResponse,
       coin: coin,
     );
 
-    _response.add(
-      ServiceTxResponse(
-        code: txResponse.code,
-        message: txResponse.rawLog,
-        // gasUsed: response.gasUsed.toInt(),
-        // gasWanted: response.gasWanted.toInt(),
-        // height: response.height.toInt(),
-        txHash: txResponse.txhash,
-        fees: item.fee.amount,
-        codespace: txResponse.codespace,
-      ),
-    );
-
-    return TxResult(
+    final result = TxResult(
       body: item.txBody,
       response: responsePair,
+      fee: item.fee,
+      txId: txId,
     );
+
+    _response.add(result);
+
+    return result;
   }
 
   @override
@@ -306,15 +292,36 @@ class DefaultQueueTxService implements TxQueueService {
 
     TxResult? result;
 
+    AccountGasEstimate? accountGasEstimate;
+    var gasEstimate = model.gasEstimate;
+    if (gasEstimate != null) {
+      accountGasEstimate = AccountGasEstimate(
+        gasEstimate.estimatedGas,
+        gasEstimate.baseFee,
+        gasEstimate.gasAdjustment,
+        gasEstimate.estimatedFees,
+      );
+    } else {
+      accountGasEstimate = await _transactionHandler.estimateGas(
+        model.txBody,
+        [
+          account.publicKey,
+        ],
+        account.coin,
+      );
+    }
+
     final response = await _transactionHandler.executeTransaction(
       model.txBody,
       privateKey.defaultKey(),
       account.coin,
+      accountGasEstimate,
     );
 
     result = TxResult(
       body: model.txBody,
       response: response,
+      fee: toFee(accountGasEstimate),
     );
 
     return result;

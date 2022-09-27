@@ -4,6 +4,6 @@ abstract class WalletConnectAction {
   WalletConnectAction._();
 
   String get id;
-  int get walletConnectId;
+  int get walletConnectRequestId;
   WalletConnectActionKind get kind;
 }

@@ -197,7 +197,7 @@ class WalletConnectSession {
   }
 
   Future<bool> sendMessageFinish({
-    required requestId,
+    required String requestId,
     required bool allowed,
   }) async {
     _startInactivityTimer(inactivityTimeout);

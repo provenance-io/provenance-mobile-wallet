@@ -377,7 +377,7 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    await _txQueueService.completeTx(txUuid: item.txId);
+    await _txQueueService.completeTx(txId: item.txId);
   }
 
   Future<void> _processMultiSigSignItem(bool approved, ActionListGroup group,

@@ -2,10 +2,8 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
-import 'models/service_tx_response.dart';
-
 abstract class TxQueueService {
-  Stream<ServiceTxResponse> get response;
+  Stream<TxResult> get response;
 
   Future<AccountGasEstimate> estimateGas({
     required proto.TxBody txBody,
@@ -19,7 +17,7 @@ abstract class TxQueueService {
   });
 
   Future<void> completeTx({
-    required String txUuid,
+    required String txId,
   });
 
   Future<bool> signTx({
@@ -45,10 +43,14 @@ class TxResult {
   TxResult({
     required this.body,
     required this.response,
+    required this.fee,
+    this.txId,
   });
 
   final proto.TxBody body;
   final proto.RawTxResponsePair response;
+  final proto.Fee fee;
+  final String? txId;
 }
 
 class AccountTransactionResponse {

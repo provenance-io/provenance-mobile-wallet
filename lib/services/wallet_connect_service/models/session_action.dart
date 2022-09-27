@@ -6,7 +6,7 @@ import 'wallet_connect_action_kind.dart';
 class SessionAction implements WalletConnectAction {
   SessionAction(
     this.id,
-    this.walletConnectId,
+    this.walletConnectRequestId,
     this.data,
   );
 
@@ -14,7 +14,7 @@ class SessionAction implements WalletConnectAction {
   final String id;
 
   @override
-  final int walletConnectId;
+  final int walletConnectRequestId;
 
   @override
   WalletConnectActionKind get kind => WalletConnectActionKind.session;

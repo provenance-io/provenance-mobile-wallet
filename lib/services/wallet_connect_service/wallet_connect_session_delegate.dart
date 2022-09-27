@@ -9,7 +9,6 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/tx_queue_service/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -32,14 +31,14 @@ class WalletConnectSessionDelegateEvents {
   final _signRequest = PublishSubject<SignAction>(sync: true);
   final _sendRequest = PublishSubject<TxAction>(sync: true);
   final _onDidError = PublishSubject<String>(sync: true);
-  final _onResponse = PublishSubject<ServiceTxResponse>(sync: true);
+  final _onResponse = PublishSubject<TxResult>(sync: true);
   final _onClose = PublishSubject<void>(sync: true);
 
   Stream<SessionAction> get sessionRequest => _sessionRequest;
   Stream<SignAction> get signRequest => _signRequest;
   Stream<TxAction> get sendRequest => _sendRequest;
   Stream<String> get onDidError => _onDidError;
-  Stream<ServiceTxResponse> get onResponse => _onResponse;
+  Stream<TxResult> get onResponse => _onResponse;
   Stream<void> get onClose => _onClose;
 
   void listen(WalletConnectSessionDelegateEvents other) {
@@ -95,6 +94,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final WalletConnectAddress _address;
   final WalletConnection _connection;
 
+  final _txSubscriptions = CompositeSubscription();
+
   final events = WalletConnectSessionDelegateEvents();
 
   ///
@@ -106,7 +107,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return false;
     }
 
-    final wcRequestId = action.walletConnectId;
+    final wcRequestId = action.walletConnectRequestId;
     if (!allowed) {
       await _connection.reject(wcRequestId);
       return true;
@@ -160,7 +161,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final signAction = SignAction(
       id: id,
-      walletConnectId: requestId,
+      walletConnectRequestId: requestId,
       message: utf8.decode(msg),
       description: description,
       address: address,
@@ -205,7 +206,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final txAction = TxAction(
       id: id,
-      walletConnectId: requestId,
+      walletConnectRequestId: requestId,
       description: description,
       messages: signTransactionData.proposedMessages,
       gasEstimate: gasEstimate,
@@ -218,6 +219,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   void onClose() {
     events._onClose.add(null);
     _queueService.removeWalletConnectSessionGroup(_address);
+    _txSubscriptions.clear();
   }
 
   @override
@@ -251,7 +253,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     await _connection.sendApproveSession(
-      action.walletConnectId,
+      action.walletConnectRequestId,
       sessionApproval,
     );
 
@@ -277,23 +279,20 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final result = scheduledTx.result;
     if (result != null) {
       final response = result.response;
-      final txResponse = response.txResponse;
 
       await _connection.sendTransactionResult(
-        action.walletConnectId,
+        action.walletConnectRequestId,
         response,
       );
 
       events._onResponse.add(
-        ServiceTxResponse(
-          code: txResponse.code,
-          message: txResponse.rawLog,
-          gasWanted: txResponse.gasWanted.toInt(),
-          gasUsed: txResponse.gasUsed.toInt(),
-          height: txResponse.height.toInt(),
-          txHash: txResponse.txhash,
-          fees: action.gasEstimate.totalFees,
-          codespace: txResponse.codespace,
+        TxResult(
+          body: txBody,
+          response: response,
+          fee: proto.Fee(
+            amount: action.gasEstimate.totalFees,
+            gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
+          ),
         ),
       );
     }
@@ -301,6 +300,13 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final txId = scheduledTx.txId;
     if (txId != null) {
       logDebug('Scheduled tx: $txId');
+
+      _txQueueService.response.listen((e) {
+        if (e.txId == txId) {
+          _connection.sendTransactionResult(
+              action.walletConnectRequestId, e.response);
+        }
+      }).addTo(_txSubscriptions);
     }
 
     _queueService.removeRequest(_address, action.id);
@@ -317,7 +323,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       ..removeLast();
 
     await _connection.sendSignResult(
-      action.walletConnectId,
+      action.walletConnectRequestId,
       signedData,
     );
 

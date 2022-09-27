@@ -68,7 +68,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "ApproveSession",
           "id": sessionAction.id,
-          "requestId": sessionAction.walletConnectId,
+          "requestId": sessionAction.walletConnectRequestId,
           "message": "Approval required",
           "description": "",
           "address": sessionAction.data.address.fullUriString,
@@ -86,7 +86,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "SendRequest",
           "id": action.id,
-          "requestId": action.walletConnectId,
+          "requestId": action.walletConnectRequestId,
           "message": "",
           "description": txAction.description,
           "txBody": body.writeToBuffer(),
@@ -103,7 +103,7 @@ class WalletConnectQueueGroup {
         return <String, dynamic>{
           "type": "SignRequest",
           "id": signAction.id,
-          "requestId": signAction.walletConnectId,
+          "requestId": signAction.walletConnectRequestId,
           "message": signAction.message,
           "description": signAction.description,
           "address": signAction.address
@@ -130,7 +130,7 @@ class WalletConnectQueueGroup {
 
       return TxAction(
           id: id,
-          walletConnectId: requestId,
+          walletConnectRequestId: requestId,
           description: description,
           messages: body.messages
               .map((e) => e.toMessage())
@@ -150,7 +150,7 @@ class WalletConnectQueueGroup {
           message: message,
           description: description,
           address: address,
-          walletConnectId: requestId);
+          walletConnectRequestId: requestId);
     } else if (type == "ApproveSession") {
       final id = input["id"];
       final requestId = input["requestId"];
