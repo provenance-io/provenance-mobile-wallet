@@ -73,12 +73,6 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  void dispose() {
-    get.unregister<ProposalsBloc>();
-    super.dispose();
-  }
-
-  @override
   Widget createStartPage() => Provider<ProposalsBloc>(
       lazy: true,
       create: (context) {
