@@ -102,13 +102,14 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                             SvgPicture.asset(ImagePaths().warningDialogIcon));
                         children.add(VerticalSpacer.xxLarge());
                         children.add(Text(
-                          Strings.of(context).pleaseNote,
+                          Strings.of(context).multiSigRecoverPleaseNote,
                           style: Theme.of(context).textTheme.titleMedium,
                         ));
                         children.add(VerticalSpacer.medium());
                         children.add(Center(
                           child: Text(
-                            Strings.of(context).noAccountsToRecover,
+                            Strings.of(context)
+                                .multiSigRecoverNoAccountsToRecover,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.body,
                           ),
