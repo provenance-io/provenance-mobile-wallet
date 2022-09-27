@@ -237,7 +237,7 @@ class DefaultQueueTxService implements TxQueueService {
 
   @override
   Future<bool> signTx({
-    required String txUuid,
+    required String txId,
     required String signerAddress,
     required String multiSigAddress,
     required proto.TxBody txBody,
@@ -267,7 +267,7 @@ class DefaultQueueTxService implements TxQueueService {
     final success = await _multiSigService.signTx(
       signerAddress: signerAccount.address,
       coin: coin,
-      txUuid: txUuid,
+      txUuid: txId,
       signatureBytes: signatureBytes,
     );
 

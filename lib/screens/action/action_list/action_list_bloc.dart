@@ -308,7 +308,7 @@ class ActionListBloc extends Disposable {
         subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
         txBody: tx.txBody,
         fee: tx.fee,
-        txUuid: tx.txUuid,
+        txId: tx.txUuid,
         signatures: tx.signatures!,
       );
 
@@ -323,7 +323,7 @@ class ActionListBloc extends Disposable {
         subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
         txBody: tx.txBody,
         fee: tx.fee,
-        txUuid: tx.txUuid,
+        txId: tx.txUuid,
       );
 
   Future<bool> _approveWalletConnectItem(
@@ -377,7 +377,7 @@ class ActionListBloc extends Disposable {
       return;
     }
 
-    await _txQueueService.completeTx(txUuid: item.txUuid);
+    await _txQueueService.completeTx(txUuid: item.txId);
   }
 
   Future<void> _processMultiSigSignItem(bool approved, ActionListGroup group,
@@ -388,7 +388,7 @@ class ActionListBloc extends Disposable {
     }
 
     final success = await _txQueueService.signTx(
-      txUuid: item.txUuid,
+      txId: item.txId,
       signerAddress: item.signerAddress,
       multiSigAddress: item.multiSigAddress,
       txBody: item.txBody,
@@ -400,7 +400,7 @@ class ActionListBloc extends Disposable {
 
     final status = success ? 'succeeded' : 'failed';
 
-    logDebug('Sign tx ${item.txUuid} $status');
+    logDebug('Sign tx ${item.txId} $status');
 
     if (!success) {
       throw ActionListError.multiSigSendSignatureFailed;

@@ -236,7 +236,7 @@ abstract class MultiSigActionListItem implements ActionListItem {
   String get multiSigAddress;
   String get signerAddress;
   String get groupAddress;
-  String get txUuid;
+  String get txId;
 }
 
 class MultiSigSignActionListItem implements MultiSigActionListItem {
@@ -248,7 +248,7 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
     required this.subLabel,
     required this.txBody,
     required this.fee,
-    required this.txUuid,
+    required this.txId,
   });
 
   @override
@@ -265,7 +265,7 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
   final Fee fee;
 
   @override
-  final String txUuid;
+  final String txId;
 
   @override
   final LocalizedString label;
@@ -283,7 +283,7 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
     required this.subLabel,
     required this.txBody,
     required this.fee,
-    required this.txUuid,
+    required this.txId,
     required this.signatures,
   });
 
@@ -301,7 +301,7 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   final Fee fee;
 
   @override
-  final String txUuid;
+  final String txId;
 
   @override
   final LocalizedString label;

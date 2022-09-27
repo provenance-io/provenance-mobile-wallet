@@ -23,7 +23,7 @@ abstract class TxQueueService {
   });
 
   Future<bool> signTx({
-    required String txUuid,
+    required String txId,
     required String signerAddress,
     required String multiSigAddress,
     required proto.TxBody txBody,
