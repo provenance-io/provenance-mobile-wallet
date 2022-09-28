@@ -110,6 +110,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final wcRequestId = action.walletConnectRequestId;
     if (!allowed) {
       await _connection.reject(wcRequestId);
+      await _queueService.removeRequest(
+        accountId: _transactAccount.id,
+        requestId: requestId,
+      );
       return true;
     }
 
