@@ -113,18 +113,30 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       return true;
     }
 
-    bool result;
+    var result = false;
 
-    switch (action.kind) {
-      case WalletConnectActionKind.session:
-        result = await _completeSessionAction(action as SessionAction);
-        break;
-      case WalletConnectActionKind.tx:
-        result = await _completeTxAction(action as TxAction);
-        break;
-      case WalletConnectActionKind.sign:
-        result = await _completeSignAction(action as SignAction);
-        break;
+    try {
+      switch (action.kind) {
+        case WalletConnectActionKind.session:
+          result = await _completeSessionAction(action as SessionAction);
+          break;
+        case WalletConnectActionKind.tx:
+          result = await _completeTxAction(action as TxAction);
+          break;
+        case WalletConnectActionKind.sign:
+          result = await _completeSignAction(action as SignAction);
+          break;
+      }
+    } catch (e) {
+      logError(
+        'Request failed',
+        error: e,
+      );
+
+      await _connection.sendError(
+        wcRequestId,
+        e.toString(),
+      );
     }
 
     return result;
