@@ -12,6 +12,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({
@@ -30,12 +31,12 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final _pageController = PageController();
   double _currentPage = 0;
-  final _bloc = LandingBloc();
+  late final LandingBloc _bloc;
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
-    get.registerSingleton(_bloc);
+    _bloc = Provider.of(context);
 
     _bloc.load();
     super.initState();
@@ -45,7 +46,6 @@ class _LandingScreenState extends State<LandingScreen> {
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
     _pageController.dispose();
-    get.unregister<LandingBloc>();
 
     super.dispose();
   }

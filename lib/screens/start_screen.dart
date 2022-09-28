@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_screen.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -42,7 +43,14 @@ class StartScreenState extends State<StartScreen> {
                   bloc.onDispose();
                 },
                 child: HomeScreen())
-            : LandingScreen();
+            : Provider<LandingBloc>(
+                lazy: true,
+                dispose: (_, bloc) => bloc.onDispose(),
+                create: (context) {
+                  return LandingBloc();
+                },
+                child: LandingScreen(),
+              );
       },
     );
   }
