@@ -189,10 +189,19 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> redirectToRedelegation(DetailedValidator validator) async {
     replaceLastPage(
-      (context) => StakingRedelegationScreen(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider<StakingDelegationBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingDelegationBloc(
+            delegation: widget.selectedDelegation,
+            validator: validator,
+            selectedDelegationType: SelectedDelegationType.undelegate,
+            account: widget.account,
+          )..load();
+          return bloc;
+        },
+        child: StakingUndelegationScreen(),
       ),
     );
   }
@@ -202,18 +211,23 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     DetailedValidator validator,
     Reward? reward,
   ) async {
-    get.registerSingleton(
-      StakingDelegationBloc(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        selectedDelegationType: SelectedDelegationType.claimRewards,
-        account: widget.account,
-        reward: reward,
+    showPage(
+      (context) => Provider<StakingDelegationBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingDelegationBloc(
+            delegation: widget.selectedDelegation!,
+            validator: validator,
+            selectedDelegationType: SelectedDelegationType.claimRewards,
+            account: widget.account,
+            reward: reward,
+          )..load();
+          return bloc;
+        },
+        child: ConfirmClaimRewardsScreen(),
       ),
     );
-    showPage(
-      (context) => ConfirmClaimRewardsScreen(),
-    ).whenComplete(() => get.unregister<StakingDelegationBloc>());
   }
 
   @override
