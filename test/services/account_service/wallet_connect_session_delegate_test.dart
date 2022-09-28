@@ -65,7 +65,6 @@ void main() {
       txQueueService: mockTxQueueService,
       connection: mockWalletConnection,
       queueService: mockWalletConnectQueueService,
-      address: walletConnectAddr,
     );
   });
 

@@ -10,13 +10,11 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_
 
 class WalletConnectQueueGroup {
   WalletConnectQueueGroup({
-    required this.connectAddress,
-    required this.accountAddress,
+    required this.accountId,
     this.clientMeta,
   });
 
-  final WalletConnectAddress connectAddress;
-  final String accountAddress;
+  final String accountId;
   final ClientMeta? clientMeta;
   final actionLookup = <String, WalletConnectAction>{};
 
@@ -24,8 +22,7 @@ class WalletConnectQueueGroup {
     ClientMeta? clientMeta,
   }) =>
       WalletConnectQueueGroup(
-        connectAddress: connectAddress,
-        accountAddress: accountAddress,
+        accountId: accountId,
         clientMeta: clientMeta ?? this.clientMeta,
       );
 
@@ -34,15 +31,12 @@ class WalletConnectQueueGroup {
     input["actions"].entries.forEach((entry) {
       actions[entry.key] = _fromRecord(entry.value);
     });
-    final connectAddress =
-        WalletConnectAddress.create(input["connectAddress"] as String)!;
-    final accountAddress = input["accountAddress"];
-    final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
 
     final group = WalletConnectQueueGroup(
-      connectAddress: connectAddress,
-      accountAddress: accountAddress,
-      clientMeta: clientMeta,
+      accountId: input['accountId'] as String,
+      clientMeta: input.containsKey('clientMeta')
+          ? ClientMeta.fromJson(input['clientMeta'])
+          : null,
     );
     group.actionLookup.addAll(actions);
     return group;
@@ -50,9 +44,8 @@ class WalletConnectQueueGroup {
 
   Map<String, dynamic> toRecord() {
     final map = <String, dynamic>{
-      "connectAddress": connectAddress.fullUriString,
-      "accountAddress": accountAddress,
-      "clientMeta": clientMeta?.toJson(),
+      'accountId': accountId,
+      if (clientMeta != null) "clientMeta": clientMeta?.toJson(),
       "actions":
           actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))
     };

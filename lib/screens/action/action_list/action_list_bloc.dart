@@ -206,12 +206,13 @@ class ActionListBloc extends Disposable {
             .whereType<TransactableAccount>()
             .toList();
 
-    final accountLookup = accounts.asMap().map(
-          (key, value) => MapEntry(
-            value.address,
-            value,
-          ),
-        );
+    final accountsByAddress = <String, TransactableAccount>{};
+    final accountsById = <String, TransactableAccount>{};
+
+    for (final account in accounts) {
+      accountsByAddress[account.address] = account;
+      accountsById[account.id] = account;
+    }
 
     final groups = <ActionListGroup>[];
 
@@ -220,13 +221,13 @@ class ActionListBloc extends Disposable {
     final walletConnectGroups = queuedItems
         .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
         .map((queuedGroup) {
-      final account = accountLookup[queuedGroup.accountAddress]!;
+      final account = accountsById[queuedGroup.accountId]!;
 
       return _WalletConnectActionGroup(
         accountId: account.id,
         queueGroup: queuedGroup,
         label: account.name,
-        subLabel: abbreviateAddress(queuedGroup.accountAddress),
+        subLabel: abbreviateAddress(account.address),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
@@ -259,7 +260,7 @@ class ActionListBloc extends Disposable {
 
     final pendingTxs = _multiSigService.items;
     for (final tx in pendingTxs) {
-      final account = accountLookup[tx.multiSigAddress]!;
+      final account = accountsByAddress[tx.multiSigAddress]!;
       final item = _toMultiSigListItem(tx, account.coin);
 
       final address = item.groupAddress;
@@ -272,7 +273,7 @@ class ActionListBloc extends Disposable {
     }
 
     for (final multiSigGroup in multiSigGroups.entries) {
-      final account = accountLookup[multiSigGroup.key]!;
+      final account = accountsByAddress[multiSigGroup.key]!;
       final name = account.name;
 
       groups.add(
