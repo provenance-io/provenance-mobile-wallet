@@ -3,10 +3,10 @@ import 'package:provenance_wallet/screens/home/staking/pw_avatar.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class StakingListItem extends StatelessWidget {
-  StakingListItem({
+  const StakingListItem({
     Key? key,
     required this.validator,
     required this.listItemText,
@@ -16,9 +16,9 @@ class StakingListItem extends StatelessWidget {
   final ProvenanceValidator validator;
   final String listItemText;
   final Future<void> Function() onTouch;
-  final bloc = get<StakingScreenBloc>();
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingScreenBloc>(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {

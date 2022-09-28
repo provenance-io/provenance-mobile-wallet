@@ -8,6 +8,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ValidatorList extends StatefulWidget {
   const ValidatorList({Key? key, this.onTap}) : super(key: key);
@@ -18,12 +19,13 @@ class ValidatorList extends StatefulWidget {
 }
 
 class ValidatorListState extends State<ValidatorList> {
-  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
+  late final StakingScreenBloc _bloc;
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _bloc = Provider.of(context);
     _scrollController.addListener(_onScrollEnd);
   }
 

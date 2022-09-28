@@ -20,6 +20,7 @@ import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 abstract class StakingFlowNavigator {
   Future<void> showDelegationScreen(
@@ -115,11 +116,20 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     Commission commission,
   ) async {
     showPage(
-      (context) => StakingDelegationScreen(
-        delegation: widget.selectedDelegation,
-        validator: validator,
-        account: widget.account,
-        commissionRate: commission.commissionRate,
+      (context) => Provider<StakingDelegationBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingDelegationBloc(
+            delegation: widget.selectedDelegation,
+            validator: validator,
+            commissionRate: commission.commissionRate,
+            selectedDelegationType: SelectedDelegationType.delegate,
+            account: widget.account,
+          )..load();
+          return bloc;
+        },
+        child: StakingDelegationScreen(),
       ),
     );
   }
@@ -149,10 +159,19 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     DetailedValidator validator,
   ) async {
     showPage(
-      (context) => StakingUndelegationScreen(
-        delegation: widget.selectedDelegation,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider<StakingDelegationBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingDelegationBloc(
+            delegation: widget.selectedDelegation,
+            validator: validator,
+            selectedDelegationType: SelectedDelegationType.undelegate,
+            account: widget.account,
+          )..load();
+          return bloc;
+        },
+        child: StakingUndelegationScreen(),
       ),
     );
   }

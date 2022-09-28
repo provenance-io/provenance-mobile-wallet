@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DelegatorDetails extends StatelessWidget {
@@ -79,7 +80,7 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.brightness_1,
-                    color: get<StakingScreenBloc>()
+                    color: Provider.of<StakingScreenBloc>(context)
                         .getColor(validator.status, context),
                     size: 8,
                   ),

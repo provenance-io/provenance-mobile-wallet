@@ -10,30 +10,14 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/validator
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingDelegationScreen extends StatefulWidget {
-  final Delegation? delegation;
-  final Reward? reward;
-
-  final DetailedValidator validator;
-
-  final String commissionRate;
-  final TransactableAccount account;
-
   const StakingDelegationScreen({
     Key? key,
-    this.delegation,
-    this.reward,
-    required this.validator,
-    required this.commissionRate,
-    required this.account,
   }) : super(key: key);
 
   @override
@@ -51,22 +35,12 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   void initState() {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
-    _bloc = StakingDelegationBloc(
-      delegation: widget.delegation,
-      reward: widget.reward,
-      validator: widget.validator,
-      commissionRate: widget.commissionRate,
-      selectedDelegationType: SelectedDelegationType.delegate,
-      account: widget.account,
-    );
-    get.registerSingleton<StakingDelegationBloc>(_bloc);
-    _bloc.load();
+    _bloc = Provider.of(context);
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
     _scrollController.dispose();
@@ -80,7 +54,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    get<StakingDelegationBloc>().updateHashDelegated(number);
+    _bloc.updateHashDelegated(number);
   }
 
   @override
@@ -174,7 +148,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
-                  if (ValidatorStatus.jailed == widget.validator.status) {
+                  if (ValidatorStatus.jailed == details.validator.status) {
                     final strings = Strings.of(context);
                     showDialog(
                       context: context,

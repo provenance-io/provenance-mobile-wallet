@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_redelegation/stak
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingRedelegationList extends StatefulWidget {
   const StakingRedelegationList({Key? key}) : super(key: key);
@@ -15,12 +16,14 @@ class StakingRedelegationList extends StatefulWidget {
 }
 
 class _StakingRedelegationListState extends State<StakingRedelegationList> {
-  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
+  late final StakingScreenBloc _bloc;
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _bloc = Provider.of<StakingScreenBloc>(context);
+
     _scrollController.addListener(_onScrollEnd);
   }
 

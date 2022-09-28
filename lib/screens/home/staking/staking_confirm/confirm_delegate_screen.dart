@@ -11,6 +11,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmDelegateScreen extends StatelessWidget {
   const ConfirmDelegateScreen({
@@ -19,7 +20,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingDelegationBloc>();
+    final bloc = Provider.of<StakingDelegationBloc>(context);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(

@@ -2,16 +2,13 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/validator_list.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingScreen extends StatefulWidget {
   const StakingScreen({
     Key? key,
-    required this.onFlowCompletion,
   }) : super(key: key);
-
-  final Function onFlowCompletion;
 
   @override
   State<StatefulWidget> createState() => _StakingScreenState();
@@ -28,8 +25,7 @@ class _StakingScreenState extends State<StakingScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
-    _bloc = StakingScreenBloc(onFlowCompletion: widget.onFlowCompletion);
-    get.registerSingleton(_bloc);
+    _bloc = Provider.of(context);
     _bloc.load();
   }
 
@@ -37,7 +33,6 @@ class _StakingScreenState extends State<StakingScreen>
   void dispose() {
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
-    get.unregister<StakingScreenBloc>();
     super.dispose();
   }
 
