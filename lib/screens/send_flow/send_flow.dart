@@ -17,6 +17,7 @@ import 'package:provenance_wallet/services/transaction_client/transaction_client
 import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class SendFlow extends FlowBase {
   const SendFlow(this.accountDetails, {Key? key}) : super(key: key);
@@ -30,30 +31,6 @@ class SendFlowState extends FlowBaseState<SendFlow>
     implements SendBlocNavigator, SendAmountBlocNavigator, SendReviewNaviagor {
   String? _receivingAddress;
   SendAsset? _asset;
-
-  @override
-  void initState() {
-    super.initState();
-    get.registerLazySingleton<SendBloc>(() {
-      final address = widget.accountDetails.address;
-      final coin = widget.accountDetails.coin;
-
-      return SendBloc(
-        coin,
-        address,
-        get<AssetClient>(),
-        get<PriceClient>(),
-        get<TransactionClient>(),
-        this,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    get.unregister<SendBloc>();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +115,23 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   @override
   Widget createStartPage() {
-    return SendScreen();
+    final address = widget.accountDetails.address;
+    final coin = widget.accountDetails.coin;
+    return Provider<SendBloc>(
+      lazy: true,
+      create: (context) {
+        return SendBloc(
+          coin,
+          address,
+          get<AssetClient>(),
+          get<PriceClient>(),
+          get<TransactionClient>(),
+          this,
+        )..load();
+      },
+      dispose: (_, bloc) => bloc.onDispose(),
+      child: SendScreen(),
+    );
   }
 
   @override

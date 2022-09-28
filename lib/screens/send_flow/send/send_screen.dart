@@ -7,9 +7,9 @@ import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class SendScreen extends StatelessWidget {
   const SendScreen({Key? key}) : super(key: key);
@@ -46,24 +46,6 @@ class SendPageState extends State<SendPage> {
   final _denomNotifier = ValueNotifier<SendAsset?>(null);
   final _recentSends = ValueNotifier<List<RecentAddress>>(<RecentAddress>[]);
   final _assets = ValueNotifier<List<SendAsset>>(<SendAsset>[]);
-  SendBloc? _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = get.get<SendBloc>();
-    assert(_bloc != null);
-
-    _bloc!.stream.listen((state) {
-      _recentSends.value = state.recentSendAddresses;
-      _assets.value = state.availableAssets;
-      _denomNotifier.value = (state.availableAssets.isNotEmpty)
-          ? state.availableAssets.first
-          : null;
-    });
-
-    _bloc!.load();
-  }
 
   @override
   void dispose() {
@@ -73,6 +55,14 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<SendBloc>(context);
+    _bloc.stream.listen((state) {
+      _recentSends.value = state.recentSendAddresses;
+      _assets.value = state.availableAssets;
+      _denomNotifier.value = (state.availableAssets.isNotEmpty)
+          ? state.availableAssets.first
+          : null;
+    });
     final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -132,7 +122,7 @@ class SendPageState extends State<SendPage> {
                       ),
                       onPressed: () async {
                         try {
-                          final newAddress = await _bloc!.scanAddress();
+                          final newAddress = await _bloc.scanAddress();
                           if (newAddress?.isNotEmpty ?? false) {
                             _addressController.text = newAddress!;
                           }
@@ -162,7 +152,9 @@ class SendPageState extends State<SendPage> {
                       RecentSendList(
                     value,
                     _onRecentAddressClicked,
-                    _onViewAllClicked,
+                    () {
+                      _onViewAllClicked(_bloc);
+                    },
                     key: ValueKey("RecentAddresses"),
                   ),
                 ),
@@ -173,7 +165,9 @@ class SendPageState extends State<SendPage> {
           PwButton(
             key: SendPage.keyNextButton,
             child: PwText(Strings.of(context).nextButtonLabel),
-            onPressed: _next,
+            onPressed: () {
+              _next(_bloc);
+            },
           ),
           VerticalSpacer.large(),
         ],
@@ -181,17 +175,17 @@ class SendPageState extends State<SendPage> {
     );
   }
 
-  void _onViewAllClicked() {
-    _bloc?.showAllRecentSends();
+  void _onViewAllClicked(SendBloc _bloc) {
+    _bloc.showAllRecentSends();
   }
 
   void _onRecentAddressClicked(RecentAddress recentAddress) {
     _addressController.text = recentAddress.address;
   }
 
-  Future<void> _next() async {
+  Future<void> _next(SendBloc _bloc) async {
     try {
-      await _bloc!.next(_addressController.text, _denomNotifier.value);
+      await _bloc.next(_addressController.text, _denomNotifier.value);
     } catch (e) {
       logError('Error', error: e);
 
