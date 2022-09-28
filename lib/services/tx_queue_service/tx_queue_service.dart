@@ -1,4 +1,5 @@
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
@@ -26,6 +27,12 @@ abstract class TxQueueService {
     required String multiSigAddress,
     required proto.TxBody txBody,
     required proto.Fee fee,
+  });
+
+  Future<bool> declineTx({
+    required String signerAddress,
+    required String txId,
+    required wallet.Coin coin,
   });
 }
 

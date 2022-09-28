@@ -7,12 +7,14 @@ class MultiSigSignTxRequest {
   MultiSigSignTxRequest({
     required this.address,
     required this.txUuid,
-    required this.signatureBytes,
+    this.signatureBytes,
+    this.declineTx,
   });
 
   final String address;
   final String txUuid;
-  final String signatureBytes;
+  final String? signatureBytes;
+  final bool? declineTx;
 
   factory MultiSigSignTxRequest.fromJson(Map<String, dynamic> json) =>
       _$MultiSigSignTxRequestFromJson(json);

@@ -11,7 +11,8 @@ MultiSigSignTxRequest _$MultiSigSignTxRequestFromJson(
     MultiSigSignTxRequest(
       address: json['address'] as String,
       txUuid: json['txUuid'] as String,
-      signatureBytes: json['signatureBytes'] as String,
+      signatureBytes: json['signatureBytes'] as String?,
+      declineTx: json['declineTx'] as bool?,
     );
 
 Map<String, dynamic> _$MultiSigSignTxRequestToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$MultiSigSignTxRequestToJson(
       'address': instance.address,
       'txUuid': instance.txUuid,
       'signatureBytes': instance.signatureBytes,
+      'declineTx': instance.declineTx,
     };
