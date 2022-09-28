@@ -131,8 +131,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+        return ListView(
+          shrinkWrap: true,
           children: [
             if (isTransactable)
               PwGreyButton(
@@ -163,13 +163,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                   Navigator.of(context).pop(MenuOperation.select);
                 },
               ),
-            PwListDivider(),
-            PwGreyButton(
-              enabled: false,
-              text: '',
-              // ignore: no-empty-block
-              onPressed: () {},
-            ),
           ],
         );
       },

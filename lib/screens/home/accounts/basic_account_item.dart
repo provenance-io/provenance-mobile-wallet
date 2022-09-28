@@ -118,8 +118,8 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+        return ListView(
+          shrinkWrap: true,
           children: [
             PwGreyButton(
               key: BasicAccountItem.keyCopyAccountNumberButton,
@@ -162,13 +162,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
                   Navigator.of(context).pop(MenuOperation.switchCoin);
                 },
               ),
-            PwListDivider(),
-            PwGreyButton(
-              enabled: false,
-              text: "",
-              // ignore: no-empty-block
-              onPressed: () {},
-            ),
           ],
         );
       },

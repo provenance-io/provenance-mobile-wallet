@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -7,6 +8,7 @@ import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/multi_sig_remote_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -72,26 +74,45 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                       }
 
                       final children = <Widget>[];
-                      for (var data in loadData.datas) {
-                        final child = _SelectableTextButton(
-                          data: data,
-                          isSelected: selectedData?.account.remoteId ==
-                              data.account.remoteId,
-                          onPressed: () {
-                            setState(() {
-                              final remoteId = data.account.remoteId;
+                      if (loadData.datas.isNotEmpty) {
+                        for (var data in loadData.datas) {
+                          final child = _SelectableTextButton(
+                            data: data,
+                            isSelected: selectedData?.account.remoteId ==
+                                data.account.remoteId,
+                            onPressed: () {
+                              setState(() {
+                                final remoteId = data.account.remoteId;
 
-                              selectedData =
-                                  selectedData?.account.remoteId == remoteId
-                                      ? null
-                                      : data;
-                            });
-                          },
-                        );
+                                selectedData =
+                                    selectedData?.account.remoteId == remoteId
+                                        ? null
+                                        : data;
+                              });
+                            },
+                          );
 
-                        children.add(child);
-                        children.add(SizedBox(
-                          height: 1,
+                          children.add(child);
+                          children.add(SizedBox(
+                            height: 1,
+                          ));
+                        }
+                      } else {
+                        children.add(
+                            SvgPicture.asset(ImagePaths().warningDialogIcon));
+                        children.add(VerticalSpacer.xxLarge());
+                        children.add(Text(
+                          Strings.of(context).multiSigRecoverPleaseNote,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ));
+                        children.add(VerticalSpacer.medium());
+                        children.add(Center(
+                          child: Text(
+                            Strings.of(context)
+                                .multiSigRecoverNoAccountsToRecover,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.body,
+                          ),
                         ));
                       }
 
@@ -133,26 +154,28 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
     var error = false;
     final recoverableRemoteAccounts = <String, _MultiSigAccountData>{};
 
-    for (var basicAccount in basicAccounts) {
-      final remoteAccounts = await multiSigClient.getAccounts(
-        address: basicAccount.address,
-        coin: basicAccount.coin,
-      );
+    if (basicAccounts.isNotEmpty) {
+      for (var basicAccount in basicAccounts) {
+        final remoteAccounts = await multiSigClient.getAccounts(
+          address: basicAccount.address,
+          coin: basicAccount.coin,
+        );
 
-      if (remoteAccounts == null) {
-        error = true;
-      }
+        if (remoteAccounts == null) {
+          error = true;
+        }
 
-      for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
-        final remoteId = remoteAccount.remoteId;
+        for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
+          final remoteId = remoteAccount.remoteId;
 
-        if (!multiAccountRemoteIds.contains(remoteId) &&
-            !recoverableRemoteAccounts.containsKey(remoteId)) {
-          recoverableRemoteAccounts[remoteAccount.remoteId] =
-              _MultiSigAccountData(
-            account: remoteAccount,
-            linkedAccount: basicAccount,
-          );
+          if (!multiAccountRemoteIds.contains(remoteId) &&
+              !recoverableRemoteAccounts.containsKey(remoteId)) {
+            recoverableRemoteAccounts[remoteAccount.remoteId] =
+                _MultiSigAccountData(
+              account: remoteAccount,
+              linkedAccount: basicAccount,
+            );
+          }
         }
       }
     }
