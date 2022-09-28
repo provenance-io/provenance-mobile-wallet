@@ -1,9 +1,9 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MultiSigInviteReviewLanding extends StatelessWidget {
@@ -77,7 +77,7 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                           text: Strings.of(context)
                               .multiSigInviteReviewDetailsTitle,
                           onPressed: () {
-                            get<MultiSigInviteReviewFlowNavigator>()
+                            Provider.of<MultiSigInviteReviewFlowBloc>(context)
                                 .showReviewInvitationDetails();
                           },
                         ),

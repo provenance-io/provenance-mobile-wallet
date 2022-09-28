@@ -2,21 +2,21 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_button.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
-  MultiSigInviteReviewCreateOrLinkScreen({
+  const MultiSigInviteReviewCreateOrLinkScreen({
     Key? key,
   }) : super(key: key);
 
   static final keyJoinMultiSig =
       ValueKey('$MultiSigInviteReviewCreateOrLinkScreen.join_button');
 
-  final _bloc = get<MultiSigInviteReviewFlowBloc>();
-
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PwAppBar(

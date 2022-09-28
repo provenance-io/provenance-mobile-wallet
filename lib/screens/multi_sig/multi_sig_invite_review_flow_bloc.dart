@@ -36,6 +36,10 @@ class MultiSigInviteReviewFlowBloc {
     _navigator.showLinkExistingAccount();
   }
 
+  void showReviewInvitationDetails() {
+    _navigator.showReviewInvitationDetails();
+  }
+
   Future<void> submitLinkedAccount(BasicAccount? account) async {
     final multiAccount = await _register(account);
 
