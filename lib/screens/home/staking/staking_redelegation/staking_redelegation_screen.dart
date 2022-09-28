@@ -5,22 +5,13 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/validator
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingRedelegationScreen extends StatefulWidget {
-  final DetailedValidator validator;
-  final TransactableAccount account;
-  final Delegation delegation;
-
   const StakingRedelegationScreen({
     Key? key,
-    required this.delegation,
-    required this.validator,
-    required this.account,
   }) : super(key: key);
 
   @override
@@ -34,20 +25,9 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = StakingRedelegationBloc(
-      widget.validator,
-      widget.delegation,
-      widget.account,
-    );
+    _bloc = Provider.of(context);
     get.registerSingleton<StakingRedelegationBloc>(_bloc);
     _bloc.load();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<StakingRedelegationBloc>();
-
-    super.dispose();
   }
 
   @override

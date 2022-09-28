@@ -11,15 +11,14 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -135,10 +134,18 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     DetailedValidator validator,
   ) async {
     showPage(
-      (context) => StakingRedelegationScreen(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider<StakingRedelegationBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingRedelegationBloc(
+            validator,
+            widget.selectedDelegation!,
+            widget.account,
+          )..load();
+          return bloc;
+        },
+        child: StakingRedelegationScreen(),
       ),
     );
   }
