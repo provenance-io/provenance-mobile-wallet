@@ -1,6 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
@@ -97,7 +97,8 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                         onTouch: () async {
                           get<StakingRedelegationBloc>()
                               .selectRedelegation(item);
-                          get<StakingFlowBloc>().showRedelegationAmountScreen();
+                          Provider.of<StakingDetailsBloc>(context)
+                              .showRedelegationAmountScreen();
                         },
                       );
                     },

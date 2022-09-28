@@ -6,12 +6,11 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -180,7 +179,8 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                get<StakingFlowBloc>().showDelegationReview();
+                                Provider.of<StakingDetailsBloc>(context)
+                                    .showDelegationReview();
                               },
                               child: PwText(
                                 strings.stakingDelegateYesResponse
@@ -193,7 +193,8 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       },
                     );
                   } else {
-                    get<StakingFlowBloc>().showDelegationReview();
+                    Provider.of<StakingDetailsBloc>(context)
+                        .showDelegationReview();
                   }
                 },
                 child: PwText(

@@ -6,7 +6,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -21,7 +20,7 @@ class DelegatorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = get<StakingDetailsBloc>();
+    final _bloc = Provider.of<StakingDetailsBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
         initialData: _bloc.validatorDetails.value,

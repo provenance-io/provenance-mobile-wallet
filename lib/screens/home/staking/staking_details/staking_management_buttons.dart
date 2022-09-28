@@ -2,12 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class StakingManagementButtons extends StatelessWidget {
   const StakingManagementButtons({
@@ -34,7 +34,7 @@ class StakingManagementButtons extends StatelessWidget {
             ),
             child: PwButton(
               onPressed: () {
-                get<StakingFlowBloc>().showDelegationScreen(
+                Provider.of<StakingDetailsBloc>(context).showDelegationScreen(
                   validator,
                   commission,
                 );
@@ -63,7 +63,8 @@ class StakingManagementButtons extends StatelessWidget {
                     Flexible(
                       child: PwButton(
                         onPressed: () {
-                          get<StakingFlowBloc>().showDelegationScreen(
+                          Provider.of<StakingDetailsBloc>(context)
+                              .showDelegationScreen(
                             validator,
                             commission,
                           );
@@ -84,7 +85,8 @@ class StakingManagementButtons extends StatelessWidget {
                         SelectedDelegationType.redelegate
                             .getDropDownTitle(context),
                         onPressed: () {
-                          get<StakingFlowBloc>().showRedelegationScreen(
+                          Provider.of<StakingDetailsBloc>(context)
+                              .showRedelegationScreen(
                             validator,
                           );
                         },
@@ -109,7 +111,8 @@ class StakingManagementButtons extends StatelessWidget {
                         SelectedDelegationType.undelegate
                             .getDropDownTitle(context),
                         onPressed: () {
-                          get<StakingFlowBloc>().showUndelegationScreen(
+                          Provider.of<StakingDetailsBloc>(context)
+                              .showUndelegationScreen(
                             validator,
                           );
                         },
@@ -125,7 +128,8 @@ class StakingManagementButtons extends StatelessWidget {
                           if (rewards != null) {
                             reward = rewards!.rewards.firstOrNull;
                           }
-                          get<StakingFlowBloc>().showClaimRewardsReview(
+                          Provider.of<StakingDetailsBloc>(context)
+                              .showClaimRewardsReview(
                             validator,
                             reward,
                           );

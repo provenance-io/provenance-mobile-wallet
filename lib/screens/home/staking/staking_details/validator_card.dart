@@ -1,8 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/pw_avatar.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ValidatorCard extends StatefulWidget {
@@ -129,7 +129,8 @@ class _ValidatorCardState extends State<ValidatorCard> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
-                    final url = get<StakingDetailsBloc>().getProvUrl();
+                    final url =
+                        Provider.of<StakingDetailsBloc>(context).getProvUrl();
                     if (await canLaunchUrlString(url)) {
                       await launchUrlString(url);
                     } else {

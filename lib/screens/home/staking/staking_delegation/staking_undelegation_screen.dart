@@ -6,10 +6,9 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -100,7 +99,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  get<StakingFlowBloc>()
+                  Provider.of<StakingDetailsBloc>(context)
                       .redirectToRedelegation(details.validator);
                 },
                 child: PwText(
@@ -161,7 +160,8 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
-                  get<StakingFlowBloc>().showUndelegationReview();
+                  Provider.of<StakingDetailsBloc>(context)
+                      .showUndelegationReview();
                 },
                 child: PwText(
                   strings.continueName,

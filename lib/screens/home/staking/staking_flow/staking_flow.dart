@@ -9,6 +9,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_u
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
@@ -89,26 +90,21 @@ class StakingFlow extends FlowBase {
 class StakingFlowState extends FlowBaseState<StakingFlow>
     implements StakingFlowNavigator {
   @override
-  Widget createStartPage() => StakingDetailsScreen(
-        validatorAddress: widget.validatorAddress,
-        account: widget.account,
-        selectedDelegation: widget.selectedDelegation,
-        rewards: widget.rewards,
+  Widget createStartPage() => Provider<StakingDetailsBloc>(
+        lazy: true,
+        dispose: (_, bloc) => bloc.onDispose(),
+        create: (context) {
+          final bloc = StakingDetailsBloc(
+            widget.validatorAddress,
+            widget.account,
+            widget.selectedDelegation,
+            widget.rewards,
+            navigator: this,
+          )..load();
+          return bloc;
+        },
+        child: StakingDetailsScreen(),
       );
-
-  @override
-  void dispose() {
-    get.unregister<StakingFlowBloc>();
-
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    final bloc = StakingFlowBloc(navigator: this);
-    get.registerSingleton<StakingFlowBloc>(bloc);
-    super.initState();
-  }
 
   @override
   Future<void> showDelegationScreen(

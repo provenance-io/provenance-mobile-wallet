@@ -4,12 +4,13 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class RedelegationAmountScreen extends StatefulWidget {
   const RedelegationAmountScreen({
@@ -165,7 +166,8 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                                 details.hashRedelegated <= Decimal.zero) {
                               return;
                             }
-                            get<StakingFlowBloc>().showRedelegationReview();
+                            Provider.of<StakingDetailsBloc>(context)
+                                .showRedelegationReview();
                           },
                           child: PwText(
                             strings.continueName,

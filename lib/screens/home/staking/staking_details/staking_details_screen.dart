@@ -4,25 +4,13 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/delegator
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management_buttons.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingDetailsScreen extends StatefulWidget {
   const StakingDetailsScreen({
     Key? key,
-    required this.validatorAddress,
-    required this.account,
-    required this.selectedDelegation,
-    required this.rewards,
   }) : super(key: key);
-
-  final String validatorAddress;
-  final TransactableAccount account;
-  final Delegation? selectedDelegation;
-  final Rewards? rewards;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
@@ -33,21 +21,8 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
 
   @override
   void initState() {
-    _bloc = StakingDetailsBloc(
-      widget.validatorAddress,
-      widget.account,
-      widget.selectedDelegation,
-      widget.rewards,
-    );
-    _bloc.load();
-    get.registerSingleton<StakingDetailsBloc>(_bloc);
+    _bloc = Provider.of(context);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<StakingDetailsBloc>();
-    super.dispose();
   }
 
   @override

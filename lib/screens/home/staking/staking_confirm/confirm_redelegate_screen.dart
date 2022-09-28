@@ -5,12 +5,13 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmRedelegateScreen extends StatelessWidget {
   const ConfirmRedelegateScreen({
@@ -33,7 +34,7 @@ class ConfirmRedelegateScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            get<StakingFlowBloc>().showTransactionData(
+            Provider.of<StakingDetailsBloc>(context).showTransactionData(
               bloc.getRedelegateMessageJson(),
               Strings.of(context).stakingConfirmData,
             );
@@ -119,7 +120,8 @@ class ConfirmRedelegateScreen extends StatelessWidget {
       final message =
           await (get<StakingRedelegationBloc>()).doRedelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      get<StakingFlowBloc>().showTransactionComplete(message, selected);
+      Provider.of<StakingDetailsBloc>(context)
+          .showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);
       showDialog(
