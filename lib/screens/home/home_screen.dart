@@ -237,6 +237,7 @@ class HomeScreenState extends State<HomeScreen>
 
     final data = <String, dynamic>{};
     if (result.body.messages.isNotEmpty) {
+      // TODO-Roy: Show the type of all messages, not just the first.
       data[MessageFieldName.type] =
           result.body.messages.first.info_.qualifiedMessageName;
     }
