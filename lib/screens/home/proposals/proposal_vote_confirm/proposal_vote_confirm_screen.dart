@@ -32,16 +32,10 @@ class ProposalVoteConfirmScreen extends StatefulWidget {
 
 class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final ProposalVoteConfirmBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = Provider.of(context);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<ProposalVoteConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -172,7 +166,8 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response = await Provider.of<ProposalVoteConfirmBloc>(context)
+          .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
       Provider.of<ProposalsBloc>(context).showTransactionComplete(
         response,

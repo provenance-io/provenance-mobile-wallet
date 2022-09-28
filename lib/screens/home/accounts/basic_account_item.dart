@@ -36,7 +36,6 @@ class BasicAccountItem extends StatefulWidget {
 
 class _BasicAccountItemState extends State<BasicAccountItem> {
   final _subscriptions = CompositeSubscription();
-  late final AccountsBloc _bloc;
   final _accountService = get<AccountService>();
   late BasicAccount _account;
   late bool _isSelected;
@@ -44,18 +43,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   @override
   void initState() {
     super.initState();
-    _bloc = Provider.of(context);
     _account = widget._initialAccount;
-
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as BasicAccount;
-          });
-        }
-      });
-    }).addTo(_subscriptions);
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
@@ -71,6 +59,16 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<AccountsBloc>(context);
+    _bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as BasicAccount;
+          });
+        }
+      });
+    }).addTo(_subscriptions);
     final accountService = get<AccountService>();
     final isSelected = _account.id == accountService.events.selected.value?.id;
     final account = _account;

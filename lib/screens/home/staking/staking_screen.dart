@@ -16,7 +16,6 @@ class StakingScreen extends StatefulWidget {
 
 class _StakingScreenState extends State<StakingScreen>
     with TickerProviderStateMixin {
-  late StakingScreenBloc _bloc;
   late TabController _tabController;
   int _currentTabIndex = 0;
 
@@ -25,8 +24,6 @@ class _StakingScreenState extends State<StakingScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
-    _bloc = Provider.of(context);
-    _bloc.load();
   }
 
   @override
@@ -38,6 +35,7 @@ class _StakingScreenState extends State<StakingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
     final strings = Strings.of(context);
     return Material(
       child: Stack(

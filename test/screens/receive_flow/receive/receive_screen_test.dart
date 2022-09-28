@@ -8,6 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'receive_screen_test.mocks.dart';
@@ -28,12 +29,9 @@ main() {
     mockBloc = MockReceiveBloc();
     when(mockBloc!.stream).thenAnswer((_) => _streamController!.stream);
     when(mockBloc!.onDispose()).thenAnswer((_) => Future.value());
-
-    get.registerSingleton<ReceiveBloc>(mockBloc!);
   });
 
   tearDown(() {
-    get.unregister<ReceiveBloc>();
     _streamController!.close();
   });
 
@@ -43,7 +41,14 @@ main() {
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: ReceiveScreen(),
+          home: Provider<ReceiveBloc>(
+            lazy: true,
+            dispose: (_, bloc) => bloc.onDispose(),
+            create: (context) {
+              return mockBloc!;
+            },
+            child: ReceiveScreen(),
+          ),
         ),
       );
     }
@@ -61,7 +66,15 @@ main() {
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: Material(child: ReceivePage()),
+          home: Material(
+            child: Provider<ReceiveBloc>(
+              dispose: (_, bloc) => bloc.onDispose(),
+              create: (context) {
+                return mockBloc!;
+              },
+              child: ReceivePage(),
+            ),
+          ),
         ),
       );
 

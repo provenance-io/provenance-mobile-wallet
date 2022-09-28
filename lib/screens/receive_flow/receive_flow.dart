@@ -3,7 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class ReceiveFlow extends FlowBase {
   const ReceiveFlow(
@@ -19,20 +19,6 @@ class ReceiveFlow extends FlowBase {
 
 class ReceiveFlowState extends FlowBaseState<ReceiveFlow>
     implements ReceiveNavigator {
-  @override
-  void initState() {
-    super.initState();
-    get.registerLazySingleton<ReceiveBloc>(() => ReceiveBloc(
-          widget._accountDetails,
-        ));
-  }
-
-  @override
-  void dispose() {
-    get.unregister<ReceiveBloc>();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -67,6 +53,15 @@ class ReceiveFlowState extends FlowBaseState<ReceiveFlow>
 
   @override
   Widget createStartPage() {
-    return ReceiveScreen();
+    return Provider<ReceiveBloc>(
+      lazy: true,
+      dispose: (_, bloc) => bloc.onDispose(),
+      create: (context) {
+        return ReceiveBloc(
+          widget._accountDetails,
+        );
+      },
+      child: ReceiveScreen(),
+    );
   }
 }

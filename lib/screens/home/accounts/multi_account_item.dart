@@ -30,7 +30,6 @@ class MultiAccountItem extends StatefulWidget {
 
 class _MultiAccountItemState extends State<MultiAccountItem> {
   final _subscriptions = CompositeSubscription();
-  late final AccountsBloc _bloc;
   final _accountService = get<AccountService>();
   late MultiAccount _account;
   late bool _isSelected;
@@ -38,18 +37,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   @override
   void initState() {
     super.initState();
-    _bloc = Provider.of(context);
-    _account = widget._initialAccount;
 
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as MultiAccount;
-          });
-        }
-      });
-    }).addTo(_subscriptions);
+    _account = widget._initialAccount;
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
@@ -72,6 +61,17 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<AccountsBloc>(context);
+    _bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as MultiAccount;
+          });
+        }
+      });
+    }).addTo(_subscriptions);
+
     return Container(
       color: _isSelected
           ? Theme.of(context).colorScheme.secondary650

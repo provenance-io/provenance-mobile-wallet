@@ -19,13 +19,11 @@ class ValidatorList extends StatefulWidget {
 }
 
 class ValidatorListState extends State<ValidatorList> {
-  late final StakingScreenBloc _bloc;
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _bloc = Provider.of(context);
     _scrollController.addListener(_onScrollEnd);
   }
 
@@ -38,6 +36,7 @@ class ValidatorListState extends State<ValidatorList> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -170,6 +169,8 @@ class ValidatorListState extends State<ValidatorList> {
   }
 
   void _onScrollEnd() {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
+
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_bloc.isLoadingValidators.value) {

@@ -34,16 +34,15 @@ class ProposalWeightedVoteConfirmScreen extends StatefulWidget {
 class _ProposalWeightedVoteConfirmScreenState
     extends State<ProposalWeightedVoteConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final WeightedVoteBloc _bloc;
 
   @override
   void initState() {
-    _bloc = Provider.of(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<WeightedVoteBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<WeightedVoteDetails>(
       stream: _bloc.weightedVoteDetails,
@@ -215,7 +214,8 @@ class _ProposalWeightedVoteConfirmScreenState
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response = await Provider.of<WeightedVoteBloc>(context)
+          .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
       Provider.of<ProposalsBloc>(context).showTransactionComplete(
         response,

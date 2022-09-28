@@ -26,7 +26,6 @@ class AccountsScreen extends StatefulWidget {
 class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
-  late final AccountsBloc _accountsBloc;
   final _accountService = get<AccountService>();
 
   @override
@@ -39,17 +38,16 @@ class AccountsScreenState extends State<AccountsScreen> {
   void initState() {
     super.initState();
 
-    _accountsBloc = Provider.of(context);
-
     _accountService.events.removed.listen(_onRemoved).addTo(_subscriptions);
-    _accountsBloc.insert.listen(_onInsert).addTo(_subscriptions);
-    _accountsBloc.loading
-        .listen((e) => _onLoading(context, e))
-        .addTo(_subscriptions);
   }
 
   @override
   Widget build(BuildContext context) {
+    final _accountsBloc = Provider.of<AccountsBloc>(context);
+    _accountsBloc.insert.listen(_onInsert).addTo(_subscriptions);
+    _accountsBloc.loading
+        .listen((e) => _onLoading(context, e))
+        .addTo(_subscriptions);
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.of(context).accounts,
@@ -129,7 +127,8 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   void _onRemoved(List<Account> accounts) {
     for (final account in accounts) {
-      final index = _accountsBloc.removeAccount(account.id);
+      final index =
+          Provider.of<AccountsBloc>(context).removeAccount(account.id);
       if (index != -1) {
         _listKey.currentState?.removeItem(
           index,

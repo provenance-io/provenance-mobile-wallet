@@ -66,7 +66,8 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                             dispose: (_, bloc) => bloc.onDispose(),
                             create: (context) {
                               return StakingScreenBloc(
-                                  onFlowCompletion: widget.onFlowCompletion);
+                                  onFlowCompletion: widget.onFlowCompletion)
+                                ..load();
                             },
                             child: StakingScreen(),
                           ),

@@ -4,7 +4,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -16,14 +15,11 @@ class StakingRedelegationList extends StatefulWidget {
 }
 
 class _StakingRedelegationListState extends State<StakingRedelegationList> {
-  late final StakingScreenBloc _bloc;
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _bloc = Provider.of<StakingScreenBloc>(context);
-
     _scrollController.addListener(_onScrollEnd);
   }
 
@@ -36,6 +32,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -95,7 +92,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                           item.commission,
                         ),
                         onTouch: () async {
-                          get<StakingRedelegationBloc>()
+                          Provider.of<StakingRedelegationBloc>(context)
                               .selectRedelegation(item);
                           Provider.of<StakingDetailsBloc>(context)
                               .showRedelegationAmountScreen();
@@ -141,6 +138,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
   }
 
   void _onScrollEnd() {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_bloc.isLoadingValidators.value) {

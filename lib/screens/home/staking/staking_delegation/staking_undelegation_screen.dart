@@ -22,7 +22,6 @@ class StakingUndelegationScreen extends StatefulWidget {
 }
 
 class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
-  late final StakingDelegationBloc _bloc;
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _scrollController = ScrollController();
@@ -31,7 +30,6 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
   void initState() {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
-    _bloc = Provider.of(context);
     super.initState();
   }
 
@@ -50,11 +48,12 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    _bloc.updateHashDelegated(number);
+    Provider.of<StakingDelegationBloc>(context).updateHashDelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingDelegationBloc>(context);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(

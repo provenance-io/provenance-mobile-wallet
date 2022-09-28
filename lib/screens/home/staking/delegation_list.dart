@@ -17,13 +17,11 @@ class DelegationList extends StatefulWidget {
 }
 
 class DelegationListState extends State<DelegationList> {
-  late final StakingScreenBloc _bloc;
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _bloc = Provider.of(context);
     _scrollController.addListener(_onScrollEnd);
   }
 
@@ -36,6 +34,8 @@ class DelegationListState extends State<DelegationList> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
+
     return Stack(
       children: [
         StreamBuilder<StakingDetails>(
@@ -149,6 +149,7 @@ class DelegationListState extends State<DelegationList> {
   }
 
   void _onScrollEnd() {
+    final _bloc = Provider.of<StakingScreenBloc>(context);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_bloc.isLoadingValidators.value) {

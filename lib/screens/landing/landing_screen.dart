@@ -31,14 +31,10 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final _pageController = PageController();
   double _currentPage = 0;
-  late final LandingBloc _bloc;
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
-    _bloc = Provider.of(context);
-
-    _bloc.load();
     super.initState();
   }
 
@@ -52,6 +48,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<LandingBloc>(context);
     final authHelper = get<LocalAuthHelper>();
     final strings = Strings.of(context);
 

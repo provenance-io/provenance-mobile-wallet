@@ -5,7 +5,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/validator
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_list.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -20,18 +19,9 @@ class StakingRedelegationScreen extends StatefulWidget {
 }
 
 class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
-  late final StakingRedelegationBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = Provider.of(context);
-    get.registerSingleton<StakingRedelegationBloc>(_bloc);
-    _bloc.load();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingRedelegationBloc>(context);
     final strings = Strings.of(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,

@@ -41,8 +41,6 @@ class HomeScreenState extends State<HomeScreen>
 
   final _subscriptions = CompositeSubscription();
 
-  late final HomeBloc _bloc;
-
   final _walletConnectService = get<WalletConnectService>();
   final _multiSigService = get<MultiSigService>();
 
@@ -69,14 +67,6 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    _bloc = Provider.of<HomeBloc>(context);
-    _bloc.isLoading.listen((e) {
-      if (e) {
-        ModalLoadingRoute.showLoading(context);
-      } else {
-        ModalLoadingRoute.dismiss(context);
-      }
-    }).addTo(_subscriptions);
     _walletConnectService.delegateEvents.sessionRequest
         .listen(_onSessionRequest)
         .addTo(_subscriptions);
@@ -90,7 +80,6 @@ class HomeScreenState extends State<HomeScreen>
 
     _multiSigService.response.listen(_onResponse).addTo(_subscriptions);
 
-    _bloc.error.listen(_onError).addTo(_subscriptions);
     _walletConnectService.delegateEvents.onResponse
         .listen(_onResponse)
         .addTo(_subscriptions);
@@ -104,6 +93,15 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<HomeBloc>(context);
+    _bloc.isLoading.listen((e) {
+      if (e) {
+        ModalLoadingRoute.showLoading(context);
+      } else {
+        ModalLoadingRoute.dismiss(context);
+      }
+    }).addTo(_subscriptions);
+    _bloc.error.listen(_onError).addTo(_subscriptions);
     final strings = Strings.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = (mediaQuery.size.height > 600);

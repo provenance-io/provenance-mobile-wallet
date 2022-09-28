@@ -17,16 +17,10 @@ class StakingDetailsScreen extends StatefulWidget {
 }
 
 class StakingDetailsScreenState extends State<StakingDetailsScreen> {
-  late final StakingDetailsBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = Provider.of(context);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<StakingDetailsBloc>(context);
+
     return Stack(
       children: [
         Container(

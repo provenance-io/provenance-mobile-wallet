@@ -25,16 +25,10 @@ class DepositConfirmScreen extends StatefulWidget {
 
 class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final DepositConfirmBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = Provider.of(context);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<DepositConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -238,7 +232,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response = await Provider.of<DepositConfirmBloc>(context)
+          .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
       Provider.of<ProposalsBloc>(context).showTransactionComplete(
         response,
