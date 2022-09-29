@@ -46,7 +46,7 @@ class AssetBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AssetChartBloc>(context);
+    final bloc = Provider.of<AssetChartBloc>(context, listen: false);
 
     return AspectRatio(
       aspectRatio: (isCompact) ? 3 / 2 : 323 / 228,

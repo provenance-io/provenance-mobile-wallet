@@ -19,7 +19,7 @@ class StakingDetailsScreen extends StatefulWidget {
 class StakingDetailsScreenState extends State<StakingDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDetailsBloc>(context);
+    final bloc = Provider.of<StakingDetailsBloc>(context, listen: false);
 
     return Stack(
       children: [

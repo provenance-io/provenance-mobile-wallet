@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
+import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
@@ -93,7 +94,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<HomeBloc>(context);
+    final bloc = Provider.of<HomeBloc>(context, listen: false);
     bloc.isLoading.listen((e) {
       if (e) {
         ModalLoadingRoute.showLoading(context);
@@ -154,7 +155,15 @@ class HomeScreenState extends State<HomeScreen>
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                DashboardTab(),
+                Provider<DashboardTabBloc>(
+                    lazy: true,
+                    create: (context) {
+                      return DashboardTabBloc();
+                    },
+                    dispose: (_, bloc) {
+                      bloc.onDispose();
+                    },
+                    child: DashboardTab()),
                 TransactionTab(
                   allMessageTypes: strings.dropDownAllMessageTypes,
                   allStatuses: strings.dropDownAllStatuses,

@@ -32,7 +32,8 @@ class ConfirmUndelegateScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            Provider.of<StakingDetailsBloc>(context).showTransactionData(
+            Provider.of<StakingDetailsBloc>(context, listen: false)
+                .showTransactionData(
               bloc.getUndelegateMessageJson(),
               Strings.of(context).stakingConfirmData,
             );
@@ -101,7 +102,7 @@ class ConfirmUndelegateScreen extends StatelessWidget {
     try {
       final message = await bloc.doUndelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      Provider.of<StakingDetailsBloc>(context)
+      Provider.of<StakingDetailsBloc>(context, listen: false)
           .showTransactionComplete(message, selected);
     } catch (err) {
       await _showErrorModal(err, context);

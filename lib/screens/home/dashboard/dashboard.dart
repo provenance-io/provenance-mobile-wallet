@@ -71,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final bloc = Provider.of<HomeBloc>(context);
+    final bloc = Provider.of<HomeBloc>(context, listen: false);
 
     final accountService = get<AccountService>();
     final isTallScreen = (mediaQuery.size.height > 600);
@@ -247,7 +247,9 @@ class _DashboardState extends State<Dashboard> {
                                 final coin =
                                     accountService.events.selected.value?.coin;
                                 if (coin != null) {
-                                  get<DashboardTabBloc>().openAsset(coin, item);
+                                  Provider.of<DashboardTabBloc>(context,
+                                          listen: false)
+                                      .openAsset(coin, item);
                                 }
                               },
                               child: Padding(

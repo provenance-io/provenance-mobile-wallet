@@ -45,6 +45,7 @@ class ConfirmNewPinScreenState extends State<ConfirmNewPinScreen> {
   }
 
   _onFinish(List<int> inputCodes) async {
-    Provider.of<ChangePinBloc>(context).enableBiometrics(inputCodes, context);
+    Provider.of<ChangePinBloc>(context, listen: false)
+        .enableBiometrics(inputCodes, context);
   }
 }

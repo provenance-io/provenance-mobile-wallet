@@ -51,12 +51,13 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    Provider.of<StakingDelegationBloc>(context).updateHashDelegated(number);
+    Provider.of<StakingDelegationBloc>(context, listen: false)
+        .updateHashDelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDelegationBloc>(context);
+    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
     final strings = Strings.of(context);
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,
@@ -178,7 +179,8 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                Provider.of<StakingDetailsBloc>(context)
+                                Provider.of<StakingDetailsBloc>(context,
+                                        listen: false)
                                     .showDelegationReview();
                               },
                               child: PwText(
@@ -192,7 +194,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       },
                     );
                   } else {
-                    Provider.of<StakingDetailsBloc>(context)
+                    Provider.of<StakingDetailsBloc>(context, listen: false)
                         .showDelegationReview();
                   }
                 },

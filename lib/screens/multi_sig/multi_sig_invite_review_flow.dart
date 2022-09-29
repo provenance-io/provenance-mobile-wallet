@@ -92,8 +92,9 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
-        onAccount: Provider.of<MultiSigInviteReviewFlowBloc>(context)
-            .submitLinkedAccount,
+        onAccount:
+            Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false)
+                .submitLinkedAccount,
         enableCreate: false,
       ),
     );

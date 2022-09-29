@@ -19,7 +19,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDelegationBloc>(context);
+    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
@@ -33,7 +33,8 @@ class ConfirmDelegateScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            Provider.of<StakingDetailsBloc>(context).showTransactionData(
+            Provider.of<StakingDetailsBloc>(context, listen: false)
+                .showTransactionData(
               bloc.getDelegateMessageJson(),
               Strings.of(context).stakingConfirmData,
             );
@@ -92,7 +93,7 @@ class ConfirmDelegateScreen extends StatelessWidget {
     try {
       final message = await bloc.doDelegate(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      Provider.of<StakingDetailsBloc>(context)
+      Provider.of<StakingDetailsBloc>(context, listen: false)
           .showTransactionComplete(message, details.selectedDelegationType);
     } catch (err) {
       await _showErrorModal(err, context);

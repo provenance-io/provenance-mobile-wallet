@@ -48,7 +48,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<LandingBloc>(context);
+    final bloc = Provider.of<LandingBloc>(context, listen: false);
     final authHelper = get<LocalAuthHelper>();
     final strings = Strings.of(context);
 

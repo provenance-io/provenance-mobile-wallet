@@ -8,7 +8,7 @@ class AssetPercentageChanged extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AssetChartBloc>(context);
+    final bloc = Provider.of<AssetChartBloc>(context, listen: false);
 
     return StreamBuilder<AssetChartDetails?>(
       initialData: bloc.chartDetails.value,

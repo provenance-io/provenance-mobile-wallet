@@ -48,12 +48,13 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    Provider.of<StakingDelegationBloc>(context).updateHashDelegated(number);
+    Provider.of<StakingDelegationBloc>(context, listen: false)
+        .updateHashDelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDelegationBloc>(context);
+    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
@@ -98,7 +99,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Provider.of<StakingDetailsBloc>(context)
+                  Provider.of<StakingDetailsBloc>(context, listen: false)
                       .redirectToRedelegation(details.validator);
                 },
                 child: PwText(
@@ -159,7 +160,7 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
-                  Provider.of<StakingDetailsBloc>(context)
+                  Provider.of<StakingDetailsBloc>(context, listen: false)
                       .showUndelegationReview();
                 },
                 child: PwText(

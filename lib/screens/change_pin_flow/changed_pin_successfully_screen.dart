@@ -65,7 +65,8 @@ class ChangedPinSuccessFullyScreen extends StatelessWidget {
                           color: PwColor.neutralNeutral,
                         ),
                         onPressed: () async {
-                          Provider.of<ChangePinBloc>(context).returnToProfile();
+                          Provider.of<ChangePinBloc>(context, listen: false)
+                              .returnToProfile();
                         },
                       ),
                     ),

@@ -19,7 +19,8 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
+    final bloc =
+        Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false);
 
     const divider = Divider(
       thickness: 1,

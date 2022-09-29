@@ -35,7 +35,7 @@ class _StakingScreenState extends State<StakingScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Material(
       child: Stack(

@@ -4,7 +4,6 @@ import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_list_item.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +14,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
   final Asset asset;
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<TransactionsBloc>(context);
+    final bloc = Provider.of<TransactionsBloc>(context, listen: false);
 
     return Column(
       children: [
@@ -60,7 +59,8 @@ class AssetChartRecentTransactions extends StatelessWidget {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    get<DashboardTabBloc>().openViewAllTransactions();
+                    Provider.of<DashboardTabBloc>(context, listen: false)
+                        .openViewAllTransactions();
                   },
                   child: Padding(
                     padding: EdgeInsets.zero,

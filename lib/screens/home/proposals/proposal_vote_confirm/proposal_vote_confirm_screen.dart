@@ -35,7 +35,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ProposalVoteConfirmBloc>(context);
+    final bloc = Provider.of<ProposalVoteConfirmBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +68,8 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
               ),
               onPressed: () {
                 final data = bloc.getMessageJson();
-                Provider.of<ProposalsBloc>(context).showTransactionData(
+                Provider.of<ProposalsBloc>(context, listen: false)
+                    .showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
                 );
@@ -166,10 +167,12 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await Provider.of<ProposalVoteConfirmBloc>(context)
-          .sendTransaction(gasEstimate);
+      final response =
+          await Provider.of<ProposalVoteConfirmBloc>(context, listen: false)
+              .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      Provider.of<ProposalsBloc>(context).showTransactionComplete(
+      Provider.of<ProposalsBloc>(context, listen: false)
+          .showTransactionComplete(
         response,
         Strings.of(context).proposalVoteComplete,
       );

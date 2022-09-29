@@ -166,7 +166,8 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                                 details.hashRedelegated <= Decimal.zero) {
                               return;
                             }
-                            Provider.of<StakingDetailsBloc>(context)
+                            Provider.of<StakingDetailsBloc>(context,
+                                    listen: false)
                                 .showRedelegationReview();
                           },
                           child: PwText(

@@ -12,7 +12,7 @@ class EnableBiometricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ChangePinBloc>(context);
+    final bloc = Provider.of<ChangePinBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(

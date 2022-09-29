@@ -16,7 +16,7 @@ class VotingButtons extends StatelessWidget {
   final Proposal proposal;
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ProposalsBloc>(context);
+    final bloc = Provider.of<ProposalsBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

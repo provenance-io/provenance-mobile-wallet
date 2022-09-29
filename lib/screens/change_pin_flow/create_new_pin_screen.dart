@@ -18,7 +18,8 @@ class CreateNewPinScreen extends StatefulHookWidget {
 class CreateNewPinState extends State<CreateNewPinScreen> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<ChangePinBloc>(context).doAuth(context);
+    final bloc = Provider.of<ChangePinBloc>(context, listen: false);
+    bloc.doAuth(context);
 
     return Scaffold(
       appBar: PwAppBar(
@@ -35,7 +36,7 @@ class CreateNewPinState extends State<CreateNewPinScreen> {
                 padding: EdgeInsets.only(top: 18),
                 child: PinPad(
                   subTitle: Strings.of(context).setAPinCodeToUnlockYourAccount,
-                  onFinish: Provider.of<ChangePinBloc>(context).confirmPin,
+                  onFinish: bloc.confirmPin,
                 ),
               ),
             ),

@@ -32,7 +32,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -92,9 +92,11 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                           item.commission,
                         ),
                         onTouch: () async {
-                          Provider.of<StakingRedelegationBloc>(context)
+                          Provider.of<StakingRedelegationBloc>(context,
+                                  listen: false)
                               .selectRedelegation(item);
-                          Provider.of<StakingDetailsBloc>(context)
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
                               .showRedelegationAmountScreen();
                         },
                       );
@@ -138,7 +140,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
   }
 
   void _onScrollEnd() {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !bloc.isLoadingValidators.value) {

@@ -34,7 +34,8 @@ class StakingManagementButtons extends StatelessWidget {
             ),
             child: PwButton(
               onPressed: () {
-                Provider.of<StakingDetailsBloc>(context).showDelegationScreen(
+                Provider.of<StakingDetailsBloc>(context, listen: false)
+                    .showDelegationScreen(
                   validator,
                   commission,
                 );
@@ -63,7 +64,8 @@ class StakingManagementButtons extends StatelessWidget {
                     Flexible(
                       child: PwButton(
                         onPressed: () {
-                          Provider.of<StakingDetailsBloc>(context)
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
                               .showDelegationScreen(
                             validator,
                             commission,
@@ -85,7 +87,8 @@ class StakingManagementButtons extends StatelessWidget {
                         SelectedDelegationType.redelegate
                             .getDropDownTitle(context),
                         onPressed: () {
-                          Provider.of<StakingDetailsBloc>(context)
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
                               .showRedelegationScreen(
                             validator,
                           );
@@ -111,7 +114,8 @@ class StakingManagementButtons extends StatelessWidget {
                         SelectedDelegationType.undelegate
                             .getDropDownTitle(context),
                         onPressed: () {
-                          Provider.of<StakingDetailsBloc>(context)
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
                               .showUndelegationScreen(
                             validator,
                           );
@@ -128,7 +132,8 @@ class StakingManagementButtons extends StatelessWidget {
                           if (rewards != null) {
                             reward = rewards!.rewards.firstOrNull;
                           }
-                          Provider.of<StakingDetailsBloc>(context)
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
                               .showClaimRewardsReview(
                             validator,
                             reward,

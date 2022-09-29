@@ -20,7 +20,7 @@ class DelegatorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDetailsBloc>(context);
+    final bloc = Provider.of<StakingDetailsBloc>(context, listen: false);
     final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
         initialData: bloc.validatorDetails.value,
@@ -79,8 +79,9 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.brightness_1,
-                    color: Provider.of<StakingScreenBloc>(context)
-                        .getColor(validator.status, context),
+                    color:
+                        Provider.of<StakingScreenBloc>(context, listen: false)
+                            .getColor(validator.status, context),
                     size: 8,
                   ),
                   HorizontalSpacer.xSmall(),

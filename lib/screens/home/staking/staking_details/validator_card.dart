@@ -130,7 +130,8 @@ class _ValidatorCardState extends State<ValidatorCard> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     final url =
-                        Provider.of<StakingDetailsBloc>(context).getProvUrl();
+                        Provider.of<StakingDetailsBloc>(context, listen: false)
+                            .getProvUrl();
                     if (await canLaunchUrlString(url)) {
                       await launchUrlString(url);
                     } else {

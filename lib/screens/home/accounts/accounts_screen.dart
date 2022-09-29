@@ -43,7 +43,7 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AccountsBloc>(context);
+    final bloc = Provider.of<AccountsBloc>(context, listen: false);
     bloc.insert.listen(_onInsert).addTo(_subscriptions);
     bloc.loading.listen((e) => _onLoading(context, e)).addTo(_subscriptions);
     return Scaffold(
@@ -125,8 +125,8 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   void _onRemoved(List<Account> accounts) {
     for (final account in accounts) {
-      final index =
-          Provider.of<AccountsBloc>(context).removeAccount(account.id);
+      final index = Provider.of<AccountsBloc>(context, listen: false)
+          .removeAccount(account.id);
       if (index != -1) {
         _listKey.currentState?.removeItem(
           index,

@@ -18,7 +18,7 @@ class StakingListItem extends StatelessWidget {
   final Future<void> Function() onTouch;
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {

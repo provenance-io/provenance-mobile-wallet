@@ -15,7 +15,8 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
+    final bloc =
+        Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

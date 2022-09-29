@@ -40,7 +40,7 @@ class ReceivePage extends StatefulWidget {
 class ReceivePageState extends State<ReceivePage> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ReceiveBloc>(context);
+    final bloc = Provider.of<ReceiveBloc>(context, listen: false);
     return StreamBuilder<ReceiveState>(
       stream: bloc.stream,
       builder: (context, snapshot) {

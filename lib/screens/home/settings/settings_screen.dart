@@ -154,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             confirmText: strings.resetAccounts,
                           );
                           if (shouldReset) {
-                            await Provider.of<HomeBloc>(context)
+                            await Provider.of<HomeBloc>(context, listen: false)
                                 .resetAccounts();
                           }
                         },

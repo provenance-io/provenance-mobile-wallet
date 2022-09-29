@@ -36,7 +36,7 @@ class ValidatorListState extends State<ValidatorList> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -169,7 +169,7 @@ class ValidatorListState extends State<ValidatorList> {
   }
 
   void _onScrollEnd() {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
 
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&

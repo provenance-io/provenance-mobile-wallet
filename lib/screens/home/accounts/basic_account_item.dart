@@ -59,7 +59,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AccountsBloc>(context);
+    final bloc = Provider.of<AccountsBloc>(context, listen: false);
     bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
@@ -165,7 +165,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       },
     );
 
-    final bloc = Provider.of<HomeBloc>(context);
+    final bloc = Provider.of<HomeBloc>(context, listen: false);
 
     switch (result) {
       case MenuOperation.rename:

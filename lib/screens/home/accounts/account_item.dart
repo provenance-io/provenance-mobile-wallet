@@ -132,7 +132,8 @@ class AccountDescriptionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<int?>(
-      future: Provider.of<AccountsBloc>(context).getAssetCount(account),
+      future: Provider.of<AccountsBloc>(context, listen: false)
+          .getAssetCount(account),
       builder: (context, snapshot) {
         final numAssets = snapshot.data;
 

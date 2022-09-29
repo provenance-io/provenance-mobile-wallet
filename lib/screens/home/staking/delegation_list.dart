@@ -34,7 +34,7 @@ class DelegationListState extends State<DelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
 
     return Stack(
       children: [
@@ -149,7 +149,7 @@ class DelegationListState extends State<DelegationList> {
   }
 
   void _onScrollEnd() {
-    final bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !bloc.isLoadingValidators.value) {

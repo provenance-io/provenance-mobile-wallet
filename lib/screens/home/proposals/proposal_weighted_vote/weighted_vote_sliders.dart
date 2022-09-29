@@ -192,7 +192,7 @@ class _WeightedVoteSlidersState extends State<WeightedVoteSliders> {
   }
 
   void _updateWeight() {
-    Provider.of<WeightedVoteBloc>(context).updateWeight(
+    Provider.of<WeightedVoteBloc>(context, listen: false).updateWeight(
       yesAmount: _currentValues[0],
       noAmount: _currentValues[1],
       noWithVetoAmount: _currentValues[2],

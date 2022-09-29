@@ -77,7 +77,8 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                           text: Strings.of(context)
                               .multiSigInviteReviewDetailsTitle,
                           onPressed: () {
-                            Provider.of<MultiSigInviteReviewFlowBloc>(context)
+                            Provider.of<MultiSigInviteReviewFlowBloc>(context,
+                                    listen: false)
                                 .showReviewInvitationDetails();
                           },
                         ),

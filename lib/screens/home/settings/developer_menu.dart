@@ -47,7 +47,7 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.httpClientDiagnostics500,
                   !data,
                 );
-                Provider.of<HomeBloc>(context).load();
+                Provider.of<HomeBloc>(context, listen: false).load();
               },
             );
           },
@@ -72,7 +72,7 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.enableMultiSig,
                   !shouldEnableMultiSig,
                 );
-                Provider.of<HomeBloc>(context).load();
+                Provider.of<HomeBloc>(context, listen: false).load();
               },
             );
           },

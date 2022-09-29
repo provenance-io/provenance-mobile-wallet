@@ -9,7 +9,6 @@ import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/price_change_indicator.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provider/provider.dart';
 
 class AssetChartScreen extends StatefulWidget {
@@ -28,7 +27,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
 
   @override
   void initState() {
-    _bloc = Provider.of<AssetChartBloc>(context);
+    _bloc = Provider.of<AssetChartBloc>(context, listen: false);
     super.initState();
   }
 
@@ -80,7 +79,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                   PwIcons.back,
                 ),
                 onPressed: () {
-                  get<DashboardTabBloc>().closeAsset();
+                  Provider.of<DashboardTabBloc>(context, listen: false)
+                      .closeAsset();
                 },
               ),
             ),

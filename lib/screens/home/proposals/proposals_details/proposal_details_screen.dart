@@ -283,7 +283,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                               child: PwOutlinedButton(
                                 strings.proposalDetailsScreenDeposit,
                                 onPressed: () {
-                                  Provider.of<ProposalsBloc>(context)
+                                  Provider.of<ProposalsBloc>(context,
+                                          listen: false)
                                       .showDepositReview(_proposal);
                                 },
                               ),

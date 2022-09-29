@@ -28,7 +28,8 @@ class _ProposalListItemState extends State<ProposalListItem> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        Provider.of<ProposalsBloc>(context).showProposalDetails(widget.item);
+        Provider.of<ProposalsBloc>(context, listen: false)
+            .showProposalDetails(widget.item);
       },
       child: Padding(
         padding: EdgeInsets.zero,

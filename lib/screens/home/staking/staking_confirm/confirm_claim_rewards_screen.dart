@@ -18,7 +18,7 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDelegationBloc>(context);
+    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
@@ -33,7 +33,8 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
         return StakingConfirmBase(
           appBarTitle: details.selectedDelegationType.getDropDownTitle(context),
           onDataClick: () {
-            Provider.of<StakingDetailsBloc>(context).showTransactionData(
+            Provider.of<StakingDetailsBloc>(context, listen: false)
+                .showTransactionData(
               bloc.getClaimRewardJson(),
               Strings.of(context).stakingConfirmData,
             );
@@ -89,10 +90,11 @@ class ConfirmClaimRewardsScreen extends StatelessWidget {
     BuildContext context,
   ) async {
     try {
-      final message = await (Provider.of<StakingDelegationBloc>(context))
-          .claimRewards(gasAdjustment);
+      final message =
+          await (Provider.of<StakingDelegationBloc>(context, listen: false))
+              .claimRewards(gasAdjustment);
       ModalLoadingRoute.dismiss(context);
-      Provider.of<StakingDetailsBloc>(context)
+      Provider.of<StakingDetailsBloc>(context, listen: false)
           .showTransactionComplete(message, selected);
     } catch (err) {
       ModalLoadingRoute.dismiss(context);

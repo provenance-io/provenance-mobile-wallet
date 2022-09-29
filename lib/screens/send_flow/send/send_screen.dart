@@ -55,7 +55,7 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SendBloc>(context);
+    final bloc = Provider.of<SendBloc>(context, listen: false);
     bloc.stream.listen((state) {
       _recentSends.value = state.recentSendAddresses;
       _assets.value = state.availableAssets;
