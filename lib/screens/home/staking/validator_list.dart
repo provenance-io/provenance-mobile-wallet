@@ -36,7 +36,7 @@ class ValidatorListState extends State<ValidatorList> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -51,7 +51,7 @@ class ValidatorListState extends State<ValidatorList> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _bloc.showMenu(context),
+              onTap: () => bloc.showMenu(context),
               child: Row(
                 children: [
                   PwText(
@@ -74,8 +74,8 @@ class ValidatorListState extends State<ValidatorList> {
           child: Stack(
             children: [
               StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -122,10 +122,10 @@ class ValidatorListState extends State<ValidatorList> {
                             ).route(),
                           );
                           if (response == true) {
-                            await _bloc.load();
+                            await bloc.load();
                           } else if (response == false) {
                             Navigator.pop(context);
-                            _bloc.onFlowCompletion();
+                            bloc.onFlowCompletion();
                           }
                         },
                       );
@@ -140,8 +140,8 @@ class ValidatorListState extends State<ValidatorList> {
                 },
               ),
               StreamBuilder<bool>(
-                initialData: _bloc.isLoadingValidators.value,
-                stream: _bloc.isLoadingValidators,
+                initialData: bloc.isLoadingValidators.value,
+                stream: bloc.isLoadingValidators,
                 builder: (context, snapshot) {
                   final isLoading = snapshot.data ?? false;
                   if (isLoading) {
@@ -169,12 +169,12 @@ class ValidatorListState extends State<ValidatorList> {
   }
 
   void _onScrollEnd() {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
 
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalValidators();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalValidators();
     }
   }
 }

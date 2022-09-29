@@ -21,7 +21,7 @@ class StakingRedelegationScreen extends StatefulWidget {
 class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingRedelegationBloc>(context);
+    final bloc = Provider.of<StakingRedelegationBloc>(context);
     final strings = Strings.of(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
@@ -29,8 +29,8 @@ class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return StreamBuilder<StakingRedelegationDetails>(
-              initialData: _bloc.stakingRedelegationDetails.value,
-              stream: _bloc.stakingRedelegationDetails,
+              initialData: bloc.stakingRedelegationDetails.value,
+              stream: bloc.stakingRedelegationDetails,
               builder: (context, snapshot) {
                 final details = snapshot.data;
 

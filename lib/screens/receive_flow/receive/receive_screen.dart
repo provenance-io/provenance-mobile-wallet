@@ -40,9 +40,9 @@ class ReceivePage extends StatefulWidget {
 class ReceivePageState extends State<ReceivePage> {
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<ReceiveBloc>(context);
+    final bloc = Provider.of<ReceiveBloc>(context);
     return StreamBuilder<ReceiveState>(
-      stream: _bloc.stream,
+      stream: bloc.stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -118,7 +118,7 @@ class ReceivePageState extends State<ReceivePage> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         icon: Icon(Icons.copy),
-                        onPressed: () => _copyClicked(_bloc),
+                        onPressed: () => _copyClicked(bloc),
                       ),
                     ),
                   ],

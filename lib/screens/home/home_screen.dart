@@ -93,15 +93,15 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<HomeBloc>(context);
-    _bloc.isLoading.listen((e) {
+    final bloc = Provider.of<HomeBloc>(context);
+    bloc.isLoading.listen((e) {
       if (e) {
         ModalLoadingRoute.showLoading(context);
       } else {
         ModalLoadingRoute.dismiss(context);
       }
     }).addTo(_subscriptions);
-    _bloc.error.listen(_onError).addTo(_subscriptions);
+    bloc.error.listen(_onError).addTo(_subscriptions);
     final strings = Strings.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = (mediaQuery.size.height > 600);

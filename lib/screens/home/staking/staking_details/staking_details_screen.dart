@@ -19,15 +19,15 @@ class StakingDetailsScreen extends StatefulWidget {
 class StakingDetailsScreenState extends State<StakingDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingDetailsBloc>(context);
+    final bloc = Provider.of<StakingDetailsBloc>(context);
 
     return Stack(
       children: [
         Container(
           color: Theme.of(context).colorScheme.neutral750,
           child: StreamBuilder<DetailedValidatorDetails>(
-            initialData: _bloc.validatorDetails.value,
-            stream: _bloc.validatorDetails,
+            initialData: bloc.validatorDetails.value,
+            stream: bloc.validatorDetails,
             builder: (context, snapshot) {
               final details = snapshot.data;
               final validator = snapshot.data?.validator;
@@ -71,8 +71,8 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
           ),
         ),
         StreamBuilder<bool>(
-          initialData: _bloc.isLoading.value,
-          stream: _bloc.isLoading,
+          initialData: bloc.isLoading.value,
+          stream: bloc.isLoading,
           builder: (context, snapshot) {
             final isLoading = snapshot.data ?? false;
             if (isLoading) {

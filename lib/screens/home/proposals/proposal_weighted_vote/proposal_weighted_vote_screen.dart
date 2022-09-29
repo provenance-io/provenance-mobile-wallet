@@ -26,7 +26,7 @@ class ProposalWeightedVoteScreen extends StatefulWidget {
 class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<WeightedVoteBloc>(context);
+    final bloc = Provider.of<WeightedVoteBloc>(context);
 
     return Scaffold(
       appBar: PwAppBar(
@@ -47,8 +47,8 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               ),
             ),
             StreamBuilder<WeightedVoteDetails>(
-              initialData: _bloc.weightedVoteDetails.value,
-              stream: _bloc.weightedVoteDetails,
+              initialData: bloc.weightedVoteDetails.value,
+              stream: bloc.weightedVoteDetails,
               builder: (context, snapshot) {
                 final details = snapshot.data;
 

@@ -61,8 +61,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<AccountsBloc>(context);
-    _bloc.updated.listen((e) {
+    final bloc = Provider.of<AccountsBloc>(context);
+    bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
           setState(() {

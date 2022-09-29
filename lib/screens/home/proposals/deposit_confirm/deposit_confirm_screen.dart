@@ -28,7 +28,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<DepositConfirmBloc>(context);
+    final bloc = Provider.of<DepositConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +60,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                 50,
               ),
               onPressed: () {
-                final data = _bloc.getMessageJson();
+                final data = bloc.getMessageJson();
                 Provider.of<ProposalsBloc>(context).showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
@@ -78,8 +78,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: StreamBuilder<DepositDetails?>(
-            initialData: _bloc.depositDetails.value,
-            stream: _bloc.depositDetails,
+            initialData: bloc.depositDetails.value,
+            stream: bloc.depositDetails,
             builder: (context, snapshot) {
               final details = snapshot.data;
 
@@ -110,7 +110,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                             HorizontalSpacer.small(),
                             GestureDetector(
                               onTap: () async {
-                                String url = _bloc.getProvUrl();
+                                String url = bloc.getProvUrl();
                                 if (await canLaunchUrlString(url)) {
                                   await launchUrlString(url);
                                 } else {
@@ -178,7 +178,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         DepositSlider(
                           max: details.sliderMax,
                           thumbColor: Theme.of(context).colorScheme.primary550,
-                          onChanged: (changed) => _bloc.depositAmount = changed,
+                          onChanged: (changed) => bloc.depositAmount = changed,
                         ),
                         PwListDivider.alternate(),
                         PwGasAdjustmentSlider(

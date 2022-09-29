@@ -34,13 +34,13 @@ class DelegationListState extends State<DelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
 
     return Stack(
       children: [
         StreamBuilder<StakingDetails>(
-            initialData: _bloc.stakingDetails.value,
-            stream: _bloc.stakingDetails,
+            initialData: bloc.stakingDetails.value,
+            stream: bloc.stakingDetails,
             builder: (context, snapshot) {
               final stakingDetails = snapshot.data;
               if (stakingDetails == null || stakingDetails.delegates.isEmpty) {
@@ -104,10 +104,10 @@ class DelegationListState extends State<DelegationList> {
                         ).route(),
                       );
                       if (response == true) {
-                        await _bloc.load();
+                        await bloc.load();
                       } else if (response == false) {
                         Navigator.pop(context);
-                        _bloc.onFlowCompletion();
+                        bloc.onFlowCompletion();
                       }
                     },
                   );
@@ -123,8 +123,8 @@ class DelegationListState extends State<DelegationList> {
               );
             }),
         StreamBuilder<bool>(
-          initialData: _bloc.isLoadingDelegations.value,
-          stream: _bloc.isLoadingDelegations,
+          initialData: bloc.isLoadingDelegations.value,
+          stream: bloc.isLoadingDelegations,
           builder: (context, snapshot) {
             final isLoading = snapshot.data ?? false;
             if (isLoading) {
@@ -149,11 +149,11 @@ class DelegationListState extends State<DelegationList> {
   }
 
   void _onScrollEnd() {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalDelegates();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalDelegates();
     }
   }
 }

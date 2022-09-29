@@ -42,10 +42,10 @@ class _ProposalWeightedVoteConfirmScreenState
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<WeightedVoteBloc>(context);
+    final bloc = Provider.of<WeightedVoteBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<WeightedVoteDetails>(
-      stream: _bloc.weightedVoteDetails,
+      stream: bloc.weightedVoteDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null) {
@@ -77,7 +77,7 @@ class _ProposalWeightedVoteConfirmScreenState
                   50,
                 ),
                 onPressed: () {
-                  final data = _bloc.getMessageJson();
+                  final data = bloc.getMessageJson();
                   Provider.of<ProposalsBloc>(context).showTransactionData(
                     data,
                     Strings.of(context).stakingConfirmData,

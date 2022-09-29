@@ -15,7 +15,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
+    final bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -45,7 +45,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                       desc: Strings.of(context)
                           .multiSigInviteReviewCreateOrLinkCreateDesc,
                       onPressed: () async {
-                        await _bloc.showCreateNewAccount();
+                        await bloc.showCreateNewAccount();
                       },
                     ),
                     VerticalSpacer.large(),
@@ -56,7 +56,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                       desc: Strings.of(context)
                           .multiSigInviteReviewCreateOrLinkLinkExistingDesc,
                       onPressed: () {
-                        _bloc.showLinkExistingAccount();
+                        bloc.showLinkExistingAccount();
                       },
                     ),
                     VerticalSpacer.largeX4(),

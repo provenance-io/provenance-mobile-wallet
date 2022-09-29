@@ -19,7 +19,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
+    final bloc = Provider.of<MultiSigInviteReviewFlowBloc>(context);
 
     const divider = Divider(
       thickness: 1,
@@ -51,7 +51,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                 textAlign: TextAlign.end,
               ),
               onPressed: () async {
-                await _bloc.declineInvite();
+                await bloc.declineInvite();
               },
             ),
           ),
@@ -122,7 +122,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         text: Strings.of(context)
                             .multiSigInviteReviewDetailsChooseAccountButton,
                         onPressed: () {
-                          _bloc.showChooseAccount();
+                          bloc.showChooseAccount();
                         },
                       ),
                       VerticalSpacer.large(),
@@ -131,7 +131,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         text: Strings.of(context)
                             .multiSigInviteReviewDetailsMaybeLaterButton,
                         onPressed: () {
-                          _bloc.submitMaybeLater();
+                          bloc.submitMaybeLater();
                         },
                       ),
                     ],

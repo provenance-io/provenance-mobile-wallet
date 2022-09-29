@@ -20,11 +20,11 @@ class DelegatorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingDetailsBloc>(context);
+    final bloc = Provider.of<StakingDetailsBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
-        initialData: _bloc.validatorDetails.value,
-        stream: _bloc.validatorDetails,
+        initialData: bloc.validatorDetails.value,
+        stream: bloc.validatorDetails,
         builder: (context, snapshot) {
           final details = snapshot.data;
           final validator = snapshot.data?.validator;
@@ -144,7 +144,7 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      String url = _bloc.getProvUrl();
+                      String url = bloc.getProvUrl();
                       if (await canLaunchUrlString(url)) {
                         await launchUrlString(url);
                       } else {

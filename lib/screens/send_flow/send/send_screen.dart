@@ -55,8 +55,8 @@ class SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<SendBloc>(context);
-    _bloc.stream.listen((state) {
+    final bloc = Provider.of<SendBloc>(context);
+    bloc.stream.listen((state) {
       _recentSends.value = state.recentSendAddresses;
       _assets.value = state.availableAssets;
       _denomNotifier.value = (state.availableAssets.isNotEmpty)
@@ -122,7 +122,7 @@ class SendPageState extends State<SendPage> {
                       ),
                       onPressed: () async {
                         try {
-                          final newAddress = await _bloc.scanAddress();
+                          final newAddress = await bloc.scanAddress();
                           if (newAddress?.isNotEmpty ?? false) {
                             _addressController.text = newAddress!;
                           }
@@ -153,7 +153,7 @@ class SendPageState extends State<SendPage> {
                     value,
                     _onRecentAddressClicked,
                     () {
-                      _onViewAllClicked(_bloc);
+                      _onViewAllClicked(bloc);
                     },
                     key: ValueKey("RecentAddresses"),
                   ),
@@ -166,7 +166,7 @@ class SendPageState extends State<SendPage> {
             key: SendPage.keyNextButton,
             child: PwText(Strings.of(context).nextButtonLabel),
             onPressed: () {
-              _next(_bloc);
+              _next(bloc);
             },
           ),
           VerticalSpacer.large(),

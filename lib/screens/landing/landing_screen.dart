@@ -48,7 +48,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<LandingBloc>(context);
+    final bloc = Provider.of<LandingBloc>(context);
     final authHelper = get<LocalAuthHelper>();
     final strings = Strings.of(context);
 
@@ -99,7 +99,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         hasAccount ? strings.continueName : strings.addAccount,
                     onPressed: () {
                       if (hasAccount) {
-                        _bloc.doAuth(context);
+                        bloc.doAuth(context);
                       } else {
                         Navigator.of(context).push(
                           AddAccountFlow(

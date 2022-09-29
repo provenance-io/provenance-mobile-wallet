@@ -16,7 +16,7 @@ class VotingButtons extends StatelessWidget {
   final Proposal proposal;
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<ProposalsBloc>(context);
+    final bloc = Provider.of<ProposalsBloc>(context);
     final strings = Strings.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsYes,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_YES,
                     );
@@ -52,7 +52,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsNo,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO,
                     );
@@ -76,7 +76,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsNoWithVeto,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
                     );
@@ -90,7 +90,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsAbstain,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_ABSTAIN,
                     );
@@ -115,7 +115,7 @@ class VotingButtons extends StatelessWidget {
               Flexible(
                 child: PwTextButton(
                   onPressed: () {
-                    _bloc.showWeightedVote(proposal);
+                    bloc.showWeightedVote(proposal);
                   },
                   child: PwText(
                     strings.proposalWeightedVote,

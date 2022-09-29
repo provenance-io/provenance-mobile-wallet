@@ -32,7 +32,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -47,7 +47,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _bloc.showMenu(context),
+              onTap: () => bloc.showMenu(context),
               child: Row(
                 children: [
                   PwText(
@@ -70,8 +70,8 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
           child: Stack(
             children: [
               StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -109,8 +109,8 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                 },
               ),
               StreamBuilder<bool>(
-                initialData: _bloc.isLoadingValidators.value,
-                stream: _bloc.isLoadingValidators,
+                initialData: bloc.isLoadingValidators.value,
+                stream: bloc.isLoadingValidators,
                 builder: (context, snapshot) {
                   final isLoading = snapshot.data ?? false;
                   if (isLoading) {
@@ -138,11 +138,11 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
   }
 
   void _onScrollEnd() {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalValidators();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalValidators();
     }
   }
 }

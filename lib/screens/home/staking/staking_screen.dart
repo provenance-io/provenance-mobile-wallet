@@ -35,7 +35,7 @@ class _StakingScreenState extends State<StakingScreen>
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<StakingScreenBloc>(context);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     final strings = Strings.of(context);
     return Material(
       child: Stack(
@@ -45,8 +45,8 @@ class _StakingScreenState extends State<StakingScreen>
             child: SafeArea(
               bottom: false,
               child: StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -142,8 +142,8 @@ class _StakingScreenState extends State<StakingScreen>
             ),
           ),
           StreamBuilder<bool>(
-            initialData: _bloc.isLoading.value,
-            stream: _bloc.isLoading,
+            initialData: bloc.isLoading.value,
+            stream: bloc.isLoading,
             builder: (context, snapshot) {
               final isLoading = snapshot.data ?? false;
               if (isLoading) {

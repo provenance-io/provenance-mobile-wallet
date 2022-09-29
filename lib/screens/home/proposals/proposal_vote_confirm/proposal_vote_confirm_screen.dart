@@ -35,7 +35,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of<ProposalVoteConfirmBloc>(context);
+    final bloc = Provider.of<ProposalVoteConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -67,7 +67,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 50,
               ),
               onPressed: () {
-                final data = _bloc.getMessageJson();
+                final data = bloc.getMessageJson();
                 Provider.of<ProposalsBloc>(context).showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
@@ -116,7 +116,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   DetailsItem(
                       title: strings.proposalVoteConfirmVoteOption,
                       endChild:
-                          ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),
+                          ProposalVoteChip(vote: bloc.getUserFriendlyVote())),
                   PwListDivider.alternate(),
                   PwGasAdjustmentSlider(
                     title: strings.stakingConfirmGasAdjustment,
