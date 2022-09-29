@@ -141,6 +141,9 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         wcRequestId,
         e.toString(),
       );
+
+      // Allow the error to be handled where the action was initiated.
+      rethrow;
     }
 
     return result;
