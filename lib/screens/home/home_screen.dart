@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
+import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
@@ -110,78 +111,86 @@ class HomeScreenState extends State<HomeScreen>
     final double topPadding = (isTallScreen) ? 10 : 5;
     final double bottomPadding = (isTallScreen) ? 28 : 5;
 
-    return Scaffold(
-      bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.neutral800,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            VerticalSpacer.large(),
-            TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.transparent,
-              tabs: [
-                TabItem(
-                  0 == _currentTabIndex,
-                  strings.dashboard,
-                  PwIcons.dashboard,
-                  topPadding: topPadding,
-                  bottomPadding: bottomPadding,
-                ),
-                TabItem(
-                  1 == _currentTabIndex,
-                  strings.transactions,
-                  PwIcons.staking,
-                  topPadding: topPadding,
-                  bottomPadding: bottomPadding,
-                ),
-                TabItem(
-                  2 == _currentTabIndex,
-                  strings.homeScreenMore,
-                  PwIcons.viewMore,
-                  topPadding: topPadding,
-                  bottomPadding: bottomPadding,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
+    return Provider<TransactionsBloc>(
+        lazy: true,
+        create: (context) {
+          return TransactionsBloc(
+            allMessageTypes: strings.dropDownAllMessageTypes,
+            allStatuses: strings.dropDownAllStatuses,
+          )..load();
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: Scaffold(
+          bottomNavigationBar: Container(
+            color: Theme.of(context).colorScheme.neutral800,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Provider<DashboardTabBloc>(
-                    lazy: true,
-                    create: (context) {
-                      return DashboardTabBloc();
-                    },
-                    dispose: (_, bloc) {
-                      bloc.onDispose();
-                    },
-                    child: DashboardTab()),
-                TransactionTab(
-                  allMessageTypes: strings.dropDownAllMessageTypes,
-                  allStatuses: strings.dropDownAllStatuses,
-                ),
-                ViewMoreTab(
-                  onFlowCompletion: () {
-                    setState(() {
-                      _tabController.animateTo(0);
-                      _currentTabIndex = 0;
-                    });
-                  },
+                VerticalSpacer.large(),
+                TabBar(
+                  controller: _tabController,
+                  indicatorColor: Colors.transparent,
+                  tabs: [
+                    TabItem(
+                      0 == _currentTabIndex,
+                      strings.dashboard,
+                      PwIcons.dashboard,
+                      topPadding: topPadding,
+                      bottomPadding: bottomPadding,
+                    ),
+                    TabItem(
+                      1 == _currentTabIndex,
+                      strings.transactions,
+                      PwIcons.staking,
+                      topPadding: topPadding,
+                      bottomPadding: bottomPadding,
+                    ),
+                    TabItem(
+                      2 == _currentTabIndex,
+                      strings.homeScreenMore,
+                      PwIcons.viewMore,
+                      topPadding: topPadding,
+                      bottomPadding: bottomPadding,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
+          body: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Provider<DashboardTabBloc>(
+                        lazy: true,
+                        create: (context) {
+                          return DashboardTabBloc();
+                        },
+                        dispose: (_, bloc) {
+                          bloc.onDispose();
+                        },
+                        child: DashboardTab()),
+                    TransactionTab(),
+                    ViewMoreTab(
+                      onFlowCompletion: () {
+                        setState(() {
+                          _tabController.animateTo(0);
+                          _currentTabIndex = 0;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 
   void _setCurrentTab() {

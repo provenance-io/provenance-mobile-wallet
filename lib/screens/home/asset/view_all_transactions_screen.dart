@@ -13,7 +13,7 @@ class ViewAllTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<TransactionsBloc>(context);
+    final bloc = Provider.of<TransactionsBloc>(context, listen: false);
 
     return StreamBuilder<TransactionDetails>(
       initialData: bloc.transactionDetails.value,
