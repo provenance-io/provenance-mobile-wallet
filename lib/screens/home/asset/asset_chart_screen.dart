@@ -22,25 +22,19 @@ class AssetChartScreen extends StatefulWidget {
 }
 
 class _AssetChartScreenState extends State<AssetChartScreen> {
-  late AssetChartBloc _bloc;
   final ValueNotifier<AssetChartPointData?> changeNotifier =
       ValueNotifier(null);
 
   @override
-  void initState() {
-    _bloc = Provider.of<AssetChartBloc>(context);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<AssetChartBloc>(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = mediaQuery.size.height > 600;
     final priceHeight = (isTallScreen) ? 45.0 : 35.0;
 
     return StreamBuilder<AssetChartDetails?>(
-      initialData: _bloc.chartDetails.value,
-      stream: _bloc.chartDetails,
+      initialData: bloc.chartDetails.value,
+      stream: bloc.chartDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (null == details) {
@@ -143,7 +137,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     AssetBarChartButtons(
                       initialValue: details.value,
                       onValueChanged: (GraphingDataValue newValue) {
-                        _bloc.load(
+                        bloc.load(
                           value: newValue,
                         );
                       },

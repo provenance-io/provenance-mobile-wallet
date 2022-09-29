@@ -31,7 +31,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
         VerticalSpacer.medium(),
         PwListDivider(),
         StreamBuilder<TransactionDetails>(
-          initialData: bloc.transactionDetails.value,
+          initialData: bloc.transactionDetails.valueOrNull,
           stream: bloc.transactionDetails,
           builder: (context, snapshot) {
             final transactionDetails = snapshot.data;
