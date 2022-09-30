@@ -61,7 +61,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
               ),
               onPressed: () {
                 final data = bloc.getMessageJson();
-                Provider.of<ProposalsBloc>(context).showTransactionData(
+                Provider.of<ProposalsBloc>(context, listen: false).showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
                 );
@@ -235,7 +235,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
       final response = await Provider.of<DepositConfirmBloc>(context)
           .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      Provider.of<ProposalsBloc>(context).showTransactionComplete(
+      Provider.of<ProposalsBloc>(context, listen: false).showTransactionComplete(
         response,
         Strings.of(context).proposalDepositComplete,
       );

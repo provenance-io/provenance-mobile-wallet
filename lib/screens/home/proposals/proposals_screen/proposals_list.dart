@@ -3,7 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_list_item.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class ProposalsList extends StatefulWidget {
   const ProposalsList({
@@ -15,7 +15,6 @@ class ProposalsList extends StatefulWidget {
 }
 
 class ProposalsListState extends State<ProposalsList> {
-  final ProposalsBloc _bloc = get<ProposalsBloc>();
   final _scrollController = ScrollController();
 
   @override
@@ -33,6 +32,8 @@ class ProposalsListState extends State<ProposalsList> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<ProposalsBloc>(context);
+
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -108,6 +109,8 @@ class ProposalsListState extends State<ProposalsList> {
   }
 
   void _onScrollEnd() {
+    final _bloc = Provider.of<ProposalsBloc>(context, listen: false);
+
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_bloc.isLoadingProposals.value) {

@@ -66,7 +66,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                             details.yesAmount ==
                         100,
                     onPressed: () {
-                      Provider.of<ProposalsBloc>(context)
+                      Provider.of<ProposalsBloc>(context, listen: false)
                           .showWeightedVoteReview(widget.proposal);
                     },
                     child: PwText(

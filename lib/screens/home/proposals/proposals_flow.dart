@@ -77,19 +77,24 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Widget createStartPage() => Provider<ProposalsBloc>(
-      lazy: true,
-      create: (context) {
-        final bloc = ProposalsBloc(
-          navigator: this,
-          account: _account,
-        )..load();
-        return bloc;
-      },
-      dispose: (_, bloc) {
-        bloc.onDispose();
-      },
-      child: ProposalsScreen());
+  Widget build(BuildContext context) {
+    return Provider<ProposalsBloc>(
+        lazy: true,
+        create: (context) {
+          final bloc = ProposalsBloc(
+            navigator: this,
+            account: _account,
+          )..load();
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: super.build(context));
+  }
+
+  @override
+  Widget createStartPage() => ProposalsScreen() ;
 
   @override
   Future<void> showProposalDetails(

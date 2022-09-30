@@ -2,8 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_legend.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_list.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalsScreen extends StatefulWidget {
   const ProposalsScreen({
@@ -15,16 +15,10 @@ class ProposalsScreen extends StatefulWidget {
 }
 
 class _ProposalsScreenState extends State<ProposalsScreen> {
-  late ProposalsBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = get<ProposalsBloc>();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final _bloc = Provider.of<ProposalsBloc>(context);
+
     return Material(
       child: Stack(
         children: [
