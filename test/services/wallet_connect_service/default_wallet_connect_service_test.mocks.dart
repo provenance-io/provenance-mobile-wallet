@@ -306,6 +306,13 @@ class MockTxQueueService extends _i1.Mock implements _i5.TxQueueService {
             #fee: fee
           }),
           returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> declineTx(
+          {String? signerAddress, String? txId, _i10.Coin? coin}) =>
+      (super.noSuchMethod(
+          Invocation.method(#declineTx, [],
+              {#signerAddress: signerAddress, #txId: txId, #coin: coin}),
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
 }
 
 /// A class which mocks [RemoteNotificationService].
@@ -357,75 +364,76 @@ class MockWalletConnectQueueService extends _i1.Mock
       returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
   @override
   _i8.Future<void> createWalletConnectSessionGroup(
-          _i6.WalletConnectAddress? connectAddress,
-          String? walletAddress,
-          _i6.ClientMeta? clientMeta) =>
+          {String? accountId, _i6.ClientMeta? clientMeta}) =>
       (super.noSuchMethod(
-              Invocation.method(#createWalletConnectSessionGroup,
-                  [connectAddress, walletAddress, clientMeta]),
+              Invocation.method(#createWalletConnectSessionGroup, [],
+                  {#accountId: accountId, #clientMeta: clientMeta}),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
-  _i8.Future<void> removeWalletConnectSessionGroup(
-          _i6.WalletConnectAddress? address) =>
+  _i8.Future<void> removeWalletConnectSessionGroup({String? accountId}) =>
       (super.noSuchMethod(
-              Invocation.method(#removeWalletConnectSessionGroup, [address]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
-  @override
-  _i8.Future<void> updateConnectionDetails(
-          _i6.WalletConnectAddress? address, _i6.ClientMeta? clientMeta) =>
-      (super.noSuchMethod(
-          Invocation.method(#updateConnectionDetails, [address, clientMeta]),
+          Invocation.method(
+              #removeWalletConnectSessionGroup, [], {#accountId: accountId}),
           returnValue: _i8.Future<void>.value(),
           returnValueForMissingStub:
               _i8.Future<void>.value()) as _i8.Future<void>);
   @override
-  _i8.Future<void> addWalletConnectSignRequest(
-          _i6.WalletConnectAddress? address, _i16.SignAction? signRequest) =>
+  _i8.Future<void> updateConnectionDetails(
+          {String? accountId, _i6.ClientMeta? clientMeta}) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #addWalletConnectSignRequest, [address, signRequest]),
+              Invocation.method(#updateConnectionDetails, [],
+                  {#accountId: accountId, #clientMeta: clientMeta}),
+              returnValue: _i8.Future<void>.value(),
+              returnValueForMissingStub: _i8.Future<void>.value())
+          as _i8.Future<void>);
+  @override
+  _i8.Future<void> addWalletConnectSignRequest(
+          {String? accountId, _i16.SignAction? signAction}) =>
+      (super.noSuchMethod(
+              Invocation.method(#addWalletConnectSignRequest, [],
+                  {#accountId: accountId, #signAction: signAction}),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
   _i8.Future<void> addWalletConnectTxRequest(
-          _i6.WalletConnectAddress? address, _i17.TxAction? txAction) =>
+          {String? accountId, _i17.TxAction? txAction}) =>
       (super.noSuchMethod(
-          Invocation.method(#addWalletConnectTxRequest, [address, txAction]),
-          returnValue: _i8.Future<void>.value(),
-          returnValueForMissingStub:
-              _i8.Future<void>.value()) as _i8.Future<void>);
-  @override
-  _i8.Future<void> addWalletApproveRequest(_i6.WalletConnectAddress? address,
-          _i18.SessionAction? approveRequestData) =>
-      (super.noSuchMethod(
-              Invocation.method(
-                  #addWalletApproveRequest, [address, approveRequestData]),
+              Invocation.method(#addWalletConnectTxRequest, [],
+                  {#accountId: accountId, #txAction: txAction}),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
   @override
-  _i8.Future<_i19.WalletConnectQueueGroup?> loadGroup(
-          _i6.WalletConnectAddress? address) =>
-      (super.noSuchMethod(Invocation.method(#loadGroup, [address]),
+  _i8.Future<void> addWalletApproveRequest(
+          {String? accountId, _i18.SessionAction? action}) =>
+      (super.noSuchMethod(
+              Invocation.method(#addWalletApproveRequest, [],
+                  {#accountId: accountId, #action: action}),
+              returnValue: _i8.Future<void>.value(),
+              returnValueForMissingStub: _i8.Future<void>.value())
+          as _i8.Future<void>);
+  @override
+  _i8.Future<_i19.WalletConnectQueueGroup?> loadGroup({String? accountId}) =>
+      (super.noSuchMethod(
+              Invocation.method(#loadGroup, [], {#accountId: accountId}),
               returnValue: _i8.Future<_i19.WalletConnectQueueGroup?>.value())
           as _i8.Future<_i19.WalletConnectQueueGroup?>);
   @override
   _i8.Future<_i20.WalletConnectAction?> loadQueuedAction(
-          _i6.WalletConnectAddress? address, String? requestId) =>
+          {String? accountId, String? requestId}) =>
       (super.noSuchMethod(
-              Invocation.method(#loadQueuedAction, [address, requestId]),
+              Invocation.method(#loadQueuedAction, [],
+                  {#accountId: accountId, #requestId: requestId}),
               returnValue: _i8.Future<_i20.WalletConnectAction?>.value())
           as _i8.Future<_i20.WalletConnectAction?>);
   @override
-  _i8.Future<void> removeRequest(
-          _i6.WalletConnectAddress? connectAddress, String? requestId) =>
+  _i8.Future<void> removeRequest({String? accountId, String? requestId}) =>
       (super.noSuchMethod(
-              Invocation.method(#removeRequest, [connectAddress, requestId]),
+              Invocation.method(#removeRequest, [],
+                  {#accountId: accountId, #requestId: requestId}),
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);

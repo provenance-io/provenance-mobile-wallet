@@ -152,7 +152,7 @@ void main() {
       delegate.onApproveSession(requestId, sessionData);
 
       verify(mockWalletConnectQueueService.createWalletConnectSessionGroup(
-          walletConnectAddr, publicKey.address, clientMeta));
+          accountId: account.id, clientMeta: clientMeta));
 
       final pred = predicate((arg) {
         final details = arg as SessionAction;
@@ -165,7 +165,7 @@ void main() {
 
       await expectLater(delegate.events.sessionRequest, emits(pred));
       verify(mockWalletConnectQueueService.addWalletApproveRequest(
-          walletConnectAddr, argThat(pred)));
+          accountId: account.id, action: argThat(pred, named: 'action')));
     });
 
     test("onApproveSign", () async {
@@ -190,7 +190,8 @@ void main() {
       // await expectLater(delegate.events.signRequest, emits(neverCalled));
 
       verify(mockWalletConnectQueueService.addWalletConnectSignRequest(
-          walletConnectAddr, argThat(pred)));
+          accountId: account.id,
+          signAction: argThat(pred, named: 'signAction')));
     });
 
     test("onApproveTransaction", () async {
@@ -224,11 +225,11 @@ void main() {
         return true;
       });
 
-      await untilCalled(
-          mockWalletConnectQueueService.addWalletConnectTxRequest(any, any));
+      await untilCalled(mockWalletConnectQueueService.addWalletConnectTxRequest(
+          accountId: anyNamed('accountId'), txAction: anyNamed('txAction')));
 
       verify(mockWalletConnectQueueService.addWalletConnectTxRequest(
-          walletConnectAddr, argThat(pred)));
+          accountId: account.id, txAction: argThat(pred, named: 'txAction')));
     });
 
     test("onApproveTransaction passes on grpc error", () async {
@@ -271,16 +272,16 @@ void main() {
 
     group("onClose", () {
       setUp(() {
-        when(mockWalletConnectQueueService
-                .removeWalletConnectSessionGroup(walletConnectAddr))
+        when(mockWalletConnectQueueService.removeWalletConnectSessionGroup(
+                accountId: anyNamed('accountId')))
             .thenAnswer((_) => Future.value());
       });
 
       test("onClose should remove queue WalletConnect items", () async {
         delegate.onClose();
 
-        verify(mockWalletConnectQueueService
-            .removeWalletConnectSessionGroup(walletConnectAddr));
+        verify(mockWalletConnectQueueService.removeWalletConnectSessionGroup(
+            accountId: account.id));
       });
 
       test("onClose sets close event", () async {
