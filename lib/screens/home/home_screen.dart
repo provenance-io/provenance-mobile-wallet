@@ -5,6 +5,7 @@ import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
+import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
@@ -146,38 +147,49 @@ class HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
+      body: Provider<DashboardTabBloc>(
+        lazy: true,
+        create: (context) {
+          return DashboardTabBloc();
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
               child: Provider<TransactionsBloc>(
-                  create: (context) {
-                    final _bloc = TransactionsBloc(
-                      allMessageTypes: strings.dropDownAllMessageTypes,
-                      allStatuses: strings.dropDownAllStatuses,
-                    )..load();
-                    return _bloc;
-                  },
-                  dispose: (context, bloc) {
-                    bloc.onDispose();
-                  },
-                  child: TabBarView(
-                    controller: _tabController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      DashboardTab(),
-                      TransactionTab(),
-                      ViewMoreTab(
-                        onFlowCompletion: () {
-                          setState(() {
-                            _tabController.animateTo(0);
-                            _currentTabIndex = 0;
-                          });
-                        },
-                      ),
-                    ],
-                  ))),
-        ],
+                create: (context) {
+                  final _bloc = TransactionsBloc(
+                    allMessageTypes: strings.dropDownAllMessageTypes,
+                    allStatuses: strings.dropDownAllStatuses,
+                  )..load();
+                  return _bloc;
+                },
+                dispose: (context, bloc) {
+                  bloc.onDispose();
+                },
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    DashboardTab(),
+                    TransactionTab(),
+                    ViewMoreTab(
+                      onFlowCompletion: () {
+                        setState(() {
+                          _tabController.animateTo(0);
+                          _currentTabIndex = 0;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
