@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -239,7 +240,7 @@ class HomeScreenState extends State<HomeScreen>
     if (result.body.messages.isNotEmpty) {
       // TODO-Roy: Show the type of all messages, not just the first.
       data[MessageFieldName.type] =
-          result.body.messages.first.info_.qualifiedMessageName;
+          result.body.messages.first.toMessage().info_.qualifiedMessageName;
     }
 
     data.addAll(
