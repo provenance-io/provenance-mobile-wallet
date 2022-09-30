@@ -13,18 +13,18 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_gas_estimate.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_scheduled_tx.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_service_error.dart';
+import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_estimate.dart';
+import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
 import 'package:provenance_wallet/util/fee_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_memory.dart';
 
-class DefaultQueueTxClient implements TxQueueService {
-  DefaultQueueTxClient({
+class DefaultQueueTxService implements TxQueueService {
+  DefaultQueueTxService({
     required TransactionHandler transactionHandler,
     required MultiSigService multiSigService,
     required AccountService accountService,

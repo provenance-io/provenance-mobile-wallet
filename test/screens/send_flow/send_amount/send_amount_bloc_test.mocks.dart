@@ -23,7 +23,7 @@ import 'package:provenance_wallet/services/models/account.dart' as _i9;
 import 'package:provenance_wallet/services/models/price.dart' as _i14;
 import 'package:provenance_wallet/services/price_client/price_service.dart'
     as _i13;
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart'
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
 
 // ignore_for_file: type=lint

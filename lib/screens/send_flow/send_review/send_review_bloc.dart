@@ -6,7 +6,7 @@ import 'package:provenance_dart/proto_bank_v1beta1.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 abstract class SendReviewNaviagor {
   void complete();

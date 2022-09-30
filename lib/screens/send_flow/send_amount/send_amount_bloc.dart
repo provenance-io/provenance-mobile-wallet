@@ -7,7 +7,7 @@ import 'package:provenance_dart/proto_bank_v1beta1.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 abstract class SendAmountBlocNavigator {

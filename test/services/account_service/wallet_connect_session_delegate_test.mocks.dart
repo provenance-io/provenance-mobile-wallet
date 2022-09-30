@@ -17,7 +17,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
     as _i3;
 import 'package:provenance_wallet/services/models/account.dart' as _i7;
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart'
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
     as _i15;

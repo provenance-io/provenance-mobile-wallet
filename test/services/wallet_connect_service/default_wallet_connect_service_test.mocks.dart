@@ -24,7 +24,7 @@ import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_
     as _i14;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
     as _i13;
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart'
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i5;
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
     as _i19;

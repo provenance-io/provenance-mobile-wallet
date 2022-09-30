@@ -9,7 +9,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
-import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -40,12 +40,12 @@ main() {
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockAccountService? mockAccountService;
-  MockTxQueueService? mockTxQueueClient;
+  MockTxQueueService? mockTxQueueService;
   MockPriceClient? mockPriceClient;
 
   setUp(() {
-    mockTxQueueClient = MockTxQueueService();
-    when(mockTxQueueClient!.estimateGas(
+    mockTxQueueService = MockTxQueueService();
+    when(mockTxQueueService!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
 
@@ -54,7 +54,7 @@ main() {
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<TxQueueService>(
-      mockTxQueueClient!,
+      mockTxQueueService!,
     );
 
     mockAccountService = MockAccountService();
