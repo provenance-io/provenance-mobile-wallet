@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/proto_bank.dart';
+import 'package:provenance_dart/proto_bank_v1beta1.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
@@ -71,7 +71,7 @@ class SendAmountBloc extends Disposable {
 
     final coin = account.coin;
 
-    final estimate = await get<TxQueueClient>().estimateGas(
+    final estimate = await get<TxQueueService>().estimateGas(
       account: account,
       txBody: body,
     );

@@ -7,9 +7,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/models/send_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
+import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
 import 'package:sembast/sembast.dart';
 
@@ -114,8 +114,8 @@ class WalletConnectQueueService extends Listenable
     notifyListeners();
   }
 
-  Future<void> addWalletConnectSendRequest(
-      WalletConnectAddress address, SendAction sendRequest) async {
+  Future<void> addWalletConnectTxRequest(
+      WalletConnectAddress address, TxAction txAction) async {
     final record = _main.record(address.fullUriString);
 
     final db = await _db;
@@ -125,7 +125,7 @@ class WalletConnectQueueService extends Listenable
     }
 
     final group = WalletConnectQueueGroup.fromRecord(map);
-    group.actionLookup[sendRequest.id] = sendRequest;
+    group.actionLookup[txAction.id] = txAction;
 
     await record.update(db, group.toRecord());
 

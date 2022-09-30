@@ -114,14 +114,14 @@ class MockWalletConnection extends _i1.Mock implements _i2.WalletConnection {
           as _i5.Future<void>);
   @override
   _i5.Future<void> sendApproveSession(
-          int? requestId, _i2.SessionApprovalData? clientMeta,
+          int? requestId, _i2.SessionApprovalData? sessionApprovalData,
           [_i2.ClientMeta? peerMeta]) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #sendApproveSession, [requestId, clientMeta, peerMeta]),
-              returnValue: _i5.Future<void>.value(),
-              returnValueForMissingStub: _i5.Future<void>.value())
-          as _i5.Future<void>);
+          Invocation.method(
+              #sendApproveSession, [requestId, sessionApprovalData, peerMeta]),
+          returnValue: _i5.Future<void>.value(),
+          returnValueForMissingStub:
+              _i5.Future<void>.value()) as _i5.Future<void>);
   @override
   void addListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),

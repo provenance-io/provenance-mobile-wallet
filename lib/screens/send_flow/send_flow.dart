@@ -157,7 +157,7 @@ class SendFlowState extends FlowBaseState<SendFlow>
   ) {
     final bloc = SendReviewBloc(
       widget.accountDetails,
-      get<TxQueueClient>(),
+      get<TxQueueService>(),
       _receivingAddress!,
       amountToSend,
       fee,

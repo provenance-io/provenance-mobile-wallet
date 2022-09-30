@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_gov.dart' as gov;
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';

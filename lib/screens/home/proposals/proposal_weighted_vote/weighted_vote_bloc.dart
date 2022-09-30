@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:fixnum/fixnum.dart';
-import 'package:provenance_dart/proto_gov.dart' as gov;
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/models/account.dart';

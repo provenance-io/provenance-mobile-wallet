@@ -7,13 +7,12 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
+import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -91,18 +90,19 @@ final account = BasicAccount(
 @GenerateMocks([
   KeyValueService,
   AccountService,
+  TxQueueService,
   RemoteNotificationService,
   WalletConnectQueueService,
-  TransactionHandler,
   WalletConnection,
   LocalAuthHelper,
 ])
 void main() {
   late MockKeyValueService mockKeyValueService;
   late MockAccountService mockAccountService;
+  late MockTxQueueService mockTxQueueService;
   late MockRemoteNotificationService mockRemoteNotificationService;
   late MockWalletConnectQueueService mockWalletConnectQueueService;
-  late MockTransactionHandler mockTransactionHandler;
+
   late MockWalletConnection mockWalletConnection;
   late MockLocalAuthHelper mockLocalAuthHelper;
 
@@ -132,6 +132,8 @@ void main() {
 
     mockKeyValueService = MockKeyValueService();
     mockAccountService = MockAccountService();
+    mockTxQueueService = MockTxQueueService();
+
     when(mockAccountService.events).thenReturn(accountServiceEvents);
     when(mockAccountService.onDispose()).thenAnswer((_) => Future.value());
     when(mockAccountService.getAccount(any))
@@ -141,7 +143,6 @@ void main() {
     mockWalletConnectQueueService = MockWalletConnectQueueService();
     when(mockWalletConnectQueueService.onDispose())
         .thenAnswer((_) => Future.value());
-    mockTransactionHandler = MockTransactionHandler();
 
     get.registerSingleton<KeyValueService>(mockKeyValueService);
     when(mockKeyValueService.removeString(any))
@@ -149,24 +150,13 @@ void main() {
     when(mockKeyValueService.setString(any, any))
         .thenAnswer((_) => Future.value(true));
 
-    get.registerSingleton<LocalAuthHelper>(mockLocalAuthHelper);
-    get.registerSingleton<AccountService>(mockAccountService);
-    get.registerSingleton<RemoteNotificationService>(
-        mockRemoteNotificationService);
-    get.registerSingleton<WalletConnectQueueService>(
-        mockWalletConnectQueueService);
-    get.registerSingleton<TransactionHandler>(mockTransactionHandler);
-
-    get.registerSingleton<WalletConnectionFactory>(
-        mockConnectionFactory.getConnection);
-
     _walletConnectService = DefaultWalletConnectService(
       keyValueService: mockKeyValueService,
       accountService: mockAccountService,
+      txQueueService: mockTxQueueService,
       connectionFactory: mockConnectionFactory.getConnection,
       notificationService: mockRemoteNotificationService,
       queueService: mockWalletConnectQueueService,
-      transactionHandler: mockTransactionHandler,
       localAuthHelper: mockLocalAuthHelper,
     );
 

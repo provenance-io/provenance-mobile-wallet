@@ -13,9 +13,8 @@ import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart
 import 'package:provenance_wallet/screens/home/view_more/view_more_tab.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/models/service_tx_response.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/multi_sig_service/mult_sig_service.dart';
+import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
@@ -44,7 +43,7 @@ class HomeScreenState extends State<HomeScreen>
   final _subscriptions = CompositeSubscription();
 
   final _walletConnectService = get<WalletConnectService>();
-  final _multiSigService = get<MultiSigService>();
+  final _txQueueService = get<TxQueueService>();
 
   List<Asset> assets = [];
   List<Transaction> transactions = [];
@@ -80,7 +79,7 @@ class HomeScreenState extends State<HomeScreen>
         .listen(_onError)
         .addTo(_subscriptions);
 
-    _multiSigService.response.listen(_onResponse).addTo(_subscriptions);
+    _txQueueService.response.listen(_onResponse).addTo(_subscriptions);
 
     _walletConnectService.delegateEvents.onResponse
         .listen(_onResponse)
@@ -235,41 +234,44 @@ class HomeScreenState extends State<HomeScreen>
     );
   }
 
-  void _onResponse(ServiceTxResponse response) {
+  void _onResponse(TxResult result) {
     final clientDetails =
         _walletConnectService.sessionEvents.state.valueOrNull?.details;
 
     const statusCodeOk = 0;
 
-    final title = response.code == statusCodeOk
+    final txResponse = result.response.txResponse;
+
+    final title = txResponse.code == statusCodeOk
         ? Strings.of(context).transactionSuccessTitle
         : Strings.of(context).transactionErrorTitle;
 
     final data = <String, dynamic>{};
-    if (response.tx?.body.messages.isNotEmpty ?? false) {
+    if (result.body.messages.isNotEmpty) {
+      // TODO-Roy: Show the type of all messages, not just the first.
       data[MessageFieldName.type] =
-          response.tx?.body.messages.first.info_.qualifiedMessageName;
+          result.body.messages.first.info_.qualifiedMessageName;
     }
 
     data.addAll(
       {
-        FieldName.gasWanted: response.gasWanted.toString(),
-        FieldName.gasUsed: response.gasUsed.toString(),
-        FieldName.txID: response.txHash,
-        FieldName.block: response.height?.toString(),
+        FieldName.gasWanted: txResponse.gasWanted.toString(),
+        FieldName.gasUsed: txResponse.gasUsed.toString(),
+        FieldName.txID: txResponse.txhash,
+        FieldName.block: txResponse.height.toString(),
       },
     );
 
-    if (response.code != statusCodeOk) {
+    if (txResponse.code != statusCodeOk) {
       data.addAll(
         {
-          FieldName.gasWanted: response.gasWanted.toString(),
-          FieldName.gasUsed: response.gasUsed.toString(),
-          FieldName.txID: response.txHash,
-          FieldName.block: response.height?.toString(),
-          FieldName.code: response.code,
-          FieldName.codespace: response.codespace,
-          FieldName.rawLog: response.message,
+          FieldName.gasWanted: txResponse.gasWanted.toString(),
+          FieldName.gasUsed: txResponse.gasUsed.toString(),
+          FieldName.txID: txResponse.txhash,
+          FieldName.block: txResponse.height.toString(),
+          FieldName.code: txResponse.code,
+          FieldName.codespace: txResponse.codespace,
+          FieldName.rawLog: txResponse.rawLog,
         },
       );
     }
@@ -288,7 +290,7 @@ class HomeScreenState extends State<HomeScreen>
           data: [
             data,
           ],
-          fees: response.fees,
+          fees: result.fee.amount,
         );
       },
     );

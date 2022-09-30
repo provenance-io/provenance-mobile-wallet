@@ -185,14 +185,19 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           returnValue: _i6.Future<bool>.value(false)) as _i6.Future<bool>);
 }
 
-/// A class which mocks [TxQueueClient].
+/// A class which mocks [TxQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTxQueueClient extends _i1.Mock implements _i4.TxQueueClient {
-  MockTxQueueClient() {
+class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
+  MockTxQueueService() {
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  _i6.Stream<_i4.TxResult> get response =>
+      (super.noSuchMethod(Invocation.getter(#response),
+              returnValue: _i6.Stream<_i4.TxResult>.empty())
+          as _i6.Stream<_i4.TxResult>);
   @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
           {_i10.TxBody? txBody, _i7.TransactableAccount? account}) =>
@@ -218,12 +223,24 @@ class MockTxQueueClient extends _i1.Mock implements _i4.TxQueueClient {
                     #gasEstimate: gasEstimate
                   })))) as _i6.Future<_i4.ScheduledTx>);
   @override
-  _i6.Future<void> completeTx(
-          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+  _i6.Future<void> completeTx({String? txId}) => (super.noSuchMethod(
+      Invocation.method(#completeTx, [], {#txId: txId}),
+      returnValue: _i6.Future<void>.value(),
+      returnValueForMissingStub: _i6.Future<void>.value()) as _i6.Future<void>);
+  @override
+  _i6.Future<bool> signTx(
+          {String? txId,
+          String? signerAddress,
+          String? multiSigAddress,
+          _i10.TxBody? txBody,
+          _i10.Fee? fee}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
-          returnValue: _i6.Future<void>.value(),
-          returnValueForMissingStub:
-              _i6.Future<void>.value()) as _i6.Future<void>);
+          Invocation.method(#signTx, [], {
+            #txId: txId,
+            #signerAddress: signerAddress,
+            #multiSigAddress: multiSigAddress,
+            #txBody: txBody,
+            #fee: fee
+          }),
+          returnValue: _i6.Future<bool>.value(false)) as _i6.Future<bool>);
 }

@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_bank.dart' as bank;
+import 'package:provenance_dart/proto_bank_v1beta1.dart' as bank;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -32,13 +32,13 @@ final accountDetails = BasicAccount(
 @GenerateMocks([
   SendReviewNaviagor,
   AccountService,
-  TxQueueClient,
+  TxQueueService,
 ])
 void main() {
   PrivateKey? privateKey;
   MockAccountService? mockAccountService;
   MockSendReviewNaviagor? mockNavigator;
-  MockTxQueueClient? mockTxQueueClient;
+  MockTxQueueService? mockTxQueueService;
 
   SendReviewBloc? bloc;
 
@@ -50,8 +50,8 @@ void main() {
     privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
     mockNavigator = MockSendReviewNaviagor();
 
-    mockTxQueueClient = MockTxQueueClient();
-    when(mockTxQueueClient!.estimateGas(
+    mockTxQueueService = MockTxQueueService();
+    when(mockTxQueueService!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) {
       return Future.value(AccountGasEstimate(100, null));
@@ -66,7 +66,7 @@ void main() {
 
     bloc = SendReviewBloc(
       accountDetails,
-      mockTxQueueClient!,
+      mockTxQueueService!,
       receivingAddress,
       dollarAsset,
       feeAsset,
@@ -105,7 +105,7 @@ void main() {
 
   group("doSend", () {
     test("args", () async {
-      when(mockTxQueueClient!.scheduleTx(
+      when(mockTxQueueService!.scheduleTx(
         txBody: anyNamed('txBody'),
         account: anyNamed('account'),
         gasEstimate: anyNamed('gasEstimate'),
@@ -114,14 +114,18 @@ void main() {
           txId: '1',
           result: TxResult(
             body: proto.TxBody(),
-            response: proto.TxResponse(),
+            response: proto.RawTxResponsePair(
+              proto.TxRaw(),
+              proto.TxResponse(),
+            ),
+            fee: proto.Fee(),
           ),
         ),
       );
 
       await bloc!.doSend();
 
-      final captures = verify(mockTxQueueClient!.scheduleTx(
+      final captures = verify(mockTxQueueService!.scheduleTx(
         txBody: captureAnyNamed('txBody'),
         account: captureAnyNamed('account'),
         gasEstimate: captureAnyNamed('gasEstimate'),

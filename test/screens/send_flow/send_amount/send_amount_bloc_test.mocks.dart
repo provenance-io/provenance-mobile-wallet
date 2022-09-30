@@ -201,14 +201,19 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
-/// A class which mocks [TxQueueClient].
+/// A class which mocks [TxQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTxQueueClient extends _i1.Mock implements _i4.TxQueueClient {
-  MockTxQueueClient() {
+class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
+  MockTxQueueService() {
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  _i7.Stream<_i4.TxResult> get response =>
+      (super.noSuchMethod(Invocation.getter(#response),
+              returnValue: _i7.Stream<_i4.TxResult>.empty())
+          as _i7.Stream<_i4.TxResult>);
   @override
   _i7.Future<_i3.AccountGasEstimate> estimateGas(
           {_i12.TxBody? txBody, _i9.TransactableAccount? account}) =>
@@ -234,14 +239,26 @@ class MockTxQueueClient extends _i1.Mock implements _i4.TxQueueClient {
                     #gasEstimate: gasEstimate
                   })))) as _i7.Future<_i4.ScheduledTx>);
   @override
-  _i7.Future<void> completeTx(
-          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+  _i7.Future<void> completeTx({String? txId}) => (super.noSuchMethod(
+      Invocation.method(#completeTx, [], {#txId: txId}),
+      returnValue: _i7.Future<void>.value(),
+      returnValueForMissingStub: _i7.Future<void>.value()) as _i7.Future<void>);
+  @override
+  _i7.Future<bool> signTx(
+          {String? txId,
+          String? signerAddress,
+          String? multiSigAddress,
+          _i12.TxBody? txBody,
+          _i12.Fee? fee}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
-          returnValue: _i7.Future<void>.value(),
-          returnValueForMissingStub:
-              _i7.Future<void>.value()) as _i7.Future<void>);
+          Invocation.method(#signTx, [], {
+            #txId: txId,
+            #signerAddress: signerAddress,
+            #multiSigAddress: multiSigAddress,
+            #txBody: txBody,
+            #fee: fee
+          }),
+          returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
 /// A class which mocks [PriceClient].

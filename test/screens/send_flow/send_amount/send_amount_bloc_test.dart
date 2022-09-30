@@ -30,7 +30,7 @@ final feeAmount = AccountGasEstimate(
 @GenerateMocks([
   SendAmountBlocNavigator,
   AccountService,
-  TxQueueClient,
+  TxQueueService,
   PriceClient,
 ])
 main() {
@@ -40,11 +40,11 @@ main() {
   SendAmountBloc? bloc;
   MockSendAmountBlocNavigator? mockNavigator;
   MockAccountService? mockAccountService;
-  MockTxQueueClient? mockTxQueueClient;
+  MockTxQueueService? mockTxQueueClient;
   MockPriceClient? mockPriceClient;
 
   setUp(() {
-    mockTxQueueClient = MockTxQueueClient();
+    mockTxQueueClient = MockTxQueueService();
     when(mockTxQueueClient!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
@@ -53,7 +53,7 @@ main() {
     when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<TxQueueClient>(
+    get.registerSingleton<TxQueueService>(
       mockTxQueueClient!,
     );
 
@@ -81,7 +81,7 @@ main() {
 
   tearDown(() {
     get.unregister<AccountService>();
-    get.unregister<TxQueueClient>();
+    get.unregister<TxQueueService>();
     get.unregister<MockAccountService>();
   });
 

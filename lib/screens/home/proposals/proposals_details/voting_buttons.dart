@@ -1,4 +1,4 @@
-import 'package:provenance_dart/proto_gov.dart' as gov;
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';

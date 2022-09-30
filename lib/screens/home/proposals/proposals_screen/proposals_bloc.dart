@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:provenance_dart/proto_gov.dart' as gov;
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';

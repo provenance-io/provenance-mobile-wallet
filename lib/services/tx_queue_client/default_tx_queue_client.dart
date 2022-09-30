@@ -1,43 +1,51 @@
 import 'dart:async';
-import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:convert/convert.dart' as convert;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
-import 'package:provenance_wallet/extension/list_extension.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/tx_queue_client/models/sembast_gas_estimate.dart';
 import 'package:provenance_wallet/services/tx_queue_client/models/sembast_scheduled_tx.dart';
-import 'package:provenance_wallet/services/tx_queue_client/models/sembast_tx_signer.dart';
 import 'package:provenance_wallet/services/tx_queue_client/tx_queue_client.dart';
 import 'package:provenance_wallet/services/tx_queue_client/tx_queue_service_error.dart';
-import 'package:provenance_wallet/util/public_key_util.dart';
+import 'package:provenance_wallet/util/fee_util.dart';
+import 'package:provenance_wallet/util/get.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_memory.dart';
 
-class DefaultQueueTxClient implements TxQueueClient {
+class DefaultQueueTxClient implements TxQueueService {
   DefaultQueueTxClient({
     required TransactionHandler transactionHandler,
-    required MultiSigClient multiSigClient,
+    required MultiSigService multiSigService,
     required AccountService accountService,
   })  : _transactionHandler = transactionHandler,
-        _multiSigClient = multiSigClient,
+        _multiSigService = multiSigService,
         _accountService = accountService {
     _db = _initDb();
   }
 
   final _store = StoreRef<String, Map<String, Object?>?>.main();
 
+  final _response = PublishSubject<TxResult>();
+
   final TransactionHandler _transactionHandler;
-  final MultiSigClient _multiSigClient;
+  final MultiSigService _multiSigService;
   final AccountService _accountService;
 
   late final Future<Database> _db;
+
+  @override
+  Stream<TxResult> get response => _response;
 
   @override
   Future<AccountGasEstimate> estimateGas({
@@ -96,7 +104,7 @@ class DefaultQueueTxClient implements TxQueueClient {
           gasLimit: proto.Int64(gasEstimate.estimatedGas),
         );
 
-        final remoteId = await _multiSigClient.createTx(
+        final remoteId = await _multiSigService.createTx(
           multiSigAddress: address,
           coin: multiAccount.coin,
           signerAddress: signerAddress,
@@ -130,71 +138,149 @@ class DefaultQueueTxClient implements TxQueueClient {
 
   @override
   Future<TxResult> completeTx({
-    required String remoteTxId,
-    required List<TxSigner> signers,
+    required String txId,
   }) async {
-    TxResult result;
-
-    final db = await _db;
-    final ref = _store.record(remoteTxId);
-    final rec = await ref.get(db);
-    if (rec == null) {
+    final item =
+        _multiSigService.items.firstWhereOrNull((e) => e.txUuid == txId);
+    if (item == null) {
       throw TxQueueClientError.txNotFound;
-    } else {
-      final model = SembastScheduledTx.fromRecord(rec).copyWith(
-        signers: signers
-            .map(
-              (e) => SembastTxSigner(
-                publicKey: e.publicKey,
-                signature: e.signature,
-                signerOrder: e.signerOrder,
-              ),
-            )
-            .toList(),
-      );
-
-      await ref.update(
-        db,
-        model.toRecord(),
-      );
-
-      result = await _execute(remoteTxId);
     }
+
+    final multiSigAddress = item.multiSigAddress;
+
+    final accounts = await _accountService.getTransactableAccounts();
+    final multiSigAccount =
+        accounts.firstWhereOrNull((e) => e.address == multiSigAddress)
+            as MultiTransactableAccount?;
+    if (multiSigAccount == null) {
+      throw TxQueueClientError.accountNotFound;
+    }
+
+    final coin = multiSigAccount.coin;
+    final signerAccount = multiSigAccount.linkedAccount;
+
+    final pbClient = await get<ProtobuffClientInjector>().call(coin);
+
+    final authBytes = await _sign(
+      pbClient: pbClient,
+      multiSigAddress: multiSigAddress,
+      signerAccountId: signerAccount.id,
+      txBody: item.txBody,
+      fee: item.fee,
+    );
+
+    final unorderedSignatures = <String, List<int>>{
+      signerAccount.address: authBytes,
+    };
+
+    for (final signature in item.signatures ?? <MultiSigSignature>[]) {
+      unorderedSignatures[signature.signerAddress] =
+          convert.hex.decode(signature.signatureHex);
+    }
+
+    final sigLookup = <String, List<int>>{};
+    for (final publicKey in multiSigAccount.publicKey.publicKeys) {
+      final address = publicKey.address;
+      final sig = unorderedSignatures[address];
+      if (sig != null) {
+        sigLookup[address] = sig;
+      }
+    }
+
+    final privateKey = AminoPrivKey(
+      threshold: multiSigAccount.signaturesRequired,
+      pubKeys: multiSigAccount.publicKey.publicKeys,
+      coin: coin,
+      sigLookup: sigLookup,
+    );
+
+    final responsePair = await pbClient.broadcastTransaction(
+      item.txBody,
+      [
+        privateKey,
+      ],
+      item.fee,
+    );
+
+    await _multiSigService.updateTxResult(
+      signerAddress: signerAccount.address,
+      txUuid: txId,
+      response: responsePair.txResponse,
+      coin: coin,
+    );
+
+    final result = TxResult(
+      body: item.txBody,
+      response: responsePair,
+      fee: item.fee,
+      txId: txId,
+    );
+
+    _response.add(result);
 
     return result;
   }
 
-  Future<TxResult> _execute(String id) async {
-    TxResult result;
-
-    final db = await _db;
-
-    final rec = _store.record(id);
-    final data = await rec.get(db);
-    if (data == null) {
-      throw TxQueueClientError.txNotFound;
-    }
-
-    final model = SembastScheduledTx.fromRecord(data);
-
-    final account = await _accountService.getAccount(model.accountId);
-    if (account == null) {
+  @override
+  Future<bool> signTx({
+    required String txId,
+    required String signerAddress,
+    required String multiSigAddress,
+    required proto.TxBody txBody,
+    required proto.Fee fee,
+  }) async {
+    final accounts = await _accountService.getTransactableAccounts();
+    final signerAccount =
+        accounts.firstWhereOrNull((e) => e.address == signerAddress);
+    if (signerAccount == null) {
       throw TxQueueClientError.accountNotFound;
-    } else {
-      switch (account.kind) {
-        case AccountKind.basic:
-          result = await _executeBasic(account as BasicAccount, model);
-          break;
-        case AccountKind.multi:
-          result =
-              await _executeMulti(account as MultiTransactableAccount, model);
-          break;
-      }
-
-      await rec.delete(db);
     }
 
-    return result;
+    final coin = signerAccount.coin;
+    final pbClient =
+        await get<ProtobuffClientInjector>().call(signerAccount.coin);
+
+    final authBytes = await _sign(
+      pbClient: pbClient,
+      multiSigAddress: multiSigAddress,
+      signerAccountId: signerAccount.id,
+      txBody: txBody,
+      fee: fee,
+    );
+
+    final signatureBytes = convert.hex.encode(authBytes);
+
+    final success = await _multiSigService.signTx(
+      signerAddress: signerAccount.address,
+      coin: coin,
+      txUuid: txId,
+      signatureBytes: signatureBytes,
+    );
+
+    return success;
+  }
+
+  Future<List<int>> _sign({
+    required proto.PbClient pbClient,
+    required String multiSigAddress,
+    required String signerAccountId,
+    required proto.TxBody txBody,
+    required proto.Fee fee,
+  }) async {
+    final signerRootPk = await _accountService.loadKey(signerAccountId);
+
+    final signerPk = signerRootPk!.defaultKey();
+
+    final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
+
+    final authBytes = pbClient.generateMultiSigAuthorization(
+      signerPk,
+      txBody,
+      fee,
+      multiSigBaseAccount,
+    );
+
+    return authBytes;
   }
 
   Future<TxResult> _executeBasic(
@@ -206,55 +292,39 @@ class DefaultQueueTxClient implements TxQueueClient {
 
     TxResult? result;
 
+    AccountGasEstimate? accountGasEstimate;
+    var gasEstimate = model.gasEstimate;
+    if (gasEstimate != null) {
+      accountGasEstimate = AccountGasEstimate(
+        gasEstimate.estimatedGas,
+        gasEstimate.baseFee,
+        gasEstimate.gasAdjustment,
+        gasEstimate.estimatedFees,
+      );
+    } else {
+      accountGasEstimate = await _transactionHandler.estimateGas(
+        model.txBody,
+        [
+          account.publicKey,
+        ],
+        account.coin,
+      );
+    }
+
     final response = await _transactionHandler.executeTransaction(
       model.txBody,
       privateKey.defaultKey(),
       account.coin,
+      accountGasEstimate,
     );
 
     result = TxResult(
       body: model.txBody,
-      response: response.txResponse,
+      response: response,
+      fee: toFee(accountGasEstimate),
     );
 
     return result;
-  }
-
-  Future<TxResult> _executeMulti(
-      MultiTransactableAccount account, SembastScheduledTx model) async {
-    final coin = account.coin;
-    final threshold = account.signaturesRequired;
-
-    final publicKeys = <PublicKey>[];
-    final sigLookup = <String, List<int>>{};
-
-    final orderedSigners = model.signers!.toList()
-      ..sortAscendingBy((e) => e.signerOrder);
-
-    for (final signer in orderedSigners) {
-      final publicKey = publicKeyFromCompressedHex(signer.publicKey, coin);
-      publicKeys.add(publicKey);
-
-      sigLookup[publicKey.address] = utf8.encode(signer.signature);
-    }
-
-    final aminoKey = AminoPrivKey(
-      threshold: threshold,
-      pubKeys: publicKeys,
-      coin: coin,
-      sigLookup: sigLookup,
-    );
-
-    final response = await _transactionHandler.executeTransaction(
-      model.txBody,
-      aminoKey,
-      account.coin,
-    );
-
-    return TxResult(
-      body: model.txBody,
-      response: response.txResponse,
-    );
   }
 
   Future<Database> _initDb() async {
