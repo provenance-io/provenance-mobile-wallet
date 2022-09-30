@@ -8,7 +8,6 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,6 @@ class RedelegationAmountScreen extends StatefulWidget {
 
 class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
   late final TextEditingController _textEditingController;
-  final StakingRedelegationBloc _bloc = get<StakingRedelegationBloc>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _scrollController = ScrollController();
 
@@ -51,18 +49,20 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    _bloc.updateHashRedelegated(number);
+    Provider.of<StakingRedelegationBloc>(context, listen: false)
+        .updateHashRedelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
+    final bloc = Provider.of<StakingRedelegationBloc>(context, listen: false);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(
         child: StreamBuilder<StakingRedelegationDetails>(
-          initialData: _bloc.stakingRedelegationDetails.value,
-          stream: _bloc.stakingRedelegationDetails,
+          initialData: bloc.stakingRedelegationDetails.value,
+          stream: bloc.stakingRedelegationDetails,
           builder: (context, snapshot) {
             final details = snapshot.data;
 

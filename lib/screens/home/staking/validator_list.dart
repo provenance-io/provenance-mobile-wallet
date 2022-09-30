@@ -114,11 +114,14 @@ class ValidatorListState extends State<ValidatorList> {
                                   element.validatorAddress == item.addressId);
 
                           final response = await Navigator.of(context).push(
-                            StakingFlow(
-                              item.addressId,
-                              account,
-                              delegation,
-                              rewards,
+                            Provider.value(
+                              value: bloc,
+                              child: StakingFlow(
+                                item.addressId,
+                                account,
+                                delegation,
+                                rewards,
+                              ),
                             ).route(),
                           );
                           if (response == true) {

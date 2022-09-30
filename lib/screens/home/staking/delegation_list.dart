@@ -96,11 +96,14 @@ class DelegationListState extends State<DelegationList> {
                           (element) =>
                               element.validatorAddress == validator.addressId);
                       final response = await Navigator.of(context).push(
-                        StakingFlow(
-                          validator.addressId,
-                          account,
-                          item,
-                          rewards,
+                        Provider.value(
+                          value: bloc,
+                          child: StakingFlow(
+                            validator.addressId,
+                            account,
+                            item,
+                            rewards,
+                          ),
                         ).route(),
                       );
                       if (response == true) {

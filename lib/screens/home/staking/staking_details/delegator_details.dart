@@ -11,11 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DelegatorDetails extends StatelessWidget {
-  final DetailedValidatorDetails details;
-
   const DelegatorDetails({
     Key? key,
-    required this.details,
   }) : super(key: key);
 
   @override
@@ -23,7 +20,7 @@ class DelegatorDetails extends StatelessWidget {
     final bloc = Provider.of<StakingDetailsBloc>(context, listen: false);
     final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
-        initialData: bloc.validatorDetails.value,
+        initialData: bloc.validatorDetails.valueOrNull,
         stream: bloc.validatorDetails,
         builder: (context, snapshot) {
           final details = snapshot.data;

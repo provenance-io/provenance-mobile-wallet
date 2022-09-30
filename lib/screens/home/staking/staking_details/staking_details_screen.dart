@@ -26,7 +26,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
         Container(
           color: Theme.of(context).colorScheme.neutral750,
           child: StreamBuilder<DetailedValidatorDetails>(
-            initialData: bloc.validatorDetails.value,
+            initialData: bloc.validatorDetails.valueOrNull,
             stream: bloc.validatorDetails,
             builder: (context, snapshot) {
               final details = snapshot.data;
@@ -53,7 +53,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         children: [
                           if (details.delegation == null)
                             ValidatorDetails(validator: validator),
-                          DelegatorDetails(details: details),
+                          DelegatorDetails(),
                         ],
                       ),
                     ),

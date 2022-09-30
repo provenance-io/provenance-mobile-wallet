@@ -14,7 +14,6 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -92,7 +91,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         children: [
                           Icon(
                             Icons.brightness_1,
-                            color: get<ProposalsBloc>()
+                            color: Provider.of<ProposalsBloc>(context,
+                                    listen: false)
                                 .getColor(_proposal.status, context),
                             size: 8,
                           ),
