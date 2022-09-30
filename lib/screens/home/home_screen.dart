@@ -245,12 +245,19 @@ class HomeScreenState extends State<HomeScreen>
 
     data.addAll(
       {
-        FieldName.gasWanted: txResponse.gasWanted.toString(),
-        FieldName.gasUsed: txResponse.gasUsed.toString(),
         FieldName.txID: txResponse.txhash,
-        FieldName.block: txResponse.height.toString(),
       },
     );
+
+    if (txResponse.height != Int64.ZERO) {
+      data.addAll(
+        {
+          FieldName.gasWanted: txResponse.gasWanted.toString(),
+          FieldName.gasUsed: txResponse.gasUsed.toString(),
+          FieldName.block: txResponse.height.toString(),
+        },
+      );
+    }
 
     if (txResponse.code != statusCodeOk) {
       data.addAll(
