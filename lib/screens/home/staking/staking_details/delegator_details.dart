@@ -79,8 +79,10 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.brightness_1,
-                    color: Provider.of<StakingScreenBloc>(context)
-                        .getColor(validator.status, context),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .validatorColorScheme
+                        .colorForStatus(validator.status),
                     size: 8,
                   ),
                   HorizontalSpacer.xSmall(),
