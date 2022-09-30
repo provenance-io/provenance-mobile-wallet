@@ -145,28 +145,25 @@ class MultiSigService extends Listenable with ListenableMixin {
     required wallet.Coin coin,
     required String txUuid,
     required String signatureBytes,
-  }) async {
-    final success = await _multiSigClient.signTx(
-      signerAddress: signerAddress,
-      coin: coin,
-      txUuid: txUuid,
-      signatureBytes: signatureBytes,
-    );
-
-    if (success) {
-      // Fetch all in case creator and co-signer are both in same app
-      final addresses = (await _accountService.getAccounts())
-          .whereType<TransactableAccount>()
-          .map((e) => e.address)
-          .toList();
-
-      await sync(
-        signerAddresses: addresses,
+  }) =>
+      _signTx(
+        signerAddress: signerAddress,
+        coin: coin,
+        txUuid: txUuid,
+        signatureBytes: signatureBytes,
       );
-    }
 
-    return success;
-  }
+  Future<bool> declineTx({
+    required String signerAddress,
+    required wallet.Coin coin,
+    required String txUuid,
+  }) =>
+      _signTx(
+        signerAddress: signerAddress,
+        coin: coin,
+        txUuid: txUuid,
+        declineTx: true,
+      );
 
   Future<void> updateTxResult({
     required String signerAddress,
@@ -219,6 +216,36 @@ class MultiSigService extends Listenable with ListenableMixin {
     _publish();
   }
 
+  Future<bool> _signTx({
+    required String signerAddress,
+    required wallet.Coin coin,
+    required String txUuid,
+    String? signatureBytes,
+    bool? declineTx,
+  }) async {
+    final success = await _multiSigClient.signTx(
+      signerAddress: signerAddress,
+      coin: coin,
+      txUuid: txUuid,
+      signatureBytes: signatureBytes,
+      declineTx: declineTx,
+    );
+
+    if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await sync(
+        signerAddresses: addresses,
+      );
+    }
+
+    return success;
+  }
+
   void _publish() {
     final updated = _actionItemsBySignerAddress.entries
         .fold<List<MultiSigPendingTx>>(
@@ -237,6 +264,7 @@ abstract class MultiSigActionListItem implements ActionListItem {
   String get signerAddress;
   String get groupAddress;
   String get txId;
+  wallet.Coin get coin;
 }
 
 class MultiSigSignActionListItem implements MultiSigActionListItem {
@@ -249,6 +277,7 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
     required this.txBody,
     required this.fee,
     required this.txId,
+    required this.coin,
   });
 
   @override
@@ -266,6 +295,9 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
 
   @override
   final String txId;
+
+  @override
+  final wallet.Coin coin;
 
   @override
   final LocalizedString label;
@@ -285,6 +317,7 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
     required this.fee,
     required this.txId,
     required this.signatures,
+    required this.coin,
   });
 
   @override
@@ -302,6 +335,9 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
 
   @override
   final String txId;
+
+  @override
+  final wallet.Coin coin;
 
   @override
   final LocalizedString label;

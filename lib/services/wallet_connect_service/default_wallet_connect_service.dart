@@ -115,7 +115,6 @@ class DefaultWalletConnectService extends WalletConnectService
       transactAccount: transactAccount,
       accountService: _accountService,
       txQueueService: _txQueueService,
-      address: address,
       connection: connection,
       queueService: _queueServce,
     );
@@ -162,8 +161,9 @@ class DefaultWalletConnectService extends WalletConnectService
           _currentSession!.sessionEvents.clear()
         ]);
 
-        await _queueServce
-            .removeWalletConnectSessionGroup(_currentSession!.address);
+        await _queueServce.removeWalletConnectSessionGroup(
+          accountId: _currentSession!.accountId,
+        );
 
         await _currentSession!.disconnect();
         await _currentSession!.dispose();
@@ -251,12 +251,10 @@ class DefaultWalletConnectService extends WalletConnectService
     }
 
     if (data == null || suspensionTime == null) {
-      final wcAddress = (data?.address.isNotEmpty ?? false)
-          ? WalletConnectAddress.create(data!.address)
-          : null;
-
       _log("No WalletConnect session to restore");
-      await _removeSessionData(wcAddress);
+      await _removeSessionData(
+        accountId: accountId,
+      );
       return false;
     }
 
@@ -297,7 +295,9 @@ class DefaultWalletConnectService extends WalletConnectService
       _log("Disconnecting expired previous session");
       await session.disconnect();
       await session.dispose();
-      await _removeSessionData(session.address);
+      await _removeSessionData(
+        accountId: session.accountId,
+      );
       return false;
     } else {
       _log("Previous session has been restored");
@@ -327,10 +327,12 @@ class DefaultWalletConnectService extends WalletConnectService
 
   @override
   Future<bool> disconnectSession() async {
-    final currentAddress = _currentSession?.address;
+    final accountId = _currentSession?.accountId;
     await _setCurrentSession(null);
 
-    await _removeSessionData(currentAddress);
+    await _removeSessionData(
+      accountId: accountId,
+    );
 
     return true;
   }
@@ -380,12 +382,13 @@ class DefaultWalletConnectService extends WalletConnectService
     }
   }
 
-  Future<void> _removeSessionData([WalletConnectAddress? address]) async {
+  Future<void> _removeSessionData({String? accountId}) async {
     Future<void> removeSessionGroupFuture;
 
-    if (address != null) {
-      removeSessionGroupFuture =
-          _queueServce.removeWalletConnectSessionGroup(address);
+    if (accountId != null) {
+      removeSessionGroupFuture = _queueServce.removeWalletConnectSessionGroup(
+        accountId: accountId,
+      );
     } else {
       removeSessionGroupFuture = Future.value();
     }

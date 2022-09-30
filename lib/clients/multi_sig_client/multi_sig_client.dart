@@ -335,7 +335,8 @@ class MultiSigClient with ClientCoinMixin {
     required String signerAddress,
     required Coin coin,
     required String txUuid,
-    required String signatureBytes,
+    String? signatureBytes,
+    bool? declineTx,
   }) async {
     final client = await getClient(coin);
     const path = '$_basePath/tx/sign';
@@ -344,6 +345,7 @@ class MultiSigClient with ClientCoinMixin {
       address: signerAddress,
       txUuid: txUuid,
       signatureBytes: signatureBytes,
+      declineTx: declineTx,
     );
 
     final response = await client.post(

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as p;
+import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
@@ -205,12 +206,13 @@ class ActionListBloc extends Disposable {
             .whereType<TransactableAccount>()
             .toList();
 
-    final accountLookup = accounts.asMap().map(
-          (key, value) => MapEntry(
-            value.address,
-            value,
-          ),
-        );
+    final accountsByAddress = <String, TransactableAccount>{};
+    final accountsById = <String, TransactableAccount>{};
+
+    for (final account in accounts) {
+      accountsByAddress[account.address] = account;
+      accountsById[account.id] = account;
+    }
 
     final groups = <ActionListGroup>[];
 
@@ -219,13 +221,13 @@ class ActionListBloc extends Disposable {
     final walletConnectGroups = queuedItems
         .where((queuedGroup) => queuedGroup.actionLookup.isNotEmpty)
         .map((queuedGroup) {
-      final account = accountLookup[queuedGroup.accountAddress]!;
+      final account = accountsById[queuedGroup.accountId]!;
 
       return _WalletConnectActionGroup(
         accountId: account.id,
         queueGroup: queuedGroup,
         label: account.name,
-        subLabel: abbreviateAddress(queuedGroup.accountAddress),
+        subLabel: abbreviateAddress(account.address),
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
@@ -256,8 +258,11 @@ class ActionListBloc extends Disposable {
 
     final multiSigGroups = <String, List<MultiSigActionListItem>>{};
 
-    final multiSigItems = _multiSigService.items;
-    for (final item in multiSigItems.map(_toMultiSigListItem)) {
+    final pendingTxs = _multiSigService.items;
+    for (final tx in pendingTxs) {
+      final account = accountsByAddress[tx.multiSigAddress]!;
+      final item = _toMultiSigListItem(tx, account.coin);
+
       final address = item.groupAddress;
 
       if (!multiSigGroups.containsKey(address)) {
@@ -268,7 +273,7 @@ class ActionListBloc extends Disposable {
     }
 
     for (final multiSigGroup in multiSigGroups.entries) {
-      final account = accountLookup[multiSigGroup.key]!;
+      final account = accountsByAddress[multiSigGroup.key]!;
       final name = account.name;
 
       groups.add(
@@ -286,18 +291,20 @@ class ActionListBloc extends Disposable {
     return groups;
   }
 
-  MultiSigActionListItem _toMultiSigListItem(MultiSigPendingTx tx) {
+  MultiSigActionListItem _toMultiSigListItem(
+      MultiSigPendingTx tx, wallet.Coin coin) {
     switch (tx.status) {
       case MultiSigStatus.pending:
-        return _toSignListItem(tx);
+        return _toSignListItem(tx, coin);
       case MultiSigStatus.ready:
-        return _toTransmitListItem(tx);
+        return _toTransmitListItem(tx, coin);
       default:
         throw 'Invalid tx status: ${tx.status.name}';
     }
   }
 
-  MultiSigTransmitActionListItem _toTransmitListItem(MultiSigPendingTx tx) =>
+  MultiSigTransmitActionListItem _toTransmitListItem(
+          MultiSigPendingTx tx, wallet.Coin coin) =>
       MultiSigTransmitActionListItem(
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
@@ -310,9 +317,11 @@ class ActionListBloc extends Disposable {
         fee: tx.fee,
         txId: tx.txUuid,
         signatures: tx.signatures!,
+        coin: coin,
       );
 
-  MultiSigSignActionListItem _toSignListItem(MultiSigPendingTx tx) =>
+  MultiSigSignActionListItem _toSignListItem(
+          MultiSigPendingTx tx, wallet.Coin coin) =>
       MultiSigSignActionListItem(
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
@@ -324,6 +333,7 @@ class ActionListBloc extends Disposable {
         txBody: tx.txBody,
         fee: tx.fee,
         txId: tx.txUuid,
+        coin: coin,
       );
 
   Future<bool> _approveWalletConnectItem(
@@ -373,7 +383,12 @@ class ActionListBloc extends Disposable {
   Future<void> _processMultiSigTransmitItem(
       bool approved, MultiSigTransmitActionListItem item) async {
     if (!approved) {
-      // TODO-Roy: Send update to service
+      await _txQueueService.declineTx(
+        signerAddress: item.signerAddress,
+        txId: item.txId,
+        coin: item.coin,
+      );
+
       return;
     }
 
@@ -383,7 +398,12 @@ class ActionListBloc extends Disposable {
   Future<void> _processMultiSigSignItem(bool approved, ActionListGroup group,
       MultiSigSignActionListItem item) async {
     if (!approved) {
-      // TODO-Roy: Send update to service
+      await _txQueueService.declineTx(
+        signerAddress: item.signerAddress,
+        txId: item.txId,
+        coin: item.coin,
+      );
+
       return;
     }
 
@@ -394,9 +414,6 @@ class ActionListBloc extends Disposable {
       txBody: item.txBody,
       fee: item.fee,
     );
-
-    // TODO-Roy: not needed, sync should pick up the change?
-    // _onActionQueueUpdated();
 
     final status = success ? 'succeeded' : 'failed';
 
