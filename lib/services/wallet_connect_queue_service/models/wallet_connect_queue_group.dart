@@ -59,7 +59,7 @@ class WalletConnectQueueGroup {
         final sessionAction = action as SessionAction;
 
         return <String, dynamic>{
-          "type": "ApproveSession",
+          "type": "SessionAction",
           "id": sessionAction.id,
           "requestId": sessionAction.walletConnectRequestId,
           "message": "Approval required",
@@ -77,7 +77,7 @@ class WalletConnectQueueGroup {
         );
 
         return <String, dynamic>{
-          "type": "SendRequest",
+          "type": "TxAction",
           "id": action.id,
           "requestId": action.walletConnectRequestId,
           "message": "",
@@ -94,7 +94,7 @@ class WalletConnectQueueGroup {
         final signAction = action as SignAction;
 
         return <String, dynamic>{
-          "type": "SignRequest",
+          "type": "SignAction",
           "id": signAction.id,
           "requestId": signAction.walletConnectRequestId,
           "message": signAction.message,
@@ -107,8 +107,7 @@ class WalletConnectQueueGroup {
   static WalletConnectAction _fromRecord(Map<String, dynamic> input) {
     final type = input["type"] as String;
 
-    // TODO-Roy: Rename SendRequest to TxAction, SignRequest to SignAction, etc.
-    if (type == "SendRequest") {
+    if (type == "TxAction") {
       final body = TxBody.fromBuffer(input["txBody"].cast<int>());
       final id = input["id"];
       final requestId = input["requestId"];
@@ -131,7 +130,7 @@ class WalletConnectQueueGroup {
               .cast<GeneratedMessage>(),
           gasEstimate: AccountGasEstimate(
               estimate, baseFee, feeAdjustment, feeCalculated));
-    } else if (type == "SignRequest") {
+    } else if (type == "SignAction") {
       final id = input["id"];
       final requestId = input["requestId"];
       final description = input["description"];
@@ -144,7 +143,7 @@ class WalletConnectQueueGroup {
           description: description,
           address: address,
           walletConnectRequestId: requestId);
-    } else if (type == "ApproveSession") {
+    } else if (type == "SessionAction") {
       final id = input["id"];
       final requestId = input["requestId"];
       final peerId = input["peerId"];
