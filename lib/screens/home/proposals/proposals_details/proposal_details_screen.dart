@@ -91,8 +91,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         children: [
                           Icon(
                             Icons.brightness_1,
-                            color: Provider.of<ProposalsBloc>(context,
-                                    listen: false)
+                            color: Provider.of<ProposalsBloc>(context)
                                 .getColor(_proposal.status, context),
                             size: 8,
                           ),

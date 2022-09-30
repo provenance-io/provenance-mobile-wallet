@@ -57,7 +57,10 @@ class StakingListItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.brightness_1,
-                        color: bloc.getColor(validator.status, context),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .validatorColorScheme
+                            .colorForStatus(validator.status),
                         size: 8,
                       ),
                       HorizontalSpacer.xSmall(),

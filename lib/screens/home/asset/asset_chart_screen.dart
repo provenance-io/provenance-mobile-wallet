@@ -25,13 +25,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
       ValueNotifier(null);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AssetChartBloc>(context, listen: false);
+    final bloc = Provider.of<AssetChartBloc>(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = mediaQuery.size.height > 600;
     final priceHeight = (isTallScreen) ? 45.0 : 35.0;
