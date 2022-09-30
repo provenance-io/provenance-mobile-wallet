@@ -194,6 +194,11 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
   }
 
   @override
+  _i6.Stream<_i4.TxResult> get response =>
+      (super.noSuchMethod(Invocation.getter(#response),
+              returnValue: _i6.Stream<_i4.TxResult>.empty())
+          as _i6.Stream<_i4.TxResult>);
+  @override
   _i6.Future<_i3.AccountGasEstimate> estimateGas(
           {_i10.TxBody? txBody, _i7.TransactableAccount? account}) =>
       (super.noSuchMethod(
@@ -218,12 +223,24 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
                     #gasEstimate: gasEstimate
                   })))) as _i6.Future<_i4.ScheduledTx>);
   @override
-  _i6.Future<void> completeTx(
-          {String? remoteTxId, List<_i4.TxSigner>? signers}) =>
+  _i6.Future<void> completeTx({String? txId}) => (super.noSuchMethod(
+      Invocation.method(#completeTx, [], {#txId: txId}),
+      returnValue: _i6.Future<void>.value(),
+      returnValueForMissingStub: _i6.Future<void>.value()) as _i6.Future<void>);
+  @override
+  _i6.Future<bool> signTx(
+          {String? txId,
+          String? signerAddress,
+          String? multiSigAddress,
+          _i10.TxBody? txBody,
+          _i10.Fee? fee}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #completeTx, [], {#remoteTxId: remoteTxId, #signers: signers}),
-          returnValue: _i6.Future<void>.value(),
-          returnValueForMissingStub:
-              _i6.Future<void>.value()) as _i6.Future<void>);
+          Invocation.method(#signTx, [], {
+            #txId: txId,
+            #signerAddress: signerAddress,
+            #multiSigAddress: multiSigAddress,
+            #txBody: txBody,
+            #fee: fee
+          }),
+          returnValue: _i6.Future<bool>.value(false)) as _i6.Future<bool>);
 }

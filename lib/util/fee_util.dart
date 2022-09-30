@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 
 List<proto.Coin> combineFees(List<proto.Coin> fees) {
   return fees
@@ -27,3 +28,8 @@ List<proto.Coin> addBaseFee(
 
   return combineFees(result);
 }
+
+proto.Fee toFee(AccountGasEstimate estimate) => proto.Fee(
+      amount: estimate.totalFees,
+      gasLimit: proto.Int64(estimate.estimatedGas),
+    );

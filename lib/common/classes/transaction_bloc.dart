@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
+import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/type_registry.dart';
 
 abstract class TransactionBloc<T extends proto.GeneratedMessage>
     implements Disposable {

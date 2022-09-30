@@ -7,12 +7,12 @@ import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/session_data.dart';
 import 'package:provenance_wallet/services/models/wallet_connect_session_restore_data.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -30,17 +30,17 @@ class DefaultWalletConnectService extends WalletConnectService
   DefaultWalletConnectService({
     required KeyValueService keyValueService,
     required AccountService accountService,
+    required TxQueueService txQueueService,
     required WalletConnectionFactory connectionFactory,
     required RemoteNotificationService notificationService,
     required WalletConnectQueueService queueService,
-    required TransactionHandler transactionHandler,
     required LocalAuthHelper localAuthHelper,
   })  : _keyValueService = keyValueService,
         _accountService = accountService,
+        _txQueueService = txQueueService,
         _connectionFactory = connectionFactory,
         _remoteNotificationService = notificationService,
         _queueServce = queueService,
-        _transactionHandler = transactionHandler,
         _localAuthHelper = localAuthHelper {
     WidgetsBinding.instance.addObserver(this);
 
@@ -63,10 +63,10 @@ class DefaultWalletConnectService extends WalletConnectService
 
   final KeyValueService _keyValueService;
   final AccountService _accountService;
+  final TxQueueService _txQueueService;
   final WalletConnectionFactory _connectionFactory;
   final RemoteNotificationService _remoteNotificationService;
   final WalletConnectQueueService _queueServce;
-  final TransactionHandler _transactionHandler;
   final LocalAuthHelper _localAuthHelper;
 
   late StreamSubscription _authSubscription;
@@ -111,16 +111,13 @@ class DefaultWalletConnectService extends WalletConnectService
     final connection = _connectionFactory(address);
 
     final delegate = WalletConnectSessionDelegate(
-      privateKey: privateKey,
-      transactionHandler: _transactionHandler,
+      connectAccount: connectAccount,
+      transactAccount: transactAccount,
+      accountService: _accountService,
+      txQueueService: _txQueueService,
       address: address,
       connection: connection,
       queueService: _queueServce,
-      walletInfo: WalletInfo(
-        transactAccount.id,
-        transactAccount.name,
-        transactAccount.coin,
-      ),
     );
 
     final session = WalletConnectSession(
