@@ -75,14 +75,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     required AccountService accountService,
     required TxQueueService txQueueService,
     required WalletConnectQueueService queueService,
-    required WalletConnectAddress address,
     required WalletConnection connection,
   })  : _connectAccount = connectAccount,
         _transactAccount = transactAccount,
         _accountService = accountService,
         _txQueueService = txQueueService,
         _queueService = queueService,
-        _address = address,
         _connection = connection;
 
   final TransactableAccount _connectAccount;
@@ -91,7 +89,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final TxQueueService _txQueueService;
 
   final WalletConnectQueueService _queueService;
-  final WalletConnectAddress _address;
   final WalletConnection _connection;
 
   final _txSubscriptions = CompositeSubscription();
@@ -102,7 +99,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   /// The user has decided to allow or disallow the action.
   ///
   Future<bool> complete(String requestId, bool allowed) async {
-    final action = await _queueService.loadQueuedAction(_address, requestId);
+    final action = await _queueService.loadQueuedAction(
+      accountId: _transactAccount.id,
+      requestId: requestId,
+    );
     if (action == null) {
       return false;
     }
@@ -110,21 +110,40 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final wcRequestId = action.walletConnectRequestId;
     if (!allowed) {
       await _connection.reject(wcRequestId);
+      await _queueService.removeRequest(
+        accountId: _transactAccount.id,
+        requestId: requestId,
+      );
       return true;
     }
 
-    bool result;
+    var result = false;
 
-    switch (action.kind) {
-      case WalletConnectActionKind.session:
-        result = await _completeSessionAction(action as SessionAction);
-        break;
-      case WalletConnectActionKind.tx:
-        result = await _completeTxAction(action as TxAction);
-        break;
-      case WalletConnectActionKind.sign:
-        result = await _completeSignAction(action as SignAction);
-        break;
+    try {
+      switch (action.kind) {
+        case WalletConnectActionKind.session:
+          result = await _completeSessionAction(action as SessionAction);
+          break;
+        case WalletConnectActionKind.tx:
+          result = await _completeTxAction(action as TxAction);
+          break;
+        case WalletConnectActionKind.sign:
+          result = await _completeSignAction(action as SignAction);
+          break;
+      }
+    } catch (e) {
+      logError(
+        'Request failed',
+        error: e,
+      );
+
+      await _connection.sendError(
+        wcRequestId,
+        e.toString(),
+      );
+
+      // Allow the error to be handled where the action was initiated.
+      rethrow;
     }
 
     return result;
@@ -142,11 +161,17 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     final id = Uuid().v1().toString();
 
     await _queueService.createWalletConnectSessionGroup(
-        _address, _transactAccount.publicKey.address, data.clientMeta);
+      accountId: _transactAccount.id,
+      clientMeta: data.clientMeta,
+    );
 
-    final details = SessionAction(id, requestId, data);
-    events._sessionRequest.add(details);
-    await _queueService.addWalletApproveRequest(_address, details);
+    final action = SessionAction(id, requestId, data);
+    events._sessionRequest.add(action);
+
+    await _queueService.addWalletApproveRequest(
+      accountId: _transactAccount.id,
+      action: action,
+    );
   }
 
   ///
@@ -167,7 +192,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       address: address,
     );
 
-    _queueService.addWalletConnectSignRequest(_address, signAction);
+    _queueService.addWalletConnectSignRequest(
+      accountId: _transactAccount.id,
+      signAction: signAction,
+    );
   }
 
   ///
@@ -212,13 +240,18 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       gasEstimate: gasEstimate,
     );
 
-    _queueService.addWalletConnectTxRequest(_address, txAction);
+    _queueService.addWalletConnectTxRequest(
+      accountId: _transactAccount.id,
+      txAction: txAction,
+    );
   }
 
   @override
   void onClose() {
     events._onClose.add(null);
-    _queueService.removeWalletConnectSessionGroup(_address);
+    _queueService.removeWalletConnectSessionGroup(
+      accountId: _transactAccount.id,
+    );
     _txSubscriptions.clear();
   }
 
@@ -258,8 +291,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     await _queueService.removeRequest(
-      _address,
-      action.id,
+      accountId: _transactAccount.id,
+      requestId: action.id,
     );
 
     return true;
@@ -309,7 +342,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       }).addTo(_txSubscriptions);
     }
 
-    _queueService.removeRequest(_address, action.id);
+    _queueService.removeRequest(
+      accountId: _transactAccount.id,
+      requestId: action.id,
+    );
 
     return true;
   }
@@ -317,6 +353,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   Future<bool> _completeSignAction(SignAction action) async {
     final bytes = action.message.codeUnits;
 
+    // TODO-Roy: Implement multi-sig sign
     final privateKey = await _accountService.loadKey(_transactAccount.id);
     List<int>? signedData;
     signedData = privateKey!.defaultKey().signData(Hash.sha256(bytes))
@@ -328,8 +365,8 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     );
 
     await _queueService.removeRequest(
-      _address,
-      action.id,
+      accountId: _transactAccount.id,
+      requestId: action.id,
     );
 
     return true;

@@ -10,13 +10,11 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_
 
 class WalletConnectQueueGroup {
   WalletConnectQueueGroup({
-    required this.connectAddress,
-    required this.accountAddress,
+    required this.accountId,
     this.clientMeta,
   });
 
-  final WalletConnectAddress connectAddress;
-  final String accountAddress;
+  final String accountId;
   final ClientMeta? clientMeta;
   final actionLookup = <String, WalletConnectAction>{};
 
@@ -24,8 +22,7 @@ class WalletConnectQueueGroup {
     ClientMeta? clientMeta,
   }) =>
       WalletConnectQueueGroup(
-        connectAddress: connectAddress,
-        accountAddress: accountAddress,
+        accountId: accountId,
         clientMeta: clientMeta ?? this.clientMeta,
       );
 
@@ -34,15 +31,12 @@ class WalletConnectQueueGroup {
     input["actions"].entries.forEach((entry) {
       actions[entry.key] = _fromRecord(entry.value);
     });
-    final connectAddress =
-        WalletConnectAddress.create(input["connectAddress"] as String)!;
-    final accountAddress = input["accountAddress"];
-    final clientMeta = ClientMeta.fromJson(input["clientMeta"]);
 
     final group = WalletConnectQueueGroup(
-      connectAddress: connectAddress,
-      accountAddress: accountAddress,
-      clientMeta: clientMeta,
+      accountId: input['accountId'] as String,
+      clientMeta: input.containsKey('clientMeta')
+          ? ClientMeta.fromJson(input['clientMeta'])
+          : null,
     );
     group.actionLookup.addAll(actions);
     return group;
@@ -50,9 +44,8 @@ class WalletConnectQueueGroup {
 
   Map<String, dynamic> toRecord() {
     final map = <String, dynamic>{
-      "connectAddress": connectAddress.fullUriString,
-      "accountAddress": accountAddress,
-      "clientMeta": clientMeta?.toJson(),
+      'accountId': accountId,
+      if (clientMeta != null) "clientMeta": clientMeta?.toJson(),
       "actions":
           actionLookup.map((key, value) => MapEntry(key, _toRecord(value)))
     };
@@ -66,7 +59,7 @@ class WalletConnectQueueGroup {
         final sessionAction = action as SessionAction;
 
         return <String, dynamic>{
-          "type": "ApproveSession",
+          "type": "SessionAction",
           "id": sessionAction.id,
           "requestId": sessionAction.walletConnectRequestId,
           "message": "Approval required",
@@ -84,7 +77,7 @@ class WalletConnectQueueGroup {
         );
 
         return <String, dynamic>{
-          "type": "SendRequest",
+          "type": "TxAction",
           "id": action.id,
           "requestId": action.walletConnectRequestId,
           "message": "",
@@ -101,7 +94,7 @@ class WalletConnectQueueGroup {
         final signAction = action as SignAction;
 
         return <String, dynamic>{
-          "type": "SignRequest",
+          "type": "SignAction",
           "id": signAction.id,
           "requestId": signAction.walletConnectRequestId,
           "message": signAction.message,
@@ -114,8 +107,7 @@ class WalletConnectQueueGroup {
   static WalletConnectAction _fromRecord(Map<String, dynamic> input) {
     final type = input["type"] as String;
 
-    // TODO-Roy: Rename SendRequest to TxAction, SignRequest to SignAction, etc.
-    if (type == "SendRequest") {
+    if (type == "TxAction") {
       final body = TxBody.fromBuffer(input["txBody"].cast<int>());
       final id = input["id"];
       final requestId = input["requestId"];
@@ -138,7 +130,7 @@ class WalletConnectQueueGroup {
               .cast<GeneratedMessage>(),
           gasEstimate: AccountGasEstimate(
               estimate, baseFee, feeAdjustment, feeCalculated));
-    } else if (type == "SignRequest") {
+    } else if (type == "SignAction") {
       final id = input["id"];
       final requestId = input["requestId"];
       final description = input["description"];
@@ -151,7 +143,7 @@ class WalletConnectQueueGroup {
           description: description,
           address: address,
           walletConnectRequestId: requestId);
-    } else if (type == "ApproveSession") {
+    } else if (type == "SessionAction") {
       final id = input["id"];
       final requestId = input["requestId"];
       final peerId = input["peerId"];

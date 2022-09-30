@@ -260,6 +260,21 @@ class DefaultQueueTxService implements TxQueueService {
     return success;
   }
 
+  @override
+  Future<bool> declineTx({
+    required String signerAddress,
+    required String txId,
+    required Coin coin,
+  }) async {
+    final success = await _multiSigService.declineTx(
+      signerAddress: signerAddress,
+      coin: coin,
+      txUuid: txId,
+    );
+
+    return success;
+  }
+
   Future<List<int>> _sign({
     required proto.PbClient pbClient,
     required String multiSigAddress,

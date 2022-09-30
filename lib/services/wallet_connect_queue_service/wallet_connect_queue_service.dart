@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:sembast/sembast.dart';
 
 class WalletConnectQueueService extends Listenable
@@ -53,34 +53,36 @@ class WalletConnectQueueService extends Listenable
     await db.close();
   }
 
-  Future<void> createWalletConnectSessionGroup(
-      WalletConnectAddress connectAddress,
-      String walletAddress,
-      ClientMeta? clientMeta) async {
+  Future<void> createWalletConnectSessionGroup({
+    required String accountId,
+    required ClientMeta? clientMeta,
+  }) async {
     final group = WalletConnectQueueGroup(
-      connectAddress: connectAddress,
-      accountAddress: walletAddress,
+      accountId: accountId,
       clientMeta: clientMeta,
     );
-    final record = _main.record(connectAddress.fullUriString);
+    final record = _main.record(accountId);
 
     final db = await _db;
 
     await record.add(db, group.toRecord());
   }
 
-  Future<void> removeWalletConnectSessionGroup(
-      WalletConnectAddress address) async {
-    final record = _main.record(address.fullUriString);
+  Future<void> removeWalletConnectSessionGroup({
+    required String accountId,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     await record.delete(db);
     notifyListeners();
   }
 
-  Future<void> updateConnectionDetails(
-      WalletConnectAddress address, ClientMeta clientMeta) async {
-    final record = _main.record(address.fullUriString);
+  Future<void> updateConnectionDetails({
+    required String accountId,
+    required ClientMeta clientMeta,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -96,9 +98,11 @@ class WalletConnectQueueService extends Listenable
     await record.update(db, group.toRecord());
   }
 
-  Future<void> addWalletConnectSignRequest(
-      WalletConnectAddress address, SignAction signRequest) async {
-    final record = _main.record(address.fullUriString);
+  Future<void> addWalletConnectSignRequest({
+    required String accountId,
+    required SignAction signAction,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -107,16 +111,18 @@ class WalletConnectQueueService extends Listenable
     }
 
     final group = WalletConnectQueueGroup.fromRecord(map);
-    group.actionLookup[signRequest.id] = signRequest;
+    group.actionLookup[signAction.id] = signAction;
 
     await record.update(db, group.toRecord());
 
     notifyListeners();
   }
 
-  Future<void> addWalletConnectTxRequest(
-      WalletConnectAddress address, TxAction txAction) async {
-    final record = _main.record(address.fullUriString);
+  Future<void> addWalletConnectTxRequest({
+    required String accountId,
+    required TxAction txAction,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -132,9 +138,11 @@ class WalletConnectQueueService extends Listenable
     notifyListeners();
   }
 
-  Future<void> addWalletApproveRequest(
-      WalletConnectAddress address, SessionAction approveRequestData) async {
-    final record = _main.record(address.fullUriString);
+  Future<void> addWalletApproveRequest({
+    required String accountId,
+    required SessionAction action,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -142,17 +150,18 @@ class WalletConnectQueueService extends Listenable
       return;
     }
     final group = WalletConnectQueueGroup.fromRecord(map);
-    group.actionLookup[approveRequestData.id] = approveRequestData;
+    group.actionLookup[action.id] = action;
 
     await record.update(db, group.toRecord());
 
     notifyListeners();
   }
 
-  Future<WalletConnectQueueGroup?> loadGroup(
-      WalletConnectAddress address) async {
+  Future<WalletConnectQueueGroup?> loadGroup({
+    required String accountId,
+  }) async {
     final db = await _db;
-    final record = _main.record(address.fullUriString);
+    final record = _main.record(accountId);
     final map = await record.get(db);
     if (map == null) {
       return null;
@@ -160,9 +169,11 @@ class WalletConnectQueueService extends Listenable
     return WalletConnectQueueGroup.fromRecord(map);
   }
 
-  Future<WalletConnectAction?> loadQueuedAction(
-      WalletConnectAddress address, String requestId) async {
-    final record = _main.record(address.fullUriString);
+  Future<WalletConnectAction?> loadQueuedAction({
+    required String accountId,
+    required String requestId,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -173,9 +184,11 @@ class WalletConnectQueueService extends Listenable
     return group.actionLookup[requestId];
   }
 
-  Future<void> removeRequest(
-      WalletConnectAddress connectAddress, String requestId) async {
-    final record = _main.record(connectAddress.fullUriString);
+  Future<void> removeRequest({
+    required String accountId,
+    required String requestId,
+  }) async {
+    final record = _main.record(accountId);
 
     final db = await _db;
     final map = await record.get(db);
@@ -192,11 +205,23 @@ class WalletConnectQueueService extends Listenable
 
   Future<List<WalletConnectQueueGroup>> loadAllGroups() async {
     final db = await _db;
-    final values = await _main.find(db);
+    final snapshots = await _main.find(db);
 
-    return values
-        .map((e) => WalletConnectQueueGroup.fromRecord(e.value))
-        .toList();
+    final groups = <WalletConnectQueueGroup>[];
+
+    for (final snapshot in snapshots) {
+      try {
+        final group = WalletConnectQueueGroup.fromRecord(snapshot.value);
+        groups.add(group);
+      } catch (e) {
+        // If schema changes, discard old records.
+        logDebug('Deleting invalid record: ${snapshot.value}');
+
+        await snapshot.ref.delete(db);
+      }
+    }
+
+    return groups;
   }
 
   @override

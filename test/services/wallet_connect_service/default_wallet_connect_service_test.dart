@@ -5,7 +5,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -303,7 +302,8 @@ void main() {
         when(mockKeyValueService.getString(PrefKey.sessionSuspendedTime))
             .thenAnswer((_) => Future.value(newExpiredTime.toIso8601String()));
 
-        when(mockWalletConnectQueueService.removeWalletConnectSessionGroup(any))
+        when(mockWalletConnectQueueService.removeWalletConnectSessionGroup(
+                accountId: anyNamed('accountId')))
             .thenAnswer((_) => Future.value());
 
         when(mockWalletConnection.connect(any, any))
@@ -319,11 +319,8 @@ void main() {
 
         verify(mockKeyValueService.removeString(PrefKey.sessionData));
         verify(mockKeyValueService.removeString(PrefKey.sessionSuspendedTime));
-        verify(mockWalletConnectQueueService
-            .removeWalletConnectSessionGroup(argThat(predicate((arg) {
-          final wcAddress = arg as WalletConnectAddress;
-          return wcAddress.fullUriString == walletConnectAddress;
-        }))));
+        verify(mockWalletConnectQueueService.removeWalletConnectSessionGroup(
+            accountId: anyNamed('accountId')));
 
         expect(success, false);
       });

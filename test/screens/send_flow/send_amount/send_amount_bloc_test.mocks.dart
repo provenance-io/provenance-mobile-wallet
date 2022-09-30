@@ -259,6 +259,13 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
             #fee: fee
           }),
           returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
+  @override
+  _i7.Future<bool> declineTx(
+          {String? signerAddress, String? txId, _i10.Coin? coin}) =>
+      (super.noSuchMethod(
+          Invocation.method(#declineTx, [],
+              {#signerAddress: signerAddress, #txId: txId, #coin: coin}),
+          returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
 /// A class which mocks [PriceService].
