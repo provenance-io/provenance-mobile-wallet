@@ -160,9 +160,15 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
                       Flexible(
                         child: PwButton(
                           enabled: _formKey.currentState?.validate() == true &&
-                              details.hashRedelegated > Decimal.zero,
+                              details.hashRedelegated > Decimal.zero &&
+                              (details.hashRedelegated <=
+                                  details.delegation.hashAmount),
                           onPressed: () {
-                            if (_formKey.currentState?.validate() == false ||
+                            final amount = (details.delegation.hashAmount -
+                                details.hashRedelegated);
+
+                            if (amount < Decimal.zero ||
+                                _formKey.currentState?.validate() == false ||
                                 details.hashRedelegated <= Decimal.zero) {
                               return;
                             }
