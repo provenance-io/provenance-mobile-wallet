@@ -70,10 +70,17 @@ class ProposalsFlow extends FlowBase {
 class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     implements ProposalsFlowNavigator {
   late TransactableAccount _account;
+  WeightedVoteBloc? _weightedVoteBloc;
   @override
   void initState() {
     _account = get<AccountService>().events.selected.value!;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _weightedVoteBloc?.onDispose();
+    super.dispose();
   }
 
   @override
@@ -94,7 +101,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   }
 
   @override
-  Widget createStartPage() => ProposalsScreen() ;
+  Widget createStartPage() => ProposalsScreen();
 
   @override
   Future<void> showProposalDetails(
@@ -111,18 +118,13 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   Future<void> showWeightedVote(
     Proposal proposal,
   ) async {
+    _weightedVoteBloc = WeightedVoteBloc(
+      proposal,
+      _account,
+    );
     showPage(
-      (context) => Provider<WeightedVoteBloc>(
-        lazy: true,
-        create: (context) {
-          return WeightedVoteBloc(
-            proposal,
-            _account,
-          );
-        },
-        dispose: (_, bloc) {
-          bloc.onDispose();
-        },
+      (context) => Provider.value(
+        value: _weightedVoteBloc,
         child: ProposalWeightedVoteScreen(
           proposal: proposal,
           account: _account,
@@ -192,9 +194,12 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   @override
   Future<void> showWeightedVoteReview(Proposal proposal) async {
     showPage(
-      (context) => ProposalWeightedVoteConfirmScreen(
-        account: _account,
-        proposal: proposal,
+      (context) => Provider.value(
+        value: _weightedVoteBloc,
+        child: ProposalWeightedVoteConfirmScreen(
+          proposal: proposal,
+          account: _account,
+        ),
       ),
     );
   }

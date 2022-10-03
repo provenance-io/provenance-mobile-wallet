@@ -112,6 +112,13 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   }
 
   @override
+  void dispose() {
+    _delegationBloc?.onDispose();
+    _redelegationBloc?.onDispose();
+    super.dispose();
+  }
+
+  @override
   Widget createStartPage() => StakingDetailsScreen();
 
   @override
