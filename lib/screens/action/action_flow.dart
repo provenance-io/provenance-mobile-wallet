@@ -37,13 +37,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
 
     return Theme(
       data: flowTheme,
-      child: super.build(context),
-    );
-  }
-
-  @override
-  Widget createStartPage() {
-    return Provider<ActionListBloc>(
+      child: Provider<ActionListBloc>(
         lazy: true,
         create: (context) {
           final bloc = ActionListBloc(
@@ -55,8 +49,13 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         dispose: (_, bloc) {
           bloc.onDispose();
         },
-        child: ActionListScreen());
+        child: super.build(context),
+      ),
+    );
   }
+
+  @override
+  Widget createStartPage() => ActionListScreen();
 
   /* ActionListNavigator */
   @override
