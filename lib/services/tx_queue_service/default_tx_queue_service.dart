@@ -205,6 +205,7 @@ class DefaultQueueTxService implements TxQueueService {
         privateKey,
       ],
       item.fee,
+      proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
 
     await _multiSigService.updateTxResult(
