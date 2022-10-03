@@ -21,7 +21,7 @@ class DashboardTab extends FlowBase {
 class DashboardTabState extends State<DashboardTab> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<DashboardTabBloc>(context, listen: false);
+    final bloc = Provider.of<DashboardTabBloc>(context);
     return StreamBuilder<AssetDetails?>(
       initialData: bloc.assetDetails.value,
       stream: bloc.assetDetails,

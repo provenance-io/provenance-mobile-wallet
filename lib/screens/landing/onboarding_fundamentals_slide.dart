@@ -19,7 +19,7 @@ class _OnboardingFundamentalsSlideState
     extends State<OnboardingFundamentalsSlide> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<LandingBloc>(context, listen: false);
+    final bloc = Provider.of<LandingBloc>(context);
 
     return PwOnboardingView(children: [
       PwText(

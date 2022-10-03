@@ -22,7 +22,7 @@ class AccountPortfolio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<HomeBloc>(context, listen: false);
+    final bloc = Provider.of<HomeBloc>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(

@@ -27,6 +27,7 @@ class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
+  late final AccountsBloc _bloc;
 
   @override
   void dispose() {
@@ -42,10 +43,15 @@ class AccountsScreenState extends State<AccountsScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    _bloc = Provider.of<AccountsBloc>(context);
+    _bloc.insert.listen(_onInsert).addTo(_subscriptions);
+    _bloc.loading.listen((e) => _onLoading(context, e)).addTo(_subscriptions);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<AccountsBloc>(context, listen: false);
-    bloc.insert.listen(_onInsert).addTo(_subscriptions);
-    bloc.loading.listen((e) => _onLoading(context, e)).addTo(_subscriptions);
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.of(context).accounts,
@@ -61,8 +67,8 @@ class AccountsScreenState extends State<AccountsScreen> {
                 top: Spacing.medium,
               ),
               child: StreamBuilder<int>(
-                initialData: bloc.count.value,
-                stream: bloc.count,
+                initialData: _bloc.count.value,
+                stream: _bloc.count,
                 builder: (context, snapshot) {
                   final count = snapshot.data!;
                   if (count == 0) {
@@ -77,7 +83,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                       index,
                       animation,
                     ) {
-                      final account = bloc.getAccountAtIndex(index);
+                      final account = _bloc.getAccountAtIndex(index);
 
                       return SlideTransition(
                         position: animation.drive(

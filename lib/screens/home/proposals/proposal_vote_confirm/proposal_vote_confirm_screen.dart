@@ -35,7 +35,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ProposalVoteConfirmBloc>(context, listen: false);
+    final bloc = Provider.of<ProposalVoteConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(

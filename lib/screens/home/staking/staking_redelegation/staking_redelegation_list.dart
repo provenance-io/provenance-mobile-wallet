@@ -32,7 +32,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
+    final bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -47,7 +47,9 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => bloc.showMenu(context),
+              onTap: () =>
+                  Provider.of<StakingScreenBloc>(context, listen: false)
+                      .showMenu(context),
               child: Row(
                 children: [
                   PwText(

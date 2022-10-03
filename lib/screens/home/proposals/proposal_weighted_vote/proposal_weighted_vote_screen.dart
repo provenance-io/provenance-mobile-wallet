@@ -26,7 +26,7 @@ class ProposalWeightedVoteScreen extends StatefulWidget {
 class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<WeightedVoteBloc>(context, listen: false);
+    final bloc = Provider.of<WeightedVoteBloc>(context);
 
     return Scaffold(
       appBar: PwAppBar(

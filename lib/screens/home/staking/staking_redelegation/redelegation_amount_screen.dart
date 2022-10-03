@@ -56,7 +56,7 @@ class _RedelegationAmountScreenState extends State<RedelegationAmountScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
-    final bloc = Provider.of<StakingRedelegationBloc>(context, listen: false);
+    final bloc = Provider.of<StakingRedelegationBloc>(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,
       child: SafeArea(

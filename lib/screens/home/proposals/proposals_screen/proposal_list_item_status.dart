@@ -21,8 +21,7 @@ class ProposalListItemStatus extends StatelessWidget {
       children: [
         Icon(
           Icons.brightness_1,
-          color: Provider.of<ProposalsBloc>(context, listen: false)
-              .getColor(status, context),
+          color: Provider.of<ProposalsBloc>(context).getColor(status, context),
           size: 8,
         ),
         HorizontalSpacer.xSmall(),

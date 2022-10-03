@@ -17,7 +17,7 @@ class ProposalsScreen extends StatefulWidget {
 class _ProposalsScreenState extends State<ProposalsScreen> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ProposalsBloc>(context, listen: false);
+    final bloc = Provider.of<ProposalsBloc>(context);
     return Material(
       child: Stack(
         children: [

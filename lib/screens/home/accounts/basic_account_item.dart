@@ -39,6 +39,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   final _accountService = get<AccountService>();
   late BasicAccount _account;
   late bool _isSelected;
+  late final AccountsBloc _bloc;
 
   @override
   void initState() {
@@ -58,9 +59,9 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<AccountsBloc>(context, listen: false);
-    bloc.updated.listen((e) {
+  void didChangeDependencies() {
+    _bloc = Provider.of<AccountsBloc>(context);
+    _bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
           setState(() {
@@ -69,6 +70,11 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         }
       });
     }).addTo(_subscriptions);
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final accountService = get<AccountService>();
     final isSelected = _account.id == accountService.events.selected.value?.id;
     final account = _account;

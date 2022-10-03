@@ -9,7 +9,7 @@ class AssetChartStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
-    final bloc = Provider.of<AssetChartBloc>(context, listen: false);
+    final bloc = Provider.of<AssetChartBloc>(context);
 
     return Column(
       children: [

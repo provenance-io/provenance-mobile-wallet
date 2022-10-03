@@ -63,6 +63,16 @@ class HomeScreenState extends State<HomeScreen>
   void didChangeDependencies() {
     RouterObserver.instance.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute);
+
+    final bloc = Provider.of<HomeBloc>(context);
+    bloc.isLoading.listen((e) {
+      if (e) {
+        ModalLoadingRoute.showLoading(context);
+      } else {
+        ModalLoadingRoute.dismiss(context);
+      }
+    }).addTo(_subscriptions);
+    bloc.error.listen(_onError).addTo(_subscriptions);
     super.didChangeDependencies();
   }
 
@@ -94,15 +104,6 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<HomeBloc>(context, listen: false);
-    bloc.isLoading.listen((e) {
-      if (e) {
-        ModalLoadingRoute.showLoading(context);
-      } else {
-        ModalLoadingRoute.dismiss(context);
-      }
-    }).addTo(_subscriptions);
-    bloc.error.listen(_onError).addTo(_subscriptions);
     final strings = Strings.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = (mediaQuery.size.height > 600);

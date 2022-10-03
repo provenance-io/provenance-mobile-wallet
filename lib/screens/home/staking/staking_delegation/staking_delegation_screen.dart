@@ -57,7 +57,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
+    final bloc = Provider.of<StakingDelegationBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<StakingDelegationDetails>(
       initialData: bloc.stakingDelegationDetails.value,

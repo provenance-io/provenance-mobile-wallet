@@ -53,15 +53,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   }
 
   @override
-  void dispose() {
-    _subscriptions.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<AccountsBloc>(context, listen: false);
+  void didChangeDependencies() {
+    final bloc = Provider.of<AccountsBloc>(context);
     bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
@@ -71,7 +64,18 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         }
       });
     }).addTo(_subscriptions);
+    super.didChangeDependencies();
+  }
 
+  @override
+  void dispose() {
+    _subscriptions.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: _isSelected
           ? Theme.of(context).colorScheme.secondary650

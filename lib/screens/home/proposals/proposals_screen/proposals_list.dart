@@ -32,7 +32,7 @@ class ProposalsListState extends State<ProposalsList> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ProposalsBloc>(context, listen: false);
+    final bloc = Provider.of<ProposalsBloc>(context);
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {

@@ -54,8 +54,8 @@ class SendPageState extends State<SendPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<SendBloc>(context, listen: false);
+  void didChangeDependencies() {
+    final bloc = Provider.of<SendBloc>(context);
     bloc.stream.listen((state) {
       _recentSends.value = state.recentSendAddresses;
       _assets.value = state.availableAssets;
@@ -63,6 +63,12 @@ class SendPageState extends State<SendPage> {
           ? state.availableAssets.first
           : null;
     });
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SendBloc>(context, listen: false);
     final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -122,7 +128,10 @@ class SendPageState extends State<SendPage> {
                       ),
                       onPressed: () async {
                         try {
-                          final newAddress = await bloc.scanAddress();
+                          final newAddress = await Provider.of<SendBloc>(
+                                  context,
+                                  listen: false)
+                              .scanAddress();
                           if (newAddress?.isNotEmpty ?? false) {
                             _addressController.text = newAddress!;
                           }

@@ -21,7 +21,7 @@ class StakingRedelegationScreen extends StatefulWidget {
 class _StakingRedelegationScreenState extends State<StakingRedelegationScreen> {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<StakingRedelegationBloc>(context, listen: false);
+    final bloc = Provider.of<StakingRedelegationBloc>(context);
     final strings = Strings.of(context);
     return Container(
       color: Theme.of(context).colorScheme.neutral750,

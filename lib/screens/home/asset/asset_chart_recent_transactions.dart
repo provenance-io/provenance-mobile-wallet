@@ -14,7 +14,7 @@ class AssetChartRecentTransactions extends StatelessWidget {
   final Asset asset;
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<TransactionsBloc>(context, listen: false);
+    final bloc = Provider.of<TransactionsBloc>(context);
 
     return Column(
       children: [
