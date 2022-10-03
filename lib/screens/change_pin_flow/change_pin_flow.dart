@@ -20,20 +20,25 @@ class ChangePinFlow extends FlowBase {
 class ChangePinFlowState extends FlowBaseState<ChangePinFlow>
     implements ChangePinBlocNavigator {
   @override
-  Widget createStartPage() => Provider<ChangePinBloc>(
-      lazy: true,
-      create: (context) {
-        final bloc = ChangePinBloc(
-          widget._accountName,
-          this,
-        );
+  Widget build(BuildContext context) {
+    return Provider<ChangePinBloc>(
+        lazy: true,
+        create: (context) {
+          final bloc = ChangePinBloc(
+            widget._accountName,
+            this,
+          );
 
-        return bloc;
-      },
-      dispose: (_, bloc) {
-        bloc.onDispose();
-      },
-      child: CreateNewPinScreen());
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: super.build(context));
+  }
+
+  @override
+  Widget createStartPage() => CreateNewPinScreen();
 
   @override
   Future<void> confirmPin() async {

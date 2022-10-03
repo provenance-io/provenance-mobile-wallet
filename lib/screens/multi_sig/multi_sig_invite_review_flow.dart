@@ -39,18 +39,23 @@ class MultiSigInviteReviewFlowState
     extends FlowBaseState<MultiSigInviteReviewFlow>
     implements MultiSigInviteReviewFlowNavigator {
   @override
-  Widget createStartPage() => Provider<MultiSigInviteReviewFlowBloc>(
-        lazy: true,
-        create: (context) {
-          return MultiSigInviteReviewFlowBloc(
-            inviteId: widget.inviteId,
-            remoteAccount: widget.multiSigRemoteAccount,
-            navigator: this,
-          );
-        },
-        child: MultiSigInviteReviewLanding(
-          name: widget.multiSigRemoteAccount.name,
-        ),
+  Widget build(BuildContext context) {
+    return Provider<MultiSigInviteReviewFlowBloc>(
+      lazy: true,
+      create: (context) {
+        return MultiSigInviteReviewFlowBloc(
+          inviteId: widget.inviteId,
+          remoteAccount: widget.multiSigRemoteAccount,
+          navigator: this,
+        );
+      },
+      child: super.build(context),
+    );
+  }
+
+  @override
+  Widget createStartPage() => MultiSigInviteReviewLanding(
+        name: widget.multiSigRemoteAccount.name,
       );
 
   @override
