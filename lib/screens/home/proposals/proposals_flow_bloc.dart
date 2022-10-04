@@ -1,4 +1,4 @@
-import 'package:provenance_dart/proto_gov.dart' as gov;
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 

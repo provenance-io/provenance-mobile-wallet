@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/proto_auth.dart';
+import 'package:provenance_dart/proto_auth_v1beta1.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';

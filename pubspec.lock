@@ -905,7 +905,7 @@ packages:
       name: protobuf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.0"
   prov_wallet_flutter:
     dependency: "direct main"
     description:
@@ -917,11 +917,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: "3c3d1214b6d20b744861b5db9f26f88fe321126c"
+      ref: multi-sig
+      resolved-ref: e7dad1fb26bdb039e29904186781e7233bc0661c
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
-    version: "0.0.1"
+    version: "1.0.1"
   provider:
     dependency: "direct main"
     description:

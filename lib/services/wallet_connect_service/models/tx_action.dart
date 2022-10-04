@@ -4,10 +4,10 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'wallet_connect_action.dart';
 import 'wallet_connect_action_kind.dart';
 
-class SendAction implements WalletConnectAction {
-  SendAction({
+class TxAction implements WalletConnectAction {
+  TxAction({
     required this.id,
-    required this.requestId,
+    required this.walletConnectRequestId,
     required this.description,
     required this.messages,
     required this.gasEstimate,
@@ -17,10 +17,10 @@ class SendAction implements WalletConnectAction {
   final String id;
 
   @override
-  final int requestId;
+  final int walletConnectRequestId;
 
   @override
-  WalletConnectActionKind get kind => WalletConnectActionKind.send;
+  WalletConnectActionKind get kind => WalletConnectActionKind.tx;
 
   final String description;
   final List<GeneratedMessage> messages;

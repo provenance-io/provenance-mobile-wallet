@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_wallet/chain_id.dart';
@@ -13,18 +14,19 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
-import 'package:provenance_wallet/services/models/service_tx_response.dart';
-import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class MultiSigService extends Listenable with ListenableMixin {
   MultiSigService({
+    required AccountService accountService,
     required MultiSigClient multiSigClient,
-  }) : _multiSigClient = multiSigClient {
+  })  : _accountService = accountService,
+        _multiSigClient = multiSigClient {
     _db = _initDb();
   }
 
@@ -44,19 +46,18 @@ class MultiSigService extends Listenable with ListenableMixin {
     return db;
   }
 
+  final AccountService _accountService;
   final MultiSigClient _multiSigClient;
 
-  final items = <MultiSigActionListItem>[];
+  final items = <MultiSigPendingTx>[];
 
-  final _actionItemsBySignerAddress = <String, List<MultiSigActionListItem>>{};
+  final _actionItemsBySignerAddress = <String, List<MultiSigPendingTx>>{};
   final _initialized = Completer();
-  final _response = PublishSubject<ServiceTxResponse>();
 
   final _main = StoreRef<String, Map<String, Object?>?>.main();
   late final Future<Database> _db;
 
   Future<void> get initialized => _initialized.future;
-  Stream<ServiceTxResponse> get response => _response;
 
   Future<void> sync({
     required List<String> signerAddresses,
@@ -80,9 +81,10 @@ class MultiSigService extends Listenable with ListenableMixin {
       return;
     }
 
+    _actionItemsBySignerAddress.clear();
+
     for (final tx in pendingTxs) {
-      final item = _toSignListItem(tx);
-      _cacheMultiSigItem(item);
+      _cacheMultiSigItem(tx);
     }
 
     for (final tx in createdTxs) {
@@ -102,8 +104,7 @@ class MultiSigService extends Listenable with ListenableMixin {
             await ref.delete(db);
           }
         } else {
-          final item = _toTransmitListItem(tx);
-          _cacheMultiSigItem(item);
+          _cacheMultiSigItem(tx);
         }
       }
     }
@@ -115,11 +116,59 @@ class MultiSigService extends Listenable with ListenableMixin {
     }
   }
 
-  Future<void> finalizeTx({
+  Future<String?> createTx({
+    required String multiSigAddress,
+    required String signerAddress,
+    required wallet.Coin coin,
+    required p.TxBody txBody,
+    required p.Fee fee,
+  }) async {
+    final remoteId = await _multiSigClient.createTx(
+      multiSigAddress: multiSigAddress,
+      signerAddress: signerAddress,
+      coin: coin,
+      txBody: txBody,
+      fee: fee,
+    );
+
+    await sync(
+      signerAddresses: [
+        signerAddress,
+      ],
+    );
+
+    return remoteId;
+  }
+
+  Future<bool> signTx({
+    required String signerAddress,
+    required wallet.Coin coin,
+    required String txUuid,
+    required String signatureBytes,
+  }) =>
+      _signTx(
+        signerAddress: signerAddress,
+        coin: coin,
+        txUuid: txUuid,
+        signatureBytes: signatureBytes,
+      );
+
+  Future<bool> declineTx({
+    required String signerAddress,
+    required wallet.Coin coin,
+    required String txUuid,
+  }) =>
+      _signTx(
+        signerAddress: signerAddress,
+        coin: coin,
+        txUuid: txUuid,
+        declineTx: true,
+      );
+
+  Future<void> updateTxResult({
     required String signerAddress,
     required String txUuid,
     required TxResponse response,
-    required Fee fee,
     required wallet.Coin coin,
   }) async {
     final chainId = ChainId.forCoin(coin);
@@ -147,55 +196,15 @@ class MultiSigService extends Listenable with ListenableMixin {
     _actionItemsBySignerAddress[signerAddress]
         ?.removeWhere((e) => e.txUuid == txUuid);
     _publish();
-
-    _response.add(
-      ServiceTxResponse(
-        code: response.code,
-        message: response.rawLog,
-        // gasUsed: response.gasUsed.toInt(),
-        // gasWanted: response.gasWanted.toInt(),
-        // height: response.height.toInt(),
-        txHash: response.txhash,
-        fees: fee.amount,
-        codespace: response.codespace,
-      ),
-    );
   }
 
-  void _cacheMultiSigItem(MultiSigActionListItem item) {
-    if (!_actionItemsBySignerAddress.containsKey(item.signerAddress)) {
-      _actionItemsBySignerAddress[item.signerAddress] = [];
+  void _cacheMultiSigItem(MultiSigPendingTx tx) {
+    if (!_actionItemsBySignerAddress.containsKey(tx.signerAddress)) {
+      _actionItemsBySignerAddress[tx.signerAddress] = [];
     }
 
-    _actionItemsBySignerAddress[item.signerAddress]!.add(item);
+    _actionItemsBySignerAddress[tx.signerAddress]!.add(tx);
   }
-
-  MultiSigTransmitActionListItem _toTransmitListItem(MultiSigPendingTx tx) =>
-      MultiSigTransmitActionListItem(
-        multiSigAddress: tx.multiSigAddress,
-        signerAddress: tx.signerAddress,
-        label: (c) => tx.txBody.messages
-            .map((e) => e.toMessage().toLocalizedName(c))
-            .join(', '),
-        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-        txBody: tx.txBody,
-        fee: tx.fee,
-        txUuid: tx.txUuid,
-        signatures: tx.signatures!,
-      );
-
-  MultiSigSignActionListItem _toSignListItem(MultiSigPendingTx tx) =>
-      MultiSigSignActionListItem(
-        multiSigAddress: tx.multiSigAddress,
-        signerAddress: tx.signerAddress,
-        label: (c) => tx.txBody.messages
-            .map((e) => e.toMessage().toLocalizedName(c))
-            .join(', '),
-        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-        txBody: tx.txBody,
-        fee: tx.fee,
-        txUuid: tx.txUuid,
-      );
 
   Future<void> remove({
     required List<String> signerAddresses,
@@ -207,9 +216,39 @@ class MultiSigService extends Listenable with ListenableMixin {
     _publish();
   }
 
+  Future<bool> _signTx({
+    required String signerAddress,
+    required wallet.Coin coin,
+    required String txUuid,
+    String? signatureBytes,
+    bool? declineTx,
+  }) async {
+    final success = await _multiSigClient.signTx(
+      signerAddress: signerAddress,
+      coin: coin,
+      txUuid: txUuid,
+      signatureBytes: signatureBytes,
+      declineTx: declineTx,
+    );
+
+    if (success) {
+      // Fetch all in case creator and co-signer are both in same app
+      final addresses = (await _accountService.getAccounts())
+          .whereType<TransactableAccount>()
+          .map((e) => e.address)
+          .toList();
+
+      await sync(
+        signerAddresses: addresses,
+      );
+    }
+
+    return success;
+  }
+
   void _publish() {
     final updated = _actionItemsBySignerAddress.entries
-        .fold<List<MultiSigActionListItem>>(
+        .fold<List<MultiSigPendingTx>>(
             [],
             (previousValue, element) =>
                 previousValue..addAll(element.value)).toList();
@@ -223,18 +262,22 @@ class MultiSigService extends Listenable with ListenableMixin {
 abstract class MultiSigActionListItem implements ActionListItem {
   String get multiSigAddress;
   String get signerAddress;
-  String get txUuid;
+  String get groupAddress;
+  String get txId;
+  wallet.Coin get coin;
 }
 
 class MultiSigSignActionListItem implements MultiSigActionListItem {
   MultiSigSignActionListItem({
     required this.multiSigAddress,
     required this.signerAddress,
+    required this.groupAddress,
     required this.label,
     required this.subLabel,
     required this.txBody,
     required this.fee,
-    required this.txUuid,
+    required this.txId,
+    required this.coin,
   });
 
   @override
@@ -243,12 +286,18 @@ class MultiSigSignActionListItem implements MultiSigActionListItem {
   @override
   final String signerAddress;
 
+  @override
+  final String groupAddress;
+
   final TxBody txBody;
 
   final Fee fee;
 
   @override
-  final String txUuid;
+  final String txId;
+
+  @override
+  final wallet.Coin coin;
 
   @override
   final LocalizedString label;
@@ -261,12 +310,14 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   MultiSigTransmitActionListItem({
     required this.multiSigAddress,
     required this.signerAddress,
+    required this.groupAddress,
     required this.label,
     required this.subLabel,
     required this.txBody,
     required this.fee,
-    required this.txUuid,
+    required this.txId,
     required this.signatures,
+    required this.coin,
   });
 
   @override
@@ -275,12 +326,18 @@ class MultiSigTransmitActionListItem implements MultiSigActionListItem {
   @override
   final String signerAddress;
 
+  @override
+  final String groupAddress;
+
   final TxBody txBody;
 
   final Fee fee;
 
   @override
-  final String txUuid;
+  final String txId;
+
+  @override
+  final wallet.Coin coin;
 
   @override
   final LocalizedString label;
