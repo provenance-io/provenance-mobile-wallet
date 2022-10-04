@@ -8,8 +8,8 @@ import 'package:provenance_wallet/services/models/base_response.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
-import 'package:provenance_wallet/services/transaction_service/dtos/transaction_dto.dart';
+import 'package:provenance_wallet/services/transaction_client/default_transaction_client.dart';
+import 'package:provenance_wallet/services/transaction_client/dtos/transaction_dto.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import 'default_transaction_service_test.mocks.dart';
@@ -18,7 +18,7 @@ import 'default_transaction_service_test.mocks.dart';
 main() {
   MockTestHttpClient? mockHttpClient;
   MockNotificationService? mockNotificationService;
-  DefaultTransactionService? statService;
+  DefaultTransactionClient? statService;
 
   setUp(() async {
     mockNotificationService = MockNotificationService();
@@ -29,7 +29,7 @@ main() {
       Future.value(mockHttpClient!),
     );
 
-    statService = DefaultTransactionService();
+    statService = DefaultTransactionClient();
   });
 
   tearDown(() async {

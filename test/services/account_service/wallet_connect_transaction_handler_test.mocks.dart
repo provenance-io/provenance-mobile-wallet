@@ -56,8 +56,7 @@ import 'package:provenance_dart/src/proto/proto_gen/provenance/name/v1/query.pbg
 import 'package:provenance_dart/src/wallet/keys.dart' as _i27;
 import 'package:provenance_dart/src/wallet/private_key.dart' as _i28;
 import 'package:provenance_dart/wallet.dart' as _i31;
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart'
-    as _i29;
+import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart' as _i29;
 import 'package:provenance_wallet/services/models/gas_fee.dart' as _i30;
 
 // ignore_for_file: type=lint
@@ -460,11 +459,11 @@ class MockPbClient extends _i1.Mock implements _i2.PbClient {
           returnValue: <int>[]) as List<int>);
 }
 
-/// A class which mocks [GasFeeService].
+/// A class which mocks [GasFeeClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGasFeeService extends _i1.Mock implements _i29.GasFeeService {
-  MockGasFeeService() {
+class MockGasFeeClient extends _i1.Mock implements _i29.GasFeeClient {
+  MockGasFeeClient() {
     _i1.throwOnMissingStub(this);
   }
 

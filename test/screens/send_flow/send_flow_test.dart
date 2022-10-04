@@ -5,30 +5,30 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 
 import 'send_flow_test.mocks.dart';
 
 final get = GetIt.instance;
 
 @GenerateMocks([
-  AssetService,
-  TransactionService,
+  AssetClient,
+  TransactionClient,
   AccountService,
   TransactionHandler,
-  PriceService,
+  PriceClient,
 ])
 main() {
-  MockAssetService? mockAssetService;
-  MockTransactionService? mockTransactionService;
+  MockAssetClient? mockAssetClient;
+  MockTransactionClient? mockTransactionClient;
   MockAccountService? mockAccountService;
   MockTransactionHandler? mockTransactionHandler;
-  MockPriceService? mockPriceService;
+  MockPriceClient? mockPriceClient;
 
   setUp(() {
     mockTransactionHandler = MockTransactionHandler();
@@ -43,8 +43,8 @@ main() {
       mockTransactionHandler!,
     );
 
-    mockTransactionService = MockTransactionService();
-    when(mockTransactionService!.getTransactions(
+    mockTransactionClient = MockTransactionClient();
+    when(mockTransactionClient!.getTransactions(
       any,
       any,
       any,
@@ -54,8 +54,8 @@ main() {
       return Future.value(response);
     });
 
-    mockAssetService = MockAssetService();
-    when(mockAssetService!.getAssets(any, any)).thenAnswer((realInvocation) {
+    mockAssetClient = MockAssetClient();
+    when(mockAssetClient!.getAssets(any, any)).thenAnswer((realInvocation) {
       final response = <Asset>[];
 
       return Future.value(response);
@@ -64,22 +64,22 @@ main() {
     mockAccountService = MockAccountService();
     when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
 
-    mockPriceService = MockPriceService();
-    when(mockPriceService!.getAssetPrices(any, any))
+    mockPriceClient = MockPriceClient();
+    when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
-    get.registerSingleton<TransactionService>(mockTransactionService!);
-    get.registerSingleton<AssetService>(mockAssetService!);
+    get.registerSingleton<TransactionClient>(mockTransactionClient!);
+    get.registerSingleton<AssetClient>(mockAssetClient!);
     get.registerSingleton<AccountService>(mockAccountService!);
-    get.registerSingleton<PriceService>(mockPriceService!);
+    get.registerSingleton<PriceClient>(mockPriceClient!);
   });
 
   tearDown(() {
     get.unregister<AccountService>();
-    get.unregister<TransactionService>();
-    get.unregister<AssetService>();
+    get.unregister<TransactionClient>();
+    get.unregister<AssetClient>();
     get.unregister<TransactionHandler>();
-    get.unregister<PriceService>();
+    get.unregister<PriceClient>();
   });
 
 //   testWidgets("Contents", (tester) async {

@@ -4,8 +4,8 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/governance_service/governance_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
+import 'package:provenance_wallet/services/governance/governance_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
@@ -21,7 +21,7 @@ class ProposalsBloc extends PwPagingCache {
     ProposalDetails(proposals: [], myVotes: [], asset: null),
   );
   final _proposalPages = BehaviorSubject.seeded(1);
-  final _governanceService = get<GovernanceService>();
+  final _governanceClient = get<GovernanceClient>();
   final TransactableAccount _account;
 
   ProposalsBloc({
@@ -49,14 +49,14 @@ class ProposalsBloc extends PwPagingCache {
     try {
       _proposalPages.tryAdd(1);
       final asset =
-          (await get<AssetService>().getAssets(_account.coin, _account.address))
+          (await get<AssetClient>().getAssets(_account.coin, _account.address))
               .firstWhere((element) => element.denom == 'nhash');
-      final proposals = await _governanceService.getProposals(
+      final proposals = await _governanceClient.getProposals(
         _account.coin,
         _proposalPages.value,
       );
 
-      final myVotes = await _governanceService.getVotesForAddress(
+      final myVotes = await _governanceClient.getVotesForAddress(
         _account.address,
         _account.coin,
       );
@@ -82,7 +82,7 @@ class ProposalsBloc extends PwPagingCache {
         oldDetails.proposals,
         _proposalPages,
         _isLoadingProposals,
-        () async => await _governanceService.getProposals(
+        () async => await _governanceClient.getProposals(
             _account.coin, _proposalPages.value));
 
     _proposalDetails.tryAdd(

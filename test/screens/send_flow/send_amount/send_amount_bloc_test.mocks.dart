@@ -21,7 +21,7 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i9;
 import 'package:provenance_wallet/services/models/price.dart' as _i14;
-import 'package:provenance_wallet/services/price_service/price_service.dart'
+import 'package:provenance_wallet/services/price_client/price_service.dart'
     as _i13;
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i4;
@@ -268,11 +268,11 @@ class MockTxQueueService extends _i1.Mock implements _i4.TxQueueService {
           returnValue: _i7.Future<bool>.value(false)) as _i7.Future<bool>);
 }
 
-/// A class which mocks [PriceService].
+/// A class which mocks [PriceClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i13.PriceService {
-  MockPriceService() {
+class MockPriceClient extends _i1.Mock implements _i13.PriceClient {
+  MockPriceClient() {
     _i1.throwOnMissingStub(this);
   }
 

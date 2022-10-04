@@ -4,10 +4,10 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/util/extensions/iterable_extensions.dart';
 
 abstract class SendBlocNavigator {
@@ -37,9 +37,9 @@ class SendBloc extends Disposable {
   SendBloc(
     this._coin,
     this._provenanceAddress,
-    this._assetService,
-    this._priceService,
-    this._transactionService,
+    this._assetClient,
+    this._priceClient,
+    this._transactionClient,
     this._navigator,
   );
 
@@ -47,18 +47,18 @@ class SendBloc extends Disposable {
   final Coin _coin;
   final String _provenanceAddress;
   final SendBlocNavigator _navigator;
-  final AssetService _assetService;
-  final TransactionService _transactionService;
-  final PriceService _priceService;
+  final AssetClient _assetClient;
+  final TransactionClient _transactionClient;
+  final PriceClient _priceClient;
 
   Stream<SendBlocState> get stream => _stateStreamController.stream;
 
   Future<void> load() {
     final assetFuture =
-        _assetService.getAssets(_coin, _provenanceAddress).then((assets) async {
+        _assetClient.getAssets(_coin, _provenanceAddress).then((assets) async {
       final denominations = assets.map((e) => e.denom).toSet().toList();
 
-      final prices = await _priceService
+      final prices = await _priceClient
           .getAssetPrices(_coin, denominations)
           .then((response) {
         final map = <String, double>{};
@@ -84,7 +84,7 @@ class SendBloc extends Disposable {
 
     return Future.wait([
       assetFuture,
-      _transactionService.getSendTransactions(
+      _transactionClient.getSendTransactions(
         _coin,
         _provenanceAddress,
       ),

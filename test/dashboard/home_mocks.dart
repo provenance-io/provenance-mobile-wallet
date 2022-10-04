@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/asset_graph_item.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MockDeepLinkService implements DeepLinkService {
@@ -18,8 +18,8 @@ class MockDeepLinkService implements DeepLinkService {
   ValueStream<Uri> get link => _link ?? BehaviorSubject();
 }
 
-class MockAssetService implements AssetService {
-  MockAssetService([this._assets = const {}]);
+class MockAssetClient implements AssetClient {
+  MockAssetClient([this._assets = const {}]);
 
   final Map<String, List<Asset>> _assets;
 
@@ -42,7 +42,7 @@ class MockAssetService implements AssetService {
   }
 }
 
-class MockTransactionService implements TransactionService {
+class MockTransactionService implements TransactionClient {
   MockTransactionService([
     this._sendTransactions = const {},
     this._transactions = const {},

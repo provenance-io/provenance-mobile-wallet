@@ -11,7 +11,7 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
@@ -58,7 +58,7 @@ class StakingDelegationBloc extends Disposable {
 
   Future<void> load() async {
     final asset =
-        (await get<AssetService>().getAssets(_account.coin, _account.address))
+        (await get<AssetClient>().getAssets(_account.coin, _account.address))
             .firstWhere((element) => element.denom == 'nhash');
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(

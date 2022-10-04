@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/home/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_recent_transactions.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/price_change_indicator.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';

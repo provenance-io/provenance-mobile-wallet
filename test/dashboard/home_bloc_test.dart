@@ -11,7 +11,7 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -20,7 +20,7 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/send_transactions.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -55,7 +55,7 @@ void main() {
       final address = selectedAccount!.address;
       final coin = selectedAccount.coin;
 
-      final assets = await state.assetService.getAssets(coin, address);
+      final assets = await state.assetClient.getAssets(coin, address);
 
       expect(walletService.events.selected.value?.id, selectedAccount.id);
       expect(bloc.assetList.value!.first.amount, assets.first.amount);
@@ -165,16 +165,16 @@ void main() {
 class TestState {
   TestState._(
     this.accountIds,
-    this.assetService,
-    this.transactionService,
+    this.assetClient,
+    this.transactionClient,
     this.deepLinkService,
     this.walletService,
     this.bloc,
   );
 
   final List<String> accountIds;
-  final AssetService assetService;
-  final TransactionService transactionService;
+  final AssetClient assetClient;
+  final TransactionClient transactionClient;
   final DeepLinkService deepLinkService;
   final AccountService walletService;
   final HomeBloc bloc;
@@ -287,8 +287,8 @@ class TestState {
     final mockWalletConnectService = MockWalletConnectService();
 
     final deepLinkService = MockDeepLinkService();
-    final assetService = MockAssetService(assets);
-    final transactionService =
+    final assetClient = MockAssetClient(assets);
+    final transactionClient =
         MockTransactionService(sendTransactions, transactions);
 
     final keyValueService = DefaultKeyValueService(
@@ -299,8 +299,8 @@ class TestState {
 
     final authHelper = LocalAuthHelper();
 
-    get.registerSingleton<AssetService>(assetService);
-    get.registerSingleton<TransactionService>(transactionService);
+    get.registerSingleton<AssetClient>(assetClient);
+    get.registerSingleton<TransactionClient>(transactionClient);
     get.registerSingleton<DeepLinkService>(deepLinkService);
     get.registerSingleton<KeyValueService>(keyValueService);
     get.registerSingleton<RemoteNotificationService>(
@@ -318,8 +318,8 @@ class TestState {
 
     return TestState._(
       accountIds,
-      assetService,
-      transactionService,
+      assetClient,
+      transactionClient,
       deepLinkService,
       accountService,
       bloc,

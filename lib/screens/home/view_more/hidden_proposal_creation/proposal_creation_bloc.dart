@@ -5,7 +5,7 @@ import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
@@ -38,7 +38,7 @@ class ProposalCreationBloc extends TransactionBloc {
 
     try {
       final asset =
-          (await get<AssetService>().getAssets(account.coin, account.address))
+          (await get<AssetClient>().getAssets(account.coin, account.address))
               .firstWhere((element) => element.denom == nHashDenom);
 
       _creationDetails.tryAdd(

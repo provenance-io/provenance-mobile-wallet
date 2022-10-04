@@ -16,7 +16,7 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
     as _i3;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
     as _i16;
-import 'package:provenance_wallet/services/asset_service/asset_service.dart'
+import 'package:provenance_wallet/services/asset_client/asset_client.dart'
     as _i6;
 import 'package:provenance_wallet/services/http_client.dart' as _i5;
 import 'package:provenance_wallet/services/models/account.dart' as _i14;
@@ -27,9 +27,9 @@ import 'package:provenance_wallet/services/models/price.dart' as _i18;
 import 'package:provenance_wallet/services/models/send_transactions.dart'
     as _i12;
 import 'package:provenance_wallet/services/models/transaction.dart' as _i13;
-import 'package:provenance_wallet/services/price_service/price_service.dart'
+import 'package:provenance_wallet/services/price_client/price_service.dart'
     as _i17;
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart'
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart'
     as _i11;
 
 // ignore_for_file: type=lint
@@ -66,11 +66,11 @@ class _FakeHttpClient_3 extends _i1.SmartFake implements _i5.HttpClient {
       : super(parent, parentInvocation);
 }
 
-/// A class which mocks [AssetService].
+/// A class which mocks [AssetClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAssetService extends _i1.Mock implements _i6.AssetService {
-  MockAssetService() {
+class MockAssetClient extends _i1.Mock implements _i6.AssetClient {
+  MockAssetClient() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -93,12 +93,11 @@ class MockAssetService extends _i1.Mock implements _i6.AssetService {
           as _i7.Future<List<_i10.AssetGraphItem>>);
 }
 
-/// A class which mocks [TransactionService].
+/// A class which mocks [TransactionClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTransactionService extends _i1.Mock
-    implements _i11.TransactionService {
-  MockTransactionService() {
+class MockTransactionClient extends _i1.Mock implements _i11.TransactionClient {
+  MockTransactionClient() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -280,11 +279,11 @@ class MockTransactionHandler extends _i1.Mock
           as _i7.Future<_i4.RawTxResponsePair>);
 }
 
-/// A class which mocks [PriceService].
+/// A class which mocks [PriceClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPriceService extends _i1.Mock implements _i17.PriceService {
-  MockPriceService() {
+class MockPriceClient extends _i1.Mock implements _i17.PriceClient {
+  MockPriceClient() {
     _i1.throwOnMissingStub(this);
   }
 

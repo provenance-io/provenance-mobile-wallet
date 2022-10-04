@@ -8,7 +8,7 @@ import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/price.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
 import '../send_flow_test_constants.dart';
@@ -31,7 +31,7 @@ final feeAmount = AccountGasEstimate(
   SendAmountBlocNavigator,
   AccountService,
   TxQueueService,
-  PriceService,
+  PriceClient,
 ])
 main() {
   const receivingAddress = "ReceivingAdress";
@@ -41,7 +41,7 @@ main() {
   MockSendAmountBlocNavigator? mockNavigator;
   MockAccountService? mockAccountService;
   MockTxQueueService? mockTxQueueService;
-  MockPriceService? mockPriceService;
+  MockPriceClient? mockPriceClient;
 
   setUp(() {
     mockTxQueueService = MockTxQueueService();
@@ -49,8 +49,8 @@ main() {
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) => Future.value(feeAmount));
 
-    mockPriceService = MockPriceService();
-    when(mockPriceService!.getAssetPrices(any, any))
+    mockPriceClient = MockPriceClient();
+    when(mockPriceClient!.getAssetPrices(any, any))
         .thenAnswer((realInvocation) => Future.value(<Price>[]));
 
     get.registerSingleton<TxQueueService>(
@@ -70,7 +70,7 @@ main() {
       walletDetails,
       receivingAddress,
       hashAsset,
-      mockPriceService!,
+      mockPriceClient!,
       mockNavigator!,
       gasEstimateNotReadyString: "The estimated fee is not ready",
       insufficientString: "Insufficient",

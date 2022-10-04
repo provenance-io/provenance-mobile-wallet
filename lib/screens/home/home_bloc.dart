@@ -6,7 +6,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -39,7 +39,7 @@ class HomeBloc extends Disposable {
 
   final _transactionHandler = get<TransactionHandler>();
   final _accountService = get<AccountService>();
-  final _assetService = get<AssetService>();
+  final _assetClient = get<AssetClient>();
   final _walletConnectService = get<WalletConnectService>();
 
   ValueStream<bool> get isLoading => _isLoading;
@@ -59,7 +59,7 @@ class HomeBloc extends Disposable {
       var assetList = <Asset>[];
 
       if (account != null) {
-        assetList = await _assetService.getAssets(
+        assetList = await _assetClient.getAssets(
           account.coin,
           account.address,
         );

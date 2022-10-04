@@ -1,4 +1,4 @@
-import 'package:provenance_wallet/services/asset_service/dtos/asset_graph_item_dto.dart';
+import 'package:provenance_wallet/services/asset_client/dtos/asset_graph_item_dto.dart';
 
 class AssetGraphItem {
   AssetGraphItem({required AssetGraphItemDto dto})

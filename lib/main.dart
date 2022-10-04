@@ -28,9 +28,9 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
-import 'package:provenance_wallet/services/asset_service/asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/default_asset_service.dart';
-import 'package:provenance_wallet/services/asset_service/mock_asset_service.dart';
+import 'package:provenance_wallet/services/asset_client/asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/default_asset_client.dart';
+import 'package:provenance_wallet/services/asset_client/mock_asset_client.dart';
 import 'package:provenance_wallet/services/config_service/default_local_config_service.dart';
 import 'package:provenance_wallet/services/config_service/default_remote_config_service.dart';
 import 'package:provenance_wallet/services/config_service/firebase_remote_config_service.dart';
@@ -38,16 +38,16 @@ import 'package:provenance_wallet/services/config_service/local_config.dart';
 import 'package:provenance_wallet/services/config_service/remote_config_service.dart';
 import 'package:provenance_wallet/services/connectivity/connectivity_service.dart';
 import 'package:provenance_wallet/services/connectivity/default_connectivity_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/crash_reporting_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_service.dart';
-import 'package:provenance_wallet/services/crash_reporting/logging_crash_reporting_service.dart';
+import 'package:provenance_wallet/services/crash_reporting/crash_reporting_client.dart';
+import 'package:provenance_wallet/services/crash_reporting/firebase_crash_reporting_client.dart';
+import 'package:provenance_wallet/services/crash_reporting/logging_crash_reporting_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/disabled_deep_link_service.dart';
 import 'package:provenance_wallet/services/deep_link/firebase_deep_link_service.dart';
-import 'package:provenance_wallet/services/gas_fee_service/default_gas_fee_service.dart';
-import 'package:provenance_wallet/services/gas_fee_service/gas_fee_service.dart';
-import 'package:provenance_wallet/services/governance_service/default_governance_service.dart';
-import 'package:provenance_wallet/services/governance_service/governance_service.dart';
+import 'package:provenance_wallet/services/gas_fee/default_gas_fee_client.dart';
+import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
+import 'package:provenance_wallet/services/governance/default_governance_client.dart';
+import 'package:provenance_wallet/services/governance/governance_client.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -58,22 +58,22 @@ import 'package:provenance_wallet/services/notification/basic_notification_servi
 import 'package:provenance_wallet/services/notification/notification_info.dart';
 import 'package:provenance_wallet/services/notification/notification_kind.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
-import 'package:provenance_wallet/services/price_service/price_service.dart';
+import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/remote_notification/default_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/disabled_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
 import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
-import 'package:provenance_wallet/services/stat_service/default_stat_service.dart';
-import 'package:provenance_wallet/services/stat_service/stat_service.dart';
-import 'package:provenance_wallet/services/transaction_service/default_transaction_service.dart';
-import 'package:provenance_wallet/services/transaction_service/mock_transaction_service.dart';
-import 'package:provenance_wallet/services/transaction_service/transaction_service.dart';
+import 'package:provenance_wallet/services/stat_client/default_stat_client.dart';
+import 'package:provenance_wallet/services/stat_client/stat_client.dart';
+import 'package:provenance_wallet/services/transaction_client/default_transaction_client.dart';
+import 'package:provenance_wallet/services/transaction_client/mock_transaction_client.dart';
+import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
 import 'package:provenance_wallet/services/tx_queue_service/default_tx_queue_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
-import 'package:provenance_wallet/services/validator_service/default_validator_service.dart';
-import 'package:provenance_wallet/services/validator_service/mock_validator_service.dart';
-import 'package:provenance_wallet/services/validator_service/validator_service.dart';
+import 'package:provenance_wallet/services/validator_client/default_validator_client.dart';
+import 'package:provenance_wallet/services/validator_client/mock_validator_client.dart';
+import 'package:provenance_wallet/services/validator_client/validator_client.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -113,8 +113,8 @@ void main(List<String> args) {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
     originalOnError?.call(errorDetails);
-    if (get.isRegistered<CrashReportingService>()) {
-      get<CrashReportingService>().recordFlutterError(errorDetails);
+    if (get.isRegistered<CrashReportingClient>()) {
+      get<CrashReportingClient>().recordFlutterError(errorDetails);
     }
   };
 
@@ -149,7 +149,7 @@ void main(List<String> args) {
 
       _log.info('Initializing: $config', tag: _tag);
 
-      CrashReportingService crashReportingService;
+      CrashReportingClient crashReportingService;
       RemoteNotificationService remoteNotificationService;
       RemoteConfigService remoteConfigService;
       DeepLinkService deepLinkService;
@@ -159,7 +159,7 @@ void main(List<String> args) {
       if (_enableFirebase) {
         await Firebase.initializeApp();
 
-        crashReportingService = FirebaseCrashReportingService();
+        crashReportingService = FirebaseCrashReportingClient();
 
         remoteNotificationService = DefaultRemoteNotificationService();
 
@@ -169,7 +169,7 @@ void main(List<String> args) {
         );
         deepLinkService = FirebaseDeepLinkService()..init();
       } else {
-        crashReportingService = LoggingCrashReportingService();
+        crashReportingService = LoggingCrashReportingClient();
         remoteNotificationService = DisabledRemoteNotificationService();
         remoteConfigService = DefaultRemoteConfigService(
           localConfigService: localConfigService,
@@ -177,7 +177,7 @@ void main(List<String> args) {
         deepLinkService = DisabledDeepLinkService();
       }
 
-      get.registerSingleton<CrashReportingService>(
+      get.registerSingleton<CrashReportingClient>(
         crashReportingService,
       );
 
@@ -295,8 +295,8 @@ void main(List<String> args) {
       mainCompleter.complete();
     },
     (error, stack) {
-      if (get.isRegistered<CrashReportingService>()) {
-        get<CrashReportingService>().recordError(
+      if (get.isRegistered<CrashReportingClient>()) {
+        get<CrashReportingClient>().recordError(
           error,
           stack: stack,
         );
@@ -464,43 +464,43 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       (await get<Future<TestHttpClient>>()).setDiagnosticsError(statusCode);
     }).addTo(_subscriptions);
 
-    get.registerLazySingleton<StatService>(
-      () => DefaultStatService(),
+    get.registerLazySingleton<StatClient>(
+      () => DefaultStatClient(),
     );
     final isMockingAssetService =
         await keyValueService.getBool(PrefKey.isMockingAssetService) ?? false;
 
-    get.registerLazySingleton<AssetService>(
-      () => isMockingAssetService ? MockAssetService() : DefaultAssetService(),
+    get.registerLazySingleton<AssetClient>(
+      () => isMockingAssetService ? MockAssetClient() : DefaultAssetClient(),
     );
 
     final isMockingTransactionService =
         await keyValueService.getBool(PrefKey.isMockingTransactionService) ??
             false;
 
-    get.registerLazySingleton<TransactionService>(
+    get.registerLazySingleton<TransactionClient>(
       () => isMockingTransactionService
-          ? MockTransactionService()
-          : DefaultTransactionService(),
+          ? MockTransactionClient()
+          : DefaultTransactionClient(),
     );
 
     final isMockingValidatorService =
         await keyValueService.getBool(PrefKey.isMockingValidatorService) ??
             false;
 
-    get.registerLazySingleton<ValidatorService>(
+    get.registerLazySingleton<ValidatorClient>(
       () => isMockingValidatorService
-          ? MockValidatorService()
-          : DefaultValidatorService(),
+          ? MockValidatorClient()
+          : DefaultValidatorClient(),
     );
 
     // final isMockingGovernanceService =
     //     await keyValueService.getBool(PrefKey.isMockingGovernanceService) ??
     //         false;
-    get.registerLazySingleton<GovernanceService>(
+    get.registerLazySingleton<GovernanceClient>(
       () => //isMockingGovernanceService
           //? MockGovernanceService() :
-          DefaultGovernanceService(),
+          DefaultGovernanceClient(),
     );
     get.registerLazySingleton<ConnectivityService>(
       () => DefaultConnectivityService(),
@@ -523,8 +523,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerLazySingleton<NotificationService>(
       () => BasicNotificationService(),
     );
-    get.registerLazySingleton<GasFeeService>(
-      () => DefaultGasFeeService(),
+    get.registerLazySingleton<GasFeeClient>(
+      () => DefaultGasFeeClient(),
     );
 
     WalletConnection walletConnectionFactory(address) =>
@@ -535,8 +535,8 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       transactionHandler,
     );
 
-    get.registerLazySingleton<PriceService>(
-      () => PriceService(),
+    get.registerLazySingleton<PriceClient>(
+      () => PriceClient(),
     );
 
     final accountService = get<AccountService>();
