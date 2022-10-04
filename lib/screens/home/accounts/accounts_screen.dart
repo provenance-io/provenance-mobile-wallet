@@ -45,8 +45,12 @@ class AccountsScreenState extends State<AccountsScreen> {
   @override
   void didChangeDependencies() {
     _bloc = Provider.of<AccountsBloc>(context);
-    _bloc.insert.listen(_onInsert).addTo(_subscriptions);
-    _bloc.loading.listen((e) => _onLoading(context, e)).addTo(_subscriptions);
+    final sub1 = _bloc.insert.listen(_onInsert);
+    final sub2 = _bloc.loading.listen((e) => _onLoading(context, e));
+    _subscriptions.remove(sub1);
+    _subscriptions.remove(sub2);
+    _subscriptions.add(sub1);
+    _subscriptions.add(sub2);
     super.didChangeDependencies();
   }
 

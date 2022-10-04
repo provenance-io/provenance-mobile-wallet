@@ -65,14 +65,19 @@ class HomeScreenState extends State<HomeScreen>
         .subscribe(this, ModalRoute.of(context) as PageRoute);
 
     final bloc = Provider.of<HomeBloc>(context);
-    bloc.isLoading.listen((e) {
+    var sub1 = bloc.isLoading.listen((e) {
       if (e) {
         ModalLoadingRoute.showLoading(context);
       } else {
         ModalLoadingRoute.dismiss(context);
       }
-    }).addTo(_subscriptions);
-    bloc.error.listen(_onError).addTo(_subscriptions);
+    });
+    var sub2 = bloc.error.listen(_onError);
+    _subscriptions.remove(sub1);
+    _subscriptions.remove(sub2);
+    _subscriptions.add(sub1);
+    _subscriptions.add(sub2);
+
     super.didChangeDependencies();
   }
 

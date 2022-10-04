@@ -55,7 +55,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   @override
   void didChangeDependencies() {
     final bloc = Provider.of<AccountsBloc>(context);
-    bloc.updated.listen((e) {
+    final sub = bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
           setState(() {
@@ -63,7 +63,9 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
           });
         }
       });
-    }).addTo(_subscriptions);
+    });
+    _subscriptions.remove(sub);
+    _subscriptions.add(sub);
     super.didChangeDependencies();
   }
 

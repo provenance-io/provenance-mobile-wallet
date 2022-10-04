@@ -61,15 +61,17 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   @override
   void didChangeDependencies() {
     _bloc = Provider.of<AccountsBloc>(context);
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as BasicAccount;
-          });
-        }
-      });
-    }).addTo(_subscriptions);
+    _subscriptions.cancel().whenComplete(() {
+      _bloc.updated.listen((e) {
+        setState(() {
+          if (_account.id == e.id) {
+            setState(() {
+              _account = e as BasicAccount;
+            });
+          }
+        });
+      }).addTo(_subscriptions);
+    });
     super.didChangeDependencies();
   }
 
