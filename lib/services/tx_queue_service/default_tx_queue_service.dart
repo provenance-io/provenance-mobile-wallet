@@ -169,21 +169,26 @@ class DefaultQueueTxService implements TxQueueService {
       fee: item.fee,
     );
 
-    final unorderedSignatures = <String, List<int>>{
+    final signaturesByAddress = <String, List<int>>{
       signerAccount.address: authBytes,
     };
 
     for (final signature in item.signatures ?? <MultiSigSignature>[]) {
-      unorderedSignatures[signature.signerAddress] =
+      signaturesByAddress[signature.signerAddress] =
           convert.hex.decode(signature.signatureHex);
     }
 
-    final sigLookup = <String, List<int>>{};
+    final signatures = <AminoSignature>[];
     for (final publicKey in multiSigAccount.publicKey.publicKeys) {
       final address = publicKey.address;
-      final sig = unorderedSignatures[address];
+      final sig = signaturesByAddress[address];
       if (sig != null) {
-        sigLookup[address] = sig;
+        signatures.add(
+          AminoSignature(
+            address: address,
+            signedData: sig,
+          ),
+        );
       }
     }
 
@@ -191,7 +196,7 @@ class DefaultQueueTxService implements TxQueueService {
       threshold: multiSigAccount.signaturesRequired,
       pubKeys: multiSigAccount.publicKey.publicKeys,
       coin: coin,
-      sigLookup: sigLookup,
+      signatures: signatures,
     );
 
     final responsePair = await pbClient.broadcastTransaction(
@@ -200,6 +205,7 @@ class DefaultQueueTxService implements TxQueueService {
         privateKey,
       ],
       item.fee,
+      proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
 
     await _multiSigService.updateTxResult(
