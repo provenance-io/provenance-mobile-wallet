@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/proto_bank.dart';
-import 'package:provenance_dart/proto_marker.dart';
+import 'package:provenance_dart/proto_bank_v1beta1.dart';
+import 'package:provenance_dart/proto_marker_v1.dart';
+import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/messages/message_field.dart';
 import 'package:provenance_wallet/util/messages/message_field_group.dart';
 import 'package:provenance_wallet/util/messages/message_field_processor.dart';
-import 'package:provenance_wallet/util/type_registry.dart';
 
 final msgSend = MsgSend(
   fromAddress: 'abcdefghijklmnop',

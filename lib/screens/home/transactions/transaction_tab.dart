@@ -65,147 +65,151 @@ class TransactionTabState extends State<TransactionTab> {
                 ),
                 leading: Container(),
               ),
-              Expanded(
-                child: StreamBuilder<TransactionDetails>(
-                    initialData: _bloc.transactionDetails.valueOrNull,
-                    stream: _bloc.transactionDetails,
-                    builder: (context, snapshot) {
-                      final workingIndicator = SizedBox(
-                        height: 80,
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-
-                      final transactionDetails = snapshot.data;
-                      if (transactionDetails == null) {
-                        return StreamBuilder<bool>(
-                          initialData: _bloc.isLoadingTransactions.valueOrNull,
-                          stream: _bloc.isLoadingTransactions,
-                          builder: (context, snapshot) {
-                            final isLoading = snapshot.data ?? false;
-
-                            return isLoading ? workingIndicator : Container();
-                          },
-                        );
-                      }
-
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: Spacing.large,
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .neutral250,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(4)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Spacing.medium,
-                                  ),
-                                  child: PwDropDown.fromStrings(
-                                    value: transactionDetails.selectedType,
-                                    items: transactionDetails.types,
-                                    onValueChanged: (item) {
-                                      _bloc.filterTransactions(
-                                        item,
-                                        transactionDetails.selectedStatus,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                VerticalSpacer.medium(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .neutral250,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(4)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Spacing.medium,
-                                  ),
-                                  child: PwDropDown.fromStrings(
-                                    value: transactionDetails.selectedStatus,
-                                    items: transactionDetails.statuses,
-                                    onValueChanged: (item) {
-                                      _bloc.filterTransactions(
-                                        transactionDetails.selectedType,
-                                        item,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+              Provider<TransactionsBloc>(
+                create: (_) => _bloc,
+                child: Expanded(
+                  child: StreamBuilder<TransactionDetails>(
+                      initialData: _bloc.transactionDetails.valueOrNull,
+                      stream: _bloc.transactionDetails,
+                      builder: (context, snapshot) {
+                        final workingIndicator = SizedBox(
+                          height: 80,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: CircularProgressIndicator(),
                           ),
-                          VerticalSpacer.medium(),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                ListView.separated(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Spacing.large,
-                                    vertical: 20,
-                                  ),
-                                  controller: _scrollController,
-                                  itemBuilder: (context, index) {
-                                    final item = transactionDetails
-                                        .filteredTransactions[index];
+                        );
 
-                                    return TransactionListItem(
-                                      address: transactionDetails.address,
-                                      item: item,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return PwListDivider();
-                                  },
-                                  itemCount: transactionDetails
-                                      .filteredTransactions.length,
-                                  shrinkWrap: true,
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                ),
-                                StreamBuilder<bool>(
-                                  initialData:
-                                      _bloc.isLoadingTransactions.value,
-                                  stream: _bloc.isLoadingTransactions,
-                                  builder: (context, snapshot) {
-                                    final isLoading = snapshot.data ?? false;
-                                    if (isLoading) {
-                                      if (transactionDetails
-                                          .filteredTransactions.isEmpty) {
-                                        return workingIndicator;
+                        final transactionDetails = snapshot.data;
+                        if (transactionDetails == null) {
+                          return StreamBuilder<bool>(
+                            initialData:
+                                _bloc.isLoadingTransactions.valueOrNull,
+                            stream: _bloc.isLoadingTransactions,
+                            builder: (context, snapshot) {
+                              final isLoading = snapshot.data ?? false;
+
+                              return isLoading ? workingIndicator : Container();
+                            },
+                          );
+                        }
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Spacing.large,
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .neutral250,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(4)),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Spacing.medium,
+                                    ),
+                                    child: PwDropDown.fromStrings(
+                                      value: transactionDetails.selectedType,
+                                      items: transactionDetails.types,
+                                      onValueChanged: (item) {
+                                        _bloc.filterTransactions(
+                                          item,
+                                          transactionDetails.selectedStatus,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  VerticalSpacer.medium(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .neutral250,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(4)),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Spacing.medium,
+                                    ),
+                                    child: PwDropDown.fromStrings(
+                                      value: transactionDetails.selectedStatus,
+                                      items: transactionDetails.statuses,
+                                      onValueChanged: (item) {
+                                        _bloc.filterTransactions(
+                                          transactionDetails.selectedType,
+                                          item,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            VerticalSpacer.medium(),
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  ListView.separated(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Spacing.large,
+                                      vertical: 20,
+                                    ),
+                                    controller: _scrollController,
+                                    itemBuilder: (context, index) {
+                                      final item = transactionDetails
+                                          .filteredTransactions[index];
+
+                                      return TransactionListItem(
+                                        address: transactionDetails.address,
+                                        item: item,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return PwListDivider();
+                                    },
+                                    itemCount: transactionDetails
+                                        .filteredTransactions.length,
+                                    shrinkWrap: true,
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                  ),
+                                  StreamBuilder<bool>(
+                                    initialData:
+                                        _bloc.isLoadingTransactions.value,
+                                    stream: _bloc.isLoadingTransactions,
+                                    builder: (context, snapshot) {
+                                      final isLoading = snapshot.data ?? false;
+                                      if (isLoading) {
+                                        if (transactionDetails
+                                            .filteredTransactions.isEmpty) {
+                                          return workingIndicator;
+                                        }
+
+                                        return Positioned(
+                                          bottom: 0,
+                                          left: 0,
+                                          child: workingIndicator,
+                                        );
                                       }
 
-                                      return Positioned(
-                                        bottom: 0,
-                                        left: 0,
-                                        child: workingIndicator,
-                                      );
-                                    }
-
-                                    return Container();
-                                  },
-                                ),
-                              ],
+                                      return Container();
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
+                          ],
+                        );
+                      }),
+                ),
               )
             ],
           ),
