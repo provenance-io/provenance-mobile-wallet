@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -7,6 +8,7 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/constants.dart';
@@ -30,6 +32,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<DepositConfirmBloc>(context, listen: false);
     final strings = Strings.of(context);
+    final _formatter = DateFormat.yMMMd('en_US');
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.neutral750,
@@ -96,6 +100,14 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                     child: ListView(
                       padding: EdgeInsets.symmetric(horizontal: Spacing.large),
                       children: [
+                        WarningSection(
+                          title: strings.depositConfirmScreenByDepositingHASH,
+                          message:
+                              strings.depositConfirmScreenDepositWillBeLocked(
+                                  _formatter.format(
+                                      details.proposal!.depositEndTime)),
+                          background: Theme.of(context).colorScheme.error,
+                        ),
                         DetailsHeader(
                           title: strings.depositConfirmScreenDepositDetails,
                         ),
@@ -136,6 +148,28 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         DetailsItem.fromStrings(
                           title: strings.proposalVoteConfirmTitle,
                           value: details.proposal?.title ?? "",
+                        ),
+                        PwListDivider.alternate(),
+                        VerticalSpacer.xxLarge(),
+                        PwText(strings.depositConfirmScreenDepositAmount),
+                        DepositSlider(
+                          max: details.sliderMax,
+                          thumbColor:
+                              Theme.of(context).colorScheme.secondary350,
+                          onChanged: (changed) => bloc.depositAmount = changed,
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.fromStrings(
+                          title: strings.depositConfirmScreenAvailableBalance,
+                          value:
+                              strings.hashAmount(details.hashAmount.toString()),
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.fromStrings(
+                          title: strings.depositConfirmScreenDepositNeeded,
+                          value: strings.hashAmount(details
+                              .proposal!.neededDepositFormatted
+                              .toString()),
                         ),
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(

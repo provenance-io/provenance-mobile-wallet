@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -159,10 +160,16 @@ class ProposalsBloc extends PwPagingCache implements ProposalsFlowNavigator {
   Color getColor(String status, BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     switch (status.toLowerCase()) {
-      case "passed":
+      case passed:
         return colorScheme.positive300;
-      case "rejected":
+      case rejected:
         return colorScheme.error;
+      case votingPeriod:
+        return colorScheme.terciary350;
+      case depositPeriod:
+        return colorScheme.notice325;
+      case vetoed:
+        return colorScheme.neutral200;
       default:
         return colorScheme.neutral200;
     }

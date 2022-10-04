@@ -274,7 +274,7 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
-        onPressed: () => showTransactionData(
+        onDataPressed: () => showTransactionData(
           response,
           Strings.of(context).transactionResponse,
         ),

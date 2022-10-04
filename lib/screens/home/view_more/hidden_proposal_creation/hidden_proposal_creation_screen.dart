@@ -256,7 +256,7 @@ class _HiddenProposalCreationScreenState
             navigator.pop();
             navigator.pop();
           },
-          onPressed: () {
+          onDataPressed: () {
             navigator.push(PwDataScreen(
               title: Strings.of(context).transactionResponse,
               data: response,

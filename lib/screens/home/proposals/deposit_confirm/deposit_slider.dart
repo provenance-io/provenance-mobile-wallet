@@ -1,5 +1,7 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_thumb_shape.dart';
+import 'package:provenance_wallet/util/strings.dart';
 
 class DepositSlider extends StatefulWidget {
   final ValueChanged<double>? onChanged;
@@ -33,11 +35,60 @@ class _DepositSliderState extends State<DepositSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: PieChart(
+                PieChartData(
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    centerSpaceRadius: 150,
+                    sections: [
+                      PieChartSectionData(
+                        showTitle: false,
+                        color: colors.neutral700,
+                        value: widget.max - _value,
+                        radius: 10,
+                      ),
+                      PieChartSectionData(
+                        color: widget.thumbColor,
+                        value: _value,
+                        showTitle: false,
+                        radius: 10,
+                      ),
+                    ]),
+                swapAnimationDuration: Duration.zero,
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PwIcon(
+                  PwIcons.hashLogo,
+                  size: 24,
+                  color: Theme.of(context).colorScheme.neutralNeutral,
+                ),
+                HorizontalSpacer.small(),
+                PwText(
+                  Strings.of(context).hashAmount(_value.toString()),
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: PwTextStyle.footnote,
+                ),
+              ],
+            ),
+          ],
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -56,7 +107,7 @@ class _DepositSliderState extends State<DepositSlider> {
                       activeTrackColor: widget.thumbColor,
                       inactiveTrackColor:
                           Theme.of(context).colorScheme.neutral700,
-                      thumbShape: PwThumbShape(isBig: true),
+                      thumbShape: PwThumbShape(),
                     ),
                 child: Slider(
                   value: _value,

@@ -3,9 +3,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_details/address_card.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_details/single_percentage_bar_chart.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_details/voting_buttons.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/address_card.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/proposal_voting_info.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/single_percentage_bar_chart.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/voting_buttons.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -174,85 +175,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         _proposal.neededDepositFormatted,
                         title: strings.proposalDetailsDeposits,
                       ),
-                      DetailsHeader(
-                        title: strings.proposalDetailsThresholdDetails,
-                      ),
-                      PwListDivider.alternate(),
-                      DetailsItem.fromStrings(
-                        title: strings.proposalDetailsQuorumThreshold,
-                        value:
-                            "${(_proposal.quorumThreshold * 100).toStringAsFixed(2)}%",
-                      ),
-                      PwListDivider.alternate(),
-                      DetailsItem.fromStrings(
-                        title: strings.proposalDetailsPassThreshold,
-                        value:
-                            "${(_proposal.passThreshold * 100).toStringAsFixed(2)}%",
-                      ),
-                      PwListDivider.alternate(),
-                      DetailsItem.fromStrings(
-                        title: strings.proposalDetailsVetoThreshold,
-                        value:
-                            "${(_proposal.vetoThreshold * 100).toStringAsFixed(2)}%",
-                      ),
-                      PwListDivider.alternate(),
-                      VerticalSpacer.large(),
-                      SinglePercentageBarChart(
-                        _proposal.totalAmount,
-                        _proposal.totalEligibleAmount,
-                        title: strings.proposalDetailsPercentVoted,
-                      ),
-                      DetailsHeader(
-                        title: strings.proposalDetailsProposalVoting,
-                      ),
-                      PwListDivider.alternate(),
-                      VerticalSpacer.large(),
-                      SinglePercentageBarChart(
-                        _proposal.yesAmount,
-                        _proposal.totalAmount,
-                        title: strings.proposalsScreenVoted(
-                          strings.proposalDetailsYes,
-                        ),
-                      ),
-                      VerticalSpacer.large(),
-                      SinglePercentageBarChart(
-                        _proposal.noAmount,
-                        _proposal.totalAmount,
-                        title: strings.proposalsScreenVoted(
-                          strings.proposalDetailsNo,
-                        ),
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                      VerticalSpacer.large(),
-                      SinglePercentageBarChart(
-                        _proposal.noWithVetoAmount,
-                        _proposal.totalAmount,
-                        title: strings.proposalsScreenVoted(
-                          strings.proposalDetailsNoWithVeto,
-                        ),
-                        color: Theme.of(context).colorScheme.notice350,
-                      ),
-                      VerticalSpacer.large(),
-                      SinglePercentageBarChart(
-                        _proposal.abstainAmount,
-                        _proposal.totalAmount,
-                        title: strings.proposalsScreenVoted(
-                          strings.proposalDetailsAbstain,
-                        ),
-                        color: Theme.of(context).colorScheme.neutral600,
-                      ),
-                      DetailsItem(
-                        title: strings.proposalDetailsTotalVotes,
-                        endChild: PwText(
-                          _proposal.totalAmount
-                              .toInt()
-                              .toString()
-                              .formatNumber(),
-                          style: PwTextStyle.bodyBold,
-                        ),
-                      ),
-                      if (_proposal.status.toLowerCase() != votingPeriod)
-                        VerticalSpacer.largeX3(),
+                      if (_proposal.status.toLowerCase() != depositPeriod)
+                        ProposalVotingInfo(proposal: _proposal),
                     ],
                   ),
                 ),

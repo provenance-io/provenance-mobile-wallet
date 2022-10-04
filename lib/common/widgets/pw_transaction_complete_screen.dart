@@ -7,14 +7,14 @@ class PwTransactionCompleteScreen extends StatelessWidget {
   const PwTransactionCompleteScreen({
     Key? key,
     required this.title,
-    required this.onPressed,
+    required this.onDataPressed,
     required this.onComplete,
     this.onBackToDashboard,
     required this.response,
   }) : super(key: key);
 
   final String title;
-  final Function onPressed;
+  final Function onDataPressed;
   final Function onComplete;
   final Function? onBackToDashboard;
   final Object? response;
@@ -44,17 +44,33 @@ class PwTransactionCompleteScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        color: Theme.of(context).colorScheme.neutralNeutral,
-                        icon: PwIcon(
-                          PwIcons.back,
+                    Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            color: Theme.of(context).colorScheme.neutralNeutral,
+                            icon: PwIcon(
+                              PwIcons.back,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: PwTextButton(
+                            child: PwText(
+                              Strings.of(context).stakingConfirmData,
+                              color: PwColor.neutralNeutral,
+                            ),
+                            onPressed: () {
+                              onDataPressed();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     Expanded(child: Container()),
                     PwText(
@@ -64,16 +80,7 @@ class PwTransactionCompleteScreen extends StatelessWidget {
                       softWrap: false,
                       overflow: TextOverflow.fade,
                     ),
-                    VerticalSpacer.large(),
-                    PwTextButton(
-                      child: PwText(
-                        Strings.of(context).stakingCompleteTapToSeeResponse,
-                        style: PwTextStyle.body,
-                        textAlign: TextAlign.center,
-                      ),
-                      onPressed: () => onPressed(),
-                    ),
-                    VerticalSpacer.largeX3(),
+                    VerticalSpacer.xxLarge(),
                     Image.asset(
                       Assets.imagePaths.transactionComplete,
                       height: 80,
