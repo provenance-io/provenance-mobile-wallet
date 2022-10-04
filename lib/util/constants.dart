@@ -7,3 +7,4 @@ const votingPeriod = "voting period";
 const depositPeriod = "deposit period";
 const passed = "passed";
 const rejected = "rejected";
+const vetoed = "vetoed";

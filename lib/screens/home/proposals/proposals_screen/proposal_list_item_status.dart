@@ -26,7 +26,7 @@ class ProposalListItemStatus extends StatelessWidget {
         ),
         HorizontalSpacer.xSmall(),
         PwText(
-          status.capitalize(),
+          status.capitalizeWords(),
           color: PwColor.neutral200,
           style: PwTextStyle.footnote,
           overflow: TextOverflow.fade,

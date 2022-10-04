@@ -4,10 +4,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_screen.dart';
@@ -145,7 +145,7 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
         onBackToDashboard: backToDashboard,
         response: response,
         onComplete: onComplete,
-        onPressed: () => showTransactionData(
+        onDataPressed: () => showTransactionData(
           response,
           Strings.of(context).transactionResponse,
         ),

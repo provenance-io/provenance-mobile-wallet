@@ -59,20 +59,37 @@ class _ProposalsLegendState extends State<ProposalsLegend> {
           if (_isActive)
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PwText(
                   Strings.of(context).proposalsLegendGlobalStatus,
                   style: PwTextStyle.body,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: Spacing.large),
-                  child: ProposalListItemStatus(status: passed),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: Spacing.large),
-                  child: ProposalListItemStatus(status: rejected),
-                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: depositPeriod),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: votingPeriod),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: passed),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: rejected),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Spacing.large),
+                      child: ProposalListItemStatus(status: vetoed),
+                    ),
+                  ],
+                )
               ],
             ),
           if (_isActive) VerticalSpacer.large(),
