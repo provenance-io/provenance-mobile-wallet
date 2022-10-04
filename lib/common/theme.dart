@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provenance_wallet/common/widgets/pw_spacer.dart';
 import 'package:provenance_wallet/common/widgets/pw_thumb_shape.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 
 class ProvenanceColorScheme extends ColorScheme {
   const ProvenanceColorScheme({
@@ -457,29 +456,6 @@ extension CustomSliderTheme on SliderThemeData {
           .copyWith(color: ProvenanceThemeData._neutral800));
 }
 
-class ValidatorStatusColorScheme {
-  final Color activeColor;
-  final Color candidateColor;
-  final Color jailedColor;
-
-  ValidatorStatusColorScheme({
-    required this.activeColor,
-    required this.candidateColor,
-    required this.jailedColor
-  });
-
-  Color colorForStatus(ValidatorStatus status) { 
-    switch (status) {
-      case ValidatorStatus.active:
-        return activeColor;
-      case ValidatorStatus.candidate:
-        return candidateColor;
-      case ValidatorStatus.jailed:
-        return jailedColor;
-    }
-  }
-}
-
 extension CustomColorScheme on ColorScheme {
   Color get neutral800 => ProvenanceThemeData._neutral800;
   Color get neutral750 => ProvenanceThemeData._neutral750;
@@ -514,12 +490,6 @@ extension CustomColorScheme on ColorScheme {
   Color get notice350 => ProvenanceThemeData._notice350;
   Color get notice800 => ProvenanceThemeData._notice800;
   Color get positive300 => ProvenanceThemeData._positive300;
-
-  ValidatorStatusColorScheme get validatorColorScheme => ValidatorStatusColorScheme(
-    activeColor: positive300,
-    candidateColor: secondaryContainer,
-    jailedColor: error
-  );
 }
 
 extension CustomTextTheme on TextTheme {

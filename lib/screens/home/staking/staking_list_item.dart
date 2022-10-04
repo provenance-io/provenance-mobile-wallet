@@ -2,6 +2,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/pw_avatar.dart';
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
+import 'package:provenance_wallet/util/validator_util.dart';
 
 class StakingListItem extends StatelessWidget {
   const StakingListItem({
@@ -54,10 +55,8 @@ class StakingListItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.brightness_1,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .validatorColorScheme
-                            .colorForStatus(validator.status),
+                        color:
+                            validatorColorForStatus(context, validator.status),
                         size: 8,
                       ),
                       HorizontalSpacer.xSmall(),

@@ -7,6 +7,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart'
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/validator_util.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -76,10 +77,7 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.brightness_1,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .validatorColorScheme
-                        .colorForStatus(validator.status),
+                    color: validatorColorForStatus(context, validator.status),
                     size: 8,
                   ),
                   HorizontalSpacer.xSmall(),
