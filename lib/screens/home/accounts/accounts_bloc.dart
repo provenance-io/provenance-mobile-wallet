@@ -17,7 +17,7 @@ class AccountsBloc implements Disposable {
 
   final _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
-  final _assetService = get<AssetClient>();
+  final _assetClient = get<AssetClient>();
   final _count = BehaviorSubject.seeded(0);
 
   final _updated = PublishSubject<Account>();
@@ -94,7 +94,7 @@ class AccountsBloc implements Disposable {
     var count = _assetCounts[account.id];
     if (count == null) {
       final assets =
-          await _assetService.getAssets(account.coin, account.address);
+          await _assetClient.getAssets(account.coin, account.address);
       count = assets.length;
       _assetCounts[account.id] = count;
     }

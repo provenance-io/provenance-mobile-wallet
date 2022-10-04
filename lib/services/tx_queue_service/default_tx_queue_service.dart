@@ -113,7 +113,7 @@ class DefaultQueueTxService implements TxQueueService {
         );
 
         if (remoteId == null) {
-          throw TxQueueClientError.createTxFailed;
+          throw TxQueueServiceError.createTxFailed;
         } else {
           final model = SembastScheduledTx(
             accountId: account.id,
@@ -143,7 +143,7 @@ class DefaultQueueTxService implements TxQueueService {
     final item =
         _multiSigService.items.firstWhereOrNull((e) => e.txUuid == txId);
     if (item == null) {
-      throw TxQueueClientError.txNotFound;
+      throw TxQueueServiceError.txNotFound;
     }
 
     final multiSigAddress = item.multiSigAddress;
@@ -153,7 +153,7 @@ class DefaultQueueTxService implements TxQueueService {
         accounts.firstWhereOrNull((e) => e.address == multiSigAddress)
             as MultiTransactableAccount?;
     if (multiSigAccount == null) {
-      throw TxQueueClientError.accountNotFound;
+      throw TxQueueServiceError.accountNotFound;
     }
 
     final coin = multiSigAccount.coin;
@@ -233,7 +233,7 @@ class DefaultQueueTxService implements TxQueueService {
     final signerAccount =
         accounts.firstWhereOrNull((e) => e.address == signerAddress);
     if (signerAccount == null) {
-      throw TxQueueClientError.accountNotFound;
+      throw TxQueueServiceError.accountNotFound;
     }
 
     final coin = signerAccount.coin;
@@ -302,7 +302,7 @@ class DefaultQueueTxService implements TxQueueService {
       BasicAccount account, SembastScheduledTx model) async {
     final privateKey = await _accountService.loadKey(account.id);
     if (privateKey == null) {
-      throw TxQueueClientError.cipherKeyNotFound;
+      throw TxQueueServiceError.cipherKeyNotFound;
     }
 
     TxResult? result;
