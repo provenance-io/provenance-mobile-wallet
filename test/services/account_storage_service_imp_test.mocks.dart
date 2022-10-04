@@ -43,15 +43,10 @@ class MockAccountStorageServiceCore extends _i1.Mock
           returnValue: _i3.Future<int>.value(0)) as _i3.Future<int>);
   @override
   _i3.Future<_i4.BasicAccount?> addBasicAccount(
-          {String? name,
-          List<_i5.PublicKeyData>? publicKeys,
-          String? selectedChainId}) =>
+          {String? name, _i5.PublicKeyData? publicKey}) =>
       (super.noSuchMethod(
-              Invocation.method(#addBasicAccount, [], {
-                #name: name,
-                #publicKeys: publicKeys,
-                #selectedChainId: selectedChainId
-              }),
+              Invocation.method(
+                  #addBasicAccount, [], {#name: name, #publicKey: publicKey}),
               returnValue: _i3.Future<_i4.BasicAccount?>.value())
           as _i3.Future<_i4.BasicAccount?>);
   @override

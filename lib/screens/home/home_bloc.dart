@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -85,13 +84,6 @@ class HomeBloc extends Disposable {
       id: id,
       name: name,
     );
-  }
-
-  Future<Account?> setAccountCoin({
-    required String id,
-    required Coin coin,
-  }) async {
-    return await get<AccountService>().setAccountCoin(id: id, coin: coin);
   }
 
   Future<bool> isValidWalletConnectAddress(String address) {

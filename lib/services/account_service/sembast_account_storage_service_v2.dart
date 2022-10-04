@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
-import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
@@ -8,32 +8,44 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_schema_v1.dart'
     as v1;
+import 'package:provenance_wallet/services/account_service/sembast_schema_v2.dart'
+    as v2;
+import 'package:provenance_wallet/services/account_service/version_data.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/sembast_import_export.dart' as ie;
 
-class SembastAccountStorageService implements AccountStorageServiceCore {
-  SembastAccountStorageService({
+class SembastAccountStorageServiceV2 implements AccountStorageServiceCore {
+  SembastAccountStorageServiceV2({
     required DatabaseFactory factory,
-    required String directory,
+    required String dbPath,
     Map<dynamic, dynamic>? import,
   }) : _factory = factory {
-    final path = p.join(directory, _fileName);
-
     Future<Database> initDb(
         DatabaseFactory factory, Map<dynamic, dynamic>? import) async {
       if (import != null) {
-        await ie.importDatabase(import, factory, path);
+        await ie.importDatabase(import, factory, dbPath);
       }
 
       Future<void> onVersionChanged(
           Database db, int oldVersion, int newVersion) async {
         var current = oldVersion;
+
         // Old version is zero when db is created
         while (current > 0 && current < newVersion) {
+          final last = current;
           current++;
           await _update[current]!(db);
+
+          _versionChanged.add(
+            VersionData(
+              oldVersion: last,
+              newVersion: current,
+            ),
+          );
         }
       }
 
@@ -42,7 +54,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       _multiAccounts = stringMapStoreFactory.store('multi_accounts');
 
       final db = await factory.openDatabase(
-        path,
+        dbPath,
         version: version,
         onVersionChanged: onVersionChanged,
       );
@@ -53,16 +65,18 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     _db = initDb(factory, import);
   }
 
-  static const version = 1;
-  static const _fileName = 'account.db';
+  static const version = 2;
   static const _keySelectedAccountId = 'selectedAccountId';
 
   // Schema updates go here.
   // Export and commit a sample db before making updates and
   // import the db in unit tests to verify the update process.
   static const _update = <int, Future<void> Function(Database db)>{
-    // 2: _updateV1ToV2,
+    2: _updateV1ToV2,
   };
+
+  final _versionChanged = PublishSubject<VersionData>();
+  Stream<VersionData> get versionChanged => _versionChanged;
 
   final DatabaseFactory _factory;
   late final StoreRef<String, Map<String, Object?>> _basicAccounts;
@@ -87,6 +101,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   Future<void> close() async {
     final db = await _db;
     await db.close();
+    _versionChanged.close();
   }
 
   @override
@@ -99,19 +114,15 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   @override
   Future<BasicAccount?> addBasicAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
-    required String selectedChainId,
+    required PublicKeyData publicKey,
   }) async {
     final db = await _db;
-    final model = v1.SembastAccountModel(
+    final model = v2.SembastAccountModel(
       name: name,
-      publicKeys: publicKeys
-          .map((e) => v1.SembastPublicKeyModel(
-                hex: e.hex,
-                chainId: e.chainId,
-              ))
-          .toList(),
-      selectedChainId: selectedChainId,
+      publicKey: v2.SembastPublicKeyModel(
+        hex: publicKey.hex,
+        chainId: publicKey.chainId,
+      ),
       linkedAccountIds: [],
     );
     final id = await _basicAccounts.add(
@@ -226,7 +237,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
 
             if (linkedAccount != null) {
               final linkedAccountModel =
-                  v1.SembastAccountModel.fromRecord(linkedAccount);
+                  v2.SembastAccountModel.fromRecord(linkedAccount);
               final linkedAccountIds = linkedAccountModel.linkedAccountIds
                 ..remove(multiAccount.id);
 
@@ -284,7 +295,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           var rec = await ref.get(db);
 
           if (rec != null) {
-            final old = v1.SembastAccountModel.fromRecord(rec);
+            final old = v2.SembastAccountModel.fromRecord(rec);
             final updated =
                 await ref.update(db, old.copyWith(name: name).toRecord());
             if (updated != null) {
@@ -297,7 +308,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
           var rec = await ref.get(db);
 
           if (rec != null) {
-            final old = v1.SembastMultiAccountModel.fromRecord(rec);
+            final old = v2.SembastMultiAccountModel.fromRecord(rec);
             final updated =
                 await ref.update(db, old.copyWith(name: name).toRecord());
             if (updated != null) {
@@ -337,58 +348,6 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   @override
-  Future<Account?> setChainId({
-    required String id,
-    required String chainId,
-  }) async {
-    Account? updatedAccount;
-
-    final account = await getAccount(id: id);
-    if (account != null) {
-      final db = await _db;
-
-      switch (account.kind) {
-        case AccountKind.basic:
-          final ref = _basicAccounts.record(id);
-          final rec = await ref.get(db);
-          if (rec != null) {
-            final model = v1.SembastAccountModel.fromRecord(rec);
-            final updatedModel = model.copyWith(
-              selectedChainId: chainId,
-            );
-            final updatedRec = await ref.update(
-              db,
-              updatedModel.toRecord(),
-            );
-            if (updatedRec != null) {
-              updatedAccount = _toBasic(id, updatedRec);
-            }
-          }
-          break;
-        case AccountKind.multi:
-          final ref = _multiAccounts.record(id);
-          final rec = await ref.get(db);
-          if (rec != null) {
-            final model = v1.SembastMultiAccountModel.fromRecord(rec);
-            final updatedModel = model.copyWith(
-              selectedChainId: chainId,
-            );
-            final updatedRec = await ref.update(
-              db,
-              updatedModel.toRecord(),
-            );
-            if (updatedRec != null) {
-              updatedAccount = await _toMulti(id, updatedRec);
-            }
-          }
-          break;
-      }
-    }
-
-    return updatedAccount;
-  }
-
-  @override
   Future<MultiAccount?> addMultiAccount({
     required String name,
     required String selectedChainId,
@@ -401,7 +360,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     List<MultiSigSigner>? signers,
   }) async {
     final db = await _db;
-    final model = v1.SembastMultiAccountModel(
+    final model = v2.SembastMultiAccountModel(
       name: name,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
@@ -409,7 +368,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       signaturesRequired: signaturesRequired,
       inviteIds: inviteIds,
       signers: signers
-          ?.map((e) => v1.SembastMultiAccountSigner(
+          ?.map((e) => v2.SembastMultiAccountSigner(
                 publicKey: e.publicKey?.compressedPublicKeyHex,
                 signerOrder: e.signerOrder,
               ))
@@ -428,7 +387,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
       final linkedAccount = await linkedAccountRef.get(tx);
       if (linkedAccount != null) {
         final linkedAccountModel =
-            v1.SembastAccountModel.fromRecord(linkedAccount);
+            v2.SembastAccountModel.fromRecord(linkedAccount);
         final linkedAccountIds = linkedAccountModel.linkedAccountIds
           ..add(multiAccountId)
           ..toSet()
@@ -459,7 +418,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     final ref = _multiAccounts.record(id);
     final rec = await ref.get(db);
     if (rec != null) {
-      final model = v1.SembastMultiAccountModel.fromRecord(rec);
+      final model = v2.SembastMultiAccountModel.fromRecord(rec);
       final updatedModel = model.copyWith(
         signers: signers,
       );
@@ -500,19 +459,10 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   BasicAccount _toBasic(String id, Map<String, Object?> value) {
-    final model = v1.SembastAccountModel.fromRecord(value);
-    final chainId = model.selectedChainId;
+    final model = v2.SembastAccountModel.fromRecord(value);
 
-    var hex = '';
-
-    if (model.publicKeys.isNotEmpty) {
-      final selectedKey = model.publicKeys
-          .firstWhere((e) => e.chainId == model.selectedChainId);
-
-      hex = selectedKey.hex;
-    }
-
-    final coin = ChainId.toCoin(chainId);
+    var hex = model.publicKey.hex;
+    final coin = ChainId.toCoin(model.publicKey.chainId);
     final publicKey =
         PublicKey.fromCompressPublicHex(convert.hex.decoder.convert(hex), coin);
 
@@ -525,7 +475,7 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
   }
 
   Future<MultiAccount> _toMulti(String id, Map<String, Object?> value) async {
-    final model = v1.SembastMultiAccountModel.fromRecord(value);
+    final model = v2.SembastMultiAccountModel.fromRecord(value);
 
     final linkedAccount = await getBasicAccount(id: model.linkedAccountId);
 
@@ -573,5 +523,39 @@ class SembastAccountStorageService implements AccountStorageServiceCore {
     }
 
     return account;
+  }
+
+  ///
+  /// V2 accounts only have a single chain-id. Migrate mainnet and toss
+  /// testnet. Testnet accounts will have to be re-imported as a separate
+  /// account.
+  ///
+  static Future<void> _updateV1ToV2(Database db) async {
+    final store = stringMapStoreFactory.store('accounts');
+    final snapshots = await store.find(db);
+
+    for (final snapshot in snapshots) {
+      final accountModelV1 = v1.SembastAccountModel.fromRecord(snapshot.value);
+      final publicKeyV1 = accountModelV1.publicKeys
+          .firstWhereOrNull((e) => e.chainId == ChainId.mainNet);
+      if (publicKeyV1 != null) {
+        final publicKeyV2 = v2.SembastPublicKeyModel(
+          chainId: publicKeyV1.chainId,
+          hex: publicKeyV1.hex,
+        );
+        final accountModelV2 = v2.SembastAccountModel(
+          name: accountModelV1.name,
+          publicKey: publicKeyV2,
+          linkedAccountIds: accountModelV1.linkedAccountIds,
+        );
+
+        await snapshot.ref.put(
+          db,
+          accountModelV2.toRecord(),
+        );
+      } else {
+        snapshot.ref.delete(db);
+      }
+    }
   }
 }

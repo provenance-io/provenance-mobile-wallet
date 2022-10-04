@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:path/path.dart' as path;
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -9,7 +10,7 @@ import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
@@ -35,7 +36,7 @@ const walletConnectAddress =
 @GenerateMocks([RemoteNotificationService, WalletConnectService])
 void main() {
   tearDown(() async {
-    await get<SembastAccountStorageService>().deleteDatabase();
+    await get<SembastAccountStorageServiceV2>().deleteDatabase();
     await get.reset(dispose: true);
   });
 
@@ -200,11 +201,13 @@ class TestState {
 
     await get.reset(dispose: true);
 
+    final dbPath = path.join(sembastInMemoryDatabasePath, 'account.db');
+
     final cipherService = MemoryCipherService();
     get.registerSingleton<CipherService>(cipherService);
-    final serviceCore = SembastAccountStorageService(
+    final serviceCore = SembastAccountStorageServiceV2(
       factory: databaseFactoryMemory,
-      directory: sembastInMemoryDatabasePath,
+      dbPath: dbPath,
     );
     get.registerSingleton(serviceCore);
     final accountService = AccountService(

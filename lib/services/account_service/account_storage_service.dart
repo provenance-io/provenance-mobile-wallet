@@ -50,8 +50,7 @@ abstract class AccountStorageService {
 
   Future<Account?> addAccount({
     required String name,
-    required List<PrivateKey> privateKeys,
-    required Coin selectedCoin,
+    required PrivateKey privateKey,
   });
 
   Future<MultiAccount?> addMultiAccount({
@@ -75,9 +74,4 @@ abstract class AccountStorageService {
   Future<bool> removeAccount(String id);
 
   Future<bool> removeAllAccounts();
-
-  Future<Account?> setAccountCoin({
-    required String id,
-    required Coin coin,
-  });
 }

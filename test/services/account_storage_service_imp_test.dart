@@ -50,15 +50,13 @@ main() {
   });
 
   group("addWallet", () {
-    List<PrivateKey>? privateKeys;
-    Coin? selectedCoin;
-    final publicKeys = <PublicKeyData>[];
+    late PrivateKey privateKey;
+    late PublicKeyData publicKeyData;
     const id = "TestId";
 
     BasicAccount firstAccount() {
-      final data = publicKeys.first;
-      final coin = ChainId.toCoin(data.chainId);
-      final publicKey = keyFromHex(data.hex, coin);
+      final coin = ChainId.toCoin(publicKeyData.chainId);
+      final publicKey = keyFromHex(publicKeyData.hex, coin);
 
       return BasicAccount(
         id: id,
@@ -69,21 +67,13 @@ main() {
 
     setUp(() {
       final seed = Mnemonic.createSeed(['test']);
-      privateKeys = [
-        PrivateKey.fromSeed(seed, Coin.testNet),
-        PrivateKey.fromSeed(seed, Coin.mainNet),
-      ];
-      selectedCoin = Coin.testNet;
+      privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
 
-      publicKeys.clear();
-      for (final privateKey in privateKeys!) {
-        final publicKey = privateKey.defaultKey().publicKey;
-        final publicKeyData = PublicKeyData(
-          hex: publicKey.compressedPublicKeyHex,
-          chainId: ChainId.forCoin(privateKey.coin),
-        );
-        publicKeys.add(publicKeyData);
-      }
+      final publicKey = privateKey.defaultKey().publicKey;
+      publicKeyData = PublicKeyData(
+        hex: publicKey.compressedPublicKeyHex,
+        chainId: ChainId.forCoin(privateKey.coin),
+      );
     });
 
     test('success', () async {
@@ -91,8 +81,7 @@ main() {
 
       when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(account));
 
       when(_mockCipherService!.encryptKey(
@@ -102,26 +91,22 @@ main() {
 
       final result = await _storageService!.addAccount(
         name: account.name,
-        privateKeys: privateKeys!,
-        selectedCoin: selectedCoin!,
+        privateKey: privateKey,
       );
 
       expect(result, account);
 
       verify(_mockAccountStorageServiceCore!.addBasicAccount(
         name: account.name,
-        publicKeys: publicKeys,
-        selectedChainId: ChainId.forCoin(selectedCoin!),
+        publicKey: publicKeyData,
       ));
 
-      for (final privateKey in privateKeys!) {
-        final keyId = _storageService!.privateKeyId(id, privateKey.coin);
+      final keyId = _storageService!.privateKeyId(id, privateKey.coin);
 
-        verify(_mockCipherService!.encryptKey(
-          id: keyId,
-          privateKey: privateKey.serialize(publicKeyOnly: false),
-        ));
-      }
+      verify(_mockCipherService!.encryptKey(
+        id: keyId,
+        privateKey: privateKey.serialize(publicKeyOnly: false),
+      ));
     });
 
     testWidgets('add wallet failure', (tester) async {
@@ -129,15 +114,13 @@ main() {
 
       when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => _storageService!.addAccount(
           name: "Name",
-          privateKeys: privateKeys!,
-          selectedCoin: selectedCoin!,
+          privateKey: privateKey,
         ),
         throwsA(exception),
       );
@@ -152,8 +135,7 @@ main() {
           .thenAnswer((_) => Future.value(0));
       when(_mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(account));
 
       when(_mockCipherService!.encryptKey(
@@ -163,8 +145,7 @@ main() {
 
       final result = await _storageService!.addAccount(
         name: "Name",
-        privateKeys: privateKeys!,
-        selectedCoin: selectedCoin!,
+        privateKey: privateKey,
       );
 
       verify(_mockAccountStorageServiceCore!.removeAccount(id: id));

@@ -64,8 +64,6 @@
   "profileDeveloperConnectLabel": "Connect",
   "profileDeveloperConnectInvalidAddress": "Invalid address",
   "profileShowAdvancedUI": "Show Advanced UI",
-  "profileMenuUseMainnet": "Use Mainnet",
-  "profileMenuUseTestnet": "Use Testnet",
   "profileAllowCrashlitics": "Allow Crash Data Collection",
   "developerMocksMockAssetService": "Mock Asset Service",
   "developerMocksMockTransactionService": "Mock Transaction Service",

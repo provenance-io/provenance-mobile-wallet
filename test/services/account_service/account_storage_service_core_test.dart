@@ -1,23 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as path;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
-import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:sembast/sembast_memory.dart';
 
-SembastAccountStorageService? _service;
+SembastAccountStorageServiceV2? _service;
 
 AccountStorageServiceCore get service => _service!;
+
+final dbPath = path.join(sembastInMemoryDatabasePath, 'account.db');
 
 void main() {
   setUp(() async {
     await _service?.deleteDatabase();
 
-    _service = SembastAccountStorageService(
+    _service = SembastAccountStorageServiceV2(
       factory: databaseFactoryMemory,
-      directory: '',
+      dbPath: dbPath,
     );
     final accounts = await _service!.getBasicAccounts();
     expect(accounts, isEmpty);
@@ -25,7 +28,7 @@ void main() {
 
   test('Given service, version is set', () async {
     final version = await service.getVersion();
-    expect(version, SembastAccountStorageService.version);
+    expect(version, SembastAccountStorageServiceV2.version);
   });
 
   test('Given service, accounts is empty', () async {
@@ -104,30 +107,10 @@ void main() {
     expect(account!.name, name);
   });
 
-  test('Given service with accounts, on set chain, account is updated',
-      () async {
-    final datas = await _initAccounts(count: 2);
-    final second = datas[1];
-
-    final coin = ChainId.toCoin(second.selectedKey.chainId);
-    final newCoin = Coin.values.firstWhere((e) => e != coin);
-
-    var account = await service.setChainId(
-      id: second.id,
-      chainId: ChainId.forCoin(newCoin),
-    );
-    expect(account, isNotNull);
-    expect(account!.coin, newCoin);
-
-    account = await service.getBasicAccount(id: second.id);
-    expect(account, isNotNull);
-    expect(account!.coin, newCoin);
-  });
-
   test('When multi-sig is added, linked account is updated', () async {
     final datas = await _initAccounts(count: 1);
     final account = datas.first;
-    final chainId = account.selectedKey.chainId;
+    final chainId = account.publicKeyData.chainId;
 
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
@@ -154,7 +137,7 @@ void main() {
   test('When multi-sig is removed, linked account is updated', () async {
     final datas = await _initAccounts(count: 1);
     final account = datas.first;
-    final chainId = account.selectedKey.chainId;
+    final chainId = account.publicKeyData.chainId;
 
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
@@ -185,7 +168,7 @@ void main() {
       () async {
     final datas = await _initAccounts(count: 1);
     final account = datas.first;
-    final chainId = account.selectedKey.chainId;
+    final chainId = account.publicKeyData.chainId;
 
     final multiAccount = await service.addMultiAccount(
       name: 'multi',
@@ -214,26 +197,21 @@ class _AccountData {
   _AccountData({
     required this.id,
     required this.name,
-    required String selectedChainId,
-    required this.publicKeyDatas,
-  }) {
-    selectedKey =
-        publicKeyDatas.firstWhere((e) => e.chainId == selectedChainId);
-  }
+    required this.publicKeyData,
+  });
 
   final String id;
   final String name;
 
-  final List<PublicKeyData> publicKeyDatas;
-  late final PublicKeyData selectedKey;
+  final PublicKeyData publicKeyData;
 }
 
 _expectAccountMatches(_AccountData data, Account? account) {
   expect(account, isNotNull);
   expect(account!.name, data.name);
   expect((account as BasicAccount).publicKey.compressedPublicKeyHex,
-      data.selectedKey.hex);
-  expect(account.coin, ChainId.toCoin(data.selectedKey.chainId));
+      data.publicKeyData.hex);
+  expect(account.coin, ChainId.toCoin(data.publicKeyData.chainId));
 }
 
 Future<_AccountData> _initAccount() async {
@@ -249,30 +227,24 @@ Future<List<_AccountData>> _initAccounts({
 
   for (var i = 0; i < count; i++) {
     final name = 'name-$i';
-    const selectedChainId = ChainId.mainNet;
+    const coin = Coin.mainNet;
     final seed = Mnemonic.createSeed([i.toString()]);
-    final publicKeyDatas = <PublicKeyData>[];
-    for (var coin in Coin.values) {
-      final privateKey = PrivateKey.fromSeed(seed, coin);
-      publicKeyDatas.add(
-        PublicKeyData(
-            hex: privateKey.defaultKey().publicKey.compressedPublicKeyHex,
-            chainId: ChainId.forCoin(coin)),
-      );
-    }
+    final privateKey = PrivateKey.fromSeed(seed, coin);
+    final publicKeyData = PublicKeyData(
+      hex: privateKey.defaultKey().publicKey.compressedPublicKeyHex,
+      chainId: ChainId.forCoin(coin),
+    );
 
     final details = await service.addBasicAccount(
       name: name,
-      publicKeys: publicKeyDatas,
-      selectedChainId: selectedChainId,
+      publicKey: publicKeyData,
     );
 
     datas.add(
       _AccountData(
         id: details!.id,
         name: name,
-        selectedChainId: selectedChainId,
-        publicKeyDatas: publicKeyDatas,
+        publicKeyData: publicKeyData,
       ),
     );
   }
