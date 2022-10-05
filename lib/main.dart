@@ -359,6 +359,7 @@ class ProvenanceWalletApp extends StatefulWidget {
 
 class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   bool _isSetupComplete = false;
+  bool _setupAlreadyRun = false;
 
   final _subscriptions = CompositeSubscription();
   final _navigatorKey = GlobalKey<NavigatorState>();
@@ -366,6 +367,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
   @override
   Future<void> didChangeDependencies() async {
+    if (_setupAlreadyRun) {
+      super.didChangeDependencies();
+      return;
+    }
+    _setupAlreadyRun = true;
     await _setup();
     setState(() {
       _isSetupComplete = true;
