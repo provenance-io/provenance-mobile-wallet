@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:provenance_dart/proto.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -256,19 +257,26 @@ class HomeScreenState extends State<HomeScreen>
 
     final data = <String, dynamic>{};
     if (result.body.messages.isNotEmpty) {
-      // TODO-Roy: Show the type of all messages, not just the first.
-      data[MessageFieldName.type] =
-          result.body.messages.first.info_.qualifiedMessageName;
+      data[MessageFieldName.type] = result.body.messages
+          .map((e) => e.toMessage().info_.qualifiedMessageName)
+          .join(', ');
     }
 
     data.addAll(
       {
-        FieldName.gasWanted: txResponse.gasWanted.toString(),
-        FieldName.gasUsed: txResponse.gasUsed.toString(),
         FieldName.txID: txResponse.txhash,
-        FieldName.block: txResponse.height.toString(),
       },
     );
+
+    if (txResponse.height != Int64.ZERO) {
+      data.addAll(
+        {
+          FieldName.gasWanted: txResponse.gasWanted.toString(),
+          FieldName.gasUsed: txResponse.gasUsed.toString(),
+          FieldName.block: txResponse.height.toString(),
+        },
+      );
+    }
 
     if (txResponse.code != statusCodeOk) {
       data.addAll(
