@@ -166,12 +166,11 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
         }
 
         for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
-          final remoteId = remoteAccount.remoteId;
+          final uniqueId = '${remoteAccount.remoteId}-${basicAccount.id}';
 
-          if (!multiAccountRemoteIds.contains(remoteId) &&
-              !recoverableRemoteAccounts.containsKey(remoteId)) {
-            recoverableRemoteAccounts[remoteAccount.remoteId] =
-                _MultiSigAccountData(
+          if (!multiAccountRemoteIds.contains(uniqueId) &&
+              !recoverableRemoteAccounts.containsKey(uniqueId)) {
+            recoverableRemoteAccounts[uniqueId] = _MultiSigAccountData(
               account: remoteAccount,
               linkedAccount: basicAccount,
             );
