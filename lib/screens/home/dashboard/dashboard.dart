@@ -152,22 +152,28 @@ class _DashboardState extends State<Dashboard> {
                 key: Dashboard.keyOpenAccountsButton,
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
+                  final bloc = Provider.of<HomeBloc>(context, listen: false);
+
                   await showDialog(
                     barrierColor: Theme.of(context).colorScheme.neutral750,
                     useSafeArea: true,
                     barrierDismissible: false,
                     context: context,
                     builder: (context) => Provider<AccountsBloc>(
-                        lazy: true,
-                        create: (context) {
-                          final bloc = AccountsBloc();
-                          bloc.load();
-                          return bloc;
-                        },
-                        dispose: (_, bloc) {
-                          bloc.onDispose();
-                        },
-                        child: AccountsScreen()),
+                      lazy: true,
+                      create: (context) {
+                        final bloc = AccountsBloc();
+                        bloc.load();
+                        return bloc;
+                      },
+                      dispose: (_, bloc) {
+                        bloc.onDispose();
+                      },
+                      child: Provider.value(
+                        value: bloc,
+                        child: AccountsScreen(),
+                      ),
+                    ),
                   );
                 },
                 child: Padding(
