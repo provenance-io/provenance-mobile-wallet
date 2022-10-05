@@ -78,6 +78,7 @@ import 'package:provenance_wallet/services/validator_client/validator_client.dar
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -360,13 +361,26 @@ class ProvenanceWalletApp extends StatefulWidget {
 }
 
 class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
-  _ProvenanceWalletAppState() {
-    _setup();
-  }
+  bool _isSetupComplete = false;
+  bool _setupAlreadyRun = false;
 
   final _subscriptions = CompositeSubscription();
   final _navigatorKey = GlobalKey<NavigatorState>();
   var _authStatus = AuthStatus.noAccount;
+
+  @override
+  Future<void> didChangeDependencies() async {
+    if (_setupAlreadyRun) {
+      super.didChangeDependencies();
+      return;
+    }
+    _setupAlreadyRun = true;
+    await _setup();
+    setState(() {
+      _isSetupComplete = true;
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
@@ -385,7 +399,24 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       ],
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: StartScreen(),
+      home: Stack(
+        children: [
+          if (!_isSetupComplete)
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(Assets.imagePaths.background),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          if (_isSetupComplete) StartScreen(),
+          if (!_isSetupComplete)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
       navigatorKey: _navigatorKey,
     );
   }
