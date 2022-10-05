@@ -154,27 +154,25 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
     var error = false;
     final recoverableRemoteAccounts = <String, _MultiSigAccountData>{};
 
-    if (basicAccounts.isNotEmpty) {
-      for (var basicAccount in basicAccounts) {
-        final remoteAccounts = await multiSigClient.getAccounts(
-          address: basicAccount.address,
-          coin: basicAccount.coin,
-        );
+    for (var basicAccount in basicAccounts) {
+      final remoteAccounts = await multiSigClient.getAccounts(
+        address: basicAccount.address,
+        coin: basicAccount.coin,
+      );
 
-        if (remoteAccounts == null) {
-          error = true;
-        }
+      if (remoteAccounts == null) {
+        error = true;
+      }
 
-        for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
-          final uniqueId = '${remoteAccount.remoteId}-${basicAccount.id}';
+      for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
+        final uniqueId = '${remoteAccount.remoteId}-${basicAccount.id}';
 
-          if (!multiAccountRemoteIds.contains(uniqueId) &&
-              !recoverableRemoteAccounts.containsKey(uniqueId)) {
-            recoverableRemoteAccounts[uniqueId] = _MultiSigAccountData(
-              account: remoteAccount,
-              linkedAccount: basicAccount,
-            );
-          }
+        if (!multiAccountRemoteIds.contains(uniqueId) &&
+            !recoverableRemoteAccounts.containsKey(uniqueId)) {
+          recoverableRemoteAccounts[uniqueId] = _MultiSigAccountData(
+            account: remoteAccount,
+            linkedAccount: basicAccount,
+          );
         }
       }
     }
