@@ -357,13 +357,20 @@ class ProvenanceWalletApp extends StatefulWidget {
 }
 
 class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
-  _ProvenanceWalletAppState() {
-    _setup();
-  }
+  bool _isSetupComplete = false;
 
   final _subscriptions = CompositeSubscription();
   final _navigatorKey = GlobalKey<NavigatorState>();
   var _authStatus = AuthStatus.noAccount;
+
+  @override
+  Future<void> didChangeDependencies() async {
+    await _setup();
+    setState(() {
+      _isSetupComplete = true;
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
@@ -382,7 +389,15 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       ],
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: StartScreen(),
+      home: Stack(
+        children: [
+          StartScreen(),
+          if (!_isSetupComplete)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
       navigatorKey: _navigatorKey,
     );
   }
