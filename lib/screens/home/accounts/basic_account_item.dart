@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
@@ -9,7 +8,6 @@ import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -119,8 +117,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   ) async {
     final strings = Strings.of(context);
 
-    final showAdvancedUI =
-        await get<KeyValueService>().getBool(PrefKey.showAdvancedUI) ?? false;
     var result = await showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
       context: context,
@@ -157,16 +153,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
                 text: strings.select,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.select);
-                },
-              ),
-            if (showAdvancedUI) PwListDivider(),
-            if (showAdvancedUI)
-              PwGreyButton(
-                text: item.publicKey.coin == Coin.mainNet
-                    ? strings.profileMenuUseTestnet
-                    : strings.profileMenuUseMainnet,
-                onPressed: () {
-                  Navigator.of(context).pop(MenuOperation.switchCoin);
                 },
               ),
           ],
@@ -228,11 +214,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         await bloc.selectAccount(id: item.id);
 
         break;
-      case MenuOperation.switchCoin:
-        final coin =
-            item.publicKey.coin == Coin.mainNet ? Coin.testNet : Coin.mainNet;
-        await bloc.setAccountCoin(id: item.id, coin: coin);
-        break;
       default:
     }
   }
@@ -243,5 +224,4 @@ enum MenuOperation {
   select,
   rename,
   delete,
-  switchCoin,
 }

@@ -9,8 +9,7 @@ abstract class AccountStorageServiceCore {
 
   Future<BasicAccount?> addBasicAccount({
     required String name,
-    required List<PublicKeyData> publicKeys,
-    required String selectedChainId,
+    required PublicKeyData publicKey,
   });
 
   Future<MultiAccount?> addMultiAccount({
@@ -63,10 +62,5 @@ abstract class AccountStorageServiceCore {
 
   Future<TransactableAccount?> selectAccount({
     String? id,
-  });
-
-  Future<Account?> setChainId({
-    required String id,
-    required String chainId,
   });
 }
