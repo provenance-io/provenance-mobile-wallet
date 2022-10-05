@@ -77,6 +77,7 @@ import 'package:provenance_wallet/services/validator_client/validator_client.dar
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/default_wallet_connect_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -391,7 +392,16 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       home: Stack(
         children: [
-          StartScreen(),
+          if (!_isSetupComplete)
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(Assets.imagePaths.background),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          if (_isSetupComplete) StartScreen(),
           if (!_isSetupComplete)
             Center(
               child: CircularProgressIndicator(),
