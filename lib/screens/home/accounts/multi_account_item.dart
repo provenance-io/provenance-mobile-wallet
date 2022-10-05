@@ -29,7 +29,7 @@ class MultiAccountItem extends StatefulWidget {
 }
 
 class _MultiAccountItemState extends State<MultiAccountItem> {
-  final _subscriptions = CompositeSubscription();
+  CompositeSubscription _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
   late MultiAccount _account;
   late bool _isSelected;
@@ -55,17 +55,18 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
   @override
   void didChangeDependencies() {
     final bloc = Provider.of<AccountsBloc>(context);
-    _subscriptions.cancel().whenComplete(() {
-      bloc.updated.listen((e) {
-        setState(() {
-          if (_account.id == e.id) {
-            setState(() {
-              _account = e as MultiAccount;
-            });
-          }
-        });
-      }).addTo(_subscriptions);
-    });
+    _subscriptions.cancel();
+    final subscriptions = CompositeSubscription();
+    bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as MultiAccount;
+          });
+        }
+      });
+    }).addTo(subscriptions);
+    _subscriptions = subscriptions;
     super.didChangeDependencies();
   }
 

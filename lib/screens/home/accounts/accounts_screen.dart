@@ -26,7 +26,7 @@ class AccountsScreen extends StatefulWidget {
 class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
-  final _providerSubscriptions = CompositeSubscription();
+  CompositeSubscription _providerSubscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
   late final AccountsBloc _bloc;
 
@@ -46,12 +46,13 @@ class AccountsScreenState extends State<AccountsScreen> {
   @override
   void didChangeDependencies() {
     _bloc = Provider.of<AccountsBloc>(context);
-    _providerSubscriptions.cancel().whenComplete(() {
-      _bloc.insert.listen(_onInsert).addTo(_providerSubscriptions);
-      _bloc.loading
-          .listen((e) => _onLoading(context, e))
-          .addTo(_providerSubscriptions);
-    });
+    _providerSubscriptions.cancel();
+    final providerSubscriptions = CompositeSubscription();
+    _bloc.insert.listen(_onInsert).addTo(providerSubscriptions);
+    _bloc.loading
+        .listen((e) => _onLoading(context, e))
+        .addTo(providerSubscriptions);
+    _providerSubscriptions = providerSubscriptions;
 
     super.didChangeDependencies();
   }

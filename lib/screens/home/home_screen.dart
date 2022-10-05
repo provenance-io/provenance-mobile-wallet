@@ -41,7 +41,7 @@ class HomeScreenState extends State<HomeScreen>
   int _currentTabIndex = 0;
 
   final _subscriptions = CompositeSubscription();
-  final _providerSubscriptions = CompositeSubscription();
+  CompositeSubscription _providerSubscriptions = CompositeSubscription();
 
   final _walletConnectService = get<WalletConnectService>();
   final _txQueueService = get<TxQueueService>();
@@ -56,6 +56,7 @@ class HomeScreenState extends State<HomeScreen>
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
     _subscriptions.dispose();
+    _providerSubscriptions.dispose();
 
     super.dispose();
   }
@@ -66,16 +67,17 @@ class HomeScreenState extends State<HomeScreen>
         .subscribe(this, ModalRoute.of(context) as PageRoute);
 
     final bloc = Provider.of<HomeBloc>(context);
-    _providerSubscriptions.cancel().whenComplete(() {
-      bloc.isLoading.listen((e) {
-        if (e) {
-          ModalLoadingRoute.showLoading(context);
-        } else {
-          ModalLoadingRoute.dismiss(context);
-        }
-      }).addTo(_providerSubscriptions);
-      bloc.error.listen(_onError).addTo(_providerSubscriptions);
-    });
+    _providerSubscriptions.cancel();
+    final providerSubscriptions = CompositeSubscription();
+    bloc.isLoading.listen((e) {
+      if (e) {
+        ModalLoadingRoute.showLoading(context);
+      } else {
+        ModalLoadingRoute.dismiss(context);
+      }
+    }).addTo(providerSubscriptions);
+    bloc.error.listen(_onError).addTo(providerSubscriptions);
+    _providerSubscriptions = providerSubscriptions;
     super.didChangeDependencies();
   }
 
