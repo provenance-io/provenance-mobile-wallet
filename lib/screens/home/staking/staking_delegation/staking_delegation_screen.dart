@@ -143,12 +143,15 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                 enabled: _formKey.currentState?.validate() == true &&
                     details.hashDelegated > Decimal.zero,
                 onPressed: () {
+                  final bloc =
+                      Provider.of<StakingDetailsBloc>(context, listen: false);
                   if (_formKey.currentState?.validate() == false ||
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
                   if (ValidatorStatus.jailed == details.validator.status) {
                     final strings = Strings.of(context);
+
                     showDialog(
                       context: context,
                       barrierDismissible: false,
@@ -179,9 +182,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                Provider.of<StakingDetailsBloc>(context,
-                                        listen: false)
-                                    .showDelegationReview();
+                                bloc.showDelegationReview();
                               },
                               child: PwText(
                                 strings.stakingDelegateYesResponse
@@ -194,8 +195,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       },
                     );
                   } else {
-                    Provider.of<StakingDetailsBloc>(context, listen: false)
-                        .showDelegationReview();
+                    bloc.showDelegationReview();
                   }
                 },
                 child: PwText(
