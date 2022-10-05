@@ -3,7 +3,6 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_list_item.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,7 @@ class ViewAllTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<TransactionsBloc>(context);
+    final bloc = Provider.of<TransactionsBloc>(context, listen: false);
 
     return StreamBuilder<TransactionDetails>(
       initialData: bloc.transactionDetails.value,
@@ -43,7 +42,8 @@ class ViewAllTransactionsScreen extends StatelessWidget {
                 PwIcons.back,
               ),
               onPressed: () {
-                get<DashboardTabBloc>().closeViewAllTransactions();
+                Provider.of<DashboardTabBloc>(context, listen: false)
+                    .closeViewAllTransactions();
               },
             ),
           ),

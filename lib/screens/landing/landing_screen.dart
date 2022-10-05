@@ -12,6 +12,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({
@@ -30,14 +31,10 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final _pageController = PageController();
   double _currentPage = 0;
-  final _bloc = LandingBloc();
 
   @override
   void initState() {
     _pageController.addListener(_setCurrentPage);
-    get.registerSingleton(_bloc);
-
-    _bloc.load();
     super.initState();
   }
 
@@ -45,13 +42,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void dispose() {
     _pageController.removeListener(_setCurrentPage);
     _pageController.dispose();
-    get.unregister<LandingBloc>();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<LandingBloc>(context, listen: false);
     final authHelper = get<LocalAuthHelper>();
     final strings = Strings.of(context);
 
@@ -102,7 +99,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         hasAccount ? strings.continueName : strings.addAccount,
                     onPressed: () {
                       if (hasAccount) {
-                        _bloc.doAuth(context);
+                        bloc.doAuth(context);
                       } else {
                         Navigator.of(context).push(
                           AddAccountFlow(

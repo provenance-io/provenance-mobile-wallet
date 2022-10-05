@@ -6,35 +6,22 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_card.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingUndelegationScreen extends StatefulWidget {
   const StakingUndelegationScreen({
     Key? key,
-    this.delegation,
-    required this.validator,
-    required this.account,
   }) : super(key: key);
-
-  final Delegation? delegation;
-
-  final DetailedValidator validator;
-
-  final TransactableAccount account;
 
   @override
   State<StatefulWidget> createState() => _StakingUndelegationScreenState();
 }
 
 class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
-  late final StakingDelegationBloc _bloc;
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _scrollController = ScrollController();
@@ -43,20 +30,11 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
   void initState() {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
-    _bloc = StakingDelegationBloc(
-      delegation: widget.delegation,
-      validator: widget.validator,
-      selectedDelegationType: SelectedDelegationType.undelegate,
-      account: widget.account,
-    );
-    get.registerSingleton<StakingDelegationBloc>(_bloc);
-    _bloc.load();
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
     _scrollController.dispose();
@@ -70,12 +48,13 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    get<StakingDelegationBloc>().updateHashDelegated(number);
+    Provider.of<StakingDelegationBloc>(context, listen: false)
+        .updateHashDelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<StakingDelegationBloc>();
+    final bloc = Provider.of<StakingDelegationBloc>(context, listen: false);
     final strings = Strings.of(context);
 
     return StreamBuilder<StakingDelegationDetails>(
@@ -120,8 +99,8 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  get<StakingFlowBloc>()
-                      .redirectToRedelegation(widget.validator);
+                  Provider.of<StakingDetailsBloc>(context, listen: false)
+                      .redirectToRedelegation(details.validator);
                 },
                 child: PwText(
                   strings.stakingUndelegateWarningSwitchValidators,
@@ -181,7 +160,8 @@ class _StakingUndelegationScreenState extends State<StakingUndelegationScreen> {
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
-                  get<StakingFlowBloc>().showUndelegationReview();
+                  Provider.of<StakingDetailsBloc>(context, listen: false)
+                      .showUndelegationReview();
                 },
                 child: PwText(
                   strings.continueName,

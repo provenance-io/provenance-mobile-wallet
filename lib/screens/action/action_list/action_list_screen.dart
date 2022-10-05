@@ -58,7 +58,7 @@ class ActionListScreenState extends State<ActionListScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<ActionListBloc>(context, listen: false);
+    final bloc = Provider.of<ActionListBloc>(context);
 
     return Scaffold(
         appBar: PwAppBar(),

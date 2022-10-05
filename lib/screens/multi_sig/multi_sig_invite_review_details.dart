@@ -2,11 +2,11 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class MultiSigInviteReviewDetails extends StatelessWidget {
-  MultiSigInviteReviewDetails({
+  const MultiSigInviteReviewDetails({
     required this.name,
     required this.cosignerCount,
     required this.signaturesRequired,
@@ -17,10 +17,11 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
   final int cosignerCount;
   final int signaturesRequired;
 
-  final _bloc = get<MultiSigInviteReviewFlowBloc>();
-
   @override
   Widget build(BuildContext context) {
+    final bloc =
+        Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false);
+
     const divider = Divider(
       thickness: 1,
     );
@@ -51,7 +52,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                 textAlign: TextAlign.end,
               ),
               onPressed: () async {
-                await _bloc.declineInvite();
+                await bloc.declineInvite();
               },
             ),
           ),
@@ -122,7 +123,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         text: Strings.of(context)
                             .multiSigInviteReviewDetailsChooseAccountButton,
                         onPressed: () {
-                          _bloc.showChooseAccount();
+                          bloc.showChooseAccount();
                         },
                       ),
                       VerticalSpacer.large(),
@@ -131,7 +132,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         text: Strings.of(context)
                             .multiSigInviteReviewDetailsMaybeLaterButton,
                         onPressed: () {
-                          _bloc.submitMaybeLater();
+                          bloc.submitMaybeLater();
                         },
                       ),
                     ],

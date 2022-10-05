@@ -12,6 +12,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MultiAccountItem extends StatefulWidget {
@@ -28,8 +29,7 @@ class MultiAccountItem extends StatefulWidget {
 }
 
 class _MultiAccountItemState extends State<MultiAccountItem> {
-  final _subscriptions = CompositeSubscription();
-  final _bloc = get<AccountsBloc>();
+  CompositeSubscription _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
   late MultiAccount _account;
   late bool _isSelected;
@@ -39,16 +39,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
     super.initState();
 
     _account = widget._initialAccount;
-
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as MultiAccount;
-          });
-        }
-      });
-    }).addTo(_subscriptions);
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
@@ -60,6 +50,24 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    final bloc = Provider.of<AccountsBloc>(context);
+    _subscriptions.cancel();
+    final subscriptions = CompositeSubscription();
+    bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as MultiAccount;
+          });
+        }
+      });
+    }).addTo(subscriptions);
+    _subscriptions = subscriptions;
+    super.didChangeDependencies();
   }
 
   @override
@@ -171,7 +179,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       return;
     }
 
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<HomeBloc>(context, listen: false);
 
     switch (result) {
       case MenuOperation.delete:

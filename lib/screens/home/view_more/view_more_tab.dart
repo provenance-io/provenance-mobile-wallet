@@ -5,11 +5,13 @@ import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
 import 'package:provenance_wallet/screens/home/settings/information_screen.dart';
 import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/view_more/hidden_proposal_creation/hidden_proposal_creation_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ViewMoreTab extends StatefulWidget {
   const ViewMoreTab({
@@ -59,8 +61,15 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                         _getLink(
                           PwIcons.coinsOutline,
                           strings.staking,
-                          StakingScreen(
-                            onFlowCompletion: widget.onFlowCompletion,
+                          Provider<StakingScreenBloc>(
+                            lazy: true,
+                            dispose: (_, bloc) => bloc.onDispose(),
+                            create: (context) {
+                              return StakingScreenBloc(
+                                  onFlowCompletion: widget.onFlowCompletion)
+                                ..load();
+                            },
+                            child: StakingScreen(),
                           ),
                         ),
                         _getLink(

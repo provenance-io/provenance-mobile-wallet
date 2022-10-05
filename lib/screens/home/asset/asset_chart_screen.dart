@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_bar_chart.dart';
@@ -9,52 +8,32 @@ import 'package:provenance_wallet/screens/home/asset/asset_chart_recent_transact
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/asset/price_change_indicator.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
-import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class AssetChartScreen extends StatefulWidget {
-  const AssetChartScreen(
-    this.coin,
-    this.asset, {
+  const AssetChartScreen({
     Key? key,
   }) : super(key: key);
-
-  final Coin coin;
-  final Asset asset;
 
   @override
   _AssetChartScreenState createState() => _AssetChartScreenState();
 }
 
 class _AssetChartScreenState extends State<AssetChartScreen> {
-  late AssetChartBloc _bloc;
   final ValueNotifier<AssetChartPointData?> changeNotifier =
       ValueNotifier(null);
 
   @override
-  void initState() {
-    if (!get.isRegistered<AssetChartBloc>()) {
-      final bloc = AssetChartBloc(widget.coin, widget.asset);
-      get.registerSingleton(bloc);
-
-      _bloc = bloc..load();
-    } else {
-      _bloc = get<AssetChartBloc>();
-    }
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<AssetChartBloc>(context);
     final mediaQuery = MediaQuery.of(context);
     final isTallScreen = mediaQuery.size.height > 600;
     final priceHeight = (isTallScreen) ? 45.0 : 35.0;
 
     return StreamBuilder<AssetChartDetails?>(
-      initialData: _bloc.chartDetails.value,
-      stream: _bloc.chartDetails,
+      initialData: bloc.chartDetails.value,
+      stream: bloc.chartDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (null == details) {
@@ -94,8 +73,8 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                   PwIcons.back,
                 ),
                 onPressed: () {
-                  get.unregister<AssetChartBloc>();
-                  get<DashboardTabBloc>().closeAsset();
+                  Provider.of<DashboardTabBloc>(context, listen: false)
+                      .closeAsset();
                 },
               ),
             ),
@@ -158,7 +137,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     AssetBarChartButtons(
                       initialValue: details.value,
                       onValueChanged: (GraphingDataValue newValue) {
-                        _bloc.load(
+                        bloc.load(
                           value: newValue,
                         );
                       },
@@ -169,7 +148,7 @@ class _AssetChartScreenState extends State<AssetChartScreen> {
                     (isTallScreen)
                         ? VerticalSpacer.xxLarge()
                         : VerticalSpacer.medium(),
-                    AssetChartRecentTransactions(asset: widget.asset),
+                    AssetChartRecentTransactions(asset: details.asset),
                   ],
                 ),
               ),

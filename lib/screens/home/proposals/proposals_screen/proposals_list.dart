@@ -3,7 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_list_item.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class ProposalsList extends StatefulWidget {
   const ProposalsList({
@@ -15,7 +15,6 @@ class ProposalsList extends StatefulWidget {
 }
 
 class ProposalsListState extends State<ProposalsList> {
-  final ProposalsBloc _bloc = get<ProposalsBloc>();
   final _scrollController = ScrollController();
 
   @override
@@ -33,10 +32,11 @@ class ProposalsListState extends State<ProposalsList> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<ProposalsBloc>(context);
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
-          await _bloc.load(
+          await bloc.load(
             showLoading: false,
           );
         },
@@ -44,8 +44,8 @@ class ProposalsListState extends State<ProposalsList> {
         child: Stack(
           children: [
             StreamBuilder<ProposalDetails>(
-                initialData: _bloc.proposalDetails.value,
-                stream: _bloc.proposalDetails,
+                initialData: bloc.proposalDetails.value,
+                stream: bloc.proposalDetails,
                 builder: (context, snapshot) {
                   final details = snapshot.data;
                   if (details == null) {
@@ -80,8 +80,8 @@ class ProposalsListState extends State<ProposalsList> {
                   );
                 }),
             StreamBuilder<bool>(
-              initialData: _bloc.isLoadingProposals.value,
-              stream: _bloc.isLoadingProposals,
+              initialData: bloc.isLoadingProposals.value,
+              stream: bloc.isLoadingProposals,
               builder: (context, snapshot) {
                 final isLoading = snapshot.data ?? false;
                 if (isLoading) {
@@ -108,10 +108,11 @@ class ProposalsListState extends State<ProposalsList> {
   }
 
   void _onScrollEnd() {
+    final bloc = Provider.of<ProposalsBloc>(context, listen: false);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingProposals.value) {
-      _bloc.loadAdditionalProposals();
+        !bloc.isLoadingProposals.value) {
+      bloc.loadAdditionalProposals();
     }
   }
 }

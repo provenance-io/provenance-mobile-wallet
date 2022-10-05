@@ -14,6 +14,7 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BasicAccountItem extends StatefulWidget {
@@ -34,27 +35,16 @@ class BasicAccountItem extends StatefulWidget {
 }
 
 class _BasicAccountItemState extends State<BasicAccountItem> {
-  final _subscriptions = CompositeSubscription();
-  final _bloc = get<AccountsBloc>();
+  CompositeSubscription _subscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
   late BasicAccount _account;
   late bool _isSelected;
+  late final AccountsBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-
     _account = widget._initialAccount;
-
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as BasicAccount;
-          });
-        }
-      });
-    }).addTo(_subscriptions);
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
@@ -66,6 +56,24 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    _bloc = Provider.of<AccountsBloc>(context);
+    _subscriptions.cancel();
+    final subscriptions = CompositeSubscription();
+    _bloc.updated.listen((e) {
+      setState(() {
+        if (_account.id == e.id) {
+          setState(() {
+            _account = e as BasicAccount;
+          });
+        }
+      });
+    }).addTo(subscriptions);
+    _subscriptions = subscriptions;
+    super.didChangeDependencies();
   }
 
   @override
@@ -166,7 +174,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       },
     );
 
-    final bloc = get<HomeBloc>();
+    final bloc = Provider.of<HomeBloc>(context, listen: false);
 
     switch (result) {
       case MenuOperation.rename:

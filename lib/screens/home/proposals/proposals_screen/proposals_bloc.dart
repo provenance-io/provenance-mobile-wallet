@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/classes/pw_paging_cache.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/governance/governance_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -14,7 +16,7 @@ import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ProposalsBloc extends PwPagingCache {
+class ProposalsBloc extends PwPagingCache implements ProposalsFlowNavigator {
   final _isLoading = BehaviorSubject.seeded(false);
   final _isLoadingProposals = BehaviorSubject.seeded(false);
   final _proposalDetails = BehaviorSubject.seeded(
@@ -23,11 +25,70 @@ class ProposalsBloc extends PwPagingCache {
   final _proposalPages = BehaviorSubject.seeded(1);
   final _governanceClient = get<GovernanceClient>();
   final TransactableAccount _account;
-
+  final ProposalsFlowNavigator _navigator;
   ProposalsBloc({
+    required ProposalsFlowNavigator navigator,
     required TransactableAccount account,
   })  : _account = account,
+        _navigator = navigator,
         super(50);
+
+  @override
+  void onComplete() {
+    _navigator.onComplete();
+  }
+
+  @override
+  Future<void> showProposalDetails(Proposal proposal) async {
+    await _navigator.showProposalDetails(proposal);
+  }
+
+  @override
+  Future<void> showTransactionData(Object? data, String screenTitle) async {
+    await _navigator.showTransactionData(data, screenTitle);
+  }
+
+  @override
+  Future<void> showTransactionComplete(
+    Object? response,
+    String title,
+  ) async {
+    await _navigator.showTransactionComplete(
+      response,
+      title,
+    );
+  }
+
+  @override
+  Future<void> showVoteReview(
+    Proposal proposal,
+    gov.VoteOption voteOption,
+  ) async {
+    await _navigator.showVoteReview(
+      proposal,
+      voteOption,
+    );
+  }
+
+  @override
+  Future<void> showWeightedVote(Proposal proposal) async {
+    await _navigator.showWeightedVote(proposal);
+  }
+
+  @override
+  Future<void> showWeightedVoteReview(Proposal proposal) async {
+    await _navigator.showWeightedVoteReview(proposal);
+  }
+
+  @override
+  void backToDashboard() {
+    _navigator.backToDashboard();
+  }
+
+  @override
+  Future<void> showDepositReview(Proposal proposal) async {
+    await _navigator.showDepositReview(proposal);
+  }
 
   ValueStream<ProposalDetails> get proposalDetails => _proposalDetails;
   ValueStream<bool> get isLoading => _isLoading;

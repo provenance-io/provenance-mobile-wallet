@@ -3,8 +3,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/change_pin_flow/change_pin_bloc.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class CreateNewPinScreen extends StatefulHookWidget {
   const CreateNewPinScreen({
@@ -16,10 +16,9 @@ class CreateNewPinScreen extends StatefulHookWidget {
 }
 
 class CreateNewPinState extends State<CreateNewPinScreen> {
-  final bloc = get<ChangePinBloc>();
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<ChangePinBloc>(context, listen: false);
     bloc.doAuth(context);
 
     return Scaffold(

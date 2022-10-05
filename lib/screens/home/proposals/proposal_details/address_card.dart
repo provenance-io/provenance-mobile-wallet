@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/util/address_util.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AddressCard extends StatefulWidget {
@@ -71,7 +71,8 @@ class _AddressCardState extends State<AddressCard> {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
-              final url = get<ProposalsBloc>().getExplorerUrl(widget.address);
+              final url = Provider.of<ProposalsBloc>(context, listen: false)
+                  .getExplorerUrl(widget.address);
               if (await canLaunchUrlString(url)) {
                 await launchUrlString(url);
               } else {

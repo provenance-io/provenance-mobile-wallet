@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class AssetChartStatistics extends StatelessWidget {
   const AssetChartStatistics({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class AssetChartStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = Strings.of(context);
-    final bloc = get<AssetChartBloc>();
+    final bloc = Provider.of<AssetChartBloc>(context);
 
     return Column(
       children: [

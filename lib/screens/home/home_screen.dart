@@ -7,6 +7,7 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
+import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
@@ -23,6 +24,7 @@ import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,8 +42,7 @@ class HomeScreenState extends State<HomeScreen>
   int _currentTabIndex = 0;
 
   final _subscriptions = CompositeSubscription();
-
-  final _bloc = HomeBloc();
+  CompositeSubscription _providerSubscriptions = CompositeSubscription();
 
   final _walletConnectService = get<WalletConnectService>();
   final _txQueueService = get<TxQueueService>();
@@ -56,11 +57,7 @@ class HomeScreenState extends State<HomeScreen>
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
     _subscriptions.dispose();
-
-    get.unregister<HomeBloc>();
-    if (get.isRegistered<DashboardTabBloc>()) {
-      get.unregister<DashboardTabBloc>();
-    }
+    _providerSubscriptions.dispose();
 
     super.dispose();
   }
@@ -69,18 +66,24 @@ class HomeScreenState extends State<HomeScreen>
   void didChangeDependencies() {
     RouterObserver.instance.routeObserver
         .subscribe(this, ModalRoute.of(context) as PageRoute);
-    super.didChangeDependencies();
-  }
 
-  @override
-  void initState() {
-    _bloc.isLoading.listen((e) {
+    final bloc = Provider.of<HomeBloc>(context);
+    _providerSubscriptions.cancel();
+    final providerSubscriptions = CompositeSubscription();
+    bloc.isLoading.listen((e) {
       if (e) {
         ModalLoadingRoute.showLoading(context);
       } else {
         ModalLoadingRoute.dismiss(context);
       }
-    }).addTo(_subscriptions);
+    }).addTo(providerSubscriptions);
+    bloc.error.listen(_onError).addTo(providerSubscriptions);
+    _providerSubscriptions = providerSubscriptions;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
     _walletConnectService.delegateEvents.sessionRequest
         .listen(_onSessionRequest)
         .addTo(_subscriptions);
@@ -94,12 +97,10 @@ class HomeScreenState extends State<HomeScreen>
 
     _txQueueService.response.listen(_onResponse).addTo(_subscriptions);
 
-    _bloc.error.listen(_onError).addTo(_subscriptions);
     _walletConnectService.delegateEvents.onResponse
         .listen(_onResponse)
         .addTo(_subscriptions);
 
-    get.registerSingleton<HomeBloc>(_bloc);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setCurrentTab);
     WidgetsBinding.instance.addObserver(this);
@@ -153,31 +154,49 @@ class HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                DashboardTab(),
-                TransactionTab(
-                  allMessageTypes: strings.dropDownAllMessageTypes,
-                  allStatuses: strings.dropDownAllStatuses,
+      body: Provider<DashboardTabBloc>(
+        lazy: true,
+        create: (context) {
+          return DashboardTabBloc();
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: Provider<TransactionsBloc>(
+                create: (context) {
+                  final _bloc = TransactionsBloc(
+                    allMessageTypes: strings.dropDownAllMessageTypes,
+                    allStatuses: strings.dropDownAllStatuses,
+                  )..load();
+                  return _bloc;
+                },
+                dispose: (context, bloc) {
+                  bloc.onDispose();
+                },
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    DashboardTab(),
+                    TransactionTab(),
+                    ViewMoreTab(
+                      onFlowCompletion: () {
+                        setState(() {
+                          _tabController.animateTo(0);
+                          _currentTabIndex = 0;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                ViewMoreTab(
-                  onFlowCompletion: () {
-                    setState(() {
-                      _tabController.animateTo(0);
-                      _currentTabIndex = 0;
-                    });
-                  },
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

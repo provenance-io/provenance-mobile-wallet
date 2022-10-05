@@ -7,7 +7,6 @@ import 'package:provenance_wallet/screens/home/proposals/proposal_details/addres
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/proposal_voting_info.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/voting_buttons.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -16,8 +15,8 @@ import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalDetailsScreen extends StatefulWidget {
   const ProposalDetailsScreen({
@@ -93,7 +92,7 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                         children: [
                           Icon(
                             Icons.brightness_1,
-                            color: get<ProposalsBloc>()
+                            color: Provider.of<ProposalsBloc>(context)
                                 .getColor(_proposal.status, context),
                             size: 8,
                           ),
@@ -207,7 +206,8 @@ class _ProposalDetailsScreenState extends State<ProposalDetailsScreen> {
                               child: PwOutlinedButton(
                                 strings.proposalDetailsScreenDeposit,
                                 onPressed: () {
-                                  get<ProposalsFlowBloc>()
+                                  Provider.of<ProposalsBloc>(context,
+                                          listen: false)
                                       .showDepositReview(_proposal);
                                 },
                               ),

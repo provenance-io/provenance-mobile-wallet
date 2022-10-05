@@ -5,8 +5,8 @@ import 'package:intl/intl.dart' as intl;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/asset/asset_chart_bloc.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class AssetChartPointData {
   AssetChartPointData(
@@ -46,7 +46,7 @@ class AssetBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = get<AssetChartBloc>();
+    final bloc = Provider.of<AssetChartBloc>(context);
 
     return AspectRatio(
       aspectRatio: (isCompact) ? 3 / 2 : 323 / 228,

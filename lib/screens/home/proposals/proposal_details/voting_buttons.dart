@@ -2,10 +2,10 @@ import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class VotingButtons extends StatelessWidget {
   const VotingButtons({
@@ -16,7 +16,7 @@ class VotingButtons extends StatelessWidget {
   final Proposal proposal;
   @override
   Widget build(BuildContext context) {
-    final _bloc = get<ProposalsFlowBloc>();
+    final bloc = Provider.of<ProposalsBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsYes,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_YES,
                     );
@@ -52,7 +52,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsNo,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO,
                     );
@@ -76,7 +76,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsNoWithVeto,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_NO_WITH_VETO,
                     );
@@ -90,7 +90,7 @@ class VotingButtons extends StatelessWidget {
                 child: PwOutlinedButton(
                   strings.proposalDetailsAbstain,
                   onPressed: () {
-                    _bloc.showVoteReview(
+                    bloc.showVoteReview(
                       proposal,
                       gov.VoteOption.VOTE_OPTION_ABSTAIN,
                     );
@@ -115,7 +115,7 @@ class VotingButtons extends StatelessWidget {
               Flexible(
                 child: PwTextButton(
                   onPressed: () {
-                    _bloc.showWeightedVote(proposal);
+                    bloc.showWeightedVote(proposal);
                   },
                   child: PwText(
                     strings.proposalWeightedVote,

@@ -5,8 +5,8 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_corner_border.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/receive_flow/receive/receive_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceiveScreen extends StatelessWidget {
@@ -38,19 +38,11 @@ class ReceivePage extends StatefulWidget {
 }
 
 class ReceivePageState extends State<ReceivePage> {
-  ReceiveBloc? _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _bloc = get<ReceiveBloc>();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<ReceiveBloc>(context, listen: false);
     return StreamBuilder<ReceiveState>(
-      stream: _bloc!.stream,
+      stream: bloc.stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -126,7 +118,7 @@ class ReceivePageState extends State<ReceivePage> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         icon: Icon(Icons.copy),
-                        onPressed: _copyClicked,
+                        onPressed: () => _copyClicked(bloc),
                       ),
                     ),
                   ],
@@ -139,9 +131,9 @@ class ReceivePageState extends State<ReceivePage> {
     );
   }
 
-  Future<void> _copyClicked() async {
+  Future<void> _copyClicked(ReceiveBloc bloc) async {
     try {
-      await _bloc!.copyAddressToClipboard();
+      await bloc.copyAddressToClipboard();
       PwDialog.showMessage(
         context,
         message: Strings.of(context).receiveAccountAddressCopiedMessage,

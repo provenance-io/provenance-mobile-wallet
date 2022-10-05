@@ -2,16 +2,13 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/home/staking/delegation_list.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/validator_list.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingScreen extends StatefulWidget {
   const StakingScreen({
     Key? key,
-    required this.onFlowCompletion,
   }) : super(key: key);
-
-  final Function onFlowCompletion;
 
   @override
   State<StatefulWidget> createState() => _StakingScreenState();
@@ -19,7 +16,6 @@ class StakingScreen extends StatefulWidget {
 
 class _StakingScreenState extends State<StakingScreen>
     with TickerProviderStateMixin {
-  late StakingScreenBloc _bloc;
   late TabController _tabController;
   int _currentTabIndex = 0;
 
@@ -28,21 +24,18 @@ class _StakingScreenState extends State<StakingScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setCurrentTab);
-    _bloc = StakingScreenBloc(onFlowCompletion: widget.onFlowCompletion);
-    get.registerSingleton(_bloc);
-    _bloc.load();
   }
 
   @override
   void dispose() {
     _tabController.removeListener(_setCurrentTab);
     _tabController.dispose();
-    get.unregister<StakingScreenBloc>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     final strings = Strings.of(context);
     return Material(
       child: Stack(
@@ -52,8 +45,8 @@ class _StakingScreenState extends State<StakingScreen>
             child: SafeArea(
               bottom: false,
               child: StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -149,8 +142,8 @@ class _StakingScreenState extends State<StakingScreen>
             ),
           ),
           StreamBuilder<bool>(
-            initialData: _bloc.isLoading.value,
-            stream: _bloc.isLoading,
+            initialData: bloc.isLoading.value,
+            stream: bloc.isLoading,
             builder: (context, snapshot) {
               final isLoading = snapshot.data ?? false;
               if (isLoading) {

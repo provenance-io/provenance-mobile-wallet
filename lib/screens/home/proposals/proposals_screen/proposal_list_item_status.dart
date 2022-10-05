@@ -3,7 +3,7 @@ import 'package:provenance_wallet/screens/home/proposals/proposals_screen/propos
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/vote.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class ProposalListItemStatus extends StatelessWidget {
   final String status;
@@ -21,7 +21,7 @@ class ProposalListItemStatus extends StatelessWidget {
       children: [
         Icon(
           Icons.brightness_1,
-          color: get<ProposalsBloc>().getColor(status, context),
+          color: Provider.of<ProposalsBloc>(context).getColor(status, context),
           size: 8,
         ),
         HorizontalSpacer.xSmall(),

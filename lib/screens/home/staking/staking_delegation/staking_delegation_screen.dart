@@ -6,34 +6,17 @@ import 'package:provenance_wallet/screens/home/staking/staking_delegation/stakin
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/detailed_validator.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingDelegationScreen extends StatefulWidget {
-  final Delegation? delegation;
-  final Reward? reward;
-
-  final DetailedValidator validator;
-
-  final String commissionRate;
-  final TransactableAccount account;
-
   const StakingDelegationScreen({
     Key? key,
-    this.delegation,
-    this.reward,
-    required this.validator,
-    required this.commissionRate,
-    required this.account,
   }) : super(key: key);
 
   @override
@@ -42,7 +25,6 @@ class StakingDelegationScreen extends StatefulWidget {
 }
 
 class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
-  late final StakingDelegationBloc _bloc;
   late final TextEditingController _textEditingController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _scrollController = ScrollController();
@@ -51,22 +33,11 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
   void initState() {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
-    _bloc = StakingDelegationBloc(
-      delegation: widget.delegation,
-      reward: widget.reward,
-      validator: widget.validator,
-      commissionRate: widget.commissionRate,
-      selectedDelegationType: SelectedDelegationType.delegate,
-      account: widget.account,
-    );
-    get.registerSingleton<StakingDelegationBloc>(_bloc);
-    _bloc.load();
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<StakingDelegationBloc>();
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
     _scrollController.dispose();
@@ -80,15 +51,17 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
     }
 
     final number = Decimal.tryParse(text) ?? Decimal.zero;
-    get<StakingDelegationBloc>().updateHashDelegated(number);
+    Provider.of<StakingDelegationBloc>(context, listen: false)
+        .updateHashDelegated(number);
   }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingDelegationBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<StakingDelegationDetails>(
-      initialData: _bloc.stakingDelegationDetails.value,
-      stream: _bloc.stakingDelegationDetails,
+      initialData: bloc.stakingDelegationDetails.value,
+      stream: bloc.stakingDelegationDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
 
@@ -174,7 +147,7 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       details.hashDelegated <= Decimal.zero) {
                     return;
                   }
-                  if (ValidatorStatus.jailed == widget.validator.status) {
+                  if (ValidatorStatus.jailed == details.validator.status) {
                     final strings = Strings.of(context);
                     showDialog(
                       context: context,
@@ -206,7 +179,9 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                get<StakingFlowBloc>().showDelegationReview();
+                                Provider.of<StakingDetailsBloc>(context,
+                                        listen: false)
+                                    .showDelegationReview();
                               },
                               child: PwText(
                                 strings.stakingDelegateYesResponse
@@ -219,7 +194,8 @@ class _StakingDelegationScreenState extends State<StakingDelegationScreen> {
                       },
                     );
                   } else {
-                    get<StakingFlowBloc>().showDelegationReview();
+                    Provider.of<StakingDetailsBloc>(context, listen: false)
+                        .showDelegationReview();
                   }
                 },
                 child: PwText(

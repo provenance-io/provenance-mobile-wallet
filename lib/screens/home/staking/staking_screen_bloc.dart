@@ -160,18 +160,6 @@ class StakingScreenBloc extends PwPagingCache {
     _isLoadingValidators.value = false;
   }
 
-  Color getColor(ValidatorStatus status, BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    switch (status) {
-      case ValidatorStatus.active:
-        return colorScheme.positive300;
-      case ValidatorStatus.candidate:
-        return colorScheme.secondaryContainer;
-      case ValidatorStatus.jailed:
-        return colorScheme.error;
-    }
-  }
-
   Future<void> showMenu(
     BuildContext context,
   ) async {

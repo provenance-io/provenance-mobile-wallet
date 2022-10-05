@@ -9,17 +9,18 @@ import 'package:provenance_wallet/screens/home/staking/staking_confirm/confirm_u
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_screen.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_undelegation_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_screen.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/redelegation_amount_screen.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_screen.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/commission.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 abstract class StakingFlowNavigator {
   Future<void> showDelegationScreen(
@@ -87,39 +88,55 @@ class StakingFlow extends FlowBase {
 
 class StakingFlowState extends FlowBaseState<StakingFlow>
     implements StakingFlowNavigator {
+  StakingDelegationBloc? _delegationBloc;
+  StakingRedelegationBloc? _redelegationBloc;
+
   @override
-  Widget createStartPage() => StakingDetailsScreen(
-        validatorAddress: widget.validatorAddress,
-        account: widget.account,
-        selectedDelegation: widget.selectedDelegation,
-        rewards: widget.rewards,
-      );
+  Widget build(BuildContext context) {
+    return Provider<StakingDetailsBloc>(
+        lazy: true,
+        create: (context) {
+          final bloc = StakingDetailsBloc(
+            widget.validatorAddress,
+            widget.account,
+            widget.selectedDelegation,
+            widget.rewards,
+            navigator: this,
+          )..load();
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: super.build(context));
+  }
 
   @override
   void dispose() {
-    get.unregister<StakingFlowBloc>();
-
+    _delegationBloc?.onDispose();
+    _redelegationBloc?.onDispose();
     super.dispose();
   }
 
   @override
-  void initState() {
-    final bloc = StakingFlowBloc(navigator: this);
-    get.registerSingleton<StakingFlowBloc>(bloc);
-    super.initState();
-  }
+  Widget createStartPage() => StakingDetailsScreen();
 
   @override
   Future<void> showDelegationScreen(
     DetailedValidator validator,
     Commission commission,
   ) async {
+    _delegationBloc = StakingDelegationBloc(
+      delegation: widget.selectedDelegation,
+      validator: validator,
+      commissionRate: commission.commissionRate,
+      selectedDelegationType: SelectedDelegationType.delegate,
+      account: widget.account,
+    )..load();
     showPage(
-      (context) => StakingDelegationScreen(
-        delegation: widget.selectedDelegation,
-        validator: validator,
-        account: widget.account,
-        commissionRate: commission.commissionRate,
+      (context) => Provider.value(
+        value: _delegationBloc!,
+        child: StakingDelegationScreen(),
       ),
     );
   }
@@ -128,11 +145,15 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   Future<void> showRedelegationScreen(
     DetailedValidator validator,
   ) async {
+    _redelegationBloc = StakingRedelegationBloc(
+      validator,
+      widget.selectedDelegation!,
+      widget.account,
+    )..load();
     showPage(
-      (context) => StakingRedelegationScreen(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider.value(
+        value: _redelegationBloc,
+        child: StakingRedelegationScreen(),
       ),
     );
   }
@@ -140,7 +161,10 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showRedelegationAmountScreen() async {
     showPage(
-      (context) => RedelegationAmountScreen(),
+      (context) => Provider.value(
+        value: _redelegationBloc,
+        child: RedelegationAmountScreen(),
+      ),
     );
   }
 
@@ -148,11 +172,16 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   Future<void> showUndelegationScreen(
     DetailedValidator validator,
   ) async {
+    _delegationBloc = StakingDelegationBloc(
+      delegation: widget.selectedDelegation,
+      validator: validator,
+      selectedDelegationType: SelectedDelegationType.undelegate,
+      account: widget.account,
+    )..load();
     showPage(
-      (context) => StakingUndelegationScreen(
-        delegation: widget.selectedDelegation,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider.value(
+        value: _delegationBloc,
+        child: StakingUndelegationScreen(),
       ),
     );
   }
@@ -160,24 +189,35 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
   @override
   Future<void> showDelegationReview() async {
     showPage(
-      (context) => ConfirmDelegateScreen(),
+      (context) => Provider.value(
+        value: _delegationBloc,
+        child: ConfirmDelegateScreen(),
+      ),
     );
   }
 
   @override
   Future<void> showUndelegationReview() async {
     showPage(
-      (context) => ConfirmUndelegateScreen(),
+      (context) => Provider.value(
+        value: _delegationBloc,
+        child: ConfirmUndelegateScreen(),
+      ),
     );
   }
 
   @override
   Future<void> redirectToRedelegation(DetailedValidator validator) async {
+    _delegationBloc = StakingDelegationBloc(
+      delegation: widget.selectedDelegation,
+      validator: validator,
+      selectedDelegationType: SelectedDelegationType.undelegate,
+      account: widget.account,
+    )..load();
     replaceLastPage(
-      (context) => StakingRedelegationScreen(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        account: widget.account,
+      (context) => Provider.value(
+        value: _delegationBloc,
+        child: StakingUndelegationScreen(),
       ),
     );
   }
@@ -187,24 +227,28 @@ class StakingFlowState extends FlowBaseState<StakingFlow>
     DetailedValidator validator,
     Reward? reward,
   ) async {
-    get.registerSingleton(
-      StakingDelegationBloc(
-        delegation: widget.selectedDelegation!,
-        validator: validator,
-        selectedDelegationType: SelectedDelegationType.claimRewards,
-        account: widget.account,
-        reward: reward,
+    _delegationBloc = StakingDelegationBloc(
+      delegation: widget.selectedDelegation!,
+      validator: validator,
+      selectedDelegationType: SelectedDelegationType.claimRewards,
+      account: widget.account,
+      reward: reward,
+    )..load();
+    showPage(
+      (context) => Provider.value(
+        value: _delegationBloc,
+        child: ConfirmClaimRewardsScreen(),
       ),
     );
-    showPage(
-      (context) => ConfirmClaimRewardsScreen(),
-    ).whenComplete(() => get.unregister<StakingDelegationBloc>());
   }
 
   @override
   Future<void> showRedelegationReview() async {
     showPage(
-      (context) => ConfirmRedelegateScreen(),
+      (context) => Provider.value(
+        value: _redelegationBloc,
+        child: ConfirmRedelegateScreen(),
+      ),
     );
   }
 

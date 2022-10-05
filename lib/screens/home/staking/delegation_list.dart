@@ -6,6 +6,7 @@ import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart'
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class DelegationList extends StatefulWidget {
   const DelegationList({
@@ -16,7 +17,6 @@ class DelegationList extends StatefulWidget {
 }
 
 class DelegationListState extends State<DelegationList> {
-  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
   final _scrollController = ScrollController();
 
   @override
@@ -34,11 +34,13 @@ class DelegationListState extends State<DelegationList> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
+
     return Stack(
       children: [
         StreamBuilder<StakingDetails>(
-            initialData: _bloc.stakingDetails.value,
-            stream: _bloc.stakingDetails,
+            initialData: bloc.stakingDetails.value,
+            stream: bloc.stakingDetails,
             builder: (context, snapshot) {
               final stakingDetails = snapshot.data;
               if (stakingDetails == null || stakingDetails.delegates.isEmpty) {
@@ -94,18 +96,21 @@ class DelegationListState extends State<DelegationList> {
                           (element) =>
                               element.validatorAddress == validator.addressId);
                       final response = await Navigator.of(context).push(
-                        StakingFlow(
-                          validator.addressId,
-                          account,
-                          item,
-                          rewards,
+                        Provider.value(
+                          value: bloc,
+                          child: StakingFlow(
+                            validator.addressId,
+                            account,
+                            item,
+                            rewards,
+                          ),
                         ).route(),
                       );
                       if (response == true) {
-                        await _bloc.load();
+                        await bloc.load();
                       } else if (response == false) {
                         Navigator.pop(context);
-                        _bloc.onFlowCompletion();
+                        bloc.onFlowCompletion();
                       }
                     },
                   );
@@ -121,8 +126,8 @@ class DelegationListState extends State<DelegationList> {
               );
             }),
         StreamBuilder<bool>(
-          initialData: _bloc.isLoadingDelegations.value,
-          stream: _bloc.isLoadingDelegations,
+          initialData: bloc.isLoadingDelegations.value,
+          stream: bloc.isLoadingDelegations,
           builder: (context, snapshot) {
             final isLoading = snapshot.data ?? false;
             if (isLoading) {
@@ -147,10 +152,11 @@ class DelegationListState extends State<DelegationList> {
   }
 
   void _onScrollEnd() {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalDelegates();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalDelegates();
     }
   }
 }

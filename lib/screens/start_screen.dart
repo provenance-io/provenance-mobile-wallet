@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/home_screen.dart';
+import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provider/provider.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({Key? key}) : super(key: key);
@@ -31,8 +34,23 @@ class StartScreenState extends State<StartScreen> {
         }
 
         return (snapshot.data == AuthStatus.authenticated)
-            ? HomeScreen()
-            : LandingScreen();
+            ? Provider<HomeBloc>(
+                lazy: true,
+                create: (context) {
+                  return HomeBloc();
+                },
+                dispose: (_, bloc) {
+                  bloc.onDispose();
+                },
+                child: HomeScreen())
+            : Provider<LandingBloc>(
+                lazy: true,
+                dispose: (_, bloc) => bloc.onDispose(),
+                create: (context) {
+                  return LandingBloc();
+                },
+                child: LandingScreen(),
+              );
       },
     );
   }

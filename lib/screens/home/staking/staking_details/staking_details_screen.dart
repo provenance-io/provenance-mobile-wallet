@@ -4,61 +4,30 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/delegator
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/staking_management_buttons.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/validator_details.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/delegation.dart';
-import 'package:provenance_wallet/services/models/rewards.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingDetailsScreen extends StatefulWidget {
   const StakingDetailsScreen({
     Key? key,
-    required this.validatorAddress,
-    required this.account,
-    required this.selectedDelegation,
-    required this.rewards,
   }) : super(key: key);
-
-  final String validatorAddress;
-  final TransactableAccount account;
-  final Delegation? selectedDelegation;
-  final Rewards? rewards;
 
   @override
   State<StatefulWidget> createState() => StakingDetailsScreenState();
 }
 
 class StakingDetailsScreenState extends State<StakingDetailsScreen> {
-  late final StakingDetailsBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = StakingDetailsBloc(
-      widget.validatorAddress,
-      widget.account,
-      widget.selectedDelegation,
-      widget.rewards,
-    );
-    _bloc.load();
-    get.registerSingleton<StakingDetailsBloc>(_bloc);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<StakingDetailsBloc>();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingDetailsBloc>(context, listen: false);
+
     return Stack(
       children: [
         Container(
           color: Theme.of(context).colorScheme.neutral750,
           child: StreamBuilder<DetailedValidatorDetails>(
-            initialData: _bloc.validatorDetails.value,
-            stream: _bloc.validatorDetails,
+            initialData: bloc.validatorDetails.valueOrNull,
+            stream: bloc.validatorDetails,
             builder: (context, snapshot) {
               final details = snapshot.data;
               final validator = snapshot.data?.validator;
@@ -84,7 +53,7 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
                         children: [
                           if (details.delegation == null)
                             ValidatorDetails(validator: validator),
-                          DelegatorDetails(details: details),
+                          DelegatorDetails(),
                         ],
                       ),
                     ),
@@ -102,8 +71,8 @@ class StakingDetailsScreenState extends State<StakingDetailsScreen> {
           ),
         ),
         StreamBuilder<bool>(
-          initialData: _bloc.isLoading.value,
-          stream: _bloc.isLoading,
+          initialData: bloc.isLoading.value,
+          stream: bloc.isLoading,
           builder: (context, snapshot) {
             final isLoading = snapshot.data ?? false;
             if (isLoading) {

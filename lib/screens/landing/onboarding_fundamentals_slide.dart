@@ -1,8 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/pw_onboarding_view.dart';
 import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingFundamentalsSlide extends StatefulWidget {
   const OnboardingFundamentalsSlide({
@@ -19,7 +19,7 @@ class _OnboardingFundamentalsSlideState
     extends State<OnboardingFundamentalsSlide> {
   @override
   Widget build(BuildContext context) {
-    final bloc = get<LandingBloc>();
+    final bloc = Provider.of<LandingBloc>(context);
 
     return PwOnboardingView(children: [
       PwText(

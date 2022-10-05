@@ -8,6 +8,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/models/provenance_validator.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ValidatorList extends StatefulWidget {
   const ValidatorList({Key? key, this.onTap}) : super(key: key);
@@ -18,7 +19,6 @@ class ValidatorList extends StatefulWidget {
 }
 
 class ValidatorListState extends State<ValidatorList> {
-  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
   final _scrollController = ScrollController();
 
   @override
@@ -36,6 +36,7 @@ class ValidatorListState extends State<ValidatorList> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -50,7 +51,7 @@ class ValidatorListState extends State<ValidatorList> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _bloc.showMenu(context),
+              onTap: () => bloc.showMenu(context),
               child: Row(
                 children: [
                   PwText(
@@ -73,8 +74,8 @@ class ValidatorListState extends State<ValidatorList> {
           child: Stack(
             children: [
               StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -113,18 +114,21 @@ class ValidatorListState extends State<ValidatorList> {
                                   element.validatorAddress == item.addressId);
 
                           final response = await Navigator.of(context).push(
-                            StakingFlow(
-                              item.addressId,
-                              account,
-                              delegation,
-                              rewards,
+                            Provider.value(
+                              value: bloc,
+                              child: StakingFlow(
+                                item.addressId,
+                                account,
+                                delegation,
+                                rewards,
+                              ),
                             ).route(),
                           );
                           if (response == true) {
-                            await _bloc.load();
+                            await bloc.load();
                           } else if (response == false) {
                             Navigator.pop(context);
-                            _bloc.onFlowCompletion();
+                            bloc.onFlowCompletion();
                           }
                         },
                       );
@@ -139,8 +143,8 @@ class ValidatorListState extends State<ValidatorList> {
                 },
               ),
               StreamBuilder<bool>(
-                initialData: _bloc.isLoadingValidators.value,
-                stream: _bloc.isLoadingValidators,
+                initialData: bloc.isLoadingValidators.value,
+                stream: bloc.isLoadingValidators,
                 builder: (context, snapshot) {
                   final isLoading = snapshot.data ?? false;
                   if (isLoading) {
@@ -168,10 +172,12 @@ class ValidatorListState extends State<ValidatorList> {
   }
 
   void _onScrollEnd() {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
+
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalValidators();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalValidators();
     }
   }
 }

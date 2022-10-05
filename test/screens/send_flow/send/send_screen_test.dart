@@ -14,6 +14,7 @@ import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_screen_test.mocks.dart';
@@ -32,12 +33,9 @@ main() {
     mockBloc = MockSendBloc();
     when(mockBloc!.stream).thenAnswer((_) => _streamController!.stream);
     when(mockBloc!.onDispose()).thenAnswer((_) => Future.value());
-
-    get.registerSingleton<SendBloc>(mockBloc!);
   });
 
   tearDown(() {
-    get.unregister<SendBloc>();
     _streamController!.close();
   });
 
@@ -48,7 +46,14 @@ main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Material(
-            child: SendScreen(),
+            child: Provider<SendBloc>(
+              lazy: true,
+              create: (context) {
+                return mockBloc!;
+              },
+              dispose: (_, bloc) => bloc.onDispose(),
+              child: SendScreen(),
+            ),
           ),
         ),
       );
@@ -77,7 +82,14 @@ main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Material(
-            child: SendPage(),
+            child: Provider<SendBloc>(
+              lazy: true,
+              create: (context) {
+                return mockBloc!;
+              },
+              dispose: (_, bloc) => bloc.onDispose(),
+              child: SendPage(),
+            ),
           ),
         ),
       );

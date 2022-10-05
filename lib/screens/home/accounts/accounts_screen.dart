@@ -11,6 +11,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountsScreen extends StatefulWidget {
@@ -25,31 +26,35 @@ class AccountsScreen extends StatefulWidget {
 class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
-  final _accountsBloc = AccountsBloc();
+  CompositeSubscription _providerSubscriptions = CompositeSubscription();
   final _accountService = get<AccountService>();
+  late final AccountsBloc _bloc;
 
   @override
   void dispose() {
     _subscriptions.dispose();
-
     super.dispose();
-
-    get.unregister<AccountsBloc>();
   }
 
   @override
   void initState() {
     super.initState();
 
-    get.registerSingleton(_accountsBloc);
-
-    _accountsBloc.load();
-
     _accountService.events.removed.listen(_onRemoved).addTo(_subscriptions);
-    _accountsBloc.insert.listen(_onInsert).addTo(_subscriptions);
-    _accountsBloc.loading
+  }
+
+  @override
+  void didChangeDependencies() {
+    _bloc = Provider.of<AccountsBloc>(context);
+    _providerSubscriptions.cancel();
+    final providerSubscriptions = CompositeSubscription();
+    _bloc.insert.listen(_onInsert).addTo(providerSubscriptions);
+    _bloc.loading
         .listen((e) => _onLoading(context, e))
-        .addTo(_subscriptions);
+        .addTo(providerSubscriptions);
+    _providerSubscriptions = providerSubscriptions;
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -69,8 +74,8 @@ class AccountsScreenState extends State<AccountsScreen> {
                 top: Spacing.medium,
               ),
               child: StreamBuilder<int>(
-                initialData: _accountsBloc.count.value,
-                stream: _accountsBloc.count,
+                initialData: _bloc.count.value,
+                stream: _bloc.count,
                 builder: (context, snapshot) {
                   final count = snapshot.data!;
                   if (count == 0) {
@@ -85,7 +90,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                       index,
                       animation,
                     ) {
-                      final account = _accountsBloc.getAccountAtIndex(index);
+                      final account = _bloc.getAccountAtIndex(index);
 
                       return SlideTransition(
                         position: animation.drive(
@@ -133,7 +138,8 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   void _onRemoved(List<Account> accounts) {
     for (final account in accounts) {
-      final index = _accountsBloc.removeAccount(account.id);
+      final index = Provider.of<AccountsBloc>(context, listen: false)
+          .removeAccount(account.id);
       if (index != -1) {
         _listKey.currentState?.removeItem(
           index,

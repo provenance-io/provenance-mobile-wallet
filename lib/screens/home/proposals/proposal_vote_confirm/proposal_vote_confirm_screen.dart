@@ -1,4 +1,3 @@
-import 'package:provenance_dart/proto_gov_v1beta1.dart' as gov;
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -7,27 +6,25 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalVoteConfirmScreen extends StatefulWidget {
   const ProposalVoteConfirmScreen({
     Key? key,
     required this.account,
     required this.proposal,
-    required this.voteOption,
   }) : super(key: key);
 
   final TransactableAccount account;
   final Proposal proposal;
-  final gov.VoteOption voteOption;
 
   @override
   State<StatefulWidget> createState() => _ProposalVoteConfirmScreen();
@@ -35,27 +32,10 @@ class ProposalVoteConfirmScreen extends StatefulWidget {
 
 class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final ProposalVoteConfirmBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = ProposalVoteConfirmBloc(
-      widget.account,
-      widget.proposal,
-      widget.voteOption,
-    );
-    get.registerSingleton<ProposalVoteConfirmBloc>(_bloc);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<ProposalVoteConfirmBloc>();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<ProposalVoteConfirmBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -87,8 +67,9 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                 50,
               ),
               onPressed: () {
-                final data = _bloc.getMessageJson();
-                get<ProposalsFlowBloc>().showTransactionData(
+                final data = bloc.getMessageJson();
+                Provider.of<ProposalsBloc>(context, listen: false)
+                    .showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
                 );
@@ -136,7 +117,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   DetailsItem(
                       title: strings.proposalVoteConfirmVoteOption,
                       endChild:
-                          ProposalVoteChip(vote: _bloc.getUserFriendlyVote())),
+                          ProposalVoteChip(vote: bloc.getUserFriendlyVote())),
                   PwListDivider.alternate(),
                   PwGasAdjustmentSlider(
                     title: strings.stakingConfirmGasAdjustment,
@@ -186,9 +167,12 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response =
+          await Provider.of<ProposalVoteConfirmBloc>(context, listen: false)
+              .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(
+      Provider.of<ProposalsBloc>(context, listen: false)
+          .showTransactionComplete(
         response,
         Strings.of(context).proposalVoteComplete,
       );

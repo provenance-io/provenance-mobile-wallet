@@ -1,11 +1,11 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/screens/home/staking/staking_flow/staking_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/staking/staking_details/staking_details_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_list_item.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_redelegation/staking_redelegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class StakingRedelegationList extends StatefulWidget {
   const StakingRedelegationList({Key? key}) : super(key: key);
@@ -15,7 +15,6 @@ class StakingRedelegationList extends StatefulWidget {
 }
 
 class _StakingRedelegationListState extends State<StakingRedelegationList> {
-  final StakingScreenBloc _bloc = get<StakingScreenBloc>();
   final _scrollController = ScrollController();
 
   @override
@@ -33,6 +32,7 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<StakingScreenBloc>(context);
     return Column(
       children: [
         VerticalSpacer.xLarge(),
@@ -47,7 +47,9 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _bloc.showMenu(context),
+              onTap: () =>
+                  Provider.of<StakingScreenBloc>(context, listen: false)
+                      .showMenu(context),
               child: Row(
                 children: [
                   PwText(
@@ -70,8 +72,8 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
           child: Stack(
             children: [
               StreamBuilder<StakingDetails>(
-                initialData: _bloc.stakingDetails.value,
-                stream: _bloc.stakingDetails,
+                initialData: bloc.stakingDetails.value,
+                stream: bloc.stakingDetails,
                 builder: (context, snapshot) {
                   final stakingDetails = snapshot.data;
                   if (stakingDetails == null) {
@@ -92,9 +94,12 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                           item.commission,
                         ),
                         onTouch: () async {
-                          get<StakingRedelegationBloc>()
+                          Provider.of<StakingRedelegationBloc>(context,
+                                  listen: false)
                               .selectRedelegation(item);
-                          get<StakingFlowBloc>().showRedelegationAmountScreen();
+                          Provider.of<StakingDetailsBloc>(context,
+                                  listen: false)
+                              .showRedelegationAmountScreen();
                         },
                       );
                     },
@@ -108,8 +113,8 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
                 },
               ),
               StreamBuilder<bool>(
-                initialData: _bloc.isLoadingValidators.value,
-                stream: _bloc.isLoadingValidators,
+                initialData: bloc.isLoadingValidators.value,
+                stream: bloc.isLoadingValidators,
                 builder: (context, snapshot) {
                   final isLoading = snapshot.data ?? false;
                   if (isLoading) {
@@ -137,10 +142,11 @@ class _StakingRedelegationListState extends State<StakingRedelegationList> {
   }
 
   void _onScrollEnd() {
+    final bloc = Provider.of<StakingScreenBloc>(context, listen: false);
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        !_bloc.isLoadingValidators.value) {
-      _bloc.loadAdditionalValidators();
+        !bloc.isLoadingValidators.value) {
+      bloc.loadAdditionalValidators();
     }
   }
 }

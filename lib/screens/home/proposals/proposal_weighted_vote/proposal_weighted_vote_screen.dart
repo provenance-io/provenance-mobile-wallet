@@ -3,11 +3,11 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_sliders.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalWeightedVoteScreen extends StatefulWidget {
   const ProposalWeightedVoteScreen({
@@ -24,26 +24,10 @@ class ProposalWeightedVoteScreen extends StatefulWidget {
 }
 
 class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
-  late final WeightedVoteBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = WeightedVoteBloc(
-      widget.proposal,
-      widget.account,
-    );
-    get.registerSingleton<WeightedVoteBloc>(_bloc);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<WeightedVoteBloc>();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<WeightedVoteBloc>(context);
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.of(context).proposalWeightedVote,
@@ -63,8 +47,8 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
               ),
             ),
             StreamBuilder<WeightedVoteDetails>(
-              initialData: _bloc.weightedVoteDetails.value,
-              stream: _bloc.weightedVoteDetails,
+              initialData: bloc.weightedVoteDetails.value,
+              stream: bloc.weightedVoteDetails,
               builder: (context, snapshot) {
                 final details = snapshot.data;
 
@@ -82,7 +66,7 @@ class _ProposalDetailsScreenState extends State<ProposalWeightedVoteScreen> {
                             details.yesAmount ==
                         100,
                     onPressed: () {
-                      get<ProposalsFlowBloc>()
+                      Provider.of<ProposalsBloc>(context, listen: false)
                           .showWeightedVoteReview(widget.proposal);
                     },
                     child: PwText(

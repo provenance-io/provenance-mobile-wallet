@@ -9,6 +9,7 @@ import 'package:provenance_wallet/screens/home/settings/wallet_connect_item.dart
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class DeveloperMenu extends StatelessWidget {
   const DeveloperMenu({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.httpClientDiagnostics500,
                   !data,
                 );
-                get<HomeBloc>().load();
+                Provider.of<HomeBloc>(context, listen: false).load();
               },
             );
           },
@@ -71,7 +72,7 @@ class DeveloperMenu extends StatelessWidget {
                   PrefKey.enableMultiSig,
                   !shouldEnableMultiSig,
                 );
-                get<HomeBloc>().load();
+                Provider.of<HomeBloc>(context, listen: false).load();
               },
             );
           },

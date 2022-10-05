@@ -7,14 +7,14 @@ import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/single_percentage_bar_chart.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 
 class ProposalWeightedVoteConfirmScreen extends StatefulWidget {
   const ProposalWeightedVoteConfirmScreen({
@@ -34,19 +34,18 @@ class ProposalWeightedVoteConfirmScreen extends StatefulWidget {
 class _ProposalWeightedVoteConfirmScreenState
     extends State<ProposalWeightedVoteConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final WeightedVoteBloc _bloc;
 
   @override
   void initState() {
-    _bloc = get<WeightedVoteBloc>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<WeightedVoteBloc>(context, listen: false);
     final strings = Strings.of(context);
     return StreamBuilder<WeightedVoteDetails>(
-      stream: _bloc.weightedVoteDetails,
+      stream: bloc.weightedVoteDetails,
       builder: (context, snapshot) {
         final details = snapshot.data;
         if (details == null) {
@@ -78,8 +77,9 @@ class _ProposalWeightedVoteConfirmScreenState
                   50,
                 ),
                 onPressed: () {
-                  final data = _bloc.getMessageJson();
-                  get<ProposalsFlowBloc>().showTransactionData(
+                  final data = bloc.getMessageJson();
+                  Provider.of<ProposalsBloc>(context, listen: false)
+                      .showTransactionData(
                     data,
                     Strings.of(context).stakingConfirmData,
                   );
@@ -215,9 +215,12 @@ class _ProposalWeightedVoteConfirmScreenState
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response =
+          await Provider.of<WeightedVoteBloc>(context, listen: false)
+              .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(
+      Provider.of<ProposalsBloc>(context, listen: false)
+          .showTransactionComplete(
         response,
         Strings.of(context).proposalVoteComplete,
       );

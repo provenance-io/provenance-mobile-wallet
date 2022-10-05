@@ -3,12 +3,13 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
 import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/proposal_details_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_screen.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/proposal_weighted_vote_screen.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote/weighted_vote_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_weighted_vote_confirm/proposal_weighted_vote_confirm.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -16,6 +17,9 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
+
+import 'proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 
 abstract class ProposalsFlowNavigator {
   Future<void> showProposalDetails(
@@ -66,19 +70,34 @@ class ProposalsFlow extends FlowBase {
 class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     implements ProposalsFlowNavigator {
   late TransactableAccount _account;
+  WeightedVoteBloc? _weightedVoteBloc;
   @override
   void initState() {
     _account = get<AccountService>().events.selected.value!;
-    get.registerSingleton<ProposalsFlowBloc>(ProposalsFlowBloc(this));
-    get.registerSingleton(ProposalsBloc(account: _account)..load());
     super.initState();
   }
 
   @override
   void dispose() {
-    get.unregister<ProposalsFlowBloc>();
-    get.unregister<ProposalsBloc>();
+    _weightedVoteBloc?.onDispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Provider<ProposalsBloc>(
+        lazy: true,
+        create: (context) {
+          final bloc = ProposalsBloc(
+            navigator: this,
+            account: _account,
+          )..load();
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: super.build(context));
   }
 
   @override
@@ -99,10 +118,17 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   Future<void> showWeightedVote(
     Proposal proposal,
   ) async {
+    _weightedVoteBloc = WeightedVoteBloc(
+      proposal,
+      _account,
+    );
     showPage(
-      (context) => ProposalWeightedVoteScreen(
-        proposal: proposal,
-        account: _account,
+      (context) => Provider.value(
+        value: _weightedVoteBloc,
+        child: ProposalWeightedVoteScreen(
+          proposal: proposal,
+          account: _account,
+        ),
       ),
     );
   }
@@ -113,10 +139,22 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
     proto.VoteOption voteOption,
   ) async {
     showPage(
-      (context) => ProposalVoteConfirmScreen(
-        account: _account,
-        proposal: proposal,
-        voteOption: voteOption,
+      (context) => Provider<ProposalVoteConfirmBloc>(
+        lazy: true,
+        create: (context) {
+          return ProposalVoteConfirmBloc(
+            _account,
+            proposal,
+            voteOption,
+          );
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: ProposalVoteConfirmScreen(
+          account: _account,
+          proposal: proposal,
+        ),
       ),
     );
   }
@@ -156,9 +194,12 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   @override
   Future<void> showWeightedVoteReview(Proposal proposal) async {
     showPage(
-      (context) => ProposalWeightedVoteConfirmScreen(
-        account: _account,
-        proposal: proposal,
+      (context) => Provider.value(
+        value: _weightedVoteBloc,
+        child: ProposalWeightedVoteConfirmScreen(
+          proposal: proposal,
+          account: _account,
+        ),
       ),
     );
   }
@@ -166,9 +207,20 @@ class _ProposalsFlowState extends FlowBaseState<ProposalsFlow>
   @override
   Future<void> showDepositReview(Proposal proposal) async {
     showPage(
-      (context) => DepositConfirmScreen(
-        account: _account,
-        proposal: proposal,
+      (context) => Provider<DepositConfirmBloc>(
+        lazy: true,
+        create: (context) {
+          final bloc = DepositConfirmBloc(
+            _account,
+            proposal,
+          )..load();
+
+          return bloc;
+        },
+        dispose: (_, bloc) {
+          bloc.onDispose();
+        },
+        child: DepositConfirmScreen(),
       ),
     );
   }

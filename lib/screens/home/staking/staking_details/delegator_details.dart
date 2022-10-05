@@ -6,25 +6,23 @@ import 'package:provenance_wallet/screens/home/staking/staking_details/staking_d
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
 import 'package:provenance_wallet/util/extensions/string_extensions.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/validator_util.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DelegatorDetails extends StatelessWidget {
-  final DetailedValidatorDetails details;
-
   const DelegatorDetails({
     Key? key,
-    required this.details,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = get<StakingDetailsBloc>();
+    final bloc = Provider.of<StakingDetailsBloc>(context);
     final strings = Strings.of(context);
     return StreamBuilder<DetailedValidatorDetails>(
-        initialData: _bloc.validatorDetails.value,
-        stream: _bloc.validatorDetails,
+        initialData: bloc.validatorDetails.valueOrNull,
+        stream: bloc.validatorDetails,
         builder: (context, snapshot) {
           final details = snapshot.data;
           final validator = snapshot.data?.validator;
@@ -79,8 +77,7 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.brightness_1,
-                    color: get<StakingScreenBloc>()
-                        .getColor(validator.status, context),
+                    color: validatorColorForStatus(context, validator.status),
                     size: 8,
                   ),
                   HorizontalSpacer.xSmall(),
@@ -144,7 +141,8 @@ class DelegatorDetails extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      String url = _bloc.getProvUrl();
+                      String url =
+                          Provider.of<StakingDetailsBloc>(context).getProvUrl();
                       if (await canLaunchUrlString(url)) {
                         await launchUrlString(url);
                       } else {

@@ -7,26 +7,19 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
-import 'package:provenance_wallet/screens/home/proposals/proposals_flow_bloc.dart';
+import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/warning_section.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
 import 'package:provenance_wallet/screens/home/transactions/details_item.dart';
-import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DepositConfirmScreen extends StatefulWidget {
   const DepositConfirmScreen({
     Key? key,
-    required this.account,
-    required this.proposal,
   }) : super(key: key);
-
-  final TransactableAccount account;
-  final Proposal proposal;
 
   @override
   State<StatefulWidget> createState() => _DepositConfirmScreenState();
@@ -34,27 +27,10 @@ class DepositConfirmScreen extends StatefulWidget {
 
 class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
   double _gasEstimate = defaultGasEstimate;
-  late final DepositConfirmBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = DepositConfirmBloc(
-      widget.account,
-      widget.proposal,
-    );
-    get.registerSingleton<DepositConfirmBloc>(_bloc);
-    _bloc.load();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    get.unregister<DepositConfirmBloc>();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<DepositConfirmBloc>(context, listen: false);
     final strings = Strings.of(context);
     final _formatter = DateFormat.yMMMd('en_US');
 
@@ -88,8 +64,9 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                 50,
               ),
               onPressed: () {
-                final data = _bloc.getMessageJson();
-                get<ProposalsFlowBloc>().showTransactionData(
+                final data = bloc.getMessageJson();
+                Provider.of<ProposalsBloc>(context, listen: false)
+                    .showTransactionData(
                   data,
                   Strings.of(context).stakingConfirmData,
                 );
@@ -106,8 +83,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
         child: StreamBuilder<DepositDetails?>(
-            initialData: _bloc.depositDetails.value,
-            stream: _bloc.depositDetails,
+            initialData: bloc.depositDetails.value,
+            stream: bloc.depositDetails,
             builder: (context, snapshot) {
               final details = snapshot.data;
 
@@ -127,8 +104,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                           title: strings.depositConfirmScreenByDepositingHASH,
                           message:
                               strings.depositConfirmScreenDepositWillBeLocked(
-                                  _formatter
-                                      .format(widget.proposal.depositEndTime)),
+                                  _formatter.format(
+                                      details.proposal!.depositEndTime)),
                           background: Theme.of(context).colorScheme.error,
                         ),
                         DetailsHeader(
@@ -139,14 +116,14 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                           title: strings.proposalVoteConfirmProposalId,
                           children: [
                             PwText(
-                              widget.proposal.proposalId.toString(),
+                              details.proposal?.proposalId.toString() ?? "",
                               textAlign: TextAlign.end,
                               style: PwTextStyle.footnote,
                             ),
                             HorizontalSpacer.small(),
                             GestureDetector(
                               onTap: () async {
-                                String url = _bloc.getProvUrl();
+                                String url = bloc.getProvUrl();
                                 if (await canLaunchUrlString(url)) {
                                   await launchUrlString(url);
                                 } else {
@@ -170,7 +147,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.proposalVoteConfirmTitle,
-                          value: widget.proposal.title,
+                          value: details.proposal?.title ?? "",
                         ),
                         PwListDivider.alternate(),
                         VerticalSpacer.xxLarge(),
@@ -179,7 +156,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                           max: details.sliderMax,
                           thumbColor:
                               Theme.of(context).colorScheme.secondary350,
-                          onChanged: (changed) => _bloc.depositAmount = changed,
+                          onChanged: (changed) => bloc.depositAmount = changed,
                         ),
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
@@ -190,8 +167,8 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         PwListDivider.alternate(),
                         DetailsItem.fromStrings(
                           title: strings.depositConfirmScreenDepositNeeded,
-                          value: strings.hashAmount(widget
-                              .proposal.neededDepositFormatted
+                          value: strings.hashAmount(details
+                              .proposal!.neededDepositFormatted
                               .toString()),
                         ),
                         PwListDivider.alternate(),
@@ -207,6 +184,36 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                               (details.amount + details.currentDepositHash)
                                   .toInt()
                                   .toString()),
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.fromStrings(
+                          title: strings.stakingDelegateAvailableBalance,
+                          value:
+                              strings.hashAmount(details.hashAmount.toString()),
+                        ),
+                        PwListDivider.alternate(),
+                        DetailsItem.withRowChildren(
+                          title: strings.depositConfirmScreenDepositAmount,
+                          children: [
+                            if (details.amount + details.currentDepositHash >
+                                details.neededDepositHash)
+                              PwIcon(
+                                PwIcons.warn,
+                                color: Theme.of(context).errorColor,
+                                size: 19,
+                              ),
+                            HorizontalSpacer.small(),
+                            PwText(
+                              strings.hashAmount(
+                                  details.amount.toInt().toString()),
+                              style: PwTextStyle.footnote,
+                            )
+                          ],
+                        ),
+                        DepositSlider(
+                          max: details.sliderMax,
+                          thumbColor: Theme.of(context).colorScheme.primary550,
+                          onChanged: (changed) => bloc.depositAmount = changed,
                         ),
                         PwListDivider.alternate(),
                         PwGasAdjustmentSlider(
@@ -260,9 +267,12 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
     BuildContext context,
   ) async {
     try {
-      final response = await _bloc.sendTransaction(gasEstimate);
+      final response =
+          await Provider.of<DepositConfirmBloc>(context, listen: false)
+              .sendTransaction(gasEstimate);
       ModalLoadingRoute.dismiss(context);
-      get<ProposalsFlowBloc>().showTransactionComplete(
+      Provider.of<ProposalsBloc>(context, listen: false)
+          .showTransactionComplete(
         response,
         Strings.of(context).proposalDepositComplete,
       );

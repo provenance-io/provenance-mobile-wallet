@@ -9,7 +9,7 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_deta
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_landing.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 abstract class MultiSigInviteReviewFlowNavigator {
   MultiSigInviteReviewFlowNavigator._();
@@ -38,28 +38,19 @@ class MultiSigInviteReviewFlow extends FlowBase {
 class MultiSigInviteReviewFlowState
     extends FlowBaseState<MultiSigInviteReviewFlow>
     implements MultiSigInviteReviewFlowNavigator {
-  late final MultiSigInviteReviewFlowBloc bloc;
-
   @override
-  void initState() {
-    super.initState();
-
-    bloc = MultiSigInviteReviewFlowBloc(
-      inviteId: widget.inviteId,
-      remoteAccount: widget.multiSigRemoteAccount,
-      navigator: this,
+  Widget build(BuildContext context) {
+    return Provider<MultiSigInviteReviewFlowBloc>(
+      lazy: true,
+      create: (context) {
+        return MultiSigInviteReviewFlowBloc(
+          inviteId: widget.inviteId,
+          remoteAccount: widget.multiSigRemoteAccount,
+          navigator: this,
+        );
+      },
+      child: super.build(context),
     );
-
-    get.registerSingleton<MultiSigInviteReviewFlowNavigator>(this);
-    get.registerSingleton<MultiSigInviteReviewFlowBloc>(bloc);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    get.unregister<MultiSigInviteReviewFlowNavigator>();
-    get.unregister<MultiSigInviteReviewFlowBloc>();
   }
 
   @override
@@ -106,7 +97,9 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
-        onAccount: bloc.submitLinkedAccount,
+        onAccount:
+            Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false)
+                .submitLinkedAccount,
         enableCreate: false,
       ),
     );
