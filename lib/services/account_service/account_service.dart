@@ -122,40 +122,18 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<Account?> setAccountCoin({
-    required String id,
-    required Coin coin,
-  }) async {
-    final details = await _storage.setAccountCoin(
-      id: id,
-      coin: coin,
-    );
-
-    if (details != null) {
-      events._updated.add(details);
-      if (events.selected.value?.id == details.id) {
-        selectAccount(id: details.id);
-      }
-    }
-
-    return details;
-  }
-
   Future<Account?> addAccount({
     required List<String> phrase,
     required String name,
     required Coin coin,
   }) async {
     final seed = Mnemonic.createSeed(phrase);
-    final privateKeys = [
-      PrivateKey.fromSeed(seed, Coin.mainNet),
-      PrivateKey.fromSeed(seed, Coin.testNet),
-    ];
+
+    final privateKey = PrivateKey.fromSeed(seed, coin);
 
     final details = await _storage.addAccount(
       name: name,
-      privateKeys: privateKeys,
-      selectedCoin: coin,
+      privateKey: privateKey,
     );
 
     if (details != null) {

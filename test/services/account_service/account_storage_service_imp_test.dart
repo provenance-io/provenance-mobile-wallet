@@ -14,24 +14,18 @@ import 'account_storage_service_imp_test.mocks.dart';
 final seed = Mnemonic.createSeed(
   Mnemonic.fromEntropy(List.generate(256, (index) => index)),
 );
-final privateKeys = [
-  PrivateKey.fromSeed(seed, Coin.mainNet),
-  PrivateKey.fromSeed(seed, Coin.testNet),
-];
-final publicKeys = privateKeys.map((e) => e.defaultKey().publicKey).toList();
-
-final selectedPrivateKey = privateKeys.first;
-final selectedPublicKey = publicKeys.first;
+final privateKey = PrivateKey.fromSeed(seed, Coin.testNet);
+final publicKey = privateKey.defaultKey().publicKey;
 
 final details = BasicAccount(
   id: "1",
   name: "Account1",
-  publicKey: selectedPublicKey,
+  publicKey: publicKey,
 );
 final details2 = BasicAccount(
   id: "2",
   name: "Account2",
-  publicKey: selectedPublicKey,
+  publicKey: publicKey,
 );
 
 @GenerateMocks([AccountStorageServiceCore, CipherService])
@@ -54,8 +48,7 @@ main() {
     setUp(() {
       when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(details));
 
       when(mockCipherService!.encryptKey(
@@ -67,8 +60,7 @@ main() {
     test('success result', () async {
       final outDetails = await accountStorageService!.addAccount(
         name: "New Name",
-        privateKeys: privateKeys,
-        selectedCoin: selectedPrivateKey.coin,
+        privateKey: privateKey,
       );
 
       expect(outDetails, details);
@@ -77,31 +69,26 @@ main() {
     test('call sequence', () async {
       await accountStorageService!.addAccount(
         name: "New Name",
-        privateKeys: privateKeys,
-        selectedCoin: selectedPrivateKey.coin,
+        privateKey: privateKey,
       );
 
       verify(mockAccountStorageServiceCore!.addBasicAccount(
         name: "New Name",
-        publicKeys: publicKeys
-            .map((e) => PublicKeyData(
-                hex: e.compressedPublicKeyHex,
-                chainId: ChainId.forCoin(e.coin)))
-            .toList(),
-        selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
+        publicKey: PublicKeyData(
+          hex: publicKey.compressedPublicKeyHex,
+          chainId: ChainId.forCoin(publicKey.coin),
+        ),
       ));
 
-      for (final privateKey in privateKeys) {
-        final keyId = accountStorageService!.privateKeyId(
-          details.id,
-          privateKey.coin,
-        );
+      final keyId = accountStorageService!.privateKeyId(
+        details.id,
+        privateKey.coin,
+      );
 
-        verify(mockCipherService!.encryptKey(
-          id: keyId,
-          privateKey: privateKey.serialize(publicKeyOnly: false),
-        ));
-      }
+      verify(mockCipherService!.encryptKey(
+        id: keyId,
+        privateKey: privateKey.serialize(publicKeyOnly: false),
+      ));
     });
 
     test("no details found", () async {
@@ -110,14 +97,12 @@ main() {
 
       when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.value(null));
 
       final result = await accountStorageService!.addAccount(
         name: "New Name",
-        privateKeys: privateKeys,
-        selectedCoin: selectedPrivateKey.coin,
+        privateKey: privateKey,
       );
 
       expect(result, null);
@@ -125,12 +110,10 @@ main() {
 
       verify(mockAccountStorageServiceCore!.addBasicAccount(
         name: "New Name",
-        publicKeys: publicKeys
-            .map((e) => PublicKeyData(
-                hex: e.compressedPublicKeyHex,
-                chainId: ChainId.forCoin(e.coin)))
-            .toList(),
-        selectedChainId: ChainId.forCoin(selectedPrivateKey.coin),
+        publicKey: PublicKeyData(
+          hex: publicKey.compressedPublicKeyHex,
+          chainId: ChainId.forCoin(publicKey.coin),
+        ),
       ));
       verifyNoMoreInteractions(mockAccountStorageServiceCore!);
     });
@@ -146,8 +129,7 @@ main() {
 
       final result = await accountStorageService!.addAccount(
         name: "New Name",
-        privateKeys: privateKeys,
-        selectedCoin: selectedPrivateKey.coin,
+        privateKey: privateKey,
       );
 
       expect(result, null);
@@ -159,15 +141,13 @@ main() {
 
       when(mockAccountStorageServiceCore!.addBasicAccount(
         name: anyNamed("name"),
-        publicKeys: anyNamed("publicKeys"),
-        selectedChainId: anyNamed("selectedChainId"),
+        publicKey: anyNamed("publicKey"),
       )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => accountStorageService!.addAccount(
           name: "New Name",
-          privateKeys: privateKeys,
-          selectedCoin: selectedPrivateKey.coin,
+          privateKey: privateKey,
         ),
         throwsA(exception),
       );
@@ -184,8 +164,7 @@ main() {
       expect(
         () => accountStorageService!.addAccount(
           name: "New Name",
-          privateKeys: privateKeys,
-          selectedCoin: selectedPrivateKey.coin,
+          privateKey: privateKey,
         ),
         throwsA(exception),
       );
@@ -255,15 +234,15 @@ main() {
   group("loadKey", () {
     test("results", () async {
       when(mockCipherService!.decryptKey(id: anyNamed("id"))).thenAnswer(
-        (_) => Future.value(selectedPrivateKey.serialize(publicKeyOnly: false)),
+        (_) => Future.value(privateKey.serialize(publicKeyOnly: false)),
       );
 
       const walletId = "A";
-      final coin = selectedPrivateKey.coin;
+      final coin = privateKey.coin;
       final keyId = accountStorageService!.privateKeyId(walletId, coin);
 
       final result = await accountStorageService!.loadKey(walletId, coin);
-      expect(result!.rawHex, selectedPrivateKey.rawHex);
+      expect(result!.rawHex, privateKey.rawHex);
       verify(mockCipherService!.decryptKey(id: keyId));
     });
 

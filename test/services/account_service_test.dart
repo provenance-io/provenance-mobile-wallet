@@ -1,39 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as path;
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
-import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
 import 'package:sembast/sembast_memory.dart';
 
 import '../screens/receive_flow/receive/receive_screen_test.dart';
 
+final dbPath = path.join(sembastInMemoryDatabasePath, 'account.db');
+
 void main() {
   tearDown(() async {
     await get.reset(dispose: true);
-  });
-
-  test('On set coin expect selected wallet updates', () async {
-    const initialCoin = Coin.mainNet;
-    final service = await createService(dataCount: 2, coin: initialCoin);
-
-    var calledUpdate = false;
-    service.events.updated.listen((event) {
-      calledUpdate = true;
-    });
-
-    final initial = service.events.selected.value!;
-    expect(initial.coin, initialCoin);
-
-    const updatedCoin = Coin.testNet;
-    final updated =
-        await service.setAccountCoin(id: initial.id, coin: updatedCoin);
-
-    await pumpEventQueue();
-
-    expect(updated!.coin, updatedCoin);
-    expect(service.events.selected.value!.coin, updatedCoin);
-    expect(calledUpdate, isTrue);
   });
 
   test('On rename selected wallet expect selected wallet updates', () async {
@@ -71,9 +51,9 @@ Future<AccountService> createService({
     coin: coin,
   );
 
-  final serviceCore = SembastAccountStorageService(
+  final serviceCore = SembastAccountStorageServiceV2(
     factory: newDatabaseFactoryMemory(),
-    directory: sembastInMemoryDatabasePath,
+    dbPath: dbPath,
     import: export,
   );
   final cipherService = MemoryCipherService();
@@ -89,7 +69,7 @@ Future<AccountService> createService({
   expect(accounts.length, dataCount);
 
   get.registerSingleton(serviceCore,
-      dispose: (SembastAccountStorageService serviceCore) {
+      dispose: (SembastAccountStorageServiceV2 serviceCore) {
     return serviceCore.deleteDatabase();
   });
 
@@ -104,9 +84,9 @@ Future<Map<String, Object?>> createDatabaseExport({
   int dataCount = 0,
   Coin coin = Coin.mainNet,
 }) async {
-  final serviceCore = SembastAccountStorageService(
+  final serviceCore = SembastAccountStorageServiceV2(
     factory: newDatabaseFactoryMemory(),
-    directory: sembastInMemoryDatabasePath,
+    dbPath: dbPath,
   );
   final cipherService = MemoryCipherService();
 

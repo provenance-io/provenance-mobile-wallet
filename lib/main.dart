@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart';
@@ -26,7 +27,7 @@ import 'package:provenance_wallet/services/account_service/account_storage_servi
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_kind.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/sembast_account_storage_service.dart';
+import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/asset_client/default_asset_client.dart';
@@ -222,15 +223,17 @@ void main(List<String> args) {
         keyValueService.setBool(PrefKey.isSubsequentRun, true);
       }
 
+      const accountDbFilename = 'account.db';
+
       AccountStorageService accountStorageService;
 
       switch (AccountStorageServiceKind.values.byName(_accountServiceKind)) {
         case AccountStorageServiceKind.sembast:
           final directory = await getApplicationDocumentsDirectory();
           await directory.create(recursive: true);
-          final serviceCore = SembastAccountStorageService(
+          final serviceCore = SembastAccountStorageServiceV2(
             factory: databaseFactoryIo,
-            directory: directory.absolute.path,
+            dbPath: path.join(directory.absolute.path, accountDbFilename),
           );
           accountStorageService =
               AccountStorageServiceImp(serviceCore, cipherService);
@@ -239,9 +242,9 @@ void main(List<String> args) {
 
           break;
         case AccountStorageServiceKind.memory:
-          final serviceCore = SembastAccountStorageService(
+          final serviceCore = SembastAccountStorageServiceV2(
             factory: databaseFactoryMemory,
-            directory: sembastInMemoryDatabasePath,
+            dbPath: path.join(sembastInMemoryDatabasePath, accountDbFilename),
           );
           accountStorageService = AccountStorageServiceImp(
             serviceCore,
@@ -714,7 +717,7 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
 
     var migrated = 0;
     for (var account in accounts) {
-      final privateKeys = <wallet.PrivateKey>[];
+      wallet.PrivateKey? privateKey;
 
       final mainNetKeyId = '${account.id}-${ChainId.mainNet}';
       final testNetKeyId = '${account.id}-${ChainId.testNet}';
@@ -722,23 +725,15 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
       final mainNetKey = await cipherService.decryptKey(
         id: mainNetKeyId,
       );
-      final testNetKey = await cipherService.decryptKey(
-        id: testNetKeyId,
-      );
 
       if (mainNetKey != null) {
-        privateKeys.add(wallet.PrivateKey.fromBip32(mainNetKey));
+        privateKey = wallet.PrivateKey.fromBip32(mainNetKey);
       }
 
-      if (testNetKey != null) {
-        privateKeys.add(wallet.PrivateKey.fromBip32(testNetKey));
-      }
-
-      if (privateKeys.length == 2) {
+      if (privateKey != null) {
         final details = await accountStorageService.addAccount(
           name: account.name,
-          privateKeys: privateKeys,
-          selectedCoin: account.coin!,
+          privateKey: privateKey,
         );
 
         if (details != null) {

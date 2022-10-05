@@ -19,47 +19,36 @@ class AccountStorageServiceImp implements AccountStorageService {
   @override
   Future<Account?> addAccount({
     required String name,
-    required List<PrivateKey> privateKeys,
-    required Coin selectedCoin,
+    required PrivateKey privateKey,
   }) async {
-    final keyDatas = <PublicKeyData>[];
-    for (var privateKey in privateKeys) {
-      final publicKey = privateKey.defaultKey().publicKey;
+    final publicKey = privateKey.defaultKey().publicKey;
 
-      final hex = publicKey.compressedPublicKeyHex;
-      final network = ChainId.forCoin(publicKey.coin);
-      final data = PublicKeyData(
-        hex: hex,
-        chainId: network,
-      );
-      keyDatas.add(data);
-    }
-
-    final selectedChainId = ChainId.forCoin(selectedCoin);
+    final hex = publicKey.compressedPublicKeyHex;
+    final network = ChainId.forCoin(publicKey.coin);
 
     final details = await _serviceCore.addBasicAccount(
       name: name,
-      publicKeys: keyDatas,
-      selectedChainId: selectedChainId,
+      publicKey: PublicKeyData(
+        hex: hex,
+        chainId: network,
+      ),
     );
 
     if (details != null) {
-      for (var privateKey in privateKeys) {
-        final privateKeyStr = privateKey.serialize(
-          publicKeyOnly: false,
-        );
+      final privateKeyStr = privateKey.serialize(
+        publicKeyOnly: false,
+      );
 
-        final keyId = privateKeyId(details.id, privateKey.coin);
-        final success = await _cipherService.encryptKey(
-          id: keyId,
-          privateKey: privateKeyStr,
-        );
+      final keyId = privateKeyId(details.id, privateKey.coin);
+      final success = await _cipherService.encryptKey(
+        id: keyId,
+        privateKey: privateKeyStr,
+      );
 
-        if (!success) {
-          await _serviceCore.removeAccount(id: details.id);
+      if (!success) {
+        await _serviceCore.removeAccount(id: details.id);
 
-          return null;
-        }
+        return null;
       }
     }
 
@@ -163,21 +152,6 @@ class AccountStorageServiceImp implements AccountStorageService {
     required String name,
   }) {
     return _serviceCore.renameAccount(id: id, name: name);
-  }
-
-  @override
-  Future<Account?> setAccountCoin({
-    required String id,
-    required Coin coin,
-  }) async {
-    final network = ChainId.forCoin(coin);
-
-    final details = await _serviceCore.setChainId(
-      id: id,
-      chainId: network,
-    );
-
-    return details;
   }
 
   @override
