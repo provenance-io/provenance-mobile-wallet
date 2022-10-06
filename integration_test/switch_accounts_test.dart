@@ -4,7 +4,7 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
@@ -48,7 +48,7 @@ void main() {
       await AccountContainer.keyAccountEllipsisName(
               data.switchAccountsTest!.nameTwo!)
           .tap(tester);
-      await BasicAccountItem.keySelectAccountButton.tap(tester);
+      await AccountsScreen.keySelectAccountButton.tap(tester);
 
       await PwAppBar.keyLeadingIconButton.tap(tester);
 
