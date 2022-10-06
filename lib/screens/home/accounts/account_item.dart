@@ -1,10 +1,9 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provider/provider.dart';
 
 class AccountTitleRow extends StatelessWidget {
   const AccountTitleRow({
@@ -121,47 +120,24 @@ class AccountContainer extends StatelessWidget {
 
 class AccountDescriptionRow extends StatelessWidget {
   const AccountDescriptionRow({
-    required this.account,
-    required this.isSelected,
+    required this.address,
     Key? key,
   }) : super(key: key);
-
-  final bool isSelected;
-  final TransactableAccount account;
+  final String address;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<int?>(
-      future: Provider.of<AccountsBloc>(context).getAssetCount(account),
-      builder: (context, snapshot) {
-        final numAssets = snapshot.data;
-
-        var text = '';
-        if (isSelected) {
-          text += Strings.of(context).selectedAccountLabel;
-        }
-
-        if (numAssets != null) {
-          if (isSelected) {
-            text += ' ${Strings.dotSeparator} ';
-          }
-
-          text += Strings.of(context).nAssets(numAssets);
-        }
-
-        return Container(
-          margin: EdgeInsets.only(
-            top: 4,
-          ),
-          child: PwText(
-            text,
-            style: PwTextStyle.bodySmall,
-            color: PwColor.neutralNeutral,
-            overflow: TextOverflow.fade,
-            softWrap: true,
-          ),
-        );
-      },
+    return Container(
+      margin: EdgeInsets.only(
+        top: 4,
+      ),
+      child: PwText(
+        abbreviateAddress(address),
+        style: PwTextStyle.bodySmall,
+        color: PwColor.neutralNeutral,
+        overflow: TextOverflow.fade,
+        softWrap: true,
+      ),
     );
   }
 }

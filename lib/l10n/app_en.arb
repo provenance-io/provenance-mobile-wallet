@@ -78,7 +78,6 @@
   "accounts": "Accounts",
   "accountKindBasic": "Basic",
   "accountKindMulti": "Multi-sig",
-  "selectedAccountLabel": "Selected Account",
   "accountStatusPending": "Pending",
   "accountMenuItemViewInvite": "View Invitation Details",
   "accountLinkedTo": "Linked to '{name}'",
@@ -550,15 +549,6 @@
   "stakingConfirmDelegating": "Delegating",
   "stakingConfirmDelegationDetails": "Delegation Details",
   "stakingConfirmAmountToDelegate": "Amount to Delegate",
-  "nAssets": "{count,plural, =1{{count} Asset} other{{count} Assets}}",
-  "@nAssets": {
-    "description": "A plural label for assets.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "hashAmount": "{amount} HASH",
   "@hashAmount": {
     "description": "A String for how much HASH coin there is",

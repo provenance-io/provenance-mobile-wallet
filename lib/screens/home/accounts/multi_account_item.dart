@@ -94,6 +94,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 kind: widget._initialAccount.kind,
                 isSelected: _isSelected,
               ),
+              if (widget._initialAccount.address != null)
+                AccountDescriptionRow(address: widget._initialAccount.address!),
               AccountNetworkRow(
                 coin: _account.coin,
               ),
@@ -163,14 +165,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
-            if (isTransactable && !isSelected) PwListDivider(),
-            if (isTransactable && !isSelected)
-              PwGreyButton(
-                text: strings.select,
-                onPressed: () {
-                  Navigator.of(context).pop(MenuOperation.select);
-                },
-              ),
           ],
         );
       },
@@ -211,10 +205,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
           ),
         );
         break;
-      case MenuOperation.select:
-        await _accountService.selectAccount(id: item.id);
-
-        break;
       case MenuOperation.viewInvite:
         Navigator.of(
           context,
@@ -233,7 +223,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
 
 enum MenuOperation {
   copy,
-  select,
   delete,
   viewInvite,
 }

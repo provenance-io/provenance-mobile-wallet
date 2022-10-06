@@ -21,6 +21,9 @@ class AccountsScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     return AccountsScreenState();
   }
+
+  static final keySelectAccountButton =
+      ValueKey('$AccountsScreen.select_account_button');
 }
 
 class AccountsScreenState extends State<AccountsScreen> {
@@ -188,6 +191,20 @@ class AccountsScreenState extends State<AccountsScreen> {
         break;
     }
 
-    return item;
+    return GestureDetector(
+      key: AccountsScreen.keySelectAccountButton,
+      child: item,
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        final isSelected =
+            account.id == _accountService.events.selected.valueOrNull?.id;
+        if (isSelected ||
+            (account is MultiAccount && account is! TransactableAccount)) {
+          return;
+        } else {
+          await _accountService.selectAccount(id: account.id);
+        }
+      },
+    );
   }
 }
