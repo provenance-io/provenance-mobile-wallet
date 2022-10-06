@@ -35,8 +35,9 @@ class CreatePassphraseScreen extends StatelessWidget {
       ),
       body: PwOnboardingScreen(
         children: [
-          VerticalSpacer.largeX6(),
-          VerticalSpacer.xxLarge(),
+          Expanded(
+            child: Container(),
+          ),
           PwText(
             strings.savePassphrase,
             style: PwTextStyle.headline2,
@@ -66,8 +67,9 @@ class CreatePassphraseScreen extends StatelessWidget {
               color: PwColor.neutral50,
             ),
           ),
-          VerticalSpacer.large(),
-          VerticalSpacer.medium(),
+          Expanded(
+            child: Container(),
+          ),
           Container(
             width: 180,
             alignment: Alignment.center,
@@ -105,7 +107,9 @@ class CreatePassphraseScreen extends StatelessWidget {
               },
             ),
           ),
-          VerticalSpacer.largeX4(),
+          Expanded(
+            child: Container(),
+          ),
         ],
       ),
     );
