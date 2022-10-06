@@ -608,6 +608,8 @@ class AddAccountFlowBloc implements Disposable {
 
     _navigator.endFlow(_createdAccount);
 
+    // TODO-Roy: If a multi-sig was the first account added (along with a recovered basic account), then we get left at the "Add Account" page.
+    // Need to re-check local auth?
     if (id != null) {
       Navigator.of(
         context,
