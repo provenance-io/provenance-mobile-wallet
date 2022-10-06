@@ -193,7 +193,9 @@ class ActionList extends StatelessWidget {
     try {
       final approved = await bloc.requestApproval(group, item);
       ModalLoadingRoute.showLoading(context);
-      await bloc.processWalletConnectQueue(approved, group, item);
+      if (approved != null) {
+        await bloc.processWalletConnectQueue(approved, group, item);
+      }
     } catch (e) {
       logError(
         'Action failed',

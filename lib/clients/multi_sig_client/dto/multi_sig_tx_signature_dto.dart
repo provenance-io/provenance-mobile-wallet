@@ -6,13 +6,15 @@ part 'multi_sig_tx_signature_dto.g.dart';
 class MultiSigTxSignatureDto {
   MultiSigTxSignatureDto({
     required this.signerAddress,
-    required this.signatureHex,
+    required this.signatureDecline,
+    this.signatureHex,
   });
 
   final String signerAddress;
+  final bool signatureDecline;
 
   @JsonKey(name: 'signatureBytes')
-  final String signatureHex;
+  final String? signatureHex;
 
   factory MultiSigTxSignatureDto.fromJson(Map<String, dynamic> json) =>
       _$MultiSigTxSignatureDtoFromJson(json);

@@ -76,9 +76,9 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   }
 
   @override
-  Future<bool> showApproveSign(
+  Future<bool?> showApproveSign(
       SignAction signRequest, ClientMeta clientMeta) async {
-    return showGeneralDialog<bool>(
+    return showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
         context,
@@ -98,7 +98,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
           ],
         );
       },
-    ).then((approved) => approved ?? false);
+    ).then((approved) => approved);
   }
 
   @override
