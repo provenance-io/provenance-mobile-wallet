@@ -265,6 +265,11 @@ class ActionListBloc extends Disposable {
           for (final signature in tx.signatures) {
             final signerAccount = accountsByAddress[signature.signerAddress];
             if (signerAccount != null) {
+              if (signature.signerAddress == tx.signerAddress) {
+                // The tx creator signs once threshold - 1 has been achieved
+                continue;
+              }
+
               if (signature.signatureHex == null) {
                 if (signature.signatureDecline) {
                   // TODO-Roy: Add item for pending but did decline
