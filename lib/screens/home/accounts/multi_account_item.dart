@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -42,14 +41,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
-    _accountService.events.selected.listen((e) {
-      final isSelected = _account.id == e?.id;
-      if (isSelected != _isSelected) {
-        setState(() {
-          _isSelected = isSelected;
-        });
-      }
-    });
   }
 
   @override
@@ -57,6 +48,16 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
     final bloc = Provider.of<AccountsBloc>(context);
     _subscriptions.cancel();
     final subscriptions = CompositeSubscription();
+
+    _accountService.events.selected.listen((e) {
+      final isSelected = _account.id == e?.id;
+      if (isSelected != _isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+      }
+    }).addTo(subscriptions);
+
     bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
@@ -179,8 +180,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       return;
     }
 
-    final bloc = Provider.of<HomeBloc>(context, listen: false);
-
     switch (result) {
       case MenuOperation.delete:
         final dialogResult = await PwDialog.showConfirmation(
@@ -213,7 +212,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         );
         break;
       case MenuOperation.select:
-        await bloc.selectAccount(id: item.id);
+        await _accountService.selectAccount(id: item.id);
 
         break;
       case MenuOperation.viewInvite:
