@@ -6,7 +6,6 @@ import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -46,6 +45,15 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
     _isSelected =
         _account.id == _accountService.events.selected.valueOrNull?.id;
+  }
+
+  @override
+  void didChangeDependencies() {
+    _bloc = Provider.of<AccountsBloc>(context);
+    _subscriptions.cancel();
+
+    final subscriptions = CompositeSubscription();
+
     _accountService.events.selected.listen((e) {
       final isSelected = _account.id == e?.id;
       if (isSelected != _isSelected) {
@@ -53,14 +61,8 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           _isSelected = isSelected;
         });
       }
-    });
-  }
+    }).addTo(subscriptions);
 
-  @override
-  void didChangeDependencies() {
-    _bloc = Provider.of<AccountsBloc>(context);
-    _subscriptions.cancel();
-    final subscriptions = CompositeSubscription();
     _bloc.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
@@ -70,6 +72,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         }
       });
     }).addTo(subscriptions);
+
     _subscriptions = subscriptions;
     super.didChangeDependencies();
   }
@@ -116,6 +119,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
     bool isSelected,
   ) async {
     final strings = Strings.of(context);
+    final accountService = get<AccountService>();
 
     var result = await showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
@@ -160,8 +164,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
       },
     );
 
-    final bloc = Provider.of<HomeBloc>(context, listen: false);
-
     switch (result) {
       case MenuOperation.rename:
         final text = await showDialog<String?>(
@@ -174,10 +176,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           ),
         );
         if (text != null) {
-          await bloc.renameAccount(
-            id: item.id,
-            name: text,
-          );
+          await accountService.renameAccount(id: item.id, name: text);
         }
         break;
       case MenuOperation.copy:
@@ -211,8 +210,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         }
         break;
       case MenuOperation.select:
-        await bloc.selectAccount(id: item.id);
-
+        await accountService.selectAccount(id: item.id);
         break;
       default:
     }
