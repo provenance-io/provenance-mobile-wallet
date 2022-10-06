@@ -1,9 +1,11 @@
 class MultiSigSignature {
   MultiSigSignature({
     required this.signerAddress,
-    required this.signatureHex,
+    required this.signatureDecline,
+    this.signatureHex,
   });
 
   final String signerAddress;
-  final String signatureHex;
+  final bool signatureDecline;
+  final String? signatureHex;
 }

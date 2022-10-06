@@ -2,17 +2,17 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_signature_dto.dart';
 
-part 'multi_sig_created_tx_dto.g.dart';
+part 'multi_sig_tx_dto.g.dart';
 
 @JsonSerializable()
-class MultiSigCreatedTxDto {
-  MultiSigCreatedTxDto({
+class MultiSigTxDto {
+  MultiSigTxDto({
     required this.multiSigAddress,
     required this.signerAddress,
     required this.txUuid,
     required this.txBodyBytes,
     required this.status,
-    this.signatures,
+    required this.signatures,
   });
 
   final String multiSigAddress;
@@ -20,9 +20,9 @@ class MultiSigCreatedTxDto {
   final String txUuid;
   final String txBodyBytes;
   final MultiSigStatus status;
-  final List<MultiSigTxSignatureDto>? signatures;
+  final List<MultiSigTxSignatureDto> signatures;
 
-  factory MultiSigCreatedTxDto.fromJson(Map<String, dynamic> json) =>
-      _$MultiSigCreatedTxDtoFromJson(json);
-  Map<String, dynamic> toJson() => _$MultiSigCreatedTxDtoToJson(this);
+  factory MultiSigTxDto.fromJson(Map<String, dynamic> json) =>
+      _$MultiSigTxDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$MultiSigTxDtoToJson(this);
 }

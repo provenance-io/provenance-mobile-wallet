@@ -6,7 +6,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
@@ -173,9 +172,12 @@ class DefaultQueueTxService implements TxQueueService {
       signerAccount.address: authBytes,
     };
 
-    for (final signature in item.signatures ?? <MultiSigSignature>[]) {
-      signaturesByAddress[signature.signerAddress] =
-          convert.hex.decode(signature.signatureHex);
+    for (final signature in item.signatures) {
+      final signatureHex = signature.signatureHex;
+      if (signatureHex != null) {
+        signaturesByAddress[signature.signerAddress] =
+            convert.hex.decode(signatureHex);
+      }
     }
 
     final signatures = <AminoSignature>[];

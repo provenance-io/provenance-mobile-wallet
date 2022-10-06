@@ -46,6 +46,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
       _defaultValue,
     ];
 
+    // TODO-Roy: Limit accounts to the chain-id of the invite
     final accounts = await _accountService.getBasicAccounts();
     items.addAll(
       accounts.map(
