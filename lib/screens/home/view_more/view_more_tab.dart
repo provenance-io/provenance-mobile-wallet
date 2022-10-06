@@ -1,6 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_flow.dart';
 import 'package:provenance_wallet/screens/home/settings/information_screen.dart';
 import 'package:provenance_wallet/screens/home/settings/settings_screen.dart';
@@ -30,6 +31,7 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
   final accountService = get<AccountService>();
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<HomeBloc>(context);
     final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
@@ -115,7 +117,10 @@ class _ViewMoreTabState extends State<ViewMoreTab> {
                         _getLink(
                           PwIcons.gear,
                           strings.globalSettings,
-                          SettingsScreen(),
+                          Provider.value(
+                            value: bloc,
+                            child: SettingsScreen(),
+                          ),
                         ),
                       ],
                     ),
