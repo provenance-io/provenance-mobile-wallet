@@ -29,7 +29,7 @@ import 'package:provenance_wallet/util/strings.dart';
 abstract class ActionListNavigator {
   Future<bool> showApproveSession(SessionAction sessionRequestData);
 
-  Future<bool> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
+  Future<bool?> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
 
   Future<bool> showApproveTransaction({
     required List<p.GeneratedMessage> messages,
@@ -146,9 +146,9 @@ class ActionListBloc extends Disposable {
     _streamController.close();
   }
 
-  Future<bool> requestApproval(
+  Future<bool?> requestApproval(
       ActionListGroup group, ActionListItem item) async {
-    bool approved;
+    bool? approved;
 
     if (group is _WalletConnectActionGroup) {
       approved = await _approveWalletConnectItem(
@@ -258,18 +258,59 @@ class ActionListBloc extends Disposable {
 
     final multiSigGroups = <String, List<MultiSigActionListItem>>{};
 
-    final pendingTxs = _multiSigService.items;
-    for (final tx in pendingTxs) {
-      final account = accountsByAddress[tx.multiSigAddress]!;
-      final item = _toMultiSigListItem(tx, account.coin);
+    final txs = _multiSigService.items;
+    for (final tx in txs) {
+      switch (tx.status) {
+        case MultiSigStatus.pending:
+          for (final signature in tx.signatures) {
+            final signerAccount = accountsByAddress[signature.signerAddress];
+            if (signerAccount != null) {
+              if (signature.signerAddress == tx.signerAddress) {
+                // The tx creator signs once threshold - 1 has been achieved
+                continue;
+              }
 
-      final address = item.groupAddress;
+              if (signature.signatureHex == null) {
+                if (signature.signatureDecline) {
+                  // TODO-Roy: Add item for pending but did decline
+                } else {
+                  // Need a signature
+                  final item = _toMultiSigListItem(
+                      tx, signerAccount.coin, signature.signerAddress);
+                  final address = item.groupAddress;
 
-      if (!multiSigGroups.containsKey(address)) {
-        multiSigGroups[address] = <MultiSigActionListItem>[];
+                  if (!multiSigGroups.containsKey(address)) {
+                    multiSigGroups[address] = <MultiSigActionListItem>[];
+                  }
+
+                  multiSigGroups[address]!.add(item);
+                }
+              } else {
+                // TODO-Roy: Add item for pending but already signed
+              }
+            }
+          }
+          break;
+
+        case MultiSigStatus.ready:
+          final multiSigAccount = accountsByAddress[tx.multiSigAddress];
+          if (multiSigAccount != null) {
+            final item = _toMultiSigListItem(
+                tx, multiSigAccount.coin, multiSigAccount.address);
+            final address = item.groupAddress;
+
+            if (!multiSigGroups.containsKey(address)) {
+              multiSigGroups[address] = <MultiSigActionListItem>[];
+            }
+
+            multiSigGroups[address]!.add(item);
+          }
+
+          break;
+        default:
+          // Exclude tx
+          break;
       }
-
-      multiSigGroups[address]!.add(item);
     }
 
     for (final multiSigGroup in multiSigGroups.entries) {
@@ -292,10 +333,10 @@ class ActionListBloc extends Disposable {
   }
 
   MultiSigActionListItem _toMultiSigListItem(
-      MultiSigPendingTx tx, wallet.Coin coin) {
+      MultiSigPendingTx tx, wallet.Coin coin, String signerAddress) {
     switch (tx.status) {
       case MultiSigStatus.pending:
-        return _toSignListItem(tx, coin);
+        return _toSignListItem(tx, coin, signerAddress);
       case MultiSigStatus.ready:
         return _toTransmitListItem(tx, coin);
       default:
@@ -316,27 +357,28 @@ class ActionListBloc extends Disposable {
         txBody: tx.txBody,
         fee: tx.fee,
         txId: tx.txUuid,
-        signatures: tx.signatures!,
+        signatures: tx.signatures,
         coin: coin,
       );
 
   MultiSigSignActionListItem _toSignListItem(
-          MultiSigPendingTx tx, wallet.Coin coin) =>
-      MultiSigSignActionListItem(
-        multiSigAddress: tx.multiSigAddress,
-        signerAddress: tx.signerAddress,
-        groupAddress: tx.signerAddress,
-        label: (c) => tx.txBody.messages
-            .map((e) => e.toMessage().toLocalizedName(c))
-            .join(', '),
-        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-        txBody: tx.txBody,
-        fee: tx.fee,
-        txId: tx.txUuid,
-        coin: coin,
-      );
+      MultiSigPendingTx tx, wallet.Coin coin, String signerAddress) {
+    return MultiSigSignActionListItem(
+      multiSigAddress: tx.multiSigAddress,
+      signerAddress: signerAddress,
+      groupAddress: signerAddress,
+      label: (c) => tx.txBody.messages
+          .map((e) => e.toMessage().toLocalizedName(c))
+          .join(', '),
+      subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+      txBody: tx.txBody,
+      fee: tx.fee,
+      txId: tx.txUuid,
+      coin: coin,
+    );
+  }
 
-  Future<bool> _approveWalletConnectItem(
+  Future<bool?> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
     final action = item.action;
 

@@ -138,12 +138,6 @@ class MockAccountStorageServiceCore extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
               returnValue: _i3.Future<_i4.TransactableAccount?>.value())
           as _i3.Future<_i4.TransactableAccount?>);
-  @override
-  _i3.Future<_i4.Account?> setChainId({String? id, String? chainId}) =>
-      (super.noSuchMethod(
-              Invocation.method(#setChainId, [], {#id: id, #chainId: chainId}),
-              returnValue: _i3.Future<_i4.Account?>.value())
-          as _i3.Future<_i4.Account?>);
 }
 
 /// A class which mocks [CipherService].

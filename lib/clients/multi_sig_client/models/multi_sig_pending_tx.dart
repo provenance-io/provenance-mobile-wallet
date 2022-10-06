@@ -10,7 +10,7 @@ class MultiSigPendingTx {
     required this.txBody,
     required this.fee,
     required this.status,
-    this.signatures,
+    required this.signatures,
   });
 
   final String multiSigAddress;
@@ -19,5 +19,5 @@ class MultiSigPendingTx {
   final TxBody txBody;
   final Fee fee;
   final MultiSigStatus status;
-  final List<MultiSigSignature>? signatures;
+  final List<MultiSigSignature> signatures;
 }

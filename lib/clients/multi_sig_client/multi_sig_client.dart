@@ -8,17 +8,16 @@ import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_response_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_tx_response_dto.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_created_tx_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_created_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_get_account_by_invite_response_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_get_accounts_response_dto.dart';
-import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_pending_tx_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_pending_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_register_response_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_sign_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_body_bytes_dto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_update_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
@@ -281,10 +280,10 @@ class MultiSigClient with ClientCoinMixin {
       ),
       listConverter: (json) {
         if (json is String) {
-          return <MultiSigPendingTxDto>[];
+          return <MultiSigTxDto>[];
         }
 
-        return json.map((e) => MultiSigPendingTxDto.fromJson(e)).toList();
+        return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
       },
     );
 
@@ -292,7 +291,7 @@ class MultiSigClient with ClientCoinMixin {
 
     final data = response.data;
     if (data != null) {
-      result = data.map((e) => _fromPendingTxDto(e)).whereNotNull().toList();
+      result = data.map((e) => _fromCreatedTxDto(e)).whereNotNull().toList();
     }
 
     return result;
@@ -314,10 +313,10 @@ class MultiSigClient with ClientCoinMixin {
       ),
       listConverter: (json) {
         if (json is String) {
-          return <MultiSigCreatedTxDto>[];
+          return <MultiSigTxDto>[];
         }
 
-        return json.map((e) => MultiSigCreatedTxDto.fromJson(e)).toList();
+        return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
       },
     );
 
@@ -377,7 +376,7 @@ class MultiSigClient with ClientCoinMixin {
     return response.isSuccessful;
   }
 
-  MultiSigPendingTx? _fromCreatedTxDto(MultiSigCreatedTxDto? dto) {
+  MultiSigPendingTx? _fromCreatedTxDto(MultiSigTxDto? dto) {
     MultiSigPendingTx? result;
 
     try {
@@ -393,41 +392,18 @@ class MultiSigClient with ClientCoinMixin {
           fee: txBodyBytes.fee,
           status: dto.status,
           signatures: dto.signatures
-              ?.map(
+              .map(
                 (e) => MultiSigSignature(
                   signerAddress: e.signerAddress,
                   signatureHex: e.signatureHex,
+                  signatureDecline: e.signatureDecline,
                 ),
               )
               .toList(),
         );
       }
     } catch (e) {
-      logDebug('Invalid $MultiSigCreatedTxDto');
-    }
-
-    return result;
-  }
-
-  MultiSigPendingTx? _fromPendingTxDto(MultiSigPendingTxDto? dto) {
-    MultiSigPendingTx? result;
-
-    try {
-      if (dto != null) {
-        final txBodyBytes =
-            MultiSigTxBodyBytesDto.fromJson(jsonDecode(dto.txBodyBytes));
-
-        result = MultiSigPendingTx(
-          multiSigAddress: dto.multiSigAddress,
-          signerAddress: dto.signerAddress,
-          txUuid: dto.txUuid,
-          txBody: txBodyBytes.txBody,
-          fee: txBodyBytes.fee,
-          status: MultiSigStatus.pending,
-        );
-      }
-    } catch (e) {
-      logDebug('Invalid $MultiSigPendingTxDto');
+      logDebug('Invalid $MultiSigTxDto');
     }
 
     return result;

@@ -4,17 +4,18 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:ui' as _i7;
+import 'dart:ui' as _i8;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i6;
+import 'package:provenance_dart/wallet.dart' as _i7;
 import 'package:provenance_dart/wallet_connect.dart' as _i2;
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
-    as _i10;
+    as _i11;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
-    as _i9;
+    as _i10;
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
-    as _i8;
+    as _i9;
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart'
     as _i3;
 import 'package:rxdart/rxdart.dart' as _i4;
@@ -113,6 +114,14 @@ class MockWalletConnection extends _i1.Mock implements _i2.WalletConnection {
               returnValueForMissingStub: _i5.Future<void>.value())
           as _i5.Future<void>);
   @override
+  _i5.Future<void> sendMultiSigSignResult(
+          int? requestId, List<_i7.AminoSignature>? signatures) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendMultiSigSignResult, [requestId, signatures]),
+          returnValue: _i5.Future<void>.value(),
+          returnValueForMissingStub:
+              _i5.Future<void>.value()) as _i5.Future<void>);
+  @override
   _i5.Future<void> sendApproveSession(
           int? requestId, _i2.SessionApprovalData? sessionApprovalData,
           [_i2.ClientMeta? peerMeta]) =>
@@ -123,11 +132,11 @@ class MockWalletConnection extends _i1.Mock implements _i2.WalletConnection {
           returnValueForMissingStub:
               _i5.Future<void>.value()) as _i5.Future<void>);
   @override
-  void addListener(_i7.VoidCallback? listener) =>
+  void addListener(_i8.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
+  void removeListener(_i8.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
@@ -182,16 +191,16 @@ class MockWalletConnectSessionDelegate extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoteNotificationService extends _i1.Mock
-    implements _i8.RemoteNotificationService {
+    implements _i9.RemoteNotificationService {
   MockRemoteNotificationService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Stream<_i9.MultiSigRemoteNotification> get multiSig =>
+  _i5.Stream<_i10.MultiSigRemoteNotification> get multiSig =>
       (super.noSuchMethod(Invocation.getter(#multiSig),
-              returnValue: _i5.Stream<_i9.MultiSigRemoteNotification>.empty())
-          as _i5.Stream<_i9.MultiSigRemoteNotification>);
+              returnValue: _i5.Stream<_i10.MultiSigRemoteNotification>.empty())
+          as _i5.Stream<_i10.MultiSigRemoteNotification>);
   @override
   bool isRegistered(String? topic) =>
       (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
@@ -215,43 +224,43 @@ class MockRemoteNotificationService extends _i1.Mock
 /// A class which mocks [KeyValueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockKeyValueService extends _i1.Mock implements _i10.KeyValueService {
+class MockKeyValueService extends _i1.Mock implements _i11.KeyValueService {
   MockKeyValueService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<bool> containsKey(_i10.PrefKey? key) =>
+  _i5.Future<bool> containsKey(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#containsKey, [key]),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  _i4.ValueStream<_i10.KeyValueData<T>> stream<T>(_i10.PrefKey? key) =>
+  _i4.ValueStream<_i11.KeyValueData<T>> stream<T>(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#stream, [key]),
-              returnValue: _FakeValueStream_2<_i10.KeyValueData<T>>(
+              returnValue: _FakeValueStream_2<_i11.KeyValueData<T>>(
                   this, Invocation.method(#stream, [key])))
-          as _i4.ValueStream<_i10.KeyValueData<T>>);
+          as _i4.ValueStream<_i11.KeyValueData<T>>);
   @override
-  _i5.Future<bool?> getBool(_i10.PrefKey? key) =>
+  _i5.Future<bool?> getBool(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#getBool, [key]),
           returnValue: _i5.Future<bool?>.value()) as _i5.Future<bool?>);
   @override
-  _i5.Future<bool> setBool(_i10.PrefKey? key, bool? value) =>
+  _i5.Future<bool> setBool(_i11.PrefKey? key, bool? value) =>
       (super.noSuchMethod(Invocation.method(#setBool, [key, value]),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  _i5.Future<bool> removeBool(_i10.PrefKey? key) =>
+  _i5.Future<bool> removeBool(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#removeBool, [key]),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  _i5.Future<String?> getString(_i10.PrefKey? key) =>
+  _i5.Future<String?> getString(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#getString, [key]),
           returnValue: _i5.Future<String?>.value()) as _i5.Future<String?>);
   @override
-  _i5.Future<bool> setString(_i10.PrefKey? key, String? value) =>
+  _i5.Future<bool> setString(_i11.PrefKey? key, String? value) =>
       (super.noSuchMethod(Invocation.method(#setString, [key, value]),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
   @override
-  _i5.Future<bool> removeString(_i10.PrefKey? key) =>
+  _i5.Future<bool> removeString(_i11.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#removeString, [key]),
           returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
 }

@@ -61,6 +61,12 @@ class TransactionConfirmScreenState extends State<TransactionConfirmScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.neutral750,
         appBar: AppBar(
+          leading: IconButton(
+            icon: PwIcon(
+              PwIcons.close,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           backgroundColor: Theme.of(context).colorScheme.neutral750,
           elevation: 0.0,
           centerTitle: true,

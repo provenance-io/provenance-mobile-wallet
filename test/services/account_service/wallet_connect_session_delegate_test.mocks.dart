@@ -124,12 +124,6 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue: _i6.Future<_i7.Account?>.value())
           as _i6.Future<_i7.Account?>);
   @override
-  _i6.Future<_i7.Account?> setAccountCoin({String? id, _i8.Coin? coin}) =>
-      (super.noSuchMethod(
-              Invocation.method(#setAccountCoin, [], {#id: id, #coin: coin}),
-              returnValue: _i6.Future<_i7.Account?>.value())
-          as _i6.Future<_i7.Account?>);
-  @override
   _i6.Future<_i7.Account?> addAccount(
           {List<String>? phrase, String? name, _i8.Coin? coin}) =>
       (super.noSuchMethod(
@@ -427,6 +421,14 @@ class MockWalletConnection extends _i1.Mock implements _i5.WalletConnection {
               returnValue: _i6.Future<void>.value(),
               returnValueForMissingStub: _i6.Future<void>.value())
           as _i6.Future<void>);
+  @override
+  _i6.Future<void> sendMultiSigSignResult(
+          int? requestId, List<_i8.AminoSignature>? signatures) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendMultiSigSignResult, [requestId, signatures]),
+          returnValue: _i6.Future<void>.value(),
+          returnValueForMissingStub:
+              _i6.Future<void>.value()) as _i6.Future<void>);
   @override
   _i6.Future<void> sendApproveSession(
           int? requestId, _i5.SessionApprovalData? sessionApprovalData,

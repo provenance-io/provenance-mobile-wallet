@@ -10,12 +10,14 @@ MultiSigTxSignatureDto _$MultiSigTxSignatureDtoFromJson(
         Map<String, dynamic> json) =>
     MultiSigTxSignatureDto(
       signerAddress: json['signerAddress'] as String,
-      signatureHex: json['signatureBytes'] as String,
+      signatureDecline: json['signatureDecline'] as bool,
+      signatureHex: json['signatureBytes'] as String?,
     );
 
 Map<String, dynamic> _$MultiSigTxSignatureDtoToJson(
         MultiSigTxSignatureDto instance) =>
     <String, dynamic>{
       'signerAddress': instance.signerAddress,
+      'signatureDecline': instance.signatureDecline,
       'signatureBytes': instance.signatureHex,
     };
