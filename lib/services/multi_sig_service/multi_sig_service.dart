@@ -10,6 +10,7 @@ import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
@@ -88,24 +89,20 @@ class MultiSigService extends Listenable with ListenableMixin {
     }
 
     for (final tx in createdTxs) {
-      if (tx.signatures != null) {
-        final ref = _main.record(tx.txUuid);
-        final db = await _db;
-        final result = await ref.get(db);
-        if (result != null) {
-          final model = _SembastResultData.fromRecord(result);
-          final success = await _multiSigClient.updateTxResult(
-            txUuid: model.txUuid,
-            txHash: model.txHash,
-            coin: ChainId.toCoin(model.chainId),
-          );
+      final ref = _main.record(tx.txUuid);
+      final db = await _db;
+      final record = await ref.get(db);
+      if (record != null) {
+        final model = _SembastResultData.fromRecord(record);
+        final result = await _multiSigClient.updateTxResult(
+          txUuid: model.txUuid,
+          txHash: model.txHash,
+          coin: ChainId.toCoin(model.chainId),
+        );
 
-          if (success) {
-            await ref.delete(db);
-          }
-        } else {
-          _cacheMultiSigItem(tx);
-        }
+        await _handleUpdateResult(ref, db, result);
+      } else {
+        _cacheMultiSigItem(tx);
       }
     }
 
@@ -183,15 +180,13 @@ class MultiSigService extends Listenable with ListenableMixin {
     final db = await _db;
     await ref.put(db, data.toRecord());
 
-    final success = await _multiSigClient.updateTxResult(
+    final result = await _multiSigClient.updateTxResult(
       txUuid: txUuid,
       txHash: response.txhash,
       coin: coin,
     );
 
-    if (success) {
-      await ref.delete(db);
-    }
+    await _handleUpdateResult(ref, db, result);
 
     _actionItemsBySignerAddress[signerAddress]
         ?.removeWhere((e) => e.txUuid == txUuid);
@@ -244,6 +239,19 @@ class MultiSigService extends Listenable with ListenableMixin {
     }
 
     return success;
+  }
+
+  Future<void> _handleUpdateResult(
+      RecordRef ref, Database db, MultiSigUpdateResult result) async {
+    switch (result) {
+      case MultiSigUpdateResult.success:
+      case MultiSigUpdateResult.error:
+        await ref.delete(db);
+        break;
+      case MultiSigUpdateResult.fail:
+        // Try again next time
+        break;
+    }
   }
 
   void _publish() {
