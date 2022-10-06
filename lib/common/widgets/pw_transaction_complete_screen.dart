@@ -46,29 +46,26 @@ class PwTransactionCompleteScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: IconButton(
-                            color: Theme.of(context).colorScheme.neutralNeutral,
-                            icon: PwIcon(
-                              PwIcons.back,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                        IconButton(
+                          color: Theme.of(context).colorScheme.neutralNeutral,
+                          icon: PwIcon(
+                            PwIcons.back,
                           ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: PwTextButton(
-                            child: PwText(
-                              Strings.of(context).stakingConfirmData,
-                              color: PwColor.neutralNeutral,
-                            ),
-                            onPressed: () {
-                              onDataPressed();
-                            },
+                        Expanded(
+                          child: Container(),
+                        ),
+                        PwTextButton.shrinkWrap(
+                          child: PwText(
+                            Strings.of(context).stakingConfirmData,
+                            color: PwColor.neutralNeutral,
                           ),
+                          onPressed: () {
+                            onDataPressed();
+                          },
                         ),
                       ],
                     ),
