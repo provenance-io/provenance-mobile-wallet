@@ -22,8 +22,6 @@ class BasicAccountItem extends StatefulWidget {
         super(key: key);
 
   final BasicAccount _initialAccount;
-  static final keySelectAccountButton =
-      ValueKey('$BasicAccountItem.select_account_button');
   static final keyCopyAccountNumberButton =
       ValueKey('$BasicAccountItem.copy_account_number_button');
 
@@ -150,15 +148,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
                   Navigator.of(context).pop(MenuOperation.delete);
                 },
               ),
-            if (!isSelected) PwListDivider(),
-            if (!isSelected)
-              PwGreyButton(
-                key: BasicAccountItem.keySelectAccountButton,
-                text: strings.select,
-                onPressed: () {
-                  Navigator.of(context).pop(MenuOperation.select);
-                },
-              ),
           ],
         );
       },
@@ -209,9 +198,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
           }
         }
         break;
-      case MenuOperation.select:
-        await accountService.selectAccount(id: item.id);
-        break;
       default:
     }
   }
@@ -219,7 +205,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
 enum MenuOperation {
   copy,
-  select,
   rename,
   delete,
 }
