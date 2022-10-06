@@ -94,8 +94,7 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
             isSelected: isSelected,
           ),
           AccountDescriptionRow(
-            account: account,
-            isSelected: isSelected,
+            address: account.address,
           ),
           AccountNetworkRow(
             coin: account.publicKey.coin,

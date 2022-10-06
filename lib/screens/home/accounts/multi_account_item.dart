@@ -94,6 +94,8 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 kind: widget._initialAccount.kind,
                 isSelected: _isSelected,
               ),
+              if (widget._initialAccount.address != null)
+                AccountDescriptionRow(address: widget._initialAccount.address!),
               AccountNetworkRow(
                 coin: _account.coin,
               ),
