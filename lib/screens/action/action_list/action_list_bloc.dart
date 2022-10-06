@@ -29,7 +29,7 @@ import 'package:provenance_wallet/util/strings.dart';
 abstract class ActionListNavigator {
   Future<bool> showApproveSession(SessionAction sessionRequestData);
 
-  Future<bool> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
+  Future<bool?> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
 
   Future<bool> showApproveTransaction({
     required List<p.GeneratedMessage> messages,
@@ -146,9 +146,9 @@ class ActionListBloc extends Disposable {
     _streamController.close();
   }
 
-  Future<bool> requestApproval(
+  Future<bool?> requestApproval(
       ActionListGroup group, ActionListItem item) async {
-    bool approved;
+    bool? approved;
 
     if (group is _WalletConnectActionGroup) {
       approved = await _approveWalletConnectItem(
@@ -371,7 +371,7 @@ class ActionListBloc extends Disposable {
     );
   }
 
-  Future<bool> _approveWalletConnectItem(
+  Future<bool?> _approveWalletConnectItem(
       _WalletConnectActionGroup group, _WalletConnectActionItem item) {
     final action = item.action;
 
