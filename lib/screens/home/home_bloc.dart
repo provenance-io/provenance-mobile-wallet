@@ -7,6 +7,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -27,6 +28,22 @@ class HomeBloc extends Disposable {
     _accountService.events.selected
         .distinct()
         .listen(_onSelected)
+        .addTo(_subscriptions);
+
+    prefTriggeredReload(_) {
+      load();
+    }
+
+    get<KeyValueService>()
+        .stream<bool>(PrefKey.httpClientDiagnostics500)
+        .skip(1) // the stream always emits an event for its initial value
+        .listen(prefTriggeredReload)
+        .addTo(_subscriptions);
+
+    get<KeyValueService>()
+        .stream<bool>(PrefKey.enableMultiSig)
+        .skip(1) // the stream always emits an event for its initial value
+        .listen(prefTriggeredReload)
         .addTo(_subscriptions);
   }
 
