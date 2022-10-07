@@ -918,7 +918,7 @@ packages:
     description:
       path: "."
       ref: multi-sig
-      resolved-ref: ae2de875484dabb3cf28c25e69449a1e51044a99
+      resolved-ref: "87e1be203306ab4a091ace94dffdb396dd451e26"
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
     version: "1.0.1"
