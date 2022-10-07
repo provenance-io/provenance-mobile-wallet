@@ -917,8 +917,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: multi-sig
-      resolved-ref: "87e1be203306ab4a091ace94dffdb396dd451e26"
+      ref: develop
+      resolved-ref: "4ab994f982b79aec83b0bab599a30594f106278d"
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
     version: "1.0.1"
