@@ -36,12 +36,6 @@ abstract class ActionListNavigator {
     List<p.Coin>? fees,
     ClientMeta? clientMeta,
   });
-
-  Future<bool> showTransaction({
-    required List<p.GeneratedMessage> messages,
-    List<p.Coin>? fees,
-    ClientMeta? clientMeta,
-  });
 }
 
 class _WalletConnectActionGroup extends ActionListGroup {
@@ -171,13 +165,6 @@ class ActionListBloc extends Disposable {
         messages: item.txBody.messages.map((e) => e.toMessage()).toList(),
         fees: item.fee.amount,
       );
-    } else if (item is MultiSigStatusActionListItem) {
-      approved = false;
-
-      await _navigator.showTransaction(
-        messages: item.txBody.messages.map((e) => e.toMessage()).toList(),
-        fees: item.fee.amount,
-      );
     } else {
       log("Unknown actionType ${group.runtimeType}");
       approved = false;
@@ -198,8 +185,6 @@ class ActionListBloc extends Disposable {
       await _processMultiSigSignItem(approved, group, item);
     } else if (item is MultiSigTransmitActionListItem) {
       await _processMultiSigTransmitItem(approved, item);
-    } else if (item is MultiSigStatusActionListItem) {
-      // Ignore
     } else {
       log("Unknown actionType ${group.runtimeType}");
     }
@@ -277,13 +262,6 @@ class ActionListBloc extends Disposable {
     for (final tx in txs) {
       switch (tx.status) {
         case MultiSigStatus.pending:
-          final multiSigAccount = accountsByAddress[tx.multiSigAddress];
-          if (multiSigAccount != null) {
-            final coin = multiSigAccount.coin;
-            final item = _toStatusListItem(tx, coin, multiSigAccount.address);
-            _addToGroup(multiSigGroups, item);
-          }
-
           for (final signature in tx.signatures) {
             final signerAccount = accountsByAddress[signature.signerAddress];
             if (signerAccount != null) {
@@ -292,24 +270,23 @@ class ActionListBloc extends Disposable {
                 continue;
               }
 
-              final coin = signerAccount.coin;
-              final signerAddress = signerAccount.address;
-
-              MultiSigActionListItem? item;
-
               if (signature.signatureHex == null) {
                 if (signature.signatureDecline) {
-                  // Ignore
+                  // TODO-Roy: Add item for pending but did decline
                 } else {
                   // Need a signature
-                  item = _toMultiSigListItem(tx, coin, signerAddress);
+                  final item = _toMultiSigListItem(
+                      tx, signerAccount.coin, signature.signerAddress);
+                  final address = item.groupAddress;
+
+                  if (!multiSigGroups.containsKey(address)) {
+                    multiSigGroups[address] = <MultiSigActionListItem>[];
+                  }
+
+                  multiSigGroups[address]!.add(item);
                 }
               } else {
-                // Ignore
-              }
-
-              if (item != null) {
-                _addToGroup(multiSigGroups, item);
+                // TODO-Roy: Add item for pending but already signed
               }
             }
           }
@@ -355,17 +332,6 @@ class ActionListBloc extends Disposable {
     return groups;
   }
 
-  static void _addToGroup(Map<String, List<MultiSigActionListItem>> groups,
-      MultiSigActionListItem item) {
-    final address = item.groupAddress;
-
-    if (!groups.containsKey(address)) {
-      groups[address] = <MultiSigActionListItem>[];
-    }
-
-    groups[address]!.add(item);
-  }
-
   MultiSigActionListItem _toMultiSigListItem(
       MultiSigPendingTx tx, wallet.Coin coin, String signerAddress) {
     switch (tx.status) {
@@ -405,23 +371,6 @@ class ActionListBloc extends Disposable {
           .map((e) => e.toMessage().toLocalizedName(c))
           .join(', '),
       subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
-      txBody: tx.txBody,
-      fee: tx.fee,
-      txId: tx.txUuid,
-      coin: coin,
-    );
-  }
-
-  MultiSigStatusActionListItem _toStatusListItem(
-      MultiSigPendingTx tx, wallet.Coin coin, String signerAddress) {
-    return MultiSigStatusActionListItem(
-      multiSigAddress: tx.multiSigAddress,
-      signerAddress: signerAddress,
-      groupAddress: signerAddress,
-      label: (c) => tx.txBody.messages
-          .map((e) => e.toMessage().toLocalizedName(c))
-          .join(', '),
-      subLabel: (c) => Strings.of(c).actionListSubLabelPendingSignatures,
       txBody: tx.txBody,
       fee: tx.fee,
       txId: tx.txUuid,
