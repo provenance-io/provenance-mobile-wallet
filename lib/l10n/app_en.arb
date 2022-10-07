@@ -358,6 +358,7 @@
   "actionListLabelTransactionRequested": "Transaction Requested",
   "actionListLabelUnknown": "Unknown",
   "actionListSubLabelActionRequired": "Action Required",
+  "actionListSubLabelPendingSignatures": "Pending Signatures",
   "deleteConfirmationDeleteTitle": "Delete",
   "deleteConfirmationTitle": "Confirm Delete",
   "deleteConfirmationMessage": "Do you want to delete these Items",

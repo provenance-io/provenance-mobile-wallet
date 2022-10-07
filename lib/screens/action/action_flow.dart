@@ -106,7 +106,33 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
     required List<proto.GeneratedMessage> messages,
     List<proto.Coin>? fees,
     ClientMeta? clientMeta,
-  }) async {
+  }) =>
+      _showTransaction(
+        kind: TransactionConfirmKind.approve,
+        messages: messages,
+        fees: fees,
+        clientMeta: clientMeta,
+      );
+
+  @override
+  Future<bool> showTransaction({
+    required List<proto.GeneratedMessage> messages,
+    List<proto.Coin>? fees,
+    ClientMeta? clientMeta,
+  }) =>
+      _showTransaction(
+        kind: TransactionConfirmKind.notify,
+        messages: messages,
+        fees: fees,
+        clientMeta: clientMeta,
+      );
+
+  Future<bool> _showTransaction({
+    required TransactionConfirmKind kind,
+    required List<proto.GeneratedMessage> messages,
+    List<proto.Coin>? fees,
+    ClientMeta? clientMeta,
+  }) {
     return showGeneralDialog<bool?>(
       context: context,
       pageBuilder: (
@@ -123,7 +149,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
         }).toList();
 
         return TransactionConfirmScreen(
-          kind: TransactionConfirmKind.approve,
+          kind: kind,
           title: Strings.of(context).confirmTransactionTitle,
           clientMeta: clientMeta,
           data: data,

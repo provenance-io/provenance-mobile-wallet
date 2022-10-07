@@ -275,6 +275,45 @@ abstract class MultiSigActionListItem implements ActionListItem {
   wallet.Coin get coin;
 }
 
+class MultiSigStatusActionListItem implements MultiSigActionListItem {
+  MultiSigStatusActionListItem({
+    required this.multiSigAddress,
+    required this.signerAddress,
+    required this.groupAddress,
+    required this.label,
+    required this.subLabel,
+    required this.txBody,
+    required this.fee,
+    required this.txId,
+    required this.coin,
+  });
+
+  @override
+  final String multiSigAddress;
+
+  @override
+  final String signerAddress;
+
+  @override
+  final String groupAddress;
+
+  final TxBody txBody;
+
+  final Fee fee;
+
+  @override
+  final String txId;
+
+  @override
+  final wallet.Coin coin;
+
+  @override
+  final LocalizedString label;
+
+  @override
+  final LocalizedString subLabel;
+}
+
 class MultiSigSignActionListItem implements MultiSigActionListItem {
   MultiSigSignActionListItem({
     required this.multiSigAddress,
