@@ -33,10 +33,6 @@ class MultiSigConfirmScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: strings.multiSigConfirmTitle,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          currentStep,
-          totalSteps,
-        ),
       ),
       body: CustomScrollView(
         slivers: [

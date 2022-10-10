@@ -64,10 +64,6 @@ class RecoveryWordsConfirmScreenState
       appBar: PwAppBar(
         title: Strings.of(context).verifyPassphrase,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

@@ -28,10 +28,6 @@ class CreatePassphraseScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: strings.createPassphrase,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          currentStep,
-          totalSteps,
-        ),
       ),
       body: PwOnboardingScreen(
         children: [

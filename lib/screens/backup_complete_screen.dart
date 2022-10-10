@@ -29,10 +29,6 @@ class BackupCompleteScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: strings.backupComplete,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          currentStep,
-          totalSteps,
-        ),
       ),
       body: PwOnboardingScreen(
         children: [

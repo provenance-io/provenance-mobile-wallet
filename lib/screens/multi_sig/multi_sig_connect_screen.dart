@@ -89,12 +89,6 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
       appBar: PwAppBar(
         title: strings.multiSigConnectTitle,
         leadingIcon: PwIcons.back,
-        bottom: currentStep == null || totalSteps == null
-            ? null
-            : ProgressStepper(
-                currentStep,
-                totalSteps,
-              ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

@@ -29,10 +29,6 @@ class RecoverAccountScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: strings.recoverAccount,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          currentStep,
-          totalSteps,
-        ),
       ),
       body: CustomScrollView(
         slivers: [

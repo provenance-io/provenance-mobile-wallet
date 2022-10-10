@@ -89,10 +89,6 @@ class RecoverPassphraseEntryScreenState
         child: PwAppBar(
           title: Strings.of(context).enterRecoveryPassphrase,
           leadingIcon: PwIcons.back,
-          bottom: ProgressStepper(
-            widget.currentStep,
-            widget.totalSteps,
-          ),
         ),
       ),
       body: PwOnboardingScreen(

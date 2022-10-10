@@ -78,10 +78,6 @@ class EnableFaceIdScreen extends StatelessWidget {
       appBar: PwAppBar(
         title: header,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          currentStep,
-          totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

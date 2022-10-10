@@ -32,10 +32,6 @@ class ConfirmPinState extends State<ConfirmPin> {
       appBar: PwAppBar(
         title: Strings.of(context).verifyPinCode,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

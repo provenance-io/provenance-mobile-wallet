@@ -54,10 +54,6 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
       appBar: PwAppBar(
         title: Strings.of(context).recoveryPassphrase,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       backgroundColor: Theme.of(context).colorScheme.neutral750,
       body: PwOnboardingScreen(

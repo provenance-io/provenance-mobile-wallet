@@ -30,10 +30,6 @@ class CreatePinState extends State<CreatePin> {
       appBar: PwAppBar(
         title: Strings.of(context).setPinCode,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
