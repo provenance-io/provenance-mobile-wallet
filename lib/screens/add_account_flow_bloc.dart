@@ -240,8 +240,6 @@ class AddAccountFlowBloc implements Disposable {
     if (_flow.length > nextIndex) {
       _showScreen(
         screen: _flow[nextIndex],
-        currentStep: nextIndex,
-        totalSteps: _flow.length - 1,
       );
     } else {
       _navigator.endFlow(_createdAccount);
@@ -250,45 +248,43 @@ class AddAccountFlowBloc implements Disposable {
 
   void _showScreen({
     required AddAccountScreen screen,
-    required int currentStep,
-    required int totalSteps,
   }) {
     switch (screen) {
       case AddAccountScreen.accountType:
         _navigator.showAccountType();
         break;
       case AddAccountScreen.accountName:
-        _navigator.showAccountName(currentStep, totalSteps);
+        _navigator.showAccountName();
         break;
       case AddAccountScreen.recoverAccount:
-        _navigator.showRecoverAccount(currentStep, totalSteps);
+        _navigator.showRecoverAccount();
         break;
       case AddAccountScreen.createPassphrase:
-        _navigator.showCreatePassphrase(currentStep, totalSteps);
+        _navigator.showCreatePassphrase();
         break;
       case AddAccountScreen.recoveryWords:
-        _navigator.showRecoveryWords(currentStep, totalSteps);
+        _navigator.showRecoveryWords();
         break;
       case AddAccountScreen.recoveryWordsConfirm:
-        _navigator.showRecoveryWordsConfirm(currentStep, totalSteps);
+        _navigator.showRecoveryWordsConfirm();
         break;
       case AddAccountScreen.backupComplete:
-        _navigator.showBackupComplete(currentStep, totalSteps);
+        _navigator.showBackupComplete();
         break;
       case AddAccountScreen.createPin:
-        _navigator.showCreatePin(currentStep, totalSteps);
+        _navigator.showCreatePin();
         break;
       case AddAccountScreen.confirmPin:
-        _navigator.showConfirmPin(currentStep, totalSteps);
+        _navigator.showConfirmPin();
         break;
       case AddAccountScreen.enableFaceId:
-        _navigator.showEnableFaceId(currentStep, totalSteps);
+        _navigator.showEnableFaceId();
         break;
       case AddAccountScreen.accountSetupConfirmation:
         _navigator.showAccountSetupConfirmation();
         break;
       case AddAccountScreen.recoverPassphraseEntry:
-        _navigator.showRecoverPassphraseEntry(currentStep, totalSteps);
+        _navigator.showRecoverPassphraseEntry();
         break;
       case AddAccountScreen.multiSigCreateOrJoin:
         _navigator.showMultiSigCreateOrJoin();
@@ -300,27 +296,26 @@ class AddAccountFlowBloc implements Disposable {
         _navigator.showMultiSigScanQrCode();
         break;
       case AddAccountScreen.multiSigConnect:
-        _navigator.showMultiSigConnect(
-          currentStep: currentStep,
-          totalSteps: totalSteps,
-        );
+        _navigator.showMultiSigConnect();
         break;
       case AddAccountScreen.multiSigRecover:
         _navigator.showMultiSigRecover();
         break;
       case AddAccountScreen.multiSigAccountName:
-        _navigator.showMultiSigAccountName(currentStep, totalSteps);
+        _navigator.showMultiSigAccountName();
         break;
       case AddAccountScreen.multiSigCosigners:
         _navigator.showMultiSigCosigners(
-            FieldMode.initial, currentStep, totalSteps);
+          FieldMode.initial,
+        );
         break;
       case AddAccountScreen.multiSigSignatures:
         _navigator.showMultiSigSignatures(
-            FieldMode.initial, currentStep, totalSteps);
+          FieldMode.initial,
+        );
         break;
       case AddAccountScreen.multiSigConfirm:
-        _navigator.showMultiSigConfirm(currentStep, totalSteps);
+        _navigator.showMultiSigConfirm();
         break;
       case AddAccountScreen.multiSigInviteReviewFlow:
         _navigator.showMultiSigInviteReviewFlow(

@@ -10,14 +10,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class ConfirmPin extends StatefulHookWidget {
   const ConfirmPin({
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc bloc;
-  final int currentStep;
-  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {

@@ -12,14 +12,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class RecoveryWordsScreen extends StatefulWidget {
   const RecoveryWordsScreen({
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc bloc;
-  final int currentStep;
-  final int totalSteps;
 
   static final keyCopyButton = ValueKey("$RecoveryWordsScreen.copy_button");
   static final keySnackbar = ValueKey("$RecoveryWordsScreen.snackbar");

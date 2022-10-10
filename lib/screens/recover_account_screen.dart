@@ -9,15 +9,10 @@ class RecoverAccountScreen extends StatelessWidget {
   const RecoverAccountScreen({
     Key? key,
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
   }) : super(key: key);
 
   static final keyContinueButton =
       ValueKey('$RecoverAccountScreen.continue_button');
-
-  final int currentStep;
-  final int totalSteps;
 
   final AddAccountFlowBloc bloc;
 

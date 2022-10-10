@@ -8,14 +8,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class EnableFaceIdScreen extends StatelessWidget {
   const EnableFaceIdScreen({
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc bloc;
-  final int currentStep;
-  final int totalSteps;
 
   static final keyEnableButton = ValueKey('$EnableFaceIdScreen.enable_button');
   static final keySkipButton = ValueKey('$EnableFaceIdScreen.skip_button');

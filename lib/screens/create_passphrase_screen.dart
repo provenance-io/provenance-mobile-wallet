@@ -9,14 +9,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class CreatePassphraseScreen extends StatelessWidget {
   const CreatePassphraseScreen({
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc bloc;
-  final int currentStep;
-  final int totalSteps;
 
   static final keyContinueButton =
       ValueKey('$CreatePassphraseScreen.continue_button');

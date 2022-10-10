@@ -9,15 +9,10 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigConfirmScreen extends StatelessWidget {
   const MultiSigConfirmScreen({
-    required this.currentStep,
-    required this.totalSteps,
     required AddAccountFlowBloc bloc,
     Key? key,
   })  : _bloc = bloc,
         super(key: key);
-
-  final int currentStep;
-  final int totalSteps;
 
   final AddAccountFlowBloc _bloc;
 
