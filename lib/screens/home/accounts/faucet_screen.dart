@@ -3,8 +3,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provider/provider.dart';
 
 class FaucetScreen extends StatefulWidget {
   const FaucetScreen({
@@ -23,37 +25,69 @@ class FaucetScreen extends StatefulWidget {
 }
 
 class FaucetScreenState extends State<FaucetScreen> {
+  String? _error;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PwAppBar(
         title: "Faucet",
+        leadingIconOnPress: () {
+          Provider.of<HomeBloc>(
+            context,
+            listen: false,
+          ).load();
+          Navigator.of(context).pop();
+        },
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PwText(
-            "PROVENANCE BLOCKCHAIN FAUCET",
-            style: PwTextStyle.display1,
-          ),
-          PwButton(
-            key: FaucetScreen.keyAddHashButton,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(
-                  IconData(0xef55, fontFamily: 'MaterialIcons'),
-                ),
-                PwText("Get HASH"),
-              ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Spacing.large),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            VerticalSpacer.large(),
+            PwText(
+              "PROVENANCE BLOCKCHAIN FAUCET",
+              style: PwTextStyle.headline1,
+              textAlign: TextAlign.center,
             ),
-            onPressed: () async {
-              _onLoading(context, true);
-              await get<AssetClient>().getHash(widget.coin, widget.address);
-              _onLoading(context, false);
-            },
-          ),
-        ],
+            if (_error != null) VerticalSpacer.large(),
+            if (_error != null)
+              PwText(
+                _error!,
+                color: PwColor.error,
+              ),
+            VerticalSpacer.large(),
+            PwButton(
+              key: FaucetScreen.keyAddHashButton,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    IconData(0xef55, fontFamily: 'MaterialIcons'),
+                  ),
+                  HorizontalSpacer.small(),
+                  PwText("Get HASH"),
+                ],
+              ),
+              onPressed: () async {
+                setState(() {
+                  _error = null;
+                });
+                _onLoading(context, true);
+                try {
+                  await get<AssetClient>().getHash(widget.coin, widget.address);
+                } catch (e) {
+                  setState(() {
+                    _error = e.toString();
+                  });
+                } finally {
+                  _onLoading(context, false);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
