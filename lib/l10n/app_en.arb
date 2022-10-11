@@ -637,5 +637,8 @@
   "devConfirmProposal": "Confirm Proposal",
   "devProposalComplete": "PROPOSAL COMPLETE",
   "devEnableMultiSig": "Enable Multi Sig",
-  "sendAssetListLoadingAssets": "Loading assets"
+  "sendAssetListLoadingAssets": "Loading assets",
+  "faucetScreenAppBarTitle": "Faucet",
+  "faucetScreenTitle": "PROVENANCE BLOCKCHAIN FAUCET",
+  "faucetScreenButtonTitle": "Add HASH"
 }

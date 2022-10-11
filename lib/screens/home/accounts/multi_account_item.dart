@@ -171,7 +171,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
             if (item.coin == Coin.testNet) PwListDivider(),
             if (item.coin == Coin.testNet)
               PwGreyButton(
-                text: "Add Hash",
+                text: strings.faucetScreenButtonTitle,
                 onPressed: () {
                   Navigator.of(context).pop(MenuOperation.addHash);
                 },

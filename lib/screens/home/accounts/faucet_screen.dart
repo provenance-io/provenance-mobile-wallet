@@ -6,6 +6,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
 class FaucetScreen extends StatefulWidget {
@@ -29,9 +30,10 @@ class FaucetScreenState extends State<FaucetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = Strings.of(context);
     return Scaffold(
       appBar: PwAppBar(
-        title: "Faucet",
+        title: strings.faucetScreenAppBarTitle,
         leadingIconOnPress: () {
           Provider.of<HomeBloc>(
             context,
@@ -47,7 +49,7 @@ class FaucetScreenState extends State<FaucetScreen> {
           children: [
             VerticalSpacer.large(),
             PwText(
-              "PROVENANCE BLOCKCHAIN FAUCET",
+              strings.faucetScreenTitle,
               style: PwTextStyle.headline1,
               textAlign: TextAlign.center,
             ),
@@ -62,12 +64,12 @@ class FaucetScreenState extends State<FaucetScreen> {
               key: FaucetScreen.keyAddHashButton,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     IconData(0xef55, fontFamily: 'MaterialIcons'),
                   ),
                   HorizontalSpacer.small(),
-                  PwText("Get HASH"),
+                  PwText(strings.faucetScreenButtonTitle),
                 ],
               ),
               onPressed: () async {
