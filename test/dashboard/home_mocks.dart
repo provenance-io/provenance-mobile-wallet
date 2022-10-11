@@ -40,6 +40,15 @@ class MockAssetClient implements AssetClient {
   }) async {
     return [];
   }
+
+  @override
+  Future<void> getHash(Coin coin, String provenanceAddress) async {
+    await Future.delayed(
+      Duration(
+        milliseconds: 1000,
+      ),
+    );
+  }
 }
 
 class MockTransactionService implements TransactionClient {
