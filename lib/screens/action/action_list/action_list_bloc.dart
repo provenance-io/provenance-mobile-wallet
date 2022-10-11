@@ -31,7 +31,7 @@ abstract class ActionListNavigator {
 
   Future<bool?> showApproveSign(SignAction signRequest, ClientMeta clientMeta);
 
-  Future<bool> showApproveTransaction({
+  Future<bool?> showApproveTransaction({
     required List<p.GeneratedMessage> messages,
     List<p.Coin>? fees,
     ClientMeta? clientMeta,
