@@ -23,6 +23,7 @@ import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pend
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -355,7 +356,7 @@ class MultiSigClient with ClientCoinMixin {
     return response.isSuccessful;
   }
 
-  Future<bool> updateTxResult({
+  Future<MultiSigUpdateResult> updateTxResult({
     required String txUuid,
     required String txHash,
     required Coin coin,
@@ -373,7 +374,15 @@ class MultiSigClient with ClientCoinMixin {
       body: request,
     );
 
-    return response.isSuccessful;
+    var result = MultiSigUpdateResult.fail;
+
+    if (response.isSuccessful) {
+      result = MultiSigUpdateResult.success;
+    } else if (response.error?.response?.statusCode == 500) {
+      result = MultiSigUpdateResult.error;
+    }
+
+    return result;
   }
 
   MultiSigPendingTx? _fromCreatedTxDto(MultiSigTxDto? dto) {

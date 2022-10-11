@@ -180,25 +180,11 @@ class DefaultQueueTxService implements TxQueueService {
       }
     }
 
-    final signatures = <AminoSignature>[];
-    for (final publicKey in multiSigAccount.publicKey.publicKeys) {
-      final address = publicKey.address;
-      final sig = signaturesByAddress[address];
-      if (sig != null) {
-        signatures.add(
-          AminoSignature(
-            address: address,
-            signedData: sig,
-          ),
-        );
-      }
-    }
-
     final privateKey = AminoPrivKey(
       threshold: multiSigAccount.signaturesRequired,
       pubKeys: multiSigAccount.publicKey.publicKeys,
       coin: coin,
-      signatures: signatures,
+      sigLookup: signaturesByAddress,
     );
 
     final responsePair = await pbClient.broadcastTransaction(

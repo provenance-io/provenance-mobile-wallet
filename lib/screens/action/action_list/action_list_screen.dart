@@ -25,7 +25,7 @@ class ActionListTab extends StatelessWidget {
         "$label ($count)",
         textAlign: TextAlign.center,
         maxLines: 1,
-        overflow: TextOverflow.fade,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
