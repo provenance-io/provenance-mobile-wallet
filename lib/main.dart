@@ -158,7 +158,7 @@ void main(List<String> args) {
 
       _log.info('Enable Firebase: $_enableFirebase', tag: _tag);
 
-      if (_enableFirebase) {
+      if (_enableFirebase && !Platform.isMacOS) {
         await Firebase.initializeApp();
 
         crashReportingService = FirebaseCrashReportingClient();
