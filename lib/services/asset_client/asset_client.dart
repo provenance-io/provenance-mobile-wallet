@@ -20,6 +20,13 @@ class AssetClient {
   }) {
     throw Strings.notImplementedMessage;
   }
+
+  Future<void> getHash(
+    Coin coin,
+    String provenanceAddress,
+  ) {
+    throw Strings.notImplementedMessage;
+  }
 }
 
 enum GraphingDataValue {

@@ -105,4 +105,18 @@ class DefaultAssetClient extends AssetClient
 
     return data.data ?? [];
   }
+
+  @override
+  Future<void> getHash(
+    Coin coin,
+    String provenanceAddress,
+  ) async {
+    if (coin != Coin.testNet) {
+      throw "Must be on Testnet";
+    }
+    String uri = "https://test.provenance.io/blockchain/faucet/external";
+    final client = await getClient(coin);
+    await client.post(uri, body: {"address": provenanceAddress});
+    return;
+  }
 }
