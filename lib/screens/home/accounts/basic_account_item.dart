@@ -8,6 +8,7 @@ import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -208,10 +209,15 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
         }
         break;
       case MenuOperation.addHash:
+        final bloc = Provider.of<HomeBloc>(context, listen: false);
+
         Navigator.of(context).push(
-          FaucetScreen(
-            address: item.address,
-            coin: item.coin,
+          Provider.value(
+            value: bloc,
+            child: FaucetScreen(
+              address: item.address,
+              coin: item.coin,
+            ),
           ).route(),
         );
         break;
