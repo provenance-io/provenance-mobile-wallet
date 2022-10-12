@@ -5,6 +5,7 @@ import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountsBloc implements Disposable {
@@ -114,6 +115,18 @@ class AccountsBloc implements Disposable {
   void _onSelected(Account? account) {
     if (account != null) {
       _updated.add(account);
+    }
+  }
+
+  Future<void> renameAccount(Account account, String newName) async {
+    await _accountService.renameAccount(id: account.id, name: newName);
+  }
+
+  Future<void> deleteAccount(Account account) async {
+    await get<AccountService>().removeAccount(id: account.id);
+    final list = await get<AccountService>().getAccounts();
+    if (list.isEmpty) {
+      get<LocalAuthHelper>().reset();
     }
   }
 }

@@ -4,9 +4,8 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
+import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
-import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/multi_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -175,36 +174,31 @@ class AccountsScreenState extends State<AccountsScreen> {
   }
 
   Widget _getItem(Account account) {
-    Widget item;
-
-    switch (account.kind) {
-      case AccountKind.basic:
-        item = BasicAccountItem(
-          account: account as BasicAccount,
-        );
-        break;
-      case AccountKind.multi:
-        item = MultiAccountItem(
-          account: account as MultiAccount,
-        );
-
-        break;
-    }
-
-    return GestureDetector(
-      key: AccountsScreen.keySelectAccountButton,
-      child: item,
-      behavior: HitTestBehavior.opaque,
-      onTap: () async {
-        final isSelected =
-            account.id == _accountService.events.selected.valueOrNull?.id;
-        if (isSelected ||
-            (account is MultiAccount && account is! TransactableAccount)) {
-          return;
-        } else {
-          await _accountService.selectAccount(id: account.id);
-        }
-      },
-    );
+    return StreamBuilder<TransactableAccount?>(
+        stream: _accountService.events.selected,
+        builder: (context, snapshot) {
+          final isSelected = account.id == snapshot.data?.id;
+          Widget item = AccountCell(
+            account: account,
+            isSelected: isSelected,
+            key: ValueKey(account.id),
+          );
+          return GestureDetector(
+            key: AccountsScreen.keySelectAccountButton,
+            child: item,
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              final isSelected =
+                  account.id == _accountService.events.selected.valueOrNull?.id;
+              if (isSelected ||
+                  (account is MultiAccount &&
+                      account is! TransactableAccount)) {
+                return;
+              } else {
+                await _accountService.selectAccount(id: account.id);
+              }
+            },
+          );
+        });
   }
 }
