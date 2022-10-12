@@ -70,47 +70,31 @@ class MockAccountsBloc extends _i1.Mock implements _i6.AccountsBloc {
   }
 
   @override
-  _i2.ValueStream<int> get count => (super.noSuchMethod(
-          Invocation.getter(#count),
-          returnValue: _FakeValueStream_0<int>(this, Invocation.getter(#count)))
-      as _i2.ValueStream<int>);
-  @override
-  _i7.Stream<_i3.Account> get updated => (super.noSuchMethod(
-      Invocation.getter(#updated),
-      returnValue: _i7.Stream<_i3.Account>.empty()) as _i7.Stream<_i3.Account>);
-  @override
-  _i7.Stream<int> get insert => (super.noSuchMethod(Invocation.getter(#insert),
-      returnValue: _i7.Stream<int>.empty()) as _i7.Stream<int>);
-  @override
   _i2.ValueStream<bool> get loading =>
       (super.noSuchMethod(Invocation.getter(#loading),
               returnValue:
                   _FakeValueStream_0<bool>(this, Invocation.getter(#loading)))
           as _i2.ValueStream<bool>);
   @override
+  _i2.ValueStream<_i6.AccountsBlocState> get accountsStream =>
+      (super.noSuchMethod(Invocation.getter(#accountsStream),
+              returnValue: _FakeValueStream_0<_i6.AccountsBlocState>(
+                  this, Invocation.getter(#accountsStream)))
+          as _i2.ValueStream<_i6.AccountsBlocState>);
+  @override
   _i7.Future<void> load() => (super.noSuchMethod(Invocation.method(#load, []),
       returnValue: _i7.Future<void>.value(),
       returnValueForMissingStub: _i7.Future<void>.value()) as _i7.Future<void>);
+  @override
+  _i7.Future<dynamic> selectAccount(_i3.Account? account) =>
+      (super.noSuchMethod(Invocation.method(#selectAccount, [account]),
+          returnValue: _i7.Future<dynamic>.value()) as _i7.Future<dynamic>);
   @override
   _i3.Account getAccountAtIndex(int? index) =>
       (super.noSuchMethod(Invocation.method(#getAccountAtIndex, [index]),
               returnValue: _FakeAccount_1(
                   this, Invocation.method(#getAccountAtIndex, [index])))
           as _i3.Account);
-  @override
-  _i3.Account getAccount(String? id) =>
-      (super.noSuchMethod(Invocation.method(#getAccount, [id]),
-              returnValue:
-                  _FakeAccount_1(this, Invocation.method(#getAccount, [id])))
-          as _i3.Account);
-  @override
-  int getAccountIndex(String? id) =>
-      (super.noSuchMethod(Invocation.method(#getAccountIndex, [id]),
-          returnValue: 0) as int);
-  @override
-  int removeAccount(String? id) => (super
-          .noSuchMethod(Invocation.method(#removeAccount, [id]), returnValue: 0)
-      as int);
   @override
   _i7.Future<void> renameAccount(_i3.Account? account, String? newName) =>
       (super.noSuchMethod(Invocation.method(#renameAccount, [account, newName]),

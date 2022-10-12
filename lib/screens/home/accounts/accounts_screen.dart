@@ -6,9 +6,7 @@ import 'package:provenance_wallet/screens/add_account_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
-import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,8 +27,9 @@ class AccountsScreenState extends State<AccountsScreen> {
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
   CompositeSubscription _providerSubscriptions = CompositeSubscription();
-  final _accountService = get<AccountService>();
   late final AccountsBloc _bloc;
+  final List<Account> _accountIds = <Account>[];
+  final ValueNotifier<String?> _selectedId = ValueNotifier<String?>(null);
 
   @override
   void dispose() {
@@ -39,18 +38,13 @@ class AccountsScreenState extends State<AccountsScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _accountService.events.removed.listen(_onRemoved).addTo(_subscriptions);
-  }
-
-  @override
   void didChangeDependencies() {
     _bloc = Provider.of<AccountsBloc>(context);
+
     _providerSubscriptions.cancel();
     final providerSubscriptions = CompositeSubscription();
-    _bloc.insert.listen(_onInsert).addTo(providerSubscriptions);
+
+    _bloc.accountsStream.listen(_onAccountStreamChanged).addTo(_subscriptions);
     _bloc.loading
         .listen((e) => _onLoading(context, e))
         .addTo(providerSubscriptions);
@@ -70,49 +64,24 @@ class AccountsScreenState extends State<AccountsScreen> {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(
-                left: Spacing.large,
-                right: Spacing.large,
-                top: Spacing.medium,
-              ),
-              child: StreamBuilder<int>(
-                initialData: _bloc.count.value,
-                stream: _bloc.count,
-                builder: (context, snapshot) {
-                  final count = snapshot.data!;
-                  if (count == 0) {
-                    return Container();
-                  }
+                padding: EdgeInsets.only(
+                  left: Spacing.large,
+                  right: Spacing.large,
+                  top: Spacing.medium,
+                ),
+                child: AnimatedList(
+                  key: _listKey,
+                  initialItemCount: _accountIds.length,
+                  itemBuilder: (
+                    context,
+                    index,
+                    animation,
+                  ) {
+                    final account = _bloc.getAccountAtIndex(index);
 
-                  return AnimatedList(
-                    key: _listKey,
-                    initialItemCount: count,
-                    itemBuilder: (
-                      context,
-                      index,
-                      animation,
-                    ) {
-                      final account = _bloc.getAccountAtIndex(index);
-
-                      return SlideTransition(
-                        position: animation.drive(
-                          Tween(
-                            begin: Offset(1, 0),
-                            end: Offset(0, 0),
-                          ),
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            bottom: 1,
-                          ),
-                          child: _getItem(account),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+                    return _cellBuilder(context, animation, account);
+                  },
+                )),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -138,31 +107,52 @@ class AccountsScreenState extends State<AccountsScreen> {
     );
   }
 
-  void _onRemoved(List<Account> accounts) {
-    for (final account in accounts) {
-      final index = Provider.of<AccountsBloc>(context, listen: false)
-          .removeAccount(account.id);
-      if (index != -1) {
-        _listKey.currentState?.removeItem(
-          index,
-          (context, animation) {
-            return SlideTransition(
-              position: animation.drive(
-                Tween(
-                  begin: Offset(-1, 0),
-                  end: Offset(0, 0),
-                ),
-              ),
-              child: _getItem(account),
-            );
-          },
-        );
+  void _onAccountStreamChanged(AccountsBlocState state) {
+    final animatedState = _listKey.currentState;
+    if (animatedState == null) {
+      return;
+    }
+
+    final existingIds = _accountIds.map((e) => e.id).toList();
+    final stateIds = state.accounts.map((e) => e.id).toList();
+
+    for (var index = 0; index < _accountIds.length; index++) {
+      if (!stateIds.contains(existingIds[index])) {
+        final account = _accountIds[index];
+        animatedState.removeItem(index,
+            (context, animation) => _cellBuilder(context, animation, account));
       }
     }
+
+    int offset = 0;
+    for (var index = 0; index < stateIds.length; index++) {
+      if (!existingIds.contains(stateIds[index])) {
+        animatedState.insertItem(existingIds.length + offset);
+        offset++;
+      }
+    }
+    _accountIds.replaceRange(0, _accountIds.length, state.accounts);
+    _selectedId.value = state.selectedAccount;
+    animatedState.setState(() {});
   }
 
-  void _onInsert(int index) {
-    _listKey.currentState?.insertItem(index);
+  Widget _cellBuilder(
+      BuildContext context, Animation<double> animation, Account account) {
+    return SlideTransition(
+      key: ValueKey(account.id),
+      position: animation.drive(
+        Tween(
+          begin: Offset(1, 0),
+          end: Offset(0, 0),
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.only(
+          bottom: 1,
+        ),
+        child: _getItem(account),
+      ),
+    );
   }
 
   void _onLoading(BuildContext context, bool loading) {
@@ -174,31 +164,25 @@ class AccountsScreenState extends State<AccountsScreen> {
   }
 
   Widget _getItem(Account account) {
-    return StreamBuilder<TransactableAccount?>(
-        stream: _accountService.events.selected,
-        builder: (context, snapshot) {
-          final isSelected = account.id == snapshot.data?.id;
-          Widget item = AccountCell(
-            account: account,
-            isSelected: isSelected,
-            key: ValueKey(account.id),
-          );
-          return GestureDetector(
-            key: AccountsScreen.keySelectAccountButton,
-            child: item,
-            behavior: HitTestBehavior.opaque,
-            onTap: () async {
-              final isSelected =
-                  account.id == _accountService.events.selected.valueOrNull?.id;
-              if (isSelected ||
-                  (account is MultiAccount &&
-                      account is! TransactableAccount)) {
-                return;
-              } else {
-                await _accountService.selectAccount(id: account.id);
-              }
-            },
-          );
-        });
+    final state = _bloc.accountsStream.value;
+    final isSelected = account.id == state.selectedAccount;
+
+    return GestureDetector(
+      key: AccountsScreen.keySelectAccountButton,
+      child: AccountCell(
+        account: account,
+        isSelected: isSelected,
+        key: ValueKey(account.id),
+      ),
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        if (isSelected ||
+            (account is MultiAccount && account is! TransactableAccount)) {
+          return;
+        } else {
+          await _bloc.selectAccount(account);
+        }
+      },
+    );
   }
 }

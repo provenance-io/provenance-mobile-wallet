@@ -50,7 +50,6 @@ void main() {
   setUp(() {
     _accountStream = StreamController<Account>();
     mockAccountsBloc = MockAccountsBloc();
-    when(mockAccountsBloc.updated).thenAnswer((_) => _accountStream.stream);
   });
 
   tearDown(() {

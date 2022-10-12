@@ -11,7 +11,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.da
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
 
 enum MenuOperation {
   copy,
@@ -37,7 +36,6 @@ class AccountCell extends StatefulWidget {
 }
 
 class _AccountCellState extends State<AccountCell> {
-  CompositeSubscription _subscriptions = CompositeSubscription();
   late Account _account;
   late final AccountsBloc _bloc;
 
@@ -50,28 +48,13 @@ class _AccountCellState extends State<AccountCell> {
   @override
   void didChangeDependencies() {
     _bloc = Provider.of<AccountsBloc>(context);
-    _subscriptions.cancel();
-
-    final subscriptions = CompositeSubscription();
-
-    _bloc.updated.listen((e) {
-      setState(() {
-        if (_account.id == e.id) {
-          setState(() {
-            _account = e as BasicAccount;
-          });
-        }
-      });
-    }).addTo(subscriptions);
-
-    _subscriptions = subscriptions;
     super.didChangeDependencies();
   }
 
   @override
-  void dispose() {
-    _subscriptions.dispose();
-    super.dispose();
+  void didUpdateWidget(covariant AccountCell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _account = widget.account;
   }
 
   @override
