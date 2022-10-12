@@ -421,8 +421,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     );
   }
 
-  // TODO-Roy: This needs to be awaited somewhere.
-  // It is possible for widgets to request a dependency before it is registered.
   Future<void> _setup() async {
     final keyValueService = get<KeyValueService>();
     final cipherService = get<CipherService>();
