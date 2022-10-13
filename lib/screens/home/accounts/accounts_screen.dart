@@ -113,27 +113,30 @@ class AccountsScreenState extends State<AccountsScreen> {
       return;
     }
 
-    final existingIds = _accountIds.map((e) => e.id).toList();
-    final stateIds = state.accounts.map((e) => e.id).toList();
+    animatedState.setState(() {
+      final existingIds = _accountIds.map((e) => e.id).toList();
+      final stateIds = state.accounts.map((e) => e.id).toList();
 
-    for (var index = 0; index < _accountIds.length; index++) {
-      if (!stateIds.contains(existingIds[index])) {
-        final account = _accountIds[index];
-        animatedState.removeItem(index,
-            (context, animation) => _cellBuilder(context, animation, account));
+      for (var index = 0; index < _accountIds.length; index++) {
+        if (!stateIds.contains(existingIds[index])) {
+          final account = _accountIds[index];
+          animatedState.removeItem(
+              index,
+              (context, animation) =>
+                  _cellBuilder(context, animation, account));
+        }
       }
-    }
 
-    int offset = 0;
-    for (var index = 0; index < stateIds.length; index++) {
-      if (!existingIds.contains(stateIds[index])) {
-        animatedState.insertItem(existingIds.length + offset);
-        offset++;
+      int offset = 0;
+      for (var index = 0; index < stateIds.length; index++) {
+        if (!existingIds.contains(stateIds[index])) {
+          animatedState.insertItem(existingIds.length + offset);
+          offset++;
+        }
       }
-    }
-    _accountIds.replaceRange(0, _accountIds.length, state.accounts);
-    _selectedId.value = state.selectedAccount;
-    animatedState.setState(() {});
+      _accountIds.replaceRange(0, _accountIds.length, state.accounts);
+      _selectedId.value = state.selectedAccount;
+    });
   }
 
   Widget _cellBuilder(
