@@ -50,6 +50,7 @@ enum PrefKey {
   isMockingValidatorService,
   isMockingGovernanceService,
   isSubsequentRun,
+  multiSigInviteUri,
   sessionData,
   sessionSuspendedTime,
   showAdvancedUI,

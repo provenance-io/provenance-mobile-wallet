@@ -191,7 +191,8 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
         signers.sortAscendingBy((e) => e.signerOrder);
 
         for (var signer in remoteAccount.signers) {
-          final inviteLink = createInviteLink(signer.inviteId, coin);
+          final inviteLink =
+              await createDynamicInviteLink(signer.inviteId, coin);
           final signerAddress = signer.publicKey?.address;
 
           cosigners.add(

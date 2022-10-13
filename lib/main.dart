@@ -169,7 +169,11 @@ void main(List<String> args) {
           keyValueService: keyValueService,
           localConfigService: localConfigService,
         );
-        deepLinkService = FirebaseDeepLinkService()..init();
+
+        final firebaseDeepLinkService = FirebaseDeepLinkService();
+        firebaseDeepLinkService.link.listen(_onDeepLink);
+        firebaseDeepLinkService.init();
+        deepLinkService = firebaseDeepLinkService;
       } else {
         crashReportingService = LoggingCrashReportingClient();
         remoteNotificationService = DisabledRemoteNotificationService();
@@ -314,6 +318,23 @@ void main(List<String> args) {
       }
     },
   );
+}
+
+void _onDeepLink(Uri uri) {
+  final uriStr = uri.toString();
+  Log.instance.debug(
+    'Deep link: $uriStr',
+    tag: 'main',
+  );
+
+  switch (uri.path) {
+    case '/invite':
+      get<KeyValueService>().setString(
+        PrefKey.multiSigInviteUri,
+        uri.toString(),
+      );
+      break;
+  }
 }
 
 Future<void> _integrationTestSetup(String json) async {
