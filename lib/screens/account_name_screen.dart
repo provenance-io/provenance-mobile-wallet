@@ -135,12 +135,6 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
       appBar: PwAppBar(
         title: strings.nameYourAccount,
         leadingIcon: widget.leadingIcon,
-        bottom: (widget.currentStep != null && widget.totalSteps != null)
-            ? ProgressStepper(
-                widget.currentStep!,
-                widget.totalSteps!,
-              )
-            : null,
       ),
       body: Form(
         key: _formKey,

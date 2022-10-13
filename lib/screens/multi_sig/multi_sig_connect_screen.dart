@@ -13,15 +13,11 @@ class MultiSigConnectScreen extends StatefulWidget {
   const MultiSigConnectScreen({
     required this.onAccount,
     required this.enableCreate,
-    this.currentStep,
-    this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final void Function(BasicAccount? account) onAccount;
   final bool enableCreate;
-  final int? currentStep;
-  final int? totalSteps;
 
   @override
   State<MultiSigConnectScreen> createState() => _MultiSigConnectScreenState();
@@ -80,8 +76,6 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentStep = widget.currentStep;
-    final totalSteps = widget.totalSteps;
     final items = _items;
     final strings = Strings.of(context);
 
@@ -89,12 +83,6 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
       appBar: PwAppBar(
         title: strings.multiSigConnectTitle,
         leadingIcon: PwIcons.back,
-        bottom: currentStep == null || totalSteps == null
-            ? null
-            : ProgressStepper(
-                currentStep,
-                totalSteps,
-              ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

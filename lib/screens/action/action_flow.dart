@@ -102,7 +102,7 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
   }
 
   @override
-  Future<bool> showApproveTransaction({
+  Future<bool?> showApproveTransaction({
     required List<proto.GeneratedMessage> messages,
     List<proto.Coin>? fees,
     ClientMeta? clientMeta,
@@ -130,6 +130,6 @@ class ActionFlowState extends FlowBaseState implements ActionListNavigator {
           fees: fees,
         );
       },
-    ).then((approved) => approved ?? false);
+    );
   }
 }

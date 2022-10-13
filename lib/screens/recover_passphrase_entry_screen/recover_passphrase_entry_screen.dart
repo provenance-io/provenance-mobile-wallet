@@ -16,8 +16,6 @@ import 'package:provenance_wallet/util/timed_counter.dart';
 class RecoverPassphraseEntryScreen extends StatefulWidget {
   const RecoverPassphraseEntryScreen({
     required this.addAccountBloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
@@ -38,8 +36,6 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
       ValueKey('$RecoverPassphraseEntryScreen.word_$index');
 
   final AddAccountFlowBloc addAccountBloc;
-  final int currentStep;
-  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {
@@ -89,10 +85,6 @@ class RecoverPassphraseEntryScreenState
         child: PwAppBar(
           title: Strings.of(context).enterRecoveryPassphrase,
           leadingIcon: PwIcons.back,
-          bottom: ProgressStepper(
-            widget.currentStep,
-            widget.totalSteps,
-          ),
         ),
       ),
       body: PwOnboardingScreen(
