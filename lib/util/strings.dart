@@ -22,5 +22,3 @@ class Strings {
     return AppLocalizations.of(context)!;
   }
 }
-
-typedef LocalizedString = String Function(BuildContext context);

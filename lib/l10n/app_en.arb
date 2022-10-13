@@ -176,6 +176,7 @@
   "multiSigTransactionInitiatedTitle": "Transaction Initiated",
   "multiSigTransactionInitiatedMessage": "You will be notified upon co-signer approval",
   "multiSigTransactionInitiatedDone": "Back to dashboard",
+  "multiSigTransactionInitiatedNotification": "Multi Signature Transaction Created",
   "multiSigRecoverPleaseNote": "Please note",
   "multiSigRecoverNoAccountsToRecover": "At this time, you do not have any accounts to import or recover",
   "nameYourAccount": "Name Your Account",

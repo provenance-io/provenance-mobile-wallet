@@ -1,3 +1,5 @@
+import 'package:provenance_wallet/util/localized_string.dart';
+
 class NotificationItem {
   const NotificationItem({
     required this.id,
@@ -6,6 +8,6 @@ class NotificationItem {
   });
 
   final String id;
-  final String label;
+  final LocalizedString label;
   final DateTime created;
 }
