@@ -697,6 +697,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
           break;
         case MultiSigTopic.txSignatureRequired:
         case MultiSigTopic.txReady:
+        case MultiSigTopic.txDeclined:
         case MultiSigTopic.txResult:
           multiSigService.sync(
             signerAddresses: [address],
