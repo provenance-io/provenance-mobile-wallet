@@ -8,14 +8,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class CreatePin extends StatefulHookWidget {
   const CreatePin({
     required this.bloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc bloc;
-  final int currentStep;
-  final int totalSteps;
 
   @override
   State<StatefulWidget> createState() {
@@ -30,10 +26,6 @@ class CreatePinState extends State<CreatePin> {
       appBar: PwAppBar(
         title: Strings.of(context).setPinCode,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,

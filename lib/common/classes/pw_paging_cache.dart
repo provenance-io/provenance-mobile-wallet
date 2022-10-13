@@ -2,8 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:rxdart/rxdart.dart';
 
-// TODO: Make tests for me!
-
 abstract class PwPagingCache extends Disposable {
   @visibleForTesting
   final int itemCount;

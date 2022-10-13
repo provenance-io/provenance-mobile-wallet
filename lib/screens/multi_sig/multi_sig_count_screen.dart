@@ -149,12 +149,6 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
       appBar: PwAppBar(
         title: widget.title,
         leadingIcon: leadingIcon,
-        bottom: widget.currentStep != null && widget.totalSteps != null
-            ? ProgressStepper(
-                widget.currentStep!,
-                widget.totalSteps!,
-              )
-            : null,
       ),
       body: CustomScrollView(
         slivers: [

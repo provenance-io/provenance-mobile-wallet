@@ -11,14 +11,10 @@ import 'package:provenance_wallet/util/strings.dart';
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   const RecoveryWordsConfirmScreen({
     required this.addAccountBloc,
-    required this.currentStep,
-    required this.totalSteps,
     Key? key,
   }) : super(key: key);
 
   final AddAccountFlowBloc addAccountBloc;
-  final int currentStep;
-  final int totalSteps;
 
   static ValueKey keyCheckbox =
       ValueKey("$RecoveryWordsConfirmScreen.checkbox");
@@ -64,10 +60,6 @@ class RecoveryWordsConfirmScreenState
       appBar: PwAppBar(
         title: Strings.of(context).verifyPassphrase,
         leadingIcon: PwIcons.back,
-        bottom: ProgressStepper(
-          widget.currentStep,
-          widget.totalSteps,
-        ),
       ),
       body: Container(
         color: Theme.of(context).colorScheme.neutral750,
