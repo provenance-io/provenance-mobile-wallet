@@ -91,6 +91,12 @@ class MockAssetClient extends _i1.Mock implements _i6.AssetClient {
               returnValue: _i7.Future<List<_i10.AssetGraphItem>>.value(
                   <_i10.AssetGraphItem>[]))
           as _i7.Future<List<_i10.AssetGraphItem>>);
+  @override
+  _i7.Future<void> getHash(_i9.Coin? coin, String? provenanceAddress) => (super
+          .noSuchMethod(Invocation.method(#getHash, [coin, provenanceAddress]),
+              returnValue: _i7.Future<void>.value(),
+              returnValueForMissingStub: _i7.Future<void>.value())
+      as _i7.Future<void>);
 }
 
 /// A class which mocks [TransactionClient].

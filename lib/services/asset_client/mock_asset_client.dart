@@ -50,6 +50,15 @@ class MockAssetClient extends AssetClient {
     return items;
   }
 
+  @override
+  Future<void> getHash(Coin coin, String provenanceAddress) async {
+    await Future.delayed(
+      Duration(
+        milliseconds: faker.randomGenerator.integer(1000, min: 500),
+      ),
+    );
+  }
+
   Asset _getAsset() {
     var amount = faker.randomGenerator.decimal(min: 50).toStringAsFixed(2);
 

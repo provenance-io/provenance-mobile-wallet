@@ -75,6 +75,12 @@ class MockAssetClient extends _i1.Mock implements _i5.AssetClient {
               {#startDate: startDate, #endDate: endDate}),
           returnValue: _i6.Future<List<_i9.AssetGraphItem>>.value(
               <_i9.AssetGraphItem>[])) as _i6.Future<List<_i9.AssetGraphItem>>);
+  @override
+  _i6.Future<void> getHash(_i8.Coin? coin, String? provenanceAddress) => (super
+          .noSuchMethod(Invocation.method(#getHash, [coin, provenanceAddress]),
+              returnValue: _i6.Future<void>.value(),
+              returnValueForMissingStub: _i6.Future<void>.value())
+      as _i6.Future<void>);
 }
 
 /// A class which mocks [AccountService].
@@ -132,12 +138,6 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
   _i6.Future<_i10.Account?> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: _i6.Future<_i10.Account?>.value())
-          as _i6.Future<_i10.Account?>);
-  @override
-  _i6.Future<_i10.Account?> setAccountCoin({String? id, _i8.Coin? coin}) =>
-      (super.noSuchMethod(
-              Invocation.method(#setAccountCoin, [], {#id: id, #coin: coin}),
               returnValue: _i6.Future<_i10.Account?>.value())
           as _i6.Future<_i10.Account?>);
   @override

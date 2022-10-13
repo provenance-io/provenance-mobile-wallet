@@ -1,10 +1,13 @@
 import 'package:flutter/services.dart';
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
+import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -165,6 +168,14 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
                 Navigator.of(context).pop(MenuOperation.delete);
               },
             ),
+            if (item.coin == Coin.testNet) PwListDivider(),
+            if (item.coin == Coin.testNet)
+              PwGreyButton(
+                text: strings.faucetScreenButtonTitle,
+                onPressed: () {
+                  Navigator.of(context).pop(MenuOperation.addHash);
+                },
+              ),
           ],
         );
       },
@@ -217,6 +228,19 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
           ),
         );
         break;
+      case MenuOperation.addHash:
+        final bloc = Provider.of<HomeBloc>(context, listen: false);
+
+        Navigator.of(context).push(
+          Provider.value(
+            value: bloc,
+            child: FaucetScreen(
+              address: item.address!,
+              coin: item.coin,
+            ),
+          ).route(),
+        );
+        break;
     }
   }
 }
@@ -225,4 +249,5 @@ enum MenuOperation {
   copy,
   delete,
   viewInvite,
+  addHash,
 }
