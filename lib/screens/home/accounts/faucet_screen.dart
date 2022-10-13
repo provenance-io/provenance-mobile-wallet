@@ -66,7 +66,7 @@ class FaucetScreenState extends State<FaucetScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    IconData(0xef55, fontFamily: 'MaterialIcons'),
+                    const IconData(0xef55, fontFamily: 'MaterialIcons'),
                   ),
                   HorizontalSpacer.small(),
                   PwText(strings.faucetScreenButtonTitle),
