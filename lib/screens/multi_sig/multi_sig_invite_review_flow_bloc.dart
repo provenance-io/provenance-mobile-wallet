@@ -29,7 +29,9 @@ class MultiSigInviteReviewFlowBloc {
     final account = await _navigator.showCreateLinkedAccount();
     final multiAccount = await _register(account);
 
-    _navigator.endFlow(multiAccount);
+    if (account != null) {
+      _navigator.endFlow(multiAccount);
+    }
   }
 
   void showLinkExistingAccount() {
