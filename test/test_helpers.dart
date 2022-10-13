@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
 
 class StreamHasListener<X> extends Matcher {
   StreamHasListener(this._hasListener);
@@ -54,5 +56,21 @@ class PrivateKeyMatcher extends Matcher {
     return ListEquality().equals(key.raw, privKey.raw) &&
         key.coin == privKey.coin &&
         ListEquality().equals(key.chainCode, privKey.chainCode);
+  }
+}
+
+class ProvenanceTestAppRig extends StatelessWidget {
+  final Widget child;
+
+  const ProvenanceTestAppRig({required this.child, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ProvenanceThemeData.themeData,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: Material(child: child)),
+    );
   }
 }

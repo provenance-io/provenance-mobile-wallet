@@ -5,8 +5,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
+import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/basic_account_item.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
@@ -69,7 +69,7 @@ void main() {
         await Dashboard.keyOpenAccountsButton.tap(tester);
         await AccountContainer.keyAccountEllipsisName(data.accountName!)
             .tap(tester);
-        await BasicAccountItem.keyCopyAccountNumberButton.tap(tester);
+        await AccountCell.keyCopyAccountNumberButton.tap(tester);
         Map<String, dynamic> json = {'address': clipboardData};
         final res = await TestHttpClient(baseUrl: 'https://test.provenance.io/')
             .post('blockchain/faucet/external', body: json);

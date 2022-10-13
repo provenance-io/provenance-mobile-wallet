@@ -30,6 +30,22 @@ class HomeBloc extends Disposable {
         .distinct()
         .listen(_onSelected)
         .addTo(_subscriptions);
+
+    prefTriggeredReload(_) {
+      load();
+    }
+
+    get<KeyValueService>()
+        .stream<bool>(PrefKey.httpClientDiagnostics500)
+        .skip(1) // the stream always emits an event for its initial value
+        .listen(prefTriggeredReload)
+        .addTo(_subscriptions);
+
+    get<KeyValueService>()
+        .stream<bool>(PrefKey.enableMultiSig)
+        .skip(1) // the stream always emits an event for its initial value
+        .listen(prefTriggeredReload)
+        .addTo(_subscriptions);
   }
 
   final _isLoading = BehaviorSubject.seeded(false);
