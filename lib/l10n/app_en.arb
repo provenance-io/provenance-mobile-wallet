@@ -137,6 +137,8 @@
   "multiSigInviteReviewCreateOrLinkCreateDesc": "Create a passphrase and use this account to join the multi-sig account",
   "multiSigInviteReviewCreateOrLinkLinkExisting": "Link Existing Account",
   "multiSigInviteReviewCreateOrLinkLinkExistingDesc": "Select an account to join this multi-sig account",
+  "multiSigInviteDeepLinkParseFailed": "The invite link was invalid",
+  "multiSigInviteDeepLinkFetchAccountFailed": "Failed to retrieve invite details",
   "multiSigJoinLinkTitle": "Multi-Signature Account",
   "multiSigJoinLinkMessage": "Paste invitation code address you've received as an invitation",
   "multiSigJoinLinkFieldLabel": "Enter Invitation Link",

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:provenance_dart/proto.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
@@ -12,6 +13,7 @@ import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/tab_item.dart';
 import 'package:provenance_wallet/screens/home/transactions/transaction_tab.dart';
 import 'package:provenance_wallet/screens/home/view_more/view_more_tab.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/screens/transaction/transaction_confirm_screen.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
@@ -20,6 +22,7 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/session
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/messages/message_field_name.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
@@ -78,6 +81,36 @@ class HomeScreenState extends State<HomeScreen>
       }
     }).addTo(providerSubscriptions);
     bloc.error.listen(_onError).addTo(providerSubscriptions);
+    bloc.multiSigInviteDeepLink.listen((e) async {
+      final data = parseInviteLinkData(e);
+      if (data != null) {
+        final inviteId = data.inviteId;
+        final coin = data.coin;
+
+        final client = get<MultiSigClient>();
+        final remoteAccount = await client.getAccountByInvite(
+          inviteId: inviteId,
+          coin: coin,
+        );
+
+        if (remoteAccount != null) {
+          showGeneralDialog(
+              context: context,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return MultiSigInviteReviewFlow(
+                  inviteId: data.inviteId,
+                  multiSigRemoteAccount: remoteAccount,
+                );
+              });
+        } else {
+          _onError(
+              Strings.of(context).multiSigInviteDeepLinkFetchAccountFailed);
+        }
+      } else {
+        _onError(Strings.of(context).multiSigInviteDeepLinkParseFailed);
+      }
+    }).addTo(providerSubscriptions);
+
     _providerSubscriptions = providerSubscriptions;
     super.didChangeDependencies();
   }

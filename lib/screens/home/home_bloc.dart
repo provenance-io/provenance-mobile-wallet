@@ -7,6 +7,7 @@ import 'package:provenance_wallet/services/account_service/account_service.dart'
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
@@ -17,9 +18,10 @@ import 'package:rxdart/rxdart.dart';
 
 class HomeBloc extends Disposable {
   HomeBloc() {
-    get<DeepLinkService>()
-        .link
-        .listen(_handleDynamicLink)
+    get<DeepLinkService>().link.listen(_onDeepLink).addTo(_subscriptions);
+    get<KeyValueService>()
+        .stream<String>(PrefKey.multiSigInviteUri)
+        .listen(_onMultiSigInviteDeepLink)
         .addTo(_subscriptions);
     _transactionHandler.transaction
         .listen(_onTransaction)
@@ -32,6 +34,7 @@ class HomeBloc extends Disposable {
 
   final _isLoading = BehaviorSubject.seeded(false);
   final _assetList = BehaviorSubject<List<Asset>?>.seeded([]);
+  final _multiSigInviteDeepLink = PublishSubject<String>();
   final _error = PublishSubject<String>();
 
   final _subscriptions = CompositeSubscription();
@@ -44,6 +47,7 @@ class HomeBloc extends Disposable {
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<List<Asset>?> get assetList => _assetList;
   Stream<String> get error => _error;
+  Stream<String> get multiSigInviteDeepLink => _multiSigInviteDeepLink;
 
   Future<void> load({
     bool showLoading = true,
@@ -102,6 +106,7 @@ class HomeBloc extends Disposable {
     _isLoading.close();
     _assetList.close();
     _error.close();
+    _multiSigInviteDeepLink.close();
   }
 
   void _onSelected(Account? details) {
@@ -112,15 +117,21 @@ class HomeBloc extends Disposable {
     load();
   }
 
-  Future<void> _handleDynamicLink(Uri link) async {
+  void _onMultiSigInviteDeepLink(KeyValueData<String> kvData) async {
+    final link = kvData.data;
+    if (link != null) {
+      await get<KeyValueService>().removeString(PrefKey.multiSigInviteUri);
+
+      _multiSigInviteDeepLink.add(link);
+    }
+  }
+
+  Future<void> _onDeepLink(Uri link) async {
     final path = link.path;
     switch (path) {
       case '/wallet-connect':
         final data = link.queryParameters['data'];
         _handleWalletConnectLink(data);
-        break;
-      default:
-        logError('Unhandled dynamic link: $path');
         break;
     }
   }

@@ -32,9 +32,10 @@ Future<String> createDynamicInviteLink(String inviteId, Coin coin) async {
     ),
   );
 
-  final dynamicLink = await FirebaseDynamicLinks.instance.buildLink(params);
+  final dynamicLink =
+      await FirebaseDynamicLinks.instance.buildShortLink(params);
 
-  return dynamicLink.toString();
+  return dynamicLink.shortUrl.toString();
 }
 
 @visibleForTesting
