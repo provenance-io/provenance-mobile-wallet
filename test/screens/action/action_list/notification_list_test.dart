@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/screens/action/action_list/notification_list.dart';
 import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 
 extension _WidgetTesterHelper on WidgetTester {
   Future<void> tapAndSettle(Finder finder) {
@@ -18,7 +19,7 @@ main() {
     final item = NotificationItem(
       id: '1',
       created: DateTime.fromMillisecondsSinceEpoch(1000),
-      label: "TestLabel",
+      label: LocalizedString.text("TestLabel"),
     );
 
     Future<void> _build(WidgetTester tester, NotificationItem item,
@@ -120,12 +121,12 @@ main() {
   group("NotificationList", () {
     final item1 = NotificationItem(
       id: '1',
-      label: "item1",
+      label: LocalizedString.text("item1"),
       created: DateTime.fromMillisecondsSinceEpoch(1000),
     );
     final item2 = NotificationItem(
       id: '2',
-      label: "item2",
+      label: LocalizedString.text("item2"),
       created: DateTime.fromMillisecondsSinceEpoch(3000),
     );
 

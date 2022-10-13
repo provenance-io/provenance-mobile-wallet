@@ -23,8 +23,8 @@ import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/extensions/generated_message_extension.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
 
 abstract class ActionListNavigator {
   Future<bool> showApproveSession(SessionAction sessionRequestData);
@@ -231,23 +231,23 @@ class ActionListBloc extends Disposable {
         isSelected: currentAccount!.id == account.id,
         isBasicAccount: account.kind == AccountKind.basic,
         items: queuedGroup.actionLookup.entries.map((entry) {
-          LocalizedString label = (c) => Strings.of(c).actionListLabelUnknown;
+          var label = StringId.actionListLabelUnknown;
 
           switch (entry.value.kind) {
             case WalletConnectActionKind.session:
-              label = (c) => Strings.of(c).actionListLabelApproveSession;
+              label = StringId.actionListLabelApproveSession;
               break;
             case WalletConnectActionKind.tx:
-              label = (c) => Strings.of(c).actionListLabelTransactionRequested;
+              label = StringId.actionListLabelTransactionRequested;
               break;
             case WalletConnectActionKind.sign:
-              label = (c) => Strings.of(c).actionListLabelSignatureRequested;
+              label = StringId.actionListLabelSignatureRequested;
               break;
           }
 
           return _WalletConnectActionItem(
-            label: label,
-            subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+            label: LocalizedString.id(label),
+            subLabel: StringId.actionListSubLabelActionRequired.toLocalized(),
             action: entry.value,
           );
         }).toList(),
@@ -350,10 +350,12 @@ class ActionListBloc extends Disposable {
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
         groupAddress: tx.multiSigAddress,
-        label: (c) => tx.txBody.messages
-            .map((e) => e.toMessage().toLocalizedName(c))
-            .join(', '),
-        subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+        label: LocalizedString(
+          (c) => tx.txBody.messages
+              .map((e) => e.toMessage().toLocalizedName(c))
+              .join(', '),
+        ),
+        subLabel: StringId.actionListSubLabelActionRequired.toLocalized(),
         txBody: tx.txBody,
         fee: tx.fee,
         txId: tx.txUuid,
@@ -367,10 +369,12 @@ class ActionListBloc extends Disposable {
       multiSigAddress: tx.multiSigAddress,
       signerAddress: signerAddress,
       groupAddress: signerAddress,
-      label: (c) => tx.txBody.messages
-          .map((e) => e.toMessage().toLocalizedName(c))
-          .join(', '),
-      subLabel: (c) => Strings.of(c).actionListSubLabelActionRequired,
+      label: LocalizedString(
+        (c) => tx.txBody.messages
+            .map((e) => e.toMessage().toLocalizedName(c))
+            .join(', '),
+      ),
+      subLabel: StringId.actionListSubLabelActionRequired.toLocalized(),
       txBody: tx.txBody,
       fee: tx.fee,
       txId: tx.txUuid,

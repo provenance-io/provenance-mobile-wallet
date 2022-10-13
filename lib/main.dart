@@ -81,6 +81,7 @@ import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -621,10 +622,17 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
     get.registerSingleton<AccountNotificationService>(
         accountNotificationService);
 
+    multiSigService.txCreated.listen((event) {
+      accountNotificationService.addId(
+        id: StringId.multiSigTransactionInitiatedNotification,
+        created: DateTime.now(),
+      );
+    }).addTo(_subscriptions);
+
     remoteNotificationService.multiSig.listen((e) {
       final title = e.title;
       if (title != null) {
-        accountNotificationService.add(
+        accountNotificationService.addText(
           label: title,
           created: DateTime.now(),
         );

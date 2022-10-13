@@ -57,7 +57,7 @@ main() {
       final accountNotificationService = AccountNotificationService(
         inMemory: true,
       );
-      await accountNotificationService.add(
+      await accountNotificationService.addText(
         label: 'Test',
         created: DateTime.now(),
       );

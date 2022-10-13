@@ -54,7 +54,7 @@ class NotificationItemCell extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   PwText(
-                    item.label,
+                    item.label.get(context),
                     maxLines: 2,
                   ),
                   PwText(notificationListFormatter.format(item.created))

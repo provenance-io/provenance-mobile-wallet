@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:provenance_wallet/services/account_notification_service/models/sembast_notification_item.dart';
+import 'package:provenance_wallet/services/account_notification_service/models/sembast_text_notification_item.dart';
 import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:sembast/sembast_memory.dart';
+
+import 'models/sembast_id_notification_item.dart';
 
 class AccountNotificationService implements Disposable {
   AccountNotificationService({
@@ -21,7 +24,9 @@ class AccountNotificationService implements Disposable {
     _update();
   }
 
-  final _main = StoreRef<String, Map<String, Object?>?>.main();
+  final _textStore = StoreRef<String, Map<String, Object?>?>('text');
+  final _idStore = StoreRef<String, Map<String, Object?>?>('id');
+
   late final Future<Database> _db;
 
   ValueStream<List<NotificationItem>> get notifications => _notifications;
@@ -35,7 +40,7 @@ class AccountNotificationService implements Disposable {
       inMemory: false,
     );
 
-    final model = SembastNotificationItem(
+    final model = SembastTextNotificationItem(
       label: label,
       created: created,
     );
@@ -50,18 +55,34 @@ class AccountNotificationService implements Disposable {
     _notifications.close();
   }
 
-  Future<void> add({
+  Future<void> addText({
     required String label,
     required DateTime created,
   }) async {
     final db = await _db;
 
-    final model = SembastNotificationItem(
+    final model = SembastTextNotificationItem(
       label: label,
       created: created,
     );
 
-    await _main.add(db, model.toRecord());
+    await _textStore.add(db, model.toRecord());
+
+    await _update();
+  }
+
+  Future<void> addId({
+    required StringId id,
+    required DateTime created,
+  }) async {
+    final db = await _db;
+
+    final model = SembastIdNotificationItem(
+      stringId: id,
+      created: created,
+    );
+
+    await _idStore.add(db, model.toRecord());
 
     await _update();
   }
@@ -72,8 +93,8 @@ class AccountNotificationService implements Disposable {
     final db = await _db;
 
     for (final id in ids) {
-      final ref = _main.record(id);
-      await ref.delete(db);
+      await _textStore.record(id).delete(db);
+      await _idStore.record(id).delete(db);
     }
 
     await _update();
@@ -105,14 +126,21 @@ class AccountNotificationService implements Disposable {
 
   Future<List<NotificationItem>> _getAll() async {
     final db = await _db;
-    final records = await _main.find(db);
+    final textRecords = await _textStore.find(db);
 
-    final results = records
+    final textResults = textRecords
         .where((e) => e.value != null)
-        .map((e) => _fromRecord(e.key, e.value!))
-        .toList();
+        .map((e) => _fromTextRecord(e.key, e.value!));
 
-    return results;
+    final idRecords = await _idStore.find(db);
+    final idResults = idRecords
+        .where((e) => e.value != null)
+        .map((e) => _fromIdRecord(e.key, e.value!));
+
+    return [
+      ...textResults,
+      ...idResults,
+    ];
   }
 
   Future<void> _update() async {
@@ -121,12 +149,22 @@ class AccountNotificationService implements Disposable {
     _notifications.add(results);
   }
 
-  NotificationItem _fromRecord(String id, Map<String, dynamic> record) {
-    final model = SembastNotificationItem.fromRecord(record);
+  NotificationItem _fromTextRecord(String id, Map<String, dynamic> record) {
+    final model = SembastTextNotificationItem.fromRecord(record);
 
     return NotificationItem(
       id: id,
-      label: model.label,
+      label: LocalizedString.text(model.label),
+      created: model.created,
+    );
+  }
+
+  NotificationItem _fromIdRecord(String id, Map<String, dynamic> record) {
+    final model = SembastIdNotificationItem.fromRecord(record);
+
+    return NotificationItem(
+      id: id,
+      label: LocalizedString.id(model.stringId),
       created: model.created,
     );
   }

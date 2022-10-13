@@ -1,5 +1,5 @@
-class SembastNotificationItem {
-  const SembastNotificationItem({
+class SembastTextNotificationItem {
+  const SembastTextNotificationItem({
     required this.label,
     required this.created,
   });
@@ -13,8 +13,8 @@ class SembastNotificationItem {
       };
 
   // ignore: unused_element
-  factory SembastNotificationItem.fromRecord(Map<String, dynamic> rec) =>
-      SembastNotificationItem(
+  factory SembastTextNotificationItem.fromRecord(Map<String, dynamic> rec) =>
+      SembastTextNotificationItem(
         label: rec['label'] as String,
         created: DateTime.fromMillisecondsSinceEpoch(rec['created'] as int),
       );

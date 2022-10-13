@@ -17,8 +17,9 @@ import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
@@ -54,11 +55,13 @@ class MultiSigService extends Listenable with ListenableMixin {
 
   final _actionItemsBySignerAddress = <String, List<MultiSigPendingTx>>{};
   final _initialized = Completer();
+  final _txCreated = PublishSubject<String>();
 
   final _main = StoreRef<String, Map<String, Object?>?>.main();
   late final Future<Database> _db;
 
   Future<void> get initialized => _initialized.future;
+  Stream<String> get txCreated => _txCreated;
 
   Future<void> sync({
     required List<String> signerAddresses,
@@ -133,6 +136,10 @@ class MultiSigService extends Listenable with ListenableMixin {
         signerAddress,
       ],
     );
+
+    if (remoteId != null) {
+      _txCreated.add(remoteId);
+    }
 
     return remoteId;
   }
