@@ -34,10 +34,24 @@ void main() {
   final pubKey2 = PublicKey.fromCompressPublicHex(
       Base64Decoder().convert(pubKeyHex2), Coin.testNet);
 
+  final amino1 = AminoPubKey(
+      publicKeys: [pubKey1, pubKey2], coin: Coin.testNet, threshold: 2);
+
   final account = BasicAccount(
     id: "BasicAccountId",
     name: "BasicAccountName",
     publicKey: pubKey1,
+  );
+
+  final multiAccount = MultiAccount(
+    id: "BasicAccountId",
+    name: "BasicAccountName",
+    publicKey: amino1,
+    cosignerCount: 2,
+    inviteIds: [],
+    linkedAccount: account,
+    remoteId: "test",
+    signaturesRequired: 2,
   );
 
   String? copiedString;
@@ -385,6 +399,8 @@ void main() {
 
         get.registerSingleton<MultiSigClient>(mockMultiSigClient);
         get.registerSingleton<AccountService>(mockAccountService);
+        when(mockAccountService.getAccount(any)).thenFuture(multiAccount);
+        when(mockAccountService.events).thenReturn(AccountServiceEvents());
       });
 
       tearDown(() {
