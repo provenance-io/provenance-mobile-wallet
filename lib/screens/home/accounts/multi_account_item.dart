@@ -61,7 +61,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
       }
     }).addTo(subscriptions);
 
-    bloc.updated.listen((e) {
+    _accountService.events.updated.listen((e) {
       setState(() {
         if (_account.id == e.id) {
           setState(() {
