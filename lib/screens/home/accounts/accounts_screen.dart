@@ -28,7 +28,7 @@ class AccountsScreenState extends State<AccountsScreen> {
   final _subscriptions = CompositeSubscription();
   CompositeSubscription _providerSubscriptions = CompositeSubscription();
   late final AccountsBloc _bloc;
-  final List<Account> _accountIds = <Account>[];
+  final List<Account> _accounts = <Account>[];
   final ValueNotifier<String?> _selectedId = ValueNotifier<String?>(null);
 
   @override
@@ -71,7 +71,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                 ),
                 child: AnimatedList(
                   key: _listKey,
-                  initialItemCount: _accountIds.length,
+                  initialItemCount: _accounts.length,
                   itemBuilder: (
                     context,
                     index,
@@ -114,12 +114,12 @@ class AccountsScreenState extends State<AccountsScreen> {
     }
 
     animatedState.setState(() {
-      final existingIds = _accountIds.map((e) => e.id).toList();
+      final existingIds = _accounts.map((e) => e.id).toList();
       final stateIds = state.accounts.map((e) => e.id).toList();
 
-      for (var index = 0; index < _accountIds.length; index++) {
+      for (var index = 0; index < _accounts.length; index++) {
         if (!stateIds.contains(existingIds[index])) {
-          final account = _accountIds[index];
+          final account = _accounts[index];
           animatedState.removeItem(
               index,
               (context, animation) =>
@@ -134,7 +134,8 @@ class AccountsScreenState extends State<AccountsScreen> {
           offset++;
         }
       }
-      _accountIds.replaceRange(0, _accountIds.length, state.accounts);
+
+      _accounts.replaceRange(0, _accounts.length, state.accounts);
       _selectedId.value = state.selectedAccount;
     });
   }
