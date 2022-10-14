@@ -30,7 +30,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _multiSigClient = get<MultiSigClient>();
   final _subscriptions = CompositeSubscription();
 
-  late final Future<List<CosignerData>> _getCosignersFuture;
+  late Future<List<CosignerData>> _getCosignersFuture;
 
   @override
   void initState() {
