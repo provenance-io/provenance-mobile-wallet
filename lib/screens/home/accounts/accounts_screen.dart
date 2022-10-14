@@ -2,7 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
@@ -94,8 +95,27 @@ class AccountsScreenState extends State<AccountsScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   AddAccountFlow(
+                    method: AddAccountMethod.create,
                     origin: AddAccountOrigin.accounts,
-                    includeMultiSig: true,
+                  ).route(),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: Spacing.large,
+              left: Spacing.large,
+              right: Spacing.large,
+            ),
+            child: PwTextButton.secondaryAction(
+              context: context,
+              text: Strings.of(context).recoverAccount,
+              onPressed: () {
+                Navigator.of(context).push(
+                  AddAccountFlow(
+                    method: AddAccountMethod.recover,
+                    origin: AddAccountOrigin.accounts,
                   ).route(),
                 );
               },

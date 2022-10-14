@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
-import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account/basic_account_create_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_create_or_link_screen.dart';
@@ -38,17 +38,16 @@ class MultiSigInviteReviewFlow extends FlowBase {
 class MultiSigInviteReviewFlowState
     extends FlowBaseState<MultiSigInviteReviewFlow>
     implements MultiSigInviteReviewFlowNavigator {
+  late final _bloc = MultiSigInviteReviewFlowBloc(
+    inviteId: widget.inviteId,
+    remoteAccount: widget.multiSigRemoteAccount,
+    navigator: this,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Provider<MultiSigInviteReviewFlowBloc>(
-      lazy: true,
-      create: (context) {
-        return MultiSigInviteReviewFlowBloc(
-          inviteId: widget.inviteId,
-          remoteAccount: widget.multiSigRemoteAccount,
-          navigator: this,
-        );
-      },
+    return Provider.value(
+      value: _bloc,
       child: super.build(context),
     );
   }
@@ -84,9 +83,8 @@ class MultiSigInviteReviewFlowState
   @override
   Future<BasicAccount?> showCreateLinkedAccount() async {
     final account = await showPage<BasicAccount?>(
-      (context) => AddAccountFlow(
+      (context) => BasicAccountCreateFlow(
         origin: AddAccountOrigin.accounts,
-        includeMultiSig: false,
       ),
     );
 
@@ -97,10 +95,7 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
-        onAccount:
-            Provider.of<MultiSigInviteReviewFlowBloc>(context, listen: false)
-                .submitLinkedAccount,
-        enableCreate: false,
+        bloc: _bloc,
       ),
     );
   }

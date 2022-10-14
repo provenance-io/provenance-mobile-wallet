@@ -2,12 +2,13 @@ import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remo
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class MultiSigInviteReviewFlowBloc {
+class MultiSigInviteReviewFlowBloc implements MultiSigConnectBloc {
   MultiSigInviteReviewFlowBloc({
     required String inviteId,
     required MultiSigRemoteAccount remoteAccount,
@@ -27,9 +28,16 @@ class MultiSigInviteReviewFlowBloc {
     _navigator.showChooseAccount();
   }
 
-  Future<void> showCreateNewAccount() async {
+  Future<void> showCreateNewAccount(BuildContext context) async {
+    ModalLoadingRoute.showLoading(context);
+
     final account = await _navigator.showCreateLinkedAccount();
-    final multiAccount = await _register(account);
+    MultiAccount? multiAccount;
+    try {
+      multiAccount = await _register(account);
+    } finally {
+      ModalLoadingRoute.dismiss(context);
+    }
 
     if (account != null) {
       _navigator.endFlow(multiAccount);
@@ -44,13 +52,18 @@ class MultiSigInviteReviewFlowBloc {
     _navigator.showReviewInvitationDetails();
   }
 
-  Future<void> submitLinkedAccount(
-    BuildContext context,
-    BasicAccount? account,
-  ) async {
+  @override
+  Future<void> submitMultiSigConnect(
+      BuildContext context, BasicAccount account) async {
     ModalLoadingRoute.showLoading(context);
-    final multiAccount = await _register(account);
-    ModalLoadingRoute.dismiss(context);
+
+    MultiAccount? multiAccount;
+
+    try {
+      multiAccount = await _register(account);
+    } finally {
+      ModalLoadingRoute.dismiss(context);
+    }
 
     _navigator.endFlow(multiAccount);
   }

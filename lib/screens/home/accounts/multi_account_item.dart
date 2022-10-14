@@ -223,6 +223,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         ).push(
           MultiSigCreationStatus(
             accountId: widget._initialAccount.id,
+            onDone: Navigator.of(context).pop,
           ).route(
             fullScreenDialog: true,
           ),

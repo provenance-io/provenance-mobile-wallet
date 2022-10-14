@@ -3,22 +3,23 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
-import 'package:provenance_wallet/screens/add_account_flow.dart';
-import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class MultiSigConnectBloc {
+  void submitMultiSigConnect(BuildContext context, BasicAccount account);
+}
+
 class MultiSigConnectScreen extends StatefulWidget {
   const MultiSigConnectScreen({
-    required this.onAccount,
-    required this.enableCreate,
+    required MultiSigConnectBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
-  final void Function(BuildContext context, BasicAccount? account) onAccount;
-  final bool enableCreate;
+  final MultiSigConnectBloc _bloc;
 
   @override
   State<MultiSigConnectScreen> createState() => _MultiSigConnectScreenState();
@@ -197,36 +198,13 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
 
                         final account =
                             _value == _defaultValue ? null : _value.account;
-                        widget.onAccount(context, account);
+
+                        if (account != null) {
+                          widget._bloc.submitMultiSigConnect(context, account);
+                        }
                       },
                     ),
                   ),
-                  if (widget.enableCreate) VerticalSpacer.large(),
-                  if (widget.enableCreate)
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: PwTextButton(
-                        onPressed: () async {
-                          final account = await Navigator.push(
-                            context,
-                            AddAccountFlow(
-                              origin: AddAccountOrigin.accounts,
-                              includeMultiSig: false,
-                            ).route<Account>(),
-                          );
-
-                          if (account != null) {
-                            _load(account);
-                          }
-                        },
-                        child: PwText(
-                          strings.multiSigConnectCreateButton,
-                          key: _keyNextButton,
-                          style: PwTextStyle.body,
-                          color: PwColor.neutralNeutral,
-                        ),
-                      ),
-                    ),
                   VerticalSpacer.largeX4(),
                 ],
               ),

@@ -96,6 +96,18 @@ abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
     return _navigatorKey.currentState!.push<X>(route);
   }
 
+  Future<X?> replaceAllPages<X>(WidgetBuilder builder,
+      {RouteSettings? settings}) {
+    final route = MaterialPageRoute<X>(
+      settings: settings,
+      builder: builder,
+    );
+
+    _navigatorKey.currentState!.popUntil((r) => r.isFirst);
+
+    return _navigatorKey.currentState!.pushReplacement(route);
+  }
+
   Future<X?> replaceLastPage<X>(WidgetBuilder builder,
       {RouteSettings? settings}) {
     final route = MaterialPageRoute<X>(
@@ -114,6 +126,11 @@ abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
   void backToFlowStart<X>(X value) {
     final navigator = _navigatorKey.currentState;
     navigator!.popUntil((route) => route is _FlowRootRoute<Z>);
+  }
+
+  void back<X>([X? value]) {
+    final navigator = _navigatorKey.currentState;
+    navigator!.pop(value);
   }
 
   Widget createStartPage();

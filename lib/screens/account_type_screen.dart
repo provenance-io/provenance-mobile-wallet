@@ -1,24 +1,31 @@
-import 'package:provenance_wallet/common/enum/account_add_kind.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_button.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/strings.dart';
+
+enum AddAccountMethod {
+  create,
+  recover,
+}
+
+abstract class AccountTypeBloc {
+  void submitBasic();
+  void submitMultiSig();
+}
 
 class AccountTypeScreen extends StatelessWidget {
   const AccountTypeScreen({
-    required this.bloc,
-    required this.includeMultiSig,
+    required AccountTypeBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
   static final keyBasicAccountButton =
       ValueKey('$AccountTypeScreen.basic_button');
   static final keyRecoverAccountButton =
       ValueKey('$AccountTypeScreen.recover_account_button');
 
-  final bool includeMultiSig;
-  final AddAccountFlowBloc bloc;
+  final AccountTypeBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -49,38 +56,14 @@ class AccountTypeScreen extends StatelessWidget {
                       key: keyBasicAccountButton,
                       name: strings.accountTypeOptionBasicName,
                       desc: strings.accountTypeOptionBasicDesc,
-                      onPressed: () {
-                        bloc.submitAccountType(
-                          AccountAddKind.createSingle,
-                        );
-                      },
+                      onPressed: () => _bloc.submitBasic(),
                     ),
                     VerticalSpacer.large(),
                     AccountButton(
-                      key: keyRecoverAccountButton,
-                      name: strings.accountTypeOptionImportName,
-                      desc: strings.accountTypeOptionImportDesc,
-                      onPressed: () {
-                        bloc.submitAccountType(
-                          AccountAddKind.recover,
-                        );
-                      },
+                      name: strings.accountTypeOptionMultiName,
+                      desc: strings.accountTypeOptionMultiDesc,
+                      onPressed: () => _bloc.submitMultiSig(),
                     ),
-                    if (includeMultiSig)
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: Spacing.large,
-                        ),
-                        child: AccountButton(
-                          name: strings.accountTypeOptionMultiName,
-                          desc: strings.accountTypeOptionMultiDesc,
-                          onPressed: () {
-                            bloc.submitAccountType(
-                              AccountAddKind.createMulti,
-                            );
-                          },
-                        ),
-                      ),
                     VerticalSpacer.largeX3(),
                   ],
                 ),

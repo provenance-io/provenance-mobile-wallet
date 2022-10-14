@@ -33,6 +33,7 @@ class LocalAuthHelper with WidgetsBindingObserver implements Disposable {
     _status.value = AuthStatus.noAccount;
   }
 
+  // TODO-Roy: Throw instead of returning bool
   Future<bool> enroll(
     String code,
     String accountName,

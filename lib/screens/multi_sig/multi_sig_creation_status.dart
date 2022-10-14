@@ -5,21 +5,28 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
+
+abstract class MultiSigCreationStatusBloc {
+  String get accountId;
+  void submitDone();
+}
 
 class MultiSigCreationStatus extends StatefulWidget {
   const MultiSigCreationStatus({
     required this.accountId,
+    required this.onDone,
     Key? key,
   }) : super(key: key);
 
   final String accountId;
+  final void Function() onDone;
 
   @override
   State<MultiSigCreationStatus> createState() => _MultiSigCreationStatusState();
@@ -29,6 +36,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _accountService = get<AccountService>();
   final _multiSigClient = get<MultiSigClient>();
   final _subscriptions = CompositeSubscription();
+  final _deepLinkService = get<DeepLinkService>();
 
   late Future<List<CosignerData>> _getCosignersFuture;
 
@@ -62,6 +70,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
       appBar: PwAppBar(
         leadingIcon: PwIcons.close,
         title: Strings.of(context).multiSigCreationStatusTitle,
+        leadingIconOnPress: widget.onDone,
       ),
       body: CustomScrollView(
         slivers: [
@@ -170,9 +179,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: widget.onDone,
                   ),
                   VerticalSpacer.largeX4(),
                 ],
@@ -205,7 +212,7 @@ class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
 
         for (var signer in remoteAccount.signers) {
           final inviteLink =
-              await createDynamicInviteLink(signer.inviteId, coin);
+              await _deepLinkService.createInviteLink(signer.inviteId, coin);
           final signerAddress = signer.publicKey?.address;
 
           cosigners.add(
