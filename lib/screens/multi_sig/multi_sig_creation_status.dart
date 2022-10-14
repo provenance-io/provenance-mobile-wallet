@@ -11,6 +11,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MultiSigCreationStatus extends StatefulWidget {
   const MultiSigCreationStatus({
@@ -27,14 +28,26 @@ class MultiSigCreationStatus extends StatefulWidget {
 class _MultiSigCreationStatusState extends State<MultiSigCreationStatus> {
   final _accountService = get<AccountService>();
   final _multiSigClient = get<MultiSigClient>();
+  final _subscriptions = CompositeSubscription();
 
-  late final Future<List<CosignerData>> _getCosignersFuture;
+  late Future<List<CosignerData>> _getCosignersFuture;
 
   @override
   void initState() {
     super.initState();
 
     _getCosignersFuture = _getCosigners();
+    _accountService.events.updated.listen((event) {
+      setState(() {
+        _getCosignersFuture = _getCosigners();
+      });
+    }).addTo(_subscriptions);
+  }
+
+  @override
+  void dispose() {
+    _subscriptions.dispose();
+    super.dispose();
   }
 
   @override
