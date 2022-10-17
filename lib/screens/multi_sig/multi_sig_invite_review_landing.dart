@@ -4,7 +4,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class MultiSigInviteReviewLanding extends StatelessWidget {
   const MultiSigInviteReviewLanding({
@@ -70,32 +69,34 @@ class MultiSigInviteReviewLanding extends StatelessWidget {
                     margin: EdgeInsets.symmetric(
                       horizontal: Spacing.large,
                     ),
-                    child: Column(
-                      children: [
+                    child:
+                        // TODO: Bring this back/redesign when we have copy.
+                        // Column(
+                        // children: [
                         PwTextButton.primaryAction(
-                          context: context,
-                          text: Strings.of(context)
-                              .multiSigInviteReviewDetailsTitle,
-                          onPressed: () {
-                            Provider.of<MultiSigInviteReviewFlowBloc>(context,
-                                    listen: false)
-                                .showReviewInvitationDetails();
-                          },
-                        ),
-                        VerticalSpacer.large(),
-                        PwTextButton.secondaryAction(
-                          context: context,
-                          text: Strings.of(context)
-                              .multiSigInviteReviewLandingLearnMoreButton,
-                          onPressed: () async {
-                            const url = 'https://provenance.io';
-                            if (await canLaunchUrlString(url)) {
-                              launchUrlString(url);
-                            }
-                          },
-                        ),
-                      ],
+                      context: context,
+                      text:
+                          Strings.of(context).multiSigInviteReviewDetailsTitle,
+                      onPressed: () {
+                        Provider.of<MultiSigInviteReviewFlowBloc>(context,
+                                listen: false)
+                            .showReviewInvitationDetails();
+                      },
                     ),
+                    //     VerticalSpacer.large(),
+                    //     PwTextButton.secondaryAction(
+                    //       context: context,
+                    //       text: Strings.of(context)
+                    //           .multiSigInviteReviewLandingLearnMoreButton,
+                    //       onPressed: () async {
+                    //         const url = 'https://provenance.io';
+                    //         if (await canLaunchUrlString(url)) {
+                    //           launchUrlString(url);
+                    //         }
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                   VerticalSpacer.largeX4(),
                 ],
