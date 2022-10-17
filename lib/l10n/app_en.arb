@@ -129,7 +129,7 @@
   "multiSigInviteReviewLandingLearnMoreButton": "Learn More",
   "multiSigInviteReviewDetailsTitle": "Review Invitation",
   "multiSigInviteReviewDetailsDesc": "Review the multi-sig account information.",
-  "multiSigInviteReviewDetailsChooseAccountButton": "Choose Individual Account",
+  "multiSigInviteReviewDetailsJoinButton": "Join",
   "multiSigInviteReviewDetailsMaybeLaterButton": "Maybe Later",
   "multiSigInviteReviewCreateOrLinkTitle": "Choose Individual Account",
   "multiSigInviteReviewCreateOrLinkCreate": "Create New Account",

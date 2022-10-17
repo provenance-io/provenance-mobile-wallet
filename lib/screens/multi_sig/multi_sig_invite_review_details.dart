@@ -103,7 +103,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                       PwTextButton.primaryAction(
                         context: context,
                         text: Strings.of(context)
-                            .multiSigInviteReviewDetailsChooseAccountButton,
+                            .multiSigInviteReviewDetailsJoinButton,
                         onPressed: () {
                           bloc.showChooseAccount();
                         },
