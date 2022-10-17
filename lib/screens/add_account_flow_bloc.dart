@@ -540,7 +540,12 @@ class AddAccountFlowBloc implements Disposable {
   }
 
   Future<void> submitRecoverFromAccount(
-      MultiSigRemoteAccount account, BasicAccount linkedAccount) async {
+    BuildContext context,
+    MultiSigRemoteAccount account,
+    BasicAccount linkedAccount,
+  ) async {
+    ModalLoadingRoute.showLoading(context);
+
     final multiAccount = await _accountService.addMultiAccount(
       name: account.name,
       coin: account.coin,
@@ -551,6 +556,7 @@ class AddAccountFlowBloc implements Disposable {
       inviteIds: account.signers.map((e) => e.inviteId).toList(),
       signers: account.signers,
     );
+    ModalLoadingRoute.dismiss(context);
 
     _navigator.endFlow(multiAccount);
   }
