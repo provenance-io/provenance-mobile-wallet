@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
@@ -127,13 +128,23 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     );
   }
 
+  void _onLoading(BuildContext context, bool loading) {
+    if (loading) {
+      ModalLoadingRoute.showLoading(context);
+    } else {
+      ModalLoadingRoute.dismiss(context);
+    }
+  }
+
   Future<void> _submit(BuildContext context, String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
+      _onLoading(context, true);
       final success = await widget.bloc.submitMultiSigJoinLink(
         Strings.of(context).multiSigInvalidLink,
         _textController.text.trim(),
         AddAccountScreen.multiSigJoinLink,
       );
+      _onLoading(context, false);
       if (!success) {
         setState(() {
           _validate = _validateInvalid;

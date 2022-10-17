@@ -128,8 +128,9 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                   PwButton(
                     child: PwText(Strings.of(context).next),
                     enabled: selectedData != null,
-                    onPressed: () {
-                      widget.bloc.submitRecoverFromAccount(
+                    onPressed: () async {
+                      await widget.bloc.submitRecoverFromAccount(
+                        context,
                         selectedData!.account,
                         selectedData!.linkedAccount,
                       );

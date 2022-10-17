@@ -1,5 +1,7 @@
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
+import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -42,8 +44,13 @@ class MultiSigInviteReviewFlowBloc {
     _navigator.showReviewInvitationDetails();
   }
 
-  Future<void> submitLinkedAccount(BasicAccount? account) async {
+  Future<void> submitLinkedAccount(
+    BuildContext context,
+    BasicAccount? account,
+  ) async {
+    ModalLoadingRoute.showLoading(context);
     final multiAccount = await _register(account);
+    ModalLoadingRoute.dismiss(context);
 
     _navigator.endFlow(multiAccount);
   }
