@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_bank_v1beta1.dart' as bank;
+import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart' as bank;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';

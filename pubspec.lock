@@ -917,11 +917,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: "4ab994f982b79aec83b0bab599a30594f106278d"
-      url: "https://github.com/provenance-io/provenance-dart.git"
+      ref: "jake/create-types-update"
+      resolved-ref: "6dc2e6db98c0e5fd83df1fdf7571916504686ae7"
+      url: "https://github.com/jakegraves-figure/provenance-dart.git"
     source: git
-    version: "1.0.1"
+    version: "2.0.0"
   provider:
     dependency: "direct main"
     description:

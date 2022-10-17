@@ -1,5 +1,5 @@
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/proto_bank_v1beta1.dart';
+import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
