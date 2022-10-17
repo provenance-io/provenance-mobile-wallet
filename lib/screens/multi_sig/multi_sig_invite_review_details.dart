@@ -39,24 +39,6 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
             },
           ),
         ),
-        actions: [
-          Container(
-            padding: EdgeInsets.only(
-              right: Spacing.large,
-            ),
-            child: PwTextButton.shrinkWrap(
-              child: PwText(
-                Strings.of(context).multiSigInviteReviewDetailsDeclineButton,
-                style: PwTextStyle.body,
-                color: PwColor.primaryP500,
-                textAlign: TextAlign.end,
-              ),
-              onPressed: () async {
-                await bloc.declineInvite();
-              },
-            ),
-          ),
-        ],
         backgroundColor: Theme.of(context).colorScheme.neutral750,
         elevation: 0.0,
         centerTitle: false,
@@ -121,7 +103,7 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                       PwTextButton.primaryAction(
                         context: context,
                         text: Strings.of(context)
-                            .multiSigInviteReviewDetailsChooseAccountButton,
+                            .multiSigInviteReviewDetailsJoinButton,
                         onPressed: () {
                           bloc.showChooseAccount();
                         },
