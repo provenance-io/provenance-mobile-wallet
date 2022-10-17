@@ -8,5 +8,5 @@ import Foundation
 import prov_wallet_flutter
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-    ProvWalletFlutterPlugin.register(with: registry.registrar(forPlugin: "ProvWalletFlutterPlugin"))
+  ProvWalletFlutterPlugin.register(with: registry.registrar(forPlugin: "ProvWalletFlutterPlugin"))
 }

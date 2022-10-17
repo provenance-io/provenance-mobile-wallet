@@ -918,10 +918,10 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: "4ab994f982b79aec83b0bab599a30594f106278d"
+      resolved-ref: "96db1d17cb0162a372a6ff47e013f1783a07d643"
       url: "https://github.com/provenance-io/provenance-dart.git"
     source: git
-    version: "1.0.1"
+    version: "2.0.0"
   provider:
     dependency: "direct main"
     description:
