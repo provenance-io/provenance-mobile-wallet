@@ -11,7 +11,7 @@ const _checkBoxSize = 40.0;
 /// a widget that represents an instance of a notification
 ///
 class NotificationItemCell extends StatelessWidget {
-  static final notificationListFormatter = DateFormat("MMM dd, yyyy");
+  static final notificationListFormatter = DateFormat("MMM dd, yyyy").add_Hms();
 
   NotificationItemCell(
       {required this.item,
