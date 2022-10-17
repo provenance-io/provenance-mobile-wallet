@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
@@ -37,7 +36,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
   final _accountService = get<AccountService>();
   late BasicAccount _account;
   late bool _isSelected;
-  late final AccountsBloc _bloc;
 
   @override
   void initState() {
@@ -50,7 +48,6 @@ class _BasicAccountItemState extends State<BasicAccountItem> {
 
   @override
   void didChangeDependencies() {
-    _bloc = Provider.of<AccountsBloc>(context);
     _subscriptions.cancel();
 
     final subscriptions = CompositeSubscription();
