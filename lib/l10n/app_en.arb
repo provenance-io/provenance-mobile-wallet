@@ -131,7 +131,6 @@
   "multiSigInviteReviewDetailsDesc": "Review the multi-sig account information.",
   "multiSigInviteReviewDetailsChooseAccountButton": "Choose Individual Account",
   "multiSigInviteReviewDetailsMaybeLaterButton": "Maybe Later",
-  "multiSigInviteReviewDetailsDeclineButton": "Decline Invitation",
   "multiSigInviteReviewCreateOrLinkTitle": "Choose Individual Account",
   "multiSigInviteReviewCreateOrLinkCreate": "Create New Account",
   "multiSigInviteReviewCreateOrLinkCreateDesc": "Create a passphrase and use this account to join the multi-sig account",
