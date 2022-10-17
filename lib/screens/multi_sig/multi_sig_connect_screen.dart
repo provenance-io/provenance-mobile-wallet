@@ -1,5 +1,6 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/screens/add_account_flow.dart';
@@ -16,7 +17,7 @@ class MultiSigConnectScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final void Function(BasicAccount? account) onAccount;
+  final void Function(BuildContext context, BasicAccount? account) onAccount;
   final bool enableCreate;
 
   @override
@@ -191,10 +192,12 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                         style: PwTextStyle.bodyBold,
                         color: PwColor.neutralNeutral,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        await ModalLoadingRoute.showLoading(context);
+
                         final account =
                             _value == _defaultValue ? null : _value.account;
-                        widget.onAccount(account);
+                        widget.onAccount(context, account);
                       },
                     ),
                   ),

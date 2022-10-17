@@ -528,7 +528,10 @@ class AddAccountFlowBloc implements Disposable {
     return success;
   }
 
-  void submitMultiSigConnect(BasicAccount? account) {
+  void submitMultiSigConnect(
+    BuildContext context,
+    BasicAccount? account,
+  ) {
     _multiSigLinkedAccount = account;
 
     if (_multiSigLinkedAccount == null) {
