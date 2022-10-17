@@ -126,7 +126,6 @@
     }
   },
   "multiSigInviteReviewLandingMultiSigAccount": " Multi-Sig Account",
-  "multiSigInviteReviewLandingLearnMoreButton": "Learn More",
   "multiSigInviteReviewDetailsTitle": "Review Invitation",
   "multiSigInviteReviewDetailsDesc": "Review the multi-sig account information.",
   "multiSigInviteReviewDetailsJoinButton": "Join",
