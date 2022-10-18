@@ -18,7 +18,7 @@ abstract class MultiSigInviteReviewFlowNavigator {
   void showChooseAccount();
   Future<BasicAccount?> showCreateLinkedAccount();
   void showLinkExistingAccount();
-  void endFlow(MultiAccount? account);
+  void endFlow(MultiSigAddResult? result);
 }
 
 class MultiSigInviteReviewFlow extends FlowBase {
@@ -76,8 +76,8 @@ class MultiSigInviteReviewFlowState
   }
 
   @override
-  void endFlow(MultiAccount? account) {
-    completeFlow(account);
+  void endFlow(MultiSigAddResult? result) {
+    completeFlow(result);
   }
 
   @override
@@ -99,4 +99,12 @@ class MultiSigInviteReviewFlowState
       ),
     );
   }
+}
+
+class MultiSigAddResult {
+  MultiSigAddResult([
+    this.account,
+  ]);
+
+  final MultiAccount? account;
 }

@@ -20,6 +20,7 @@ import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_body
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_tx_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_update_tx_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_register_result.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
@@ -98,7 +99,7 @@ class MultiSigClient with ClientCoinMixin {
     return invite;
   }
 
-  Future<MultiSigSigner?> register({
+  Future<MultiSigRegisterResult?> register({
     required String inviteId,
     required PublicKey publicKey,
   }) async {
@@ -129,7 +130,12 @@ class MultiSigClient with ClientCoinMixin {
       );
     }
 
-    return signer;
+    final error = response.error?.message;
+
+    return MultiSigRegisterResult(
+      signer: signer,
+      error: error,
+    );
   }
 
   Future<List<MultiSigRemoteAccount>?> getAccounts({

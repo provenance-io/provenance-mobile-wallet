@@ -1,69 +1,19 @@
-import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/extension/stream_controller.dart';
-import 'package:provenance_wallet/screens/account/multi_sig_join_link_flow.dart';
-import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:rxdart/rxdart.dart';
-
-class MultiSigJoinLinkBloc {
-  MultiSigJoinLinkBloc({
-    required MultiSigJoinLinkFlowNavigator navigator,
-  }) : _navigator = navigator;
-  final MultiSigJoinLinkFlowNavigator _navigator;
-  final _client = get<MultiSigClient>();
-  final _multiSigInviteLinkError = PublishSubject<String?>();
-
-  Stream<String?> get multiSigInviteLinkError => _multiSigInviteLinkError;
-
-  Future<bool> submitMultiSigJoinLink(
-    String multiSigInvalidLink,
-    String link,
-  ) async {
-    var success = false;
-
-    final redirectedLink = await tryFollowRedirect(link);
-    if (redirectedLink != null) {
-      final linkData = parseInviteLinkData(redirectedLink);
-      if (linkData != null) {
-        final remoteAccount = await _client.getAccountByInvite(
-          inviteId: linkData.inviteId,
-          coin: linkData.coin,
-        );
-        if (remoteAccount != null) {
-          success = true;
-
-          _navigator.showInviteReviewFlow(
-            inviteId: linkData.inviteId,
-            remoteAccount: remoteAccount,
-          );
-        }
-      }
-    }
-
-    if (!success) {
-      _multiSigInviteLinkError.tryAdd(
-        multiSigInvalidLink,
-      );
-    }
-
-    return success;
-  }
-}
 
 class MultiSigJoinLinkScreen extends StatefulWidget {
   const MultiSigJoinLinkScreen({
-    required MultiSigJoinLinkBloc bloc,
+    required this.onSubmit,
     Key? key,
-  })  : _bloc = bloc,
-        super(key: key);
+  }) : super(key: key);
 
-  final MultiSigJoinLinkBloc _bloc;
+  final Future<bool> Function(
+    BuildContext context,
+    String link,
+  ) onSubmit;
 
   @override
   State<MultiSigJoinLinkScreen> createState() => _MultiSigJoinLinkScreenState();
@@ -178,22 +128,13 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     );
   }
 
-  void _onLoading(BuildContext context, bool loading) {
-    if (loading) {
-      ModalLoadingRoute.showLoading(context);
-    } else {
-      ModalLoadingRoute.dismiss(context);
-    }
-  }
-
   Future<void> _submit(BuildContext context, String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
-      _onLoading(context, true);
-      final success = await widget._bloc.submitMultiSigJoinLink(
-        Strings.of(context).multiSigInvalidLink,
+      final success = await widget.onSubmit(
+        context,
         _textController.text.trim(),
       );
-      _onLoading(context, false);
+
       if (!success) {
         setState(() {
           _validate = _validateInvalid;
@@ -219,7 +160,17 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     if (text == null || text.isEmpty) {
       error = Strings.of(context).required;
     } else {
-      final valid = parseInviteLinkData(text) != null;
+      const validHosts = {
+        'provenancewallet.page.link',
+        'provenance.io',
+      };
+
+      final uri = Uri.tryParse(text);
+      final valid = uri != null &&
+          uri.scheme == 'https' &&
+          validHosts.contains(uri.host) &&
+          uri.path.isNotEmpty &&
+          uri.path != '/';
       if (!valid) {
         error = Strings.of(context).multiSigInvalidLink;
       }
