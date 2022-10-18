@@ -196,6 +196,7 @@ class _AccountCellState extends State<AccountCell> {
         ).push(
           MultiSigCreationStatus(
             accountId: _account.id,
+            onDone: Navigator.of(context).pop,
           ).route(
             fullScreenDialog: true,
           ),

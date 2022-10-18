@@ -1,0 +1,4 @@
+enum FieldMode {
+  initial,
+  edit,
+}

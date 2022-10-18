@@ -17,7 +17,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   final CipherService _cipherService;
 
   @override
-  Future<Account?> addAccount({
+  Future<BasicAccount?> addAccount({
     required String name,
     required PrivateKey privateKey,
   }) async {

@@ -16,11 +16,13 @@ import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provider/provider.dart';
 
 import './account_cell_test.mocks.dart';
+import '../../../dashboard/home_mocks.dart';
 import '../../../test_helpers.dart';
 
 @GenerateMocks([AccountsBloc, MultiSigClient, AccountService])
@@ -399,6 +401,7 @@ void main() {
 
         get.registerSingleton<MultiSigClient>(mockMultiSigClient);
         get.registerSingleton<AccountService>(mockAccountService);
+        get.registerSingleton<DeepLinkService>(MockDeepLinkService());
         when(mockAccountService.getAccount(any)).thenFuture(multiAccount);
         when(mockAccountService.events).thenReturn(AccountServiceEvents());
       });

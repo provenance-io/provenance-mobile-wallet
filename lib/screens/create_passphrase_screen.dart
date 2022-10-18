@@ -2,20 +2,24 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class CreatePassphraseBloc {
+  void submitCreatePassphraseContinue();
+}
+
 class CreatePassphraseScreen extends StatelessWidget {
   const CreatePassphraseScreen({
-    required this.bloc,
+    required CreatePassphraseBloc controller,
     Key? key,
-  }) : super(key: key);
-
-  final AddAccountFlowBloc bloc;
+  })  : _controller = controller,
+        super(key: key);
 
   static final keyContinueButton =
       ValueKey('$CreatePassphraseScreen.continue_button');
+
+  final CreatePassphraseBloc _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +99,7 @@ class CreatePassphraseScreen extends StatelessWidget {
                 color: PwColor.neutralNeutral,
               ),
               onPressed: () {
-                bloc.submitCreatePassphrase();
+                _controller.submitCreatePassphraseContinue();
               },
             ),
           ),

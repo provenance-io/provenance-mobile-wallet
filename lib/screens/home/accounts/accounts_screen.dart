@@ -2,7 +2,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
@@ -28,7 +29,7 @@ class AccountsScreenState extends State<AccountsScreen> {
   final _subscriptions = CompositeSubscription();
   CompositeSubscription _providerSubscriptions = CompositeSubscription();
   late final AccountsBloc _bloc;
-  final List<Account> _accountIds = <Account>[];
+  final List<Account> _accounts = <Account>[];
   final ValueNotifier<String?> _selectedId = ValueNotifier<String?>(null);
 
   @override
@@ -71,7 +72,7 @@ class AccountsScreenState extends State<AccountsScreen> {
                 ),
                 child: AnimatedList(
                   key: _listKey,
-                  initialItemCount: _accountIds.length,
+                  initialItemCount: _accounts.length,
                   itemBuilder: (
                     context,
                     index,
@@ -94,8 +95,27 @@ class AccountsScreenState extends State<AccountsScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   AddAccountFlow(
+                    method: AddAccountMethod.create,
                     origin: AddAccountOrigin.accounts,
-                    includeMultiSig: true,
+                  ).route(),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: Spacing.large,
+              left: Spacing.large,
+              right: Spacing.large,
+            ),
+            child: PwTextButton.secondaryAction(
+              context: context,
+              text: Strings.of(context).recoverAccount,
+              onPressed: () {
+                Navigator.of(context).push(
+                  AddAccountFlow(
+                    method: AddAccountMethod.recover,
+                    origin: AddAccountOrigin.accounts,
                   ).route(),
                 );
               },
@@ -114,12 +134,12 @@ class AccountsScreenState extends State<AccountsScreen> {
     }
 
     animatedState.setState(() {
-      final existingIds = _accountIds.map((e) => e.id).toList();
+      final existingIds = _accounts.map((e) => e.id).toList();
       final stateIds = state.accounts.map((e) => e.id).toList();
 
-      for (var index = 0; index < _accountIds.length; index++) {
+      for (var index = 0; index < _accounts.length; index++) {
         if (!stateIds.contains(existingIds[index])) {
-          final account = _accountIds[index];
+          final account = _accounts[index];
           animatedState.removeItem(
               index,
               (context, animation) =>
@@ -134,7 +154,8 @@ class AccountsScreenState extends State<AccountsScreen> {
           offset++;
         }
       }
-      _accountIds.replaceRange(0, _accountIds.length, state.accounts);
+
+      _accounts.replaceRange(0, _accounts.length, state.accounts);
       _selectedId.value = state.selectedAccount;
     });
   }

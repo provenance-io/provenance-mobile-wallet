@@ -1,20 +1,24 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
+
+abstract class RecoverAccountBloc {
+  void submitRecoverAccount();
+}
 
 class RecoverAccountScreen extends StatelessWidget {
   const RecoverAccountScreen({
     Key? key,
-    required this.bloc,
-  }) : super(key: key);
+    required RecoverAccountBloc bloc,
+  })  : _bloc = bloc,
+        super(key: key);
 
   static final keyContinueButton =
       ValueKey('$RecoverAccountScreen.continue_button');
 
-  final AddAccountFlowBloc bloc;
+  final RecoverAccountBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +78,7 @@ class RecoverAccountScreen extends StatelessWidget {
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: () {
-                      bloc.submitRecoverAccount();
+                      _bloc.submitRecoverAccount();
                     },
                   ),
                 ),

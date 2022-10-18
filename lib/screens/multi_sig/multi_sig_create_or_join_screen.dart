@@ -1,20 +1,27 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_button.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_add_kind.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class MultiSigCreateOrJoinBloc {
+  void submitMultiSigCreateOrJoin(MultiSigAddKind kind);
+}
+
 class MultiSigCreateOrJoinScreen extends StatelessWidget {
   const MultiSigCreateOrJoinScreen({
-    required this.bloc,
+    required MultiSigCreateOrJoinBloc bloc,
+    required Set<MultiSigAddKind> addKinds,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        _addKinds = addKinds,
+        super(key: key);
 
   static final keyJoinMultiSig =
       ValueKey('$MultiSigCreateOrJoinScreen.join_button');
 
-  final AddAccountFlowBloc bloc;
+  final Set<MultiSigAddKind> _addKinds;
+  final MultiSigCreateOrJoinBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -46,81 +53,54 @@ class MultiSigCreateOrJoinScreen extends StatelessWidget {
                       color: PwColor.neutralNeutral,
                     ),
                     VerticalSpacer.largeX3(),
-                    AccountButton(
-                      name: strings.accountTypeMultiSigCreateName,
-                      desc: strings.accountTypeMultiSigCreateDesc,
-                      onPressed: () {
-                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.create);
-                      },
-                    ),
-                    VerticalSpacer.large(),
-                    AccountButton(
-                      name: strings.accountTypeMultiSigJoinName,
-                      desc: strings.accountTypeMultiSigJoinDesc,
-                      onPressed: () {
-                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.join);
-                      },
-                    ),
-                    VerticalSpacer.large(),
-                    AccountButton(
+                    if (_addKinds.contains(MultiSigAddKind.create))
+                      AccountButton(
+                        name: strings.accountTypeMultiSigCreateName,
+                        desc: strings.accountTypeMultiSigCreateDesc,
+                        onPressed: () => _bloc.submitMultiSigCreateOrJoin(
+                          MultiSigAddKind.create,
+                        ),
+                      ),
+                    if (_addKinds.contains(MultiSigAddKind.recover))
+                      VerticalSpacer.large(),
+                    if (_addKinds.contains(MultiSigAddKind.recover))
+                      AccountButton(
                         name: strings.accountTypeMultiSigRecoverName,
                         desc: strings.accountTypeMultiSigRecoverDesc,
-                        onPressed: () {
-                          bloc.submitMultiSigCreateOrJoin(
-                              MultiSigAddKind.recover);
-                        }),
-                    StreamBuilder<String?>(
-                      stream: bloc.multiSigInviteLinkError,
-                      builder: (context, snapshot) {
-                        final error = snapshot.data;
-                        if (error == null) {
-                          return Container();
-                        }
-
-                        return Container(
-                          margin: EdgeInsets.only(
-                            top: Spacing.large,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              PwIcon(
-                                PwIcons.warnCircle,
-                                color:
-                                    Theme.of(context).colorScheme.negative350,
-                              ),
-                              HorizontalSpacer.xSmall(),
-                              Expanded(
-                                child: PwText(
-                                  error,
-                                  color: PwColor.negative350,
-                                  style: PwTextStyle.body,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                        onPressed: () => _bloc.submitMultiSigCreateOrJoin(
+                          MultiSigAddKind.recover,
+                        ),
+                      ),
+                    if (_addKinds.contains(MultiSigAddKind.join))
+                      VerticalSpacer.large(),
+                    if (_addKinds.contains(MultiSigAddKind.join))
+                      AccountButton(
+                        name: strings.accountTypeMultiSigJoinName,
+                        desc: strings.accountTypeMultiSigJoinDesc,
+                        onPressed: () => _bloc.submitMultiSigCreateOrJoin(
+                          MultiSigAddKind.join,
+                        ),
+                      ),
                     Expanded(
                       child: SizedBox(),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        bloc.submitMultiSigCreateOrJoin(MultiSigAddKind.link);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(
-                          Spacing.medium,
+                    if (_addKinds.contains(MultiSigAddKind.link))
+                      TextButton(
+                        onPressed: () => _bloc.submitMultiSigCreateOrJoin(
+                          MultiSigAddKind.link,
                         ),
-                        child: PwText(
-                          strings.accountTypeMultiSigJoinLink,
-                          style: PwTextStyle.body,
-                          textAlign: TextAlign.center,
-                          underline: true,
+                        child: Container(
+                          padding: EdgeInsets.all(
+                            Spacing.medium,
+                          ),
+                          child: PwText(
+                            strings.accountTypeMultiSigJoinLink,
+                            style: PwTextStyle.body,
+                            textAlign: TextAlign.center,
+                            underline: true,
+                          ),
                         ),
                       ),
-                    ),
                     VerticalSpacer.largeX4(),
                   ],
                 ),

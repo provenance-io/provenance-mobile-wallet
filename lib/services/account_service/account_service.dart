@@ -122,7 +122,8 @@ class AccountService implements Disposable {
     return details;
   }
 
-  Future<Account?> addAccount({
+  // TODO-Roy: Throw instead of returning nullable
+  Future<BasicAccount?> addAccount({
     required List<String> phrase,
     required String name,
     required Coin coin,

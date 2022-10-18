@@ -2,20 +2,22 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
+import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
+
+abstract class AccountNameBloc {
+  ValueStream<String> get name;
+  void submitName(String name, FieldMode mode);
+}
 
 class AccountNameScreen extends StatefulWidget {
   const AccountNameScreen({
     required this.mode,
     required this.message,
     required this.leadingIcon,
-    required this.name,
-    required this.submit,
+    required this.bloc,
     required this.popOnSubmit,
-    this.currentStep,
-    this.totalSteps,
     Key? key,
   }) : super(key: key);
 
@@ -24,69 +26,10 @@ class AccountNameScreen extends StatefulWidget {
   static final keyContinueButton =
       ValueKey('$AccountNameScreen.continue_button');
 
-  factory AccountNameScreen.single({
-    required FieldMode mode,
-    required String leadingIcon,
-    required AddAccountFlowBloc bloc,
-    required String message,
-    int? currentStep,
-    int? totalSteps,
-    Key? key,
-  }) {
-    return AccountNameScreen(
-      mode: mode,
-      leadingIcon: leadingIcon,
-      message: message,
-      name: bloc.name,
-      submit: bloc.submitAccountName,
-      popOnSubmit: false,
-      currentStep: currentStep,
-      totalSteps: totalSteps,
-    );
-  }
-
-  factory AccountNameScreen.multi({
-    required FieldMode mode,
-    required String leadingIcon,
-    required AddAccountFlowBloc bloc,
-    required String message,
-    int? currentStep,
-    int? totalSteps,
-    Key? key,
-  }) {
-    bool pop;
-    void Function(String name) submit;
-
-    switch (mode) {
-      case FieldMode.initial:
-        pop = false;
-        submit = bloc.submitMultiSigAccountName;
-        break;
-      case FieldMode.edit:
-        pop = true;
-        submit = bloc.setMultiSigName;
-        break;
-    }
-
-    return AccountNameScreen(
-      mode: mode,
-      leadingIcon: leadingIcon,
-      message: message,
-      name: bloc.multiSigName,
-      submit: submit,
-      popOnSubmit: pop,
-      currentStep: currentStep,
-      totalSteps: totalSteps,
-    );
-  }
-
-  final int? currentStep;
-  final int? totalSteps;
   final FieldMode mode;
   final String leadingIcon;
   final String message;
-  final ValueStream<String> name;
-  final void Function(String name) submit;
+  final AccountNameBloc bloc;
   final bool popOnSubmit;
 
   @override
@@ -104,7 +47,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
     super.initState();
 
     _textEditingController = TextEditingController();
-    widget.name.listen((e) {
+    widget.bloc.name.listen((e) {
       _textEditingController.text = e;
     }).addTo(_subscriptions);
   }
@@ -202,11 +145,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() == true) {
-      widget.submit(_textEditingController.text);
-
-      if (widget.popOnSubmit) {
-        Navigator.of(context).pop();
-      }
+      widget.bloc.submitName(_textEditingController.text, widget.mode);
     }
   }
 }

@@ -1,20 +1,24 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class AccountSetupConfirmationBloc {
+  void submitAccountSetupConfirmation();
+}
+
 class AccountSetupConfirmationScreen extends StatelessWidget {
   const AccountSetupConfirmationScreen({
-    required this.bloc,
+    required AccountSetupConfirmationBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
   static final keyContinueButton =
       ValueKey('$AccountSetupConfirmationScreen.continue_button');
 
-  final AddAccountFlowBloc bloc;
+  final AccountSetupConfirmationBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +80,7 @@ class AccountSetupConfirmationScreen extends StatelessWidget {
                           style: PwTextStyle.subhead,
                           color: PwColor.neutralNeutral,
                         ),
-                        onPressed: bloc.submitAccountSetupConfirmation,
+                        onPressed: _bloc.submitAccountSetupConfirmation,
                       ),
                     ),
                     VerticalSpacer.xxLarge(),

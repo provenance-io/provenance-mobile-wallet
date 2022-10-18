@@ -2,9 +2,19 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_edit_count.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
+import 'package:provenance_wallet/screens/count.dart';
+import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
+
+abstract class MultiSigCountBloc {
+  void submitMultiSigCosigners(int count);
+  void submitMultiSigSignatures(int count);
+  void setCosignerCount(int count);
+  void setSignatureCount(int count);
+  ValueStream<Count> get cosignerCount;
+  ValueStream<Count> get signatureCount;
+}
 
 class MultiSigCountScreen extends StatefulWidget {
   const MultiSigCountScreen._({
@@ -20,7 +30,7 @@ class MultiSigCountScreen extends StatefulWidget {
   }) : super(key: key);
 
   factory MultiSigCountScreen.signatures({
-    required AddAccountFlowBloc bloc,
+    required MultiSigCountBloc bloc,
     required FieldMode mode,
     required String title,
     required String message,
@@ -47,13 +57,13 @@ class MultiSigCountScreen extends StatefulWidget {
       mode: mode,
       currentStep: currentStep,
       totalSteps: totalSteps,
-      stream: bloc.multiSigSignatureCount,
+      stream: bloc.signatureCount,
       onConfirm: onConfirm,
     );
   }
 
   factory MultiSigCountScreen.cosigners({
-    required AddAccountFlowBloc bloc,
+    required MultiSigCountBloc bloc,
     required FieldMode mode,
     required String title,
     required String message,
@@ -80,7 +90,7 @@ class MultiSigCountScreen extends StatefulWidget {
       mode: mode,
       currentStep: currentStep,
       totalSteps: totalSteps,
-      stream: bloc.multiSigCosignerCount,
+      stream: bloc.cosignerCount,
       onConfirm: onConfirm,
     );
   }
@@ -130,18 +140,17 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
   Widget build(BuildContext context) {
     String? leadingIcon;
     String confirmButtonLabel;
-    bool pop;
 
     switch (widget.mode) {
       case FieldMode.initial:
         leadingIcon = PwIcons.back;
         confirmButtonLabel = Strings.of(context).multiSigNextButton;
-        pop = false;
+
         break;
       case FieldMode.edit:
         leadingIcon = PwIcons.close;
         confirmButtonLabel = Strings.of(context).multiSigSaveButton;
-        pop = true;
+
         break;
     }
 
@@ -212,10 +221,6 @@ class _MultiSigCountScreenState extends State<MultiSigCountScreen> {
                       ),
                       onPressed: () {
                         widget.onConfirm(value);
-
-                        if (pop) {
-                          Navigator.of(context).pop();
-                        }
                       }),
                 ),
                 VerticalSpacer.largeX4(),
