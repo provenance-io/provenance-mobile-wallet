@@ -4,7 +4,6 @@ import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/screens/account/basic_account_create_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_create_or_link_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_details.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_landing.dart';
@@ -15,7 +14,6 @@ abstract class MultiSigInviteReviewFlowNavigator {
   MultiSigInviteReviewFlowNavigator._();
 
   void showReviewInvitationDetails();
-  void showChooseAccount();
   Future<BasicAccount?> showCreateLinkedAccount();
   void showLinkExistingAccount();
   void endFlow(MultiSigAddResult? result);
@@ -69,13 +67,6 @@ class MultiSigInviteReviewFlowState
   }
 
   @override
-  void showChooseAccount() {
-    showPage(
-      (context) => MultiSigInviteReviewCreateOrLinkScreen(),
-    );
-  }
-
-  @override
   void endFlow(MultiSigAddResult? result) {
     completeFlow(result);
   }
@@ -95,7 +86,7 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
-        bloc: _bloc,
+        onSubmit: _bloc.submitMultiSigConnect,
       ),
     );
   }

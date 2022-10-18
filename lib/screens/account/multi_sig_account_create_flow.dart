@@ -5,8 +5,8 @@ import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/count.dart';
 import 'package:provenance_wallet/screens/field_mode.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_account_name_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_confirm_screen.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -33,21 +33,13 @@ class MultiSigAccountCreateFlowState
 
   @override
   Widget createStartPage() {
-    return MultiSigConnectScreen(
-      bloc: _bloc,
-    );
-  }
-
-  @override
-  void showMultiSigAccountName() {
-    showPage(
-      (context) => AccountNameScreen(
-        message: Strings.of(context).accountNameMultiSigMessage,
-        mode: FieldMode.initial,
-        leadingIcon: PwIcons.back,
-        bloc: _bloc,
-        popOnSubmit: false,
-      ),
+    return MultiSigAccountNameScreen(
+      message: Strings.of(context).accountNameMultiSigMessage,
+      mode: FieldMode.initial,
+      leadingIcon: PwIcons.back,
+      name: _bloc.name,
+      onSubmit: _bloc.submitMultiSigName,
+      popOnSubmit: false,
     );
   }
 
@@ -106,7 +98,6 @@ class MultiSigAccountCreateFlowState
 }
 
 abstract class MultiSigAccountCreateFlowNavigator {
-  void showMultiSigAccountName();
   void showMultiSigCosigners(FieldMode mode);
   void showMultiSigSignatures(FieldMode mode);
   void showMultiSigConfirm();
@@ -116,11 +107,7 @@ abstract class MultiSigAccountCreateFlowNavigator {
 }
 
 class MultiSigAccountCreateFlowBloc
-    implements
-        MultiSigConnectBloc,
-        AccountNameBloc,
-        MultiSigCountBloc,
-        MultiSigConfirmBloc {
+    implements AccountNameBloc, MultiSigCountBloc, MultiSigConfirmBloc {
   MultiSigAccountCreateFlowBloc({
     required MultiSigAccountCreateFlowNavigator navigator,
   }) : _navigator = navigator;
@@ -157,15 +144,23 @@ class MultiSigAccountCreateFlowBloc
   ValueStream<Count> get signatureCount => _signatureCount;
 
   @override
-  void submitMultiSigConnect(BuildContext context, BasicAccount account) {
-    _linkedAccount = account;
-
-    _navigator.showMultiSigAccountName();
-  }
-
-  @override
   void submitName(String name, FieldMode mode) {
     _name.add(name);
+
+    switch (mode) {
+      case FieldMode.initial:
+        _navigator.showMultiSigCosigners(FieldMode.initial);
+        break;
+      case FieldMode.edit:
+        _navigator.back();
+        break;
+    }
+  }
+
+  void submitMultiSigName(
+      String name, FieldMode mode, BasicAccount linkedAccount) {
+    _name.add(name);
+    _linkedAccount = linkedAccount;
 
     switch (mode) {
       case FieldMode.initial:
