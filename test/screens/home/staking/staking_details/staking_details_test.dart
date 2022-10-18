@@ -116,7 +116,9 @@ main() {
 
         try {
           await bloc.load();
-        } catch (e) {}
+        } catch (e) {
+          // Ignore
+        }
       });
 
       test("loading is cancelled on getValidatorCommission error", () async {
@@ -129,7 +131,9 @@ main() {
             emitsInOrder([emits(false), emits(true), emits(false)]));
         try {
           await bloc.load();
-        } catch (e) {}
+        } catch (e) {
+          // Ignore
+        }
       });
     });
 

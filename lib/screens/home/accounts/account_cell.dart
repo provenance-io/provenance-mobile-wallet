@@ -62,7 +62,7 @@ class _AccountCellState extends State<AccountCell> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final linkedAccount;
+    final String? linkedAccount;
 
     if (_account is MultiAccount) {
       linkedAccount = (_account as MultiAccount).linkedAccount.name;
