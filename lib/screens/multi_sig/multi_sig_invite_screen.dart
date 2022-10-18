@@ -69,14 +69,6 @@ class MultiSigInviteScreen extends StatelessWidget {
                         ),
                       ),
                       VerticalSpacer.xLarge(),
-                      PwText(
-                        Strings.of(context).multiSigInviteMessagePrefix +
-                            Strings.of(context).multiSigInviteMessage,
-                        style: PwTextStyle.footnote,
-                        color: PwColor.neutralNeutral,
-                        textAlign: TextAlign.center,
-                      ),
-                      VerticalSpacer.xLarge(),
                     ],
                   ),
                 ),
@@ -95,9 +87,7 @@ class MultiSigInviteScreen extends StatelessWidget {
                         final box = context.findRenderObject() as RenderBox;
 
                         Share.share(
-                          Strings.of(context).multiSigInviteMessage +
-                              '\n' +
-                              url,
+                          url,
                           subject: Strings.of(context).multiSigInviteSubject,
                           sharePositionOrigin:
                               box.localToGlobal(Offset.zero) & box.size,
