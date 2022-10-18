@@ -4,13 +4,12 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
-import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 
-class MultiSigInviteReviewFlowBloc implements MultiSigConnectBloc {
+class MultiSigInviteReviewFlowBloc {
   MultiSigInviteReviewFlowBloc({
     required String inviteId,
     required MultiSigRemoteAccount remoteAccount,
@@ -27,7 +26,7 @@ class MultiSigInviteReviewFlowBloc implements MultiSigConnectBloc {
   final MultiSigInviteReviewFlowNavigator _navigator;
 
   void showChooseAccount() {
-    _navigator.showChooseAccount();
+    _navigator.showLinkExistingAccount();
   }
 
   Future<void> showCreateNewAccount(BuildContext context) async {
@@ -49,7 +48,6 @@ class MultiSigInviteReviewFlowBloc implements MultiSigConnectBloc {
     _navigator.showReviewInvitationDetails();
   }
 
-  @override
   Future<void> submitMultiSigConnect(
       BuildContext context, BasicAccount account) async {
     ModalLoadingRoute.showLoading(context);
