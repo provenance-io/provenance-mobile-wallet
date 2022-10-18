@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -7,10 +8,12 @@ import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigConnectScreen extends StatefulWidget {
   const MultiSigConnectScreen({
+    required this.coin,
     required this.onSubmit,
     Key? key,
   }) : super(key: key);
 
+  final Coin coin;
   final void Function(BuildContext context, BasicAccount account) onSubmit;
 
   @override
@@ -73,6 +76,7 @@ class _MultiSigConnectScreenState extends State<MultiSigConnectScreen> {
                       horizontal: Spacing.large,
                     ),
                     child: MultiSigConnectDropDown(
+                      coin: widget.coin,
                       onChanged: (item) {
                         setState(() {
                           _value = item;

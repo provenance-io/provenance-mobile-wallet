@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -16,6 +17,7 @@ class MultiSigAccountNameScreen extends StatefulWidget {
     required this.onSubmit,
     required this.name,
     required this.popOnSubmit,
+    required this.coin,
     Key? key,
   }) : super(key: key);
 
@@ -32,6 +34,7 @@ class MultiSigAccountNameScreen extends StatefulWidget {
   final String leadingIcon;
   final String message;
   final bool popOnSubmit;
+  final Coin coin;
 
   @override
   State<MultiSigAccountNameScreen> createState() =>
@@ -127,6 +130,7 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                     horizontal: Spacing.large,
                   ),
                   child: MultiSigConnectDropDown(
+                    coin: widget.coin,
                     onChanged: (e) {
                       setState(() {
                         _linkedAccount = e.account;
@@ -147,6 +151,7 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
+                    enabled: _isValid(),
                     onPressed: _submit,
                   ),
                 ),
@@ -159,8 +164,12 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
     );
   }
 
+  bool _isValid() {
+    return _textEditingController.text.isNotEmpty && _linkedAccount != null;
+  }
+
   void _submit() {
-    if (_formKey.currentState?.validate() == true) {
+    if (_isValid()) {
       widget.onSubmit(
           _textEditingController.text, widget.mode, _linkedAccount!);
     }

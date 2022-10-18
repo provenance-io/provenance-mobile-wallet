@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -11,10 +12,12 @@ const defaultValue = MultiSigConnectDropdownItem(
 
 class MultiSigConnectDropDown extends StatefulWidget {
   const MultiSigConnectDropDown({
+    required this.coin,
     required this.onChanged,
     Key? key,
   }) : super(key: key);
 
+  final Coin coin;
   final void Function(MultiSigConnectDropdownItem item) onChanged;
 
   @override
@@ -113,8 +116,8 @@ class _MultiSigConnectDropDownState extends State<MultiSigConnectDropDown> {
   Future<void> _load(Account? selected) async {
     final accounts = await _accountService.getBasicAccounts();
 
-    // TODO-Roy: Limit accounts to the chain-id of the invite
     var items = accounts
+        .where((e) => e.coin == widget.coin)
         .map(
           (e) => MultiSigConnectDropdownItem(
             name: e.name,

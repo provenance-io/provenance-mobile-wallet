@@ -86,6 +86,7 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
+        coin: widget.multiSigRemoteAccount.coin,
         onSubmit: _bloc.submitMultiSigConnect,
       ),
     );
