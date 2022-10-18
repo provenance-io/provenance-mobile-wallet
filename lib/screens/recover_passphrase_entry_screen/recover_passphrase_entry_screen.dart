@@ -6,18 +6,22 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_bloc.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/timed_counter.dart';
 
+abstract class RecoverPassphraseEntryBloc {
+  void submitRecoverPassphraseEntry(List<String> words);
+}
+
 class RecoverPassphraseEntryScreen extends StatefulWidget {
   const RecoverPassphraseEntryScreen({
-    required this.addAccountBloc,
+    required RecoverPassphraseEntryBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
   static final keyContinueButton =
       ValueKey('$RecoverPassphraseEntryScreen.continue_button');
@@ -35,7 +39,7 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
   static Key keyPassphraseWordTextField(int index) =>
       ValueKey('$RecoverPassphraseEntryScreen.word_$index');
 
-  final AddAccountFlowBloc addAccountBloc;
+  final RecoverPassphraseEntryBloc _bloc;
 
   @override
   State<StatefulWidget> createState() {
@@ -201,11 +205,11 @@ class RecoverPassphraseEntryScreenState
     );
   }
 
-  Future<void> _submit() async {
+  void _submit() {
     if (_formKey.currentState?.validate() == true) {
       final words = _bloc.getCompletedMnemonic();
 
-      await widget.addAccountBloc.submitRecoverPassphraseEntry(context, words);
+      widget._bloc.submitRecoverPassphraseEntry(words);
     }
   }
 

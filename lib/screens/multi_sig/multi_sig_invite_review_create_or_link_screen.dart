@@ -46,7 +46,7 @@ class MultiSigInviteReviewCreateOrLinkScreen extends StatelessWidget {
                       desc: Strings.of(context)
                           .multiSigInviteReviewCreateOrLinkCreateDesc,
                       onPressed: () async {
-                        await bloc.showCreateNewAccount();
+                        await bloc.showCreateNewAccount(context);
                       },
                     ),
                     VerticalSpacer.large(),

@@ -1,7 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/screens/add_account_flow.dart';
+import 'package:provenance_wallet/screens/account/basic_account_create_flow.dart';
+import 'package:provenance_wallet/screens/account/basic_account_recover_flow.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/landing/landing_bloc.dart';
 import 'package:provenance_wallet/screens/landing/onboarding_customization_slide.dart';
@@ -93,22 +94,38 @@ class _LandingScreenState extends State<LandingScreen> {
 
                   var hasAccount = status != AuthStatus.noAccount;
 
-                  return PwPrimaryButton.fromString(
-                    key: LandingScreen.keyAddAccountButton,
-                    text:
-                        hasAccount ? strings.continueName : strings.addAccount,
-                    onPressed: () {
-                      if (hasAccount) {
-                        bloc.doAuth(context);
-                      } else {
-                        Navigator.of(context).push(
-                          AddAccountFlow(
-                            origin: AddAccountOrigin.landing,
-                            includeMultiSig: true,
-                          ).route(),
-                        );
-                      }
-                    },
+                  return Column(
+                    children: [
+                      PwPrimaryButton.fromString(
+                        key: LandingScreen.keyAddAccountButton,
+                        text: hasAccount
+                            ? strings.continueName
+                            : strings.addAccount,
+                        onPressed: () {
+                          if (hasAccount) {
+                            bloc.doAuth(context);
+                          } else {
+                            Navigator.of(context).push(
+                              BasicAccountCreateFlow(
+                                origin: AddAccountOrigin.landing,
+                              ).route(),
+                            );
+                          }
+                        },
+                      ),
+                      VerticalSpacer.large(),
+                      PwTextButton.secondaryAction(
+                        context: context,
+                        text: Strings.of(context).recoverAccount,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            BasicAccountRecoverFlow(
+                              origin: AddAccountOrigin.landing,
+                            ).route(),
+                          );
+                        },
+                      )
+                    ],
                   );
                 },
               ),

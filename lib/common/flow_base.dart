@@ -116,5 +116,10 @@ abstract class FlowBaseState<Z extends FlowBase> extends State<Z> {
     navigator!.popUntil((route) => route is _FlowRootRoute<Z>);
   }
 
+  void back<X>([X? value]) {
+    final navigator = _navigatorKey.currentState;
+    navigator!.pop(value);
+  }
+
   Widget createStartPage();
 }

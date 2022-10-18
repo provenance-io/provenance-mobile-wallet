@@ -48,7 +48,7 @@ abstract class AccountStorageService {
     required String name,
   });
 
-  Future<Account?> addAccount({
+  Future<BasicAccount?> addAccount({
     required String name,
     required PrivateKey privateKey,
   });

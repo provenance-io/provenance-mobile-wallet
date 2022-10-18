@@ -2,17 +2,21 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class BackupCompleteBloc {
+  void submitBackupComplete();
+}
+
 class BackupCompleteScreen extends StatelessWidget {
   const BackupCompleteScreen({
-    required this.bloc,
+    required BackupCompleteBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
-  final AddAccountFlowBloc bloc;
+  final BackupCompleteBloc _bloc;
 
   static ValueKey keyContinueButton =
       ValueKey("$BackupCompleteScreen.continue_button");
@@ -67,8 +71,8 @@ class BackupCompleteScreen extends StatelessWidget {
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),
-              onPressed: () async {
-                await bloc.submitBackupComplete(context);
+              onPressed: () {
+                _bloc.submitBackupComplete();
               },
             ),
           ),

@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
@@ -48,7 +47,6 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
 
   @override
   void didChangeDependencies() {
-    final bloc = Provider.of<AccountsBloc>(context);
     _subscriptions.cancel();
     final subscriptions = CompositeSubscription();
 
@@ -223,6 +221,7 @@ class _MultiAccountItemState extends State<MultiAccountItem> {
         ).push(
           MultiSigCreationStatus(
             accountId: widget._initialAccount.id,
+            onDone: Navigator.of(context).pop,
           ).route(
             fullScreenDialog: true,
           ),

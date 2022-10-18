@@ -706,14 +706,16 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     });
 
-    // Don't delay startup by awaiting here
-    multiSigService.sync(
-        signerAddresses: accounts
-            .whereType<TransactableAccount>()
-            .map((e) => e.address)
-            .toList());
+    if (accounts.isNotEmpty) {
+      // Don't delay startup by awaiting here
+      multiSigService.sync(
+          signerAddresses: accounts
+              .whereType<TransactableAccount>()
+              .map((e) => e.address)
+              .toList());
 
-    await _activatePendingMultiAccounts();
+      await _activatePendingMultiAccounts();
+    }
   }
 
   Future<void> _activatePendingMultiAccounts() async {

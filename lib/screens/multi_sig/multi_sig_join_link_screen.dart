@@ -1,19 +1,19 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
-import 'package:provenance_wallet/util/invite_link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class MultiSigJoinLinkScreen extends StatefulWidget {
   const MultiSigJoinLinkScreen({
-    required this.bloc,
+    required this.onSubmit,
     Key? key,
   }) : super(key: key);
 
-  final AddAccountFlowBloc bloc;
+  final Future<bool> Function(
+    BuildContext context,
+    String link,
+  ) onSubmit;
 
   @override
   State<MultiSigJoinLinkScreen> createState() => _MultiSigJoinLinkScreenState();
@@ -128,23 +128,13 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     );
   }
 
-  void _onLoading(BuildContext context, bool loading) {
-    if (loading) {
-      ModalLoadingRoute.showLoading(context);
-    } else {
-      ModalLoadingRoute.dismiss(context);
-    }
-  }
-
   Future<void> _submit(BuildContext context, String text) async {
     if ((_formKey.currentState as FormState?)?.validate() == true) {
-      _onLoading(context, true);
-      final success = await widget.bloc.submitMultiSigJoinLink(
-        Strings.of(context).multiSigInvalidLink,
+      final success = await widget.onSubmit(
+        context,
         _textController.text.trim(),
-        AddAccountScreen.multiSigJoinLink,
       );
-      _onLoading(context, false);
+
       if (!success) {
         setState(() {
           _validate = _validateInvalid;
@@ -170,7 +160,17 @@ class _MultiSigJoinLinkScreenState extends State<MultiSigJoinLinkScreen> {
     if (text == null || text.isEmpty) {
       error = Strings.of(context).required;
     } else {
-      final valid = parseInviteLinkData(text) != null;
+      const validHosts = {
+        'provenancewallet.page.link',
+        'provenance.io',
+      };
+
+      final uri = Uri.tryParse(text);
+      final valid = uri != null &&
+          uri.scheme == 'https' &&
+          validHosts.contains(uri.host) &&
+          uri.path.isNotEmpty &&
+          uri.path != '/';
       if (!valid) {
         error = Strings.of(context).multiSigInvalidLink;
       }

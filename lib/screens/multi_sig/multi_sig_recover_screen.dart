@@ -4,7 +4,6 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/multi_sig_remote_account_item.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -12,13 +11,22 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class MultiSigRecoverBloc {
+  void submitRecoverFromAccount({
+    required BuildContext context,
+    required MultiSigRemoteAccount account,
+    required BasicAccount linkedAccount,
+  });
+}
+
 class MultiSigRecoverScreen extends StatefulWidget {
   const MultiSigRecoverScreen({
-    required this.bloc,
+    required MultiSigRecoverBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
-  final AddAccountFlowBloc bloc;
+  final MultiSigRecoverBloc _bloc;
 
   @override
   State<MultiSigRecoverScreen> createState() => _MultiSigRecoverScreenState();
@@ -128,11 +136,11 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
                   PwButton(
                     child: PwText(Strings.of(context).next),
                     enabled: selectedData != null,
-                    onPressed: () async {
-                      await widget.bloc.submitRecoverFromAccount(
-                        context,
-                        selectedData!.account,
-                        selectedData!.linkedAccount,
+                    onPressed: () {
+                      widget._bloc.submitRecoverFromAccount(
+                        context: context,
+                        account: selectedData!.account,
+                        linkedAccount: selectedData!.linkedAccount,
                       );
                     },
                   ),

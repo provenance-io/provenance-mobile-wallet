@@ -3,18 +3,23 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_check_box.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_bloc.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/word_selector.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
+abstract class RecoveryWordsConfirmBloc {
+  List<String> get recoveryWords;
+  void submitRecoveryWordsConfirm();
+}
+
 class RecoveryWordsConfirmScreen extends StatefulWidget {
   const RecoveryWordsConfirmScreen({
-    required this.addAccountBloc,
+    required RecoveryWordsConfirmBloc bloc,
     Key? key,
-  }) : super(key: key);
+  })  : _bloc = bloc,
+        super(key: key);
 
-  final AddAccountFlowBloc addAccountBloc;
+  final RecoveryWordsConfirmBloc _bloc;
 
   static ValueKey keyCheckbox =
       ValueKey("$RecoveryWordsConfirmScreen.checkbox");
@@ -36,7 +41,7 @@ class RecoveryWordsConfirmScreenState
 
   @override
   void initState() {
-    bloc.setup(widget.addAccountBloc.words);
+    bloc.setup(widget._bloc.recoveryWords);
 
     super.initState();
   }
@@ -164,7 +169,7 @@ class RecoveryWordsConfirmScreenState
     } else if (!_isResponsible) {
       setError(Strings.of(context).youMustAgreeToThePassphraseTerms);
     } else {
-      widget.addAccountBloc.submitRecoveryWordsConfirm();
+      widget._bloc.submitRecoveryWordsConfirm();
 
       setError("");
     }

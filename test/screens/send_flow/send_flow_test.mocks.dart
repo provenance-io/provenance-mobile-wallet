@@ -183,13 +183,13 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue: _i7.Future<_i14.Account?>.value())
           as _i7.Future<_i14.Account?>);
   @override
-  _i7.Future<_i14.Account?> addAccount(
+  _i7.Future<_i14.BasicAccount?> addAccount(
           {List<String>? phrase, String? name, _i9.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: _i7.Future<_i14.Account?>.value())
-          as _i7.Future<_i14.Account?>);
+              returnValue: _i7.Future<_i14.BasicAccount?>.value())
+          as _i7.Future<_i14.BasicAccount?>);
   @override
   _i7.Future<_i14.MultiAccount?> addMultiAccount(
           {String? name,

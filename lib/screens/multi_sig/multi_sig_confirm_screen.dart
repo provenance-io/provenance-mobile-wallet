@@ -2,19 +2,35 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
-import 'package:provenance_wallet/screens/add_account_flow_bloc.dart';
+import 'package:provenance_wallet/screens/count.dart';
+import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:rxdart/rxdart.dart';
+
+abstract class MultiSigConfirmBloc
+    implements AccountNameBloc, MultiSigCountBloc {
+  @override
+  ValueStream<String> get name;
+
+  @override
+  ValueStream<Count> get cosignerCount;
+
+  @override
+  ValueStream<Count> get signatureCount;
+
+  void submitMultiSigConfirm(BuildContext context);
+}
 
 class MultiSigConfirmScreen extends StatelessWidget {
   const MultiSigConfirmScreen({
-    required AddAccountFlowBloc bloc,
+    required MultiSigConfirmBloc bloc,
     Key? key,
   })  : _bloc = bloc,
         super(key: key);
 
-  final AddAccountFlowBloc _bloc;
+  final MultiSigConfirmBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +65,8 @@ class MultiSigConfirmScreen extends StatelessWidget {
                   ),
                   VerticalSpacer.largeX4(),
                   StreamBuilder<String>(
-                      initialData: _bloc.multiSigName.valueOrNull,
-                      stream: _bloc.multiSigName,
+                      initialData: _bloc.name.valueOrNull,
+                      stream: _bloc.name,
                       builder: (context, snapshot) {
                         final name = snapshot.data ?? '';
 
@@ -62,11 +78,12 @@ class MultiSigConfirmScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 fullscreenDialog: true,
                                 builder: (context) {
-                                  return AccountNameScreen.multi(
+                                  return AccountNameScreen(
                                     message: strings.accountNameMultiSigMessage,
                                     mode: FieldMode.edit,
                                     leadingIcon: PwIcons.close,
                                     bloc: _bloc,
+                                    popOnSubmit: true,
                                   );
                                 },
                               ),
@@ -76,8 +93,8 @@ class MultiSigConfirmScreen extends StatelessWidget {
                       }),
                   divider,
                   StreamBuilder<Count>(
-                      initialData: _bloc.multiSigCosignerCount.valueOrNull,
-                      stream: _bloc.multiSigCosignerCount,
+                      initialData: _bloc.cosignerCount.valueOrNull,
+                      stream: _bloc.cosignerCount,
                       builder: (context, snapshot) {
                         final count = snapshot.data?.value ?? 0;
 
@@ -105,8 +122,8 @@ class MultiSigConfirmScreen extends StatelessWidget {
                       }),
                   divider,
                   StreamBuilder<Count>(
-                      initialData: _bloc.multiSigSignatureCount.valueOrNull,
-                      stream: _bloc.multiSigSignatureCount,
+                      initialData: _bloc.signatureCount.valueOrNull,
+                      stream: _bloc.signatureCount,
                       builder: (context, snapshot) {
                         final count = snapshot.data?.value ?? 0;
 

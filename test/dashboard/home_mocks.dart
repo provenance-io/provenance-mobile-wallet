@@ -16,6 +16,10 @@ class MockDeepLinkService implements DeepLinkService {
 
   @override
   ValueStream<Uri> get link => _link ?? BehaviorSubject();
+
+  @override
+  Future<String> createInviteLink(String inviteId, Coin coin) async =>
+      'https://provenance.io';
 }
 
 class MockAssetClient implements AssetClient {
