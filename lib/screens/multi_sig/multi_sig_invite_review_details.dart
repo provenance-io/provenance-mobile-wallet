@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
@@ -10,12 +11,14 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
     required this.name,
     required this.cosignerCount,
     required this.signaturesRequired,
+    required this.coin,
     Key? key,
   }) : super(key: key);
 
   final String name;
   final int cosignerCount;
   final int signaturesRequired;
+  final Coin coin;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +88,11 @@ class MultiSigInviteReviewDetails extends StatelessWidget {
                         name:
                             Strings.of(context).multiSigConfirmSignaturesLabel,
                         value: signaturesRequired.toString(),
+                      ),
+                      divider,
+                      MultiSigField(
+                        name: Strings.of(context).multiSigConfirmChainIdLabel,
+                        value: coin.chainId,
                       ),
                       divider,
                     ],

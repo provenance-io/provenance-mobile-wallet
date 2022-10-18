@@ -159,6 +159,7 @@
   "multiSigConfirmAccountNameLabel": "Account Name",
   "multiSigConfirmCosignersLabel": "Total number of users",
   "multiSigConfirmSignaturesLabel": "Signatures required",
+  "multiSigConfirmChainIdLabel": "Chain",
   "multiSigCreationStatusTitle": "Multi Signature Account Invitation",
   "multiSigCreationStatusMessage": "Here’s how it works:",
   "multiSigCreationStatusDescription": "Share the QR code or invitation link with the users joining this account. \n\nIf the users of the multi signature account lose their keys, it is possible that the multi signature account will be lost.",

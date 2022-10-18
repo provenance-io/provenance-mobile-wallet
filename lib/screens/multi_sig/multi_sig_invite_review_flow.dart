@@ -62,6 +62,7 @@ class MultiSigInviteReviewFlowState
         name: widget.multiSigRemoteAccount.name,
         cosignerCount: widget.multiSigRemoteAccount.signers.length,
         signaturesRequired: widget.multiSigRemoteAccount.signersRequired,
+        coin: widget.multiSigRemoteAccount.coin,
       ),
     );
   }
