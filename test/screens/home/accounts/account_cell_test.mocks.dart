@@ -12,10 +12,12 @@ import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.
     as _i14;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart'
     as _i13;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_register_result.dart'
+    as _i11;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart'
     as _i9;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i11;
+    as _i16;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart'
     as _i15;
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart'
@@ -132,13 +134,13 @@ class MockMultiSigClient extends _i1.Mock implements _i8.MultiSigClient {
               returnValue: _i7.Future<_i9.MultiSigRemoteAccount?>.value())
           as _i7.Future<_i9.MultiSigRemoteAccount?>);
   @override
-  _i7.Future<_i11.MultiSigSigner?> register(
+  _i7.Future<_i11.MultiSigRegisterResult?> register(
           {String? inviteId, _i10.PublicKey? publicKey}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #register, [], {#inviteId: inviteId, #publicKey: publicKey}),
-              returnValue: _i7.Future<_i11.MultiSigSigner?>.value())
-          as _i7.Future<_i11.MultiSigSigner?>);
+              returnValue: _i7.Future<_i11.MultiSigRegisterResult?>.value())
+          as _i7.Future<_i11.MultiSigRegisterResult?>);
   @override
   _i7.Future<List<_i9.MultiSigRemoteAccount>?> getAccounts(
           {String? address, _i10.Coin? coin}) =>
@@ -305,7 +307,7 @@ class MockAccountService extends _i1.Mock implements _i5.AccountService {
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          List<_i11.MultiSigSigner>? signers}) =>
+          List<_i16.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
@@ -321,7 +323,7 @@ class MockAccountService extends _i1.Mock implements _i5.AccountService {
           as _i7.Future<_i3.MultiAccount?>);
   @override
   _i7.Future<_i3.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, List<_i11.MultiSigSigner>? signers}) =>
+          {String? id, List<_i16.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #activateMultiAccount, [], {#id: id, #signers: signers}),
