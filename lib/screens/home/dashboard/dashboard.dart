@@ -167,7 +167,10 @@ class _DashboardState extends State<Dashboard> {
                       dispose: (_, bloc) {
                         bloc.onDispose();
                       },
-                      child: AccountsScreen(),
+                      child: Provider.value(
+                        value: bloc,
+                        child: AccountsScreen(),
+                      ),
                     ),
                   );
                 },
