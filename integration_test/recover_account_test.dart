@@ -5,7 +5,6 @@ import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
-import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/landing/landing_screen.dart';
@@ -28,8 +27,7 @@ void main() {
 
       await tester.pumpAndSettle(Duration(seconds: 1));
 
-      await LandingScreen.keyAddAccountButton.tap(tester);
-      await AccountTypeScreen.keyRecoverAccountButton.tap(tester);
+      await LandingScreen.keyImportAccountButton.tap(tester);
       await AccountNameScreen.keyNameTextField.tap(tester);
 
       final accountName = testData.accountName!;
