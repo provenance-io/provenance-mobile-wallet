@@ -6,7 +6,9 @@ import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
+import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
+import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -17,19 +19,24 @@ enum MenuOperation {
   rename,
   delete,
   viewInvite,
+  addHash,
 }
 
 class AccountCell extends StatefulWidget {
   static const accountCellBackgroundKey = ValueKey("AccountCellBackground");
   static const accountCellMenuKey = ValueKey("AccountCellMenu");
 
-  const AccountCell(
-      {super.key, required this.isSelected, required this.account});
+  const AccountCell({
+    super.key,
+    required this.isSelected,
+    required this.account,
+  });
 
   final Account account;
   final bool isSelected;
   static final keyCopyAccountNumberButton =
       ValueKey('$AccountCell.copy_account_number_button');
+  static final keyAddHashButton = ValueKey('$AccountCell.add_hash_button');
 
   @override
   State<AccountCell> createState() => _AccountCellState();
@@ -202,6 +209,21 @@ class _AccountCellState extends State<AccountCell> {
           ),
         );
         break;
+      case MenuOperation.addHash:
+        final bloc = Provider.of<HomeBloc>(context, listen: false);
+
+        Navigator.of(context).push(
+          Provider.value(
+            value: bloc,
+            child: FaucetScreen(
+              onHashAdd: bloc.load,
+              address: _account.address!,
+              coin: _account.coin!,
+            ),
+          ).route(),
+        );
+        break;
+      default:
     }
   }
 
@@ -223,6 +245,10 @@ class _AccountCellState extends State<AccountCell> {
       operations.add(MenuOperation.delete);
     }
 
+    if (_account.coin == Coin.testNet) {
+      operations.add(MenuOperation.addHash);
+    }
+
     final strings = Strings.of(context);
     return showModalBottomSheet<MenuOperation>(
       backgroundColor: Colors.transparent,
@@ -236,10 +262,12 @@ class _AccountCellState extends State<AccountCell> {
             itemBuilder: (contect, index) {
               final operation = operations[index];
               final String label;
+              Key? key;
 
               switch (operation) {
                 case MenuOperation.copy:
                   label = strings.copyAccountAddress;
+                  key = AccountCell.keyCopyAccountNumberButton;
                   break;
                 case MenuOperation.rename:
                   label = strings.rename;
@@ -250,9 +278,14 @@ class _AccountCellState extends State<AccountCell> {
                 case MenuOperation.viewInvite:
                   label = strings.accountMenuItemViewInvite;
                   break;
+                case MenuOperation.addHash:
+                  label = strings.faucetScreenButtonTitle;
+                  key = AccountCell.keyAddHashButton;
+                  break;
               }
 
               return PwGreyButton(
+                key: key,
                 text: label,
                 onPressed: () {
                   Navigator.of(context).pop(operation);

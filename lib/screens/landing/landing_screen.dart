@@ -22,6 +22,8 @@ class LandingScreen extends StatefulWidget {
 
   static final keyAddAccountButton =
       ValueKey('$LandingScreen.add_account_button');
+  static final keyImportAccountButton =
+      ValueKey('$LandingScreen.import_account_button');
 
   @override
   State<StatefulWidget> createState() {
@@ -115,6 +117,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       ),
                       VerticalSpacer.large(),
                       PwTextButton.secondaryAction(
+                        key: LandingScreen.keyImportAccountButton,
                         context: context,
                         text: Strings.of(context).recoverAccount,
                         onPressed: () {
