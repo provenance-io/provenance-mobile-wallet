@@ -62,6 +62,7 @@ class MultiSigInviteReviewFlowState
         name: widget.multiSigRemoteAccount.name,
         cosignerCount: widget.multiSigRemoteAccount.signers.length,
         signaturesRequired: widget.multiSigRemoteAccount.signersRequired,
+        coin: widget.multiSigRemoteAccount.coin,
       ),
     );
   }
@@ -86,6 +87,7 @@ class MultiSigInviteReviewFlowState
   void showLinkExistingAccount() {
     showPage(
       (context) => MultiSigConnectScreen(
+        coin: widget.multiSigRemoteAccount.coin,
         onSubmit: _bloc.submitMultiSigConnect,
       ),
     );

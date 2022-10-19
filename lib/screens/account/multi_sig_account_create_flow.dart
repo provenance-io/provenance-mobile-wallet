@@ -1,3 +1,4 @@
+import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
@@ -17,8 +18,11 @@ import 'package:rxdart/rxdart.dart';
 
 class MultiSigAccountCreateFlow extends FlowBase {
   const MultiSigAccountCreateFlow({
+    required this.coin,
     Key? key,
   }) : super(key: key);
+
+  final Coin coin;
 
   @override
   State<StatefulWidget> createState() => MultiSigAccountCreateFlowState();
@@ -40,6 +44,7 @@ class MultiSigAccountCreateFlowState
       name: _bloc.name,
       onSubmit: _bloc.submitMultiSigName,
       popOnSubmit: false,
+      coin: widget.coin,
     );
   }
 
@@ -227,8 +232,6 @@ class MultiSigAccountCreateFlowBloc
 
     ModalLoadingRoute.dismiss(context);
 
-    // TODO-Roy: If a multi-sig was the first account added (along with a recovered basic account), then we get left at the "Add Account" page.
-    // Need to re-check local auth?
     if (_multiSigAccount != null) {
       _navigator.showMultiSigCreationStatus(_multiSigAccount!);
     }

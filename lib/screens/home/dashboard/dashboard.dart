@@ -152,8 +152,6 @@ class _DashboardState extends State<Dashboard> {
                 key: Dashboard.keyOpenAccountsButton,
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
-                  final bloc = Provider.of<HomeBloc>(context, listen: false);
-
                   await showDialog(
                     barrierColor: Theme.of(context).colorScheme.neutral750,
                     useSafeArea: true,
