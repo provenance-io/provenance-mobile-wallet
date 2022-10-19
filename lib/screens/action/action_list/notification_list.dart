@@ -156,7 +156,9 @@ class NotificationListState extends State<NotificationList>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Spacing.small,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
@@ -210,11 +212,13 @@ class NotificationListState extends State<NotificationList>
                 text: "Delete",
                 onPressed: _deleteSelected,
               ),
+              VerticalSpacer.large(),
               PwTextButton.secondaryAction(
                 context: context,
                 text: "Cancel",
                 onPressed: _cancelClicked,
-              )
+              ),
+              VerticalSpacer.large(),
             ]),
           ),
         )

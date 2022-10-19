@@ -72,7 +72,9 @@ class ActionListScreenState extends State<ActionListScreen>
               final state = snapshot.data!;
 
               return Padding(
-                padding: const EdgeInsets.all(Spacing.small),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.large,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
