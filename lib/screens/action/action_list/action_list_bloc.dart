@@ -272,7 +272,7 @@ class ActionListBloc extends Disposable {
 
               if (signature.signatureHex == null) {
                 if (signature.signatureDecline) {
-                  // TODO-Roy: Add item for pending but did decline
+                  // Pending but did decline
                 } else {
                   // Need a signature
                   final item = _toMultiSigListItem(
@@ -286,7 +286,7 @@ class ActionListBloc extends Disposable {
                   multiSigGroups[address]!.add(item);
                 }
               } else {
-                // TODO-Roy: Add item for pending but already signed
+                // Pending but already signed
               }
             }
           }
