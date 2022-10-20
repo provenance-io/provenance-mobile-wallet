@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_notification_service/models/sembast_text_notification_item.dart';
 import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
@@ -145,6 +146,7 @@ class AccountNotificationService implements Disposable {
 
   Future<void> _update() async {
     final results = await _getAll();
+    results.sortDescendingBy((e) => e.created.millisecondsSinceEpoch);
 
     _notifications.add(results);
   }

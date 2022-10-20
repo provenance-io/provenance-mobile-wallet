@@ -127,7 +127,16 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
       case MultiSigAddKind.join:
         final link = await showPage<String>(
           (context) => QRCodeScanner(
-            isValidCallback: (e) async => parseInviteLinkData(e) != null,
+            isValidCallback: (e) async {
+              InviteLinkData? data;
+
+              final redirected = await tryFollowRedirect(e);
+              if (redirected != null) {
+                data = parseInviteLinkData(redirected);
+              }
+
+              return data != null;
+            },
           ),
         );
         _bloc.submitMultiSigJoinLink(
