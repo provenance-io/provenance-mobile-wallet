@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -7,6 +7,7 @@ import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
+import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
 import 'package:provenance_wallet/screens/home/dashboard/dashboard.dart';
 import 'package:provenance_wallet/screens/pin/pin_pad.dart';
@@ -15,7 +16,6 @@ import 'package:provenance_wallet/screens/send_flow/send/send_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_screen.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
-import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/util/integration_test_data.dart';
 
 import 'util/key_extension.dart';
@@ -52,33 +52,21 @@ void main() {
         await key.tap(tester);
       }
 
-      double beginningHash =
-          double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
+      Decimal beginningHash =
+          Decimal.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
 
-      if (beginningHash < 10) {
-        String clipboardData = "";
-        SystemChannels.platform
-            .setMockMethodCallHandler((MethodCall methodCall) async {
-          if (methodCall.method == "Clipboard.setData") {
-            clipboardData = methodCall.arguments
-                .toString()
-                .replaceAll('{text: ', '')
-                .replaceAll('}', '');
-          }
-        });
+      if (beginningHash < Decimal.parse("10")) {
         await Dashboard.keyOpenAccountsButton.tap(tester);
         await AccountContainer.keyAccountEllipsisName(data.accountName!)
             .tap(tester);
-        await AccountCell.keyCopyAccountNumberButton.tap(tester);
-        Map<String, dynamic> json = {'address': clipboardData};
-        final res = await TestHttpClient(baseUrl: 'https://test.provenance.io/')
-            .post('blockchain/faucet/external', body: json);
+        await AccountCell.keyAddHashButton.tap(tester);
+        await FaucetScreen.keyAddHashButton.tap(tester);
 
-        expect(true, res.isSuccessful);
+        await PwAppBar.keyLeadingIconButton.tap(tester);
         await PwAppBar.keyLeadingIconButton.tap(tester);
         await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
         beginningHash =
-            double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
+            Decimal.parse(Dashboard.keyAssetAmount("HASH").pwText(tester));
       }
 
       await AccountPortfolio.keySendButton.tap(tester);
@@ -99,10 +87,11 @@ void main() {
       // Text is something like "6.473829789 HASH"
       final textPrice =
           SendSuccessScreen.keyTransactionAmount.pwText(tester).split(" ")[0];
-      final transactionAmount = double.parse(textPrice);
+      final transactionAmount = Decimal.parse(textPrice);
 
       await SendSuccessScreen.keyDoneButton.tap(tester);
-      //await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
+      await tester.pumpAndSettle();
+      await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
 
       // The expected value uses less hash than the actual value, so we only look at 2 decimal places.
       final compareValue =
