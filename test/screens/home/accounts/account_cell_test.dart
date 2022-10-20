@@ -10,22 +10,19 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provider/provider.dart';
 
 import './account_cell_test.mocks.dart';
 import '../../../dashboard/home_mocks.dart';
 import '../../../test_helpers.dart';
 
-@GenerateMocks([AccountsBloc, MultiSigClient, AccountService])
+@GenerateMocks([MultiSigClient, AccountService])
 void main() {
   const pubKeyHex1 = "AtqS7MRO7zKZ4Azfj0do1bYGv4JC/1J35vB6rdk1JXo3";
   const pubKeyHex2 = "A20rKxFRxuXvhRpOZRz3jCzkO91HMDiCDyTHgVevYnzJ";
@@ -61,11 +58,9 @@ void main() {
   AppLocalizations? strings;
 
   late StreamController<Account> _accountStream;
-  late MockAccountsBloc mockAccountsBloc;
 
   setUp(() {
     _accountStream = StreamController<Account>();
-    mockAccountsBloc = MockAccountsBloc();
   });
 
   tearDown(() {
@@ -75,12 +70,19 @@ void main() {
   Future<void> _build(
       WidgetTester tester, Account account, bool isSelected) async {
     await tester.pumpWidget(ProvenanceTestAppRig(
-      child: Provider<AccountsBloc>.value(
-        value: mockAccountsBloc,
-        child: AccountCell(
-          account: account,
-          isSelected: isSelected,
-        ),
+      child: AccountCell(
+        account: account,
+        isSelected: isSelected,
+        isRemovable: true,
+        onRename: ({
+          required String id,
+          required String name,
+        }) =>
+            Future.value(),
+        onRemove: ({
+          required String id,
+        }) =>
+            Future.value(),
       ),
     ));
 
@@ -203,58 +205,6 @@ void main() {
 
         final dialog = tester.widget<RenameAccountDialog>(dialogFind);
         expect(dialog.currentName, account.name);
-      });
-
-      testWidgets("The account is renamed when the dialog returns",
-          (tester) async {
-        final menuFind = await _buildAndShowMenu(tester, account);
-
-        await tester
-            .tap(find.descendant(
-                of: menuFind, matching: find.text(strings!.rename)))
-            .then((_) => tester.pump(Duration(milliseconds: 600)));
-
-        final dialogFind = find.byType(RenameAccountDialog);
-        final textFind = find.descendant(
-            of: dialogFind, matching: find.byType(PwTextFormField));
-        await tester.enterText(textFind, "ABCDE");
-        await tester.tap(find.descendant(
-            of: dialogFind, matching: find.text(strings!.confirm)));
-
-        verify(mockAccountsBloc.renameAccount(account, "ABCDE"));
-      });
-    });
-
-    group("Delete menu item clicked", () {
-      testWidgets("The account is removed when the dialog returns",
-          (tester) async {
-        final menuFind = await _buildAndShowMenu(tester, account);
-
-        await tester
-            .tap(find.descendant(
-                of: menuFind, matching: find.text(strings!.remove)))
-            .then((_) => tester.pump(Duration(milliseconds: 600)));
-
-        final yesFind = find.text(strings!.yes);
-
-        await tester.tap(yesFind);
-
-        verify(mockAccountsBloc.deleteAccount(account));
-      });
-      testWidgets("The account is not removed when the dialog returns",
-          (tester) async {
-        final menuFind = await _buildAndShowMenu(tester, account);
-
-        await tester
-            .tap(find.descendant(
-                of: menuFind, matching: find.text(strings!.remove)))
-            .then((_) => tester.pump(Duration(milliseconds: 600)));
-
-        final yesFind = find.text(strings!.cancel);
-
-        await tester.tap(yesFind);
-
-        verifyNever(mockAccountsBloc.deleteAccount(account));
       });
     });
   });
@@ -419,40 +369,6 @@ void main() {
                 of: menuFind,
                 matching: find.text(strings!.accountMenuItemViewInvite)))
             .then((_) => tester.pump(Duration(milliseconds: 600)));
-      });
-    });
-
-    group("Delete menu item clicked", () {
-      testWidgets("The account is removed when the dialog returns",
-          (tester) async {
-        final menuFind = await _buildAndShowMenu(tester, multiSigAccount);
-
-        await tester
-            .tap(find.descendant(
-                of: menuFind, matching: find.text(strings!.remove)))
-            .then((_) => tester.pump(Duration(milliseconds: 600)));
-
-        final yesFind = find.text(strings!.yes);
-
-        await tester.tap(yesFind);
-
-        verify(mockAccountsBloc.deleteAccount(multiSigAccount));
-      });
-
-      testWidgets("The account is not removed when the dialog returns",
-          (tester) async {
-        final menuFind = await _buildAndShowMenu(tester, multiSigAccount);
-
-        await tester
-            .tap(find.descendant(
-                of: menuFind, matching: find.text(strings!.remove)))
-            .then((_) => tester.pump(Duration(milliseconds: 600)));
-
-        final yesFind = find.text(strings!.cancel);
-
-        await tester.tap(yesFind);
-
-        verifyNever(mockAccountsBloc.deleteAccount(account));
       });
     });
   });
