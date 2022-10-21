@@ -19,8 +19,8 @@ class AccountsScreen extends StatefulWidget {
     return AccountsScreenState();
   }
 
-  static final keySelectAccountButton =
-      ValueKey('$AccountsScreen.select_account_button');
+  static ValueKey keySelectAccountButton(String name) =>
+      ValueKey('$AccountsScreen.$name.select_account_button');
 }
 
 class AccountsScreenState extends State<AccountsScreen> {
@@ -242,7 +242,7 @@ class AccountsScreenState extends State<AccountsScreen> {
     final linkedIds = _linkedIds ?? {};
 
     return GestureDetector(
-      key: AccountsScreen.keySelectAccountButton,
+      key: AccountsScreen.keySelectAccountButton(account.name),
       child: AccountCell(
         account: account,
         isSelected: isSelected,

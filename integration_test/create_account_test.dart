@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
-import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/backup_complete_screen.dart';
 import 'package:provenance_wallet/screens/create_passphrase_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
@@ -34,7 +33,6 @@ void main() {
       final testData = await tester.loadTestData();
 
       await LandingScreen.keyAddAccountButton.tap(tester);
-      await AccountTypeScreen.keyBasicAccountButton.tap(tester);
       await AccountNameScreen.keyNameTextField.tap(tester);
 
       final accountName = testData.accountName!;

@@ -156,7 +156,10 @@ class _DashboardState extends State<Dashboard> {
                     useSafeArea: true,
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => AccountsScreen(),
+                    builder: (context) => Provider.value(
+                      value: bloc,
+                      child: AccountsScreen(),
+                    ),
                   );
                 },
                 child: Padding(
