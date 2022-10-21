@@ -15,7 +15,7 @@ class WordButton extends StatelessWidget {
   final Function setSelected;
 
   static ValueKey keyWordButton(String word, int index) =>
-      ValueKey("$WordButton.word_$word");
+      ValueKey("$WordButton.word_$word.$index");
 
   @override
   Widget build(BuildContext context) {

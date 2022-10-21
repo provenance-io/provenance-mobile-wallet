@@ -194,6 +194,7 @@ class PwTextButton extends StatelessWidget {
     Key? key,
   }) {
     return PwTextButton(
+      key: key,
       child: PwText(
         text,
         style: PwTextStyle.bodyBold,
@@ -211,6 +212,7 @@ class PwTextButton extends StatelessWidget {
     Key? key,
   }) {
     return PwTextButton(
+      key: key,
       child: PwText(
         text,
         style: PwTextStyle.body,

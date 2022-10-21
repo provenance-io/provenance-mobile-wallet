@@ -3,21 +3,21 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provider/provider.dart';
 
 class FaucetScreen extends StatefulWidget {
   const FaucetScreen({
     Key? key,
     required this.address,
     required this.coin,
+    required this.onHashAdd,
   }) : super(key: key);
 
   final String address;
   final Coin coin;
+  final Future<void> Function() onHashAdd;
 
   @override
   State<StatefulWidget> createState() => FaucetScreenState();
@@ -26,6 +26,7 @@ class FaucetScreen extends StatefulWidget {
 }
 
 class FaucetScreenState extends State<FaucetScreen> {
+  bool _didGetHash = false;
   String? _error;
 
   @override
@@ -35,10 +36,9 @@ class FaucetScreenState extends State<FaucetScreen> {
       appBar: PwAppBar(
         title: strings.faucetScreenAppBarTitle,
         leadingIconOnPress: () {
-          Provider.of<HomeBloc>(
-            context,
-            listen: false,
-          ).load();
+          if (_didGetHash) {
+            widget.onHashAdd();
+          }
           Navigator.of(context).pop();
         },
       ),
@@ -74,6 +74,7 @@ class FaucetScreenState extends State<FaucetScreen> {
               ),
               onPressed: () async {
                 setState(() {
+                  _didGetHash = true;
                   _error = null;
                 });
                 _onLoading(context, true);

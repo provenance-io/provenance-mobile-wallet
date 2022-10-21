@@ -14,6 +14,7 @@ import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:provenance_wallet/util/transaction_error_util.dart';
 
 class SendReviewCell extends StatelessWidget {
   const SendReviewCell(
@@ -219,7 +220,8 @@ class SendReviewPageState extends State<SendReviewPage> {
       ModalLoadingRoute.dismiss(context);
     }
 
-    if (response?.result != null) {
+    if (response?.result != null &&
+        response?.result?.response.txResponse.code == 0) {
       await showDialog(
         barrierColor: Colors.transparent,
         useSafeArea: true,
@@ -232,6 +234,23 @@ class SendReviewPageState extends State<SendReviewPage> {
       );
 
       await _bloc!.complete();
+    } else if (response?.result?.response.txResponse.code != 0) {
+      logError(
+        'Send failed',
+        error: response?.result?.response.txResponse.rawLog,
+      );
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+              error: errorMessage(
+            context,
+            response?.result?.response.txResponse.codespace,
+            response?.result?.response.txResponse.code,
+          ));
+        },
+      );
     } else if (response?.txId != null) {
       await PwDialog.showFull(
         context: context,
