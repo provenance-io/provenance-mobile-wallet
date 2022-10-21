@@ -1,15 +1,14 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
-import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/screens/account/add_account_flow.dart';
 import 'package:provenance_wallet/screens/account_type_screen.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountsScreen extends StatefulWidget {
@@ -25,12 +24,48 @@ class AccountsScreen extends StatefulWidget {
 }
 
 class AccountsScreenState extends State<AccountsScreen> {
+  final _accountService = get<AccountService>();
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
-  CompositeSubscription _providerSubscriptions = CompositeSubscription();
-  late final AccountsBloc _bloc;
-  final List<Account> _accounts = <Account>[];
-  final ValueNotifier<String?> _selectedId = ValueNotifier<String?>(null);
+
+  List<Account>? _accounts;
+  Account? _selected;
+  Set<String>? _linkedIds;
+
+  void _sort(List<Account>? accounts, Account? selected) {
+    accounts?.sort((a, b) {
+      if (b.id == selected?.id) {
+        return 1;
+      } else if (a.id == selected?.id) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  Future<void> _load() async {
+    Account? selected;
+    List<Account>? accounts;
+    Set<String>? linkedIds;
+
+    try {
+      selected = await _accountService.getSelectedAccount();
+      accounts = await _accountService.getAccounts();
+      linkedIds = accounts
+          .whereType<MultiAccount>()
+          .map((e) => e.linkedAccount.id)
+          .toSet();
+
+      _sort(accounts, selected);
+    } finally {
+      setState(() {
+        _selected = selected;
+        _accounts = accounts;
+        _linkedIds = linkedIds;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -39,23 +74,68 @@ class AccountsScreenState extends State<AccountsScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    _bloc = Provider.of<AccountsBloc>(context);
+  void initState() {
+    super.initState();
 
-    _providerSubscriptions.cancel();
-    final providerSubscriptions = CompositeSubscription();
+    _accountService.events.added.listen((e) {
+      _accounts?.add(e);
+      _sort(_accounts, _selected);
 
-    _bloc.accountsStream.listen(_onAccountStreamChanged).addTo(_subscriptions);
-    _bloc.loading
-        .listen((e) => _onLoading(context, e))
-        .addTo(providerSubscriptions);
-    _providerSubscriptions = providerSubscriptions;
+      if (e is MultiAccount) {
+        _linkedIds?.add(e.id);
+      }
 
-    super.didChangeDependencies();
+      final index = _accounts?.indexWhere((i) => i.id == e.id);
+      if (index != null) {
+        _listKey.currentState?.insertItem(index);
+      }
+    }).addTo(_subscriptions);
+
+    _accountService.events.removed.listen((e) {
+      for (final account in e) {
+        final index = _accounts?.indexWhere((i) => i.id == account.id);
+        if (index != null) {
+          _accounts?.removeAt(index);
+
+          if (e is MultiAccount) {
+            _linkedIds =
+                _accounts?.whereType<MultiAccount>().map((e) => e.id).toSet();
+          }
+
+          _listKey.currentState?.removeItem(
+            index,
+            (context, animation) => _cellBuilder(
+              context,
+              animation,
+              account,
+            ),
+          );
+        }
+      }
+    }).addTo(_subscriptions);
+
+    _accountService.events.selected.listen((e) {
+      setState(() {
+        _selected = e;
+      });
+    }).addTo(_subscriptions);
+
+    _accountService.events.updated.listen((e) {
+      final index = _accounts?.indexWhere((i) => i.id == e.id);
+      if (index != null) {
+        setState(() {
+          _accounts?[index] = e;
+        });
+      }
+    }).addTo(_subscriptions);
+
+    _load();
   }
 
   @override
   Widget build(BuildContext context) {
+    final accounts = _accounts;
+
     return Scaffold(
       appBar: PwAppBar(
         title: Strings.of(context).accounts,
@@ -64,25 +144,36 @@ class AccountsScreenState extends State<AccountsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: Container(
-                padding: EdgeInsets.only(
-                  left: Spacing.large,
-                  right: Spacing.large,
-                  top: Spacing.medium,
-                ),
-                child: AnimatedList(
-                  key: _listKey,
-                  initialItemCount: _accounts.length,
-                  itemBuilder: (
-                    context,
-                    index,
-                    animation,
-                  ) {
-                    final account = _bloc.getAccountAtIndex(index);
+            child: Stack(
+              children: [
+                accounts == null
+                    ? Container()
+                    : Container(
+                        padding: EdgeInsets.only(
+                          left: Spacing.large,
+                          right: Spacing.large,
+                          top: Spacing.medium,
+                        ),
+                        child: AnimatedList(
+                          key: _listKey,
+                          initialItemCount: accounts.length,
+                          itemBuilder: (
+                            context,
+                            index,
+                            animation,
+                          ) {
+                            final account = accounts[index];
 
-                    return _cellBuilder(context, animation, account);
-                  },
-                )),
+                            return _cellBuilder(context, animation, account);
+                          },
+                        ),
+                      ),
+                Container(
+                  alignment: Alignment.center,
+                  child: accounts == null ? CircularProgressIndicator() : null,
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -127,39 +218,6 @@ class AccountsScreenState extends State<AccountsScreen> {
     );
   }
 
-  void _onAccountStreamChanged(AccountsBlocState state) {
-    final animatedState = _listKey.currentState;
-    if (animatedState == null) {
-      return;
-    }
-
-    animatedState.setState(() {
-      final existingIds = _accounts.map((e) => e.id).toList();
-      final stateIds = state.accounts.map((e) => e.id).toList();
-
-      for (var index = 0; index < _accounts.length; index++) {
-        if (!stateIds.contains(existingIds[index])) {
-          final account = _accounts[index];
-          animatedState.removeItem(
-              index,
-              (context, animation) =>
-                  _cellBuilder(context, animation, account));
-        }
-      }
-
-      int offset = 0;
-      for (var index = 0; index < stateIds.length; index++) {
-        if (!existingIds.contains(stateIds[index])) {
-          animatedState.insertItem(existingIds.length + offset);
-          offset++;
-        }
-      }
-
-      _accounts.replaceRange(0, _accounts.length, state.accounts);
-      _selectedId.value = state.selectedAccount;
-    });
-  }
-
   Widget _cellBuilder(
       BuildContext context, Animation<double> animation, Account account) {
     return SlideTransition(
@@ -179,24 +237,22 @@ class AccountsScreenState extends State<AccountsScreen> {
     );
   }
 
-  void _onLoading(BuildContext context, bool loading) {
-    if (loading) {
-      ModalLoadingRoute.showLoading(context);
-    } else {
-      ModalLoadingRoute.dismiss(context);
-    }
-  }
-
   Widget _getItem(Account account) {
-    final state = _bloc.accountsStream.value;
-    final isSelected = account.id == state.selectedAccount;
+    final isSelected = account.id == _selected?.id;
+    final linkedIds = _linkedIds ?? {};
 
     return GestureDetector(
       key: AccountsScreen.keySelectAccountButton,
       child: AccountCell(
         account: account,
         isSelected: isSelected,
+        isRemovable: !linkedIds.contains(account.id),
         key: ValueKey(account.id),
+        onRename: _accountService.renameAccount,
+        onRemove: ({
+          required String id,
+        }) =>
+            _accountService.removeAccount(id: id),
       ),
       behavior: HitTestBehavior.opaque,
       onTap: () async {
@@ -204,7 +260,7 @@ class AccountsScreenState extends State<AccountsScreen> {
             (account is MultiAccount && account is! TransactableAccount)) {
           return;
         } else {
-          await _bloc.selectAccount(account);
+          await _accountService.selectAccount(id: account.id);
         }
       },
     );

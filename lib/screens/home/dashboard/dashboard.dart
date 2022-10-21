@@ -5,7 +5,6 @@ import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/action/action_flow.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
@@ -157,20 +156,9 @@ class _DashboardState extends State<Dashboard> {
                     useSafeArea: true,
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => Provider<AccountsBloc>(
-                      lazy: true,
-                      create: (context) {
-                        final bloc = AccountsBloc();
-                        bloc.load();
-                        return bloc;
-                      },
-                      dispose: (_, bloc) {
-                        bloc.onDispose();
-                      },
-                      child: Provider.value(
-                        value: bloc,
-                        child: AccountsScreen(),
-                      ),
+                    builder: (context) => Provider.value(
+                      value: bloc,
+                      child: AccountsScreen(),
                     ),
                   );
                 },
