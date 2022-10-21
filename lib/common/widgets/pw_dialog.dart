@@ -44,6 +44,7 @@ class PwDialog {
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             PwText(
                               title.toUpperCase(),
@@ -57,6 +58,7 @@ class PwDialog {
                                 message,
                                 style: PwTextStyle.body,
                                 color: PwColor.neutralNeutral,
+                                textAlign: TextAlign.center,
                               ),
                             if (icon != null) VerticalSpacer.xxLarge(),
                             if (icon != null) icon,
