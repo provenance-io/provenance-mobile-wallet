@@ -183,9 +183,9 @@ class SendReviewPageState extends State<SendReviewPage> {
   }
 
   Future<void> _sendClicked(String total, String addressTo) async {
-    ScheduledTx? response;
+    ScheduledTx? scheduledTx;
     try {
-      response = await _bloc!.doSend();
+      scheduledTx = await _bloc!.doSend();
     } on PwError catch (e, s) {
       logError(
         'Send failed',
@@ -220,38 +220,42 @@ class SendReviewPageState extends State<SendReviewPage> {
       ModalLoadingRoute.dismiss(context);
     }
 
-    if (response?.result != null &&
-        response?.result?.response.txResponse.code == 0) {
-      await showDialog(
-        barrierColor: Colors.transparent,
-        useSafeArea: true,
-        context: context,
-        builder: (context) => SendSuccessScreen(
-          date: DateTime.now(),
-          totalAmount: total,
-          addressTo: abbreviateAddress(addressTo),
-        ),
-      );
+    final executed = scheduledTx?.result != null;
+    final responseCode = scheduledTx?.result?.response.txResponse.code;
 
-      await _bloc!.complete();
-    } else if (response?.result?.response.txResponse.code != 0) {
-      logError(
-        'Send failed',
-        error: response?.result?.response.txResponse.rawLog,
-      );
+    if (executed) {
+      if (responseCode == 0) {
+        await showDialog(
+          barrierColor: Colors.transparent,
+          useSafeArea: true,
+          context: context,
+          builder: (context) => SendSuccessScreen(
+            date: DateTime.now(),
+            totalAmount: total,
+            addressTo: abbreviateAddress(addressTo),
+          ),
+        );
 
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-              error: errorMessage(
-            context,
-            response?.result?.response.txResponse.codespace,
-            response?.result?.response.txResponse.code,
-          ));
-        },
-      );
-    } else if (response?.txId != null) {
+        await _bloc!.complete();
+      } else {
+        logError(
+          'Send failed',
+          error: scheduledTx?.result?.response.txResponse.rawLog,
+        );
+
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(
+                error: errorMessage(
+              context,
+              scheduledTx?.result?.response.txResponse.codespace,
+              scheduledTx?.result?.response.txResponse.code,
+            ));
+          },
+        );
+      }
+    } else {
       await PwDialog.showFull(
         context: context,
         title: Strings.of(context).multiSigTransactionInitiatedTitle,
