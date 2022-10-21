@@ -5,12 +5,10 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
-import 'package:provenance_wallet/screens/home/accounts/accounts_bloc.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/strings.dart';
-import 'package:provider/provider.dart';
 
 enum MenuOperation {
   copy,
@@ -23,13 +21,28 @@ class AccountCell extends StatefulWidget {
   static const accountCellBackgroundKey = ValueKey("AccountCellBackground");
   static const accountCellMenuKey = ValueKey("AccountCellMenu");
 
-  const AccountCell(
-      {super.key, required this.isSelected, required this.account});
+  const AccountCell({
+    super.key,
+    required this.isSelected,
+    required this.isRemovable,
+    required this.account,
+    required this.onRename,
+    required this.onRemove,
+  });
+
+  static final keyCopyAccountNumberButton =
+      ValueKey('$AccountCell.copy_account_number_button');
 
   final Account account;
   final bool isSelected;
-  static final keyCopyAccountNumberButton =
-      ValueKey('$AccountCell.copy_account_number_button');
+  final bool isRemovable;
+  final Future<void> Function({
+    required String id,
+    required String name,
+  }) onRename;
+  final Future<void> Function({
+    required String id,
+  }) onRemove;
 
   @override
   State<AccountCell> createState() => _AccountCellState();
@@ -37,7 +50,6 @@ class AccountCell extends StatefulWidget {
 
 class _AccountCellState extends State<AccountCell> {
   late Account _account;
-  late final AccountsBloc _bloc;
 
   @override
   void initState() {
@@ -47,7 +59,6 @@ class _AccountCellState extends State<AccountCell> {
 
   @override
   void didChangeDependencies() {
-    _bloc = Provider.of<AccountsBloc>(context);
     super.didChangeDependencies();
   }
 
@@ -175,7 +186,7 @@ class _AccountCellState extends State<AccountCell> {
           ),
         );
         if (text != null) {
-          await _bloc.renameAccount(_account, text);
+          await widget.onRename(id: _account.id, name: text);
         }
         break;
       case MenuOperation.delete:
@@ -186,7 +197,7 @@ class _AccountCellState extends State<AccountCell> {
           cancelText: strings.cancel,
         );
         if (dialogResult) {
-          _bloc.deleteAccount(_account);
+          widget.onRemove(id: _account.id);
         }
         break;
       case MenuOperation.viewInvite:
@@ -211,7 +222,7 @@ class _AccountCellState extends State<AccountCell> {
       operations = <MenuOperation>[
         MenuOperation.rename,
         MenuOperation.copy,
-        MenuOperation.delete
+        if (widget.isRemovable) MenuOperation.delete
       ];
     } else {
       final isTransactable = _account is TransactableAccount;
@@ -220,7 +231,7 @@ class _AccountCellState extends State<AccountCell> {
         operations.add(MenuOperation.copy);
       }
       operations.add(MenuOperation.viewInvite);
-      operations.add(MenuOperation.delete);
+      if (widget.isRemovable) operations.add(MenuOperation.delete);
     }
 
     final strings = Strings.of(context);

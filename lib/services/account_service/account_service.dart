@@ -72,7 +72,7 @@ class AccountService implements Disposable {
 
   Future<Account?> selectFirstAccount() async {
     final id = (await _storage.getAccounts())
-        .firstWhereOrNull((e) => e.address != null)
+        .firstWhereOrNull((e) => e is TransactableAccount)
         ?.id;
 
     return await selectAccount(id: id);
@@ -203,11 +203,7 @@ class AccountService implements Disposable {
       if (success) {
         events._removed.add([account]);
         if (events.selected.value?.id == id) {
-          final accounts = await getAccounts();
-          final first = accounts.firstOrNull;
-          if (first != null) {
-            await selectAccount(id: first.id);
-          }
+          await selectFirstAccount();
         }
 
         if (account is MultiAccount) {

@@ -658,7 +658,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    accountService.events.removed.listen((e) {
+    accountService.events.removed.listen((e) async {
       for (var account in e) {
         final address = account.address;
         if (address != null) {
@@ -670,6 +670,11 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
                 ),
               );
         }
+      }
+
+      final accounts = await accountService.getAccounts();
+      if (accounts.isEmpty) {
+        authHelper.reset();
       }
     }).addTo(_subscriptions);
 
