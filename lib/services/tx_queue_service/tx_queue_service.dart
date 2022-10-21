@@ -36,11 +36,17 @@ abstract class TxQueueService {
   });
 }
 
+// TODO-MultiSig: Separate this into two classes with a common base
+// and an enum kind. Use switch statement at consuming sites for visibility
+// if unhandled cases are added.
 class ScheduledTx {
-  ScheduledTx({
-    this.txId,
-    this.result,
-  });
+  ScheduledTx.executed({
+    required this.result,
+  }) : txId = null;
+
+  ScheduledTx.scheduled({
+    required this.txId,
+  }) : result = null;
 
   final String? txId;
   final TxResult? result;
