@@ -26,7 +26,6 @@ import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_sign
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/public_key_util.dart';
 
@@ -273,65 +272,70 @@ class MultiSigClient with ClientCoinMixin {
     return response.data?.txUuid;
   }
 
-  Future<List<MultiSigPendingTx>?> getPendingTxs({
-    required List<String> signerAddresses,
+  Future<List<MultiSigPendingTx>> getPendingTxs({
+    required List<SignerData> signer,
   }) async {
-    final coin = getCoinFromAddress(signerAddresses.first);
-    final client = await getClient(coin);
-    const path = '$_basePath/tx/pending';
+    final result = <MultiSigPendingTx>[];
 
-    final response = await client.post(
-      path,
-      body: MultiSigPendingTxRequestDto(
-        addresses: signerAddresses,
-      ),
-      listConverter: (json) {
-        if (json is String) {
-          return <MultiSigTxDto>[];
-        }
+    final accountsByCoin = signer.groupListsBy((e) => e.coin);
+    for (final entry in accountsByCoin.entries) {
+      final client = await getClient(entry.key);
 
-        return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
-      },
-    );
+      const path = '$_basePath/tx/pending';
 
-    List<MultiSigPendingTx>? result;
+      final response = await client.post(
+        path,
+        body: MultiSigPendingTxRequestDto(
+          addresses: entry.value.map((e) => e.address).toList(),
+        ),
+        listConverter: (json) {
+          if (json is String) {
+            return <MultiSigTxDto>[];
+          }
 
-    final data = response.data;
-    if (data != null) {
-      result = data.map((e) => _fromCreatedTxDto(e)).whereNotNull().toList();
+          return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
+        },
+      );
+
+      final data = response.data;
+      if (data != null) {
+        result.addAll(data.map((e) => _fromCreatedTxDto(e)).whereNotNull());
+      }
     }
 
     return result;
   }
 
-  Future<List<MultiSigPendingTx>?> getCreatedTxs({
-    required List<String> signerAddresses,
+  Future<List<MultiSigPendingTx>> getCreatedTxs({
+    required List<SignerData> signers,
     MultiSigStatus? status,
   }) async {
-    final coin = getCoinFromAddress(signerAddresses.first);
-    final client = await getClient(coin);
-    const path = '$_basePath/tx/created';
+    final result = <MultiSigPendingTx>[];
 
-    final response = await client.post(
-      path,
-      body: MultiSigCreatedTxRequestDto(
-        addresses: signerAddresses,
-        status: status,
-      ),
-      listConverter: (json) {
-        if (json is String) {
-          return <MultiSigTxDto>[];
-        }
+    final accountsByCoin = signers.groupListsBy((e) => e.coin);
+    for (final entry in accountsByCoin.entries) {
+      final client = await getClient(entry.key);
+      const path = '$_basePath/tx/created';
 
-        return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
-      },
-    );
+      final response = await client.post(
+        path,
+        body: MultiSigCreatedTxRequestDto(
+          addresses: signers.map((e) => e.address).toList(),
+          status: status,
+        ),
+        listConverter: (json) {
+          if (json is String) {
+            return <MultiSigTxDto>[];
+          }
 
-    List<MultiSigPendingTx>? result;
+          return json.map((e) => MultiSigTxDto.fromJson(e)).toList();
+        },
+      );
 
-    final data = response.data;
-    if (data != null) {
-      result = data.map((e) => _fromCreatedTxDto(e)).whereNotNull().toList();
+      final data = response.data;
+      if (data != null) {
+        result.addAll(data.map((e) => _fromCreatedTxDto(e)).whereNotNull());
+      }
     }
 
     return result;
@@ -441,4 +445,14 @@ class MultiSigClient with ClientCoinMixin {
       signerOrder: signerOrder,
     );
   }
+}
+
+class SignerData {
+  SignerData({
+    required this.address,
+    required this.coin,
+  });
+
+  final String address;
+  final Coin coin;
 }

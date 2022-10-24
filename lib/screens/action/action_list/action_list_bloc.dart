@@ -7,6 +7,7 @@ import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
+import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/screens/action/action_list/action_list_error.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -129,9 +130,15 @@ class ActionListBloc extends Disposable {
     final accounts = (await _accountService.getAccounts())
         .whereType<TransactableAccount>()
         .toList();
-    final addresses = accounts.map((e) => e.address).toList();
+    final signers = accounts
+        .map((e) => SignerData(
+              address: e.address,
+              coin: e.coin,
+            ))
+        .toList();
+
     await _multiSigService.sync(
-      signerAddresses: addresses,
+      signers: signers,
     );
 
     final actionGroups = await _buildActionGroups(accounts);

@@ -124,21 +124,22 @@ class MockMultiSigClient extends _i1.Mock implements _i4.MultiSigClient {
           }),
           returnValue: _i5.Future<String?>.value()) as _i5.Future<String?>);
   @override
-  _i5.Future<List<_i10.MultiSigPendingTx>?> getPendingTxs(
-          {List<String>? signerAddresses}) =>
+  _i5.Future<List<_i10.MultiSigPendingTx>> getPendingTxs(
+          {List<_i4.SignerData>? signer}) =>
+      (super.noSuchMethod(
+              Invocation.method(#getPendingTxs, [], {#signer: signer}),
+              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>>.value(
+                  <_i10.MultiSigPendingTx>[]))
+          as _i5.Future<List<_i10.MultiSigPendingTx>>);
+  @override
+  _i5.Future<List<_i10.MultiSigPendingTx>> getCreatedTxs(
+          {List<_i4.SignerData>? signers, _i11.MultiSigStatus? status}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #getPendingTxs, [], {#signerAddresses: signerAddresses}),
-              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>?>.value())
-          as _i5.Future<List<_i10.MultiSigPendingTx>?>);
-  @override
-  _i5.Future<List<_i10.MultiSigPendingTx>?> getCreatedTxs(
-          {List<String>? signerAddresses, _i11.MultiSigStatus? status}) =>
-      (super.noSuchMethod(
-              Invocation.method(#getCreatedTxs, [],
-                  {#signerAddresses: signerAddresses, #status: status}),
-              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>?>.value())
-          as _i5.Future<List<_i10.MultiSigPendingTx>?>);
+                  #getCreatedTxs, [], {#signers: signers, #status: status}),
+              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>>.value(
+                  <_i10.MultiSigPendingTx>[]))
+          as _i5.Future<List<_i10.MultiSigPendingTx>>);
   @override
   _i5.Future<bool> signTx(
           {String? signerAddress,

@@ -689,34 +689,46 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }).addTo(_subscriptions);
 
-    remoteNotificationService.multiSig.listen((e) {
+    remoteNotificationService.multiSig.listen((e) async {
       final data = e.data;
       final address = data.address;
       if (address == null) {
         return;
       }
 
-      switch (data.topic) {
-        case MultiSigTopic.accountComplete:
-          _activatePendingMultiAccounts();
-          break;
-        case MultiSigTopic.txSignatureRequired:
-        case MultiSigTopic.txReady:
-        case MultiSigTopic.txDeclined:
-        case MultiSigTopic.txResult:
-          multiSigService.sync(
-            signerAddresses: [address],
-          );
-          break;
+      final accounts = await accountService.getTransactableAccounts();
+      final account = accounts.firstWhereOrNull((e) => e.address == address);
+      if (account != null) {
+        switch (data.topic) {
+          case MultiSigTopic.accountComplete:
+            _activatePendingMultiAccounts();
+            break;
+          case MultiSigTopic.txSignatureRequired:
+          case MultiSigTopic.txReady:
+          case MultiSigTopic.txDeclined:
+          case MultiSigTopic.txResult:
+            multiSigService.sync(
+              signers: [
+                SignerData(
+                  address: address,
+                  coin: account.coin,
+                ),
+              ],
+            );
+            break;
+        }
       }
     });
 
     if (accounts.isNotEmpty) {
       // Don't delay startup by awaiting here
       multiSigService.sync(
-          signerAddresses: accounts
+          signers: accounts
               .whereType<TransactableAccount>()
-              .map((e) => e.address)
+              .map((e) => SignerData(
+                    address: e.address,
+                    coin: e.coin,
+                  ))
               .toList());
 
       await _activatePendingMultiAccounts();
