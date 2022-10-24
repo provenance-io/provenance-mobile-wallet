@@ -353,7 +353,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   Future<bool> _completeSignAction(SignAction action) async {
     final bytes = action.message.codeUnits;
 
-    // TODO-Roy: Implement multi-sig sign
+    if (_transactAccount is MultiAccount) {
+      throw 'This action is not supported for multi signature accounts';
+    }
+
     final privateKey = await _accountService.loadKey(_transactAccount.id);
     List<int>? signedData;
     signedData = privateKey!.defaultKey().signData(Hash.sha256(bytes))
