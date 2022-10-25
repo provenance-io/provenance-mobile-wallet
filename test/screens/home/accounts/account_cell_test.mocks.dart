@@ -3,29 +3,30 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i8;
 
+import 'package:flutter/widgets.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i9;
-import 'package:provenance_dart/wallet.dart' as _i7;
+import 'package:provenance_dart/proto.dart' as _i11;
+import 'package:provenance_dart/wallet.dart' as _i6;
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart'
-    as _i11;
+    as _i13;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart'
-    as _i10;
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_register_result.dart'
-    as _i8;
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart'
-    as _i6;
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i14;
-import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart'
     as _i12;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_register_result.dart'
+    as _i10;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart'
+    as _i9;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
+    as _i15;
+import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart'
+    as _i14;
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart'
-    as _i4;
+    as _i7;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
 import 'package:provenance_wallet/services/http_client.dart' as _i2;
-import 'package:provenance_wallet/services/models/account.dart' as _i13;
+import 'package:provenance_wallet/services/models/account.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -49,20 +50,58 @@ class _FakeAccountServiceEvents_1 extends _i1.SmartFake
       : super(parent, parentInvocation);
 }
 
+class _FakeAccount_2 extends _i1.SmartFake implements _i4.Account {
+  _FakeAccount_2(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+}
+
+class _FakeBasicAccount_3 extends _i1.SmartFake implements _i4.BasicAccount {
+  _FakeBasicAccount_3(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeMultiAccount_4 extends _i1.SmartFake implements _i4.MultiAccount {
+  _FakeMultiAccount_4(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeMultiTransactableAccount_5 extends _i1.SmartFake
+    implements _i4.MultiTransactableAccount {
+  _FakeMultiTransactableAccount_5(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakePrivateKey_6 extends _i1.SmartFake implements _i6.PrivateKey {
+  _FakePrivateKey_6(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+}
+
 /// A class which mocks [MultiSigClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMultiSigClient extends _i1.Mock implements _i4.MultiSigClient {
+class MockMultiSigClient extends _i1.Mock implements _i7.MultiSigClient {
   MockMultiSigClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i6.MultiSigRemoteAccount?> create(
+  _i8.Future<_i9.MultiSigRemoteAccount?> create(
           {String? name,
           int? cosignerCount,
           int? threshold,
-          _i7.PublicKey? publicKey}) =>
+          _i6.PublicKey? publicKey}) =>
       (super.noSuchMethod(
               Invocation.method(#create, [], {
                 #name: name,
@@ -70,50 +109,50 @@ class MockMultiSigClient extends _i1.Mock implements _i4.MultiSigClient {
                 #threshold: threshold,
                 #publicKey: publicKey
               }),
-              returnValue: _i5.Future<_i6.MultiSigRemoteAccount?>.value())
-          as _i5.Future<_i6.MultiSigRemoteAccount?>);
+              returnValue: _i8.Future<_i9.MultiSigRemoteAccount?>.value())
+          as _i8.Future<_i9.MultiSigRemoteAccount?>);
   @override
-  _i5.Future<_i8.MultiSigRegisterResult?> register(
-          {String? inviteId, _i7.PublicKey? publicKey}) =>
+  _i8.Future<_i10.MultiSigRegisterResult?> register(
+          {String? inviteId, _i6.PublicKey? publicKey}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #register, [], {#inviteId: inviteId, #publicKey: publicKey}),
-              returnValue: _i5.Future<_i8.MultiSigRegisterResult?>.value())
-          as _i5.Future<_i8.MultiSigRegisterResult?>);
+              returnValue: _i8.Future<_i10.MultiSigRegisterResult?>.value())
+          as _i8.Future<_i10.MultiSigRegisterResult?>);
   @override
-  _i5.Future<List<_i6.MultiSigRemoteAccount>?> getAccounts(
-          {String? address, _i7.Coin? coin}) =>
+  _i8.Future<List<_i9.MultiSigRemoteAccount>?> getAccounts(
+          {String? address, _i6.Coin? coin}) =>
       (super.noSuchMethod(
           Invocation.method(#getAccounts, [], {#address: address, #coin: coin}),
           returnValue:
-              _i5.Future<List<_i6.MultiSigRemoteAccount>?>.value()) as _i5
-          .Future<List<_i6.MultiSigRemoteAccount>?>);
+              _i8.Future<List<_i9.MultiSigRemoteAccount>?>.value()) as _i8
+          .Future<List<_i9.MultiSigRemoteAccount>?>);
   @override
-  _i5.Future<_i6.MultiSigRemoteAccount?> getAccount(
-          {String? remoteId, String? signerAddress, _i7.Coin? coin}) =>
+  _i8.Future<_i9.MultiSigRemoteAccount?> getAccount(
+          {String? remoteId, String? signerAddress, _i6.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(#getAccount, [], {
                 #remoteId: remoteId,
                 #signerAddress: signerAddress,
                 #coin: coin
               }),
-              returnValue: _i5.Future<_i6.MultiSigRemoteAccount?>.value())
-          as _i5.Future<_i6.MultiSigRemoteAccount?>);
+              returnValue: _i8.Future<_i9.MultiSigRemoteAccount?>.value())
+          as _i8.Future<_i9.MultiSigRemoteAccount?>);
   @override
-  _i5.Future<_i6.MultiSigRemoteAccount?> getAccountByInvite(
-          {String? inviteId, _i7.Coin? coin}) =>
+  _i8.Future<_i9.MultiSigRemoteAccount?> getAccountByInvite(
+          {String? inviteId, _i6.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getAccountByInvite, [], {#inviteId: inviteId, #coin: coin}),
-              returnValue: _i5.Future<_i6.MultiSigRemoteAccount?>.value())
-          as _i5.Future<_i6.MultiSigRemoteAccount?>);
+              returnValue: _i8.Future<_i9.MultiSigRemoteAccount?>.value())
+          as _i8.Future<_i9.MultiSigRemoteAccount?>);
   @override
-  _i5.Future<String?> createTx(
+  _i8.Future<String?> createTx(
           {String? multiSigAddress,
           String? signerAddress,
-          _i7.Coin? coin,
-          _i9.TxBody? txBody,
-          _i9.Fee? fee}) =>
+          _i6.Coin? coin,
+          _i11.TxBody? txBody,
+          _i11.Fee? fee}) =>
       (super.noSuchMethod(
           Invocation.method(#createTx, [], {
             #multiSigAddress: multiSigAddress,
@@ -122,28 +161,28 @@ class MockMultiSigClient extends _i1.Mock implements _i4.MultiSigClient {
             #txBody: txBody,
             #fee: fee
           }),
-          returnValue: _i5.Future<String?>.value()) as _i5.Future<String?>);
+          returnValue: _i8.Future<String?>.value()) as _i8.Future<String?>);
   @override
-  _i5.Future<List<_i10.MultiSigPendingTx>> getPendingTxs(
-          {List<_i4.SignerData>? signer}) =>
+  _i8.Future<List<_i12.MultiSigPendingTx>> getPendingTxs(
+          {List<_i7.SignerData>? signer}) =>
       (super.noSuchMethod(
               Invocation.method(#getPendingTxs, [], {#signer: signer}),
-              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>>.value(
-                  <_i10.MultiSigPendingTx>[]))
-          as _i5.Future<List<_i10.MultiSigPendingTx>>);
+              returnValue: _i8.Future<List<_i12.MultiSigPendingTx>>.value(
+                  <_i12.MultiSigPendingTx>[]))
+          as _i8.Future<List<_i12.MultiSigPendingTx>>);
   @override
-  _i5.Future<List<_i10.MultiSigPendingTx>> getCreatedTxs(
-          {List<_i4.SignerData>? signers, _i11.MultiSigStatus? status}) =>
+  _i8.Future<List<_i12.MultiSigPendingTx>> getCreatedTxs(
+          {List<_i7.SignerData>? signers, _i13.MultiSigStatus? status}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getCreatedTxs, [], {#signers: signers, #status: status}),
-              returnValue: _i5.Future<List<_i10.MultiSigPendingTx>>.value(
-                  <_i10.MultiSigPendingTx>[]))
-          as _i5.Future<List<_i10.MultiSigPendingTx>>);
+              returnValue: _i8.Future<List<_i12.MultiSigPendingTx>>.value(
+                  <_i12.MultiSigPendingTx>[]))
+          as _i8.Future<List<_i12.MultiSigPendingTx>>);
   @override
-  _i5.Future<bool> signTx(
+  _i8.Future<bool> signTx(
           {String? signerAddress,
-          _i7.Coin? coin,
+          _i6.Coin? coin,
           String? txUuid,
           String? signatureBytes,
           bool? declineTx}) =>
@@ -155,22 +194,22 @@ class MockMultiSigClient extends _i1.Mock implements _i4.MultiSigClient {
             #signatureBytes: signatureBytes,
             #declineTx: declineTx
           }),
-          returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
   @override
-  _i5.Future<_i12.MultiSigUpdateResult> updateTxResult(
-          {String? txUuid, String? txHash, _i7.Coin? coin}) =>
+  _i8.Future<_i14.MultiSigUpdateResult> updateTxResult(
+          {String? txUuid, String? txHash, _i6.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(#updateTxResult, [],
                   {#txUuid: txUuid, #txHash: txHash, #coin: coin}),
-              returnValue: _i5.Future<_i12.MultiSigUpdateResult>.value(
-                  _i12.MultiSigUpdateResult.success))
-          as _i5.Future<_i12.MultiSigUpdateResult>);
+              returnValue: _i8.Future<_i14.MultiSigUpdateResult>.value(
+                  _i14.MultiSigUpdateResult.success))
+          as _i8.Future<_i14.MultiSigUpdateResult>);
   @override
-  _i5.Future<_i2.HttpClient> getClient(_i7.Coin? coin) => (super.noSuchMethod(
+  _i8.Future<_i2.HttpClient> getClient(_i6.Coin? coin) => (super.noSuchMethod(
           Invocation.method(#getClient, [coin]),
-          returnValue: _i5.Future<_i2.HttpClient>.value(
+          returnValue: _i8.Future<_i2.HttpClient>.value(
               _FakeHttpClient_0(this, Invocation.method(#getClient, [coin]))))
-      as _i5.Future<_i2.HttpClient>);
+      as _i8.Future<_i2.HttpClient>);
 }
 
 /// A class which mocks [AccountService].
@@ -188,67 +227,84 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                   _FakeAccountServiceEvents_1(this, Invocation.getter(#events)))
           as _i3.AccountServiceEvents);
   @override
-  _i5.Future<_i13.Account?> getAccount(String? id) =>
+  _i8.Future<_i4.Account?> getAccount(String? id) =>
       (super.noSuchMethod(Invocation.method(#getAccount, [id]),
-              returnValue: _i5.Future<_i13.Account?>.value())
-          as _i5.Future<_i13.Account?>);
+              returnValue: _i8.Future<_i4.Account?>.value())
+          as _i8.Future<_i4.Account?>);
   @override
-  _i5.Future<_i13.Account?> selectFirstAccount() =>
+  _i8.Future<_i4.Account?> selectFirstAccount() =>
       (super.noSuchMethod(Invocation.method(#selectFirstAccount, []),
-              returnValue: _i5.Future<_i13.Account?>.value())
-          as _i5.Future<_i13.Account?>);
+              returnValue: _i8.Future<_i4.Account?>.value())
+          as _i8.Future<_i4.Account?>);
   @override
-  _i5.Future<_i13.TransactableAccount?> selectAccount({String? id}) =>
+  _i8.Future<_i4.TransactableAccount?> selectAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: _i5.Future<_i13.TransactableAccount?>.value())
-          as _i5.Future<_i13.TransactableAccount?>);
+              returnValue: _i8.Future<_i4.TransactableAccount?>.value())
+          as _i8.Future<_i4.TransactableAccount?>);
   @override
-  _i5.Future<_i13.TransactableAccount?> getSelectedAccount() =>
+  _i8.Future<_i4.TransactableAccount?> getSelectedAccount() =>
       (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: _i5.Future<_i13.TransactableAccount?>.value())
-          as _i5.Future<_i13.TransactableAccount?>);
+              returnValue: _i8.Future<_i4.TransactableAccount?>.value())
+          as _i8.Future<_i4.TransactableAccount?>);
   @override
-  _i5.Future<List<_i13.Account>> getAccounts() => (super.noSuchMethod(
-          Invocation.method(#getAccounts, []),
-          returnValue: _i5.Future<List<_i13.Account>>.value(<_i13.Account>[]))
-      as _i5.Future<List<_i13.Account>>);
+  _i8.Future<List<_i4.Account>> getAccounts() =>
+      (super.noSuchMethod(Invocation.method(#getAccounts, []),
+              returnValue: _i8.Future<List<_i4.Account>>.value(<_i4.Account>[]))
+          as _i8.Future<List<_i4.Account>>);
   @override
-  _i5.Future<List<_i13.BasicAccount>> getBasicAccounts() => (super.noSuchMethod(
+  _i8.Future<List<_i4.BasicAccount>> getBasicAccounts() => (super.noSuchMethod(
           Invocation.method(#getBasicAccounts, []),
           returnValue:
-              _i5.Future<List<_i13.BasicAccount>>.value(<_i13.BasicAccount>[]))
-      as _i5.Future<List<_i13.BasicAccount>>);
+              _i8.Future<List<_i4.BasicAccount>>.value(<_i4.BasicAccount>[]))
+      as _i8.Future<List<_i4.BasicAccount>>);
   @override
-  _i5.Future<List<_i13.TransactableAccount>> getTransactableAccounts() =>
+  _i8.Future<List<_i4.TransactableAccount>> getTransactableAccounts() =>
       (super.noSuchMethod(Invocation.method(#getTransactableAccounts, []),
-              returnValue: _i5.Future<List<_i13.TransactableAccount>>.value(
-                  <_i13.TransactableAccount>[]))
-          as _i5.Future<List<_i13.TransactableAccount>>);
+              returnValue: _i8.Future<List<_i4.TransactableAccount>>.value(
+                  <_i4.TransactableAccount>[]))
+          as _i8.Future<List<_i4.TransactableAccount>>);
   @override
-  _i5.Future<_i13.Account?> renameAccount({String? id, String? name}) =>
+  _i8.Future<_i4.Account> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: _i5.Future<_i13.Account?>.value())
-          as _i5.Future<_i13.Account?>);
+              returnValue: _i8.Future<_i4.Account>.value(_FakeAccount_2(
+                  this,
+                  Invocation.method(
+                      #renameAccount, [], {#id: id, #name: name}))))
+          as _i8.Future<_i4.Account>);
   @override
-  _i5.Future<_i13.BasicAccount?> addAccount(
-          {List<String>? phrase, String? name, _i7.Coin? coin}) =>
+  _i8.Future<_i4.BasicAccount> addAccount(
+          {List<String>? phrase, String? name, _i6.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: _i5.Future<_i13.BasicAccount?>.value())
-          as _i5.Future<_i13.BasicAccount?>);
+              returnValue: _i8.Future<_i4.BasicAccount>.value(_FakeBasicAccount_3(
+                  this,
+                  Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #coin: coin}))))
+          as _i8.Future<_i4.BasicAccount>);
   @override
-  _i5.Future<_i13.MultiAccount?> addMultiAccount(
+  _i8.Future<_i4.MultiAccount> addMultiAccount(
           {String? name,
-          _i7.Coin? coin,
+          _i6.Coin? coin,
           String? linkedAccountId,
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          List<_i14.MultiSigSigner>? signers}) =>
+          List<_i15.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
+          Invocation.method(#addMultiAccount, [], {
+            #name: name,
+            #coin: coin,
+            #linkedAccountId: linkedAccountId,
+            #remoteId: remoteId,
+            #cosignerCount: cosignerCount,
+            #signaturesRequired: signaturesRequired,
+            #inviteIds: inviteIds,
+            #signers: signers
+          }),
+          returnValue: _i8.Future<_i4.MultiAccount>.value(_FakeMultiAccount_4(
+              this,
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
                 #coin: coin,
@@ -258,34 +314,36 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                 #signaturesRequired: signaturesRequired,
                 #inviteIds: inviteIds,
                 #signers: signers
-              }),
-              returnValue: _i5.Future<_i13.MultiAccount?>.value())
-          as _i5.Future<_i13.MultiAccount?>);
+              })))) as _i8.Future<_i4.MultiAccount>);
   @override
-  _i5.Future<_i13.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, List<_i14.MultiSigSigner>? signers}) =>
-      (super.noSuchMethod(
-              Invocation.method(
-                  #activateMultiAccount, [], {#id: id, #signers: signers}),
-              returnValue: _i5.Future<_i13.MultiTransactableAccount?>.value())
-          as _i5.Future<_i13.MultiTransactableAccount?>);
+  _i8.Future<_i4.MultiTransactableAccount> activateMultiAccount(
+          {String? id, List<_i15.MultiSigSigner>? signers}) =>
+      (super.noSuchMethod(Invocation.method(#activateMultiAccount, [], {#id: id, #signers: signers}),
+          returnValue: _i8.Future<_i4.MultiTransactableAccount>.value(
+              _FakeMultiTransactableAccount_5(
+                  this,
+                  Invocation.method(#activateMultiAccount, [], {
+                    #id: id,
+                    #signers: signers
+                  })))) as _i8.Future<_i4.MultiTransactableAccount>);
   @override
-  _i5.Future<_i13.Account?> removeAccount({String? id}) =>
+  _i8.Future<_i4.Account?> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
-              returnValue: _i5.Future<_i13.Account?>.value())
-          as _i5.Future<_i13.Account?>);
+              returnValue: _i8.Future<_i4.Account?>.value())
+          as _i8.Future<_i4.Account?>);
   @override
-  _i5.Future<List<_i13.Account>> resetAccounts() => (super.noSuchMethod(
-          Invocation.method(#resetAccounts, []),
-          returnValue: _i5.Future<List<_i13.Account>>.value(<_i13.Account>[]))
-      as _i5.Future<List<_i13.Account>>);
+  _i8.Future<List<_i4.Account>> resetAccounts() =>
+      (super.noSuchMethod(Invocation.method(#resetAccounts, []),
+              returnValue: _i8.Future<List<_i4.Account>>.value(<_i4.Account>[]))
+          as _i8.Future<List<_i4.Account>>);
   @override
-  _i5.Future<_i7.PrivateKey?> loadKey(String? accountId) =>
+  _i8.Future<_i6.PrivateKey> loadKey(String? accountId) =>
       (super.noSuchMethod(Invocation.method(#loadKey, [accountId]),
-              returnValue: _i5.Future<_i7.PrivateKey?>.value())
-          as _i5.Future<_i7.PrivateKey?>);
+              returnValue: _i8.Future<_i6.PrivateKey>.value(_FakePrivateKey_6(
+                  this, Invocation.method(#loadKey, [accountId]))))
+          as _i8.Future<_i6.PrivateKey>);
   @override
-  _i5.Future<bool> isValidWalletConnectData(String? qrData) => (super
+  _i8.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: _i5.Future<bool>.value(false)) as _i5.Future<bool>);
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
 }

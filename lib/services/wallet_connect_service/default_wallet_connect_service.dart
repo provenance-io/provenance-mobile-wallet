@@ -96,10 +96,6 @@ class DefaultWalletConnectService extends WalletConnectService
       ClientMeta? clientMeta,
       Duration? timeout}) async {
     final privateKey = await _accountService.loadKey(connectAccount.id);
-    if (privateKey == null) {
-      logError('Failed to locate the private key');
-      return null;
-    }
 
     final address = WalletConnectAddress.create(wcAddress);
     if (address == null) {
