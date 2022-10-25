@@ -183,9 +183,10 @@ class SendReviewPageState extends State<SendReviewPage> {
   }
 
   Future<void> _sendClicked(String total, String addressTo) async {
-    ScheduledTx? scheduledTx;
+    QueuedTx? queuedTx;
+
     try {
-      scheduledTx = await _bloc!.doSend();
+      queuedTx = await _bloc!.doSend();
     } on PwError catch (e, s) {
       logError(
         'Send failed',
@@ -220,54 +221,59 @@ class SendReviewPageState extends State<SendReviewPage> {
       ModalLoadingRoute.dismiss(context);
     }
 
-    final executed = scheduledTx?.result != null;
-    final responseCode = scheduledTx?.result?.response.txResponse.code;
+    if (queuedTx != null) {
+      switch (queuedTx.kind) {
+        case QueuedTxKind.executed:
+          final executedTx = queuedTx as ExecutedTx;
+          final responseCode = executedTx.result.response.txResponse.code;
+          if (responseCode == 0) {
+            await showDialog(
+              barrierColor: Colors.transparent,
+              useSafeArea: true,
+              context: context,
+              builder: (context) => SendSuccessScreen(
+                date: DateTime.now(),
+                totalAmount: total,
+                addressTo: abbreviateAddress(addressTo),
+              ),
+            );
 
-    if (executed) {
-      if (responseCode == 0) {
-        await showDialog(
-          barrierColor: Colors.transparent,
-          useSafeArea: true,
-          context: context,
-          builder: (context) => SendSuccessScreen(
-            date: DateTime.now(),
-            totalAmount: total,
-            addressTo: abbreviateAddress(addressTo),
-          ),
-        );
+            await _bloc!.complete();
+          } else {
+            logError(
+              'Send failed',
+              error: queuedTx.result.response.txResponse.rawLog,
+            );
 
-        await _bloc!.complete();
-      } else {
-        logError(
-          'Send failed',
-          error: scheduledTx?.result?.response.txResponse.rawLog,
-        );
-
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorDialog(
-                error: errorMessage(
-              context,
-              scheduledTx?.result?.response.txResponse.codespace,
-              scheduledTx?.result?.response.txResponse.code,
-            ));
-          },
-        );
+            await showDialog(
+              context: context,
+              builder: (context) {
+                return ErrorDialog(
+                    error: errorMessage(
+                  context,
+                  executedTx.result.response.txResponse.codespace,
+                  executedTx.result.response.txResponse.code,
+                ));
+              },
+            );
+          }
+          break;
+        case QueuedTxKind.scheduled:
+          await PwDialog.showFull(
+            context: context,
+            title: Strings.of(context).multiSigTransactionInitiatedTitle,
+            message: Strings.of(context).multiSigTransactionInitiatedMessage,
+            icon: Image.asset(
+              Assets.imagePaths.transactionComplete,
+              height: 80,
+              width: 80,
+            ),
+            dismissButtonText:
+                Strings.of(context).multiSigTransactionInitiatedDone,
+          );
+          await _bloc!.complete();
+          break;
       }
-    } else {
-      await PwDialog.showFull(
-        context: context,
-        title: Strings.of(context).multiSigTransactionInitiatedTitle,
-        message: Strings.of(context).multiSigTransactionInitiatedMessage,
-        icon: Image.asset(
-          Assets.imagePaths.transactionComplete,
-          height: 80,
-          width: 80,
-        ),
-        dismissButtonText: Strings.of(context).multiSigTransactionInitiatedDone,
-      );
-      await _bloc!.complete();
     }
   }
 }

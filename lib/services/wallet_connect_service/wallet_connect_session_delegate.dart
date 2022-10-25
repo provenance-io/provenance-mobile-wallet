@@ -303,49 +303,51 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       messages: action.messages.map((msg) => msg.toAny()).toList(),
     );
 
-    final scheduledTx = await _txQueueService.scheduleTx(
+    final queuedTx = await _txQueueService.scheduleTx(
       txBody: txBody,
       account: _transactAccount,
       gasEstimate: action.gasEstimate,
     );
 
-    final result = scheduledTx.result;
-    if (result != null) {
-      final response = result.response;
+    switch (queuedTx.kind) {
+      case QueuedTxKind.executed:
+        final executedTx = queuedTx as ExecutedTx;
+        final response = executedTx.result.response;
 
-      await _connection.sendTransactionResult(
-        action.walletConnectRequestId,
-        response,
-      );
+        await _connection.sendTransactionResult(
+          action.walletConnectRequestId,
+          response,
+        );
 
-      events._onResponse.add(
-        TxResult(
-          body: txBody,
-          response: response,
-          fee: proto.Fee(
-            amount: action.gasEstimate.totalFees,
-            gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
+        events._onResponse.add(
+          TxResult(
+            body: txBody,
+            response: response,
+            fee: proto.Fee(
+              amount: action.gasEstimate.totalFees,
+              gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
+            ),
           ),
-        ),
-      );
+        );
+        break;
+      case QueuedTxKind.scheduled:
+        final scheduledTx = queuedTx as ScheduledTx;
+        final txId = scheduledTx.txId;
+        logDebug('Scheduled tx: $txId');
+
+        _txQueueService.response.listen((e) {
+          if (e.txId == txId) {
+            _connection.sendTransactionResult(
+                action.walletConnectRequestId, e.response);
+          }
+        }).addTo(_txSubscriptions);
+
+        _queueService.removeRequest(
+          accountId: _transactAccount.id,
+          requestId: action.id,
+        );
+        break;
     }
-
-    final txId = scheduledTx.txId;
-    if (txId != null) {
-      logDebug('Scheduled tx: $txId');
-
-      _txQueueService.response.listen((e) {
-        if (e.txId == txId) {
-          _connection.sendTransactionResult(
-              action.walletConnectRequestId, e.response);
-        }
-      }).addTo(_txSubscriptions);
-    }
-
-    _queueService.removeRequest(
-      accountId: _transactAccount.id,
-      requestId: action.id,
-    );
 
     return true;
   }

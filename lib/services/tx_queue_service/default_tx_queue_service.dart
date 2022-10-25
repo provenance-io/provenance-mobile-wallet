@@ -60,7 +60,7 @@ class DefaultQueueTxService implements TxQueueService {
       );
 
   @override
-  Future<ScheduledTx> scheduleTx({
+  Future<QueuedTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
     required AccountGasEstimate gasEstimate,
@@ -74,7 +74,7 @@ class DefaultQueueTxService implements TxQueueService {
       estimatedFees: gasEstimate.estimatedFees,
     );
 
-    ScheduledTx response;
+    QueuedTx queuedTx;
 
     switch (account.kind) {
       case AccountKind.basic:
@@ -87,7 +87,7 @@ class DefaultQueueTxService implements TxQueueService {
 
         final result = await _executeBasic(account, model);
 
-        response = ScheduledTx.executed(
+        queuedTx = ExecutedTx(
           result: result,
         );
 
@@ -124,7 +124,7 @@ class DefaultQueueTxService implements TxQueueService {
           final ref = _store.record(remoteId);
           await ref.put(db, model.toRecord());
 
-          response = ScheduledTx.scheduled(
+          queuedTx = ScheduledTx(
             txId: remoteId,
           );
         }
@@ -132,7 +132,7 @@ class DefaultQueueTxService implements TxQueueService {
         break;
     }
 
-    return response;
+    return queuedTx;
   }
 
   @override
