@@ -1,18 +1,42 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
+import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef WalletConnectionProvider = WalletConnection Function(
   WalletConnectAddress address,
 );
+
+enum AccountServiceError implements PwError {
+  accountNotActivated,
+  accountNotCreated,
+  accountNotRenamed,
+  privateKeyNotFound;
+
+  @override
+  String toLocalizedString(BuildContext context) {
+    switch (this) {
+      case AccountServiceError.accountNotActivated:
+        return Strings.of(context).errorAccountNotActivated;
+      case AccountServiceError.accountNotCreated:
+        return Strings.of(context).errorAccountNotCreated;
+      case AccountServiceError.accountNotRenamed:
+        return Strings.of(context).errorAccountNotRenamed;
+      case AccountServiceError.privateKeyNotFound:
+        return Strings.of(context).errorPrivateKeyNotFound;
+    }
+  }
+}
 
 class AccountServiceEvents {
   final _subscriptions = CompositeSubscription();
@@ -103,7 +127,7 @@ class AccountService implements Disposable {
     return accounts.whereType<TransactableAccount>().toList();
   }
 
-  Future<Account?> renameAccount({
+  Future<Account> renameAccount({
     required String id,
     required String name,
   }) async {
@@ -112,18 +136,19 @@ class AccountService implements Disposable {
       name: name,
     );
 
-    if (details != null) {
-      events._updated.add(details);
-      if (events.selected.value?.id == details.id) {
-        selectAccount(id: details.id);
-      }
+    if (details == null) {
+      throw AccountServiceError.accountNotCreated;
+    }
+
+    events._updated.add(details);
+    if (events.selected.value?.id == details.id) {
+      selectAccount(id: details.id);
     }
 
     return details;
   }
 
-  // TODO-Roy: Throw instead of returning nullable
-  Future<BasicAccount?> addAccount({
+  Future<BasicAccount> addAccount({
     required List<String> phrase,
     required String name,
     required Coin coin,
@@ -137,17 +162,19 @@ class AccountService implements Disposable {
       privateKey: privateKey,
     );
 
-    if (details != null) {
-      events._added.add(details);
-      if (events.selected.valueOrNull == null) {
-        selectAccount(id: details.id);
-      }
+    if (details == null) {
+      throw AccountServiceError.accountNotCreated;
+    }
+
+    events._added.add(details);
+    if (events.selected.valueOrNull == null) {
+      selectAccount(id: details.id);
     }
 
     return details;
   }
 
-  Future<MultiAccount?> addMultiAccount({
+  Future<MultiAccount> addMultiAccount({
     required String name,
     required Coin coin,
     required String linkedAccountId,
@@ -168,19 +195,21 @@ class AccountService implements Disposable {
       signers: signers,
     );
 
-    if (details != null) {
-      events._added.add(details);
-      if (events.selected.value == null) {
-        selectAccount(id: details.id);
-      }
-
-      events._updated.add(details.linkedAccount);
+    if (details == null) {
+      throw AccountServiceError.accountNotCreated;
     }
+
+    events._added.add(details);
+    if (events.selected.value == null) {
+      selectAccount(id: details.id);
+    }
+
+    events._updated.add(details.linkedAccount);
 
     return details;
   }
 
-  Future<MultiTransactableAccount?> activateMultiAccount({
+  Future<MultiTransactableAccount> activateMultiAccount({
     required String id,
     required List<MultiSigSigner> signers,
   }) async {
@@ -189,11 +218,13 @@ class AccountService implements Disposable {
       signers: signers,
     );
 
-    if (account != null) {
-      events._updated.add(account);
+    if (account is! MultiTransactableAccount) {
+      throw AccountServiceError.accountNotActivated;
     }
 
-    return account is MultiTransactableAccount ? account : null;
+    events._updated.add(account);
+
+    return account;
   }
 
   Future<Account?> removeAccount({required String id}) async {
@@ -244,12 +275,15 @@ class AccountService implements Disposable {
     return accounts;
   }
 
-  // TODO-Roy: Throw instead of returning null if missing
-  Future<PrivateKey?> loadKey(String accountId) async {
+  Future<PrivateKey> loadKey(String accountId) async {
     final coin = events.selected.value?.coin;
     PrivateKey? privateKey;
     if (coin != null) {
       privateKey = await _storage.loadKey(accountId, coin);
+    }
+
+    if (privateKey == null) {
+      throw AccountServiceError.privateKeyNotFound;
     }
 
     return privateKey;

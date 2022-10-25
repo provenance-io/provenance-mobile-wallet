@@ -755,17 +755,12 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       if (remoteAccount != null) {
         final active = remoteAccount.signers.every((e) => e.publicKey != null);
         if (active) {
-          final account = await accountService.activateMultiAccount(
+          await accountService.activateMultiAccount(
             id: pendingAccount.id,
             signers: remoteAccount.signers,
           );
 
-          if (account == null) {
-            logError(
-                'Failed to activate multi sig account: ${pendingAccount.name}');
-          } else {
-            logDebug('Activated multi sig account: ${pendingAccount.name}');
-          }
+          logDebug('Activated multi sig account: ${pendingAccount.name}');
         }
       }
     }

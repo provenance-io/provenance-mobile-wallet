@@ -278,7 +278,7 @@ class DefaultQueueTxService implements TxQueueService {
   }) async {
     final signerRootPk = await _accountService.loadKey(signerAccountId);
 
-    final signerPk = signerRootPk!.defaultKey();
+    final signerPk = signerRootPk.defaultKey();
 
     final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
 
@@ -295,9 +295,6 @@ class DefaultQueueTxService implements TxQueueService {
   Future<TxResult> _executeBasic(
       BasicAccount account, SembastScheduledTx model) async {
     final privateKey = await _accountService.loadKey(account.id);
-    if (privateKey == null) {
-      throw TxQueueServiceError.cipherKeyNotFound;
-    }
 
     TxResult? result;
 
