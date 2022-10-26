@@ -11,7 +11,7 @@ abstract class TxQueueService {
     required TransactableAccount account,
   });
 
-  Future<ScheduledTx> scheduleTx({
+  Future<QueuedTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
     required AccountGasEstimate gasEstimate,
@@ -36,20 +36,35 @@ abstract class TxQueueService {
   });
 }
 
-// TODO-MultiSig: Separate this into two classes with a common base
-// and an enum kind. Use switch statement at consuming sites for visibility
-// if unhandled cases are added.
-class ScheduledTx {
-  ScheduledTx.executed({
+class ExecutedTx implements QueuedTx {
+  ExecutedTx({
     required this.result,
-  }) : txId = null;
+  });
 
-  ScheduledTx.scheduled({
+  @override
+  final kind = QueuedTxKind.executed;
+
+  final TxResult result;
+}
+
+class ScheduledTx implements QueuedTx {
+  ScheduledTx({
     required this.txId,
-  }) : result = null;
+  });
 
-  final String? txId;
-  final TxResult? result;
+  @override
+  final kind = QueuedTxKind.scheduled;
+
+  final String txId;
+}
+
+abstract class QueuedTx {
+  QueuedTxKind get kind;
+}
+
+enum QueuedTxKind {
+  executed,
+  scheduled;
 }
 
 class TxResult {

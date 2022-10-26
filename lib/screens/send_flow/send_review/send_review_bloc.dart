@@ -80,7 +80,7 @@ class SendReviewBloc implements Disposable {
     _stateStreamController.close();
   }
 
-  Future<ScheduledTx> doSend() async {
+  Future<QueuedTx> doSend() async {
     final amountToSend = sendingAsset.amount;
 
     final body = TxBody(
@@ -111,13 +111,13 @@ class SendReviewBloc implements Disposable {
           .toList(),
     );
 
-    final response = await _txQueueService.scheduleTx(
+    final queuedTx = await _txQueueService.scheduleTx(
       txBody: body,
       account: _accountDetails,
       gasEstimate: estimate,
     );
 
-    return response;
+    return queuedTx;
   }
 
   Future<void> complete() async {

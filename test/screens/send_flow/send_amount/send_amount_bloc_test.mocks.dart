@@ -88,8 +88,8 @@ class _FakeAccountGasEstimate_6 extends _i1.SmartFake
       : super(parent, parentInvocation);
 }
 
-class _FakeScheduledTx_7 extends _i1.SmartFake implements _i7.ScheduledTx {
-  _FakeScheduledTx_7(Object parent, Invocation parentInvocation)
+class _FakeQueuedTx_7 extends _i1.SmartFake implements _i7.QueuedTx {
+  _FakeQueuedTx_7(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
@@ -277,19 +277,19 @@ class MockTxQueueService extends _i1.Mock implements _i7.TxQueueService {
                       Invocation.method(#estimateGas, [], {#txBody: txBody, #account: account}))))
           as _i10.Future<_i6.AccountGasEstimate>);
   @override
-  _i10.Future<_i7.ScheduledTx> scheduleTx(
+  _i10.Future<_i7.QueuedTx> scheduleTx(
           {_i13.TxBody? txBody,
           _i3.TransactableAccount? account,
           _i6.AccountGasEstimate? gasEstimate}) =>
       (super
           .noSuchMethod(Invocation.method(#scheduleTx, [], {#txBody: txBody, #account: account, #gasEstimate: gasEstimate}),
-              returnValue: _i10.Future<_i7.ScheduledTx>.value(_FakeScheduledTx_7(
+              returnValue: _i10.Future<_i7.QueuedTx>.value(_FakeQueuedTx_7(
                   this,
                   Invocation.method(#scheduleTx, [], {
                     #txBody: txBody,
                     #account: account,
                     #gasEstimate: gasEstimate
-                  })))) as _i10.Future<_i7.ScheduledTx>);
+                  })))) as _i10.Future<_i7.QueuedTx>);
   @override
   _i10.Future<void> completeTx({String? txId}) =>
       (super.noSuchMethod(Invocation.method(#completeTx, [], {#txId: txId}),
