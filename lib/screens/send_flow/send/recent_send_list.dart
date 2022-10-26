@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
+import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 @visibleForTesting
@@ -50,7 +51,7 @@ class RecentSendCell extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               PwText(
-                recentAddress!.address,
+                abbreviateAddress(recentAddress!.address),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -99,6 +100,7 @@ class RecentSendList extends StatelessWidget {
         );
 
         return GestureDetector(
+          behavior: HitTestBehavior.opaque,
           child: cell,
           onTap: () {
             if (address == null) {
