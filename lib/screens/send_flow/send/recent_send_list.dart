@@ -100,6 +100,7 @@ class RecentSendList extends StatelessWidget {
         );
 
         return GestureDetector(
+          behavior: HitTestBehavior.opaque,
           child: cell,
           onTap: () {
             if (address == null) {
