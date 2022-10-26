@@ -154,11 +154,7 @@ class SendReviewPage extends StatelessWidget {
                       Strings.of(context).sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
-                    onPressed: () async {
-                      await ModalLoadingRoute.showLoading(
-                        context,
-                        minDisplayTime: Duration(milliseconds: 500),
-                      );
+                    onPressed: () {
                       _sendClicked(
                         context,
                         bloc,
@@ -180,6 +176,11 @@ class SendReviewPage extends StatelessWidget {
   Future<void> _sendClicked(BuildContext context, SendReviewBloc bloc,
       String total, String addressTo) async {
     QueuedTx? queuedTx;
+
+    ModalLoadingRoute.showLoading(
+      context,
+      minDisplayTime: Duration(milliseconds: 500),
+    );
 
     try {
       queuedTx = await bloc.doSend();
