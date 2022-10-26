@@ -16,5 +16,5 @@ defines=$(echo -n $data | base64),$(echo -n "CIPHER_SERVICE=memory" | base64),$(
 pushd android
 flutter build apk --flavor dev
 ./gradlew app:assembleAndroidTest
-./gradlew app:assembleDevDebug -Ptarget=integration_test -Pdart-defines=$defines
+./gradlew app:assembleDevDebug -Ptarget=integration_test/main_test.dart -Pdart-defines=$defines
 popd
