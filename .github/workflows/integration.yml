@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs Monday-Friday at 8am MST, or UTC 14:00
     - cron: "0 14 * * 1-5"
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: macos-latest
