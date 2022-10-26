@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v1.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
@@ -35,7 +34,7 @@ void main() {
         .map(
           (e) => PublicKeyData(
             hex: e.compressedPublicKeyHex,
-            chainId: ChainId.forCoin(e.coin),
+            chainId: e.coin.chainId,
           ),
         )
         .toList();
@@ -43,7 +42,7 @@ void main() {
     final accountV1 = await storageV1.addBasicAccount(
       name: 'one',
       publicKeys: publicKeyDatas,
-      selectedChainId: ChainId.mainNet,
+      selectedChainId: Coin.mainNet.chainId,
     );
 
     expect(accountV1, isNotNull);

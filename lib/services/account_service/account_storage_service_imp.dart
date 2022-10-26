@@ -1,6 +1,5 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
@@ -24,13 +23,12 @@ class AccountStorageServiceImp implements AccountStorageService {
     final publicKey = privateKey.defaultKey().publicKey;
 
     final hex = publicKey.compressedPublicKeyHex;
-    final network = ChainId.forCoin(publicKey.coin);
 
     final details = await _serviceCore.addBasicAccount(
       name: name,
       publicKey: PublicKeyData(
         hex: hex,
-        chainId: network,
+        chainId: publicKey.coin.chainId,
       ),
     );
 
@@ -69,7 +67,7 @@ class AccountStorageServiceImp implements AccountStorageService {
   }) async {
     final details = await _serviceCore.addMultiAccount(
       name: name,
-      selectedChainId: ChainId.forCoin(selectedCoin),
+      selectedChainId: selectedCoin.chainId,
       linkedAccountId: linkedAccountId,
       remoteId: remoteId,
       cosignerCount: cosignerCount,
@@ -161,8 +159,6 @@ class AccountStorageServiceImp implements AccountStorageService {
 
   @visibleForTesting
   String privateKeyId(String accountId, Coin coin) {
-    final chainId = ChainId.forCoin(coin);
-
-    return '$accountId-$chainId';
+    return '$accountId-${coin.chainId}';
   }
 }

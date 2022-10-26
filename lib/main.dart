@@ -15,7 +15,6 @@ import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/cipher_service_pw_error.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/theme.dart';
@@ -485,9 +484,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       (coin) => remoteConfig.then(
         (value) => PbClient(
           Uri.parse(value.endpoints.chain.forCoin(coin)),
-          ChainId.forCoin(
-            coin,
-          ),
+          coin.chainId,
         ),
       ),
     );
@@ -792,8 +789,8 @@ Future<void> _migrateSqlite(AccountStorageService accountStorageService,
     for (var account in accounts) {
       wallet.PrivateKey? privateKey;
 
-      final mainNetKeyId = '${account.id}-${ChainId.mainNet}';
-      final testNetKeyId = '${account.id}-${ChainId.testNet}';
+      final mainNetKeyId = '${account.id}-${wallet.Coin.mainNet.chainId}';
+      final testNetKeyId = '${account.id}-${wallet.Coin.testNet.chainId}';
 
       final mainNetKey = await cipherService.decryptKey(
         id: mainNetKeyId,

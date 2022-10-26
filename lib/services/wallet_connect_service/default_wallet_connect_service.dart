@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/mixin/listenable_mixin.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
@@ -129,7 +128,7 @@ class DefaultWalletConnectService extends WalletConnectService
         clientMeta,
         SessionRestoreData(
           privateKey,
-          ChainId.forCoin(privateKey.coin),
+          privateKey.coin.chainId,
           peerId,
           remotePeerId,
         ),

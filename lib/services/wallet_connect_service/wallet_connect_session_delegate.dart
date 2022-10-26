@@ -5,7 +5,6 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -270,14 +269,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   }
 
   Future<bool> _completeSessionAction(SessionAction action) async {
-    final chainId = ChainId.forCoin(_transactAccount.coin);
-
     final privateKey = await _accountService.loadKey(_connectAccount.id);
 
     SessionApprovalData sessionApproval = SessionApprovalData(
       privateKey,
       _transactAccount.publicKey,
-      chainId,
+      _transactAccount.coin.chainId,
       WalletInfo(
         _transactAccount.id,
         _transactAccount.name,

@@ -1,6 +1,5 @@
 import 'package:convert/convert.dart' as convert;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
@@ -492,7 +491,7 @@ class SembastAccountStorageServiceV1 {
       hex = selectedKey.hex;
     }
 
-    final coin = ChainId.toCoin(chainId);
+    final coin = Coin.forChainId(chainId);
     final publicKey =
         PublicKey.fromCompressPublicHex(convert.hex.decoder.convert(hex), coin);
 

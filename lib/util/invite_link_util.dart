@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 
 const _origin = 'https://provenance.io';
@@ -12,9 +11,7 @@ const _paramInviteId = 'inviteId';
 const _paramChainId = 'chainId';
 
 String createInviteLink(String inviteId, Coin coin) {
-  final chainId = ChainId.forCoin(coin);
-
-  return '$_origin/$_segment?$_paramInviteId=$inviteId&$_paramChainId=$chainId';
+  return '$_origin/$_segment?$_paramInviteId=$inviteId&$_paramChainId=${coin.chainId}';
 }
 
 InviteLinkData? parseInviteLinkData(String inviteLink) {
@@ -34,7 +31,7 @@ InviteLinkData? parseInviteLinkData(String inviteLink) {
     Coin? coin;
 
     try {
-      coin = ChainId.toCoin(chainId);
+      coin = Coin.forChainId(chainId);
     } catch (_) {
       log('Invalid chain id: $chainId');
     }
