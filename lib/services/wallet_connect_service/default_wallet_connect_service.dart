@@ -317,6 +317,10 @@ class DefaultWalletConnectService extends WalletConnectService
       allowed: allowed,
     );
 
+    if (!allowed || !success) {
+      _setCurrentSession(null);
+    }
+
     return success;
   }
 
