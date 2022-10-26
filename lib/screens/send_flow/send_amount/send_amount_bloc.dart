@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
@@ -101,11 +102,7 @@ class SendAmountBloc extends Disposable {
     );
 
     final state = SendAmountBlocState(_fee);
-    try {
-      _streamController.add(state);
-    } catch (e) {
-      // ignored. here for integration tests only.
-    }
+    _streamController.tryAdd(state);
   }
 
   String? validateAmount(String? proposedAmount) {
