@@ -2,10 +2,10 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_data_screen.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
 import 'package:provenance_wallet/common/widgets/pw_transaction_complete_screen.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_text_form_field.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -265,13 +265,9 @@ class _HiddenProposalCreationScreenState
         ).route(),
       );
     } else {
-      await showDialog(
+      await PwDialog.showError(
         context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: error.toString(),
-          );
-        },
+        error: error,
       );
     }
   }

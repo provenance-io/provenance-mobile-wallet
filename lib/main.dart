@@ -769,7 +769,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {
   PwDialog.showError(
-    context,
+    context: context,
     error: CipherServicePwError(
       inner: error,
     ),

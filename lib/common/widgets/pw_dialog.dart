@@ -1,6 +1,7 @@
 import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
+import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
@@ -164,13 +165,12 @@ class PwDialog {
     );
   }
 
-  static Future<T?> showError<T>(
-    BuildContext context, {
-    String title = 'Oops!',
+  static Future<void> showError({
+    required BuildContext context,
+    String? title,
     String? message,
-    dynamic error,
-    VoidCallback? okAction,
-    bool showCancel = false,
+    String? buttonText,
+    Object? error,
   }) {
     final msg = message ??
         ((error is PwError)
@@ -180,39 +180,16 @@ class PwDialog {
                   "",
                 ));
 
-    return show<T>(
-      context,
-      barrierDismissible: false,
-      title: title,
-      message: msg ?? 'Unknown Error',
-      bottom: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.xLarge,
-            ),
-            child: PwPrimaryButton.fromString(
-              text: Strings.of(context).okay,
-              onPressed: () {
-                Navigator.of(context).pop();
-                okAction?.call();
-              },
-            ),
-          ),
-          if (showCancel) ...[
-            const VerticalSpacer.small(),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: Spacing.xLarge,
-              ),
-              child: PwTextButton(
-                child: PwText(Strings.of(context).cancel),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ],
-        ],
-      ),
+    return showDialog(
+      context: context,
+      useSafeArea: true,
+      builder: (context) {
+        return ErrorDialog(
+          title: title,
+          error: msg,
+          buttonText: buttonText,
+        );
+      },
     );
   }
 

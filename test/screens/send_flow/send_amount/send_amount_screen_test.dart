@@ -166,7 +166,8 @@ main() {
     });
 
     testWidgets("next button - error", (tester) async {
-      final ex = Exception("Next Error");
+      const errorText = 'Next Error';
+      final ex = Exception(errorText);
       when(mockBloc!.showNext(any, any)).thenAnswer((_) => Future.error(ex));
       _streamController!.add(SendAmountBlocState(feeAsset));
       await _build(tester);
@@ -183,7 +184,7 @@ main() {
       expect(dialogFind, findsOneWidget);
 
       final dialog = tester.widget<ErrorDialog>(dialogFind);
-      expect(dialog.error, "Exception: Next Error");
+      expect(dialog.error, errorText);
     });
 
     testWidgets("Dollar amount of sent", (tester) async {
