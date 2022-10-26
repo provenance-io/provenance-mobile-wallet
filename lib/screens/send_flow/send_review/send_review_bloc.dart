@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
@@ -45,7 +44,7 @@ class SendReviewBlocState {
   }
 }
 
-class SendReviewBloc implements Disposable {
+class SendReviewBloc {
   SendReviewBloc(
     this._accountDetails,
     this._txQueueService,
@@ -75,8 +74,7 @@ class SendReviewBloc implements Disposable {
 
   Stream<SendReviewBlocState> get stream => _stateStreamController.stream;
 
-  @override
-  FutureOr onDispose() {
+  void dispose() {
     _stateStreamController.close();
   }
 

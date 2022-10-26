@@ -11,10 +11,10 @@ import 'package:provenance_wallet/screens/send_flow/send_success/send_success_sc
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/transaction_error_util.dart';
+import 'package:provider/provider.dart';
 
 class SendReviewCell extends StatelessWidget {
   const SendReviewCell(
@@ -68,29 +68,19 @@ class SendReviewScreen extends StatelessWidget {
   }
 }
 
-class SendReviewPage extends StatefulWidget {
-  const SendReviewPage({Key? key}) : super(key: key);
+class SendReviewPage extends StatelessWidget {
+  const SendReviewPage({
+    Key? key,
+  }) : super(key: key);
 
   static final keySendButton = ValueKey('$SendReviewPage.send_button');
 
   @override
-  State<StatefulWidget> createState() => SendReviewPageState();
-}
-
-class SendReviewPageState extends State<SendReviewPage> {
-  SendReviewBloc? _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _bloc = get<SendReviewBloc>();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<SendReviewBloc>(context);
+
     return StreamBuilder<SendReviewBlocState>(
-      stream: _bloc!.stream,
+      stream: bloc.stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -169,7 +159,12 @@ class SendReviewPageState extends State<SendReviewPage> {
                         context,
                         minDisplayTime: Duration(milliseconds: 500),
                       );
-                      _sendClicked(state.total, state.receivingAddress);
+                      _sendClicked(
+                        context,
+                        bloc,
+                        state.total,
+                        state.receivingAddress,
+                      );
                     },
                   ),
                   VerticalSpacer.large(),
@@ -182,11 +177,12 @@ class SendReviewPageState extends State<SendReviewPage> {
     );
   }
 
-  Future<void> _sendClicked(String total, String addressTo) async {
+  Future<void> _sendClicked(BuildContext context, SendReviewBloc bloc,
+      String total, String addressTo) async {
     QueuedTx? queuedTx;
 
     try {
-      queuedTx = await _bloc!.doSend();
+      queuedTx = await bloc.doSend();
     } on PwError catch (e, s) {
       logError(
         'Send failed',
@@ -238,7 +234,7 @@ class SendReviewPageState extends State<SendReviewPage> {
               ),
             );
 
-            await _bloc!.complete();
+            await bloc.complete();
           } else {
             logError(
               'Send failed',
@@ -271,7 +267,7 @@ class SendReviewPageState extends State<SendReviewPage> {
             dismissButtonText:
                 Strings.of(context).multiSigTransactionInitiatedDone,
           );
-          await _bloc!.complete();
+          await bloc.complete();
           break;
       }
     }

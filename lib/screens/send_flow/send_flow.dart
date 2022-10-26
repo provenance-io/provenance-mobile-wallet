@@ -155,20 +155,25 @@ class SendFlowState extends FlowBaseState<SendFlow>
     MultiSendAsset fee,
     String note,
   ) {
-    final bloc = SendReviewBloc(
-      widget.accountDetails,
-      get<TxQueueService>(),
-      _receivingAddress!,
-      amountToSend,
-      fee,
-      note,
-      this,
+    return showPage(
+      (context) => Provider<SendReviewBloc>(
+        create: (context) {
+          return SendReviewBloc(
+            widget.accountDetails,
+            get<TxQueueService>(),
+            _receivingAddress!,
+            amountToSend,
+            fee,
+            note,
+            this,
+          );
+        },
+        dispose: (context, bloc) {
+          bloc.dispose();
+        },
+        child: SendReviewScreen(),
+      ),
     );
-
-    get.registerSingleton(bloc);
-
-    return showPage((context) => SendReviewScreen())
-        .whenComplete(() => get.unregister<SendReviewBloc>());
   }
 
   /* SendReviewNaviagor */
