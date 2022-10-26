@@ -101,7 +101,11 @@ class SendAmountBloc extends Disposable {
     );
 
     final state = SendAmountBlocState(_fee);
-    _streamController.add(state);
+    try {
+      _streamController.add(state);
+    } catch (e) {
+      // ignored. here for integration tests only.
+    }
   }
 
   String? validateAmount(String? proposedAmount) {

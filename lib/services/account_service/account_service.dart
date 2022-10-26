@@ -235,8 +235,12 @@ class AccountService implements Disposable {
 
     final success = await _storage.removeAllAccounts();
     if (success) {
-      events._removed.add(accounts);
-      events._selected.add(null);
+      try {
+        events._removed.add(accounts);
+        events._selected.add(null);
+      } catch (e) {
+        // ignored. here for integration tests only.
+      }
     } else {
       accounts.clear();
     }
