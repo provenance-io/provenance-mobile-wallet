@@ -3,42 +3,42 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
-import 'dart:ui' as _i21;
+import 'dart:async' as _i11;
+import 'dart:ui' as _i22;
 
+import 'package:flutter/widgets.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:provenance_dart/proto.dart' as _i12;
-import 'package:provenance_dart/wallet.dart' as _i10;
-import 'package:provenance_dart/wallet_connect.dart' as _i6;
+import 'package:provenance_dart/proto.dart' as _i13;
+import 'package:provenance_dart/wallet.dart' as _i6;
+import 'package:provenance_dart/wallet_connect.dart' as _i9;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i11;
-import 'package:provenance_wallet/common/pw_design.dart' as _i23;
+    as _i12;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
-    as _i4;
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
     as _i7;
-import 'package:provenance_wallet/services/models/account.dart' as _i9;
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart'
+    as _i10;
+import 'package:provenance_wallet/services/models/account.dart' as _i4;
 import 'package:provenance_wallet/services/remote_notification/multi_sig_remote_notification.dart'
-    as _i14;
-import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
-    as _i13;
-import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
-    as _i5;
-import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
-    as _i19;
-import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
     as _i15;
-import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart'
-    as _i18;
-import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart'
-    as _i16;
-import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart'
-    as _i17;
-import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart'
+import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart'
+    as _i14;
+import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
+    as _i8;
+import 'package:provenance_wallet/services/wallet_connect_queue_service/models/wallet_connect_queue_group.dart'
     as _i20;
-import 'package:provenance_wallet/util/local_auth_helper.dart' as _i22;
+import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart'
+    as _i16;
+import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart'
+    as _i19;
+import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart'
+    as _i17;
+import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart'
+    as _i18;
+import 'package:provenance_wallet/services/wallet_connect_service/models/wallet_connect_action.dart'
+    as _i21;
+import 'package:provenance_wallet/util/local_auth_helper.dart' as _i23;
 import 'package:rxdart/streams.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -64,65 +64,103 @@ class _FakeAccountServiceEvents_1 extends _i1.SmartFake
       : super(parent, parentInvocation);
 }
 
-class _FakeAccountGasEstimate_2 extends _i1.SmartFake
-    implements _i4.AccountGasEstimate {
-  _FakeAccountGasEstimate_2(Object parent, Invocation parentInvocation)
+class _FakeAccount_2 extends _i1.SmartFake implements _i4.Account {
+  _FakeAccount_2(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
-class _FakeScheduledTx_3 extends _i1.SmartFake implements _i5.ScheduledTx {
-  _FakeScheduledTx_3(Object parent, Invocation parentInvocation)
+class _FakeBasicAccount_3 extends _i1.SmartFake implements _i4.BasicAccount {
+  _FakeBasicAccount_3(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeMultiAccount_4 extends _i1.SmartFake implements _i4.MultiAccount {
+  _FakeMultiAccount_4(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeMultiTransactableAccount_5 extends _i1.SmartFake
+    implements _i4.MultiTransactableAccount {
+  _FakeMultiTransactableAccount_5(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakePrivateKey_6 extends _i1.SmartFake implements _i6.PrivateKey {
+  _FakePrivateKey_6(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
-class _FakeWalletConnectAddress_4 extends _i1.SmartFake
-    implements _i6.WalletConnectAddress {
-  _FakeWalletConnectAddress_4(Object parent, Invocation parentInvocation)
+class _FakeAccountGasEstimate_7 extends _i1.SmartFake
+    implements _i7.AccountGasEstimate {
+  _FakeAccountGasEstimate_7(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+}
+
+class _FakeScheduledTx_8 extends _i1.SmartFake implements _i8.ScheduledTx {
+  _FakeScheduledTx_8(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+}
+
+class _FakeWalletConnectAddress_9 extends _i1.SmartFake
+    implements _i9.WalletConnectAddress {
+  _FakeWalletConnectAddress_9(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
 /// A class which mocks [KeyValueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockKeyValueService extends _i1.Mock implements _i7.KeyValueService {
+class MockKeyValueService extends _i1.Mock implements _i10.KeyValueService {
   MockKeyValueService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<bool> containsKey(_i7.PrefKey? key) =>
+  _i11.Future<bool> containsKey(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#containsKey, [key]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i2.ValueStream<_i7.KeyValueData<T>> stream<T>(_i7.PrefKey? key) =>
+  _i2.ValueStream<_i10.KeyValueData<T>> stream<T>(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#stream, [key]),
-              returnValue: _FakeValueStream_0<_i7.KeyValueData<T>>(
+              returnValue: _FakeValueStream_0<_i10.KeyValueData<T>>(
                   this, Invocation.method(#stream, [key])))
-          as _i2.ValueStream<_i7.KeyValueData<T>>);
+          as _i2.ValueStream<_i10.KeyValueData<T>>);
   @override
-  _i8.Future<bool?> getBool(_i7.PrefKey? key) =>
+  _i11.Future<bool?> getBool(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#getBool, [key]),
-          returnValue: _i8.Future<bool?>.value()) as _i8.Future<bool?>);
+          returnValue: _i11.Future<bool?>.value()) as _i11.Future<bool?>);
   @override
-  _i8.Future<bool> setBool(_i7.PrefKey? key, bool? value) =>
+  _i11.Future<bool> setBool(_i10.PrefKey? key, bool? value) =>
       (super.noSuchMethod(Invocation.method(#setBool, [key, value]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<bool> removeBool(_i7.PrefKey? key) =>
+  _i11.Future<bool> removeBool(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#removeBool, [key]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<String?> getString(_i7.PrefKey? key) =>
+  _i11.Future<String?> getString(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#getString, [key]),
-          returnValue: _i8.Future<String?>.value()) as _i8.Future<String?>);
+          returnValue: _i11.Future<String?>.value()) as _i11.Future<String?>);
   @override
-  _i8.Future<bool> setString(_i7.PrefKey? key, String? value) =>
+  _i11.Future<bool> setString(_i10.PrefKey? key, String? value) =>
       (super.noSuchMethod(Invocation.method(#setString, [key, value]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<bool> removeString(_i7.PrefKey? key) =>
+  _i11.Future<bool> removeString(_i10.PrefKey? key) =>
       (super.noSuchMethod(Invocation.method(#removeString, [key]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
 }
 
 /// A class which mocks [AccountService].
@@ -140,67 +178,84 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                   _FakeAccountServiceEvents_1(this, Invocation.getter(#events)))
           as _i3.AccountServiceEvents);
   @override
-  _i8.Future<_i9.Account?> getAccount(String? id) =>
+  _i11.Future<_i4.Account?> getAccount(String? id) =>
       (super.noSuchMethod(Invocation.method(#getAccount, [id]),
-              returnValue: _i8.Future<_i9.Account?>.value())
-          as _i8.Future<_i9.Account?>);
+              returnValue: _i11.Future<_i4.Account?>.value())
+          as _i11.Future<_i4.Account?>);
   @override
-  _i8.Future<_i9.Account?> selectFirstAccount() =>
+  _i11.Future<_i4.Account?> selectFirstAccount() =>
       (super.noSuchMethod(Invocation.method(#selectFirstAccount, []),
-              returnValue: _i8.Future<_i9.Account?>.value())
-          as _i8.Future<_i9.Account?>);
+              returnValue: _i11.Future<_i4.Account?>.value())
+          as _i11.Future<_i4.Account?>);
   @override
-  _i8.Future<_i9.TransactableAccount?> selectAccount({String? id}) =>
+  _i11.Future<_i4.TransactableAccount?> selectAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#selectAccount, [], {#id: id}),
-              returnValue: _i8.Future<_i9.TransactableAccount?>.value())
-          as _i8.Future<_i9.TransactableAccount?>);
+              returnValue: _i11.Future<_i4.TransactableAccount?>.value())
+          as _i11.Future<_i4.TransactableAccount?>);
   @override
-  _i8.Future<_i9.TransactableAccount?> getSelectedAccount() =>
+  _i11.Future<_i4.TransactableAccount?> getSelectedAccount() =>
       (super.noSuchMethod(Invocation.method(#getSelectedAccount, []),
-              returnValue: _i8.Future<_i9.TransactableAccount?>.value())
-          as _i8.Future<_i9.TransactableAccount?>);
+              returnValue: _i11.Future<_i4.TransactableAccount?>.value())
+          as _i11.Future<_i4.TransactableAccount?>);
   @override
-  _i8.Future<List<_i9.Account>> getAccounts() =>
-      (super.noSuchMethod(Invocation.method(#getAccounts, []),
-              returnValue: _i8.Future<List<_i9.Account>>.value(<_i9.Account>[]))
-          as _i8.Future<List<_i9.Account>>);
+  _i11.Future<List<_i4.Account>> getAccounts() => (super.noSuchMethod(
+          Invocation.method(#getAccounts, []),
+          returnValue: _i11.Future<List<_i4.Account>>.value(<_i4.Account>[]))
+      as _i11.Future<List<_i4.Account>>);
   @override
-  _i8.Future<List<_i9.BasicAccount>> getBasicAccounts() => (super.noSuchMethod(
+  _i11.Future<List<_i4.BasicAccount>> getBasicAccounts() => (super.noSuchMethod(
           Invocation.method(#getBasicAccounts, []),
           returnValue:
-              _i8.Future<List<_i9.BasicAccount>>.value(<_i9.BasicAccount>[]))
-      as _i8.Future<List<_i9.BasicAccount>>);
+              _i11.Future<List<_i4.BasicAccount>>.value(<_i4.BasicAccount>[]))
+      as _i11.Future<List<_i4.BasicAccount>>);
   @override
-  _i8.Future<List<_i9.TransactableAccount>> getTransactableAccounts() =>
+  _i11.Future<List<_i4.TransactableAccount>> getTransactableAccounts() =>
       (super.noSuchMethod(Invocation.method(#getTransactableAccounts, []),
-              returnValue: _i8.Future<List<_i9.TransactableAccount>>.value(
-                  <_i9.TransactableAccount>[]))
-          as _i8.Future<List<_i9.TransactableAccount>>);
+              returnValue: _i11.Future<List<_i4.TransactableAccount>>.value(
+                  <_i4.TransactableAccount>[]))
+          as _i11.Future<List<_i4.TransactableAccount>>);
   @override
-  _i8.Future<_i9.Account?> renameAccount({String? id, String? name}) =>
+  _i11.Future<_i4.Account> renameAccount({String? id, String? name}) =>
       (super.noSuchMethod(
               Invocation.method(#renameAccount, [], {#id: id, #name: name}),
-              returnValue: _i8.Future<_i9.Account?>.value())
-          as _i8.Future<_i9.Account?>);
+              returnValue: _i11.Future<_i4.Account>.value(_FakeAccount_2(
+                  this,
+                  Invocation.method(
+                      #renameAccount, [], {#id: id, #name: name}))))
+          as _i11.Future<_i4.Account>);
   @override
-  _i8.Future<_i9.BasicAccount?> addAccount(
-          {List<String>? phrase, String? name, _i10.Coin? coin}) =>
+  _i11.Future<_i4.BasicAccount> addAccount(
+          {List<String>? phrase, String? name, _i6.Coin? coin}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: _i8.Future<_i9.BasicAccount?>.value())
-          as _i8.Future<_i9.BasicAccount?>);
+              returnValue: _i11.Future<_i4.BasicAccount>.value(_FakeBasicAccount_3(
+                  this,
+                  Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #coin: coin}))))
+          as _i11.Future<_i4.BasicAccount>);
   @override
-  _i8.Future<_i9.MultiAccount?> addMultiAccount(
+  _i11.Future<_i4.MultiAccount> addMultiAccount(
           {String? name,
-          _i10.Coin? coin,
+          _i6.Coin? coin,
           String? linkedAccountId,
           String? remoteId,
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          List<_i11.MultiSigSigner>? signers}) =>
+          List<_i12.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
+          Invocation.method(#addMultiAccount, [], {
+            #name: name,
+            #coin: coin,
+            #linkedAccountId: linkedAccountId,
+            #remoteId: remoteId,
+            #cosignerCount: cosignerCount,
+            #signaturesRequired: signaturesRequired,
+            #inviteIds: inviteIds,
+            #signers: signers
+          }),
+          returnValue: _i11.Future<_i4.MultiAccount>.value(_FakeMultiAccount_4(
+              this,
               Invocation.method(#addMultiAccount, [], {
                 #name: name,
                 #coin: coin,
@@ -210,87 +265,90 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                 #signaturesRequired: signaturesRequired,
                 #inviteIds: inviteIds,
                 #signers: signers
-              }),
-              returnValue: _i8.Future<_i9.MultiAccount?>.value())
-          as _i8.Future<_i9.MultiAccount?>);
+              })))) as _i11.Future<_i4.MultiAccount>);
   @override
-  _i8.Future<_i9.MultiTransactableAccount?> activateMultiAccount(
-          {String? id, List<_i11.MultiSigSigner>? signers}) =>
-      (super.noSuchMethod(
-              Invocation.method(
-                  #activateMultiAccount, [], {#id: id, #signers: signers}),
-              returnValue: _i8.Future<_i9.MultiTransactableAccount?>.value())
-          as _i8.Future<_i9.MultiTransactableAccount?>);
+  _i11.Future<_i4.MultiTransactableAccount> activateMultiAccount(
+          {String? id, List<_i12.MultiSigSigner>? signers}) =>
+      (super.noSuchMethod(Invocation.method(#activateMultiAccount, [], {#id: id, #signers: signers}),
+          returnValue: _i11.Future<_i4.MultiTransactableAccount>.value(
+              _FakeMultiTransactableAccount_5(
+                  this,
+                  Invocation.method(#activateMultiAccount, [], {
+                    #id: id,
+                    #signers: signers
+                  })))) as _i11.Future<_i4.MultiTransactableAccount>);
   @override
-  _i8.Future<_i9.Account?> removeAccount({String? id}) =>
+  _i11.Future<_i4.Account?> removeAccount({String? id}) =>
       (super.noSuchMethod(Invocation.method(#removeAccount, [], {#id: id}),
-              returnValue: _i8.Future<_i9.Account?>.value())
-          as _i8.Future<_i9.Account?>);
+              returnValue: _i11.Future<_i4.Account?>.value())
+          as _i11.Future<_i4.Account?>);
   @override
-  _i8.Future<List<_i9.Account>> resetAccounts() =>
-      (super.noSuchMethod(Invocation.method(#resetAccounts, []),
-              returnValue: _i8.Future<List<_i9.Account>>.value(<_i9.Account>[]))
-          as _i8.Future<List<_i9.Account>>);
+  _i11.Future<List<_i4.Account>> resetAccounts() => (super.noSuchMethod(
+          Invocation.method(#resetAccounts, []),
+          returnValue: _i11.Future<List<_i4.Account>>.value(<_i4.Account>[]))
+      as _i11.Future<List<_i4.Account>>);
   @override
-  _i8.Future<_i10.PrivateKey?> loadKey(String? accountId) =>
+  _i11.Future<_i6.PrivateKey> loadKey(String? accountId) =>
       (super.noSuchMethod(Invocation.method(#loadKey, [accountId]),
-              returnValue: _i8.Future<_i10.PrivateKey?>.value())
-          as _i8.Future<_i10.PrivateKey?>);
+              returnValue: _i11.Future<_i6.PrivateKey>.value(_FakePrivateKey_6(
+                  this, Invocation.method(#loadKey, [accountId]))))
+          as _i11.Future<_i6.PrivateKey>);
   @override
-  _i8.Future<bool> isValidWalletConnectData(String? qrData) => (super
+  _i11.Future<bool> isValidWalletConnectData(String? qrData) => (super
       .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
 }
 
 /// A class which mocks [TxQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTxQueueService extends _i1.Mock implements _i5.TxQueueService {
+class MockTxQueueService extends _i1.Mock implements _i8.TxQueueService {
   MockTxQueueService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Stream<_i5.TxResult> get response =>
+  _i11.Stream<_i8.TxResult> get response =>
       (super.noSuchMethod(Invocation.getter(#response),
-              returnValue: _i8.Stream<_i5.TxResult>.empty())
-          as _i8.Stream<_i5.TxResult>);
+              returnValue: _i11.Stream<_i8.TxResult>.empty())
+          as _i11.Stream<_i8.TxResult>);
   @override
-  _i8.Future<_i4.AccountGasEstimate> estimateGas(
-          {_i12.TxBody? txBody, _i9.TransactableAccount? account}) =>
+  _i11.Future<_i7.AccountGasEstimate> estimateGas(
+          {_i13.TxBody? txBody, _i4.TransactableAccount? account}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #estimateGas, [], {#txBody: txBody, #account: account}),
-              returnValue: _i8.Future<_i4.AccountGasEstimate>.value(
-                  _FakeAccountGasEstimate_2(this,
+              returnValue: _i11.Future<_i7.AccountGasEstimate>.value(
+                  _FakeAccountGasEstimate_7(this,
                       Invocation.method(#estimateGas, [], {#txBody: txBody, #account: account}))))
-          as _i8.Future<_i4.AccountGasEstimate>);
+          as _i11.Future<_i7.AccountGasEstimate>);
   @override
-  _i8.Future<_i5.ScheduledTx> scheduleTx(
-          {_i12.TxBody? txBody,
-          _i9.TransactableAccount? account,
-          _i4.AccountGasEstimate? gasEstimate}) =>
+  _i11.Future<_i8.ScheduledTx> scheduleTx(
+          {_i13.TxBody? txBody,
+          _i4.TransactableAccount? account,
+          _i7.AccountGasEstimate? gasEstimate}) =>
       (super
           .noSuchMethod(Invocation.method(#scheduleTx, [], {#txBody: txBody, #account: account, #gasEstimate: gasEstimate}),
-              returnValue: _i8.Future<_i5.ScheduledTx>.value(_FakeScheduledTx_3(
+              returnValue: _i11.Future<_i8.ScheduledTx>.value(_FakeScheduledTx_8(
                   this,
                   Invocation.method(#scheduleTx, [], {
                     #txBody: txBody,
                     #account: account,
                     #gasEstimate: gasEstimate
-                  })))) as _i8.Future<_i5.ScheduledTx>);
+                  })))) as _i11.Future<_i8.ScheduledTx>);
   @override
-  _i8.Future<void> completeTx({String? txId}) => (super.noSuchMethod(
-      Invocation.method(#completeTx, [], {#txId: txId}),
-      returnValue: _i8.Future<void>.value(),
-      returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
+  _i11.Future<void> completeTx({String? txId}) =>
+      (super.noSuchMethod(Invocation.method(#completeTx, [], {#txId: txId}),
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<bool> signTx(
+  _i11.Future<bool> signTx(
           {String? txId,
           String? signerAddress,
           String? multiSigAddress,
-          _i12.TxBody? txBody,
-          _i12.Fee? fee}) =>
+          _i13.TxBody? txBody,
+          _i13.Fee? fee}) =>
       (super.noSuchMethod(
           Invocation.method(#signTx, [], {
             #txId: txId,
@@ -299,150 +357,152 @@ class MockTxQueueService extends _i1.Mock implements _i5.TxQueueService {
             #txBody: txBody,
             #fee: fee
           }),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<bool> declineTx(
-          {String? signerAddress, String? txId, _i10.Coin? coin}) =>
+  _i11.Future<bool> declineTx(
+          {String? signerAddress, String? txId, _i6.Coin? coin}) =>
       (super.noSuchMethod(
           Invocation.method(#declineTx, [],
               {#signerAddress: signerAddress, #txId: txId, #coin: coin}),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
 }
 
 /// A class which mocks [RemoteNotificationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoteNotificationService extends _i1.Mock
-    implements _i13.RemoteNotificationService {
+    implements _i14.RemoteNotificationService {
   MockRemoteNotificationService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Stream<_i14.MultiSigRemoteNotification> get multiSig =>
+  _i11.Stream<_i15.MultiSigRemoteNotification> get multiSig =>
       (super.noSuchMethod(Invocation.getter(#multiSig),
-              returnValue: _i8.Stream<_i14.MultiSigRemoteNotification>.empty())
-          as _i8.Stream<_i14.MultiSigRemoteNotification>);
+              returnValue: _i11.Stream<_i15.MultiSigRemoteNotification>.empty())
+          as _i11.Stream<_i15.MultiSigRemoteNotification>);
   @override
   bool isRegistered(String? topic) =>
       (super.noSuchMethod(Invocation.method(#isRegistered, [topic]),
           returnValue: false) as bool);
   @override
-  _i8.Future<void> registerForPushNotifications(String? topic) =>
+  _i11.Future<void> registerForPushNotifications(String? topic) =>
       (super.noSuchMethod(
               Invocation.method(#registerForPushNotifications, [topic]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> unregisterForPushNotifications(String? topic) =>
+  _i11.Future<void> unregisterForPushNotifications(String? topic) =>
       (super.noSuchMethod(
               Invocation.method(#unregisterForPushNotifications, [topic]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
 }
 
 /// A class which mocks [WalletConnectQueueService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletConnectQueueService extends _i1.Mock
-    implements _i15.WalletConnectQueueService {
+    implements _i16.WalletConnectQueueService {
   MockWalletConnectQueueService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
-      returnValue: _i8.Future<void>.value(),
-      returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
+  _i11.Future<void> close() =>
+      (super.noSuchMethod(Invocation.method(#close, []),
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> createWalletConnectSessionGroup(
-          {String? accountId, _i6.ClientMeta? clientMeta}) =>
+  _i11.Future<void> createWalletConnectSessionGroup(
+          {String? accountId, _i9.ClientMeta? clientMeta}) =>
       (super.noSuchMethod(
               Invocation.method(#createWalletConnectSessionGroup, [],
                   {#accountId: accountId, #clientMeta: clientMeta}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> removeWalletConnectSessionGroup({String? accountId}) =>
+  _i11.Future<void> removeWalletConnectSessionGroup({String? accountId}) =>
       (super.noSuchMethod(
           Invocation.method(
               #removeWalletConnectSessionGroup, [], {#accountId: accountId}),
-          returnValue: _i8.Future<void>.value(),
+          returnValue: _i11.Future<void>.value(),
           returnValueForMissingStub:
-              _i8.Future<void>.value()) as _i8.Future<void>);
+              _i11.Future<void>.value()) as _i11.Future<void>);
   @override
-  _i8.Future<void> updateConnectionDetails(
-          {String? accountId, _i6.ClientMeta? clientMeta}) =>
+  _i11.Future<void> updateConnectionDetails(
+          {String? accountId, _i9.ClientMeta? clientMeta}) =>
       (super.noSuchMethod(
               Invocation.method(#updateConnectionDetails, [],
                   {#accountId: accountId, #clientMeta: clientMeta}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> addWalletConnectSignRequest(
-          {String? accountId, _i16.SignAction? signAction}) =>
+  _i11.Future<void> addWalletConnectSignRequest(
+          {String? accountId, _i17.SignAction? signAction}) =>
       (super.noSuchMethod(
               Invocation.method(#addWalletConnectSignRequest, [],
                   {#accountId: accountId, #signAction: signAction}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> addWalletConnectTxRequest(
-          {String? accountId, _i17.TxAction? txAction}) =>
+  _i11.Future<void> addWalletConnectTxRequest(
+          {String? accountId, _i18.TxAction? txAction}) =>
       (super.noSuchMethod(
               Invocation.method(#addWalletConnectTxRequest, [],
                   {#accountId: accountId, #txAction: txAction}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> addWalletApproveRequest(
-          {String? accountId, _i18.SessionAction? action}) =>
+  _i11.Future<void> addWalletApproveRequest(
+          {String? accountId, _i19.SessionAction? action}) =>
       (super.noSuchMethod(
               Invocation.method(#addWalletApproveRequest, [],
                   {#accountId: accountId, #action: action}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<_i19.WalletConnectQueueGroup?> loadGroup({String? accountId}) =>
+  _i11.Future<_i20.WalletConnectQueueGroup?> loadGroup({String? accountId}) =>
       (super.noSuchMethod(
               Invocation.method(#loadGroup, [], {#accountId: accountId}),
-              returnValue: _i8.Future<_i19.WalletConnectQueueGroup?>.value())
-          as _i8.Future<_i19.WalletConnectQueueGroup?>);
+              returnValue: _i11.Future<_i20.WalletConnectQueueGroup?>.value())
+          as _i11.Future<_i20.WalletConnectQueueGroup?>);
   @override
-  _i8.Future<_i20.WalletConnectAction?> loadQueuedAction(
+  _i11.Future<_i21.WalletConnectAction?> loadQueuedAction(
           {String? accountId, String? requestId}) =>
       (super.noSuchMethod(
               Invocation.method(#loadQueuedAction, [],
                   {#accountId: accountId, #requestId: requestId}),
-              returnValue: _i8.Future<_i20.WalletConnectAction?>.value())
-          as _i8.Future<_i20.WalletConnectAction?>);
+              returnValue: _i11.Future<_i21.WalletConnectAction?>.value())
+          as _i11.Future<_i21.WalletConnectAction?>);
   @override
-  _i8.Future<void> removeRequest({String? accountId, String? requestId}) =>
+  _i11.Future<void> removeRequest({String? accountId, String? requestId}) =>
       (super.noSuchMethod(
               Invocation.method(#removeRequest, [],
                   {#accountId: accountId, #requestId: requestId}),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<List<_i19.WalletConnectQueueGroup>> loadAllGroups() =>
+  _i11.Future<List<_i20.WalletConnectQueueGroup>> loadAllGroups() =>
       (super.noSuchMethod(Invocation.method(#loadAllGroups, []),
-              returnValue: _i8.Future<List<_i19.WalletConnectQueueGroup>>.value(
-                  <_i19.WalletConnectQueueGroup>[]))
-          as _i8.Future<List<_i19.WalletConnectQueueGroup>>);
+          returnValue: _i11.Future<List<_i20.WalletConnectQueueGroup>>.value(
+              <_i20.WalletConnectQueueGroup>[])) as _i11
+          .Future<List<_i20.WalletConnectQueueGroup>>);
   @override
-  void addListener(_i21.VoidCallback? listener) =>
+  void addListener(_i22.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i21.VoidCallback? listener) =>
+  void removeListener(_i22.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -454,90 +514,93 @@ class MockWalletConnectQueueService extends _i1.Mock
 /// A class which mocks [WalletConnection].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
+class MockWalletConnection extends _i1.Mock implements _i9.WalletConnection {
   MockWalletConnection() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.WalletConnectAddress get address => (super.noSuchMethod(
+  _i9.WalletConnectAddress get address => (super.noSuchMethod(
           Invocation.getter(#address),
           returnValue:
-              _FakeWalletConnectAddress_4(this, Invocation.getter(#address)))
-      as _i6.WalletConnectAddress);
+              _FakeWalletConnectAddress_9(this, Invocation.getter(#address)))
+      as _i9.WalletConnectAddress);
   @override
-  _i6.WalletConnectState get value => (super.noSuchMethod(
+  _i9.WalletConnectState get value => (super.noSuchMethod(
           Invocation.getter(#value),
-          returnValue: _i6.WalletConnectState.connecting)
-      as _i6.WalletConnectState);
+          returnValue: _i9.WalletConnectState.connecting)
+      as _i9.WalletConnectState);
   @override
-  _i8.Future<void> connect(_i6.WalletConnectionDelegate? delegate,
-          [_i6.SessionRestoreData? restoreData]) =>
+  _i11.Future<void> connect(_i9.WalletConnectionDelegate? delegate,
+          [_i9.SessionRestoreData? restoreData]) =>
       (super.noSuchMethod(Invocation.method(#connect, [delegate, restoreData]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> dispose() => (super.noSuchMethod(
-      Invocation.method(#dispose, []),
-      returnValue: _i8.Future<void>.value(),
-      returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
+  _i11.Future<void> dispose() =>
+      (super.noSuchMethod(Invocation.method(#dispose, []),
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> disconnect() => (super.noSuchMethod(
-      Invocation.method(#disconnect, []),
-      returnValue: _i8.Future<void>.value(),
-      returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
+  _i11.Future<void> disconnect() =>
+      (super.noSuchMethod(Invocation.method(#disconnect, []),
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> sendError(int? requestId, String? error) =>
+  _i11.Future<void> sendError(int? requestId, String? error) =>
       (super.noSuchMethod(Invocation.method(#sendError, [requestId, error]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> reject(int? requestId) => (super.noSuchMethod(
-      Invocation.method(#reject, [requestId]),
-      returnValue: _i8.Future<void>.value(),
-      returnValueForMissingStub: _i8.Future<void>.value()) as _i8.Future<void>);
+  _i11.Future<void> reject(int? requestId) =>
+      (super.noSuchMethod(Invocation.method(#reject, [requestId]),
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> sendTransactionResult(
-          int? requestId, _i12.RawTxResponsePair? txResponsePair) =>
+  _i11.Future<void> sendTransactionResult(
+          int? requestId, _i13.RawTxResponsePair? txResponsePair) =>
       (super.noSuchMethod(
               Invocation.method(
                   #sendTransactionResult, [requestId, txResponsePair]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> sendSignResult(int? requestId, List<int>? signedData) =>
+  _i11.Future<void> sendSignResult(int? requestId, List<int>? signedData) =>
       (super.noSuchMethod(
               Invocation.method(#sendSignResult, [requestId, signedData]),
-              returnValue: _i8.Future<void>.value(),
-              returnValueForMissingStub: _i8.Future<void>.value())
-          as _i8.Future<void>);
+              returnValue: _i11.Future<void>.value(),
+              returnValueForMissingStub: _i11.Future<void>.value())
+          as _i11.Future<void>);
   @override
-  _i8.Future<void> sendMultiSigSignResult(
-          int? requestId, List<_i10.AminoSignature>? signatures) =>
+  _i11.Future<void> sendMultiSigSignResult(
+          int? requestId, List<_i6.AminoSignature>? signatures) =>
       (super.noSuchMethod(
           Invocation.method(#sendMultiSigSignResult, [requestId, signatures]),
-          returnValue: _i8.Future<void>.value(),
+          returnValue: _i11.Future<void>.value(),
           returnValueForMissingStub:
-              _i8.Future<void>.value()) as _i8.Future<void>);
+              _i11.Future<void>.value()) as _i11.Future<void>);
   @override
-  _i8.Future<void> sendApproveSession(
-          int? requestId, _i6.SessionApprovalData? sessionApprovalData,
-          [_i6.ClientMeta? peerMeta]) =>
+  _i11.Future<void> sendApproveSession(
+          int? requestId, _i9.SessionApprovalData? sessionApprovalData,
+          [_i9.ClientMeta? peerMeta]) =>
       (super.noSuchMethod(
           Invocation.method(
               #sendApproveSession, [requestId, sessionApprovalData, peerMeta]),
-          returnValue: _i8.Future<void>.value(),
+          returnValue: _i11.Future<void>.value(),
           returnValueForMissingStub:
-              _i8.Future<void>.value()) as _i8.Future<void>);
+              _i11.Future<void>.value()) as _i11.Future<void>);
   @override
-  void addListener(_i21.VoidCallback? listener) =>
+  void addListener(_i22.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i21.VoidCallback? listener) =>
+  void removeListener(_i22.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
 }
@@ -545,50 +608,50 @@ class MockWalletConnection extends _i1.Mock implements _i6.WalletConnection {
 /// A class which mocks [LocalAuthHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocalAuthHelper extends _i1.Mock implements _i22.LocalAuthHelper {
+class MockLocalAuthHelper extends _i1.Mock implements _i23.LocalAuthHelper {
   MockLocalAuthHelper() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.ValueStream<_i22.AuthStatus> get status =>
+  _i2.ValueStream<_i23.AuthStatus> get status =>
       (super.noSuchMethod(Invocation.getter(#status),
-              returnValue: _FakeValueStream_0<_i22.AuthStatus>(
+              returnValue: _FakeValueStream_0<_i23.AuthStatus>(
                   this, Invocation.getter(#status)))
-          as _i2.ValueStream<_i22.AuthStatus>);
+          as _i2.ValueStream<_i23.AuthStatus>);
   @override
   void reset() => super.noSuchMethod(Invocation.method(#reset, []),
       returnValueForMissingStub: null);
   @override
-  _i8.Future<bool> enroll(String? code, String? accountName, bool? useBiometry,
-          _i23.BuildContext? context) =>
+  _i11.Future<bool> enroll(String? code, String? accountName, bool? useBiometry,
+          _i5.BuildContext? context) =>
       (super.noSuchMethod(
           Invocation.method(#enroll, [code, accountName, useBiometry, context]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<_i22.AuthStatus> auth(_i23.BuildContext? context) =>
+  _i11.Future<_i23.AuthStatus> auth(_i5.BuildContext? context) =>
       (super.noSuchMethod(Invocation.method(#auth, [context]),
               returnValue:
-                  _i8.Future<_i22.AuthStatus>.value(_i22.AuthStatus.noAccount))
-          as _i8.Future<_i22.AuthStatus>);
+                  _i11.Future<_i23.AuthStatus>.value(_i23.AuthStatus.noAccount))
+          as _i11.Future<_i23.AuthStatus>);
   @override
-  void didChangeAppLifecycleState(_i21.AppLifecycleState? state) => super
+  void didChangeAppLifecycleState(_i22.AppLifecycleState? state) => super
       .noSuchMethod(Invocation.method(#didChangeAppLifecycleState, [state]),
           returnValueForMissingStub: null);
   @override
-  _i8.Future<bool> didPopRoute() =>
+  _i11.Future<bool> didPopRoute() =>
       (super.noSuchMethod(Invocation.method(#didPopRoute, []),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<bool> didPushRoute(String? route) =>
+  _i11.Future<bool> didPushRoute(String? route) =>
       (super.noSuchMethod(Invocation.method(#didPushRoute, [route]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
-  _i8.Future<bool> didPushRouteInformation(
-          _i23.RouteInformation? routeInformation) =>
+  _i11.Future<bool> didPushRouteInformation(
+          _i5.RouteInformation? routeInformation) =>
       (super.noSuchMethod(
           Invocation.method(#didPushRouteInformation, [routeInformation]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
   @override
   void didChangeMetrics() =>
       super.noSuchMethod(Invocation.method(#didChangeMetrics, []),
@@ -602,7 +665,7 @@ class MockLocalAuthHelper extends _i1.Mock implements _i22.LocalAuthHelper {
       super.noSuchMethod(Invocation.method(#didChangePlatformBrightness, []),
           returnValueForMissingStub: null);
   @override
-  void didChangeLocales(List<_i21.Locale>? locales) =>
+  void didChangeLocales(List<_i22.Locale>? locales) =>
       super.noSuchMethod(Invocation.method(#didChangeLocales, [locales]),
           returnValueForMissingStub: null);
   @override

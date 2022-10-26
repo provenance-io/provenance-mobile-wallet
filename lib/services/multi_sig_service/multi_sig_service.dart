@@ -18,7 +18,6 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
@@ -64,26 +63,16 @@ class MultiSigService extends Listenable with ListenableMixin {
   Stream<String> get txCreated => _txCreated;
 
   Future<void> sync({
-    required List<String> signerAddresses,
+    required List<SignerData> signers,
   }) async {
     final pendingTxs = await _multiSigClient.getPendingTxs(
-      signerAddresses: signerAddresses,
+      signer: signers,
     );
-
-    if (pendingTxs == null) {
-      logDebug('Sync failed to get pending txs');
-      return;
-    }
 
     final createdTxs = await _multiSigClient.getCreatedTxs(
-      signerAddresses: signerAddresses,
+      signers: signers,
       status: MultiSigStatus.ready,
     );
-
-    if (createdTxs == null) {
-      logDebug('Sync failed to get created txs');
-      return;
-    }
 
     _actionItemsBySignerAddress.clear();
 
@@ -132,8 +121,11 @@ class MultiSigService extends Listenable with ListenableMixin {
     );
 
     await sync(
-      signerAddresses: [
-        signerAddress,
+      signers: [
+        SignerData(
+          address: signerAddress,
+          coin: coin,
+        ),
       ],
     );
 
@@ -237,11 +229,14 @@ class MultiSigService extends Listenable with ListenableMixin {
       // Fetch all in case creator and co-signer are both in same app
       final addresses = (await _accountService.getAccounts())
           .whereType<TransactableAccount>()
-          .map((e) => e.address)
+          .map((e) => SignerData(
+                address: e.address,
+                coin: coin,
+              ))
           .toList();
 
       await sync(
-        signerAddresses: addresses,
+        signers: addresses,
       );
     }
 

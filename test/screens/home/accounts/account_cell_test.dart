@@ -275,7 +275,7 @@ void main() {
           find.descendant(of: menuFind, matching: find.byType(PwGreyButton));
 
       final menuItems = tester.widgetList<PwGreyButton>(menuItemsFind).toList();
-      expect(menuItems.length, 2);
+      expect(menuItems.length, 3);
       expect(menuItems[0].text, strings!.accountMenuItemViewInvite);
       expect(menuItems[1].text, strings!.remove);
     });
@@ -304,7 +304,7 @@ void main() {
           find.descendant(of: menuFind, matching: find.byType(PwGreyButton));
 
       final menuItems = tester.widgetList<PwGreyButton>(menuItemsFind).toList();
-      expect(menuItems.length, 3);
+      expect(menuItems.length, 4);
       expect(menuItems[0].text, strings!.copyAccountAddress);
       expect(menuItems[1].text, strings!.accountMenuItemViewInvite);
       expect(menuItems[2].text, strings!.remove);

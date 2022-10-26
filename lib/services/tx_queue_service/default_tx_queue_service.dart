@@ -87,7 +87,7 @@ class DefaultQueueTxService implements TxQueueService {
 
         final result = await _executeBasic(account, model);
 
-        response = ScheduledTx(
+        response = ScheduledTx.executed(
           result: result,
         );
 
@@ -124,7 +124,7 @@ class DefaultQueueTxService implements TxQueueService {
           final ref = _store.record(remoteId);
           await ref.put(db, model.toRecord());
 
-          response = ScheduledTx(
+          response = ScheduledTx.scheduled(
             txId: remoteId,
           );
         }
@@ -278,7 +278,7 @@ class DefaultQueueTxService implements TxQueueService {
   }) async {
     final signerRootPk = await _accountService.loadKey(signerAccountId);
 
-    final signerPk = signerRootPk!.defaultKey();
+    final signerPk = signerRootPk.defaultKey();
 
     final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
 
@@ -295,9 +295,6 @@ class DefaultQueueTxService implements TxQueueService {
   Future<TxResult> _executeBasic(
       BasicAccount account, SembastScheduledTx model) async {
     final privateKey = await _accountService.loadKey(account.id);
-    if (privateKey == null) {
-      throw TxQueueServiceError.cipherKeyNotFound;
-    }
 
     TxResult? result;
 
