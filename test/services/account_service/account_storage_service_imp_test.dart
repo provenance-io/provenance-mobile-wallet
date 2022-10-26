@@ -3,7 +3,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
@@ -76,7 +75,7 @@ main() {
         name: "New Name",
         publicKey: PublicKeyData(
           hex: publicKey.compressedPublicKeyHex,
-          chainId: ChainId.forCoin(publicKey.coin),
+          chainId: publicKey.coin.chainId,
         ),
       ));
 
@@ -112,7 +111,7 @@ main() {
         name: "New Name",
         publicKey: PublicKeyData(
           hex: publicKey.compressedPublicKeyHex,
-          chainId: ChainId.forCoin(publicKey.coin),
+          chainId: publicKey.coin.chainId,
         ),
       ));
       verifyNoMoreInteractions(mockAccountStorageServiceCore!);

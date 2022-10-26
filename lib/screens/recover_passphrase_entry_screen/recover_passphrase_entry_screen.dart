@@ -1,5 +1,4 @@
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -106,15 +105,15 @@ class RecoverPassphraseEntryScreenState
                 initialData: defaultChainId.valueOrNull,
                 stream: defaultChainId,
                 builder: (context, snapshot) {
-                  final chainId = snapshot.data?.data ?? ChainId.mainNet;
-                  final coin = ChainId.toCoin(chainId);
+                  final chainId = snapshot.data?.data ?? defaultCoin.chainId;
+                  final coin = Coin.forChainId(chainId);
 
                   return GestureDetector(
                     key: RecoverPassphraseEntryScreen.networkToggle,
                     onTap: () {
-                      final newChainId = chainId == ChainId.mainNet
-                          ? ChainId.testNet
-                          : ChainId.mainNet;
+                      final newChainId = chainId == Coin.mainNet.chainId
+                          ? Coin.testNet.chainId
+                          : Coin.mainNet.chainId;
                       _keyValueService.setString(
                         PrefKey.defaultChainId,
                         newChainId,

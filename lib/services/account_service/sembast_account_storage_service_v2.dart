@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
@@ -462,7 +461,7 @@ class SembastAccountStorageServiceV2 implements AccountStorageServiceCore {
     final model = v2.SembastAccountModel.fromRecord(value);
 
     var hex = model.publicKey.hex;
-    final coin = ChainId.toCoin(model.publicKey.chainId);
+    final coin = Coin.forChainId(model.publicKey.chainId);
     final publicKey =
         PublicKey.fromCompressPublicHex(convert.hex.decoder.convert(hex), coin);
 
@@ -537,7 +536,7 @@ class SembastAccountStorageServiceV2 implements AccountStorageServiceCore {
     for (final snapshot in snapshots) {
       final accountModelV1 = v1.SembastAccountModel.fromRecord(snapshot.value);
       final publicKeyV1 = accountModelV1.publicKeys
-          .firstWhereOrNull((e) => e.chainId == ChainId.mainNet);
+          .firstWhereOrNull((e) => e.chainId == Coin.mainNet.chainId);
       if (publicKeyV1 != null) {
         final publicKeyV2 = v2.SembastPublicKeyModel(
           chainId: publicKeyV1.chainId,

@@ -1,8 +1,8 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
@@ -272,7 +272,7 @@ class BasicAccountCreateFlowBloc
 
   Future<Coin> _defaultCoin() async {
     final chainId = await _keyValueService.getString(PrefKey.defaultChainId) ??
-        ChainId.defaultChainId;
+        defaultCoin.chainId;
 
     return Coin.forChainId(chainId);
   }

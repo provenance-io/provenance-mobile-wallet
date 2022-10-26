@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_request_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_response_dto.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_create_tx_request_dto.dart';
@@ -54,7 +53,6 @@ class MultiSigClient with ClientCoinMixin {
   }) async {
     final numOfAdditionalSigners = cosignerCount - 1;
     final coin = publicKey.coin;
-    final chainId = ChainId.forCoin(coin);
 
     final body = MultiSigCreateRequestDto(
       name: name,
@@ -62,7 +60,7 @@ class MultiSigClient with ClientCoinMixin {
       address: publicKey.address,
       numOfAdditionalSigners: numOfAdditionalSigners,
       threshold: threshold,
-      chainId: chainId,
+      chainId: coin.chainId,
     );
 
     final client = await getClient(coin);

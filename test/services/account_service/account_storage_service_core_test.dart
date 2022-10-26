@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
@@ -211,7 +210,7 @@ _expectAccountMatches(_AccountData data, Account? account) {
   expect(account!.name, data.name);
   expect((account as BasicAccount).publicKey.compressedPublicKeyHex,
       data.publicKeyData.hex);
-  expect(account.coin, ChainId.toCoin(data.publicKeyData.chainId));
+  expect(account.coin, Coin.forChainId(data.publicKeyData.chainId));
 }
 
 Future<_AccountData> _initAccount() async {
@@ -232,7 +231,7 @@ Future<List<_AccountData>> _initAccounts({
     final privateKey = PrivateKey.fromSeed(seed, coin);
     final publicKeyData = PublicKeyData(
       hex: privateKey.defaultKey().publicKey.compressedPublicKeyHex,
-      chainId: ChainId.forCoin(coin),
+      chainId: coin.chainId,
     );
 
     final details = await service.addBasicAccount(

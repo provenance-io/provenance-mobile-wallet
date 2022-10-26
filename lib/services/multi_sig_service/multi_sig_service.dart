@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
@@ -89,7 +88,7 @@ class MultiSigService extends Listenable with ListenableMixin {
         final result = await _multiSigClient.updateTxResult(
           txUuid: model.txUuid,
           txHash: model.txHash,
-          coin: ChainId.toCoin(model.chainId),
+          coin: wallet.Coin.forChainId(model.chainId),
         );
 
         await _handleUpdateResult(ref, db, result);
@@ -167,12 +166,10 @@ class MultiSigService extends Listenable with ListenableMixin {
     required TxResponse response,
     required wallet.Coin coin,
   }) async {
-    final chainId = ChainId.forCoin(coin);
-
     final data = _SembastResultData(
       txUuid: txUuid,
       txHash: response.txhash,
-      chainId: chainId,
+      chainId: coin.chainId,
     );
 
     final ref = _main.record(txUuid);

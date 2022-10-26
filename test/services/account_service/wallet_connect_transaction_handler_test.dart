@@ -5,7 +5,6 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_cosmos_auth_v1beta1.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/gas_fee/dto/gas_fee_dto.dart';
@@ -63,7 +62,7 @@ main() {
     when(mockPbClient!.getBaseAccount(any))
         .thenAnswer((_) => Future.value(baseAccount));
 
-    when(mockPbClient!.chainId).thenReturn(ChainId.testNet);
+    when(mockPbClient!.chainId).thenReturn(wallet.Coin.testNet.chainId);
 
     when(mockPbClient!.estimateTx(any))
         .thenAnswer((_) => Future.value(gasEstimate));

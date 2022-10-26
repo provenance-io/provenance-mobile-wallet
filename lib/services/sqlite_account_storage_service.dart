@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:convert/convert.dart' as convert;
 import 'package:path/path.dart' as p;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -329,7 +328,7 @@ class SqliteAccountStorageService {
     final name = result['Name'] as String;
     final hex = result['Hex'] as String;
     final chainId = result['ChainId'] as String;
-    final coin = ChainId.toCoin(chainId);
+    final coin = Coin.forChainId(chainId);
 
     return BasicAccount(
       id: id.toString(),
