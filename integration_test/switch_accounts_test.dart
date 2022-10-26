@@ -31,7 +31,6 @@ void main() {
           )
         ],
       );
-      await app.mainCompleter.future;
       await tester.pumpAndSettle();
 
       final pin = data.cipherPin!;

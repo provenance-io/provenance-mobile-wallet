@@ -110,8 +110,6 @@ const _enableFirebase = bool.fromEnvironment(
 
 final _log = Log.instance;
 
-final mainCompleter = Completer();
-
 void main(List<String> args) {
   final originalOnError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails errorDetails) {
@@ -301,7 +299,6 @@ void main(List<String> args) {
           child: ProvenanceWalletApp(),
         ),
       );
-      mainCompleter.complete();
     },
     (error, stack) {
       if (get.isRegistered<CrashReportingClient>()) {
