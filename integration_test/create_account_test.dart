@@ -27,7 +27,6 @@ void main() {
     (tester) async {
       app.main([]);
 
-      await app.mainCompleter.future;
       await tester.pumpAndSettle();
 
       final testData = await tester.loadTestData();

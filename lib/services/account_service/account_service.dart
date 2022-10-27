@@ -7,6 +7,7 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/common/classes/pw_error.dart';
+import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
@@ -266,8 +267,8 @@ class AccountService implements Disposable {
 
     final success = await _storage.removeAllAccounts();
     if (success) {
-      events._removed.add(accounts);
-      events._selected.add(null);
+      events._removed.tryAdd(accounts);
+      events._selected.tryAdd(null);
     } else {
       accounts.clear();
     }

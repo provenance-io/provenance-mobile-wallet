@@ -109,214 +109,13 @@ const _enableFirebase = bool.fromEnvironment(
 
 final _log = Log.instance;
 
-final mainCompleter = Completer();
-
 void main(List<String> args) {
-  final originalOnError = FlutterError.onError;
-  FlutterError.onError = (FlutterErrorDetails errorDetails) {
-    originalOnError?.call(errorDetails);
-    if (get.isRegistered<CrashReportingClient>()) {
-      get<CrashReportingClient>().recordFlutterError(errorDetails);
-    }
-  };
-
-  DefaultRemoteNotificationService.onBackgroundMultiSigNotification(
-      (message) async {
-    final title = message.title;
-    if (title != null) {
-      await AccountNotificationService.addInBackground(
-        label: title,
-        created: DateTime.now(),
-      );
-    }
-  });
-
-  runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
-      await SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp],
-      );
-
-      final keyValueService = DefaultKeyValueService(
-        store: SharedPreferencesKeyValueStore(),
-      );
-
-      get.registerSingleton<KeyValueService>(keyValueService);
-
-      final localConfigService = DefaultLocalConfigService();
-      final config = await localConfigService.getConfig();
-      get.registerSingleton<LocalConfig>(config);
-
-      _log.info('Initializing: $config', tag: _tag);
-
-      CrashReportingClient crashReportingService;
-      RemoteNotificationService remoteNotificationService;
-      RemoteConfigService remoteConfigService;
-      DeepLinkService deepLinkService;
-
-      _log.info('Enable Firebase: $_enableFirebase', tag: _tag);
-
-      if (_enableFirebase && !Platform.isMacOS) {
-        await Firebase.initializeApp();
-
-        crashReportingService = FirebaseCrashReportingClient();
-
-        remoteNotificationService = DefaultRemoteNotificationService();
-
-        remoteConfigService = FirebaseRemoteConfigService(
-          keyValueService: keyValueService,
-          localConfigService: localConfigService,
-        );
-
-        final firebaseDeepLinkService = FirebaseDeepLinkService();
-        firebaseDeepLinkService.link.listen(_onDeepLink);
-        firebaseDeepLinkService.init();
-        deepLinkService = firebaseDeepLinkService;
-      } else {
-        crashReportingService = LoggingCrashReportingClient();
-        remoteNotificationService = DisabledRemoteNotificationService();
-        remoteConfigService = DefaultRemoteConfigService(
-          localConfigService: localConfigService,
-        );
-        deepLinkService = DisabledDeepLinkService();
-      }
-
-      get.registerSingleton<CrashReportingClient>(
-        crashReportingService,
-      );
-
-      final allowCrashReporting = _testingCrashReporting ||
-          ((await keyValueService.getBool(PrefKey.allowCrashlitics) ?? true) &&
-              !kDebugMode);
-
-      await crashReportingService.enableCrashCollection(
-        enable: allowCrashReporting,
-      );
-
-      get.registerSingleton<RemoteNotificationService>(
-        remoteNotificationService,
-      );
-
-      get.registerSingleton<RemoteConfigService>(
-        remoteConfigService,
-      );
-
-      get.registerSingleton<DeepLinkService>(deepLinkService);
-
-      CipherService cipherService;
-
-      switch (CipherServiceKind.values.byName(_cipherServiceKind)) {
-        case CipherServiceKind.platform:
-          cipherService = PlatformCipherService();
-          break;
-        case CipherServiceKind.memory:
-          cipherService = MemoryCipherService();
-          break;
-      }
-
-      get.registerSingleton<CipherService>(cipherService);
-      _log.info(
-        '$CipherService implementation: ${cipherService.runtimeType}',
-        tag: _tag,
-      );
-
-      var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
-      if (!hasKey) {
-        await cipherService.deletePin();
-        keyValueService.setBool(PrefKey.isSubsequentRun, true);
-      }
-
-      const accountDbFilename = 'account.db';
-
-      AccountStorageService accountStorageService;
-
-      switch (AccountStorageServiceKind.values.byName(_accountServiceKind)) {
-        case AccountStorageServiceKind.sembast:
-          final directory = await getApplicationDocumentsDirectory();
-          await directory.create(recursive: true);
-          final serviceCore = SembastAccountStorageServiceV2(
-            factory: databaseFactoryIo,
-            dbPath: path.join(directory.absolute.path, accountDbFilename),
-          );
-          accountStorageService =
-              AccountStorageServiceImp(serviceCore, cipherService);
-
-          await _migrateSqlite(accountStorageService, cipherService);
-
-          break;
-        case AccountStorageServiceKind.memory:
-          final serviceCore = SembastAccountStorageServiceV2(
-            factory: databaseFactoryMemory,
-            dbPath: path.join(sembastInMemoryDatabasePath, accountDbFilename),
-          );
-          accountStorageService = AccountStorageServiceImp(
-            serviceCore,
-            cipherService,
-          );
-          break;
-      }
-
-      _log.info(
-        '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
-        tag: _tag,
-      );
-
-      final multiSigClient = MultiSigClient();
-      get.registerSingleton<MultiSigClient>(multiSigClient);
-
-      final accountService = AccountService(
-        storage: accountStorageService,
-      );
-      get.registerSingleton<AccountService>(accountService);
-
-      final multiSigService = MultiSigService(
-        accountService: accountService,
-        multiSigClient: multiSigClient,
-      );
-      get.registerSingleton<MultiSigService>(multiSigService);
-
-      get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
-
-      final directory = await getApplicationDocumentsDirectory();
-      await directory.create(recursive: true);
-
-      get.registerSingleton<WalletConnectQueueService>(
-        WalletConnectQueueService(
-          factory: databaseFactoryIo,
-          directory: directory.absolute.path,
-        ),
-      );
-
-      final json = args.firstOrNull;
-
-      if (json != null) {
-        await _integrationTestSetup(json);
-      }
-
-      runApp(
-        Phoenix(
-          child: ProvenanceWalletApp(),
-        ),
-      );
-      mainCompleter.complete();
-    },
-    (error, stack) {
-      if (get.isRegistered<CrashReportingClient>()) {
-        get<CrashReportingClient>().recordError(
-          error,
-          stack: stack,
-        );
-      } else {
-        _log.error(
-          'Error occurred',
-          tag: _tag,
-          error: error,
-          stack: stack,
-        );
-      }
-    },
+  runApp(
+    Phoenix(
+      child: ProvenanceWalletApp(
+        args: args,
+      ),
+    ),
   );
 }
 
@@ -375,7 +174,10 @@ Future<void> _integrationTestSetup(String json) async {
 class ProvenanceWalletApp extends StatefulWidget {
   const ProvenanceWalletApp({
     Key? key,
+    required this.args,
   }) : super(key: key);
+
+  final List<String> args;
 
   @override
   State<StatefulWidget> createState() => _ProvenanceWalletAppState();
@@ -443,6 +245,205 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
   }
 
   Future<void> _setup() async {
+    final originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails errorDetails) {
+      originalOnError?.call(errorDetails);
+      if (get.isRegistered<CrashReportingClient>()) {
+        get<CrashReportingClient>().recordFlutterError(errorDetails);
+      }
+    };
+
+    DefaultRemoteNotificationService.onBackgroundMultiSigNotification(
+        (message) async {
+      final title = message.title;
+      if (title != null) {
+        await AccountNotificationService.addInBackground(
+          label: title,
+          created: DateTime.now(),
+        );
+      }
+    });
+    await runZonedGuarded(
+      () async {
+        await SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp],
+        );
+
+        final keyValueService = DefaultKeyValueService(
+          store: SharedPreferencesKeyValueStore(),
+        );
+
+        get.registerSingleton<KeyValueService>(keyValueService);
+
+        final localConfigService = DefaultLocalConfigService();
+        final config = await localConfigService.getConfig();
+        get.registerSingleton<LocalConfig>(config);
+
+        _log.info('Initializing: $config', tag: _tag);
+
+        CrashReportingClient crashReportingService;
+        RemoteNotificationService remoteNotificationService;
+        RemoteConfigService remoteConfigService;
+        DeepLinkService deepLinkService;
+
+        _log.info('Enable Firebase: $_enableFirebase', tag: _tag);
+
+        if (_enableFirebase && !Platform.isMacOS) {
+          await Firebase.initializeApp();
+
+          crashReportingService = FirebaseCrashReportingClient();
+
+          remoteNotificationService = DefaultRemoteNotificationService();
+
+          remoteConfigService = FirebaseRemoteConfigService(
+            keyValueService: keyValueService,
+            localConfigService: localConfigService,
+          );
+
+          final firebaseDeepLinkService = FirebaseDeepLinkService();
+          firebaseDeepLinkService.link.listen(_onDeepLink);
+          firebaseDeepLinkService.init();
+          deepLinkService = firebaseDeepLinkService;
+        } else {
+          crashReportingService = LoggingCrashReportingClient();
+          remoteNotificationService = DisabledRemoteNotificationService();
+          remoteConfigService = DefaultRemoteConfigService(
+            localConfigService: localConfigService,
+          );
+          deepLinkService = DisabledDeepLinkService();
+        }
+
+        get.registerSingleton<CrashReportingClient>(
+          crashReportingService,
+        );
+
+        final allowCrashReporting = _testingCrashReporting ||
+            ((await keyValueService.getBool(PrefKey.allowCrashlitics) ??
+                    true) &&
+                !kDebugMode);
+
+        await crashReportingService.enableCrashCollection(
+          enable: allowCrashReporting,
+        );
+
+        get.registerSingleton<RemoteNotificationService>(
+          remoteNotificationService,
+        );
+
+        get.registerSingleton<RemoteConfigService>(
+          remoteConfigService,
+        );
+
+        get.registerSingleton<DeepLinkService>(deepLinkService);
+
+        CipherService cipherService;
+
+        switch (CipherServiceKind.values.byName(_cipherServiceKind)) {
+          case CipherServiceKind.platform:
+            cipherService = PlatformCipherService();
+            break;
+          case CipherServiceKind.memory:
+            cipherService = MemoryCipherService();
+            break;
+        }
+
+        get.registerSingleton<CipherService>(cipherService);
+        _log.info(
+          '$CipherService implementation: ${cipherService.runtimeType}',
+          tag: _tag,
+        );
+
+        var hasKey = await keyValueService.containsKey(PrefKey.isSubsequentRun);
+        if (!hasKey) {
+          await cipherService.deletePin();
+          keyValueService.setBool(PrefKey.isSubsequentRun, true);
+        }
+
+        const accountDbFilename = 'account.db';
+
+        AccountStorageService accountStorageService;
+
+        switch (AccountStorageServiceKind.values.byName(_accountServiceKind)) {
+          case AccountStorageServiceKind.sembast:
+            final directory = await getApplicationDocumentsDirectory();
+            await directory.create(recursive: true);
+            final serviceCore = SembastAccountStorageServiceV2(
+              factory: databaseFactoryIo,
+              dbPath: path.join(directory.absolute.path, accountDbFilename),
+            );
+            accountStorageService =
+                AccountStorageServiceImp(serviceCore, cipherService);
+
+            await _migrateSqlite(accountStorageService, cipherService);
+
+            break;
+          case AccountStorageServiceKind.memory:
+            final serviceCore = SembastAccountStorageServiceV2(
+              factory: databaseFactoryMemory,
+              dbPath: path.join(sembastInMemoryDatabasePath, accountDbFilename),
+            );
+            accountStorageService = AccountStorageServiceImp(
+              serviceCore,
+              cipherService,
+            );
+            break;
+        }
+
+        _log.info(
+          '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
+          tag: _tag,
+        );
+
+        final multiSigClient = MultiSigClient();
+        get.registerSingleton<MultiSigClient>(multiSigClient);
+
+        final accountService = AccountService(
+          storage: accountStorageService,
+        );
+        get.registerSingleton<AccountService>(accountService);
+
+        final multiSigService = MultiSigService(
+          accountService: accountService,
+          multiSigClient: multiSigClient,
+        );
+        get.registerSingleton<MultiSigService>(multiSigService);
+
+        get.registerSingleton<LocalAuthHelper>(LocalAuthHelper());
+
+        final directory = await getApplicationDocumentsDirectory();
+        await directory.create(recursive: true);
+
+        get.registerSingleton<WalletConnectQueueService>(
+          WalletConnectQueueService(
+            factory: databaseFactoryIo,
+            directory: directory.absolute.path,
+          ),
+        );
+
+        final json = widget.args.firstOrNull;
+
+        if (json != null) {
+          await _integrationTestSetup(json);
+        }
+        return;
+      },
+      (error, stack) {
+        if (get.isRegistered<CrashReportingClient>()) {
+          get<CrashReportingClient>().recordError(
+            error,
+            stack: stack,
+          );
+        } else {
+          _log.error(
+            'Error occurred',
+            tag: _tag,
+            error: error,
+            stack: stack,
+          );
+        }
+      },
+    );
+
     final keyValueService = get<KeyValueService>();
     final cipherService = get<CipherService>();
 
