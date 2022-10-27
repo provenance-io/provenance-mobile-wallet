@@ -2,9 +2,9 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/deposit_confirm/deposit_slider.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposals_bloc.dart';
@@ -283,13 +283,10 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
 
   Future<void> _showErrorModal(Object error, BuildContext context) async {
     ModalLoadingRoute.dismiss(context);
-    await showDialog(
+
+    await PwDialog.showError(
       context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: error.toString(),
-        );
-      },
+      error: error,
     );
   }
 }
