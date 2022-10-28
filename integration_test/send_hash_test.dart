@@ -99,13 +99,13 @@ void main() {
       await tester.pumpAndSettle();
       await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
 
-      // The expected value uses less hash than the actual value, so we only look at 2 decimal places.
+      // The expected value uses less hash than the actual value, so we only look at 1 decimal place.
       final compareValue =
-          (beginningHash - transactionAmount).toStringAsFixed(2);
+          (beginningHash - transactionAmount).toStringAsFixed(1);
 
       final finalValue =
           double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester))
-              .toStringAsFixed(2);
+              .toStringAsFixed(1);
       expectLater(finalValue, compareValue);
     },
   );
