@@ -91,6 +91,7 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
                   PwListDivider(),
                   VerticalSpacer.xLarge(),
                   GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     key: RecoveryWordsScreen.keyCopyButton,
                     onTap: () async {
                       await Clipboard.setData(
