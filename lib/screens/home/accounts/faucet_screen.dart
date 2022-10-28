@@ -27,6 +27,7 @@ class FaucetScreen extends StatefulWidget {
 
 class FaucetScreenState extends State<FaucetScreen> {
   bool _didGetHash = false;
+  bool _didError = false;
   String? _message;
 
   @override
@@ -56,8 +57,8 @@ class FaucetScreenState extends State<FaucetScreen> {
             if (_message != null) VerticalSpacer.large(),
             if (_message != null)
               PwText(
-                color: PwColor.error,
                 _message ?? "",
+                color: _didError ? PwColor.error : PwColor.positive,
               ),
             VerticalSpacer.large(),
             PwButton(
@@ -76,6 +77,7 @@ class FaucetScreenState extends State<FaucetScreen> {
                 setState(() {
                   _didGetHash = true;
                   _message = null;
+                  _didError = false;
                 });
                 _onLoading(context, true);
                 try {
@@ -86,6 +88,7 @@ class FaucetScreenState extends State<FaucetScreen> {
                 } catch (e) {
                   setState(() {
                     _message = e.toString();
+                    _didError = true;
                   });
                 } finally {
                   _onLoading(context, false);
