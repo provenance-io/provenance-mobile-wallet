@@ -65,9 +65,9 @@ class BackupCompleteScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
+              key: BackupCompleteScreen.keyContinueButton,
               child: PwText(
                 strings.continueName,
-                key: BackupCompleteScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),

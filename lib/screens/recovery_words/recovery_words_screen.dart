@@ -134,9 +134,9 @@ class RecoveryWordsScreenState extends State<RecoveryWordsScreen> {
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: PwButton(
+              key: RecoveryWordsScreen.keyContinueButton,
               child: PwText(
                 Strings.of(context).continueName,
-                key: RecoveryWordsScreen.keyContinueButton,
                 style: PwTextStyle.bodyBold,
                 color: PwColor.neutralNeutral,
               ),
