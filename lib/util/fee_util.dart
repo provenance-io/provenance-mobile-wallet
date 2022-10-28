@@ -17,11 +17,11 @@ List<proto.Coin> combineFees(List<proto.Coin> fees) {
 }
 
 List<proto.Coin> addBaseFee(
-    int estimatedGas, List<proto.Coin>? estimatedFees, int? baseFee) {
+    int gasUnits, List<proto.Coin>? estimatedFees, int? gasFeePerUnit) {
   final result = <proto.Coin>[
     proto.Coin(
       denom: 'nhash',
-      amount: (estimatedGas * (baseFee ?? 0)).toString(),
+      amount: (gasUnits * (gasFeePerUnit ?? 0)).toString(),
     ),
     ...estimatedFees ?? [],
   ];
