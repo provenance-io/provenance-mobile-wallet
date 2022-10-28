@@ -649,6 +649,7 @@
   "faucetScreenAppBarTitle": "Faucet",
   "faucetScreenTitle": "PROVENANCE BLOCKCHAIN FAUCET",
   "faucetScreenButtonTitle": "Add HASH",
+  "faucetScreenHashAddSuccess": "HASH added to account.",
   "transactionErrorUnknown": "An unknown error occurred.",
   "transactionErrorAuthz3": "The expiration time of the authorization should be later than now.",
   "transactionErrorBank2": "No inputs to send transaction.",

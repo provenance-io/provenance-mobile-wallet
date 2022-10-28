@@ -27,7 +27,7 @@ class FaucetScreen extends StatefulWidget {
 
 class FaucetScreenState extends State<FaucetScreen> {
   bool _didGetHash = false;
-  String? _error;
+  String? _message;
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +53,11 @@ class FaucetScreenState extends State<FaucetScreen> {
               style: PwTextStyle.headline1,
               textAlign: TextAlign.center,
             ),
-            if (_error != null) VerticalSpacer.large(),
-            if (_error != null)
+            if (_message != null) VerticalSpacer.large(),
+            if (_message != null)
               PwText(
-                _error!,
                 color: PwColor.error,
+                _message ?? "",
               ),
             VerticalSpacer.large(),
             PwButton(
@@ -75,14 +75,17 @@ class FaucetScreenState extends State<FaucetScreen> {
               onPressed: () async {
                 setState(() {
                   _didGetHash = true;
-                  _error = null;
+                  _message = null;
                 });
                 _onLoading(context, true);
                 try {
                   await get<AssetClient>().getHash(widget.coin, widget.address);
+                  setState(() {
+                    _message = strings.faucetScreenHashAddSuccess;
+                  });
                 } catch (e) {
                   setState(() {
-                    _error = e.toString();
+                    _message = e.toString();
                   });
                 } finally {
                   _onLoading(context, false);
