@@ -152,14 +152,16 @@ class MockMultiSigClient extends _i1.Mock implements _i7.MultiSigClient {
           String? signerAddress,
           _i6.Coin? coin,
           _i11.TxBody? txBody,
-          _i11.Fee? fee}) =>
+          _i11.Fee? fee,
+          int? walletConnectRequestId}) =>
       (super.noSuchMethod(
           Invocation.method(#createTx, [], {
             #multiSigAddress: multiSigAddress,
             #signerAddress: signerAddress,
             #coin: coin,
             #txBody: txBody,
-            #fee: fee
+            #fee: fee,
+            #walletConnectRequestId: walletConnectRequestId
           }),
           returnValue: _i8.Future<String?>.value()) as _i8.Future<String?>);
   @override

@@ -110,6 +110,7 @@ class MultiSigService extends Listenable with ListenableMixin {
     required wallet.Coin coin,
     required p.TxBody txBody,
     required p.Fee fee,
+    int? walletConnectRequestId,
   }) async {
     final remoteId = await _multiSigClient.createTx(
       multiSigAddress: multiSigAddress,
@@ -117,6 +118,7 @@ class MultiSigService extends Listenable with ListenableMixin {
       coin: coin,
       txBody: txBody,
       fee: fee,
+      walletConnectRequestId: walletConnectRequestId,
     );
 
     await sync(

@@ -246,6 +246,7 @@ class MultiSigClient with ClientCoinMixin {
     required Coin coin,
     required proto.TxBody txBody,
     required proto.Fee fee,
+    int? walletConnectRequestId,
   }) async {
     final client = await getClient(coin);
     const path = '$_basePath/tx/create';
@@ -253,6 +254,7 @@ class MultiSigClient with ClientCoinMixin {
     final txBodyBytes = MultiSigTxBodyBytesDto(
       txBody: txBody,
       fee: fee,
+      walletConnectRequestId: walletConnectRequestId,
     );
 
     final request = MultiSigCreateTxRequestDto(
@@ -417,6 +419,7 @@ class MultiSigClient with ClientCoinMixin {
                 ),
               )
               .toList(),
+          walletConnectRequestId: txBodyBytes.walletConnectRequestId,
         );
       }
     } catch (e) {

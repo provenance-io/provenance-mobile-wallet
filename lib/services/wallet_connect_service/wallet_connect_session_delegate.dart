@@ -80,7 +80,14 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         _accountService = accountService,
         _txQueueService = txQueueService,
         _queueService = queueService,
-        _connection = connection;
+        _connection = connection {
+    _txQueueService.response.listen((e) {
+      final walletConnectRequestId = e.walletConnectRequestId;
+      if (walletConnectRequestId != null) {
+        _connection.sendTransactionResult(walletConnectRequestId, e.response);
+      }
+    }).addTo(_subscriptions);
+  }
 
   final TransactableAccount _connectAccount;
   final TransactableAccount _transactAccount;
@@ -90,7 +97,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final WalletConnectQueueService _queueService;
   final WalletConnection _connection;
 
-  final _txSubscriptions = CompositeSubscription();
+  final _subscriptions = CompositeSubscription();
 
   final events = WalletConnectSessionDelegateEvents();
 
@@ -251,7 +258,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     _queueService.removeWalletConnectSessionGroup(
       accountId: _transactAccount.id,
     );
-    _txSubscriptions.clear();
+    _subscriptions.clear();
   }
 
   @override
@@ -304,6 +311,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       txBody: txBody,
       account: _transactAccount,
       gasEstimate: action.gasEstimate,
+      walletConnectRequestId: action.walletConnectRequestId,
     );
 
     switch (queuedTx.kind) {
@@ -331,13 +339,6 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         final scheduledTx = queuedTx as ScheduledTx;
         final txId = scheduledTx.txId;
         logDebug('Scheduled tx: $txId');
-
-        _txQueueService.response.listen((e) {
-          if (e.txId == txId) {
-            _connection.sendTransactionResult(
-                action.walletConnectRequestId, e.response);
-          }
-        }).addTo(_txSubscriptions);
 
         _queueService.removeRequest(
           accountId: _transactAccount.id,

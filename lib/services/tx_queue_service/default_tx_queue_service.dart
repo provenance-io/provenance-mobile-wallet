@@ -52,6 +52,7 @@ class DefaultQueueTxService implements TxQueueService {
     required proto.TxBody txBody,
     required TransactableAccount account,
     required AccountGasEstimate gasEstimate,
+    int? walletConnectRequestId,
   }) async {
     QueuedTx queuedTx;
 
@@ -83,6 +84,7 @@ class DefaultQueueTxService implements TxQueueService {
           signerAddress: signerAddress,
           txBody: txBody,
           fee: fee,
+          walletConnectRequestId: walletConnectRequestId,
         );
 
         if (remoteId == null) {
@@ -172,6 +174,7 @@ class DefaultQueueTxService implements TxQueueService {
       response: responsePair,
       fee: item.fee,
       txId: txId,
+      walletConnectRequestId: item.walletConnectRequestId,
     );
 
     _response.add(result);
