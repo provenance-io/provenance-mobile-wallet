@@ -146,9 +146,11 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                 Expanded(
                   child: Container(),
                 ),
-                VerticalSpacer.large(),
+                VerticalSpacer.xLarge(),
                 Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.large,
+                  ),
                   child: PwButton(
                     child: PwText(
                       buttonLabel,
