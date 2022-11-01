@@ -27,7 +27,6 @@ void main() {
     (tester) async {
       app.main([]);
 
-      await app.mainCompleter.future;
       await tester.pumpAndSettle();
 
       final testData = await tester.loadTestData();
@@ -59,8 +58,16 @@ void main() {
         }
       });
 
+      await RecoveryWordsScreen.keyCopyButton.scrollUntilVisible(
+        tester,
+        scrollable: PwOnboardingScreen.keyScrollView,
+      );
       await RecoveryWordsScreen.keyCopyButton.tap(tester);
       await RecoveryWordsScreen.keySnackbar.drag(tester, dx: 0, dy: 500);
+      await RecoveryWordsScreen.keyContinueButton.scrollUntilVisible(
+        tester,
+        scrollable: PwOnboardingScreen.keyScrollView,
+      );
       await RecoveryWordsScreen.keyContinueButton.tap(tester);
 
       final word1 = int.parse(WordSelector.keyWordSelector(0)
@@ -83,6 +90,10 @@ void main() {
 
       await RecoveryWordsConfirmScreen.keyCheckbox.tap(tester);
       await RecoveryWordsConfirmScreen.keyContinueButton.tap(tester);
+      await BackupCompleteScreen.keyContinueButton.scrollUntilVisible(
+        tester,
+        scrollable: PwOnboardingScreen.keyScrollView,
+      );
       await BackupCompleteScreen.keyContinueButton.tap(tester);
 
       final pin = testData.cipherPin ?? "";

@@ -201,7 +201,10 @@ class ActionList extends StatelessWidget {
         'Action failed',
         error: e,
       );
-      PwDialog.showError(context, error: e);
+      PwDialog.showError(
+        context: context,
+        error: e,
+      );
     } finally {
       ModalLoadingRoute.dismiss(context);
     }

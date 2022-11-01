@@ -58,6 +58,9 @@ void main() {
     mockWalletConnectQueueService = MockWalletConnectQueueService();
     mockWalletConnection = MockWalletConnection();
 
+    when(mockTxQueueService.response)
+        .thenAnswer((_) => Stream<TxResult>.empty());
+
     delegate = WalletConnectSessionDelegate(
       connectAccount: account,
       transactAccount: account,

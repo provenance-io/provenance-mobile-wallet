@@ -129,7 +129,7 @@ class StakingRedelegationBloc extends Disposable {
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey!.defaultKey(),
+      privateKey.defaultKey(),
       _account.coin,
       estimate,
     );

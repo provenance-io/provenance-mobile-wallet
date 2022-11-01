@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
@@ -12,15 +10,11 @@ import 'package:provenance_wallet/services/account_service/model/account_gas_est
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
-import 'package:provenance_wallet/services/tx_queue_service/models/sembast_gas_estimate.dart';
-import 'package:provenance_wallet/services/tx_queue_service/models/sembast_scheduled_tx.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
 import 'package:provenance_wallet/util/fee_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sembast/sembast.dart';
-import 'package:sembast/sembast_memory.dart';
 
 class DefaultQueueTxService implements TxQueueService {
   DefaultQueueTxService({
@@ -29,19 +23,13 @@ class DefaultQueueTxService implements TxQueueService {
     required AccountService accountService,
   })  : _transactionHandler = transactionHandler,
         _multiSigService = multiSigService,
-        _accountService = accountService {
-    _db = _initDb();
-  }
-
-  final _store = StoreRef<String, Map<String, Object?>?>.main();
+        _accountService = accountService;
 
   final _response = PublishSubject<TxResult>();
 
   final TransactionHandler _transactionHandler;
   final MultiSigService _multiSigService;
   final AccountService _accountService;
-
-  late final Future<Database> _db;
 
   @override
   Stream<TxResult> get response => _response;
@@ -60,34 +48,21 @@ class DefaultQueueTxService implements TxQueueService {
       );
 
   @override
-  Future<ScheduledTx> scheduleTx({
+  Future<QueuedTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
     required AccountGasEstimate gasEstimate,
+    int? walletConnectRequestId,
   }) async {
-    final db = await _db;
-
-    final estimateModel = SembastGasEstimate(
-      estimatedGas: gasEstimate.estimatedGas,
-      baseFee: gasEstimate.baseFee,
-      gasAdjustment: gasEstimate.gasAdjustment,
-      estimatedFees: gasEstimate.estimatedFees,
-    );
-
-    ScheduledTx response;
+    QueuedTx queuedTx;
 
     switch (account.kind) {
       case AccountKind.basic:
         final basicAccount = account as BasicAccount;
 
-        final model = SembastScheduledTx(
-          accountId: basicAccount.id,
-          txBody: txBody,
-        );
+        final result = await _executeBasic(basicAccount, txBody, gasEstimate);
 
-        final result = await _executeBasic(account, model);
-
-        response = ScheduledTx.executed(
+        queuedTx = ExecutedTx(
           result: result,
         );
 
@@ -109,22 +84,13 @@ class DefaultQueueTxService implements TxQueueService {
           signerAddress: signerAddress,
           txBody: txBody,
           fee: fee,
+          walletConnectRequestId: walletConnectRequestId,
         );
 
         if (remoteId == null) {
           throw TxQueueServiceError.createTxFailed;
         } else {
-          final model = SembastScheduledTx(
-            accountId: account.id,
-            remoteId: remoteId,
-            txBody: txBody,
-            gasEstimate: estimateModel,
-          );
-
-          final ref = _store.record(remoteId);
-          await ref.put(db, model.toRecord());
-
-          response = ScheduledTx.scheduled(
+          queuedTx = ScheduledTx(
             txId: remoteId,
           );
         }
@@ -132,7 +98,7 @@ class DefaultQueueTxService implements TxQueueService {
         break;
     }
 
-    return response;
+    return queuedTx;
   }
 
   @override
@@ -208,6 +174,7 @@ class DefaultQueueTxService implements TxQueueService {
       response: responsePair,
       fee: item.fee,
       txId: txId,
+      walletConnectRequestId: item.walletConnectRequestId,
     );
 
     _response.add(result);
@@ -278,7 +245,7 @@ class DefaultQueueTxService implements TxQueueService {
   }) async {
     final signerRootPk = await _accountService.loadKey(signerAccountId);
 
-    final signerPk = signerRootPk!.defaultKey();
+    final signerPk = signerRootPk.defaultKey();
 
     final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
 
@@ -293,63 +260,27 @@ class DefaultQueueTxService implements TxQueueService {
   }
 
   Future<TxResult> _executeBasic(
-      BasicAccount account, SembastScheduledTx model) async {
+    BasicAccount account,
+    proto.TxBody txBody,
+    AccountGasEstimate gasEstimate,
+  ) async {
     final privateKey = await _accountService.loadKey(account.id);
-    if (privateKey == null) {
-      throw TxQueueServiceError.cipherKeyNotFound;
-    }
 
     TxResult? result;
 
-    AccountGasEstimate? accountGasEstimate;
-    var gasEstimate = model.gasEstimate;
-    if (gasEstimate != null) {
-      accountGasEstimate = AccountGasEstimate(
-        gasEstimate.estimatedGas,
-        gasEstimate.baseFee,
-        gasEstimate.gasAdjustment,
-        gasEstimate.estimatedFees,
-      );
-    } else {
-      accountGasEstimate = await _transactionHandler.estimateGas(
-        model.txBody,
-        [
-          account.publicKey,
-        ],
-        account.coin,
-      );
-    }
-
     final response = await _transactionHandler.executeTransaction(
-      model.txBody,
+      txBody,
       privateKey.defaultKey(),
       account.coin,
-      accountGasEstimate,
+      gasEstimate,
     );
 
     result = TxResult(
-      body: model.txBody,
+      body: txBody,
       response: response,
-      fee: toFee(accountGasEstimate),
+      fee: toFee(gasEstimate),
     );
 
     return result;
-  }
-
-  Future<Database> _initDb() async {
-    final directory = await getApplicationDocumentsDirectory();
-    await directory.create(recursive: true);
-
-    // final factory = databaseFactoryIo;
-    final factory = databaseFactoryMemory;
-
-    final path = p.join(directory.path, 'tx.db');
-
-    final db = await factory.openDatabase(
-      path,
-      version: 1,
-    );
-
-    return db;
   }
 }

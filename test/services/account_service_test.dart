@@ -30,7 +30,7 @@ void main() {
 
     await pumpEventQueue();
 
-    expect(updated!.name, newName);
+    expect(updated.name, newName);
     expect(service.events.selected.value!.name, newName);
     expect(calledUpdate, isTrue);
   });

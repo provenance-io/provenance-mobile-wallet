@@ -11,6 +11,7 @@ class MultiSigPendingTx {
     required this.fee,
     required this.status,
     required this.signatures,
+    this.walletConnectRequestId,
   });
 
   final String multiSigAddress;
@@ -20,4 +21,5 @@ class MultiSigPendingTx {
   final Fee fee;
   final MultiSigStatus status;
   final List<MultiSigSignature> signatures;
+  final int? walletConnectRequestId;
 }

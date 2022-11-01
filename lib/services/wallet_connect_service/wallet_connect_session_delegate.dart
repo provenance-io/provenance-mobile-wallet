@@ -5,7 +5,6 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -81,7 +80,14 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
         _accountService = accountService,
         _txQueueService = txQueueService,
         _queueService = queueService,
-        _connection = connection;
+        _connection = connection {
+    _txQueueService.response.listen((e) {
+      final walletConnectRequestId = e.walletConnectRequestId;
+      if (walletConnectRequestId != null) {
+        _connection.sendTransactionResult(walletConnectRequestId, e.response);
+      }
+    }).addTo(_subscriptions);
+  }
 
   final TransactableAccount _connectAccount;
   final TransactableAccount _transactAccount;
@@ -91,7 +97,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   final WalletConnectQueueService _queueService;
   final WalletConnection _connection;
 
-  final _txSubscriptions = CompositeSubscription();
+  final _subscriptions = CompositeSubscription();
 
   final events = WalletConnectSessionDelegateEvents();
 
@@ -252,7 +258,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
     _queueService.removeWalletConnectSessionGroup(
       accountId: _transactAccount.id,
     );
-    _txSubscriptions.clear();
+    _subscriptions.clear();
   }
 
   @override
@@ -270,14 +276,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   }
 
   Future<bool> _completeSessionAction(SessionAction action) async {
-    final chainId = ChainId.forCoin(_transactAccount.coin);
-
     final privateKey = await _accountService.loadKey(_connectAccount.id);
 
     SessionApprovalData sessionApproval = SessionApprovalData(
-      privateKey!,
+      privateKey,
       _transactAccount.publicKey,
-      chainId,
+      _transactAccount.coin.chainId,
       WalletInfo(
         _transactAccount.id,
         _transactAccount.name,
@@ -303,49 +307,45 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       messages: action.messages.map((msg) => msg.toAny()).toList(),
     );
 
-    final scheduledTx = await _txQueueService.scheduleTx(
+    final queuedTx = await _txQueueService.scheduleTx(
       txBody: txBody,
       account: _transactAccount,
       gasEstimate: action.gasEstimate,
+      walletConnectRequestId: action.walletConnectRequestId,
     );
 
-    final result = scheduledTx.result;
-    if (result != null) {
-      final response = result.response;
+    switch (queuedTx.kind) {
+      case QueuedTxKind.executed:
+        final executedTx = queuedTx as ExecutedTx;
+        final response = executedTx.result.response;
 
-      await _connection.sendTransactionResult(
-        action.walletConnectRequestId,
-        response,
-      );
+        await _connection.sendTransactionResult(
+          action.walletConnectRequestId,
+          response,
+        );
 
-      events._onResponse.add(
-        TxResult(
-          body: txBody,
-          response: response,
-          fee: proto.Fee(
-            amount: action.gasEstimate.totalFees,
-            gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
+        events._onResponse.add(
+          TxResult(
+            body: txBody,
+            response: response,
+            fee: proto.Fee(
+              amount: action.gasEstimate.totalFees,
+              gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
+            ),
           ),
-        ),
-      );
+        );
+        break;
+      case QueuedTxKind.scheduled:
+        final scheduledTx = queuedTx as ScheduledTx;
+        final txId = scheduledTx.txId;
+        logDebug('Scheduled tx: $txId');
+
+        _queueService.removeRequest(
+          accountId: _transactAccount.id,
+          requestId: action.id,
+        );
+        break;
     }
-
-    final txId = scheduledTx.txId;
-    if (txId != null) {
-      logDebug('Scheduled tx: $txId');
-
-      _txQueueService.response.listen((e) {
-        if (e.txId == txId) {
-          _connection.sendTransactionResult(
-              action.walletConnectRequestId, e.response);
-        }
-      }).addTo(_txSubscriptions);
-    }
-
-    _queueService.removeRequest(
-      accountId: _transactAccount.id,
-      requestId: action.id,
-    );
 
     return true;
   }
@@ -353,10 +353,13 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   Future<bool> _completeSignAction(SignAction action) async {
     final bytes = action.message.codeUnits;
 
-    // TODO-Roy: Implement multi-sig sign
+    if (_transactAccount is MultiAccount) {
+      throw 'This action is not supported for multi signature accounts';
+    }
+
     final privateKey = await _accountService.loadKey(_transactAccount.id);
     List<int>? signedData;
-    signedData = privateKey!.defaultKey().signData(Hash.sha256(bytes))
+    signedData = privateKey.defaultKey().signData(Hash.sha256(bytes))
       ..removeLast();
 
     await _connection.sendSignResult(

@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provenance_dart/proto.dart' as p;
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/dto/multi_sig_status.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_pending_tx.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signature.dart';
@@ -18,7 +17,6 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
@@ -64,26 +62,16 @@ class MultiSigService extends Listenable with ListenableMixin {
   Stream<String> get txCreated => _txCreated;
 
   Future<void> sync({
-    required List<String> signerAddresses,
+    required List<SignerData> signers,
   }) async {
     final pendingTxs = await _multiSigClient.getPendingTxs(
-      signerAddresses: signerAddresses,
+      signer: signers,
     );
-
-    if (pendingTxs == null) {
-      logDebug('Sync failed to get pending txs');
-      return;
-    }
 
     final createdTxs = await _multiSigClient.getCreatedTxs(
-      signerAddresses: signerAddresses,
+      signers: signers,
       status: MultiSigStatus.ready,
     );
-
-    if (createdTxs == null) {
-      logDebug('Sync failed to get created txs');
-      return;
-    }
 
     _actionItemsBySignerAddress.clear();
 
@@ -100,7 +88,7 @@ class MultiSigService extends Listenable with ListenableMixin {
         final result = await _multiSigClient.updateTxResult(
           txUuid: model.txUuid,
           txHash: model.txHash,
-          coin: ChainId.toCoin(model.chainId),
+          coin: wallet.Coin.forChainId(model.chainId),
         );
 
         await _handleUpdateResult(ref, db, result);
@@ -122,6 +110,7 @@ class MultiSigService extends Listenable with ListenableMixin {
     required wallet.Coin coin,
     required p.TxBody txBody,
     required p.Fee fee,
+    int? walletConnectRequestId,
   }) async {
     final remoteId = await _multiSigClient.createTx(
       multiSigAddress: multiSigAddress,
@@ -129,11 +118,15 @@ class MultiSigService extends Listenable with ListenableMixin {
       coin: coin,
       txBody: txBody,
       fee: fee,
+      walletConnectRequestId: walletConnectRequestId,
     );
 
     await sync(
-      signerAddresses: [
-        signerAddress,
+      signers: [
+        SignerData(
+          address: signerAddress,
+          coin: coin,
+        ),
       ],
     );
 
@@ -175,12 +168,10 @@ class MultiSigService extends Listenable with ListenableMixin {
     required TxResponse response,
     required wallet.Coin coin,
   }) async {
-    final chainId = ChainId.forCoin(coin);
-
     final data = _SembastResultData(
       txUuid: txUuid,
       txHash: response.txhash,
-      chainId: chainId,
+      chainId: coin.chainId,
     );
 
     final ref = _main.record(txUuid);
@@ -237,11 +228,14 @@ class MultiSigService extends Listenable with ListenableMixin {
       // Fetch all in case creator and co-signer are both in same app
       final addresses = (await _accountService.getAccounts())
           .whereType<TransactableAccount>()
-          .map((e) => e.address)
+          .map((e) => SignerData(
+                address: e.address,
+                coin: coin,
+              ))
           .toList();
 
       await sync(
-        signerAddresses: addresses,
+        signers: addresses,
       );
     }
 

@@ -102,7 +102,7 @@ class MultiSigInviteReviewFlowBloc {
       final error = result?.error;
       if (error != null) {
         await PwDialog.showError(
-          context,
+          context: context,
           message: error,
         );
       }

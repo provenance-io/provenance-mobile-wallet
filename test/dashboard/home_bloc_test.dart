@@ -48,7 +48,7 @@ void main() {
       );
 
       final bloc = state.bloc;
-      final walletService = state.walletService;
+      final walletService = state.accountService;
 
       await pumpEventQueue();
 
@@ -70,7 +70,7 @@ void main() {
       maxWalletId: maxWalletId,
     );
 
-    final walletService = state.walletService;
+    final walletService = state.accountService;
 
     await pumpEventQueue();
 
@@ -87,7 +87,7 @@ void main() {
       );
 
       final bloc = state.bloc;
-      final walletService = state.walletService;
+      final walletService = state.accountService;
 
       await bloc.selectAccount(id: state.accountIds[maxWalletId]);
 
@@ -105,11 +105,11 @@ void main() {
     );
 
     final bloc = state.bloc;
-    final walletService = state.walletService;
+    final walletService = state.accountService;
 
     const newName = 'new';
 
-    await bloc.renameAccount(id: '0', name: newName);
+    await bloc.renameAccount(id: state.accountIds[0], name: newName);
 
     await pumpEventQueue();
 
@@ -122,9 +122,9 @@ void main() {
       maxWalletId: 1,
     );
 
-    final walletService = state.walletService;
+    final walletService = state.accountService;
 
-    await state.walletService.removeAccount(id: state.accountIds[0]);
+    await state.accountService.removeAccount(id: state.accountIds[0]);
 
     await pumpEventQueue();
 
@@ -137,7 +137,7 @@ void main() {
     );
 
     final bloc = state.bloc;
-    final walletService = state.walletService;
+    final walletService = state.accountService;
 
     await bloc.selectAccount(id: state.accountIds[0]);
     await walletService.removeAccount(id: state.accountIds[1]);
@@ -153,7 +153,7 @@ void main() {
     );
 
     final bloc = state.bloc;
-    final walletService = state.walletService;
+    final walletService = state.accountService;
 
     await bloc.resetAccounts();
 
@@ -169,7 +169,7 @@ class TestState {
     this.assetClient,
     this.transactionClient,
     this.deepLinkService,
-    this.walletService,
+    this.accountService,
     this.bloc,
   );
 
@@ -177,7 +177,7 @@ class TestState {
   final AssetClient assetClient;
   final TransactionClient transactionClient;
   final DeepLinkService deepLinkService;
-  final AccountService walletService;
+  final AccountService accountService;
   final HomeBloc bloc;
 
   static Future<TestState> createConnected({
@@ -234,7 +234,7 @@ class TestState {
         coin: Coin.mainNet,
       );
 
-      accountIds.add(account!.id);
+      accountIds.add(account.id);
 
       cipherService.encryptKey(
         id: account.id,

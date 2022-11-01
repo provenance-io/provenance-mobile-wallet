@@ -17,9 +17,28 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@6: {}
+    - script@1:
+        title: Set Flutter URL
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            file="flutter_url.txt"
+            if [[ -f $file ]]
+            then
+                url=$(<$file)
+            else
+                url=$FLUTTER_URL_DEFAULT
+            fi
+
+            envman add --key FLUTTER_URL --value $url
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
+        - installation_bundle_url: "$FLUTTER_URL"
         - is_update: 'false'
     - cache-pull@2: {}
     - script@1:
@@ -60,17 +79,31 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@6: {}
+    - script@1:
+        title: Set Flutter URL
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            file="flutter_url.txt"
+            if [[ -f $file ]]
+            then
+                url=$(<$file)
+            else
+                url=$FLUTTER_URL_DEFAULT
+            fi
+
+            envman add --key FLUTTER_URL --value $url
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
+        - installation_bundle_url: "$FLUTTER_URL"
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
-    - ios-auto-provision-appstoreconnect@2.2:
-        inputs:
-        - verbose_log: 'yes'
-        - scheme: "$BITRISE_DEV_SCHEME"
-        - distribution_type: app-store
     - set-xcode-build-number@1:
         inputs:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/Runner/Info.plist"
@@ -90,6 +123,7 @@ workflows:
     - xcode-archive@4:
         inputs:
         - distribution_method: app-store
+        - automatic_code_signing: api-key
         - scheme: "$BITRISE_DEV_SCHEME"
     - sign-apk@1: {}
     - deploy-to-itunesconnect-application-loader@1:
@@ -139,7 +173,7 @@ workflows:
     - firebase-dsym-upload@2:
         inputs:
         - fdu_fabric_location: "./ios/Pods/FirebaseCrashlytics/upload-symbols"
-        - fdu_dsym_location: "./build/ios/Release-dev-iphoneos/ProvenanceWallet.app.dSYM"
+        - fdu_dsym_location: "./build/ios/Release-dev-iphoneos/ProvenanceWalletDev.app.dSYM"
         - fdu_google_services_location: "./ios/Runner/Firebase/GoogleService-io.provenance.wallet.dev-Info.plist"
     after_run: []
   deploy-prod:
@@ -147,17 +181,31 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@6: {}
+    - script@1:
+        title: Set Flutter URL
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            file="flutter_url.txt"
+            if [[ -f $file ]]
+            then
+                url=$(<$file)
+            else
+                url=$FLUTTER_URL_DEFAULT
+            fi
+
+            envman add --key FLUTTER_URL --value $url
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
+        - installation_bundle_url: "$FLUTTER_URL"
     - cache-pull@2:
         inputs:
         - is_debug_mode: 'true'
-    - ios-auto-provision-appstoreconnect@2.2:
-        inputs:
-        - verbose_log: 'yes'
-        - scheme: "$BITRISE_PROD_SCHEME"
-        - distribution_type: app-store
     - set-xcode-build-number@1:
         inputs:
         - plist_path: "$BITRISE_SOURCE_DIR/ios/Runner/Info.plist"
@@ -175,6 +223,7 @@ workflows:
         - cache_level: none
         - distribution_method: app-store
         - scheme: "$BITRISE_PROD_SCHEME"
+        - automatic_code_signing: api-key
         - export_method: app-store
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
@@ -225,14 +274,124 @@ workflows:
         - fdu_dsym_location: "./build/ios/Release-prod-iphoneos/ProvenanceWallet.app.dSYM"
         - fdu_google_services_location: "./ios/Runner/Firebase/GoogleService-io.provenance.wallet-Info.plist"
     after_run: []
+  gcloud:
+    steps:
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            brew install --cask google-cloud-sdk
+        title: Install gcloud
+    - file-downloader@1:
+        inputs:
+        - destination: gcloud-provenance-wallet-svc-acct.json
+        - source: "$BITRISEIO_GCLOUD_PROVENANCE_WALLET_SVC_ACCT_URL"
+        title: Download Svc Acct Key
+    - script@1:
+        inputs:
+        - content: |
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            gcloud auth activate-service-account --key-file=gcloud-provenance-wallet-svc-acct.json
+            gcloud --quiet config set project provenance-wallet
+  integration-test:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@6: {}
+    - script@1:
+        title: Set Flutter URL
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            file="flutter_url.txt"
+            if [[ -f $file ]]
+            then
+                url=$(<$file)
+            else
+                url=$FLUTTER_URL_DEFAULT
+            fi
+
+            envman add --key FLUTTER_URL --value $url
+    - flutter-installer@0:
+        inputs:
+        - installation_bundle_url: "$FLUTTER_URL"
+        - is_update: 'false'
+    - cache-pull@2: {}
+    - brew-install@0: {}
+    - script@1:
+        inputs:
+        - content: |+
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            ./buildIntegrationTests.sh
+
+        title: Integration Test
+    - cache-push@2: {}
+    - slack@3:
+        inputs:
+        - channel: ''
+        - emoji: ''
+        - text: "$ICON_SUCCESS  *Build Succeeded!* $BITRISE_GIT_BRANCH"
+        - icon_url: ''
+        - emoji_on_error: ''
+        - text_on_error: "$ICON_FAILURE  *Build Failed!* $BITRISE_GIT_BRANCH"
+        - icon_url_on_error: ''
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+        - color: "$COLOR_SUCCESS"
+        - pretext: ''
+        - color_on_error: "$COLOR_FAILURE"
+        - pretext_on_error: ''
+    - deploy-to-bitrise-io@2: {}
   PR:
     steps:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@6: {}
+    - script@1:
+        title: Set Flutter URL
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            file="flutter_url.txt"
+            if [[ -f $file ]]
+            then
+                url=$(<$file)
+            else
+                url=$FLUTTER_URL_DEFAULT
+            fi
+
+            envman add --key FLUTTER_URL --value $url
     - flutter-installer@0:
         inputs:
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip
+        - installation_bundle_url: "$FLUTTER_URL"
         - is_update: 'false'
     - cache-pull@2: {}
     - script@1:
@@ -306,3 +465,6 @@ app:
   - opts:
       is_expand: false
     COLOR_FAILURE: "#EE4959"
+  - opts:
+      is_expand: false
+    FLUTTER_URL_DEFAULT: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip

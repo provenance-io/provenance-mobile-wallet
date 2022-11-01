@@ -4,7 +4,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/chain_id.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
@@ -55,7 +54,7 @@ main() {
     const id = "TestId";
 
     BasicAccount firstAccount() {
-      final coin = ChainId.toCoin(publicKeyData.chainId);
+      final coin = Coin.forChainId(publicKeyData.chainId);
       final publicKey = keyFromHex(publicKeyData.hex, coin);
 
       return BasicAccount(
@@ -72,7 +71,7 @@ main() {
       final publicKey = privateKey.defaultKey().publicKey;
       publicKeyData = PublicKeyData(
         hex: publicKey.compressedPublicKeyHex,
-        chainId: ChainId.forCoin(privateKey.coin),
+        chainId: privateKey.coin.chainId,
       );
     });
 

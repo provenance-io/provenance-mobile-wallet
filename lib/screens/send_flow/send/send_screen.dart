@@ -1,8 +1,8 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/recent_send_list.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_asset_list.dart';
@@ -136,12 +136,9 @@ class SendPageState extends State<SendPage> {
                             _addressController.text = newAddress!;
                           }
                         } catch (e) {
-                          showDialog(
-                            useSafeArea: true,
+                          PwDialog.showError(
                             context: context,
-                            builder: (context) => ErrorDialog(
-                              error: e.toString(),
-                            ),
+                            error: e,
                           );
                         }
                       },
@@ -198,12 +195,9 @@ class SendPageState extends State<SendPage> {
     } catch (e) {
       logError('Error', error: e);
 
-      showDialog(
-        useSafeArea: true,
+      PwDialog.showError(
         context: context,
-        builder: (context) => ErrorDialog(
-          error: e.toString(),
-        ),
+        error: e,
       );
     }
   }

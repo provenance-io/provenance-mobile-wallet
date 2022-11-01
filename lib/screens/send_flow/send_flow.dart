@@ -1,7 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
@@ -136,14 +136,10 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   @override
   Future<void> showAllRecentSends() {
-    return showDialog(
-      useSafeArea: true,
+    // TODO: Implement show all recent sends
+    return PwDialog.showError(
       context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: Strings.notImplementedMessage,
-        );
-      },
+      message: Strings.notImplementedMessage,
     );
   }
 
@@ -155,20 +151,25 @@ class SendFlowState extends FlowBaseState<SendFlow>
     MultiSendAsset fee,
     String note,
   ) {
-    final bloc = SendReviewBloc(
-      widget.accountDetails,
-      get<TxQueueService>(),
-      _receivingAddress!,
-      amountToSend,
-      fee,
-      note,
-      this,
+    return showPage(
+      (context) => Provider<SendReviewBloc>(
+        create: (context) {
+          return SendReviewBloc(
+            widget.accountDetails,
+            get<TxQueueService>(),
+            _receivingAddress!,
+            amountToSend,
+            fee,
+            note,
+            this,
+          );
+        },
+        dispose: (context, bloc) {
+          bloc.dispose();
+        },
+        child: SendReviewScreen(),
+      ),
     );
-
-    get.registerSingleton(bloc);
-
-    return showPage((context) => SendReviewScreen())
-        .whenComplete(() => get.unregister<SendReviewBloc>());
   }
 
   /* SendReviewNaviagor */

@@ -1,20 +1,18 @@
-import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
-import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provenance_wallet/util/transaction_error_util.dart';
+import 'package:provider/provider.dart';
 
 class SendReviewCell extends StatelessWidget {
   const SendReviewCell(
@@ -68,29 +66,19 @@ class SendReviewScreen extends StatelessWidget {
   }
 }
 
-class SendReviewPage extends StatefulWidget {
-  const SendReviewPage({Key? key}) : super(key: key);
+class SendReviewPage extends StatelessWidget {
+  const SendReviewPage({
+    Key? key,
+  }) : super(key: key);
 
   static final keySendButton = ValueKey('$SendReviewPage.send_button');
 
   @override
-  State<StatefulWidget> createState() => SendReviewPageState();
-}
-
-class SendReviewPageState extends State<SendReviewPage> {
-  SendReviewBloc? _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _bloc = get<SendReviewBloc>();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<SendReviewBloc>(context);
+
     return StreamBuilder<SendReviewBlocState>(
-      stream: _bloc!.stream,
+      stream: bloc.stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -165,11 +153,12 @@ class SendReviewPageState extends State<SendReviewPage> {
                       style: PwTextStyle.bodyBold,
                     ),
                     onPressed: () async {
-                      await ModalLoadingRoute.showLoading(
+                      await _sendClicked(
                         context,
-                        minDisplayTime: Duration(milliseconds: 500),
+                        bloc,
+                        state.total,
+                        state.receivingAddress,
                       );
-                      _sendClicked(state.total, state.receivingAddress);
                     },
                   ),
                   VerticalSpacer.large(),
@@ -182,25 +171,17 @@ class SendReviewPageState extends State<SendReviewPage> {
     );
   }
 
-  Future<void> _sendClicked(String total, String addressTo) async {
-    ScheduledTx? scheduledTx;
-    try {
-      scheduledTx = await _bloc!.doSend();
-    } on PwError catch (e, s) {
-      logError(
-        'Send failed',
-        error: e,
-        stackTrace: s,
-      );
+  Future<void> _sendClicked(BuildContext context, SendReviewBloc bloc,
+      String total, String addressTo) async {
+    QueuedTx? queuedTx;
 
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: e.toLocalizedString(context),
-          );
-        },
-      );
+    ModalLoadingRoute.showLoading(
+      context,
+      minDisplayTime: Duration(milliseconds: 500),
+    );
+
+    try {
+      queuedTx = await bloc.doSend();
     } catch (e, s) {
       logError(
         'Send failed',
@@ -208,66 +189,64 @@ class SendReviewPageState extends State<SendReviewPage> {
         stackTrace: s,
       );
 
-      await showDialog(
+      PwDialog.showError(
         context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: e.toString(),
-          );
-        },
+        error: e,
       );
     } finally {
       ModalLoadingRoute.dismiss(context);
     }
 
-    final executed = scheduledTx?.result != null;
-    final responseCode = scheduledTx?.result?.response.txResponse.code;
+    if (queuedTx != null) {
+      switch (queuedTx.kind) {
+        case QueuedTxKind.executed:
+          final executedTx = queuedTx as ExecutedTx;
+          final responseCode = executedTx.result.response.txResponse.code;
+          if (responseCode == 0) {
+            await showDialog(
+              barrierColor: Colors.transparent,
+              useSafeArea: true,
+              context: context,
+              builder: (context) => SendSuccessScreen(
+                date: DateTime.now(),
+                totalAmount: total,
+                addressTo: abbreviateAddress(addressTo),
+              ),
+            );
 
-    if (executed) {
-      if (responseCode == 0) {
-        await showDialog(
-          barrierColor: Colors.transparent,
-          useSafeArea: true,
-          context: context,
-          builder: (context) => SendSuccessScreen(
-            date: DateTime.now(),
-            totalAmount: total,
-            addressTo: abbreviateAddress(addressTo),
-          ),
-        );
+            await bloc.complete();
+          } else {
+            logError(
+              'Send failed',
+              error: queuedTx.result.response.txResponse.rawLog,
+            );
 
-        await _bloc!.complete();
-      } else {
-        logError(
-          'Send failed',
-          error: scheduledTx?.result?.response.txResponse.rawLog,
-        );
-
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorDialog(
-                error: errorMessage(
-              context,
-              scheduledTx?.result?.response.txResponse.codespace,
-              scheduledTx?.result?.response.txResponse.code,
-            ));
-          },
-        );
+            PwDialog.showError(
+              context: context,
+              message: errorMessage(
+                context,
+                executedTx.result.response.txResponse.codespace,
+                executedTx.result.response.txResponse.code,
+              ),
+            );
+          }
+          break;
+        case QueuedTxKind.scheduled:
+          await PwDialog.showFull(
+            context: context,
+            title: Strings.of(context).multiSigTransactionInitiatedTitle,
+            message: Strings.of(context).multiSigTransactionInitiatedMessage,
+            icon: Image.asset(
+              Assets.imagePaths.transactionComplete,
+              height: 80,
+              width: 80,
+            ),
+            dismissButtonText:
+                Strings.of(context).multiSigTransactionInitiatedDone,
+          );
+          await bloc.complete();
+          break;
       }
-    } else {
-      await PwDialog.showFull(
-        context: context,
-        title: Strings.of(context).multiSigTransactionInitiatedTitle,
-        message: Strings.of(context).multiSigTransactionInitiatedMessage,
-        icon: Image.asset(
-          Assets.imagePaths.transactionComplete,
-          height: 80,
-          width: 80,
-        ),
-        dismissButtonText: Strings.of(context).multiSigTransactionInitiatedDone,
-      );
-      await _bloc!.complete();
     }
   }
 }

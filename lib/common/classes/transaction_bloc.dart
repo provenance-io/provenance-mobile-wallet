@@ -56,7 +56,7 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey!.defaultKey(),
+      privateKey.defaultKey(),
       account.coin,
       estimate,
     );

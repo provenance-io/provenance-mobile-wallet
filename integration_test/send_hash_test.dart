@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
@@ -41,7 +42,6 @@ void main() {
         ],
       );
 
-      await app.mainCompleter.future;
       await tester.pumpAndSettle();
 
       final pin = data.cipherPin!;
@@ -81,6 +81,12 @@ void main() {
         scrollable: ValueKey("FeeRow"),
       );
       await SendAmountPage.keyNextButton.tap(tester);
+      if (tester
+              .widgetList<PwButton>(find.byKey(SendAmountPage.keyNextButton))
+              .length ==
+          1) {
+        await SendAmountPage.keyNextButton.tap(tester);
+      }
       await SendReviewPage.keySendButton.tap(tester);
       await pumpEventQueue();
 
@@ -93,13 +99,13 @@ void main() {
       await tester.pumpAndSettle();
       await Dashboard.keyListColumn.drag(tester, dx: 0, dy: 500);
 
-      // The expected value uses less hash than the actual value, so we only look at 2 decimal places.
+      // The expected value uses less hash than the actual value, so we only look at 1 decimal place.
       final compareValue =
-          (beginningHash - transactionAmount).toStringAsFixed(2);
+          (beginningHash - transactionAmount).toStringAsFixed(1);
 
       final finalValue =
           double.parse(Dashboard.keyAssetAmount("HASH").pwText(tester))
-              .toStringAsFixed(2);
+              .toStringAsFixed(1);
       expectLater(finalValue, compareValue);
     },
   );

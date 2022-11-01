@@ -133,6 +133,9 @@ void main() {
     mockAccountService = MockAccountService();
     mockTxQueueService = MockTxQueueService();
 
+    when(mockTxQueueService.response)
+        .thenAnswer((_) => Stream<TxResult>.empty());
+
     when(mockAccountService.events).thenReturn(accountServiceEvents);
     when(mockAccountService.onDispose()).thenAnswer((_) => Future.value());
     when(mockAccountService.getAccount(any))
@@ -188,10 +191,12 @@ void main() {
   group("connectSession", () {
     testWidgets("return false on private key not found", (_) async {
       when(mockAccountService.loadKey(any))
-          .thenAnswer((_) => Future.value(null));
-      final success = await _walletConnectService.connectSession(
-          "AccountId", walletConnectAddress);
-      expect(success, false);
+          .thenThrow(AccountServiceError.privateKeyNotFound);
+
+      expectLater(
+        _walletConnectService.connectSession("AccountId", walletConnectAddress),
+        throwsA(AccountServiceError.privateKeyNotFound),
+      );
     });
 
     testWidgets("return false on invalid address", (_) async {
@@ -328,10 +333,12 @@ void main() {
 
     testWidgets("return false on private key not found", (_) async {
       when(mockAccountService.loadKey(any))
-          .thenAnswer((_) => Future.value(null));
-      final success =
-          await _walletConnectService.tryRestoreSession("AccountId");
-      expect(success, false);
+          .thenThrow(AccountServiceError.privateKeyNotFound);
+
+      expectLater(
+        _walletConnectService.tryRestoreSession("AccountId"),
+        throwsA(AccountServiceError.privateKeyNotFound),
+      );
     });
 
     testWidgets("return false on no account selected", (_) async {
