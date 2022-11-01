@@ -140,7 +140,7 @@ class ReceivePageState extends State<ReceivePage> {
       );
     } catch (e) {
       PwDialog.showError(
-        context,
+        context: context,
         message: e.toString(),
       );
     }

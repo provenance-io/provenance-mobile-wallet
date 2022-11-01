@@ -127,7 +127,7 @@ class WalletConnectButton extends StatelessWidget {
             .connectSession(account.id, addressData)
             .catchError((err) {
           PwDialog.showError(
-            context,
+            context: context,
             message: Strings.of(context).walletConnectError,
             error: err,
           );
@@ -142,7 +142,7 @@ class WalletConnectButton extends StatelessWidget {
 
         if (!success) {
           PwDialog.showError(
-            context,
+            context: context,
             message: Strings.of(context).walletConnectFailed,
           );
         }

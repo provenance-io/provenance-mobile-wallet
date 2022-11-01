@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/strings.dart';
@@ -46,12 +46,9 @@ class ChangePinBloc extends Disposable {
     BuildContext context,
   ) async {
     if (!ListEquality().equals(inputCode, _inputCode.value)) {
-      await showDialog(
-        useSafeArea: true,
+      await PwDialog.showError(
         context: context,
-        builder: (context) => ErrorDialog(
-          error: Strings.of(context).yourPinDoesNotMatchPleaseTryAgain,
-        ),
+        message: Strings.of(context).yourPinDoesNotMatchPleaseTryAgain,
       );
     } else {
       _navigator.enableBiometrics();

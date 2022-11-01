@@ -1,7 +1,7 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send/send_bloc.dart';
@@ -136,14 +136,10 @@ class SendFlowState extends FlowBaseState<SendFlow>
 
   @override
   Future<void> showAllRecentSends() {
-    return showDialog(
-      useSafeArea: true,
+    // TODO: Implement show all recent sends
+    return PwDialog.showError(
       context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: Strings.notImplementedMessage,
-        );
-      },
+      message: Strings.notImplementedMessage,
     );
   }
 

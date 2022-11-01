@@ -1,7 +1,7 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_confirm/staking_confirm_base.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_details/details_header.dart';
@@ -111,13 +111,9 @@ class ConfirmUndelegateScreen extends StatelessWidget {
 
   Future<void> _showErrorModal(Object error, BuildContext context) async {
     ModalLoadingRoute.dismiss(context);
-    await showDialog(
+    await PwDialog.showError(
       context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: error.toString(),
-        );
-      },
+      error: error,
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal/pw_modal_screen.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/transactions_bloc.dart';
@@ -265,14 +265,12 @@ class HomeScreenState extends State<HomeScreen>
 
   void _onError(String message) {
     logError(message);
-    showDialog(
-      useSafeArea: true,
+
+    PwDialog.showError(
       context: context,
-      builder: (context) => ErrorDialog(
-        title: Strings.of(context).serviceErrorTitle,
-        error: message,
-        buttonText: Strings.of(context).continueName,
-      ),
+      title: Strings.of(context).serviceErrorTitle,
+      message: message,
+      buttonText: Strings.of(context).continueName,
     );
   }
 

@@ -1,11 +1,9 @@
-import 'package:provenance_wallet/common/classes/pw_error.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/screens/send_flow/send_success/send_success_screen.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
@@ -154,8 +152,8 @@ class SendReviewPage extends StatelessWidget {
                       Strings.of(context).sendReviewSendButtonTitle,
                       style: PwTextStyle.bodyBold,
                     ),
-                    onPressed: () {
-                      _sendClicked(
+                    onPressed: () async {
+                      await _sendClicked(
                         context,
                         bloc,
                         state.total,
@@ -184,21 +182,6 @@ class SendReviewPage extends StatelessWidget {
 
     try {
       queuedTx = await bloc.doSend();
-    } on PwError catch (e, s) {
-      logError(
-        'Send failed',
-        error: e,
-        stackTrace: s,
-      );
-
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: e.toLocalizedString(context),
-          );
-        },
-      );
     } catch (e, s) {
       logError(
         'Send failed',
@@ -206,13 +189,9 @@ class SendReviewPage extends StatelessWidget {
         stackTrace: s,
       );
 
-      await showDialog(
+      PwDialog.showError(
         context: context,
-        builder: (context) {
-          return ErrorDialog(
-            error: e.toString(),
-          );
-        },
+        error: e,
       );
     } finally {
       ModalLoadingRoute.dismiss(context);
@@ -242,16 +221,13 @@ class SendReviewPage extends StatelessWidget {
               error: queuedTx.result.response.txResponse.rawLog,
             );
 
-            await showDialog(
+            PwDialog.showError(
               context: context,
-              builder: (context) {
-                return ErrorDialog(
-                    error: errorMessage(
-                  context,
-                  executedTx.result.response.txResponse.codespace,
-                  executedTx.result.response.txResponse.code,
-                ));
-              },
+              message: errorMessage(
+                context,
+                executedTx.result.response.txResponse.codespace,
+                executedTx.result.response.txResponse.code,
+              ),
             );
           }
           break;

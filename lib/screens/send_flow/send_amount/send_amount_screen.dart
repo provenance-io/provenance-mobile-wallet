@@ -6,8 +6,8 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_autosizing_text.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -307,12 +307,9 @@ class SendAmountPageState extends State<SendAmountPage> {
     try {
       await _bloc!.showNext(_noteController.text, _amountController.text);
     } catch (error) {
-      showDialog(
-        useSafeArea: true,
+      PwDialog.showError(
         context: context,
-        builder: (context) {
-          return ErrorDialog(error: error.toString());
-        },
+        error: error,
       );
     }
   }

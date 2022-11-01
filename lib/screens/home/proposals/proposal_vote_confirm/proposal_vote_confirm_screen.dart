@@ -1,9 +1,9 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
+import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_gas_adjustment_slider.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
-import 'package:provenance_wallet/dialogs/error_dialog.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_details/address_card.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposal_vote_confirm/proposal_vote_confirm_bloc.dart';
 import 'package:provenance_wallet/screens/home/proposals/proposals_screen/proposal_vote_chip.dart';
@@ -183,13 +183,10 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
 
   Future<void> _showErrorModal(Object error, BuildContext context) async {
     ModalLoadingRoute.dismiss(context);
-    await showDialog(
+
+    await PwDialog.showError(
       context: context,
-      builder: (context) {
-        return ErrorDialog(
-          error: error.toString(),
-        );
-      },
+      error: error,
     );
   }
 }

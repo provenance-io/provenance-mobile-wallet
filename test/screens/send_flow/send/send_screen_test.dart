@@ -174,7 +174,8 @@ main() {
 
       testWidgets("QR scanner - return Error", (tester) async {
         await _build(tester);
-        final error = Exception("Test");
+        const errorText = 'Test';
+        final error = Exception(errorText);
         when(mockBloc!.scanAddress()).thenAnswer((_) => Future.error(error));
 
         final iconFind = find.byType(PwIcon);
@@ -186,7 +187,7 @@ main() {
         expect(
           find.descendant(
             of: errorFind,
-            matching: find.text("Exception: Test"),
+            matching: find.text(errorText),
           ),
           findsOneWidget,
         );
@@ -252,7 +253,8 @@ main() {
       });
 
       testWidgets("Error", (tester) async {
-        final ex = Exception("Test");
+        const errorText = 'Test';
+        final ex = Exception(errorText);
         when(mockBloc!.next(any, any)).thenAnswer((_) => Future.error(ex));
 
         await _build(tester);
@@ -265,7 +267,7 @@ main() {
         expect(
           find.descendant(
             of: dialogFind,
-            matching: find.text("Exception: Test"),
+            matching: find.text(errorText),
           ),
           findsOneWidget,
         );
