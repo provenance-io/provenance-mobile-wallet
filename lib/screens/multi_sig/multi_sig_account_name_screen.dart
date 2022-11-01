@@ -3,6 +3,9 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
+import 'package:provenance_wallet/screens/account/basic_account_create_flow.dart';
+import 'package:provenance_wallet/screens/account/basic_account_recover_flow.dart';
+import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_connect_dropdown.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -141,8 +144,48 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                         _linkedAccount = e.account;
                       });
                     },
+                    selected: _linkedAccount,
                   ),
                 ),
+                VerticalSpacer.large(),
+                PwTextButton.secondaryAction(
+                  context: context,
+                  text: Strings.of(context).multiSigCreateLinkedAccount,
+                  onPressed: () async {
+                    final account =
+                        await Navigator.of(context).push<BasicAccount?>(
+                      BasicAccountCreateFlow(
+                        origin: AddAccountOrigin.accounts,
+                      ).route(),
+                    );
+
+                    if (account != null) {
+                      setState(() {
+                        _linkedAccount = account;
+                      });
+                    }
+                  },
+                ),
+                VerticalSpacer.large(),
+                PwTextButton.secondaryAction(
+                  context: context,
+                  text: Strings.of(context).multiSigRecoverLinkedAccount,
+                  onPressed: () async {
+                    final account =
+                        await Navigator.of(context).push<BasicAccount?>(
+                      BasicAccountRecoverFlow(
+                        origin: AddAccountOrigin.accounts,
+                      ).route(),
+                    );
+
+                    if (account != null) {
+                      setState(() {
+                        _linkedAccount = account;
+                      });
+                    }
+                  },
+                ),
+                VerticalSpacer.large(),
                 Expanded(
                   child: Container(),
                 ),
