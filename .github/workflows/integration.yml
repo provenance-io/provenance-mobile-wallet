@@ -25,7 +25,7 @@ jobs:
           path: ../integration_test_data.json
           write-mode: overwrite
           contents: |
-            '${{ secrets.INTEGRATION_TEST_DATA_JSON }}'
+            "${{ secrets.INTEGRATION_TEST_DATA_JSON }}"
       - uses: actions/setup-java@v3
         with:
           distribution: "zulu"
