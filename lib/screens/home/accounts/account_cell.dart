@@ -117,14 +117,13 @@ class _AccountCellState extends State<AccountCell> {
 
   Widget _buildAccountContainer(BuildContext context, bool isSelected) {
     final strings = Strings.of(context);
-    final Coin coin;
+    final Coin? coin;
 
-    if (_account is BasicAccount) {
-      coin = _account.coin!;
-    } else if (_account is MultiAccount) {
-      coin = _account.coin!;
-    } else {
-      throw Exception("Unknown account type");
+    switch (_account.kind) {
+      case AccountKind.basic:
+      case AccountKind.multi:
+        coin = _account.coin;
+        break;
     }
 
     return AccountContainer(
@@ -137,9 +136,10 @@ class _AccountCellState extends State<AccountCell> {
           ),
           if (_account.address != null)
             AccountDescriptionRow(address: _account.address!),
-          AccountNetworkRow(
-            coin: coin,
-          ),
+          if (coin != null)
+            AccountNetworkRow(
+              coin: coin,
+            ),
           if (_account.address == null)
             PwText(
               strings.accountStatusPending,
