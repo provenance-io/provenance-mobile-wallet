@@ -36,8 +36,13 @@ void main() {
       await AccountNameScreen.keyContinueButton.tap(tester);
       await RecoverAccountScreen.keyContinueButton.tap(tester);
 
-      const taps = RecoverPassphraseEntryScreenState.toggleAdvancedUICount + 2;
-      await RecoverPassphraseEntryScreen.keyAppBar.tap(tester, times: taps);
+      while (tester
+          .widgetList(
+            find.byKey(RecoverPassphraseEntryScreen.networkName),
+          )
+          .isEmpty) {
+        await RecoverPassphraseEntryScreen.keyAppBar.tap(tester);
+      }
 
       RecoverPassphraseEntryScreen.networkName.expect(tester);
 
