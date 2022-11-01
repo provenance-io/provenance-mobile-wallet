@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
@@ -14,11 +15,13 @@ class MultiSigConnectDropDown extends StatefulWidget {
   const MultiSigConnectDropDown({
     required this.coin,
     required this.onChanged,
+    this.selected,
     Key? key,
   }) : super(key: key);
 
   final Coin coin;
   final void Function(MultiSigConnectDropdownItem item) onChanged;
+  final Account? selected;
 
   @override
   State<MultiSigConnectDropDown> createState() =>
@@ -39,7 +42,7 @@ class _MultiSigConnectDropDownState extends State<MultiSigConnectDropDown> {
     super.initState();
 
     _focusNext = FocusNode(debugLabel: 'Next button');
-    _load(null);
+    _load(widget.selected);
   }
 
   @override
@@ -47,6 +50,15 @@ class _MultiSigConnectDropDownState extends State<MultiSigConnectDropDown> {
     super.dispose();
 
     _focusNext.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiSigConnectDropDown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.selected?.id != widget.selected?.id) {
+      _load(widget.selected);
+    }
   }
 
   @override
@@ -132,7 +144,9 @@ class _MultiSigConnectDropDownState extends State<MultiSigConnectDropDown> {
       ];
     }
 
-    final value = items.first;
+    final value = items.firstWhereOrNull(
+            (e) => e.account?.id != null && e.account?.id == selected?.id) ??
+        items.first;
 
     setState(() {
       _items = items;
