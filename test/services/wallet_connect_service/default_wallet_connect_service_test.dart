@@ -133,6 +133,9 @@ void main() {
     mockAccountService = MockAccountService();
     mockTxQueueService = MockTxQueueService();
 
+    when(mockTxQueueService.response)
+        .thenAnswer((_) => Stream<TxResult>.empty());
+
     when(mockAccountService.events).thenReturn(accountServiceEvents);
     when(mockAccountService.onDispose()).thenAnswer((_) => Future.value());
     when(mockAccountService.getAccount(any))

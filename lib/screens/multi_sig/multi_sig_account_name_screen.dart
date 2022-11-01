@@ -47,15 +47,20 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
 
   late final TextEditingController _textEditingController;
   BasicAccount? _linkedAccount;
+  late bool _isValid;
 
   @override
   void initState() {
     super.initState();
 
     _textEditingController = TextEditingController();
+    _textEditingController.addListener(_validate);
+
     widget.name.listen((e) {
       _textEditingController.text = e;
     }).addTo(_subscriptions);
+
+    _validate();
   }
 
   @override
@@ -151,7 +156,7 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                       style: PwTextStyle.bodyBold,
                       color: PwColor.neutralNeutral,
                     ),
-                    enabled: _isValid(),
+                    enabled: _isValid,
                     onPressed: _submit,
                   ),
                 ),
@@ -164,12 +169,17 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
     );
   }
 
-  bool _isValid() {
-    return _textEditingController.text.isNotEmpty && _linkedAccount != null;
+  void _validate() {
+    final valid =
+        _textEditingController.text.isNotEmpty && _linkedAccount != null;
+
+    setState(() {
+      _isValid = valid;
+    });
   }
 
   void _submit() {
-    if (_isValid()) {
+    if (_isValid) {
       widget.onSubmit(
           _textEditingController.text, widget.mode, _linkedAccount!);
     }

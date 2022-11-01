@@ -15,6 +15,7 @@ abstract class TxQueueService {
     required proto.TxBody txBody,
     required TransactableAccount account,
     required AccountGasEstimate gasEstimate,
+    int? walletConnectRequestId,
   });
 
   Future<void> completeTx({
@@ -73,12 +74,14 @@ class TxResult {
     required this.response,
     required this.fee,
     this.txId,
+    this.walletConnectRequestId,
   });
 
   final proto.TxBody body;
   final proto.RawTxResponsePair response;
   final proto.Fee fee;
   final String? txId;
+  final int? walletConnectRequestId;
 }
 
 class AccountTransactionResponse {

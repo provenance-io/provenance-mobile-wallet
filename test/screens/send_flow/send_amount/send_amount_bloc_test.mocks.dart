@@ -280,16 +280,23 @@ class MockTxQueueService extends _i1.Mock implements _i7.TxQueueService {
   _i10.Future<_i7.QueuedTx> scheduleTx(
           {_i13.TxBody? txBody,
           _i3.TransactableAccount? account,
-          _i6.AccountGasEstimate? gasEstimate}) =>
-      (super
-          .noSuchMethod(Invocation.method(#scheduleTx, [], {#txBody: txBody, #account: account, #gasEstimate: gasEstimate}),
-              returnValue: _i10.Future<_i7.QueuedTx>.value(_FakeQueuedTx_7(
-                  this,
-                  Invocation.method(#scheduleTx, [], {
-                    #txBody: txBody,
-                    #account: account,
-                    #gasEstimate: gasEstimate
-                  })))) as _i10.Future<_i7.QueuedTx>);
+          _i6.AccountGasEstimate? gasEstimate,
+          int? walletConnectRequestId}) =>
+      (super.noSuchMethod(
+          Invocation.method(#scheduleTx, [], {
+            #txBody: txBody,
+            #account: account,
+            #gasEstimate: gasEstimate,
+            #walletConnectRequestId: walletConnectRequestId
+          }),
+          returnValue: _i10.Future<_i7.QueuedTx>.value(_FakeQueuedTx_7(
+              this,
+              Invocation.method(#scheduleTx, [], {
+                #txBody: txBody,
+                #account: account,
+                #gasEstimate: gasEstimate,
+                #walletConnectRequestId: walletConnectRequestId
+              })))) as _i10.Future<_i7.QueuedTx>);
   @override
   _i10.Future<void> completeTx({String? txId}) =>
       (super.noSuchMethod(Invocation.method(#completeTx, [], {#txId: txId}),

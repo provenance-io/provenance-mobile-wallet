@@ -115,19 +115,20 @@ class _LandingScreenState extends State<LandingScreen> {
                           }
                         },
                       ),
-                      VerticalSpacer.large(),
-                      PwTextButton.secondaryAction(
-                        key: LandingScreen.keyImportAccountButton,
-                        context: context,
-                        text: Strings.of(context).recoverAccount,
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            BasicAccountRecoverFlow(
-                              origin: AddAccountOrigin.landing,
-                            ).route(),
-                          );
-                        },
-                      )
+                      if (!hasAccount) VerticalSpacer.large(),
+                      if (!hasAccount)
+                        PwTextButton.secondaryAction(
+                          key: LandingScreen.keyImportAccountButton,
+                          context: context,
+                          text: Strings.of(context).recoverAccount,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              BasicAccountRecoverFlow(
+                                origin: AddAccountOrigin.landing,
+                              ).route(),
+                            );
+                          },
+                        )
                     ],
                   );
                 },
