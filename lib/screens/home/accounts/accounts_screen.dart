@@ -30,7 +30,7 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   List<Account>? _accounts;
   Account? _selected;
-  Set<String>? _linkedIds;
+  Set<String>? _linkedAccountIds;
 
   void _sort(List<Account>? accounts, Account? selected) {
     accounts?.sort((a, b) {
@@ -62,7 +62,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       setState(() {
         _selected = selected;
         _accounts = accounts;
-        _linkedIds = linkedIds;
+        _linkedAccountIds = linkedIds;
       });
     }
   }
@@ -82,7 +82,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       _sort(_accounts, _selected);
 
       if (e is MultiAccount) {
-        _linkedIds?.add(e.id);
+        _linkedAccountIds?.add(e.linkedAccount.id);
       }
 
       final index = _accounts?.indexWhere((i) => i.id == e.id);
@@ -97,9 +97,11 @@ class AccountsScreenState extends State<AccountsScreen> {
         if (index != null) {
           _accounts?.removeAt(index);
 
-          if (e is MultiAccount) {
-            _linkedIds =
-                _accounts?.whereType<MultiAccount>().map((e) => e.id).toSet();
+          if (account is MultiAccount) {
+            _linkedAccountIds = _accounts
+                ?.whereType<MultiAccount>()
+                .map((e) => e.linkedAccount.id)
+                .toSet();
           }
 
           _listKey.currentState?.removeItem(
@@ -239,7 +241,7 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   Widget _getItem(Account account) {
     final isSelected = account.id == _selected?.id;
-    final linkedIds = _linkedIds ?? {};
+    final linkedIds = _linkedAccountIds ?? {};
 
     return GestureDetector(
       key: AccountsScreen.keySelectAccountButton(account.name),
