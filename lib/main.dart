@@ -253,16 +253,18 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     };
 
-    DefaultRemoteNotificationService.onBackgroundMultiSigNotification(
-        (message) async {
-      final title = message.title;
-      if (title != null) {
-        await AccountNotificationService.addInBackground(
-          label: title,
-          created: DateTime.now(),
-        );
-      }
-    });
+    if (_enableFirebase) {
+      DefaultRemoteNotificationService.onBackgroundMultiSigNotification(
+          (message) async {
+        final title = message.title;
+        if (title != null) {
+          await AccountNotificationService.addInBackground(
+            label: title,
+            created: DateTime.now(),
+          );
+        }
+      });
+    }
     await runZonedGuarded(
       () async {
         await SystemChrome.setPreferredOrientations(
