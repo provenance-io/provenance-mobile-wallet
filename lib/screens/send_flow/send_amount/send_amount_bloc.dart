@@ -79,12 +79,12 @@ class SendAmountBloc extends Disposable {
 
     List<SendAsset> individualFees = <SendAsset>[];
 
-    final denoms = estimate.totalFees.map((e) => e.denom).toList();
+    final denoms = estimate.amount.map((e) => e.denom).toList();
     final priceLookup = await _priceClient.getAssetPrices(coin, denoms).then(
           (prices) => {for (var price in prices) price.denomination: price},
         );
 
-    for (var fee in estimate.totalFees) {
+    for (var fee in estimate.amount) {
       final price = priceLookup[fee.denom]?.usdPrice ?? 0;
       final sendAsset = SendAsset(
         fee.denom,
@@ -97,7 +97,7 @@ class SendAmountBloc extends Disposable {
     }
 
     _fee = MultiSendAsset(
-      estimate.estimatedGas,
+      estimate,
       individualFees,
     );
 

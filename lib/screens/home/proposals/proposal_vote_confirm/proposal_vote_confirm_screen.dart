@@ -31,7 +31,7 @@ class ProposalVoteConfirmScreen extends StatefulWidget {
 }
 
 class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
-  double _gasEstimate = defaultGasEstimate;
+  double _gasEstimate = defaultGasAdjustment;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class _ProposalVoteConfirmScreen extends State<ProposalVoteConfirmScreen> {
                   PwListDivider.alternate(),
                   PwGasAdjustmentSlider(
                     title: strings.stakingConfirmGasAdjustment,
-                    startingValue: defaultGasEstimate,
+                    startingValue: defaultGasAdjustment,
                     onValueChanged: (value) {
                       setState(() {
                         _gasEstimate = value;

@@ -57,7 +57,7 @@ import 'package:provenance_dart/src/wallet/keys.dart' as _i27;
 import 'package:provenance_dart/src/wallet/private_key.dart' as _i28;
 import 'package:provenance_dart/wallet.dart' as _i31;
 import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart' as _i29;
-import 'package:provenance_wallet/services/models/gas_fee.dart' as _i30;
+import 'package:provenance_wallet/services/models/gas_price.dart' as _i30;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -468,8 +468,8 @@ class MockGasFeeClient extends _i1.Mock implements _i29.GasFeeClient {
   }
 
   @override
-  _i26.Future<_i30.GasFee?> getGasFee(_i31.Coin? coin) =>
-      (super.noSuchMethod(Invocation.method(#getGasFee, [coin]),
-              returnValue: _i26.Future<_i30.GasFee?>.value())
-          as _i26.Future<_i30.GasFee?>);
+  _i26.Future<_i30.GasPrice?> getPrice(_i31.Coin? coin) =>
+      (super.noSuchMethod(Invocation.method(#getPrice, [coin]),
+              returnValue: _i26.Future<_i30.GasPrice?>.value())
+          as _i26.Future<_i30.GasPrice?>);
 }

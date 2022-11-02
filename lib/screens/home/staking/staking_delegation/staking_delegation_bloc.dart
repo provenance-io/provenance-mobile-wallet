@@ -9,7 +9,6 @@ import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -174,13 +173,11 @@ class StakingDelegationBloc extends Disposable {
 
     final privateKey = await get<AccountService>().loadKey(_account.id);
 
-    final adjustedEstimate = await _estimateGas(body);
-
-    AccountGasEstimate estimate = AccountGasEstimate(
-      adjustedEstimate.estimatedGas,
-      adjustedEstimate.baseFee,
-      gasAdjustment ?? adjustedEstimate.gasAdjustment,
-      adjustedEstimate.totalFees,
+    final estimate = await get<TransactionHandler>().estimateGas(
+      body,
+      [_account.publicKey],
+      _account.coin,
+      gasAdjustment: gasAdjustment,
     );
 
     final response = await get<TransactionHandler>().executeTransaction(
@@ -192,14 +189,6 @@ class StakingDelegationBloc extends Disposable {
 
     log(response.asJsonString());
     return response.txResponse.toProto3Json(typeRegistry: provenanceTypes);
-  }
-
-  Future<AccountGasEstimate> _estimateGas(proto.TxBody body) async {
-    return await (get<TransactionHandler>()).estimateGas(
-      body,
-      [_account.publicKey],
-      _account.coin,
-    );
   }
 }
 

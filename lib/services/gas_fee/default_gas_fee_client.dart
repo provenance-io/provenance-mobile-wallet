@@ -1,9 +1,10 @@
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/client_coin_mixin.dart';
-import 'package:provenance_wallet/services/gas_fee/dto/gas_fee_dto.dart';
+import 'package:provenance_wallet/services/gas_fee/dto/gas_markup_dto.dart';
 import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
-import 'package:provenance_wallet/services/models/gas_fee.dart';
 import 'package:provenance_wallet/services/notification/client_notification_mixin.dart';
+
+import '../models/gas_price.dart';
 
 class DefaultGasFeeClient extends GasFeeClient
     with ClientNotificationMixin, ClientCoinMixin {
@@ -11,7 +12,7 @@ class DefaultGasFeeClient extends GasFeeClient
       '/service-mobile-wallet/external/api/v1/pricing/gas-price';
 
   @override
-  Future<GasFee?> getGasFee(Coin coin) async {
+  Future<GasPrice?> getPrice(Coin coin) async {
     final client = await getClient(coin);
     final data = await client.get(
       _path,
@@ -20,9 +21,12 @@ class DefaultGasFeeClient extends GasFeeClient
           return null;
         }
 
-        final gasDto = GasFeeDto.fromJson(json);
+        final gasDto = GasPriceDto.fromJson(json);
 
-        return GasFee(dto: gasDto);
+        return GasPrice(
+          denom: gasDto.denom!,
+          amountPerUnit: gasDto.amount!,
+        );
       },
     );
 

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -23,11 +23,12 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
   }
 
   @override
-  Future<AccountGasEstimate> estimateGas(
+  Future<GasFeeEstimate> estimateGas(
     proto.TxBody txBody,
     List<IPubKey> signers,
-    Coin coin,
-  ) async {
+    Coin coin, {
+    double? gasAdjustment,
+  }) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
     final pbClient = await protoBuffInjector(coin);
 
@@ -36,14 +37,14 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final estimate = await pbClient.estimateTransactionFees(
       txBody,
       signers,
+      gasAdjustment: gasAdjustment,
     );
-    final customFee = await gasService.getGasFee(coin);
 
-    return AccountGasEstimate(
+    final gasPrice = await gasService.getPrice(coin);
+
+    return GasFeeEstimate(
       estimate.estimate,
-      customFee?.amount,
-      estimate.feeAdjustment,
-      estimate.feeCalculated,
+      [gasPrice!],
     );
   }
 
@@ -52,7 +53,7 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     proto.TxBody txBody,
     IPrivKey privateKey,
     Coin coin, [
-    AccountGasEstimate? gasEstimate,
+    GasFeeEstimate? gasEstimate,
   ]) async {
     final protoBuffInjector = get<ProtobuffClientInjector>();
 
@@ -61,17 +62,12 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
 
     gasEstimate ??= await estimateGas(txBody, [publicKey], coin);
 
-    final fee = proto.Fee(
-      amount: gasEstimate.totalFees,
-      gasLimit: proto.Int64(gasEstimate.estimatedGas),
-    );
-
     final responsePair = await pbClient.broadcastTransaction(
       txBody,
       [
         privateKey,
       ],
-      fee,
+      gasEstimate.toProtoFee(),
       proto.BroadcastMode.BROADCAST_MODE_BLOCK,
     );
 

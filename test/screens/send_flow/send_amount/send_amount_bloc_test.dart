@@ -3,13 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/screens/send_flow/send_amount/send_amount_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/util/constants.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_amount_bloc_test.mocks.dart';
@@ -22,9 +23,10 @@ Matcher throwsExceptionWithText(String msg) {
   }));
 }
 
-final feeAmount = AccountGasEstimate(
-  20000000,
-  1,
+final feeEstimate = GasFeeEstimate.single(
+  units: 20000000,
+  denom: nHashDenom,
+  amountPerUnit: 1,
 );
 
 @GenerateMocks([
@@ -47,7 +49,7 @@ main() {
     mockTxQueueService = MockTxQueueService();
     when(mockTxQueueService!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
-        .thenAnswer((_) => Future.value(feeAmount));
+        .thenAnswer((_) => Future.value(feeEstimate));
 
     mockPriceClient = MockPriceClient();
     when(mockPriceClient!.getAssetPrices(any, any))
@@ -97,15 +99,15 @@ main() {
       expect(state.transactionFees, predicate((arg) {
         final feeAsset = arg as MultiSendAsset;
         expect(
-          feeAsset.estimate,
-          feeAmount.estimatedGas,
+          feeAsset.estimate.units,
+          feeEstimate.units,
         );
-        expect(feeAsset.fees.first.denom, "nhash");
+        expect(feeAsset.assets.first.denom, nHashDenom);
         expect(
-          feeAsset.fees.first.amount,
-          Decimal.fromInt(feeAmount.estimatedGas * feeAmount.baseFee!),
+          feeAsset.assets.first.amount,
+          Decimal.parse(feeEstimate.amount.first.amount),
         );
-        expect(feeAsset.fees.length, 1);
+        expect(feeAsset.assets.length, 1);
 
         return true;
       }));
@@ -172,11 +174,11 @@ main() {
 
     expect(amountAsset.amount, Decimal.parse("110"));
     expect(amountAsset.denom, hashAsset.denom);
-    expect(feeAsset.estimate, feeAmount.estimatedGas);
-    expect(feeAsset.fees.first.denom, "nhash");
+    expect(feeAsset.estimate.units, feeEstimate.units);
+    expect(feeAsset.assets.first.denom, nHashDenom);
     expect(
-      feeAsset.fees.first.amount,
-      Decimal.fromInt(feeAmount.estimatedGas * feeAmount.baseFee!),
+      feeAsset.assets.first.amount,
+      Decimal.parse(feeEstimate.amount.first.amount),
     );
   });
 }

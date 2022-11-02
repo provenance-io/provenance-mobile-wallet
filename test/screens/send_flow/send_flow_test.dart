@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
@@ -11,6 +11,7 @@ import 'package:provenance_wallet/services/models/price.dart';
 import 'package:provenance_wallet/services/models/transaction.dart';
 import 'package:provenance_wallet/services/price_client/price_service.dart';
 import 'package:provenance_wallet/services/transaction_client/transaction_client.dart';
+import 'package:provenance_wallet/util/constants.dart';
 
 import 'send_flow_test.mocks.dart';
 
@@ -34,7 +35,11 @@ main() {
     mockTransactionHandler = MockTransactionHandler();
     when(mockTransactionHandler!.estimateGas(any, any, any))
         .thenAnswer((realInvocation) {
-      final gasEstimate = AccountGasEstimate(100, null);
+      final gasEstimate = GasFeeEstimate.single(
+        units: 100,
+        denom: nHashDenom,
+        amountPerUnit: 9625,
+      );
 
       return Future.value(gasEstimate);
     });
