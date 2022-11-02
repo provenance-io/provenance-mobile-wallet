@@ -11,12 +11,11 @@ import 'package:provenance_dart/proto.dart' as _i11;
 import 'package:provenance_dart/wallet.dart' as _i5;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
     as _i10;
+import 'package:provenance_wallet/gas_fee_estimate.dart' as _i6;
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart'
     as _i8;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
-    as _i6;
 import 'package:provenance_wallet/services/models/account.dart' as _i3;
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart'
     as _i7;
@@ -76,9 +75,9 @@ class _FakePrivateKey_5 extends _i1.SmartFake implements _i5.PrivateKey {
       : super(parent, parentInvocation);
 }
 
-class _FakeAccountGasEstimate_6 extends _i1.SmartFake
-    implements _i6.AccountGasEstimate {
-  _FakeAccountGasEstimate_6(Object parent, Invocation parentInvocation)
+class _FakeGasFeeEstimate_6 extends _i1.SmartFake
+    implements _i6.GasFeeEstimate {
+  _FakeGasFeeEstimate_6(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
@@ -251,20 +250,24 @@ class MockTxQueueService extends _i1.Mock implements _i7.TxQueueService {
               returnValue: _i9.Stream<_i7.TxResult>.empty())
           as _i9.Stream<_i7.TxResult>);
   @override
-  _i9.Future<_i6.AccountGasEstimate> estimateGas(
-          {_i11.TxBody? txBody, _i3.TransactableAccount? account}) =>
-      (super.noSuchMethod(
-              Invocation.method(
-                  #estimateGas, [], {#txBody: txBody, #account: account}),
-              returnValue: _i9.Future<_i6.AccountGasEstimate>.value(
-                  _FakeAccountGasEstimate_6(this,
-                      Invocation.method(#estimateGas, [], {#txBody: txBody, #account: account}))))
-          as _i9.Future<_i6.AccountGasEstimate>);
+  _i9.Future<_i6.GasFeeEstimate> estimateGas(
+          {_i11.TxBody? txBody,
+          _i3.TransactableAccount? account,
+          double? gasAdjustment}) =>
+      (super.noSuchMethod(Invocation.method(#estimateGas, [], {#txBody: txBody, #account: account, #gasAdjustment: gasAdjustment}),
+          returnValue: _i9.Future<_i6.GasFeeEstimate>.value(
+              _FakeGasFeeEstimate_6(
+                  this,
+                  Invocation.method(#estimateGas, [], {
+                    #txBody: txBody,
+                    #account: account,
+                    #gasAdjustment: gasAdjustment
+                  })))) as _i9.Future<_i6.GasFeeEstimate>);
   @override
   _i9.Future<_i7.QueuedTx> scheduleTx(
           {_i11.TxBody? txBody,
           _i3.TransactableAccount? account,
-          _i6.AccountGasEstimate? gasEstimate,
+          _i6.GasFeeEstimate? gasEstimate,
           int? walletConnectRequestId}) =>
       (super.noSuchMethod(
           Invocation.method(#scheduleTx, [], {

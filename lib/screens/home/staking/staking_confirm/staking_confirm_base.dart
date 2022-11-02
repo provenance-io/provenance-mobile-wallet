@@ -26,7 +26,7 @@ class StakingConfirmBase extends StatefulWidget {
 }
 
 class _StakingConfirmBaseState extends State<StakingConfirmBase> {
-  double _gasEstimate = defaultGasEstimate;
+  double _gasEstimate = defaultGasAdjustment;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class _StakingConfirmBaseState extends State<StakingConfirmBase> {
             PwListDivider.alternate(),
             PwGasAdjustmentSlider(
               title: Strings.of(context).stakingConfirmGasAdjustment,
-              startingValue: defaultGasEstimate,
+              startingValue: defaultGasAdjustment,
               onValueChanged: (value) {
                 setState(() {
                   _gasEstimate = value;

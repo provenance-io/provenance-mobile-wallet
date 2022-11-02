@@ -5,8 +5,8 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
@@ -224,7 +224,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final id = Uuid().v1().toString();
 
-    AccountGasEstimate gasEstimate;
+    GasFeeEstimate gasEstimate;
     try {
       gasEstimate = await _txQueueService.estimateGas(
         txBody: txBody,
@@ -328,10 +328,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
           TxResult(
             body: txBody,
             response: response,
-            fee: proto.Fee(
-              amount: action.gasEstimate.totalFees,
-              gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
-            ),
+            fee: action.gasEstimate.toProtoFee(),
           ),
         );
         break;

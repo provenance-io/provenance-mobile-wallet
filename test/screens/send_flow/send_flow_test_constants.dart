@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
@@ -29,7 +30,7 @@ final dollarAsset = SendAsset(
   2,
 );
 final feeAsset = MultiSendAsset(
-  2,
+  GasFeeEstimate(2, []),
   [
     SendAsset(
       "Hash",

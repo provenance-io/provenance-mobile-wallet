@@ -5,11 +5,12 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart' as bank;
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/screens/send_flow/send_review/send_review_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
+import 'package:provenance_wallet/util/constants.dart';
 
 import '../send_flow_test_constants.dart';
 import 'send_review_bloc_test.mocks.dart';
@@ -54,7 +55,8 @@ void main() {
     when(mockTxQueueService!.estimateGas(
             txBody: anyNamed('txBody'), account: anyNamed('account')))
         .thenAnswer((_) {
-      return Future.value(AccountGasEstimate(100, null));
+      return Future.value(GasFeeEstimate.single(
+          units: 100, denom: nHashDenom, amountPerUnit: 10));
     });
 
     mockAccountService = MockAccountService();
@@ -134,22 +136,8 @@ void main() {
       expect(txBody.memo, "Some Note");
       expect(txBody.messages.length, 1);
 
-      final estimate = captures.last as AccountGasEstimate;
-      expect(estimate.estimatedGas, feeAsset.estimate);
-      expect(estimate.totalFees, predicate((arg) {
-        final coins = arg as List<proto.Coin>;
-        expect(coins.length, feeAsset.fees.length);
-
-        for (var index = 0; index < coins.length; index++) {
-          final fee = feeAsset.fees[index];
-          final coin = coins[index];
-
-          expect(fee.denom, coin.denom);
-          expect(fee.amount.toString(), coin.amount);
-        }
-
-        return true;
-      }));
+      final estimate = captures.last as GasFeeEstimate;
+      expect(estimate, feeAsset.estimate);
 
       final msg = txBody.messages[0];
       final sendMsg = bank.MsgSend.fromBuffer(msg.value);

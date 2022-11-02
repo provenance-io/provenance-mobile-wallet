@@ -1,5 +1,5 @@
 import 'package:protobuf/protobuf.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 
 import 'wallet_connect_action.dart';
 import 'wallet_connect_action_kind.dart';
@@ -24,5 +24,5 @@ class TxAction implements WalletConnectAction {
 
   final String description;
   final List<GeneratedMessage> messages;
-  final AccountGasEstimate gasEstimate;
+  final GasFeeEstimate gasEstimate;
 }

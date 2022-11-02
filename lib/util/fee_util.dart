@@ -1,9 +1,9 @@
 import 'package:decimal/decimal.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/extension/list_extension.dart';
 
-List<proto.Coin> combineFees(List<proto.Coin> fees) {
-  return fees
+List<proto.Coin> combineFees(Iterable<proto.Coin> fees) {
+  final list = fees
       .fold<Map<String, Decimal>>({}, (map, coin) {
         final value = map[coin.denom] ?? Decimal.zero;
         map[coin.denom] = value + Decimal.parse(coin.amount);
@@ -14,22 +14,21 @@ List<proto.Coin> combineFees(List<proto.Coin> fees) {
       .map((entry) => proto.Coin(
           denom: entry.key, amount: entry.value.toBigInt().toString()))
       .toList();
+
+  list.sortAscendingBy((e) => e.denom);
+
+  return list;
 }
 
 List<proto.Coin> addBaseFee(
-    int estimatedGas, List<proto.Coin>? estimatedFees, int? baseFee) {
+    int gasUnits, List<proto.Coin>? estimatedFees, int? gasFeePerUnit) {
   final result = <proto.Coin>[
     proto.Coin(
       denom: 'nhash',
-      amount: (estimatedGas * (baseFee ?? 0)).toString(),
+      amount: (gasUnits * (gasFeePerUnit ?? 0)).toString(),
     ),
     ...estimatedFees ?? [],
   ];
 
   return combineFees(result);
 }
-
-proto.Fee toFee(AccountGasEstimate estimate) => proto.Fee(
-      amount: estimate.totalFees,
-      gasLimit: proto.Int64(estimate.estimatedGas),
-    );

@@ -43,7 +43,7 @@ enum PrefKey {
   allowProposalCreation,
   defaultChainId,
   endpoints,
-  enableMultiSig,
+  enableMultiSig, // TODO-Roy: Remove this
   httpClientDiagnostics500,
   isMockingAssetService,
   isMockingTransactionService,

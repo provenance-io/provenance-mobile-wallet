@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart';
 import 'package:provenance_wallet/screens/send_flow/model/send_asset.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 
@@ -25,7 +24,7 @@ class SendReviewBlocState {
   String get total {
     final map = <String, SendAsset>{};
     map[sendingAsset.denom] = sendingAsset;
-    final fees = [...fee.fees];
+    final fees = [...fee.assets];
 
     for (var fee in fees) {
       var current = map[fee.denom];
@@ -97,22 +96,10 @@ class SendReviewBloc {
       ],
     );
 
-    AccountGasEstimate estimate = AccountGasEstimate(
-      fee.estimate,
-      null,
-      null,
-      fee.fees
-          .map((e) => Coin(
-                denom: e.denom,
-                amount: e.amount.toString(),
-              ))
-          .toList(),
-    );
-
     final queuedTx = await _txQueueService.scheduleTx(
       txBody: body,
       account: _accountDetails,
-      gasEstimate: estimate,
+      gasEstimate: fee.estimate,
     );
 
     return queuedTx;

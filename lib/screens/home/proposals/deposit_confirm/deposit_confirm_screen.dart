@@ -26,7 +26,7 @@ class DepositConfirmScreen extends StatefulWidget {
 }
 
 class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
-  double _gasEstimate = defaultGasEstimate;
+  double _gasEstimate = defaultGasAdjustment;
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +218,7 @@ class _DepositConfirmScreenState extends State<DepositConfirmScreen> {
                         PwListDivider.alternate(),
                         PwGasAdjustmentSlider(
                           title: strings.stakingConfirmGasAdjustment,
-                          startingValue: defaultGasEstimate,
+                          startingValue: defaultGasAdjustment,
                           onValueChanged: (value) {
                             setState(() {
                               _gasEstimate = value;

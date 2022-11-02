@@ -5,17 +5,16 @@ import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/proto_cosmos_auth_v1beta1.dart';
 import 'package:provenance_dart/wallet.dart' as wallet;
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
-import 'package:provenance_wallet/services/gas_fee/dto/gas_fee_dto.dart';
 import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
-import 'package:provenance_wallet/services/models/gas_fee.dart';
+import 'package:provenance_wallet/services/models/gas_price.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import 'wallet_connect_transaction_handler_test.mocks.dart';
 
 final gasEstimate = GasEstimate(123);
-final gasFee = GasFee(dto: GasFeeDto(gasPrice: 123, gasPriceDenom: "nhash"));
+final gasPrice = GasPrice(amountPerUnit: 123, denom: "nhash");
 const coin = wallet.Coin.testNet;
 final seed = wallet.Mnemonic.createSeed(
   wallet.Mnemonic.fromEntropy(List.generate(256, (index) => index)),
@@ -27,21 +26,6 @@ final baseAccount = BaseAccount(address: publicKey.address);
 final txRaw = TxRaw();
 final txResponse = TxResponse(code: 0, height: $fixnum.Int64(123));
 final rawResponse = RawTxResponsePair(txRaw, txResponse);
-
-Matcher _walletEstimateMatcher(GasEstimate gasEstimate, GasFee gasFee) {
-  return predicate((arg) {
-    final walletEstimate = arg as AccountGasEstimate;
-    expect(walletEstimate.estimatedGas, gasEstimate.estimate);
-    expect(walletEstimate.baseFee, gasFee.amount);
-    expect(walletEstimate.gasAdjustment, gasEstimate.feeAdjustment);
-    expect(
-      walletEstimate.totalFees.length,
-      1,
-    ); // the 1 coin is calculated
-
-    return true;
-  });
-}
 
 @GenerateMocks([PbClient, GasFeeClient])
 main() {
@@ -73,8 +57,8 @@ main() {
     when(mockPbClient!.broadcastTransaction(any, any, any, any))
         .thenAnswer((_) async => rawResponse);
 
-    when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
-        .thenAnswer((_) => Future.value(gasFee));
+    when(mockGasFeeClient!.getPrice(wallet.Coin.testNet))
+        .thenAnswer((_) => Future.value(gasPrice));
 
     get.registerSingleton<ProtobuffClientInjector>(
       (_) => Future.value(mockPbClient!),
@@ -92,7 +76,7 @@ main() {
     test("success", () async {
       final walletEstimate =
           await transHandler!.estimateGas(txBody, [publicKey], coin);
-      expect(walletEstimate, _walletEstimateMatcher(gasEstimate, gasFee));
+      expect(walletEstimate, GasFeeEstimate(gasEstimate.estimate, [gasPrice]));
     });
 
     test("error while calling estimateTx", () async {
@@ -109,7 +93,7 @@ main() {
 
     test("error while get gas fee", () async {
       final exception = Exception("A");
-      when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
+      when(mockGasFeeClient!.getPrice(wallet.Coin.testNet))
           .thenAnswer((_) => Future.error(exception));
 
       expect(
@@ -127,22 +111,6 @@ main() {
       expect(response, rawResponse);
     });
 
-    test("calls - with gas estimate", () async {
-      final walletEstimate = AccountGasEstimate(
-        100,
-        1000,
-      );
-
-      await transHandler!.executeTransaction(
-        txBody,
-        privateKey.defaultKey(),
-        coin,
-        walletEstimate,
-      );
-
-      verifyNever(mockPbClient!.estimateTx(any));
-    });
-
     test("error while calling estimateTx", () async {
       final exception = Exception("A");
       when(mockPbClient!.estimateTransactionFees(any, any))
@@ -158,7 +126,7 @@ main() {
 
     test("error while get gas fee", () async {
       final exception = Exception("A");
-      when(mockGasFeeClient!.getGasFee(wallet.Coin.testNet))
+      when(mockGasFeeClient!.getPrice(wallet.Coin.testNet))
           .thenAnswer((_) => Future.error(exception));
 
       expect(

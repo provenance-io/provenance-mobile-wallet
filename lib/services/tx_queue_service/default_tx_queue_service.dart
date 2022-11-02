@@ -4,15 +4,14 @@ import 'package:collection/collection.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service_error.dart';
-import 'package:provenance_wallet/util/fee_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -35,9 +34,10 @@ class DefaultQueueTxService implements TxQueueService {
   Stream<TxResult> get response => _response;
 
   @override
-  Future<AccountGasEstimate> estimateGas({
+  Future<GasFeeEstimate> estimateGas({
     required proto.TxBody txBody,
     required TransactableAccount account,
+    double? gasAdjustment,
   }) =>
       _transactionHandler.estimateGas(
         txBody,
@@ -45,13 +45,14 @@ class DefaultQueueTxService implements TxQueueService {
           account.publicKey,
         ],
         account.coin,
+        gasAdjustment: gasAdjustment,
       );
 
   @override
   Future<QueuedTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    required AccountGasEstimate gasEstimate,
+    required GasFeeEstimate gasEstimate,
     int? walletConnectRequestId,
   }) async {
     QueuedTx queuedTx;
@@ -73,17 +74,12 @@ class DefaultQueueTxService implements TxQueueService {
         final address = multiAccount.address;
         final signerAddress = multiAccount.linkedAccount.address;
 
-        final fee = proto.Fee(
-          amount: gasEstimate.totalFees,
-          gasLimit: proto.Int64(gasEstimate.estimatedGas),
-        );
-
         final remoteId = await _multiSigService.createTx(
           multiSigAddress: address,
           coin: multiAccount.coin,
           signerAddress: signerAddress,
           txBody: txBody,
-          fee: fee,
+          fee: gasEstimate.toProtoFee(),
           walletConnectRequestId: walletConnectRequestId,
         );
 
@@ -262,7 +258,7 @@ class DefaultQueueTxService implements TxQueueService {
   Future<TxResult> _executeBasic(
     BasicAccount account,
     proto.TxBody txBody,
-    AccountGasEstimate gasEstimate,
+    GasFeeEstimate gasEstimate,
   ) async {
     final privateKey = await _accountService.loadKey(account.id);
 
@@ -278,7 +274,7 @@ class DefaultQueueTxService implements TxQueueService {
     result = TxResult(
       body: txBody,
       response: response,
-      fee: toFee(gasEstimate),
+      fee: gasEstimate.toProtoFee(),
     );
 
     return result;

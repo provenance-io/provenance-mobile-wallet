@@ -4,10 +4,9 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/services/gas_fee/default_gas_fee_client.dart';
-import 'package:provenance_wallet/services/gas_fee/dto/gas_fee_dto.dart';
 import 'package:provenance_wallet/services/http_client.dart';
 import 'package:provenance_wallet/services/models/base_response.dart';
-import 'package:provenance_wallet/services/models/gas_fee.dart';
+import 'package:provenance_wallet/services/models/gas_price.dart';
 import 'package:provenance_wallet/services/notification/notification_group.dart';
 import 'package:provenance_wallet/services/notification/notification_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -60,9 +59,9 @@ main() {
 
   group("getGasFee", () {
     test('notification success', () async {
-      _setupResults<GasFee>(null);
+      _setupResults<GasPrice>(null);
 
-      await assetService!.getGasFee(Coin.testNet);
+      await assetService!.getPrice(Coin.testNet);
 
       verify(mockNotificationService!
           .dismissGrouped(NotificationGroup.serviceError, argThat(isNotNull)));
@@ -96,9 +95,9 @@ main() {
     // });
 
     test('url', () async {
-      _setupResults<GasFee>(null);
+      _setupResults<GasPrice>(null);
 
-      await assetService!.getGasFee(Coin.testNet);
+      await assetService!.getPrice(Coin.testNet);
 
       var captures = verify(mockHttpClient!.get(
         captureAny,
@@ -117,16 +116,14 @@ main() {
     });
 
     test('result', () async {
-      final fee = GasFee(
-        dto: GasFeeDto(
-          gasPriceDenom: "Usd",
-          gasPrice: 2,
-        ),
+      final fee = GasPrice(
+        denom: "Usd",
+        amountPerUnit: 2,
       );
 
-      _setupResults<GasFee>(fee);
+      _setupResults<GasPrice>(fee);
 
-      final result = await assetService!.getGasFee(Coin.testNet);
+      final result = await assetService!.getPrice(Coin.testNet);
 
       expect(
         result,
@@ -135,9 +132,9 @@ main() {
     });
 
     test('Converter', () async {
-      _setupResults<GasFee>(null);
+      _setupResults<GasPrice>(null);
 
-      await assetService!.getGasFee(Coin.testNet);
+      await assetService!.getPrice(Coin.testNet);
 
       var captures = verify(mockHttpClient!.get(
         any,
@@ -150,7 +147,7 @@ main() {
       )).captured;
 
       final listConverter =
-          captures.first as GasFee? Function(Map<String, dynamic> json);
+          captures.first as GasPrice? Function(Map<String, dynamic> json);
 
       final json = <String, dynamic>{
         "gasPriceDenom": "nhash",
@@ -158,7 +155,7 @@ main() {
       };
 
       final converted = listConverter(json);
-      expect(converted!.amount, 1001);
+      expect(converted!.amountPerUnit, 1001);
       expect(converted.denom, "nhash");
     });
   });

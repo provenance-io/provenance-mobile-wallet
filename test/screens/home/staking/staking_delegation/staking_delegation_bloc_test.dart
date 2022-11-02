@@ -4,14 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provenance_dart/proto.dart' as proto;
-import 'package:provenance_dart/proto_cosmos_distribution_v1beta1.dart';
-import 'package:provenance_dart/proto_cosmos_staking_v1beta1.dart' as staking;
 import 'package:provenance_dart/type_registry.dart';
 import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_delegation/staking_delegation_bloc.dart';
 import 'package:provenance_wallet/screens/home/staking/staking_screen_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
@@ -19,10 +17,13 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/delegation.dart';
 import 'package:provenance_wallet/services/models/detailed_validator.dart';
 import 'package:provenance_wallet/services/models/rewards.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 
 import './staking_delegation_bloc_test.mocks.dart';
 import '../../../../test_helpers.dart';
+
+const nHashPerGasUnit = 9625;
 
 @GenerateMocks([AssetClient, AccountService, TransactionHandler])
 main() {
@@ -246,45 +247,19 @@ main() {
   group("doDelegate", () {
     final response = proto.RawTxResponsePair(proto.TxRaw(),
         proto.TxResponse(height: fixnum.Int64(100), txhash: "ab cde"));
-    final gasEstimate = AccountGasEstimate(134556);
+    final gasEstimate = GasFeeEstimate.single(
+      units: 134556,
+      denom: nHashDenom,
+      amountPerUnit: nHashPerGasUnit,
+    );
 
     setUp(() {
-      when(mockTransactionHandler.estimateGas(any, any, any))
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
       when(mockAccountService.loadKey(any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
-    });
-
-    test("calls", () async {
-      await bloc.doDelegate(34.55);
-
-      verify(mockAccountService.loadKey(account.id));
-      verify(
-          mockTransactionHandler.estimateGas(any, [publicKey], publicKey.coin));
-      verify(mockTransactionHandler.executeTransaction(
-          argThat(predicate((arg) {
-            final txBody = arg as proto.TxBody;
-            final message =
-                staking.MsgDelegate.fromBuffer(txBody.messages[0].value);
-            expect(message.amount.denom, "nhash");
-            expect(message.amount.amount, "0");
-            expect(message.delegatorAddress, account.address);
-            expect(message.validatorAddress, detailedValidator.operatorAddress);
-            expect(txBody.messages.length, 1);
-
-            return true;
-          })),
-          argThat(PrivateKeyMatcher(privKey.defaultKey())),
-          privKey.coin,
-          argThat(predicate((arg) {
-            final estimate = arg as AccountGasEstimate;
-            expect(estimate.estimatedGas, gasEstimate.estimatedGas);
-            expect(estimate.baseFee, gasEstimate.baseFee);
-            expect(estimate.totalFees, gasEstimate.totalFees);
-            expect(estimate.gasAdjustment, 34.55);
-            return true;
-          }))));
     });
 
     test("txResponse is serialized", () async {
@@ -302,7 +277,9 @@ main() {
 
     test("Error during estimate gas", () async {
       final ex = Exception("A");
-      when(mockTransactionHandler.estimateGas(any, any, any)).thenThrow(ex);
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
+          .thenThrow(ex);
       expect(() => bloc.doDelegate(34.55), throwsA(ex));
     });
 
@@ -317,45 +294,19 @@ main() {
   group("doUndelegate", () {
     final response = proto.RawTxResponsePair(proto.TxRaw(),
         proto.TxResponse(height: fixnum.Int64(100), txhash: "ab cde"));
-    final gasEstimate = AccountGasEstimate(134556);
+    final gasEstimate = GasFeeEstimate.single(
+      units: 134556,
+      denom: nHashDenom,
+      amountPerUnit: nHashPerGasUnit,
+    );
 
     setUp(() {
-      when(mockTransactionHandler.estimateGas(any, any, any))
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
       when(mockAccountService.loadKey(any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
-    });
-
-    test("calls", () async {
-      await bloc.doUndelegate(34.55);
-
-      verify(mockAccountService.loadKey(account.id));
-      verify(
-          mockTransactionHandler.estimateGas(any, [publicKey], publicKey.coin));
-      verify(mockTransactionHandler.executeTransaction(
-          argThat(predicate((arg) {
-            final txBody = arg as proto.TxBody;
-            final message =
-                staking.MsgUndelegate.fromBuffer(txBody.messages[0].value);
-            expect(message.amount.denom, "nhash");
-            expect(message.amount.amount, "0");
-            expect(message.delegatorAddress, account.address);
-            expect(message.validatorAddress, detailedValidator.operatorAddress);
-            expect(txBody.messages.length, 1);
-
-            return true;
-          })),
-          argThat(PrivateKeyMatcher(privKey.defaultKey())),
-          privKey.coin,
-          argThat(predicate((arg) {
-            final estimate = arg as AccountGasEstimate;
-            expect(estimate.estimatedGas, gasEstimate.estimatedGas);
-            expect(estimate.baseFee, gasEstimate.baseFee);
-            expect(estimate.totalFees, gasEstimate.totalFees);
-            expect(estimate.gasAdjustment, 34.55);
-            return true;
-          }))));
     });
 
     test("txResponse is serialized", () async {
@@ -373,7 +324,9 @@ main() {
 
     test("Error during estimate gas", () async {
       final ex = Exception("A");
-      when(mockTransactionHandler.estimateGas(any, any, any)).thenThrow(ex);
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
+          .thenThrow(ex);
       expect(() => bloc.doUndelegate(34.55), throwsA(ex));
     });
 
@@ -388,43 +341,19 @@ main() {
   group("claimRewards", () {
     final response = proto.RawTxResponsePair(proto.TxRaw(),
         proto.TxResponse(height: fixnum.Int64(100), txhash: "ab cde"));
-    final gasEstimate = AccountGasEstimate(134556);
+    final gasEstimate = GasFeeEstimate.single(
+      units: 134556,
+      denom: nHashDenom,
+      amountPerUnit: nHashPerGasUnit,
+    );
 
     setUp(() {
-      when(mockTransactionHandler.estimateGas(any, any, any))
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
       when(mockAccountService.loadKey(any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
-    });
-
-    test("calls", () async {
-      await bloc.claimRewards(34.55);
-
-      verify(mockAccountService.loadKey(account.id));
-      verify(
-          mockTransactionHandler.estimateGas(any, [publicKey], publicKey.coin));
-      verify(mockTransactionHandler.executeTransaction(
-          argThat(predicate((arg) {
-            final txBody = arg as proto.TxBody;
-            final message =
-                MsgWithdrawDelegatorReward.fromBuffer(txBody.messages[0].value);
-            expect(message.delegatorAddress, account.address);
-            expect(message.validatorAddress, detailedValidator.operatorAddress);
-            expect(txBody.messages.length, 1);
-
-            return true;
-          })),
-          argThat(PrivateKeyMatcher(privKey.defaultKey())),
-          privKey.coin,
-          argThat(predicate((arg) {
-            final estimate = arg as AccountGasEstimate;
-            expect(estimate.estimatedGas, gasEstimate.estimatedGas);
-            expect(estimate.baseFee, gasEstimate.baseFee);
-            expect(estimate.totalFees, gasEstimate.totalFees);
-            expect(estimate.gasAdjustment, 34.55);
-            return true;
-          }))));
     });
 
     test("txResponse is serialized", () async {
@@ -442,7 +371,9 @@ main() {
 
     test("Error during estimate gas", () async {
       final ex = Exception("A");
-      when(mockTransactionHandler.estimateGas(any, any, any)).thenThrow(ex);
+      when(mockTransactionHandler.estimateGas(any, any, any,
+              gasAdjustment: anyNamed('gasAdjustment')))
+          .thenThrow(ex);
       expect(() => bloc.claimRewards(34.55), throwsA(ex));
     });
 
