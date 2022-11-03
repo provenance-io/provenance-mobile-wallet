@@ -56,4 +56,5 @@ enum PrefKey {
   showDevMenu,
   testBool,
   testString,
+  deepLinkAddress
 }
