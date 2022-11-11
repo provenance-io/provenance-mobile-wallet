@@ -331,6 +331,11 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
             fee: action.gasEstimate.toProtoFee(),
           ),
         );
+
+        _queueService.removeRequest(
+          accountId: _transactAccount.id,
+          requestId: action.id,
+        );
         break;
       case QueuedTxKind.scheduled:
         final scheduledTx = queuedTx as ScheduledTx;
