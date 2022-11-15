@@ -82,6 +82,7 @@ import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
+import 'package:provenance_wallet/util/multi_sig_util.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -696,18 +697,19 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         return;
       }
 
-      final accounts = await accountService.getTransactableAccounts();
-      final account = accounts.firstWhereOrNull((e) => e.address == address);
-      if (account != null) {
-        switch (data.topic) {
-          case MultiSigTopic.accountComplete:
-            _activatePendingMultiAccounts();
-            break;
-          case MultiSigTopic.txSignatureRequired:
-          case MultiSigTopic.txReady:
-          case MultiSigTopic.txDeclined:
-          case MultiSigTopic.txResult:
-            multiSigService.sync(
+      switch (data.topic) {
+        case MultiSigTopic.accountComplete:
+          _activatePendingMultiAccounts();
+          break;
+        case MultiSigTopic.txSignatureRequired:
+        case MultiSigTopic.txReady:
+        case MultiSigTopic.txDeclined:
+        case MultiSigTopic.txResult:
+          final accounts = await accountService.getTransactableAccounts();
+          final account =
+              accounts.firstWhereOrNull((e) => e.address == address);
+          if (account != null) {
+            await multiSigService.sync(
               signers: [
                 SignerData(
                   address: address,
@@ -715,8 +717,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
                 ),
               ],
             );
-            break;
-        }
+          }
+
+          break;
       }
     });
 
@@ -737,7 +740,6 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
   Future<void> _activatePendingMultiAccounts() async {
     final accountService = get<AccountService>();
-    final multiSigClient = get<MultiSigClient>();
 
     final accounts = await accountService.getAccounts();
     final pendingAccounts = accounts
@@ -746,22 +748,10 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         .toList();
 
     for (var pendingAccount in pendingAccounts) {
-      final remoteAccount = await multiSigClient.getAccount(
-        remoteId: pendingAccount.remoteId,
-        signerAddress: pendingAccount.linkedAccount.address,
-        coin: pendingAccount.linkedAccount.coin,
-      );
-
-      if (remoteAccount != null) {
-        final active = remoteAccount.signers.every((e) => e.publicKey != null);
-        if (active) {
-          await accountService.activateMultiAccount(
-            id: pendingAccount.id,
-            signers: remoteAccount.signers,
-          );
-
-          logDebug('Activated multi sig account: ${pendingAccount.name}');
-        }
+      final activated = await tryActivateAccount(pendingAccount);
+      if (activated) {
+        logDebug(
+            'Activated multi sig account: ${pendingAccount.name}, linked to: ${pendingAccount.linkedAccount.name}');
       }
     }
   }
