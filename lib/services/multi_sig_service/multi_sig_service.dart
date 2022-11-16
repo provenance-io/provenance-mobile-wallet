@@ -17,6 +17,7 @@ import 'package:provenance_wallet/screens/action/action_list/action_list_bloc.da
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
+import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
@@ -207,6 +208,47 @@ class MultiSigService extends Listenable with ListenableMixin {
     }
 
     _publish();
+  }
+
+  Future<void> activateAccounts() async {
+    final accounts = await _accountService.getAccounts();
+    final pendingAccounts = accounts
+        .whereType<MultiAccount>()
+        .where((e) => e.address == null)
+        .toList();
+
+    for (var pendingAccount in pendingAccounts) {
+      await tryActivateAccount(pendingAccount);
+    }
+  }
+
+  Future<void> tryActivateAccount(MultiAccount pendingAccount) async {
+    final name = pendingAccount.name;
+    final linkedName = pendingAccount.linkedAccount.name;
+
+    logDebug('Checking multi sig status for account: $name');
+
+    final remoteAccount = await _multiSigClient.getAccount(
+      remoteId: pendingAccount.remoteId,
+      signerAddress: pendingAccount.linkedAccount.address,
+      coin: pendingAccount.linkedAccount.coin,
+    );
+
+    if (remoteAccount != null) {
+      final active = remoteAccount.signers.every((e) => e.publicKey != null);
+      if (active) {
+        await _accountService.activateMultiAccount(
+          id: pendingAccount.id,
+          signers: remoteAccount.signers,
+        );
+
+        logDebug('Activated multi sig account: $name, linked to: $linkedName');
+      } else {
+        logDebug('Multi sig does not have all required signers yet: $name');
+      }
+    } else {
+      logDebug('Server failed to retrieve multi sig account: $name');
+    }
   }
 
   Future<bool> _signTx({

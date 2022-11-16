@@ -645,11 +645,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
 
       if (e is MultiAccount) {
-        final activated = await _tryActivateAccount(e);
-        if (activated) {
-          logDebug(
-              'Activated multi sig account: ${e.name}, linked to: ${e.linkedAccount.name}');
-        }
+        await multiSigService.tryActivateAccount(e);
       }
     }).addTo(_subscriptions);
 
@@ -693,7 +689,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
       switch (data.topic) {
         case MultiSigTopic.accountComplete:
-          _activatePendingMultiAccounts();
+          multiSigService.activateAccounts();
           break;
         case MultiSigTopic.txSignatureRequired:
         case MultiSigTopic.txReady:
@@ -728,54 +724,9 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
                   ))
               .toList());
 
-      await _activatePendingMultiAccounts();
+      await multiSigService.activateAccounts();
     }
   }
-
-  Future<void> _activatePendingMultiAccounts() async {
-    final accountService = get<AccountService>();
-
-    final accounts = await accountService.getAccounts();
-    final pendingAccounts = accounts
-        .whereType<MultiAccount>()
-        .where((e) => e.address == null)
-        .toList();
-
-    for (var pendingAccount in pendingAccounts) {
-      final activated = await _tryActivateAccount(pendingAccount);
-      if (activated) {
-        logDebug(
-            'Activated multi sig account: ${pendingAccount.name}, linked to: ${pendingAccount.linkedAccount.name}');
-      }
-    }
-  }
-}
-
-Future<bool> _tryActivateAccount(MultiAccount pendingAccount) async {
-  final multiSigClient = get<MultiSigClient>();
-  final accountService = get<AccountService>();
-
-  var activated = false;
-
-  final remoteAccount = await multiSigClient.getAccount(
-    remoteId: pendingAccount.remoteId,
-    signerAddress: pendingAccount.linkedAccount.address,
-    coin: pendingAccount.linkedAccount.coin,
-  );
-
-  if (remoteAccount != null) {
-    final active = remoteAccount.signers.every((e) => e.publicKey != null);
-    if (active) {
-      await accountService.activateMultiAccount(
-        id: pendingAccount.id,
-        signers: remoteAccount.signers,
-      );
-
-      activated = true;
-    }
-  }
-
-  return activated;
 }
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {
