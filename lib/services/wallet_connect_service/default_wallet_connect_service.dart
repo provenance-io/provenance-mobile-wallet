@@ -227,7 +227,8 @@ class DefaultWalletConnectService extends WalletConnectService
     }
   }
 
-  Future<WalletConnectSession?> _tryRestoreSession(String accountId) async {
+  @visibleForTesting
+  Future<WalletConnectSession?> tryRestoreSession(String accountId) async {
     final sessionValues = await Future.wait([
       _keyValueService.getString(PrefKey.sessionData),
       _keyValueService.getString(PrefKey.sessionSuspendedTime)
@@ -294,7 +295,6 @@ class DefaultWalletConnectService extends WalletConnectService
         accountId: session.accountId,
       );
       return null;
-      
     }
 
     return session;
@@ -383,14 +383,14 @@ class DefaultWalletConnectService extends WalletConnectService
           WalletConnectAddress.create(deepLinkAddress ?? "");
 
       if (deepLinkWcAddress != null) {
-        final session = await _tryRestoreSession(currentUser.id);
+        final session = await tryRestoreSession(currentUser.id);
         session?.disconnect();
 
         await connectSession(currentUser.id, deepLinkAddress!);
       } else {
-        final session = await _tryRestoreSession(currentUser.id);
+        final session = await tryRestoreSession(currentUser.id);
         _setCurrentSession(session);
-      } 
+      }
     } finally {
       _isRestoring = false;
     }
