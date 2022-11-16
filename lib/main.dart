@@ -80,7 +80,6 @@ import 'package:provenance_wallet/util/integration_test_data.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/multi_sig_util.dart';
 import 'package:provenance_wallet/util/router_observer.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -635,7 +634,7 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
       }
     }
 
-    accountService.events.added.listen((e) {
+    accountService.events.added.listen((e) async {
       final address = e.address;
       if (address != null) {
         remoteNotificationService.registerForPushNotifications(address).onError(
@@ -643,6 +642,14 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
                 'Add event failed to register for push notifications for account: $address',
               ),
             );
+      }
+
+      if (e is MultiAccount) {
+        final activated = await _tryActivateAccount(e);
+        if (activated) {
+          logDebug(
+              'Activated multi sig account: ${e.name}, linked to: ${e.linkedAccount.name}');
+        }
       }
     }).addTo(_subscriptions);
 
@@ -735,13 +742,40 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
         .toList();
 
     for (var pendingAccount in pendingAccounts) {
-      final activated = await tryActivateAccount(pendingAccount);
+      final activated = await _tryActivateAccount(pendingAccount);
       if (activated) {
         logDebug(
             'Activated multi sig account: ${pendingAccount.name}, linked to: ${pendingAccount.linkedAccount.name}');
       }
     }
   }
+}
+
+Future<bool> _tryActivateAccount(MultiAccount pendingAccount) async {
+  final multiSigClient = get<MultiSigClient>();
+  final accountService = get<AccountService>();
+
+  var activated = false;
+
+  final remoteAccount = await multiSigClient.getAccount(
+    remoteId: pendingAccount.remoteId,
+    signerAddress: pendingAccount.linkedAccount.address,
+    coin: pendingAccount.linkedAccount.coin,
+  );
+
+  if (remoteAccount != null) {
+    final active = remoteAccount.signers.every((e) => e.publicKey != null);
+    if (active) {
+      await accountService.activateMultiAccount(
+        id: pendingAccount.id,
+        signers: remoteAccount.signers,
+      );
+
+      activated = true;
+    }
+  }
+
+  return activated;
 }
 
 void showCipherServiceError(BuildContext context, CipherServiceError error) {

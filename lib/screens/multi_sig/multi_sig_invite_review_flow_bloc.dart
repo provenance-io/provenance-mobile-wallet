@@ -8,8 +8,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
-import 'package:provenance_wallet/util/multi_sig_util.dart';
 
 class MultiSigInviteReviewFlowBloc {
   MultiSigInviteReviewFlowBloc({
@@ -99,12 +97,6 @@ class MultiSigInviteReviewFlowBloc {
           signaturesRequired: _remoteAccount.signersRequired,
           inviteIds: _remoteAccount.signers.map((e) => e.inviteId).toList(),
         );
-
-        final activated = await tryActivateAccount(multiAccount);
-        if (activated) {
-          logDebug(
-              'Activated multi sig account: ${multiAccount.name}, linked to: ${multiAccount.linkedAccount.name}');
-        }
       }
 
       final error = result?.error;
