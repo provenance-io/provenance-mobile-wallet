@@ -166,7 +166,6 @@ void main() {
       final menuItems = tester.widgetList<PwGreyButton>(menuItemsFind).toList();
       expect(menuItems[0].text, strings!.rename);
       expect(menuItems[1].text, strings!.copyAccountAddress);
-      expect(menuItems[2].text, strings!.remove);
     });
 
     group("Copy menu item clicked", () {
