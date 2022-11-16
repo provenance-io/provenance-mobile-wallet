@@ -1,9 +1,7 @@
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/modal_loading.dart';
-import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/count.dart';
 import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_account_name_screen.dart';
@@ -18,11 +16,8 @@ import 'package:rxdart/rxdart.dart';
 
 class MultiSigAccountCreateFlow extends FlowBase {
   const MultiSigAccountCreateFlow({
-    required this.coin,
     Key? key,
   }) : super(key: key);
-
-  final Coin coin;
 
   @override
   State<StatefulWidget> createState() => MultiSigAccountCreateFlowState();
@@ -38,13 +33,10 @@ class MultiSigAccountCreateFlowState
   @override
   Widget createStartPage() {
     return MultiSigAccountNameScreen(
+      bloc: _bloc,
       message: Strings.of(context).accountNameMultiSigMessage,
       mode: FieldMode.initial,
       leadingIcon: PwIcons.back,
-      name: _bloc.name,
-      onSubmit: _bloc.submitMultiSigName,
-      popOnSubmit: false,
-      coin: widget.coin,
     );
   }
 
@@ -112,7 +104,7 @@ abstract class MultiSigAccountCreateFlowNavigator {
 }
 
 class MultiSigAccountCreateFlowBloc
-    implements AccountNameBloc, MultiSigCountBloc, MultiSigConfirmBloc {
+    implements MultiSigAccountNameBloc, MultiSigCountBloc, MultiSigConfirmBloc {
   MultiSigAccountCreateFlowBloc({
     required MultiSigAccountCreateFlowNavigator navigator,
   }) : _navigator = navigator;
@@ -149,19 +141,6 @@ class MultiSigAccountCreateFlowBloc
   ValueStream<Count> get signatureCount => _signatureCount;
 
   @override
-  void submitName(String name, FieldMode mode) {
-    _name.add(name);
-
-    switch (mode) {
-      case FieldMode.initial:
-        _navigator.showMultiSigCosigners(FieldMode.initial);
-        break;
-      case FieldMode.edit:
-        _navigator.back();
-        break;
-    }
-  }
-
   void submitMultiSigName(
       String name, FieldMode mode, BasicAccount linkedAccount) {
     _name.add(name);

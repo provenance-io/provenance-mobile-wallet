@@ -115,6 +115,7 @@ class RecoveryWordsConfirmScreenState
                 children: [
                   PwCheckBox(
                     key: RecoveryWordsConfirmScreen.keyCheckbox,
+                    selected: _isResponsible,
                     onSelect: (isChecked) {
                       setState(() {
                         _isResponsible = isChecked;

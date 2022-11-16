@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
@@ -11,7 +10,6 @@ import 'package:provenance_wallet/screens/multi_sig/multi_sig_create_or_join_scr
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_invite_review_flow.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_join_link_screen.dart';
 import 'package:provenance_wallet/screens/qr_code_scanner.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
@@ -44,7 +42,6 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
     origin: widget._origin,
     navigator: this,
   );
-  final _keyValueService = get<KeyValueService>();
 
   @override
   Widget createStartPage() => AccountTypeScreen(
@@ -101,14 +98,8 @@ class AddAccountFlowState extends FlowBaseState<AddAccountFlow>
   void showMultiSigAddKind(MultiSigAddKind kind) async {
     switch (kind) {
       case MultiSigAddKind.create:
-        final chainId =
-            (await _keyValueService.getString(PrefKey.defaultChainId)) ??
-                Coin.mainNet.chainId;
-
         final account = await showPage(
-          (context) => MultiSigAccountCreateFlow(
-            coin: Coin.forChainId(chainId),
-          ),
+          (context) => MultiSigAccountCreateFlow(),
         );
 
         if (account != null) {

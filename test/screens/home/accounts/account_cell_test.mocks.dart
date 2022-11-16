@@ -18,11 +18,12 @@ import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_regi
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_remote_account.dart'
     as _i9;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i15;
+    as _i16;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_update_result.dart'
     as _i14;
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart'
     as _i7;
+import 'package:provenance_wallet/network.dart' as _i15;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i3;
 import 'package:provenance_wallet/services/http_client.dart' as _i2;
@@ -275,15 +276,27 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
                       #renameAccount, [], {#id: id, #name: name}))))
           as _i8.Future<_i4.Account>);
   @override
-  _i8.Future<_i4.BasicAccount> addAccount(
-          {List<String>? phrase, String? name, _i6.Coin? coin}) =>
+  _i8.Future<_i4.Account> selectNetwork(
+          {String? accountId, _i15.Network? network}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: _i8.Future<_i4.BasicAccount>.value(_FakeBasicAccount_3(
-                  this,
-                  Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #coin: coin}))))
-          as _i8.Future<_i4.BasicAccount>);
+                  #selectNetwork, [], {#accountId: accountId, #network: network}),
+              returnValue: _i8.Future<_i4.Account>.value(_FakeAccount_2(this,
+                  Invocation.method(#selectNetwork, [], {#accountId: accountId, #network: network}))))
+          as _i8.Future<_i4.Account>);
+  @override
+  _i8.Future<_i4.BasicAccount> addAccount(
+          {List<String>? phrase, String? name, _i15.Network? network}) =>
+      (super
+          .noSuchMethod(Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #network: network}),
+              returnValue: _i8.Future<_i4.BasicAccount>.value(
+                  _FakeBasicAccount_3(
+                      this,
+                      Invocation.method(#addAccount, [], {
+                        #phrase: phrase,
+                        #name: name,
+                        #network: network
+                      })))) as _i8.Future<_i4.BasicAccount>);
   @override
   _i8.Future<_i4.MultiAccount> addMultiAccount(
           {String? name,
@@ -293,7 +306,7 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          List<_i15.MultiSigSigner>? signers}) =>
+          List<_i16.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
           Invocation.method(#addMultiAccount, [], {
             #name: name,
@@ -319,7 +332,7 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
               })))) as _i8.Future<_i4.MultiAccount>);
   @override
   _i8.Future<_i4.MultiTransactableAccount> activateMultiAccount(
-          {String? id, List<_i15.MultiSigSigner>? signers}) =>
+          {String? id, List<_i16.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(Invocation.method(#activateMultiAccount, [], {#id: id, #signers: signers}),
           returnValue: _i8.Future<_i4.MultiTransactableAccount>.value(
               _FakeMultiTransactableAccount_5(
@@ -339,10 +352,10 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
               returnValue: _i8.Future<List<_i4.Account>>.value(<_i4.Account>[]))
           as _i8.Future<List<_i4.Account>>);
   @override
-  _i8.Future<_i6.PrivateKey> loadKey(String? accountId) =>
-      (super.noSuchMethod(Invocation.method(#loadKey, [accountId]),
+  _i8.Future<_i6.PrivateKey> loadKey(String? accountId, _i6.Coin? coin) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [accountId, coin]),
               returnValue: _i8.Future<_i6.PrivateKey>.value(_FakePrivateKey_6(
-                  this, Invocation.method(#loadKey, [accountId]))))
+                  this, Invocation.method(#loadKey, [accountId, coin]))))
           as _i8.Future<_i6.PrivateKey>);
   @override
   _i8.Future<bool> isValidWalletConnectData(String? qrData) => (super

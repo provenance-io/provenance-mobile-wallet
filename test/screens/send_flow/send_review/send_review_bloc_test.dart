@@ -61,7 +61,7 @@ void main() {
 
     mockAccountService = MockAccountService();
     when(mockAccountService!.onDispose()).thenAnswer((_) => Future.value());
-    when(mockAccountService!.loadKey(any))
+    when(mockAccountService!.loadKey(any, any))
         .thenAnswer((_) => Future.value(privateKey!));
 
     get.registerSingleton<AccountService>(mockAccountService!);

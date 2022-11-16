@@ -94,7 +94,10 @@ class DefaultWalletConnectService extends WalletConnectService
       String? remotePeerId,
       ClientMeta? clientMeta,
       Duration? timeout}) async {
-    final privateKey = await _accountService.loadKey(connectAccount.id);
+    final privateKey = await _accountService.loadKey(
+      connectAccount.id,
+      connectAccount.coin,
+    );
 
     final address = WalletConnectAddress.create(wcAddress);
     if (address == null) {

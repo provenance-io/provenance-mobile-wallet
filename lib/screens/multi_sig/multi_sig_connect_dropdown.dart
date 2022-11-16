@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/common/widgets/pw_dropdown.dart';
+import 'package:provenance_wallet/common/Pw_design.dart';
+import 'package:provenance_wallet/common/widgets/Pw_dropdown.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -13,13 +13,13 @@ const defaultValue = MultiSigConnectDropdownItem(
 
 class MultiSigConnectDropDown extends StatefulWidget {
   const MultiSigConnectDropDown({
-    required this.coin,
     required this.onChanged,
+    this.coin,
     this.selected,
     Key? key,
   }) : super(key: key);
 
-  final Coin coin;
+  final Coin? coin;
   final void Function(MultiSigConnectDropdownItem item) onChanged;
   final Account? selected;
 
@@ -126,10 +126,13 @@ class _MultiSigConnectDropDownState extends State<MultiSigConnectDropDown> {
   }
 
   Future<void> _load(Account? selected) async {
-    final accounts = await _accountService.getBasicAccounts();
+    Iterable<BasicAccount> accounts = await _accountService.getBasicAccounts();
+
+    if (widget.coin != null) {
+      accounts = accounts.where((e) => e.coin == widget.coin);
+    }
 
     var items = accounts
-        .where((e) => e.coin == widget.coin)
         .map(
           (e) => MultiSigConnectDropdownItem(
             name: e.name,

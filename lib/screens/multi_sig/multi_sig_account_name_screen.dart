@@ -1,4 +1,3 @@
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
@@ -12,15 +11,18 @@ import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
+abstract class MultiSigAccountNameBloc {
+  ValueStream<String> get name;
+  void submitMultiSigName(
+      String name, FieldMode mode, BasicAccount linkedAccount);
+}
+
 class MultiSigAccountNameScreen extends StatefulWidget {
   const MultiSigAccountNameScreen({
+    required this.bloc,
     required this.mode,
     required this.message,
     required this.leadingIcon,
-    required this.onSubmit,
-    required this.name,
-    required this.popOnSubmit,
-    required this.coin,
     Key? key,
   }) : super(key: key);
 
@@ -29,15 +31,10 @@ class MultiSigAccountNameScreen extends StatefulWidget {
   static final keyContinueButton =
       ValueKey('$MultiSigAccountNameScreen.continue_button');
 
-  final ValueStream<String> name;
-  final Function(String name, FieldMode mode, BasicAccount linkedAccount)
-      onSubmit;
-
+  final MultiSigAccountNameBloc bloc;
   final FieldMode mode;
   final String leadingIcon;
   final String message;
-  final bool popOnSubmit;
-  final Coin coin;
 
   @override
   State<MultiSigAccountNameScreen> createState() =>
@@ -59,7 +56,7 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_validate);
 
-    widget.name.listen((e) {
+    widget.bloc.name.listen((e) {
       _textEditingController.text = e;
     }).addTo(_subscriptions);
 
@@ -138,7 +135,6 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
                     horizontal: Spacing.large,
                   ),
                   child: MultiSigConnectDropDown(
-                    coin: widget.coin,
                     onChanged: (e) {
                       setState(() {
                         _linkedAccount = e.account;
@@ -225,7 +221,7 @@ class _MultiSigAccountNameScreenState extends State<MultiSigAccountNameScreen> {
 
   void _submit() {
     if (_isValid) {
-      widget.onSubmit(
+      widget.bloc.submitMultiSigName(
           _textEditingController.text, widget.mode, _linkedAccount!);
     }
   }

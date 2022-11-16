@@ -276,7 +276,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   }
 
   Future<bool> _completeSessionAction(SessionAction action) async {
-    final privateKey = await _accountService.loadKey(_connectAccount.id);
+    final privateKey = await _accountService.loadKey(
+      _connectAccount.id,
+      _connectAccount.coin,
+    );
 
     SessionApprovalData sessionApproval = SessionApprovalData(
       privateKey,
@@ -359,10 +362,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       throw 'This action is not supported for multi signature accounts';
     }
 
-    final privateKey = await _accountService.loadKey(_transactAccount.id);
+    final privateKey = await _accountService.loadKey(
+      _transactAccount.id,
+      _transactAccount.coin,
+    );
     List<int>? signedData;
-    signedData = privateKey.defaultKey().signData(Hash.sha256(bytes))
-      ..removeLast();
+    signedData = privateKey.signData(Hash.sha256(bytes))..removeLast();
 
     await _connection.sendSignResult(
       action.walletConnectRequestId,

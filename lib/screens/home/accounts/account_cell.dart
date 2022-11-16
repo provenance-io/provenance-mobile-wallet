@@ -4,12 +4,15 @@ import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
 import 'package:provenance_wallet/common/widgets/pw_list_divider.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_item.dart';
 import 'package:provenance_wallet/screens/home/accounts/faucet_screen.dart';
 import 'package:provenance_wallet/screens/home/accounts/rename_account_dialog.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_creation_status.dart';
+import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +22,7 @@ enum MenuOperation {
   delete,
   viewInvite,
   addHash,
+  changeNetwork,
 }
 
 class AccountCell extends StatefulWidget {
@@ -117,30 +121,26 @@ class _AccountCellState extends State<AccountCell> {
 
   Widget _buildAccountContainer(BuildContext context, bool isSelected) {
     final strings = Strings.of(context);
-    final Coin? coin;
-
-    switch (_account.kind) {
-      case AccountKind.basic:
-      case AccountKind.multi:
-        coin = _account.coin;
-        break;
-    }
+    final account = _account;
+    final coin = account.coin;
 
     return AccountContainer(
-        name: _account.name,
+        name: account.name,
         rows: [
           AccountTitleRow(
-            name: _account.name,
-            kind: _account.kind,
+            name: account.name,
+            kind: account.kind,
             isSelected: isSelected,
           ),
-          if (_account.address != null)
-            AccountDescriptionRow(address: _account.address!),
+          if (account.address != null)
+            AccountDescriptionRow(
+              address: account.address!,
+            ),
           if (coin != null)
             AccountNetworkRow(
               coin: coin,
             ),
-          if (_account.address == null)
+          if (account.address == null)
             PwText(
               strings.accountStatusPending,
               style: PwTextStyle.bodySmall,
@@ -231,20 +231,30 @@ class _AccountCellState extends State<AccountCell> {
           ).route(),
         );
         break;
-      default:
+      case MenuOperation.changeNetwork:
+        final network =
+            _account.coin == Coin.testNet ? Network.mainNet : Network.testNet;
+        get<AccountService>().selectNetwork(
+          accountId: _account.id,
+          network: network,
+        );
+        break;
     }
   }
 
   Future<MenuOperation?> _showMenu(BuildContext context) async {
+    final account = _account;
     final List<MenuOperation> operations;
-    if (_account is BasicAccount) {
+
+    if (account is BasicAccount) {
       operations = <MenuOperation>[
         MenuOperation.rename,
         MenuOperation.copy,
+        if (account.linkedAccountIds.isEmpty) MenuOperation.changeNetwork,
         if (widget.isRemovable) MenuOperation.delete
       ];
     } else {
-      final isTransactable = _account is TransactableAccount;
+      final isTransactable = account is TransactableAccount;
       operations = <MenuOperation>[];
       if (isTransactable) {
         operations.add(MenuOperation.copy);
@@ -253,7 +263,7 @@ class _AccountCellState extends State<AccountCell> {
       if (widget.isRemovable) operations.add(MenuOperation.delete);
     }
 
-    if (_account.coin == Coin.testNet) {
+    if (account.coin == Coin.testNet) {
       operations.add(MenuOperation.addHash);
     }
 
@@ -289,6 +299,11 @@ class _AccountCellState extends State<AccountCell> {
                 case MenuOperation.addHash:
                   label = strings.faucetScreenButtonTitle;
                   key = AccountCell.keyAddHashButton;
+                  break;
+                case MenuOperation.changeNetwork:
+                  label = account.coin == Coin.testNet
+                      ? strings.networkUseMainnet
+                      : strings.networkUseTestnet;
                   break;
               }
 

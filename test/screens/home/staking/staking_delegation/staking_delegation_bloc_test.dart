@@ -257,7 +257,7 @@ main() {
       when(mockTransactionHandler.estimateGas(any, any, any,
               gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
-      when(mockAccountService.loadKey(any)).thenFuture(privKey);
+      when(mockAccountService.loadKey(any, any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
     });
@@ -271,7 +271,7 @@ main() {
 
     test("Error during retrieve private key", () async {
       final ex = Exception("A");
-      when(mockAccountService.loadKey(any)).thenThrow(ex);
+      when(mockAccountService.loadKey(any, any)).thenThrow(ex);
       expect(() => bloc.doDelegate(34.55), throwsA(ex));
     });
 
@@ -304,7 +304,7 @@ main() {
       when(mockTransactionHandler.estimateGas(any, any, any,
               gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
-      when(mockAccountService.loadKey(any)).thenFuture(privKey);
+      when(mockAccountService.loadKey(any, any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
     });
@@ -318,7 +318,7 @@ main() {
 
     test("Error during retrieve private key", () async {
       final ex = Exception("A");
-      when(mockAccountService.loadKey(any)).thenThrow(ex);
+      when(mockAccountService.loadKey(any, any)).thenThrow(ex);
       expect(() => bloc.doUndelegate(34.55), throwsA(ex));
     });
 
@@ -351,7 +351,7 @@ main() {
       when(mockTransactionHandler.estimateGas(any, any, any,
               gasAdjustment: anyNamed('gasAdjustment')))
           .thenFuture(gasEstimate);
-      when(mockAccountService.loadKey(any)).thenFuture(privKey);
+      when(mockAccountService.loadKey(any, any)).thenFuture(privKey);
       when(mockTransactionHandler.executeTransaction(any, any, any, any))
           .thenFuture(response);
     });
@@ -365,7 +365,7 @@ main() {
 
     test("Error during retrieve private key", () async {
       final ex = Exception("A");
-      when(mockAccountService.loadKey(any)).thenThrow(ex);
+      when(mockAccountService.loadKey(any, any)).thenThrow(ex);
       expect(() => bloc.claimRewards(34.55), throwsA(ex));
     });
 

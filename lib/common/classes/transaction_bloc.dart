@@ -42,7 +42,8 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
       ],
     );
 
-    final privateKey = await get<AccountService>().loadKey(account.id);
+    final privateKey =
+        await get<AccountService>().loadKey(account.id, account.coin);
 
     final estimate = await get<TransactionHandler>().estimateGas(
       body,
@@ -53,7 +54,7 @@ abstract class TransactionBloc<T extends proto.GeneratedMessage>
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey.defaultKey(),
+      privateKey,
       account.coin,
       estimate,
     );

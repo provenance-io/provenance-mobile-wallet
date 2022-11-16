@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_dart/wallet.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
+import 'package:provenance_wallet/services/key_value_service/default_key_value_service.dart';
+import 'package:provenance_wallet/services/key_value_service/memory_key_value_store.dart';
 import 'package:sembast/sembast_memory.dart';
 
 import '../screens/receive_flow/receive/receive_screen_test.dart';
@@ -44,31 +45,32 @@ void main() {
 
 Future<AccountService> createService({
   int dataCount = 0,
-  Coin coin = Coin.mainNet,
 }) async {
   final export = await createDatabaseExport(
     dataCount: dataCount,
-    coin: coin,
   );
 
-  final serviceCore = SembastAccountStorageServiceV2(
+  final storage = SembastAccountStorageServiceV2(
     factory: newDatabaseFactoryMemory(),
     dbPath: dbPath,
     import: export,
   );
   final cipherService = MemoryCipherService();
 
+  final keyValueService = DefaultKeyValueService(
+    store: MemoryKeyValueStore(),
+  );
+
   final service = AccountService(
-    storage: AccountStorageServiceImp(
-      serviceCore,
-      cipherService,
-    ),
+    storage: storage,
+    keyValueService: keyValueService,
+    cipherService: cipherService,
   );
 
   final accounts = await service.getAccounts();
   expect(accounts.length, dataCount);
 
-  get.registerSingleton(serviceCore,
+  get.registerSingleton(storage,
       dispose: (SembastAccountStorageServiceV2 serviceCore) {
     return serviceCore.deleteDatabase();
   });
@@ -82,19 +84,21 @@ Future<AccountService> createService({
 
 Future<Map<String, Object?>> createDatabaseExport({
   int dataCount = 0,
-  Coin coin = Coin.mainNet,
 }) async {
-  final serviceCore = SembastAccountStorageServiceV2(
+  final storage = SembastAccountStorageServiceV2(
     factory: newDatabaseFactoryMemory(),
     dbPath: dbPath,
   );
   final cipherService = MemoryCipherService();
 
+  final keyValueService = DefaultKeyValueService(
+    store: MemoryKeyValueStore(),
+  );
+
   final service = AccountService(
-    storage: AccountStorageServiceImp(
-      serviceCore,
-      cipherService,
-    ),
+    storage: storage,
+    keyValueService: keyValueService,
+    cipherService: cipherService,
   );
 
   for (var i = 0; i < dataCount; i++) {
@@ -103,13 +107,13 @@ Future<Map<String, Object?>> createDatabaseExport({
         '$i',
       ],
       name: '$i',
-      coin: coin,
+      network: Network.mainNet,
     );
   }
 
   await service.selectFirstAccount();
 
-  final data = await serviceCore.exportDatabase();
+  final data = await storage.exportDatabase();
 
   return data;
 }

@@ -1,14 +1,24 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
+import 'package:provenance_wallet/common/widgets/pw_check_box.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/screens/field_mode.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'account/advanced_account_settings.dart';
+
 abstract class AccountNameBloc {
   ValueStream<String> get name;
-  void submitName(String name, FieldMode mode);
+
+  ValueStream<Network> get network;
+  void submitName({
+    required String name,
+    required FieldMode mode,
+    required Network network,
+  });
 }
 
 class AccountNameScreen extends StatefulWidget {
@@ -17,7 +27,6 @@ class AccountNameScreen extends StatefulWidget {
     required this.message,
     required this.leadingIcon,
     required this.bloc,
-    required this.popOnSubmit,
     Key? key,
   }) : super(key: key);
 
@@ -30,7 +39,6 @@ class AccountNameScreen extends StatefulWidget {
   final String leadingIcon;
   final String message;
   final AccountNameBloc bloc;
-  final bool popOnSubmit;
 
   @override
   State<AccountNameScreen> createState() => _AccountNameScreenState();
@@ -39,23 +47,36 @@ class AccountNameScreen extends StatefulWidget {
 class _AccountNameScreenState extends State<AccountNameScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _subscriptions = CompositeSubscription();
+  final _defaultNetwork = Network.mainNet;
+  var _showAdvanced = false;
 
-  late final TextEditingController _textEditingController;
+  late final TextEditingController _nameController;
+  late final _network = BehaviorSubject<Network>.seeded(_defaultNetwork);
+
+  var _valid = false;
 
   @override
   void initState() {
     super.initState();
 
-    _textEditingController = TextEditingController();
+    _nameController = TextEditingController();
+    _nameController.addListener(() {
+      _updateValid();
+    });
+
     widget.bloc.name.listen((e) {
-      _textEditingController.text = e;
+      _nameController.text = e;
+    }).addTo(_subscriptions);
+
+    widget.bloc.network.listen((e) {
+      _network.add(e);
     }).addTo(_subscriptions);
   }
 
   @override
   void dispose() {
     _subscriptions.dispose();
-    _textEditingController.dispose();
+    _nameController.dispose();
 
     super.dispose();
   }
@@ -114,14 +135,53 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                           ? strings.required
                           : null;
                     },
-                    controller: _textEditingController,
+                    controller: _nameController,
                     onFieldSubmitted: (_) => _submit(),
                   ),
                 ),
+                VerticalSpacer.large(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Spacing.large,
+                  ),
+                  child: Row(
+                    children: [
+                      PwCheckBox(
+                        selected: _showAdvanced,
+                        onSelect: (selected) {
+                          setState(() {
+                            _showAdvanced = selected;
+                            _network.add(_defaultNetwork);
+                          });
+                        },
+                      ),
+                      HorizontalSpacer.large(),
+                      PwText(
+                        strings.accountAdvancedSettings,
+                        color: PwColor.neutralNeutral,
+                        style: PwTextStyle.bodyBold,
+                      ),
+                    ],
+                  ),
+                ),
+                if (_showAdvanced) ...[
+                  VerticalSpacer.large(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Spacing.large,
+                    ),
+                    child: AdvancedAccountSettings(
+                      network: _network,
+                      onNetworkChanged: (coin) {
+                        _network.add(coin);
+                      },
+                    ),
+                  ),
+                ],
                 Expanded(
                   child: Container(),
                 ),
-                VerticalSpacer.large(),
+                VerticalSpacer.xxLarge(),
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: PwButton(
@@ -132,6 +192,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                       color: PwColor.neutralNeutral,
                     ),
                     onPressed: _submit,
+                    enabled: _valid,
                   ),
                 ),
                 VerticalSpacer.largeX4(),
@@ -145,7 +206,22 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() == true) {
-      widget.bloc.submitName(_textEditingController.text, widget.mode);
+      widget.bloc.submitName(
+        name: _nameController.text,
+        mode: widget.mode,
+        network: _network.value,
+      );
+    }
+  }
+
+  void _updateValid() {
+    final name = _nameController.text;
+
+    final valid = name.isNotEmpty;
+    if (valid != _valid) {
+      setState(() {
+        _valid = valid;
+      });
     }
   }
 }

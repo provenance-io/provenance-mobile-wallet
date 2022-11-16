@@ -78,12 +78,16 @@ final phrase =
     "nasty carbon end inject case prison foam tube damage poverty timber sea boring someone husband fish whip motion mail canyon census success jungle can"
         .split(" ");
 final seed = Mnemonic.createSeed(phrase);
-final privateKey = PrivateKey.fromSeed(seed, Coin.mainNet);
+final privateKey = PrivateKey.fromSeed(seed, Coin.mainNet).defaultKey();
+
 const walletConnectAddress =
     "wc:c2572162-bc23-442c-95c7-a4b6403331f4@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=c90653342c66a002944cff439239b79cc6fdde42b61a10c6d1e8d05506bd92bf";
 
 final account = BasicAccount(
-    id: "Id", name: "Account1", publicKey: privateKey.defaultKey().publicKey);
+  id: "Id",
+  name: "Account1",
+  publicKey: privateKey.publicKey,
+);
 
 // NOTE: you need to use testWidgets due to the fact that WidgetsBinding.instance.addObserver is used
 @GenerateMocks([
@@ -114,7 +118,10 @@ void main() {
       BehaviorSubject<AuthStatus>.seeded(AuthStatus.noAccount);
 
   final accountDetails = BasicAccount(
-      id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
+    id: "ABC",
+    name: "Basic Name",
+    publicKey: privateKey.publicKey,
+  );
 
   setUp(() {
     mockLocalAuthHelper = MockLocalAuthHelper();
@@ -163,7 +170,7 @@ void main() {
     );
 
     // setup values needed by the connect method
-    when(mockAccountService.loadKey(any))
+    when(mockAccountService.loadKey(any, any))
         .thenAnswer((_) => Future.value(privateKey));
 
     when(mockWalletConnection.connect(any, any))
@@ -190,7 +197,7 @@ void main() {
 
   group("connectSession", () {
     testWidgets("return false on private key not found", (_) async {
-      when(mockAccountService.loadKey(any))
+      when(mockAccountService.loadKey(any, any))
           .thenThrow(AccountServiceError.privateKeyNotFound);
 
       expectLater(
@@ -223,7 +230,10 @@ void main() {
 
       expect(success, true);
 
-      verify(mockAccountService.loadKey(accountDetails.id));
+      verify(mockAccountService.loadKey(
+        accountDetails.id,
+        accountDetails.coin,
+      ));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);
@@ -296,7 +306,10 @@ void main() {
       await tester.runAsync(() async {
         // for som
         final accountDetails = BasicAccount(
-            id: "ABC", name: "Basic Name", publicKey: privateKey.publicKey);
+          id: "ABC",
+          name: "Basic Name",
+          publicKey: privateKey.publicKey,
+        );
 
         when(mockAccountService.getAccount(any))
             .thenAnswer((_) => Future.value(accountDetails));
@@ -332,7 +345,7 @@ void main() {
     });
 
     testWidgets("return false on private key not found", (_) async {
-      when(mockAccountService.loadKey(any))
+      when(mockAccountService.loadKey(any, any))
           .thenThrow(AccountServiceError.privateKeyNotFound);
 
       expectLater(
@@ -357,7 +370,10 @@ void main() {
       expect(success, true);
 
       verify(mockAccountService.getAccount("AccountId"));
-      verify(mockAccountService.loadKey(accountDetails.id));
+      verify(mockAccountService.loadKey(
+        accountDetails.id,
+        accountDetails.coin,
+      ));
 
       expect(mockConnectionFactory.passedAddress!.bridge,
           WalletConnectAddress.create(walletConnectAddress)!.bridge);

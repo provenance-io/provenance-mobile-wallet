@@ -126,6 +126,7 @@ class DefaultQueueTxService implements TxQueueService {
       pbClient: pbClient,
       multiSigAddress: multiSigAddress,
       signerAccountId: signerAccount.id,
+      signerCoin: signerAccount.coin,
       txBody: item.txBody,
       fee: item.fee,
     );
@@ -201,6 +202,7 @@ class DefaultQueueTxService implements TxQueueService {
       pbClient: pbClient,
       multiSigAddress: multiSigAddress,
       signerAccountId: signerAccount.id,
+      signerCoin: signerAccount.coin,
       txBody: txBody,
       fee: fee,
     );
@@ -236,12 +238,14 @@ class DefaultQueueTxService implements TxQueueService {
     required proto.PbClient pbClient,
     required String multiSigAddress,
     required String signerAccountId,
+    required Coin signerCoin,
     required proto.TxBody txBody,
     required proto.Fee fee,
   }) async {
-    final signerRootPk = await _accountService.loadKey(signerAccountId);
-
-    final signerPk = signerRootPk.defaultKey();
+    final signerPk = await _accountService.loadKey(
+      signerAccountId,
+      signerCoin,
+    );
 
     final multiSigBaseAccount = await pbClient.getBaseAccount(multiSigAddress);
 
@@ -260,13 +264,16 @@ class DefaultQueueTxService implements TxQueueService {
     proto.TxBody txBody,
     GasFeeEstimate gasEstimate,
   ) async {
-    final privateKey = await _accountService.loadKey(account.id);
+    final privateKey = await _accountService.loadKey(
+      account.id,
+      account.coin,
+    );
 
     TxResult? result;
 
     final response = await _transactionHandler.executeTransaction(
       txBody,
-      privateKey.defaultKey(),
+      privateKey,
       account.coin,
       gasEstimate,
     );

@@ -171,7 +171,10 @@ class StakingDelegationBloc extends Disposable {
       ],
     );
 
-    final privateKey = await get<AccountService>().loadKey(_account.id);
+    final privateKey = await get<AccountService>().loadKey(
+      _account.id,
+      _account.coin,
+    );
 
     final estimate = await get<TransactionHandler>().estimateGas(
       body,
@@ -182,7 +185,7 @@ class StakingDelegationBloc extends Disposable {
 
     final response = await get<TransactionHandler>().executeTransaction(
       body,
-      privateKey.defaultKey(),
+      privateKey,
       _account.coin,
       estimate,
     );

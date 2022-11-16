@@ -13,17 +13,16 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/proto.dart';
-import 'package:provenance_dart/wallet.dart' as wallet;
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/cipher_service_pw_error.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/multi_sig_client.dart';
 import 'package:provenance_wallet/common/theme.dart';
 import 'package:provenance_wallet/common/widgets/pw_dialog.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/screens/start_screen.dart';
 import 'package:provenance_wallet/services/account_notification_service/account_notification_service.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
+import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_kind.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
@@ -63,7 +62,6 @@ import 'package:provenance_wallet/services/remote_notification/default_remote_no
 import 'package:provenance_wallet/services/remote_notification/disabled_remote_notification_service.dart';
 import 'package:provenance_wallet/services/remote_notification/multi_sig_topic.dart';
 import 'package:provenance_wallet/services/remote_notification/remote_notification_service.dart';
-import 'package:provenance_wallet/services/sqlite_account_storage_service.dart';
 import 'package:provenance_wallet/services/stat_client/default_stat_client.dart';
 import 'package:provenance_wallet/services/stat_client/stat_client.dart';
 import 'package:provenance_wallet/services/transaction_client/default_transaction_client.dart';
@@ -151,12 +149,12 @@ Future<void> _integrationTestSetup(String json) async {
     await service.addAccount(
       phrase: seedPhraseOne,
       name: nameOne,
-      coin: wallet.Coin.testNet,
+      network: Network.testNet,
     );
     await service.addAccount(
       phrase: seedPhraseTwo,
       name: nameTwo,
-      coin: wallet.Coin.testNet,
+      network: Network.testNet,
     );
     await get<CipherService>().setPin(pin);
   } else if (data.sendHashTest != null) {
@@ -166,7 +164,7 @@ Future<void> _integrationTestSetup(String json) async {
     await service.addAccount(
       phrase: seedPhraseOne,
       name: data.accountName!,
-      coin: wallet.Coin.testNet,
+      network: Network.testNet,
     );
     await get<CipherService>().setPin(data.cipherPin!);
   }
@@ -364,44 +362,33 @@ class _ProvenanceWalletAppState extends State<ProvenanceWalletApp> {
 
         const accountDbFilename = 'account.db';
 
-        AccountStorageService accountStorageService;
+        AccountStorageServiceCore storage;
 
         switch (AccountStorageServiceKind.values.byName(_accountServiceKind)) {
           case AccountStorageServiceKind.sembast:
             final directory = await getApplicationDocumentsDirectory();
             await directory.create(recursive: true);
-            final serviceCore = SembastAccountStorageServiceV2(
+            storage = SembastAccountStorageServiceV2(
               factory: databaseFactoryIo,
               dbPath: path.join(directory.absolute.path, accountDbFilename),
             );
-            accountStorageService =
-                AccountStorageServiceImp(serviceCore, cipherService);
-
-            await _migrateSqlite(accountStorageService, cipherService);
 
             break;
           case AccountStorageServiceKind.memory:
-            final serviceCore = SembastAccountStorageServiceV2(
+            storage = SembastAccountStorageServiceV2(
               factory: databaseFactoryMemory,
               dbPath: path.join(sembastInMemoryDatabasePath, accountDbFilename),
             );
-            accountStorageService = AccountStorageServiceImp(
-              serviceCore,
-              cipherService,
-            );
             break;
         }
-
-        _log.info(
-          '$AccountStorageService implementation: ${accountStorageService.runtimeType}',
-          tag: _tag,
-        );
 
         final multiSigClient = MultiSigClient();
         get.registerSingleton<MultiSigClient>(multiSigClient);
 
         final accountService = AccountService(
-          storage: accountStorageService,
+          storage: storage,
+          keyValueService: keyValueService,
+          cipherService: cipherService,
         );
         get.registerSingleton<AccountService>(accountService);
 
@@ -764,66 +751,4 @@ void showCipherServiceError(BuildContext context, CipherServiceError error) {
       inner: error,
     ),
   );
-}
-
-Future<void> _migrateSqlite(AccountStorageService accountStorageService,
-    CipherService cipherService) async {
-  final sqliteDb = await SqliteAccountStorageService.getDatabase();
-  if (await sqliteDb.exists()) {
-    _log.debug('Migrating sqlite db', tag: _tag);
-
-    var success = true;
-    final sqliteStorage = SqliteAccountStorageService();
-
-    final accounts = await sqliteStorage.getAccounts();
-    final selectedAccount = await sqliteStorage.getSelectedAccount();
-
-    var migrated = 0;
-    for (var account in accounts) {
-      wallet.PrivateKey? privateKey;
-
-      final mainNetKeyId = '${account.id}-${wallet.Coin.mainNet.chainId}';
-      final testNetKeyId = '${account.id}-${wallet.Coin.testNet.chainId}';
-
-      final mainNetKey = await cipherService.decryptKey(
-        id: mainNetKeyId,
-      );
-
-      if (mainNetKey != null) {
-        privateKey = wallet.PrivateKey.fromBip32(mainNetKey);
-      }
-
-      if (privateKey != null) {
-        final details = await accountStorageService.addAccount(
-          name: account.name,
-          privateKey: privateKey,
-        );
-
-        if (details != null) {
-          if (account.id == selectedAccount?.id) {
-            await accountStorageService.selectAccount(id: details.id);
-          }
-
-          await sqliteStorage.removeAccount(id: account.id);
-          await cipherService.removeKey(id: mainNetKeyId);
-          await cipherService.removeKey(id: testNetKeyId);
-          migrated++;
-        } else {
-          success = false;
-        }
-      } else {
-        success = false;
-      }
-    }
-
-    if (success) {
-      await sqliteStorage.close();
-      await sqliteDb.delete();
-    }
-
-    _log.debug(
-      'Migrate sqlite db success: $success, $migrated account(s)',
-      tag: _tag,
-    );
-  }
 }
