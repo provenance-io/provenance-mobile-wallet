@@ -269,7 +269,7 @@ void main() {
       final success =
           await _walletConnectService.tryRestoreSession("AccountId");
 
-      expect(success, false);
+      expect(success, null);
     });
 
     testWidgets("return false on invalid session data", (_) async {
@@ -279,27 +279,27 @@ void main() {
       final success =
           await _walletConnectService.tryRestoreSession("AccountId");
 
-      expect(success, false);
+      expect(success, null);
     });
 
     testWidgets("return false on null suspendedTime", (_) async {
       when(mockKeyValueService.getString(PrefKey.sessionSuspendedTime))
           .thenAnswer((_) => Future.value(null));
 
-      final success =
+      final session =
           await _walletConnectService.tryRestoreSession("AccountId");
 
-      expect(success, false);
+      expect(session, null);
     });
 
     testWidgets("return false on invalid suspendedTime", (_) async {
       when(mockKeyValueService.getString(PrefKey.sessionSuspendedTime))
           .thenAnswer((_) => Future.value("A"));
 
-      final success =
+      final session =
           await _walletConnectService.tryRestoreSession("AccountId");
 
-      expect(success, false);
+      expect(session, null);
     });
 
     testWidgets("return false on suspendedTime > 30", (tester) async {
@@ -340,7 +340,7 @@ void main() {
         verify(mockWalletConnectQueueService.removeWalletConnectSessionGroup(
             accountId: anyNamed('accountId')));
 
-        expect(success, false);
+        expect(success, null);
       });
     });
 
@@ -358,16 +358,16 @@ void main() {
       when(mockAccountService.getAccount(any))
           .thenAnswer((_) => Future.value(null));
       accountServiceEvents.selectedStreamController.add(null);
-      final success =
+      final session =
           await _walletConnectService.tryRestoreSession("AccountId");
-      expect(success, false);
+      expect(session, null);
     });
 
     testWidgets("verify calls", (_) async {
-      final success =
+      final session =
           await _walletConnectService.tryRestoreSession("AccountId");
 
-      expect(success, true);
+      expect(session, isNotNull);
 
       verify(mockAccountService.getAccount("AccountId"));
       verify(mockAccountService.loadKey(
@@ -384,8 +384,7 @@ void main() {
       expect(mockConnectionFactory.passedAddress!.topic,
           WalletConnectAddress.create(walletConnectAddress)!.topic);
 
-      _walletConnectService
-          .disconnectSession(); // make sure activity timer is shutdown
+      await session!.disconnect();
     });
   });
 }

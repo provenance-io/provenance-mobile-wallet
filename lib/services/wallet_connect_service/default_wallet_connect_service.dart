@@ -230,7 +230,8 @@ class DefaultWalletConnectService extends WalletConnectService
     }
   }
 
-  Future<bool> tryRestoreSession(String accountId) async {
+  @visibleForTesting
+  Future<WalletConnectSession?> tryRestoreSession(String accountId) async {
     final sessionValues = await Future.wait([
       _keyValueService.getString(PrefKey.sessionData),
       _keyValueService.getString(PrefKey.sessionSuspendedTime)
@@ -253,7 +254,7 @@ class DefaultWalletConnectService extends WalletConnectService
       await _removeSessionData(
         accountId: accountId,
       );
-      return false;
+      return null;
     }
 
     final sessionExpired =
@@ -265,7 +266,7 @@ class DefaultWalletConnectService extends WalletConnectService
     if (account is! TransactableAccount) {
       logError('Did not find valid account for id: $accountId');
 
-      return false;
+      return null;
     }
 
     TransactableAccount connectAccount;
@@ -286,7 +287,7 @@ class DefaultWalletConnectService extends WalletConnectService
         remotePeerId: data.remotePeerId);
 
     if (session == null) {
-      return false;
+      return null;
     }
 
     if (now.isAfter(sessionExpired)) {
@@ -296,12 +297,10 @@ class DefaultWalletConnectService extends WalletConnectService
       await _removeSessionData(
         accountId: session.accountId,
       );
-      return false;
-    } else {
-      _log("Previous session has been restored");
-      await _setCurrentSession(session);
-      return true;
+      return null;
     }
+
+    return session;
   }
 
   @override
@@ -378,7 +377,23 @@ class DefaultWalletConnectService extends WalletConnectService
         }
       }
 
-      await tryRestoreSession(currentUser.id);
+      final deepLinkAddress =
+          await _keyValueService.getString(PrefKey.deepLinkAddress);
+
+      await _keyValueService.removeString(PrefKey.deepLinkAddress);
+
+      final deepLinkWcAddress =
+          WalletConnectAddress.create(deepLinkAddress ?? "");
+
+      if (deepLinkWcAddress != null) {
+        final session = await tryRestoreSession(currentUser.id);
+        session?.disconnect();
+
+        await connectSession(currentUser.id, deepLinkAddress!);
+      } else {
+        final session = await tryRestoreSession(currentUser.id);
+        _setCurrentSession(session);
+      }
     } finally {
       _isRestoring = false;
     }
