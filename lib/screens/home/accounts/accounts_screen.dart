@@ -133,7 +133,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       }
     }).addTo(_subscriptions);
 
-    _load();
+    _load().then((_) => _multiSigService.activateAccounts());
   }
 
   @override
