@@ -241,7 +241,8 @@ class AccountService implements Disposable {
 
     final rootKey = PrivateKey.fromSeed(seed, coin);
 
-    final derivedKey = rootKey.defaultKey();
+    final nodes = DerivationNode.fromPathString(coin.defaultKeyPath);
+    final derivedKey = rootKey.deriveKeyFromPath(nodes);
     final publicKeyHex = derivedKey.publicKey.compressedPublicKeyHex;
 
     final details = await _storage.addBasicAccount(
@@ -403,7 +404,9 @@ class AccountService implements Disposable {
       throw AccountServiceError.privateKeyNotFound;
     }
 
-    final derivedKey = PrivateKey.fromBip32(serialziedKey).defaultKey();
+    final nodes = DerivationNode.fromPathString(coin.defaultKeyPath);
+    final derivedKey =
+        PrivateKey.fromBip32(serialziedKey).deriveKeyFromPath(nodes);
 
     // Do this so that the coin and public key are correct.
     // Side effect is that the new key is non-HD.
@@ -447,14 +450,16 @@ class AccountService implements Disposable {
   Future<void> _upgradeV0toV1() async {
     final accounts = await _storage.getBasicAccounts();
     for (final account in accounts) {
-      final oldId = '${account.id}-${account.coin.chainId}}';
-      final privateKey = await _cipherService.decryptKey(id: oldId);
-      if (privateKey != null) {
-        await _cipherService.encryptKey(
-          id: account.id,
-          privateKey: privateKey,
-        );
-        break;
+      for (final coin in [Coin.testNet, Coin.mainNet]) {
+        final oldId = '${account.id}-${coin.chainId}';
+        final privateKey = await _cipherService.decryptKey(id: oldId);
+        if (privateKey != null) {
+          await _cipherService.encryptKey(
+            id: account.id,
+            privateKey: privateKey,
+          );
+          break;
+        }
       }
     }
   }
