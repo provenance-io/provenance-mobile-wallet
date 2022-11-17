@@ -29,9 +29,6 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
   static final networkToggle =
       ValueKey('$RecoverPassphraseEntryScreen.network_toggle');
 
-  static final networkName =
-      ValueKey('$RecoverPassphraseEntryScreen.network_name');
-
   static final wordList = ValueKey('$RecoverPassphraseEntryScreen.word_list');
 
   static Key keyPassphraseWordTextField(int index) =>

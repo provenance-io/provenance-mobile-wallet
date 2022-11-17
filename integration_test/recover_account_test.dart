@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/main.dart' as app;
+import 'package:provenance_wallet/network.dart';
+import 'package:provenance_wallet/screens/account/advanced_account_settings.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/enable_face_id_screen.dart';
@@ -33,31 +33,16 @@ void main() {
       final accountName = testData.accountName!;
       await AccountNameScreen.keyNameTextField.enterText(accountName, tester);
 
+      await AccountNameScreen.keyAdvancedSettings.tap(tester);
+      await AdvancedAccountSettings.keyNetwork(Network.testNet).tap(tester);
+
+      await AccountNameScreen.keyContinueButton.scrollUntilVisible(
+        tester,
+        scrollable: AccountNameScreen.keyScrollableRegion,
+      );
+
       await AccountNameScreen.keyContinueButton.tap(tester);
       await RecoverAccountScreen.keyContinueButton.tap(tester);
-
-      while (tester
-          .widgetList(
-            find.byKey(RecoverPassphraseEntryScreen.networkName),
-          )
-          .isEmpty) {
-        await RecoverPassphraseEntryScreen.keyAppBar.tap(tester);
-      }
-
-      RecoverPassphraseEntryScreen.networkName.expect(tester);
-
-      final testNet = Coin.testNet.displayName;
-      final mainNet = Coin.mainNet.displayName;
-
-      final actualNetwork =
-          RecoverPassphraseEntryScreen.networkName.pwText(tester);
-
-      if (actualNetwork.endsWith(mainNet)) {
-        await RecoverPassphraseEntryScreen.networkToggle.tap(tester);
-      }
-
-      RecoverPassphraseEntryScreen.networkName
-          .expectPwTextEndsWith(testNet, tester);
 
       const wordOneIndex = 0;
       final keyWordOne =

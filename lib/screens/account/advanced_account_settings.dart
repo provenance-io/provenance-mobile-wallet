@@ -11,6 +11,9 @@ class AdvancedAccountSettings extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  static ValueKey keyNetwork(Network network) =>
+      ValueKey('$AdvancedAccountSettings.${network.chainId}');
+
   final ValueStream<Network> network;
   final void Function(Network network) onNetworkChanged;
 
@@ -85,6 +88,7 @@ class _AdvancedAccountSettingsState extends State<AdvancedAccountSettings> {
           vertical: Spacing.xSmall,
         ),
         child: PwText(
+          key: AdvancedAccountSettings.keyNetwork(network),
           network.label.get(context),
           color: PwColor.neutralNeutral,
           style: PwTextStyle.footnote,

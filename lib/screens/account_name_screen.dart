@@ -34,6 +34,10 @@ class AccountNameScreen extends StatefulWidget {
       ValueKey('$AccountNameScreen.name_text_field');
   static final keyContinueButton =
       ValueKey('$AccountNameScreen.continue_button');
+  static final keyAdvancedSettings =
+      ValueKey('$AccountNameScreen.advanced_settings');
+  static final keyScrollableRegion =
+      ValueKey('$AccountNameScreen.scrollable_region');
 
   final FieldMode mode;
   final String leadingIcon;
@@ -106,6 +110,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
+              key: AccountNameScreen.keyScrollableRegion,
               children: [
                 VerticalSpacer.largeX3(),
                 Padding(
@@ -147,6 +152,7 @@ class _AccountNameScreenState extends State<AccountNameScreen> {
                   child: Row(
                     children: [
                       PwCheckBox(
+                        key: AccountNameScreen.keyAdvancedSettings,
                         selected: _showAdvanced,
                         onSelect: (selected) {
                           setState(() {
