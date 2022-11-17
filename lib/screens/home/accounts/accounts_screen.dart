@@ -7,6 +7,7 @@ import 'package:provenance_wallet/screens/add_account_origin.dart';
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,12 +26,13 @@ class AccountsScreen extends StatefulWidget {
 
 class AccountsScreenState extends State<AccountsScreen> {
   final _accountService = get<AccountService>();
+  final _multiSigService = get<MultiSigService>();
   final _listKey = GlobalKey<AnimatedListState>();
   final _subscriptions = CompositeSubscription();
 
   List<Account>? _accounts;
   Account? _selected;
-  Set<String>? _linkedIds;
+  Set<String>? _linkedAccountIds;
 
   void _sort(List<Account>? accounts, Account? selected) {
     accounts?.sort((a, b) {
@@ -62,7 +64,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       setState(() {
         _selected = selected;
         _accounts = accounts;
-        _linkedIds = linkedIds;
+        _linkedAccountIds = linkedIds;
       });
     }
   }
@@ -82,7 +84,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       _sort(_accounts, _selected);
 
       if (e is MultiAccount) {
-        _linkedIds?.add(e.id);
+        _linkedAccountIds?.add(e.linkedAccount.id);
       }
 
       final index = _accounts?.indexWhere((i) => i.id == e.id);
@@ -97,9 +99,11 @@ class AccountsScreenState extends State<AccountsScreen> {
         if (index != null) {
           _accounts?.removeAt(index);
 
-          if (e is MultiAccount) {
-            _linkedIds =
-                _accounts?.whereType<MultiAccount>().map((e) => e.id).toSet();
+          if (account is MultiAccount) {
+            _linkedAccountIds = _accounts
+                ?.whereType<MultiAccount>()
+                .map((e) => e.linkedAccount.id)
+                .toSet();
           }
 
           _listKey.currentState?.removeItem(
@@ -129,7 +133,7 @@ class AccountsScreenState extends State<AccountsScreen> {
       }
     }).addTo(_subscriptions);
 
-    _load();
+    _load().then((_) => _multiSigService.activateAccounts());
   }
 
   @override
@@ -154,18 +158,24 @@ class AccountsScreenState extends State<AccountsScreen> {
                           right: Spacing.large,
                           top: Spacing.medium,
                         ),
-                        child: AnimatedList(
-                          key: _listKey,
-                          initialItemCount: accounts.length,
-                          itemBuilder: (
-                            context,
-                            index,
-                            animation,
-                          ) {
-                            final account = accounts[index];
-
-                            return _cellBuilder(context, animation, account);
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            await _multiSigService.activateAccounts();
+                            await _load();
                           },
+                          child: AnimatedList(
+                            key: _listKey,
+                            initialItemCount: accounts.length,
+                            itemBuilder: (
+                              context,
+                              index,
+                              animation,
+                            ) {
+                              final account = accounts[index];
+
+                              return _cellBuilder(context, animation, account);
+                            },
+                          ),
                         ),
                       ),
                 Container(
@@ -239,7 +249,7 @@ class AccountsScreenState extends State<AccountsScreen> {
 
   Widget _getItem(Account account) {
     final isSelected = account.id == _selected?.id;
-    final linkedIds = _linkedIds ?? {};
+    final linkedIds = _linkedAccountIds ?? {};
 
     return GestureDetector(
       key: AccountsScreen.keySelectAccountButton(account.name),

@@ -13,7 +13,6 @@ import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeBloc extends Disposable {
@@ -37,12 +36,6 @@ class HomeBloc extends Disposable {
 
     get<KeyValueService>()
         .stream<bool>(PrefKey.httpClientDiagnostics500)
-        .skip(1) // the stream always emits an event for its initial value
-        .listen(prefTriggeredReload)
-        .addTo(_subscriptions);
-
-    get<KeyValueService>()
-        .stream<bool>(PrefKey.enableMultiSig)
         .skip(1) // the stream always emits an event for its initial value
         .listen(prefTriggeredReload)
         .addTo(_subscriptions);
@@ -155,15 +148,12 @@ class HomeBloc extends Disposable {
   Future<void> _handleWalletConnectLink(String? data) async {
     if (data != null) {
       final addressData = Uri.decodeComponent(data);
-      final accountService = get<AccountService>();
-      final isValid =
-          await accountService.isValidWalletConnectData(addressData);
-      final accountId = _accountService.events.selected.value?.id;
-      if (isValid && accountId != null) {
-        _walletConnectService.connectSession(accountId, addressData);
-      } else {
-        logError('Invalid wallet connect data');
-      }
+      // this event fires before the normal app lifecycle
+      // so just store the requested address and allow
+      // wallet connect service lifecycle handling 
+      // to deal with it
+      await get<KeyValueService>()
+          .setString(PrefKey.deepLinkAddress, addressData);
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:provenance_dart/proto.dart';
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/extension/wallet_connect_address_helper.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/session_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
@@ -83,12 +83,7 @@ class WalletConnectQueueGroup {
           "message": "",
           "description": txAction.description,
           "txBody": body.writeToBuffer(),
-          "estimate": txAction.gasEstimate.estimatedGas,
-          "baseFee": txAction.gasEstimate.baseFee,
-          "feeAdjustment": txAction.gasEstimate.gasAdjustment,
-          "feeCalculated": txAction.gasEstimate.totalFees
-              .map((e) => e.writeToBuffer())
-              .toList(),
+          "gasEstimate": txAction.gasEstimate.toJson(),
         };
       case WalletConnectActionKind.sign:
         final signAction = action as SignAction;
@@ -112,24 +107,18 @@ class WalletConnectQueueGroup {
       final id = input["id"];
       final requestId = input["requestId"];
       final description = input["description"];
-      final estimate = input["estimate"];
-      final feeAdjustment = input["feeAdjustment"];
-      final baseFee = input["baseFee"];
-      final feeCalculated = input["feeCalculated"]
-          ?.map((e) => Coin.fromBuffer(e.cast<int>()))
-          .cast<Coin>()
-          .toList();
+      final gasEstimate = input["gasEstimate"];
 
       return TxAction(
-          id: id,
-          walletConnectRequestId: requestId,
-          description: description,
-          messages: body.messages
-              .map((e) => e.toMessage())
-              .toList()
-              .cast<GeneratedMessage>(),
-          gasEstimate: AccountGasEstimate(
-              estimate, baseFee, feeAdjustment, feeCalculated));
+        id: id,
+        walletConnectRequestId: requestId,
+        description: description,
+        messages: body.messages
+            .map((e) => e.toMessage())
+            .toList()
+            .cast<GeneratedMessage>(),
+        gasEstimate: GasFeeEstimate.fromJson(gasEstimate),
+      );
     } else if (type == "SignAction") {
       final id = input["id"];
       final requestId = input["requestId"];

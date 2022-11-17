@@ -1,20 +1,21 @@
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart' as wallet;
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
 abstract class TxQueueService {
   Stream<TxResult> get response;
 
-  Future<AccountGasEstimate> estimateGas({
+  Future<GasFeeEstimate> estimateGas({
     required proto.TxBody txBody,
     required TransactableAccount account,
+    double? gasAdjustment,
   });
 
   Future<QueuedTx> scheduleTx({
     required proto.TxBody txBody,
     required TransactableAccount account,
-    required AccountGasEstimate gasEstimate,
+    required GasFeeEstimate gasEstimate,
     int? walletConnectRequestId,
   });
 
@@ -82,26 +83,4 @@ class TxResult {
   final proto.Fee fee;
   final String? txId;
   final int? walletConnectRequestId;
-}
-
-class AccountTransactionResponse {
-  AccountTransactionResponse({
-    required this.txBody,
-    required this.status,
-    this.txResponse,
-    this.txId,
-    this.gasEstimate,
-  });
-
-  final proto.TxBody txBody;
-  final AccountTransactionStatus status;
-  final proto.TxResponse? txResponse;
-  final String? txId;
-  final AccountGasEstimate? gasEstimate;
-}
-
-enum AccountTransactionStatus {
-  fail,
-  pending,
-  complete,
 }

@@ -28,7 +28,7 @@ class HiddenProposalCreationScreen extends StatefulWidget {
 
 class _HiddenProposalCreationScreenState
     extends State<HiddenProposalCreationScreen> {
-  double _gasEstimate = defaultGasEstimate;
+  double _gasEstimate = defaultGasAdjustment;
   late final ProposalCreationBloc _bloc;
 
   late final TextEditingController _titleEditingController;
@@ -187,7 +187,7 @@ class _HiddenProposalCreationScreenState
                         PwListDivider.alternate(),
                         PwGasAdjustmentSlider(
                           title: strings.stakingConfirmGasAdjustment,
-                          startingValue: defaultGasEstimate,
+                          startingValue: defaultGasAdjustment,
                           onValueChanged: (value) {
                             setState(() {
                               _gasEstimate = value;

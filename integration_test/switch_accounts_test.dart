@@ -49,6 +49,8 @@ void main() {
 
       await PwAppBar.keyLeadingIconButton.tap(tester);
 
+      await tester.pumpAndSettle();
+
       Dashboard.keyAccountNameText
           .expectPwText(data.switchAccountsTest!.nameTwo!, tester);
     },

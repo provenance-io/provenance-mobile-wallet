@@ -5,10 +5,10 @@ import 'package:mockito/annotations.dart';
 import 'package:path/path.dart' as path;
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/Pw_design.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service_imp.dart';
 import 'package:provenance_wallet/services/account_service/default_transaction_handler.dart';
 import 'package:provenance_wallet/services/account_service/sembast_account_storage_service_v2.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
@@ -31,7 +31,7 @@ import 'home_bloc_test.mocks.dart';
 import 'home_mocks.dart';
 
 const walletConnectAddress =
-    'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Fws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
+    'wc:0a617708-4a2c-42b8-b3cd-21455c5814a3@1?bridge=wss%3A%2F%2Ftest.figure.tech%2Fservice-wallet-connect-bridge%2Pws%2Fexternal&key=7f518dccaf046b1c91e216d7b19701932bfe44e25ac0e51880eace5231934b20';
 
 @GenerateMocks([RemoteNotificationService, WalletConnectService])
 void main() {
@@ -205,16 +205,20 @@ class TestState {
 
     final cipherService = MemoryCipherService();
     get.registerSingleton<CipherService>(cipherService);
-    final serviceCore = SembastAccountStorageServiceV2(
+    final storage = SembastAccountStorageServiceV2(
       factory: databaseFactoryMemory,
       dbPath: dbPath,
     );
-    get.registerSingleton(serviceCore);
+    get.registerSingleton(storage);
+
+    final keyValueService = DefaultKeyValueService(
+      store: MemoryKeyValueStore(),
+    );
+
     final accountService = AccountService(
-      storage: AccountStorageServiceImp(
-        serviceCore,
-        cipherService,
-      ),
+      storage: storage,
+      keyValueService: keyValueService,
+      cipherService: cipherService,
     );
 
     final accountIds = <String>[];
@@ -225,13 +229,15 @@ class TestState {
     for (var i = 0; i <= maxWalletId; i++) {
       final id = i.toString();
       final seed = Mnemonic.createSeed([i.toString()]);
-      final privateKey = PrivateKey.fromSeed(seed, Coin.mainNet);
-      final publicKey = privateKey.defaultKey().publicKey;
+      const network = Network.mainNet;
+      final privateKey =
+          PrivateKey.fromSeed(seed, network.defaultCoin).defaultKey();
+      final publicKey = privateKey.publicKey;
 
       final account = await accountService.addAccount(
         phrase: [i.toString()],
         name: id,
-        coin: Coin.mainNet,
+        network: network,
       );
 
       accountIds.add(account.id);
@@ -293,10 +299,6 @@ class TestState {
     final assetClient = MockAssetClient(assets);
     final transactionClient =
         MockTransactionService(sendTransactions, transactions);
-
-    final keyValueService = DefaultKeyValueService(
-      store: MemoryKeyValueStore(),
-    );
 
     get.registerSingleton<AccountService>(accountService);
 

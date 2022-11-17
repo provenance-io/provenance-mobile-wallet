@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:decimal/intl.dart';
 import 'package:intl/intl.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/util/constants.dart';
 
 class SendAsset {
@@ -56,11 +57,11 @@ class SendAsset {
 class MultiSendAsset {
   MultiSendAsset(
     this.estimate,
-    this.fees,
+    this.assets,
   );
 
-  final int estimate;
-  final List<SendAsset> fees;
+  final GasFeeEstimate estimate;
+  final List<SendAsset> assets;
 
   String get displayAmount {
     final map = <String, SendAsset>{};
@@ -68,10 +69,10 @@ class MultiSendAsset {
       "Hash",
       9,
       nHashDenom,
-      Decimal.fromInt(estimate),
+      Decimal.fromInt(estimate.units),
       0,
     );
-    for (var fee in fees) {
+    for (var fee in assets) {
       var current = map[fee.denom];
       final total = (current?.amount ?? Decimal.zero) + fee.amount;
 

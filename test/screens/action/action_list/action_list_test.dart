@@ -7,16 +7,16 @@ import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 final item = ActionListItem(
-  label: LocalizedString((_) => "Main Label"),
-  subLabel: LocalizedString((_) => "Sub Label"),
+  label: LocalizedString.function((_) => "Main Label"),
+  subLabel: LocalizedString.function((_) => "Sub Label"),
 );
 final item2 = ActionListItem(
-  label: LocalizedString((_) => "Main Label2"),
-  subLabel: LocalizedString((_) => "Sub Label2"),
+  label: LocalizedString.function((_) => "Main Label2"),
+  subLabel: LocalizedString.function((_) => "Sub Label2"),
 );
 final item3 = ActionListItem(
-  label: LocalizedString((_) => "Main Label3"),
-  subLabel: LocalizedString((_) => "Sub Label3"),
+  label: LocalizedString.function((_) => "Main Label3"),
+  subLabel: LocalizedString.function((_) => "Sub Label3"),
 );
 
 const actionListSelected = "Selected";

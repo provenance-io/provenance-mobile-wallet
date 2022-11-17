@@ -10,13 +10,13 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:provenance_dart/proto.dart' as _i7;
 import 'package:provenance_dart/wallet.dart' as _i5;
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart'
-    as _i12;
+    as _i13;
+import 'package:provenance_wallet/gas_fee_estimate.dart' as _i6;
+import 'package:provenance_wallet/network.dart' as _i12;
 import 'package:provenance_wallet/services/account_service/account_service.dart'
     as _i2;
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart'
-    as _i6;
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart'
-    as _i13;
+    as _i14;
 import 'package:provenance_wallet/services/asset_client/asset_client.dart'
     as _i8;
 import 'package:provenance_wallet/services/models/account.dart' as _i3;
@@ -79,9 +79,9 @@ class _FakePrivateKey_5 extends _i1.SmartFake implements _i5.PrivateKey {
       : super(parent, parentInvocation);
 }
 
-class _FakeAccountGasEstimate_6 extends _i1.SmartFake
-    implements _i6.AccountGasEstimate {
-  _FakeAccountGasEstimate_6(Object parent, Invocation parentInvocation)
+class _FakeGasFeeEstimate_6 extends _i1.SmartFake
+    implements _i6.GasFeeEstimate {
+  _FakeGasFeeEstimate_6(Object parent, Invocation parentInvocation)
       : super(parent, parentInvocation);
 }
 
@@ -185,15 +185,27 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
                       #renameAccount, [], {#id: id, #name: name}))))
           as _i9.Future<_i3.Account>);
   @override
-  _i9.Future<_i3.BasicAccount> addAccount(
-          {List<String>? phrase, String? name, _i5.Coin? coin}) =>
+  _i9.Future<_i3.Account> selectNetwork(
+          {String? accountId, _i12.Network? network}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #addAccount, [], {#phrase: phrase, #name: name, #coin: coin}),
-              returnValue: _i9.Future<_i3.BasicAccount>.value(_FakeBasicAccount_2(
-                  this,
-                  Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #coin: coin}))))
-          as _i9.Future<_i3.BasicAccount>);
+                  #selectNetwork, [], {#accountId: accountId, #network: network}),
+              returnValue: _i9.Future<_i3.Account>.value(_FakeAccount_1(this,
+                  Invocation.method(#selectNetwork, [], {#accountId: accountId, #network: network}))))
+          as _i9.Future<_i3.Account>);
+  @override
+  _i9.Future<_i3.BasicAccount> addAccount(
+          {List<String>? phrase, String? name, _i12.Network? network}) =>
+      (super
+          .noSuchMethod(Invocation.method(#addAccount, [], {#phrase: phrase, #name: name, #network: network}),
+              returnValue: _i9.Future<_i3.BasicAccount>.value(
+                  _FakeBasicAccount_2(
+                      this,
+                      Invocation.method(#addAccount, [], {
+                        #phrase: phrase,
+                        #name: name,
+                        #network: network
+                      })))) as _i9.Future<_i3.BasicAccount>);
   @override
   _i9.Future<_i3.MultiAccount> addMultiAccount(
           {String? name,
@@ -203,7 +215,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
           int? cosignerCount,
           int? signaturesRequired,
           List<String>? inviteIds,
-          List<_i12.MultiSigSigner>? signers}) =>
+          List<_i13.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(
           Invocation.method(#addMultiAccount, [], {
             #name: name,
@@ -229,7 +241,7 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               })))) as _i9.Future<_i3.MultiAccount>);
   @override
   _i9.Future<_i3.MultiTransactableAccount> activateMultiAccount(
-          {String? id, List<_i12.MultiSigSigner>? signers}) =>
+          {String? id, List<_i13.MultiSigSigner>? signers}) =>
       (super.noSuchMethod(Invocation.method(#activateMultiAccount, [], {#id: id, #signers: signers}),
           returnValue: _i9.Future<_i3.MultiTransactableAccount>.value(
               _FakeMultiTransactableAccount_4(
@@ -249,10 +261,10 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue: _i9.Future<List<_i3.Account>>.value(<_i3.Account>[]))
           as _i9.Future<List<_i3.Account>>);
   @override
-  _i9.Future<_i5.PrivateKey> loadKey(String? accountId) =>
-      (super.noSuchMethod(Invocation.method(#loadKey, [accountId]),
+  _i9.Future<_i5.PrivateKey> loadKey(String? accountId, _i5.Coin? coin) =>
+      (super.noSuchMethod(Invocation.method(#loadKey, [accountId, coin]),
               returnValue: _i9.Future<_i5.PrivateKey>.value(_FakePrivateKey_5(
-                  this, Invocation.method(#loadKey, [accountId]))))
+                  this, Invocation.method(#loadKey, [accountId, coin]))))
           as _i9.Future<_i5.PrivateKey>);
   @override
   _i9.Future<bool> isValidWalletConnectData(String? qrData) => (super
@@ -264,31 +276,29 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionHandler extends _i1.Mock
-    implements _i13.TransactionHandler {
+    implements _i14.TransactionHandler {
   MockTransactionHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i9.Stream<_i13.TransactionResponse> get transaction =>
+  _i9.Stream<_i14.TransactionResponse> get transaction =>
       (super.noSuchMethod(Invocation.getter(#transaction),
-              returnValue: _i9.Stream<_i13.TransactionResponse>.empty())
-          as _i9.Stream<_i13.TransactionResponse>);
+              returnValue: _i9.Stream<_i14.TransactionResponse>.empty())
+          as _i9.Stream<_i14.TransactionResponse>);
   @override
-  _i9.Future<_i6.AccountGasEstimate> estimateGas(
-          _i7.TxBody? txBody, List<_i5.IPubKey>? signers, _i5.Coin? coin) =>
-      (super.noSuchMethod(
-              Invocation.method(#estimateGas, [txBody, signers, coin]),
-              returnValue: _i9.Future<_i6.AccountGasEstimate>.value(
-                  _FakeAccountGasEstimate_6(
-                      this,
-                      Invocation.method(
-                          #estimateGas, [txBody, signers, coin]))))
-          as _i9.Future<_i6.AccountGasEstimate>);
+  _i9.Future<_i6.GasFeeEstimate> estimateGas(
+          _i7.TxBody? txBody, List<_i5.IPubKey>? signers, _i5.Coin? coin,
+          {double? gasAdjustment}) =>
+      (super.noSuchMethod(Invocation.method(#estimateGas, [txBody, signers, coin], {#gasAdjustment: gasAdjustment}),
+          returnValue: _i9.Future<_i6.GasFeeEstimate>.value(_FakeGasFeeEstimate_6(
+              this,
+              Invocation.method(#estimateGas, [txBody, signers, coin],
+                  {#gasAdjustment: gasAdjustment})))) as _i9.Future<_i6.GasFeeEstimate>);
   @override
   _i9.Future<_i7.RawTxResponsePair> executeTransaction(
           _i7.TxBody? txBody, _i5.IPrivKey? privateKey, _i5.Coin? coin,
-          [_i6.AccountGasEstimate? gasEstimate]) =>
+          [_i6.GasFeeEstimate? gasEstimate]) =>
       (super.noSuchMethod(Invocation.method(#executeTransaction, [txBody, privateKey, coin, gasEstimate]),
               returnValue: _i9.Future<_i7.RawTxResponsePair>.value(_FakeRawTxResponsePair_7(
                   this,

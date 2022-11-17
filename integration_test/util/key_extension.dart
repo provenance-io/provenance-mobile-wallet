@@ -10,6 +10,17 @@ extension KeyExtension on Key {
     return tester.tapKeyAndSettle(this, times: times);
   }
 
+  Future<void> tapWhenExists(ft.WidgetTester tester) async {
+    while (tester
+        .widgetList(
+          find.byKey(this),
+        )
+        .isEmpty) {
+      await tester.pumpAndSettle();
+    }
+    return tester.tapKeyAndSettle(this);
+  }
+
   Future<void> enterText(String text, ft.WidgetTester tester) {
     return tester.enterTextAndSettle(this, text);
   }

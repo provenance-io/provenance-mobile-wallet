@@ -1,8 +1,7 @@
 import 'package:prov_wallet_flutter/prov_wallet_flutter.dart';
-import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/common/flow_base.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/account_setup_confirmation_screen.dart';
 import 'package:provenance_wallet/screens/add_account_origin.dart';
@@ -15,7 +14,6 @@ import 'package:provenance_wallet/screens/pin/create_pin.dart';
 import 'package:provenance_wallet/screens/recovery_words/recovery_words_screen.dart';
 import 'package:provenance_wallet/screens/recovery_words_confirm/recovery_words_confirm_screen.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
@@ -49,7 +47,6 @@ class BasicAccountCreateFlowState extends FlowBaseState<BasicAccountCreateFlow>
       mode: FieldMode.initial,
       leadingIcon: PwIcons.back,
       message: Strings.of(context).accountNameMessage,
-      popOnSubmit: false,
     );
   }
 
@@ -167,10 +164,10 @@ class BasicAccountCreateFlowBloc
   final BasicAccountCreateFlowNavigator _navigator;
 
   final _accountService = get<AccountService>();
-  final _keyValueService = get<KeyValueService>();
 
   final _name = BehaviorSubject.seeded('', sync: true);
   final _biometryType = BehaviorSubject<BiometryType>();
+  final _network = BehaviorSubject<Network>();
 
   var _recoveryWords = <String>[];
   var _pin = <int>[];
@@ -189,8 +186,17 @@ class BasicAccountCreateFlowBloc
   ValueStream<String> get name => _name;
 
   @override
-  void submitName(String name, FieldMode mode) {
+  ValueStream<Network> get network => _network;
+
+  @override
+  void submitName({
+    required String name,
+    required FieldMode mode,
+    required Network network,
+  }) {
     _name.add(name);
+
+    _network.add(network);
 
     switch (mode) {
       case FieldMode.initial:
@@ -270,19 +276,11 @@ class BasicAccountCreateFlowBloc
     _biometryType.add(type);
   }
 
-  Future<Coin> _defaultCoin() async {
-    final chainId = await _keyValueService.getString(PrefKey.defaultChainId) ??
-        defaultCoin.chainId;
-
-    return Coin.forChainId(chainId);
-  }
-
   Future<void> _addAccount() async {
-    final coin = await _defaultCoin();
     _account = await _accountService.addAccount(
       phrase: _recoveryWords,
       name: name.value,
-      coin: coin,
+      network: _network.value,
     );
 
     if (_account == null) {

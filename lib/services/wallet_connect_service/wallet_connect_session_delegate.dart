@@ -5,8 +5,8 @@ import 'package:grpc/grpc.dart';
 import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
@@ -224,7 +224,7 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
 
     final id = Uuid().v1().toString();
 
-    AccountGasEstimate gasEstimate;
+    GasFeeEstimate gasEstimate;
     try {
       gasEstimate = await _txQueueService.estimateGas(
         txBody: txBody,
@@ -276,7 +276,10 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
   }
 
   Future<bool> _completeSessionAction(SessionAction action) async {
-    final privateKey = await _accountService.loadKey(_connectAccount.id);
+    final privateKey = await _accountService.loadKey(
+      _connectAccount.id,
+      _connectAccount.coin,
+    );
 
     SessionApprovalData sessionApproval = SessionApprovalData(
       privateKey,
@@ -328,11 +331,13 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
           TxResult(
             body: txBody,
             response: response,
-            fee: proto.Fee(
-              amount: action.gasEstimate.totalFees,
-              gasLimit: proto.Int64(action.gasEstimate.estimatedGas),
-            ),
+            fee: action.gasEstimate.toProtoFee(),
           ),
+        );
+
+        _queueService.removeRequest(
+          accountId: _transactAccount.id,
+          requestId: action.id,
         );
         break;
       case QueuedTxKind.scheduled:
@@ -357,10 +362,12 @@ class WalletConnectSessionDelegate implements WalletConnectionDelegate {
       throw 'This action is not supported for multi signature accounts';
     }
 
-    final privateKey = await _accountService.loadKey(_transactAccount.id);
+    final privateKey = await _accountService.loadKey(
+      _transactAccount.id,
+      _transactAccount.coin,
+    );
     List<int>? signedData;
-    signedData = privateKey.defaultKey().signData(Hash.sha256(bytes))
-      ..removeLast();
+    signedData = privateKey.signData(Hash.sha256(bytes))..removeLast();
 
     await _connection.sendSignResult(
       action.walletConnectRequestId,

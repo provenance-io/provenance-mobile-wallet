@@ -5,15 +5,43 @@ extension StringIdExtension on StringId {
   LocalizedString toLocalized() => LocalizedString.id(this);
 }
 
-class LocalizedString {
-  LocalizedString(this.get);
+abstract class LocalizedString {
+  factory LocalizedString.id(StringId id) => LocalizedStringId(id);
 
-  LocalizedString.id(StringId id)
-      : get = ((context) => _lookup[id]!.call(context));
+  factory LocalizedString.text(String text) => LocalizedStringText(text);
 
-  LocalizedString.text(String text) : get = ((context) => text);
+  factory LocalizedString.function(
+          String Function(BuildContext context) function) =>
+      LocalizedStringFunction(function);
 
-  final String Function(BuildContext context) get;
+  String get(BuildContext context);
+}
+
+class LocalizedStringText implements LocalizedString {
+  const LocalizedStringText(this.text);
+
+  final String text;
+
+  @override
+  String get(BuildContext context) => text;
+}
+
+class LocalizedStringId implements LocalizedString {
+  const LocalizedStringId(this.id);
+
+  final StringId id;
+
+  @override
+  String get(BuildContext context) => _lookup[id]!.call(context);
+}
+
+class LocalizedStringFunction implements LocalizedString {
+  const LocalizedStringFunction(this.function);
+
+  final String Function(BuildContext context) function;
+
+  @override
+  String get(BuildContext context) => function(context);
 }
 
 enum StringId {
@@ -23,6 +51,8 @@ enum StringId {
   actionListLabelSignatureRequested,
   actionListSubLabelActionRequired,
   multiSigTransactionInitiatedNotification,
+  networkProvenanceMainnet,
+  networkProvenanceTestnet,
 }
 
 final _lookup = {
@@ -37,4 +67,8 @@ final _lookup = {
       Strings.of(c).actionListSubLabelActionRequired,
   StringId.multiSigTransactionInitiatedNotification: (c) =>
       Strings.of(c).multiSigTransactionInitiatedNotification,
+  StringId.networkProvenanceMainnet: (c) =>
+      Strings.of(c).networkProvenanceMainnet,
+  StringId.networkProvenanceTestnet: (c) =>
+      Strings.of(c).networkProvenanceTestnet,
 };

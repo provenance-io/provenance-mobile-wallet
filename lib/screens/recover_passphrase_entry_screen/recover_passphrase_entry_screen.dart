@@ -4,7 +4,6 @@ import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar_gesture_detector.dart';
 import 'package:provenance_wallet/common/widgets/pw_onboarding_screen.dart';
-import 'package:provenance_wallet/extension/coin_extension.dart';
 import 'package:provenance_wallet/screens/recover_passphrase_entry_screen/recover_passphrase_bloc.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/util/get.dart';
@@ -29,9 +28,6 @@ class RecoverPassphraseEntryScreen extends StatefulWidget {
 
   static final networkToggle =
       ValueKey('$RecoverPassphraseEntryScreen.network_toggle');
-
-  static final networkName =
-      ValueKey('$RecoverPassphraseEntryScreen.network_name');
 
   static final wordList = ValueKey('$RecoverPassphraseEntryScreen.word_list');
 
@@ -76,11 +72,6 @@ class RecoverPassphraseEntryScreenState
 
   @override
   Widget build(BuildContext context) {
-    final defaultChainId =
-        _keyValueService.stream<String>(PrefKey.defaultChainId);
-    final showAdvancedUI =
-        _keyValueService.stream<bool>(PrefKey.showAdvancedUI);
-
     return Scaffold(
       appBar: PwAppBarGestureDetector(
         key: RecoverPassphraseEntryScreen.keyAppBar,
@@ -92,51 +83,6 @@ class RecoverPassphraseEntryScreenState
       ),
       body: PwOnboardingScreen(
         children: [
-          StreamBuilder<KeyValueData<bool>>(
-            initialData: showAdvancedUI.valueOrNull,
-            stream: showAdvancedUI,
-            builder: (context, snapshot) {
-              final showAdvancedUI = snapshot.data?.data ?? false;
-              if (!showAdvancedUI) {
-                return Container();
-              }
-
-              return StreamBuilder<KeyValueData<String>>(
-                initialData: defaultChainId.valueOrNull,
-                stream: defaultChainId,
-                builder: (context, snapshot) {
-                  final chainId = snapshot.data?.data ?? defaultCoin.chainId;
-                  final coin = Coin.forChainId(chainId);
-
-                  return GestureDetector(
-                    key: RecoverPassphraseEntryScreen.networkToggle,
-                    onTap: () {
-                      final newChainId = chainId == Coin.mainNet.chainId
-                          ? Coin.testNet.chainId
-                          : Coin.mainNet.chainId;
-                      _keyValueService.setString(
-                        PrefKey.defaultChainId,
-                        newChainId,
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        top: Spacing.xLarge,
-                        left: Spacing.xLarge,
-                        bottom: Spacing.medium,
-                      ),
-                      child: PwText(
-                        Strings.of(context)
-                            .recoverPassphraseNetwork(coin.displayName),
-                        key: RecoverPassphraseEntryScreen.networkName,
-                        style: PwTextStyle.body,
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
           Form(
             key: _formKey,
             child: Padding(

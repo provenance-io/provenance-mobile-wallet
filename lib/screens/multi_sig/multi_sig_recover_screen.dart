@@ -154,11 +154,24 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
     );
   }
 
+  String _uniqueId({
+    required String remoteId,
+    required String linkedAccountId,
+  }) =>
+      '$remoteId-$linkedAccountId';
+
   Future<_LoadData> _load() async {
     final accounts = await accountService.getAccounts();
     final basicAccounts = accounts.whereType<BasicAccount>();
-    final multiAccountRemoteIds =
-        accounts.whereType<MultiAccount>().map((e) => e.remoteId).toSet();
+    final multiAccountRemoteIds = accounts
+        .whereType<MultiAccount>()
+        .map(
+          (e) => _uniqueId(
+            remoteId: e.remoteId,
+            linkedAccountId: e.linkedAccount.id,
+          ),
+        )
+        .toSet();
 
     var error = false;
     final recoverableRemoteAccounts = <String, _MultiSigAccountData>{};
@@ -174,7 +187,10 @@ class _MultiSigRecoverScreenState extends State<MultiSigRecoverScreen> {
       }
 
       for (var remoteAccount in remoteAccounts ?? <MultiSigRemoteAccount>[]) {
-        final uniqueId = '${remoteAccount.remoteId}-${basicAccount.id}';
+        final uniqueId = _uniqueId(
+          remoteId: remoteAccount.remoteId,
+          linkedAccountId: basicAccount.id,
+        );
 
         if (!multiAccountRemoteIds.contains(uniqueId) &&
             !recoverableRemoteAccounts.containsKey(uniqueId)) {

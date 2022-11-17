@@ -1,42 +1,30 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 
-class PwCheckBox extends StatefulWidget {
+class PwCheckBox extends StatelessWidget {
   const PwCheckBox({
     Key? key,
+    required this.selected,
     required this.onSelect,
   }) : super(key: key);
 
   final ValueChanged<bool> onSelect;
-
-  @override
-  _PwCheckBoxState createState() => _PwCheckBoxState();
-}
-
-class _PwCheckBoxState extends State<PwCheckBox> {
-  bool _selected = false;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: _buttonStyle(context),
-      onPressed: _onTap,
+      onPressed: () => onSelect(!selected),
       child: Center(
         child: PwIcon(
           PwIcons.check,
           size: 12,
-          color: _selected
+          color: selected
               ? Theme.of(context).colorScheme.neutralNeutral
               : Colors.transparent,
         ),
       ),
     );
-  }
-
-  void _onTap() {
-    setState(() {
-      _selected = !_selected;
-    });
-    widget.onSelect(_selected);
   }
 
   ButtonStyle _buttonStyle(BuildContext context) {
@@ -46,7 +34,7 @@ class _PwCheckBoxState extends State<PwCheckBox> {
       side: MaterialStateProperty.resolveWith((states) {
         return states.contains(MaterialState.focused)
             ? BorderSide(
-                color: _selected
+                color: selected
                     ? theme.colorScheme.neutralNeutral
                     : theme.colorScheme.neutral550,
                 width: 4,
@@ -54,12 +42,10 @@ class _PwCheckBoxState extends State<PwCheckBox> {
             : BorderSide(color: theme.colorScheme.primary550, width: 1);
       }),
       foregroundColor: MaterialStateProperty.resolveWith((states) {
-        return _selected
-            ? theme.colorScheme.neutralNeutral
-            : Colors.transparent;
+        return selected ? theme.colorScheme.neutralNeutral : Colors.transparent;
       }),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
-        return _selected ? theme.colorScheme.primary500 : Colors.transparent;
+        return selected ? theme.colorScheme.primary500 : Colors.transparent;
       }),
       padding: MaterialStateProperty.all(
         EdgeInsets.zero,

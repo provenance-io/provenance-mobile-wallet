@@ -6,8 +6,8 @@ import 'package:provenance_dart/proto.dart' as proto;
 import 'package:provenance_dart/proto_cosmos_bank_v1beta1.dart';
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_dart/wallet_connect.dart';
+import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
-import 'package:provenance_wallet/services/account_service/model/account_gas_estimate.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/tx_queue_service/tx_queue_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_queue_service/wallet_connect_queue_service.dart';
@@ -15,6 +15,7 @@ import 'package:provenance_wallet/services/wallet_connect_service/models/session
 import 'package:provenance_wallet/services/wallet_connect_service/models/sign_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/models/tx_action.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_session_delegate.dart';
+import 'package:provenance_wallet/util/constants.dart';
 
 import './wallet_connect_session_delegate_test.mocks.dart';
 import '../../test_helpers.dart';
@@ -198,7 +199,12 @@ void main() {
     });
 
     test("onApproveTransaction", () async {
-      final gasEstimate = AccountGasEstimate(100, 400);
+      final gasEstimate = GasFeeEstimate.single(
+        units: 100,
+        denom: nHashDenom,
+        amountPerUnit: 400,
+      );
+
       when(mockTxQueueService.estimateGas(
               txBody: anyNamed('txBody'), account: anyNamed('account')))
           .thenAnswer((_) async => gasEstimate);
@@ -221,9 +227,7 @@ void main() {
         expect(details.walletConnectRequestId, requestId);
         expect(details.messages, transData.proposedMessages);
         expect(details.description, description);
-        expect(details.gasEstimate.gasAdjustment, gasEstimate.gasAdjustment);
-        expect(details.gasEstimate.estimatedGas, gasEstimate.estimatedGas);
-        expect(details.gasEstimate.gasAdjustment, gasEstimate.gasAdjustment);
+        expect(details.gasEstimate, gasEstimate);
 
         return true;
       });

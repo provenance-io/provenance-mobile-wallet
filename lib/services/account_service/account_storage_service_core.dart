@@ -1,5 +1,5 @@
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 
 abstract class AccountStorageServiceCore {
@@ -9,7 +9,8 @@ abstract class AccountStorageServiceCore {
 
   Future<BasicAccount?> addBasicAccount({
     required String name,
-    required PublicKeyData publicKey,
+    required String publicKeyHex,
+    required Network network,
   });
 
   Future<MultiAccount?> addMultiAccount({
@@ -58,6 +59,12 @@ abstract class AccountStorageServiceCore {
   Future<Account?> renameAccount({
     required String id,
     required String name,
+  });
+
+  Future<Account?> selectNetwork({
+    required String id,
+    required String publicKeyHex,
+    required Network network,
   });
 
   Future<TransactableAccount?> selectAccount({

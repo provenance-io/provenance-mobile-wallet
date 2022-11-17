@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pretty_json/pretty_json.dart';
-import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
 import 'package:provenance_wallet/main.dart' as app;
 import 'package:provenance_wallet/screens/home/accounts/account_cell.dart';
@@ -72,6 +71,13 @@ void main() {
       await AccountPortfolio.keySendButton.tap(tester);
       await SendPage.keyAddressField
           .enterText(data.sendHashTest!.accountAddress!, tester);
+      while (tester
+          .widgetList(
+            find.byKey(SendAssetList.keySelectAssetButton),
+          )
+          .isEmpty) {
+        await tester.pumpAndSettle();
+      }
       await SendAssetList.keySelectAssetButton.tap(tester);
       await SendAssetList.keyDropDownItem("HASH").tap(tester);
       await SendPage.keyNextButton.tap(tester);
@@ -80,15 +86,24 @@ void main() {
         tester,
         scrollable: ValueKey("FeeRow"),
       );
-      await SendAmountPage.keyNextButton.tap(tester);
-      if (tester
-              .widgetList<PwButton>(find.byKey(SendAmountPage.keyNextButton))
-              .length ==
-          1) {
+
+      while (tester
+          .widgetList(
+            find.byKey(SendAmountPage.keyNextButton),
+          )
+          .isNotEmpty) {
         await SendAmountPage.keyNextButton.tap(tester);
       }
-      await SendReviewPage.keySendButton.tap(tester);
-      await pumpEventQueue();
+
+      await SendReviewPage.keySendButton.tapWhenExists(tester);
+
+      while (tester
+          .widgetList(
+            find.byKey(SendSuccessScreen.keyTransactionAmount),
+          )
+          .isEmpty) {
+        await tester.pumpAndSettle();
+      }
 
       // Text is something like "6.473829789 HASH"
       final textPrice =

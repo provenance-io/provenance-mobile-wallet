@@ -40,8 +40,9 @@ class WalletConnectButton extends StatelessWidget {
             initialData: _walletConnectService.sessionEvents.state.value,
             stream: _walletConnectService.sessionEvents.state,
             builder: (context, snapshot) {
-              final connected =
-                  snapshot.data?.status == WalletConnectSessionStatus.connected;
+              final status = snapshot.data?.status ??
+                  WalletConnectSessionStatus.disconnected;
+
               Widget icon;
               switch (snapshot.data?.status) {
                 case WalletConnectSessionStatus.disconnected:
@@ -83,58 +84,70 @@ class WalletConnectButton extends StatelessWidget {
               }
 
               return _IconButton(
-                onPressed: () async {
-                  if (connected) {
-                    showDialog(
-                      useSafeArea: true,
-                      barrierColor: Theme.of(context).colorScheme.neutral750,
-                      context: context,
-                      builder: (context) => ConnectionDetailsModal(),
-                    );
-                  } else {
-                    final addressData = await Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).push(
-                      QRCodeScanner(
-                        isValidCallback: (input) {
-                          return Future.value(input.isNotEmpty);
-                        },
-                      ).route(),
-                    );
-
-                    if (addressData != null) {
-                      final success = await _walletConnectService
-                          .connectSession(account.id, addressData)
-                          .catchError((err) {
-                        PwDialog.showError(
-                          context: context,
-                          message: Strings.of(context).walletConnectError,
-                          error: err,
-                        );
-
-                        logError(
-                          'Failed to connect session',
-                          error: err,
-                        );
-
-                        return false;
-                      });
-
-                      if (!success) {
-                        PwDialog.showError(
-                          context: context,
-                          message: Strings.of(context).walletConnectFailed,
-                        );
-                      }
-                    }
-                  }
+                onPressed: () {
+                  _buttonPressed(context, status, account);
                 },
                 icon: icon,
               );
             },
           );
         });
+  }
+
+  void _buttonPressed(BuildContext context, WalletConnectSessionStatus status,
+      Account account) async {
+    if (status == WalletConnectSessionStatus.connected) {
+      showDialog(
+        useSafeArea: true,
+        barrierColor: Theme.of(context).colorScheme.neutral750,
+        context: context,
+        builder: (context) => ConnectionDetailsModal(),
+      );
+    } else if (status == WalletConnectSessionStatus.connecting) {
+      showDialog(
+        useSafeArea: true,
+        barrierColor: Theme.of(context).colorScheme.neutral750,
+        context: context,
+        builder: (context) => ConnectionDetailsModal(),
+      );
+    } else {
+      final addressData = await Navigator.of(
+        context,
+        rootNavigator: true,
+      ).push(
+        QRCodeScanner(
+          isValidCallback: (input) {
+            return Future.value(input.isNotEmpty);
+          },
+        ).route(),
+      );
+
+      if (addressData != null) {
+        final success = await _walletConnectService
+            .connectSession(account.id, addressData)
+            .catchError((err) {
+          PwDialog.showError(
+            context: context,
+            message: Strings.of(context).walletConnectError,
+            error: err,
+          );
+
+          logError(
+            'Failed to connect session',
+            error: err,
+          );
+
+          return false;
+        });
+
+        if (!success) {
+          PwDialog.showError(
+            context: context,
+            message: Strings.of(context).walletConnectFailed,
+          );
+        }
+      }
+    }
   }
 }
 

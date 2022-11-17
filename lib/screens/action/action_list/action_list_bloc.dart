@@ -357,7 +357,7 @@ class ActionListBloc extends Disposable {
         multiSigAddress: tx.multiSigAddress,
         signerAddress: tx.signerAddress,
         groupAddress: tx.multiSigAddress,
-        label: LocalizedString(
+        label: LocalizedString.function(
           (c) => tx.txBody.messages
               .map((e) => e.toMessage().toLocalizedName(c))
               .join(', '),
@@ -376,7 +376,7 @@ class ActionListBloc extends Disposable {
       multiSigAddress: tx.multiSigAddress,
       signerAddress: signerAddress,
       groupAddress: signerAddress,
-      label: LocalizedString(
+      label: LocalizedString.function(
         (c) => tx.txBody.messages
             .map((e) => e.toMessage().toLocalizedName(c))
             .join(', '),
@@ -401,7 +401,7 @@ class ActionListBloc extends Disposable {
 
         return _navigator.showApproveTransaction(
           messages: txAction.messages,
-          fees: txAction.gasEstimate.totalFees,
+          fees: txAction.gasEstimate.amount,
           clientMeta: group._queueGroup.clientMeta,
         );
       case WalletConnectActionKind.sign:

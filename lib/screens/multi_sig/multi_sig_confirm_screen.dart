@@ -1,16 +1,16 @@
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_app_bar.dart';
-import 'package:provenance_wallet/screens/account_name_screen.dart';
 import 'package:provenance_wallet/screens/count.dart';
 import 'package:provenance_wallet/screens/field_mode.dart';
+import 'package:provenance_wallet/screens/multi_sig/multi_sig_account_name_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_count_screen.dart';
 import 'package:provenance_wallet/screens/multi_sig/multi_sig_field.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class MultiSigConfirmBloc
-    implements AccountNameBloc, MultiSigCountBloc {
+    implements MultiSigAccountNameBloc, MultiSigCountBloc {
   @override
   ValueStream<String> get name;
 
@@ -78,12 +78,11 @@ class MultiSigConfirmScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 fullscreenDialog: true,
                                 builder: (context) {
-                                  return AccountNameScreen(
+                                  return MultiSigAccountNameScreen(
                                     message: strings.accountNameMultiSigMessage,
                                     mode: FieldMode.edit,
                                     leadingIcon: PwIcons.close,
                                     bloc: _bloc,
-                                    popOnSubmit: true,
                                   );
                                 },
                               ),

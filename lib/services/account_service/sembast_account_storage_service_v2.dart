@@ -3,7 +3,7 @@ import 'package:convert/convert.dart' as convert;
 import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/clients/multi_sig_client/models/multi_sig_signer.dart';
 import 'package:provenance_wallet/extension/list_extension.dart';
-import 'package:provenance_wallet/services/account_service/account_storage_service.dart';
+import 'package:provenance_wallet/network.dart';
 import 'package:provenance_wallet/services/account_service/account_storage_service_core.dart';
 import 'package:provenance_wallet/services/account_service/sembast_schema_v1.dart'
     as v1;
@@ -113,14 +113,15 @@ class SembastAccountStorageServiceV2 implements AccountStorageServiceCore {
   @override
   Future<BasicAccount?> addBasicAccount({
     required String name,
-    required PublicKeyData publicKey,
+    required Network network,
+    required String publicKeyHex,
   }) async {
     final db = await _db;
     final model = v2.SembastAccountModel(
       name: name,
       publicKey: v2.SembastPublicKeyModel(
-        hex: publicKey.hex,
-        chainId: publicKey.chainId,
+        hex: publicKeyHex,
+        chainId: network.chainId,
       ),
       linkedAccountIds: [],
     );
@@ -314,6 +315,49 @@ class SembastAccountStorageServiceV2 implements AccountStorageServiceCore {
               updatedAccount = await _toMulti(id, updated);
             }
           }
+          break;
+      }
+    }
+
+    return updatedAccount;
+  }
+
+  @override
+  Future<Account?> selectNetwork({
+    required String id,
+    required String publicKeyHex,
+    required Network network,
+  }) async {
+    Account? updatedAccount;
+
+    final account = await getAccount(id: id);
+    if (account != null) {
+      final db = await _db;
+
+      switch (account.kind) {
+        case AccountKind.basic:
+          var ref = _basicAccounts.record(id);
+          var rec = await ref.get(db);
+
+          if (rec != null) {
+            final old = v2.SembastAccountModel.fromRecord(rec);
+            final updated = await ref.update(
+                db,
+                old
+                    .copyWith(
+                        publicKey: v2.SembastPublicKeyModel(
+                          hex: publicKeyHex,
+                          chainId: network.chainId,
+                        ),
+                        selectedChainId: network.chainId)
+                    .toRecord());
+            if (updated != null) {
+              updatedAccount = _toBasic(id, updated);
+            }
+          }
+          break;
+        case AccountKind.multi:
+          // Not supported
           break;
       }
     }
