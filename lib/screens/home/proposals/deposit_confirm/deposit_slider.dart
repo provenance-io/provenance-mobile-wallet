@@ -35,6 +35,13 @@ class _DepositSliderState extends State<DepositSlider> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.max == 0) {
+      return Center(
+        child: PwText(
+          Strings.of(context).hashNeeded,
+        ),
+      );
+    }
     final colors = Theme.of(context).colorScheme;
 
     return Column(
