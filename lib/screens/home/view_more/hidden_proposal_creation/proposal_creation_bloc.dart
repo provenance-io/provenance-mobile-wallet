@@ -37,14 +37,20 @@ class ProposalCreationBloc extends TransactionBloc {
     }
 
     try {
-      final asset =
-          (await get<AssetClient>().getAssets(account.coin, account.address))
-              .firstWhere((element) => element.denom == nHashDenom);
+      final assets =
+          await get<AssetClient>().getAssets(account.coin, account.address);
+
+      Decimal hash = Decimal.zero;
+
+      if (assets.isNotEmpty) {
+        final asset = assets.firstWhere((element) => element.denom == 'nhash');
+        hash = nHashToHash(BigInt.parse(asset.amount));
+      }
 
       _creationDetails.tryAdd(
         ProposalCreationDetails.fromExisting(
           oldDetails,
-          hashAmount: nHashToHash(BigInt.parse(asset.amount)),
+          hashAmount: hash,
         ),
       );
     } finally {

@@ -56,9 +56,15 @@ class StakingDelegationBloc extends Disposable {
   }
 
   Future<void> load() async {
-    final asset =
-        (await get<AssetClient>().getAssets(_account.coin, _account.address))
-            .firstWhere((element) => element.denom == 'nhash');
+    final assets =
+        await get<AssetClient>().getAssets(_account.coin, _account.address);
+
+    Asset? asset;
+
+    if (assets.isNotEmpty) {
+      asset = assets.firstWhere((element) => element.denom == 'nhash');
+    }
+
     final oldDetails = _stakingDelegationDetails.value;
     _stakingDelegationDetails.tryAdd(
       StakingDelegationDetails(
