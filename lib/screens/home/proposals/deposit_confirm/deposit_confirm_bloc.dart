@@ -10,6 +10,7 @@ import 'package:provenance_wallet/common/classes/transaction_bloc.dart';
 import 'package:provenance_wallet/extension/stream_controller.dart';
 import 'package:provenance_wallet/services/asset_client/asset_client.dart';
 import 'package:provenance_wallet/services/models/account.dart';
+import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/models/proposal.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/denom_util.dart';
@@ -35,13 +36,19 @@ class DepositConfirmBloc extends TransactionBloc {
     }
 
     try {
-      final asset =
-          (await get<AssetClient>().getAssets(account.coin, account.address))
-              .firstWhere((element) => element.denom == 'nhash');
+      final assets =
+          await get<AssetClient>().getAssets(account.coin, account.address);
+
+      Asset? asset;
+
+      if (assets.isNotEmpty) {
+        asset = assets.firstWhere((element) => element.denom == 'nhash');
+      }
 
       _depositDetails.tryAdd(
         DepositDetails(
-            hashAmount: nHashToHash(BigInt.parse(asset.amount)).toDouble(),
+            hashAmount:
+                nHashToHash(BigInt.parse(asset?.amount ?? "0")).toDouble(),
             proposal: _proposal),
       );
     } finally {
