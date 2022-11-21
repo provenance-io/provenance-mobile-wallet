@@ -109,9 +109,15 @@ class ProposalsBloc extends PwPagingCache implements ProposalsFlowNavigator {
 
     try {
       _proposalPages.tryAdd(1);
-      final asset =
-          (await get<AssetClient>().getAssets(_account.coin, _account.address))
-              .firstWhere((element) => element.denom == 'nhash');
+      final assets =
+          await get<AssetClient>().getAssets(_account.coin, _account.address);
+
+      Asset? asset;
+
+      if (assets.isNotEmpty) {
+        asset = assets.firstWhere((element) => element.denom == 'nhash');
+      }
+
       final proposals = await _governanceClient.getProposals(
         _account.coin,
         _proposalPages.value,

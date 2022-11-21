@@ -36,6 +36,7 @@
     }
   },
   "dashboard": "Dashboard",
+  "hashNeeded": "HASH Needed.",
   "portfolioValue": "Portfolio Value",
   "send": "Send",
   "receive": "Receive",
