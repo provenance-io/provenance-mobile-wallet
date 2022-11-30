@@ -1,9 +1,13 @@
 import 'package:provenance_dart/wallet_connect.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
+import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_text_form_field.dart';
+import 'package:provenance_wallet/screens/home/dashboard/wallet_connect_button.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
 import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/deep_link_util.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/link_util.dart';
 import 'package:provenance_wallet/util/strings.dart';
 
 class WalletConnectItem extends StatefulWidget {
@@ -16,11 +20,7 @@ class WalletConnectItem extends StatefulWidget {
 class _WalletConnectItemState extends State<WalletConnectItem> {
   final _focusNode = FocusNode();
   final _textController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  String? _error;
 
   @override
   void dispose() {
@@ -36,40 +36,87 @@ class _WalletConnectItemState extends State<WalletConnectItem> {
       margin: EdgeInsets.all(
         Spacing.large,
       ),
-      child: PwTextFormField(
-        label: Strings.of(context).profileDeveloperConnectLabel,
-        validator: _validate,
-        onFieldSubmitted: _onSubmitted,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PwText(
+            Strings.of(context).profileDeveloperConnectLabel,
+          ),
+          VerticalSpacer.small(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: WalletConnectButton(),
+              ),
+              HorizontalSpacer.large(),
+              Expanded(
+                child: PwTextFormField(
+                  hint: Strings.of(context).profileDeveloperConnectHint,
+                  controller: _textController,
+                ),
+              ),
+            ],
+          ),
+          if (_error != null) ...[
+            Container(
+              margin: EdgeInsets.only(
+                left: Spacing.large,
+                top: Spacing.small,
+              ),
+              child: PwText(
+                _error!,
+                color: PwColor.error,
+                style: PwTextStyle.bodySmall,
+              ),
+            ),
+          ],
+          VerticalSpacer.large(),
+          PwTextButton.primaryAction(
+            context: context,
+            text: 'Go',
+            onPressed: _onSubmitted,
+          ),
+        ],
       ),
     );
   }
 
-  String? _validate(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
+  Future<void> _onSubmitted() async {
+    final value = _textController.text;
+    if (value.isEmpty) {
+      return;
     }
 
-    if (WalletConnectAddress.create(value) == null) {
-      return Strings.of(context).profileDeveloperConnectInvalidAddress;
+    String? error = Strings.of(context).profileDeveloperConnectInvalidAddress;
+
+    WalletConnectAddress? address = WalletConnectAddress.create(value);
+    if (address == null) {
+      final decoded = Uri.decodeComponent(value);
+      address = WalletConnectAddress.create(decoded);
     }
-
-    return null;
-  }
-
-  String? _onSubmitted(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-
-    final error = _validate(value);
-    if (error == null) {
-      final bloc = get<WalletConnectService>();
-      final accountId = get<AccountService>().events.selected.value?.id;
-      if (accountId != null) {
-        bloc.connectSession(accountId, value);
+    if (address == null) {
+      final redirected = await tryFollowRedirect(value);
+      if (redirected != null) {
+        final uri = Uri.parse(redirected);
+        address = getWalletConnectAddress(uri);
       }
     }
 
-    return null;
+    if (address != null) {
+      error = null;
+
+      final bloc = get<WalletConnectService>();
+      final accountId = get<AccountService>().events.selected.value?.id;
+      if (accountId != null) {
+        bloc.connectSession(accountId, address.raw);
+      }
+    }
+
+    setState(() {
+      _error = error;
+    });
   }
 }
