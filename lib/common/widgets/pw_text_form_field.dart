@@ -3,7 +3,7 @@ import 'package:provenance_wallet/common/pw_design.dart';
 class PwTextFormField extends StatelessWidget {
   const PwTextFormField({
     Key? key,
-    required this.label,
+    this.label,
     this.keyboardType,
     this.onChanged,
     this.onFieldSubmitted,
@@ -14,7 +14,7 @@ class PwTextFormField extends StatelessWidget {
     this.hint,
   }) : super(key: key);
 
-  final String label;
+  final String? label;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onFieldSubmitted;
@@ -31,11 +31,13 @@ class PwTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PwText(
-          label,
-          color: PwColor.neutralNeutral,
-        ),
-        VerticalSpacer.small(),
+        if (label != null) ...[
+          PwText(
+            label!,
+            color: PwColor.neutralNeutral,
+          ),
+          VerticalSpacer.small(),
+        ],
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),

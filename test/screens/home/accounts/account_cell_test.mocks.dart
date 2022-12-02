@@ -357,8 +357,4 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
               returnValue: _i8.Future<_i6.PrivateKey>.value(_FakePrivateKey_6(
                   this, Invocation.method(#loadKey, [accountId, coin]))))
           as _i8.Future<_i6.PrivateKey>);
-  @override
-  _i8.Future<bool> isValidWalletConnectData(String? qrData) => (super
-      .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
 }

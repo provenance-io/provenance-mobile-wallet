@@ -415,12 +415,6 @@ class AccountService implements Disposable {
     return privateKey;
   }
 
-  Future<bool> isValidWalletConnectData(String qrData) async {
-    await _initFuture;
-
-    return WalletConnectAddress.create(qrData) != null;
-  }
-
   Future<void> _init() async {
     final current =
         await _keyValueService.getString(PrefKey.accountServiceVersion) ?? '0';

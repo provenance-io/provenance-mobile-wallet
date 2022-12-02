@@ -306,10 +306,6 @@ class MockAccountService extends _i1.Mock implements _i2.AccountService {
               returnValue: _i10.Future<_i5.PrivateKey>.value(_FakePrivateKey_5(
                   this, Invocation.method(#loadKey, [accountId, coin]))))
           as _i10.Future<_i5.PrivateKey>);
-  @override
-  _i10.Future<bool> isValidWalletConnectData(String? qrData) => (super
-      .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: _i10.Future<bool>.value(false)) as _i10.Future<bool>);
 }
 
 /// A class which mocks [TransactionHandler].

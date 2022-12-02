@@ -305,10 +305,6 @@ class MockAccountService extends _i1.Mock implements _i3.AccountService {
               returnValue: _i11.Future<_i6.PrivateKey>.value(_FakePrivateKey_6(
                   this, Invocation.method(#loadKey, [accountId, coin]))))
           as _i11.Future<_i6.PrivateKey>);
-  @override
-  _i11.Future<bool> isValidWalletConnectData(String? qrData) => (super
-      .noSuchMethod(Invocation.method(#isValidWalletConnectData, [qrData]),
-          returnValue: _i11.Future<bool>.value(false)) as _i11.Future<bool>);
 }
 
 /// A class which mocks [TxQueueService].
