@@ -13,7 +13,7 @@ class GasPriceDto {
   final String? denom;
 
   @JsonKey(name: 'gasPrice')
-  final int? amount;
+  final double? amount;
 
   // ignore: member-ordering
   factory GasPriceDto.fromJson(Map<String, dynamic> json) =>

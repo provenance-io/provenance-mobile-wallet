@@ -11,7 +11,7 @@ class GasFeeEstimate {
   factory GasFeeEstimate.single({
     required int units,
     required String denom,
-    required int amountPerUnit,
+    required double amountPerUnit,
   }) =>
       GasFeeEstimate(
         units,
@@ -34,7 +34,7 @@ class GasFeeEstimate {
 
   static proto.Coin _toCoin(int units, GasPrice quote) => proto.Coin(
         denom: quote.denom,
-        amount: (units * quote.amountPerUnit).toString(),
+        amount: (units * quote.amountPerUnit).ceil().toString(),
       );
 
   @override
