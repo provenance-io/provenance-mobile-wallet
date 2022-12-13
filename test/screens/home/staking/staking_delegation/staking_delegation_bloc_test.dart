@@ -23,7 +23,7 @@ import 'package:provenance_wallet/util/get.dart';
 import './staking_delegation_bloc_test.mocks.dart';
 import '../../../../test_helpers.dart';
 
-const nHashPerGasUnit = 9625;
+const nHashPerGasUnit = 9625.0;
 
 @GenerateMocks([AssetClient, AccountService, TransactionHandler])
 main() {

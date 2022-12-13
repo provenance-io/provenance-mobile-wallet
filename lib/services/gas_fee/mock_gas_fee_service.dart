@@ -17,7 +17,7 @@ class MockGasFeeClient extends GasFeeClient {
   }
 
   GasPrice _getGasFee() {
-    var amount = faker.randomGenerator.integer(10000);
+    var amount = faker.randomGenerator.integer(10000) / 3;
 
     return GasPrice(
       denom: faker.currency.code(),

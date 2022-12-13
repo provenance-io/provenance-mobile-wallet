@@ -51,8 +51,11 @@ main() {
     when(mockPbClient!.estimateTx(any))
         .thenAnswer((_) => Future.value(gasEstimate));
 
-    when(mockPbClient!.estimateTransactionFees(any, any))
-        .thenAnswer((_) => Future.value(gasEstimate));
+    when(mockPbClient!.estimateTransactionFees(
+      any,
+      any,
+      gasAdjustment: anyNamed('gasAdjustment'),
+    )).thenAnswer((_) => Future.value(gasEstimate));
 
     when(mockPbClient!.broadcastTransaction(any, any, any, any))
         .thenAnswer((_) async => rawResponse);
@@ -81,8 +84,11 @@ main() {
 
     test("error while calling estimateTx", () async {
       final exception = Exception("A");
-      when(mockPbClient!.estimateTransactionFees(any, any))
-          .thenAnswer((_) => Future.error(exception));
+      when(mockPbClient!.estimateTransactionFees(
+        any,
+        any,
+        gasAdjustment: anyNamed('gasAdjustment'),
+      )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => transHandler!.estimateGas(txBody, [publicKey], coin),
@@ -113,8 +119,11 @@ main() {
 
     test("error while calling estimateTx", () async {
       final exception = Exception("A");
-      when(mockPbClient!.estimateTransactionFees(any, any))
-          .thenAnswer((_) => Future.error(exception));
+      when(mockPbClient!.estimateTransactionFees(
+        any,
+        any,
+        gasAdjustment: anyNamed('gasAdjustment'),
+      )).thenAnswer((_) => Future.error(exception));
 
       expect(
         () => transHandler!

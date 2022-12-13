@@ -8,7 +8,7 @@ part of 'gas_markup_dto.dart';
 
 GasPriceDto _$GasPriceDtoFromJson(Map<String, dynamic> json) => GasPriceDto(
       denom: json['gasPriceDenom'] as String?,
-      amount: json['gasPrice'] as int?,
+      amount: (json['gasPrice'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$GasPriceDtoToJson(GasPriceDto instance) =>
