@@ -8,7 +8,7 @@ class GasPrice {
   });
 
   final String denom;
-  final int amountPerUnit;
+  final double amountPerUnit;
 
   @override
   operator ==(Object other) =>
@@ -26,6 +26,6 @@ class GasPrice {
 
   static GasPrice fromJson(Map<String, dynamic> json) => GasPrice(
         denom: json['denom'] as String,
-        amountPerUnit: json['amountPerUnit'] as int,
+        amountPerUnit: json['amountPerUnit'] as double,
       );
 }

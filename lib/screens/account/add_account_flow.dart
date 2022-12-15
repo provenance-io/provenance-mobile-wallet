@@ -13,6 +13,7 @@ import 'package:provenance_wallet/screens/qr_code_scanner.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/invite_link_util.dart';
+import 'package:provenance_wallet/util/link_util.dart';
 
 import 'basic_account_create_flow.dart';
 import 'basic_account_recover_flow.dart';

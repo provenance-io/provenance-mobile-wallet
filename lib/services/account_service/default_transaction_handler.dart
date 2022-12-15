@@ -6,6 +6,8 @@ import 'package:provenance_dart/wallet.dart';
 import 'package:provenance_wallet/gas_fee_estimate.dart';
 import 'package:provenance_wallet/services/account_service/transaction_handler.dart';
 import 'package:provenance_wallet/services/gas_fee/gas_fee_client.dart';
+import 'package:provenance_wallet/services/models/gas_price.dart';
+import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -37,14 +39,32 @@ class DefaultTransactionHandler implements TransactionHandler, Disposable {
     final estimate = await pbClient.estimateTransactionFees(
       txBody,
       signers,
-      gasAdjustment: gasAdjustment,
+      gasAdjustment: gasAdjustment ?? defaultGasAdjustment,
     );
 
+    // make sure that we are using the largest gas fee
     final gasPrice = await gasService.getPrice(coin);
+
+    final priceLookup = <String, double>{};
+    if (gasPrice != null) {
+      priceLookup[gasPrice.denom] = gasPrice.amountPerUnit.toDouble();
+    }
+
+    for (proto.Coin fee in estimate.feeCalculated ?? <proto.Coin>[]) {
+      final value = (int.parse(fee.amount) / estimate.estimate);
+      final previousValue = priceLookup[fee.denom] ?? 0;
+      if (value > previousValue) {
+        priceLookup[fee.denom] = value;
+      }
+    }
+
+    final fees = priceLookup.entries
+        .map((entry) => GasPrice(denom: entry.key, amountPerUnit: entry.value))
+        .toList();
 
     return GasFeeEstimate(
       estimate.estimate,
-      [gasPrice!],
+      fees,
     );
   }
 

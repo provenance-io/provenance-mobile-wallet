@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
-import 'package:http/http.dart' as http;
 import 'package:provenance_dart/wallet.dart';
-import 'package:provenance_wallet/util/logs/logging.dart';
 
 const _origin = 'https://provenance.io';
 const _segment = 'invite';
@@ -45,39 +43,6 @@ InviteLinkData? parseInviteLinkData(String inviteLink) {
   }
 
   return data;
-}
-
-Future<String?> tryFollowRedirect(String? uri) async {
-  if (uri == null) {
-    return null;
-  }
-
-  var result = Uri.tryParse(uri);
-  if (result == null) {
-    return null;
-  }
-
-  final baseClient = http.Client();
-
-  try {
-    final request = http.Request('Get', result)..followRedirects = false;
-
-    final response = await baseClient.send(request);
-    final location = response.headers['location'];
-    if (location != null) {
-      result = Uri.tryParse(location);
-    }
-  } on Exception catch (e) {
-    Log.instance.error(
-      'Failed to follow redirect',
-      tag: 'invite_link_util',
-      error: e,
-    );
-  } finally {
-    baseClient.close();
-  }
-
-  return result.toString();
 }
 
 class InviteLinkData {

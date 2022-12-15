@@ -10,7 +10,7 @@ import 'package:provenance_wallet/services/deep_link/deep_link_service.dart';
 import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
-import 'package:provenance_wallet/services/wallet_connect_service/wallet_connect_service.dart';
+import 'package:provenance_wallet/util/deep_link_util.dart';
 import 'package:provenance_wallet/util/get.dart';
 import 'package:provenance_wallet/util/local_auth_helper.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,7 +51,6 @@ class HomeBloc extends Disposable {
   final _transactionHandler = get<TransactionHandler>();
   final _accountService = get<AccountService>();
   final _assetClient = get<AssetClient>();
-  final _walletConnectService = get<WalletConnectService>();
 
   ValueStream<bool> get isLoading => _isLoading;
   ValueStream<List<Asset>?> get assetList => _assetList;
@@ -99,10 +98,6 @@ class HomeBloc extends Disposable {
     );
   }
 
-  Future<bool> isValidWalletConnectAddress(String address) {
-    return get<AccountService>().isValidWalletConnectData(address);
-  }
-
   Future<void> resetAccounts() async {
     await get<AccountService>().resetAccounts();
     await get<CipherService>().deletePin();
@@ -139,21 +134,20 @@ class HomeBloc extends Disposable {
     final path = link.path;
     switch (path) {
       case '/wallet-connect':
-        final data = link.queryParameters['data'];
-        _handleWalletConnectLink(data);
+        _handleWalletConnectLink(link);
         break;
     }
   }
 
-  Future<void> _handleWalletConnectLink(String? data) async {
-    if (data != null) {
-      final addressData = Uri.decodeComponent(data);
+  Future<void> _handleWalletConnectLink(Uri link) async {
+    final address = getWalletConnectAddress(link);
+    if (address != null) {
       // this event fires before the normal app lifecycle
       // so just store the requested address and allow
-      // wallet connect service lifecycle handling 
+      // wallet connect service lifecycle handling
       // to deal with it
       await get<KeyValueService>()
-          .setString(PrefKey.deepLinkAddress, addressData);
+          .setString(PrefKey.deepLinkAddress, address.raw);
     }
   }
 }
