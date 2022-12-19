@@ -55,9 +55,12 @@ class NotificationItemCell extends StatelessWidget {
                 children: [
                   PwText(
                     item.label.get(context),
-                    maxLines: 2,
                   ),
-                  PwText(notificationListFormatter.format(item.created))
+                  PwText(
+                    notificationListFormatter.format(item.created),
+                    style: PwTextStyle.footnote,
+                    color: PwColor.neutral200,
+                  ),
                 ],
               )),
             ],

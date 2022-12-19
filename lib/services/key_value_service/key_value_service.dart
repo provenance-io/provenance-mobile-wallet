@@ -56,5 +56,6 @@ enum PrefKey {
   showDevMenu,
   testBool,
   testString,
-  deepLinkAddress
+  deepLinkAddress,
+  discontinuedNotificationDate,
 }
