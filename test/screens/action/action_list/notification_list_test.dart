@@ -45,7 +45,12 @@ main() {
       final selected = ValueNotifier(false);
       await _build(tester, item, selected, animationController!);
 
-      expect(find.text("TestLabel"), findsOneWidget);
+      expect(
+          find.text(
+            "TestLabel",
+            findRichText: true,
+          ),
+          findsOneWidget);
       expect(
           find.text(NotificationItemCell.notificationListFormatter
               .format(item.created)),

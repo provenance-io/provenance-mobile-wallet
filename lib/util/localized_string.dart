@@ -50,6 +50,8 @@ enum StringId {
   actionListLabelTransactionRequested,
   actionListLabelSignatureRequested,
   actionListSubLabelActionRequired,
+  appleDiscontinuedMessage,
+  googleDiscontinuedMessage,
   multiSigTransactionInitiatedNotification,
   networkProvenanceMainnet,
   networkProvenanceTestnet,
@@ -71,4 +73,8 @@ final _lookup = {
       Strings.of(c).networkProvenanceMainnet,
   StringId.networkProvenanceTestnet: (c) =>
       Strings.of(c).networkProvenanceTestnet,
+  StringId.appleDiscontinuedMessage: (c) =>
+      Strings.of(c).appleDiscontinuedMessage,
+  StringId.googleDiscontinuedMessage: (c) =>
+      Strings.of(c).googleDiscontinuedMessage,
 };
