@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/scheduler.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/notification_bell.dart';
@@ -11,7 +13,9 @@ import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart'
 import 'package:provenance_wallet/screens/home/dashboard/wallet_connect_button.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
+import 'package:provenance_wallet/services/account_notification_service/account_notification_service.dart';
 import 'package:provenance_wallet/services/account_service/account_service.dart';
+import 'package:provenance_wallet/services/key_value_service/key_value_service.dart';
 import 'package:provenance_wallet/services/models/account.dart';
 import 'package:provenance_wallet/services/models/asset.dart';
 import 'package:provenance_wallet/services/multi_sig_service/multi_sig_service.dart';
@@ -20,8 +24,10 @@ import 'package:provenance_wallet/util/address_util.dart';
 import 'package:provenance_wallet/util/assets.dart';
 import 'package:provenance_wallet/util/constants.dart';
 import 'package:provenance_wallet/util/get.dart';
+import 'package:provenance_wallet/util/localized_string.dart';
 import 'package:provenance_wallet/util/strings.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/utils.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
@@ -42,9 +48,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final _subscriptions = CompositeSubscription();
   final _notificationBellNotifier = ValueNotifier<int>(0);
+  final _keyValueService = get<KeyValueService>();
   late WalletConnectQueueService _connectQueueService;
   late MultiSigService _multiSigService;
+  late AccountNotificationService _accountNotificationService;
+  var _accountNotificationCount = 0;
 
   @override
   void initState() {
@@ -56,13 +66,22 @@ class _DashboardState extends State<Dashboard> {
     _multiSigService = get<MultiSigService>();
     _multiSigService.addListener(_updateBellCount);
 
+    _accountNotificationService = get<AccountNotificationService>();
+    _accountNotificationService.notifications.listen((e) {
+      _accountNotificationCount = e.length;
+      _updateBellCount();
+    }).addTo(_subscriptions);
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _updateBellCount();
     });
+
+    _notifyDiscontinued();
   }
 
   @override
   void dispose() {
+    _subscriptions.dispose();
     _connectQueueService.removeListener(_updateBellCount);
     super.dispose();
   }
@@ -334,6 +353,47 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Future<void> _notifyDiscontinued() async {
+    const maxDuration = Duration(
+      days: 2,
+    );
+
+    final dateStr = await _keyValueService.getString(
+      PrefKey.discontinuedNotificationDate,
+    );
+
+    final now = DateTime.now();
+    final date = DateTime.tryParse(dateStr ?? '');
+
+    final labelId = Platform.isAndroid
+        ? StringId.googleDiscontinuedMessage
+        : StringId.appleDiscontinuedMessage;
+
+    final notifications =
+        await _accountNotificationService.notifications.first.timeout(
+      Duration(
+        seconds: 3,
+      ),
+      onTimeout: () => [],
+    );
+
+    final notified = notifications.any((e) =>
+        e.label is LocalizedStringId &&
+        (e.label as LocalizedStringId).id == labelId);
+
+    if ((date == null || now.difference(date) >= maxDuration) && !notified) {
+      await _keyValueService.setString(
+        PrefKey.discontinuedNotificationDate,
+        now.toIso8601String(),
+      );
+
+      _accountNotificationService.addId(
+        id: labelId,
+        created: now,
+      );
+    }
+  }
+
   void _onNotificationBellClicked() async {
     final accountService = get<AccountService>();
     final account = accountService.events.selected.value;
@@ -364,7 +424,8 @@ class _DashboardState extends State<Dashboard> {
       ),
     ]);
 
-    _notificationBellNotifier.value =
-        connectCount + _multiSigService.items.length;
+    _notificationBellNotifier.value = connectCount +
+        _multiSigService.items.length +
+        _accountNotificationCount;
   }
 }
