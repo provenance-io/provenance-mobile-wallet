@@ -2,8 +2,10 @@ import 'package:intl/intl.dart';
 import 'package:provenance_wallet/common/pw_design.dart';
 import 'package:provenance_wallet/common/widgets/button.dart';
 import 'package:provenance_wallet/common/widgets/pw_divider.dart';
+import 'package:provenance_wallet/common/widgets/pw_link_text.dart';
 import 'package:provenance_wallet/services/account_notification_service/notification_item.dart';
 import 'package:provenance_wallet/util/strings.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 const _checkBoxSize = 40.0;
 
@@ -53,8 +55,11 @@ class NotificationItemCell extends StatelessWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PwText(
-                    item.label.get(context),
+                  PwLinkText(
+                    text: item.label.get(context),
+                    onTap: (String uri) {
+                      launchUrlString(uri);
+                    },
                   ),
                   PwText(
                     notificationListFormatter.format(item.created),
@@ -176,8 +181,10 @@ class NotificationListState extends State<NotificationList>
                               return (value)
                                   ? Container()
                                   : PwTextButton.shrinkWrap(
-                                      child: PwText(Strings.of(context)
-                                          .notificationListEditLabel),
+                                      child: PwText(
+                                        Strings.of(context)
+                                            .notificationListEditLabel,
+                                      ),
                                       onPressed: () {
                                         _isEdittingController.value =
                                             !_isEdittingController.value;

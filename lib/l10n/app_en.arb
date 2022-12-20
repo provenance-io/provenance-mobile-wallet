@@ -844,6 +844,6 @@
   "transactionErrorWasm20": "Unknown message from the contract.",
   "transactionErrorWasm21": "Invalid event.",
   "transactionErrorWasm22": "No such contract.",
-  "appleDiscontinuedMessage": "The Provenance Blockchain Wallet is being replaced by the new Figure Wallet. Please take a moment to install the Figure Wallet from the App Store. Then, use the Figure Wallet import feature to move your Provenance Blockchain assets to your new wallet.",
-  "googleDiscontinuedMessage": "The Provenance Blockchain Wallet is being replaced by the new Figure Wallet. Please take a moment to install the Figure Wallet from the Play Store. Then, use the Figure Wallet import feature to move your Provenance Blockchain assets to your new wallet."
+  "appleDiscontinuedMessage": "The Provenance Blockchain Wallet is being replaced by the new Figure Wallet. Please take a moment to install the Figure Wallet from the [App Store](https://apps.apple.com/us/app/figure-wallet/id6444263900). Then, use the Figure Wallet import feature to move your Provenance Blockchain assets to your new wallet.",
+  "googleDiscontinuedMessage": "The Provenance Blockchain Wallet is being replaced by the new Figure Wallet. Please take a moment to install the Figure Wallet from the [Play Store](https://play.google.com/store/apps/details?id=com.figure.mobile.wallet). Then, use the Figure Wallet import feature to move your Provenance Blockchain assets to your new wallet."
 }
