@@ -10,6 +10,7 @@ import 'package:provenance_wallet/screens/action/action_flow.dart';
 import 'package:provenance_wallet/screens/home/accounts/accounts_screen.dart';
 import 'package:provenance_wallet/screens/home/asset/dashboard_tab_bloc.dart';
 import 'package:provenance_wallet/screens/home/dashboard/account_portfolio.dart';
+import 'package:provenance_wallet/screens/home/dashboard/discontinued_screen.dart';
 import 'package:provenance_wallet/screens/home/dashboard/wallet_connect_button.dart';
 import 'package:provenance_wallet/screens/home/home_bloc.dart';
 import 'package:provenance_wallet/screens/home/notification_bar.dart';
@@ -358,16 +359,31 @@ class _DashboardState extends State<Dashboard> {
       days: 2,
     );
 
-    final dateStr = await _keyValueService.getString(
+    final now = DateTime.now();
+
+    final popupDateStr = await _keyValueService.getString(
+      PrefKey.discontinuedPopupDate,
+    );
+
+    if (popupDateStr == null) {
+      await showGeneralDialog(
+        context: context,
+        pageBuilder: (context, anim, anim2) {
+          return DiscontinuedScreen();
+        },
+      );
+
+      await _keyValueService.setString(
+        PrefKey.discontinuedPopupDate,
+        now.toIso8601String(),
+      );
+    }
+
+    final notificationDateStr = await _keyValueService.getString(
       PrefKey.discontinuedNotificationDate,
     );
 
-    final now = DateTime.now();
-    final date = DateTime.tryParse(dateStr ?? '');
-
-    final labelId = Platform.isAndroid
-        ? StringId.googleDiscontinuedMessage
-        : StringId.appleDiscontinuedMessage;
+    final notificationDate = DateTime.tryParse(notificationDateStr ?? '');
 
     final notifications =
         await _accountNotificationService.notifications.first.timeout(
@@ -377,11 +393,17 @@ class _DashboardState extends State<Dashboard> {
       onTimeout: () => [],
     );
 
+    final labelId = Platform.isAndroid
+        ? StringId.googleDiscontinuedMessage
+        : StringId.appleDiscontinuedMessage;
+
     final notified = notifications.any((e) =>
         e.label is LocalizedStringId &&
         (e.label as LocalizedStringId).id == labelId);
 
-    if ((date == null || now.difference(date) >= maxDuration) && !notified) {
+    if ((notificationDate == null ||
+            now.difference(notificationDate) >= maxDuration) &&
+        !notified) {
       await _keyValueService.setString(
         PrefKey.discontinuedNotificationDate,
         now.toIso8601String(),
