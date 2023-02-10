@@ -58,4 +58,5 @@ enum PrefKey {
   testString,
   deepLinkAddress,
   discontinuedNotificationDate,
+  discontinuedPopupDate,
 }
