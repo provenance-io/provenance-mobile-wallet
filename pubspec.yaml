@@ -14,7 +14,7 @@ dependencies:
   connectivity_plus: ^2.2.1
   cupertino_icons: ^1.0.2
   decimal: ^2.1.0
-  dio: ^4.0.0
+  dio: ^5.0.3
   faker: ^2.0.0
   firebase_core: ^1.17.0
   firebase_crashlytics: ^2.8.0
